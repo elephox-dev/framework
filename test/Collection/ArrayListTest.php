@@ -1,0 +1,98 @@
+<?php
+
+namespace Philly\Base\Collection;
+
+use InvalidArgumentException;
+use Philly\Base\Exception\InvalidOffsetException;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @covers \Philly\Base\Collection\ArrayList
+ * @covers \Philly\Base\Exception\InvalidOffsetException
+ */
+class ArrayListTest extends TestCase
+{
+    public function testOffsetExists(): void
+    {
+        $arr = new ArrayList(["test"]);
+
+        self::assertTrue($arr->offsetExists(0));
+        self::assertArrayHasKey(0, $arr);
+        self::assertFalse($arr->offsetExists(1));
+    }
+
+    public function testCount(): void
+    {
+        $arr = new ArrayList(["test", "test2", "test3"]);
+
+        self::assertCount(3, $arr);
+    }
+
+    public function testOffsetUnset(): void
+    {
+        $arr = new ArrayList(["test", "test2", "test3"]);
+
+        self::assertCount(3, $arr);
+
+        $arr->offsetUnset(1);
+
+        self::assertCount(2, $arr);
+    }
+
+    public function testOffsetSet(): void
+    {
+        $arr = new ArrayList();
+
+        self::assertArrayNotHasKey(10, $arr);
+        self::assertArrayNotHasKey(90, $arr);
+        self::assertArrayNotHasKey(17, $arr);
+
+        $arr->offsetSet(10, "test");
+        $arr->set(90, "test2");
+        $arr[17] = "test2";
+
+        self::assertArrayHasKey(10, $arr);
+        self::assertArrayHasKey(90, $arr);
+        self::assertArrayHasKey(17, $arr);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $arr->offsetSet("not a number", "test");
+    }
+
+    public function testOffsetGet(): void
+    {
+        $arr = new ArrayList(["test", "test2", "test3"]);
+
+        self::assertEquals("test", $arr->offsetGet(0));
+        self::assertEquals("test", $arr->get(0));
+        self::assertEquals("test", $arr[0]);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $arr->offsetGet("not a number");
+    }
+
+    public function testGet(): void
+    {
+        $arr = new ArrayList(["test", "test2"]);
+
+        $this->expectException(InvalidOffsetException::class);
+
+        $arr->get(123);
+    }
+
+    public function testAdd(): void
+    {
+        $arr = new ArrayList();
+
+        self::assertCount(0, $arr);
+
+        $arr->add("test");
+        $arr[] = "test2";
+
+        self::assertCount(2, $arr);
+        self::assertEquals("test", $arr->get(0));
+        self::assertEquals("test2", $arr->get(1));
+    }
+}

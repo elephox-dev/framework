@@ -1,0 +1,35 @@
+{
+    "name": "philly/base",
+    "description": "A class library providing independent building blocks.",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Ricaro Boss",
+            "email": "contact@ricardoboss.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Philly\\Base\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Philly\\Base\\": "test/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "ext-json": "*",
+        "jetbrains/phpstorm-attributes": "^1.0"
+    },
+    "require-dev": {
+        "vimeo/psalm": "^4.11.2",
+        "phpunit/phpunit": "^9.5.10",
+        "infection/infection": "^0.25.3",
+        "mockery/mockery": "^1.4"
+    }
+}
