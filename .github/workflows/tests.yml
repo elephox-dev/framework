@@ -10,7 +10,7 @@ jobs:
   composer-script:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'windows-latest']
+        os: ['ubuntu-latest']
         script: ['unit-test', 'mutation-test', 'static-analysis']
 
     runs-on: ${{ matrix.os }}
