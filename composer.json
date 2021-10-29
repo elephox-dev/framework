@@ -21,6 +21,11 @@
             "Philly\\Base\\": "test/"
         }
     },
+    "scripts": {
+        "unit-test": "XDEBUG_MODE=coverage phpunit --coverage-clover=tmp/clover.xml",
+        "mutation-test": "XDEBUG_MODE=coverage infection --threads=$(nproc) --no-progress --show-mutations --logger-github",
+        "static-analysis": "psalm --shepherd"
+    },
     "require": {
         "php": ">=8.0",
         "ext-json": "*",
