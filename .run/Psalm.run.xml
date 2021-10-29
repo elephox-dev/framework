@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Psalm" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/vendor/bin/psalm">
+    <CommandLine workingDirectory="$PROJECT_DIR$">
+      <envs>
+        <env name="XDEBUG_MODE" value="coverage" />
+      </envs>
+    </CommandLine>
+    <method v="2" />
+  </configuration>
+</component>
