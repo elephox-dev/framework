@@ -7,5 +7,6 @@
     },
     "mutators": {
         "@default": true
-    }
+    },
+    "tmpDir": "tmp/"
 }
