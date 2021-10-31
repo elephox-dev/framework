@@ -2,4 +2,4 @@
 
 This is a class library providing independent building blocks.
 
-[![codecov](https://codecov.io/gh/philly-framework/base/branch/main/graph/badge.svg?token=4jwM1Ott1I)](https://codecov.io/gh/philly-framework/base)
+[![Tests](https://github.com/philly-framework/base/actions/workflows/tests.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/tests.yml)
