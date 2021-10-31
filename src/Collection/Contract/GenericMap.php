@@ -6,7 +6,7 @@ namespace Philly\Base\Collection\Contract;
  * @template TKey
  * @template TValue
  */
-interface GenericMapContract
+interface GenericMap
 {
     /**
      * @param TKey $key

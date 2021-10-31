@@ -2,7 +2,7 @@
 
 namespace Philly\Base\Support\Contract;
 
-interface HashGeneratorContract
+interface HashGenerator
 {
     public function generateHash(object $object): string|int;
 }

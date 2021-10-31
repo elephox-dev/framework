@@ -7,7 +7,7 @@ use Countable;
 /**
  * @template T
  */
-interface GenericListContract extends Countable
+interface GenericList extends Countable
 {
     /**
      * @param T $value

@@ -3,9 +3,9 @@
 namespace Philly\Base\Support;
 
 use Philly\Base\Support\Contract\HasHash;
-use Philly\Base\Support\Contract\HashGeneratorContract;
+use Philly\Base\Support\Contract\HashGenerator;
 
-class SplObjectIdHashGenerator implements HashGeneratorContract
+class SplObjectIdHashGenerator implements HashGenerator
 {
     public function generateHash(object $object): string|int
     {

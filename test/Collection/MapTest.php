@@ -4,7 +4,7 @@ namespace Philly\Base\Collection;
 
 use InvalidArgumentException;
 use Mockery as M;
-use Philly\Base\Support\Contract\HashGeneratorContract;
+use Philly\Base\Support\Contract\HashGenerator;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -66,7 +66,7 @@ class MapTest extends TestCase
 
     public function testGenerator(): void
     {
-        $hashGeneratorMock = M::mock(HashGeneratorContract::class);
+        $hashGeneratorMock = M::mock(HashGenerator::class);
 
         $obj = new stdClass();
 

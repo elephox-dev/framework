@@ -3,27 +3,27 @@
 namespace Philly\Base\Collection;
 
 use InvalidArgumentException;
-use Philly\Base\Collection\Contract\GenericMapContract;
-use Philly\Base\Support\Contract\HashGeneratorContract;
+use Philly\Base\Collection\Contract\GenericMap;
+use Philly\Base\Support\Contract\HashGenerator;
 use Philly\Base\Support\SplObjectIdHashGenerator;
 
 /**
  * @template TKey as string|int|object
  * @template TValue
  *
- * @template-implements GenericMapContract<TKey, TValue>
+ * @template-implements GenericMap<TKey, TValue>
  */
-class Map implements GenericMapContract
+class Map implements GenericMap
 {
     /** @var array<array-key, TValue> */
     private array $map = [];
 
-    private HashGeneratorContract $hashGenerator;
+    private HashGenerator $hashGenerator;
 
     /**
      * @param iterable<TKey, TValue> $items
      */
-    public function __construct(iterable $items = [], ?HashGeneratorContract $hashGenerator = null)
+    public function __construct(iterable $items = [], ?HashGenerator $hashGenerator = null)
     {
         $this->hashGenerator = $hashGenerator ?? new SplObjectIdHashGenerator();
 

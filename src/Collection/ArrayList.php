@@ -4,16 +4,16 @@ namespace Philly\Base\Collection;
 
 use ArrayAccess;
 use InvalidArgumentException;
-use Philly\Base\Collection\Contract\GenericListContract;
+use Philly\Base\Collection\Contract\GenericList;
 use Philly\Base\Exception\InvalidOffsetException;
 
 /**
  * @template T
  *
- * @template-implements GenericListContract<T>
+ * @template-implements GenericList<T>
  * @template-implements  ArrayAccess<int, T>
  */
-class ArrayList implements GenericListContract, ArrayAccess
+class ArrayList implements GenericList, ArrayAccess
 {
     /** @var array<int, T> */
     private array $list = [];
