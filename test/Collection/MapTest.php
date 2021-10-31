@@ -83,4 +83,20 @@ class MapTest extends TestCase
 
         self::assertEquals("test", $map->get($obj));
     }
+
+    public function testFirst(): void
+    {
+        $map = new Map(['653', '123', '1543']);
+
+        self::assertEquals("123", $map->first(fn(string $a) => $a[0] === '1'));
+    }
+
+    public function testWhere(): void
+    {
+        $map = new Map(['653', '123', '154']);
+        $res = $map->where(fn(string $a) => str_ends_with($a, '3'));
+
+        self::assertInstanceOf(Map::class, $res);
+        self::assertEquals('653', $res->get(0));
+    }
 }

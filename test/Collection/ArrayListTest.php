@@ -95,4 +95,21 @@ class ArrayListTest extends TestCase
         self::assertEquals("test", $arr->get(0));
         self::assertEquals("test2", $arr->get(1));
     }
+
+    public function testFirst(): void
+    {
+        $arr = new ArrayList(['653', '123', '1543']);
+
+        self::assertEquals("123", $arr->first(fn (string $a) => $a[0] === '1'));
+    }
+
+    public function testWhere(): void
+    {
+        $arr = new ArrayList(['653', '123', '154']);
+        $res = $arr->where(fn(string $a) => str_ends_with($a, '3'));
+
+        self::assertInstanceOf(ArrayList::class, $res);
+        self::assertCount(2, $res);
+        self::assertEquals('653', $res[0]);
+    }
 }
