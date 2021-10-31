@@ -5,8 +5,10 @@ namespace Philly\Base\Collection\Contract;
 /**
  * @template TKey
  * @template TValue
+ *
+ * @template-implements \Philly\Base\Collection\Contract\GenericCollection<TValue>
  */
-interface GenericMap
+interface GenericMap extends GenericCollection, Filterable
 {
     /**
      * @param TKey $key

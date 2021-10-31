@@ -6,8 +6,10 @@ use Countable;
 
 /**
  * @template T
+ *
+ * @template-implements \Philly\Base\Collection\Contract\GenericCollection<T>
  */
-interface GenericList extends Countable
+interface GenericList extends GenericCollection, Countable, Filterable
 {
     /**
      * @param T $value

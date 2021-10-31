@@ -4,6 +4,7 @@ namespace Philly\Base\Collection;
 
 use ArrayAccess;
 use InvalidArgumentException;
+use Philly\Base\Collection\Contract\GenericCollection;
 use Philly\Base\Collection\Contract\GenericList;
 use Philly\Base\Exception\InvalidOffsetException;
 
@@ -96,5 +97,29 @@ class ArrayList implements GenericList, ArrayAccess
     public function add(mixed $value): void
     {
         $this->set($this->count(), $value);
+    }
+
+    public function first(callable $filter): mixed
+    {
+        foreach ($this->list as $item) {
+            if ($filter($item)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function where(callable $filter): GenericCollection
+    {
+        $result = new ArrayList();
+
+        foreach ($this->list as $item) {
+            if ($filter($item)) {
+                $result->add($item);
+            }
+        }
+
+        return $result;
     }
 }

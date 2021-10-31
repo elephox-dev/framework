@@ -3,6 +3,7 @@
 namespace Philly\Base\Collection;
 
 use InvalidArgumentException;
+use Philly\Base\Collection\Contract\GenericCollection;
 use Philly\Base\Collection\Contract\GenericMap;
 use Philly\Base\Support\Contract\HashGenerator;
 use Philly\Base\Support\SplObjectIdHashGenerator;
@@ -61,5 +62,29 @@ class Map implements GenericMap
         }
 
         throw new InvalidArgumentException("Can only use objects, integers or strings as map keys.");
+    }
+
+    public function first(callable $filter): mixed
+    {
+        foreach ($this->map as $item) {
+            if ($filter($item)) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    public function where(callable $filter): GenericCollection
+    {
+        $result = new Map();
+
+        foreach ($this->map as $key => $item) {
+            if ($filter($item)) {
+                $result->map[$key] = $item;
+            }
+        }
+
+        return $result;
     }
 }
