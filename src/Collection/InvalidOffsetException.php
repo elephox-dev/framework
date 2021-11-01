@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Base\Exception;
+namespace Philly\Collection;
 
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;

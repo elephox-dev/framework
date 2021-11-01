@@ -1,11 +1,11 @@
 <?php
 
-namespace Philly\Base\Http\Contract;
+namespace Philly\Http\Contract;
 
-use Philly\Base\Collection\Contract\ReadonlyMap;
+use Philly\Collection\Contract\ReadonlyMap;
 
 /**
- * @extends \Philly\Base\Collection\Contract\ReadonlyMap<\Philly\Base\Http\HeaderName, array<int, string>|string>
+ * @extends \Philly\Collection\Contract\ReadonlyMap<\Philly\Http\HeaderName, array<int, string>|string>
  */
 interface ReadonlyHeaderMap extends ReadonlyMap
 {

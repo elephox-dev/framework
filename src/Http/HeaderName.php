@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Base\Http;
+namespace Philly\Http;
 
 enum HeaderName : string
 {

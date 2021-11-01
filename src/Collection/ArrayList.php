@@ -1,12 +1,11 @@
 <?php
 
-namespace Philly\Base\Collection;
+namespace Philly\Collection;
 
 use ArrayAccess;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
-use Philly\Base\Collection\Contract\GenericList;
-use Philly\Base\Exception\InvalidOffsetException;
+use Philly\Collection\Contract\GenericList;
 
 /**
  * @template T

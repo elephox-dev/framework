@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Base\Support\Contract;
+namespace Philly\Collection\Contract;
 
 /**
  * Declares the implementation can be represented as an array.

@@ -1,31 +1,14 @@
 {
-    "name": "philly/base",
-    "description": "A class library providing independent building blocks.",
-    "type": "library",
+    "name": "philly/framework",
+    "description": "Yet another PHP framework.",
     "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
+    "homepage": "https://philly.ricardoboss.de",
     "authors": [
         {
             "name": "Ricaro Boss",
             "email": "contact@ricardoboss.de"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "Philly\\Base\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Philly\\Base\\": "test/"
-        }
-    },
-    "scripts": {
-        "unit-test": "XDEBUG_MODE=coverage phpunit --coverage-clover=tmp/clover.xml",
-        "mutation-test": "XDEBUG_MODE=coverage infection --threads=$(nproc) --no-progress --show-mutations --logger-github",
-        "static-analysis": "psalm --shepherd"
-    },
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
@@ -35,6 +18,25 @@
         "vimeo/psalm": "^4.11.2",
         "phpunit/phpunit": "^9.5.10",
         "infection/infection": "^0.25.3",
-        "mockery/mockery": "^1.4"
+        "mockery/mockery": "^1.4",
+        "roave/security-advisories": "dev-latest"
+    },
+    "replace": {
+        "philly/http": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Philly\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Philly\\": "test/"
+        }
+    },
+    "scripts": {
+        "unit-test": "XDEBUG_MODE=coverage phpunit --coverage-clover=tmp/clover.xml",
+        "mutation-test": "XDEBUG_MODE=coverage infection --threads=$(nproc) --no-progress --show-mutations --logger-github",
+        "static-analysis": "psalm --shepherd"
     }
 }

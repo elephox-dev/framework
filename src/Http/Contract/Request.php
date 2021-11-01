@@ -1,8 +1,8 @@
 <?php
 
-namespace Philly\Base\Http\Contract;
+namespace Philly\Http\Contract;
 
-use Philly\Base\Http\Method;
+use Philly\Http\Method;
 
 interface Request
 {

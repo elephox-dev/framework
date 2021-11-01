@@ -1,13 +1,13 @@
 <?php
 
-namespace Philly\Base\Collection\Contract;
+namespace Philly\Collection\Contract;
 
 use Countable;
 
 /**
  * @template T
  *
- * @extends \Philly\Base\Collection\Contract\GenericCollection<T>
+ * @extends \Philly\Collection\Contract\GenericCollection<T>
  */
 interface ReadonlyList extends GenericCollection, Countable
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Philly\Base\Support;
+namespace Philly\Support;
 
-use Philly\Base\Support\Contract\HasHash;
-use Philly\Base\Support\Contract\HashGenerator;
+use Philly\Support\Contract\HasHash;
+use Philly\Support\Contract\HashGenerator;
 
 class SplObjectIdHashGenerator implements HashGenerator
 {

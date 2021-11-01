@@ -1,12 +1,12 @@
 <?php
 
-namespace Philly\Base\Collection\Contract;
+namespace Philly\Collection\Contract;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @extends \Philly\Base\Collection\Contract\GenericCollection<TValue>
+ * @extends \Philly\Collection\Contract\GenericCollection<TValue>
  */
 interface ReadonlyMap extends GenericCollection
 {
@@ -26,16 +26,4 @@ interface ReadonlyMap extends GenericCollection
      * @return GenericMap<TKey, TValue>
      */
     public function where(callable $filter): GenericMap;
-
-    /**
-     * @param callable(TKey, TValue): bool $filter
-     * @return TKey|null
-     */
-    public function firstKey(callable $filter): mixed;
-
-    /**
-     * @param callable(TKey, TValue): bool $filter
-     * @return ReadonlyMap<TKey, TValue>
-     */
-    public function whereKey(callable $filter): ReadonlyMap;
 }

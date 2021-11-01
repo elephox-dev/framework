@@ -1,14 +1,13 @@
 <?php
 
-namespace Philly\Base\Collection;
+namespace Philly\Collection;
 
 use InvalidArgumentException;
-use Philly\Base\Exception\InvalidOffsetException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Base\Collection\ArrayList
- * @covers \Philly\Base\Exception\InvalidOffsetException
+ * @covers \Philly\Collection\ArrayList
+ * @covers \Philly\Collection\InvalidOffsetException
  */
 class ArrayListTest extends TestCase
 {

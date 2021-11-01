@@ -1,14 +1,14 @@
 <?php
 
-namespace Philly\Base\Support;
+namespace Philly\Support;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Philly\Base\Support\Contract\HasHash;
+use Philly\Support\Contract\HasHash;
 use stdClass;
 
 /**
- * @covers \Philly\Base\Support\SplObjectIdHashGenerator
+ * @covers \Philly\Support\SplObjectIdHashGenerator
  */
 class SplObjectIdHashGeneratorTest extends MockeryTestCase
 {

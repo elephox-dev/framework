@@ -1,26 +1,26 @@
 <?php
 
-namespace Philly\Base\Collection;
+namespace Philly\Collection;
 
 use InvalidArgumentException;
 use Mockery as M;
-use Philly\Base\Support\Contract\HashGenerator;
+use Philly\Support\Contract\HashGenerator;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
- * @covers \Philly\Base\Collection\Map
- * @covers \Philly\Base\Support\SplObjectIdHashGenerator
+ * @covers \Philly\Collection\HashMap
+ * @covers \Philly\Support\SplObjectIdHashGenerator
  */
 class MapTest extends TestCase
 {
     public function testPutAndGet(): void
     {
         /**
-         * @var Map<string, mixed> $map
+         * @var HashMap<string, mixed> $map
          * @noinspection PhpRedundantVariableDocTypeInspection
          */
-        $map = new Map();
+        $map = new HashMap();
 
         $map->put('testKey', 'testValue');
         $map->put('anotherKey', 'anotherValue');
@@ -31,7 +31,7 @@ class MapTest extends TestCase
 
     public function testInitialize(): void
     {
-        $map = new Map(['test' => 'val', 123 => '134']);
+        $map = new HashMap(['test' => 'val', 123 => '134']);
 
         self::assertEquals('val', $map->get('test'));
     }
@@ -39,10 +39,10 @@ class MapTest extends TestCase
     public function testObjectKey(): void
     {
         /**
-         * @var Map<stdClass, mixed> $map
+         * @var HashMap<stdClass, mixed> $map
          * @noinspection PhpRedundantVariableDocTypeInspection
          */
-        $map = new Map();
+        $map = new HashMap();
 
         $key = new stdClass();
         $map->put($key, "test");
@@ -55,11 +55,11 @@ class MapTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         /**
-         * @var Map<float, mixed> $map
+         * @var HashMap<float, mixed> $map
          * @noinspection PhpRedundantVariableDocTypeInspection
          * @psalm-suppress InvalidTemplateParam
          */
-        $map = new Map();
+        $map = new HashMap();
 
         $map->put(123.542, "test");
     }
@@ -77,7 +77,7 @@ class MapTest extends TestCase
             ->andReturn("testhash")
         ;
 
-        $map = new Map(hashGenerator: $hashGeneratorMock);
+        $map = new HashMap(hashGenerator: $hashGeneratorMock);
 
         $map->put($obj, "test");
 
@@ -86,14 +86,14 @@ class MapTest extends TestCase
 
     public function testFirst(): void
     {
-        $map = new Map(['653', '123', '1543']);
+        $map = new HashMap(['653', '123', '1543']);
 
         self::assertEquals("123", $map->first(fn(string $a) => $a[0] === '1'));
     }
 
     public function testWhere(): void
     {
-        $map = new Map(['653', '123', '154']);
+        $map = new HashMap(['653', '123', '154']);
         $res = $map->where(fn(string $a) => str_ends_with($a, '3'));
 
         self::assertEquals('653', $res->get(0));

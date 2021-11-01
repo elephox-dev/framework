@@ -1,11 +1,11 @@
 <?php
 
-namespace Philly\Base\Collection\Contract;
+namespace Philly\Collection\Contract;
 
 /**
  * @template T
  *
- * @extends \Philly\Base\Collection\Contract\ReadonlyList<T>
+ * @extends \Philly\Collection\Contract\ReadonlyList<T>
  */
 interface GenericList extends ReadonlyList
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Base\Support\Contract;
+namespace Philly\Support\Contract;
 
 interface HasHash
 {
