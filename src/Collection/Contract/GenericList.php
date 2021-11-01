@@ -25,4 +25,10 @@ interface GenericList extends GenericCollection, Countable, Filterable
      * @param T $value
      */
     public function add(mixed $value): void;
+
+    /**
+     * @param callable(T): bool $filter
+     * @return GenericList<T>
+     */
+    public function where(callable $filter): GenericList;
 }

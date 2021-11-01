@@ -108,7 +108,6 @@ class ArrayListTest extends TestCase
         $arr = new ArrayList(['653', '123', '154']);
         $res = $arr->where(fn(string $a) => str_ends_with($a, '3'));
 
-        self::assertInstanceOf(ArrayList::class, $res);
         self::assertCount(2, $res);
         self::assertEquals('653', $res[0]);
     }

@@ -96,7 +96,6 @@ class MapTest extends TestCase
         $map = new Map(['653', '123', '154']);
         $res = $map->where(fn(string $a) => str_ends_with($a, '3'));
 
-        self::assertInstanceOf(Map::class, $res);
         self::assertEquals('653', $res->get(0));
     }
 }

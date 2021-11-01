@@ -110,7 +110,7 @@ class ArrayList implements GenericList, ArrayAccess
         return null;
     }
 
-    public function where(callable $filter): GenericCollection
+    public function where(callable $filter): ArrayList
     {
         $result = new ArrayList();
 

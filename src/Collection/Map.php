@@ -3,7 +3,6 @@
 namespace Philly\Base\Collection;
 
 use InvalidArgumentException;
-use Philly\Base\Collection\Contract\GenericCollection;
 use Philly\Base\Collection\Contract\GenericMap;
 use Philly\Base\Support\Contract\HashGenerator;
 use Philly\Base\Support\SplObjectIdHashGenerator;
@@ -75,7 +74,7 @@ class Map implements GenericMap
         return null;
     }
 
-    public function where(callable $filter): GenericCollection
+    public function where(callable $filter): Map
     {
         $result = new Map();
 

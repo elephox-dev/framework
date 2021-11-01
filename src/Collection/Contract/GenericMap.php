@@ -21,4 +21,10 @@ interface GenericMap extends GenericCollection, Filterable
      * @return TValue
      */
     public function get(mixed $key): mixed;
+
+    /**
+     * @param callable(TValue): bool $filter
+     * @return GenericMap<TKey, TValue>
+     */
+    public function where(callable $filter): GenericMap;
 }
