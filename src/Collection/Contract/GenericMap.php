@@ -6,9 +6,9 @@ namespace Philly\Base\Collection\Contract;
  * @template TKey
  * @template TValue
  *
- * @template-implements \Philly\Base\Collection\Contract\GenericCollection<TValue>
+ * @extends \Philly\Base\Collection\Contract\ReadonlyMap<TKey, TValue>
  */
-interface GenericMap extends GenericCollection, Filterable
+interface GenericMap extends ReadonlyMap
 {
     /**
      * @param TKey $key
@@ -17,14 +17,8 @@ interface GenericMap extends GenericCollection, Filterable
     public function put(mixed $key, mixed $value): void;
 
     /**
-     * @param TKey $key
-     * @return TValue
-     */
-    public function get(mixed $key): mixed;
-
-    /**
-     * @param callable(TValue): bool $filter
+     * @param callable(TKey, TValue): bool $filter
      * @return GenericMap<TKey, TValue>
      */
-    public function where(callable $filter): GenericMap;
+    public function whereKey(callable $filter): GenericMap;
 }

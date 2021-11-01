@@ -4,7 +4,7 @@ namespace Philly\Base\Collection;
 
 use ArrayAccess;
 use InvalidArgumentException;
-use Philly\Base\Collection\Contract\GenericCollection;
+use JetBrains\PhpStorm\Pure;
 use Philly\Base\Collection\Contract\GenericList;
 use Philly\Base\Exception\InvalidOffsetException;
 
@@ -69,7 +69,7 @@ class ArrayList implements GenericList, ArrayAccess
         unset($this->list[$offset]);
     }
 
-    public function count(): int
+    #[Pure] public function count(): int
     {
         return count($this->list);
     }
@@ -121,5 +121,10 @@ class ArrayList implements GenericList, ArrayAccess
         }
 
         return $result;
+    }
+
+    #[Pure] public function isEmpty(): bool
+    {
+        return empty($this->list);
     }
 }
