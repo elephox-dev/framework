@@ -1,8 +1,5 @@
 name: Deploy to collection repository
-on:
-  push:
-    paths:
-      - src/Collection/
+on: [push]
 
 jobs:
   Split:
