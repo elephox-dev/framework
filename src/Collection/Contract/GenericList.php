@@ -9,13 +9,13 @@ namespace Philly\Collection\Contract;
  */
 interface GenericList extends ReadonlyList
 {
-    /**
-     * @param T $value
-     */
-    public function set(int $index, mixed $value): void;
+	/**
+	 * @param T $value
+	 */
+	public function set(int $index, mixed $value): void;
 
-    /**
-     * @param T $value
-     */
-    public function add(mixed $value): void;
+	/**
+	 * @param T $value
+	 */
+	public function add(mixed $value): void;
 }

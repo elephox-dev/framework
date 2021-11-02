@@ -8,15 +8,15 @@ namespace Philly\Collection\Contract;
  */
 interface Filterable
 {
-    /**
-     * @param callable(T): bool $filter
-     * @return T|null
-     */
-    public function first(callable $filter): mixed;
+	/**
+	 * @param callable(T): bool $filter
+	 * @return T|null
+	 */
+	public function first(callable $filter): mixed;
 
-    /**
-     * @param callable(T): bool $filter
-     * @return GenericCollection<T>
-     */
-    public function where(callable $filter): GenericCollection;
+	/**
+	 * @param callable(T): bool $filter
+	 * @return GenericCollection<T>
+	 */
+	public function where(callable $filter): GenericCollection;
 }

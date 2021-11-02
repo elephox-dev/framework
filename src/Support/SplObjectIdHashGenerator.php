@@ -7,12 +7,12 @@ use Philly\Support\Contract\HashGenerator;
 
 class SplObjectIdHashGenerator implements HashGenerator
 {
-    public function generateHash(object $object): string|int
-    {
-        if ($object instanceof HasHash) {
-            return $object->getHash();
-        }
+	public function generateHash(object $object): string|int
+	{
+		if ($object instanceof HasHash) {
+			return $object->getHash();
+		}
 
-        return spl_object_id($object);
-    }
+		return spl_object_id($object);
+	}
 }

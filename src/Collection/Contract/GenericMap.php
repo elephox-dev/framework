@@ -10,9 +10,9 @@ namespace Philly\Collection\Contract;
  */
 interface GenericMap extends ReadonlyMap
 {
-    /**
-     * @param TKey $key
-     * @param TValue $value
-     */
-    public function put(mixed $key, mixed $value): void;
+	/**
+	 * @param TKey $key
+	 * @param TValue $value
+	 */
+	public function put(mixed $key, mixed $value): void;
 }

@@ -10,20 +10,20 @@ namespace Philly\Collection\Contract;
  */
 interface ReadonlyMap extends GenericCollection
 {
-    /**
-     * @param TKey $key
-     * @return TValue
-     */
-    public function get(mixed $key): mixed;
+	/**
+	 * @param TKey $key
+	 * @return TValue
+	 */
+	public function get(mixed $key): mixed;
 
-    /**
-     * @param TKey $key
-     */
-    public function hasKey(mixed $key): bool;
+	/**
+	 * @param TKey $key
+	 */
+	public function hasKey(mixed $key): bool;
 
-    /**
-     * @param callable(TValue): bool $filter
-     * @return GenericMap<TKey, TValue>
-     */
-    public function where(callable $filter): GenericMap;
+	/**
+	 * @param callable(TValue): bool $filter
+	 * @return GenericMap<TKey, TValue>
+	 */
+	public function where(callable $filter): GenericMap;
 }
