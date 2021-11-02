@@ -11,5 +11,5 @@ jobs:
       - uses: antalaron/action-splitsh@master
         with:
           split: 'philly-framework/collection'
-          split_deploy_key: ${{ secrets.GITHUB_TOKEN }}
+          split_deploy_key: ${{ secrets.SSH_KEY_COLLECTION }}
           split_prefix: 'src/Collection/'
