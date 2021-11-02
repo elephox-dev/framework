@@ -24,6 +24,11 @@
     "replace": {
         "philly/http": "self.version"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
     "autoload": {
         "psr-4": {
             "Philly\\": "src/"
