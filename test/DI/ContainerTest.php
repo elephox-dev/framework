@@ -6,6 +6,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * @covers \Philly\DI\Container
+ * @covers \Philly\DI\InjectionLifetime
+ * @covers \Philly\Collection\HashMap
  */
 class ContainerTest extends MockeryTestCase
 {
