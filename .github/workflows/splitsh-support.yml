@@ -1,6 +1,8 @@
 name: Deploy to Support repository
 on:
   push:
+    branches:
+      - main
     paths:
       - 'src/Support/**'
       - '.github/workflows/splitsh-support.yml'
@@ -17,4 +19,4 @@ jobs:
           split: 'philly-framework/support'
           split_deploy_key: ${{ secrets.SPLITSH_SUPPORT_KEY }}
           split_prefix: 'src/Support/'
-          split_branch: ${{ github.ref }}
+          split_branch: main

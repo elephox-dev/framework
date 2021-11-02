@@ -1,6 +1,8 @@
 name: Deploy to collection repository
 on:
   push:
+    branches:
+      - main
     paths:
       - 'src/Collection/**'
       - '.github/workflows/splitsh-collection.yml'
@@ -17,4 +19,4 @@ jobs:
           split: 'philly-framework/collection'
           split_deploy_key: ${{ secrets.SPLITSH_COLLECTION_KEY }}
           split_prefix: 'src/Collection/'
-          split_branch: ${{ github.ref }}
+          split_branch: main

@@ -1,6 +1,8 @@
 name: Deploy to Http repository
 on:
   push:
+    branches:
+      - main
     paths:
       - 'src/Http/**'
       - '.github/workflows/splitsh-http.yml'
@@ -17,4 +19,4 @@ jobs:
           split: 'philly-framework/http'
           split_deploy_key: ${{ secrets.SPLITSH_HTTP_KEY }}
           split_prefix: 'src/Http/'
-          split_branch: ${{ github.ref }}
+          split_branch: main
