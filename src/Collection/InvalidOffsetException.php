@@ -8,8 +8,8 @@ use Throwable;
 
 class InvalidOffsetException extends InvalidArgumentException
 {
-	#[Pure] public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
+	#[Pure] public function __construct(string|int $offset)
 	{
-		parent::__construct($message, $code, $previous);
+		parent::__construct("Offset '$offset' does not exist.");
 	}
 }

@@ -47,7 +47,7 @@ class GenericWeakMap implements GenericMap
 	public function get(mixed $key): mixed
 	{
 		if (!$this->map->offsetExists($this->typeSafeKey($key))) {
-			throw new InvalidOffsetException("The given key was either already destroyed or does not exist.");
+			throw new InvalidOffsetException($key);
 		}
 
 		/** @var TValue */
