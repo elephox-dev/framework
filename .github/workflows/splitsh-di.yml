@@ -1,4 +1,4 @@
-name: Deploy to Support repository
+name: Deploy to DI repository
 on:
   push:
     branches:
