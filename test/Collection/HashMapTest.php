@@ -12,7 +12,7 @@ use stdClass;
  * @covers \Philly\Collection\HashMap
  * @covers \Philly\Support\SplObjectIdHashGenerator
  */
-class MapTest extends TestCase
+class HashMapTest extends TestCase
 {
     public function testPutAndGet(): void
     {
