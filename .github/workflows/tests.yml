@@ -4,15 +4,15 @@ on:
   push:
     branches: [ main ]
     paths:
-      - .github/
-      - src/
-      - test/
+      - .github/**
+      - src/**
+      - test/**
   pull_request:
     branches: [ main ]
     paths:
-      - .github/
-      - src/
-      - test/
+      - .github/**
+      - src/**
+      - test/**
 
 jobs:
   composer-script:
