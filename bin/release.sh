@@ -14,7 +14,7 @@ then
     exit 1
 fi
 
-RELEASE_BRANCH="1.x"
+RELEASE_BRANCH="main"
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 VERSION=$1
 

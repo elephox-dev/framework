@@ -7,7 +7,7 @@
 set -e
 set -x
 
-CURRENT_BRANCH="1.x"
+CURRENT_BRANCH="main"
 
 function split()
 {
