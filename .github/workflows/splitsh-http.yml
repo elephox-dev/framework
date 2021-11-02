@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'src/Http/**'
+      - '.github/workflows/splitsh-http.yml'
 
 jobs:
   Split:
