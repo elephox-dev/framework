@@ -16,4 +16,4 @@ jobs:
           split: 'philly-framework/support'
           split_deploy_key: ${{ secrets.SPLITSH_SUPPORT_KEY }}
           split_prefix: 'src/Support/'
-          split_branch: ${GITHUB_REF##*/}
+          split_branch: ${{ github.ref }}

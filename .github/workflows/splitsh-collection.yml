@@ -16,4 +16,4 @@ jobs:
           split: 'philly-framework/collection'
           split_deploy_key: ${{ secrets.SPLITSH_COLLECTION_KEY }}
           split_prefix: 'src/Collection/'
-          split_branch: ${GITHUB_REF##*/}
+          split_branch: ${{ github.ref }}

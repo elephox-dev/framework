@@ -16,4 +16,4 @@ jobs:
           split: 'philly-framework/http'
           split_deploy_key: ${{ secrets.SPLITSH_HTTP_KEY }}
           split_prefix: 'src/Http/'
-          split_branch: ${GITHUB_REF##*/}
+          split_branch: ${{ github.ref }}
