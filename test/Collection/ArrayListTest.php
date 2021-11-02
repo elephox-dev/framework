@@ -11,103 +11,113 @@ use PHPUnit\Framework\TestCase;
  */
 class ArrayListTest extends TestCase
 {
-    public function testOffsetExists(): void
-    {
-        $arr = new ArrayList(["test"]);
+	public function testOffsetExists(): void
+	{
+		$arr = new ArrayList(["test"]);
 
-        self::assertTrue($arr->offsetExists(0));
-        self::assertArrayHasKey(0, $arr);
-        self::assertFalse($arr->offsetExists(1));
-    }
+		self::assertTrue($arr->offsetExists(0));
+		self::assertArrayHasKey(0, $arr);
+		self::assertFalse($arr->offsetExists(1));
+	}
 
-    public function testCount(): void
-    {
-        $arr = new ArrayList(["test", "test2", "test3"]);
+	public function testCount(): void
+	{
+		$arr = new ArrayList(["test", "test2", "test3"]);
 
-        self::assertCount(3, $arr);
-    }
+		self::assertCount(3, $arr);
+	}
 
-    public function testOffsetUnset(): void
-    {
-        $arr = new ArrayList(["test", "test2", "test3"]);
+	public function testOffsetUnset(): void
+	{
+		$arr = new ArrayList(["test", "test2", "test3"]);
 
-        self::assertCount(3, $arr);
+		self::assertCount(3, $arr);
 
-        $arr->offsetUnset(1);
+		$arr->offsetUnset(1);
 
-        self::assertCount(2, $arr);
-    }
+		self::assertCount(2, $arr);
+	}
 
-    public function testOffsetSet(): void
-    {
-        $arr = new ArrayList();
+	public function testOffsetSet(): void
+	{
+		$arr = new ArrayList();
 
-        self::assertArrayNotHasKey(10, $arr);
-        self::assertArrayNotHasKey(90, $arr);
-        self::assertArrayNotHasKey(17, $arr);
+		self::assertArrayNotHasKey(10, $arr);
+		self::assertArrayNotHasKey(90, $arr);
+		self::assertArrayNotHasKey(17, $arr);
 
-        $arr->offsetSet(10, "test");
-        $arr->set(90, "test2");
-        $arr[17] = "test2";
+		$arr->offsetSet(10, "test");
+		$arr->set(90, "test2");
+		$arr[17] = "test2";
 
-        self::assertArrayHasKey(10, $arr);
-        self::assertArrayHasKey(90, $arr);
-        self::assertArrayHasKey(17, $arr);
+		self::assertArrayHasKey(10, $arr);
+		self::assertArrayHasKey(90, $arr);
+		self::assertArrayHasKey(17, $arr);
 
-        $this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 
-        $arr->offsetSet("not a number", "test");
-    }
+		$arr->offsetSet("not a number", "test");
+	}
 
-    public function testOffsetGet(): void
-    {
-        $arr = new ArrayList(["test", "test2", "test3"]);
+	public function testOffsetGet(): void
+	{
+		$arr = new ArrayList(["test", "test2", "test3"]);
 
-        self::assertEquals("test", $arr->offsetGet(0));
-        self::assertEquals("test", $arr->get(0));
-        self::assertEquals("test", $arr[0]);
+		self::assertEquals("test", $arr->offsetGet(0));
+		self::assertEquals("test", $arr->get(0));
+		self::assertEquals("test", $arr[0]);
 
-        $this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidArgumentException::class);
 
-        $arr->offsetGet("not a number");
-    }
+		$arr->offsetGet("not a number");
+	}
 
-    public function testGet(): void
-    {
-        $arr = new ArrayList(["test", "test2"]);
+	public function testGet(): void
+	{
+		$arr = new ArrayList(["test", "test2"]);
 
-        $this->expectException(InvalidOffsetException::class);
+		$this->expectException(InvalidOffsetException::class);
 
-        $arr->get(123);
-    }
+		$arr->get(123);
+	}
 
-    public function testAdd(): void
-    {
-        $arr = new ArrayList();
+	public function testAdd(): void
+	{
+		$arr = new ArrayList();
 
-        self::assertCount(0, $arr);
+		self::assertCount(0, $arr);
 
-        $arr->add("test");
-        $arr[] = "test2";
+		$arr->add("test");
+		$arr[] = "test2";
 
-        self::assertCount(2, $arr);
-        self::assertEquals("test", $arr->get(0));
-        self::assertEquals("test2", $arr->get(1));
-    }
+		self::assertCount(2, $arr);
+		self::assertEquals("test", $arr->get(0));
+		self::assertEquals("test2", $arr->get(1));
+	}
 
-    public function testFirst(): void
-    {
-        $arr = new ArrayList(['653', '123', '1543']);
+	public function testFirst(): void
+	{
+		$arr = new ArrayList(['653', '123', '1543']);
 
-        self::assertEquals("123", $arr->first(fn (string $a) => $a[0] === '1'));
-    }
+		self::assertEquals("123", $arr->first(fn(string $a) => $a[0] === '1'));
+		self::assertNull($arr->first(fn(string $a) => $a[0] === '4'));
+	}
 
-    public function testWhere(): void
-    {
-        $arr = new ArrayList(['653', '123', '154']);
-        $res = $arr->where(fn(string $a) => str_ends_with($a, '3'));
+	public function testWhere(): void
+	{
+		$arr = new ArrayList(['653', '123', '154']);
+		$res = $arr->where(fn(string $a) => str_ends_with($a, '3'));
 
-        self::assertCount(2, $res);
-        self::assertEquals('653', $res[0]);
-    }
+		self::assertCount(2, $res);
+		self::assertEquals('653', $res[0]);
+	}
+
+	public function testIsEmpty(): void
+	{
+		$filled = new ArrayList(['653', '123', '154']);
+		$empty = new ArrayList();
+
+		self::assertFalse($filled->isEmpty());
+		self::assertTrue($empty->isEmpty());
+	}
 }
