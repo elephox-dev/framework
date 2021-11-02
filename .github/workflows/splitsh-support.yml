@@ -1,0 +1,19 @@
+name: Deploy to Support repository
+on:
+  push:
+    paths:
+      - 'src/Support/**'
+
+jobs:
+  Split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: antalaron/action-splitsh@master
+        with:
+          split: 'philly-framework/support'
+          split_deploy_key: ${{ secrets.SSH_KEY_SPLITSH }}
+          split_prefix: 'src/Support/'
+          split_branch: ${GITHUB_REF##*/}

@@ -1,0 +1,19 @@
+name: Deploy to Http repository
+on:
+  push:
+    paths:
+      - 'src/Http/**'
+
+jobs:
+  Split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: antalaron/action-splitsh@master
+        with:
+          split: 'philly-framework/http'
+          split_deploy_key: ${{ secrets.SSH_KEY_SPLITSH }}
+          split_prefix: 'src/Http/'
+          split_branch: ${GITHUB_REF##*/}

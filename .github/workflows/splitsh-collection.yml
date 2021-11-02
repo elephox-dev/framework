@@ -1,5 +1,8 @@
 name: Deploy to collection repository
-on: [push]
+on:
+  push:
+    paths:
+      - 'src/Collection/**'
 
 jobs:
   Split:
@@ -11,5 +14,6 @@ jobs:
       - uses: antalaron/action-splitsh@master
         with:
           split: 'philly-framework/collection'
-          split_deploy_key: ${{ secrets.SSH_KEY_COLLECTION }}
+          split_deploy_key: ${{ secrets.SSH_KEY_SPLITSH }}
           split_prefix: 'src/Collection/'
+          split_branch: ${GITHUB_REF##*/}
