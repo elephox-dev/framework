@@ -86,7 +86,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	public function get(int $index): mixed
 	{
 		if (!$this->offsetExists($index)) {
-			throw new InvalidOffsetException("Offset $index does not exist.");
+			throw new InvalidOffsetException($index);
 		}
 
 		return $this->list[$index];

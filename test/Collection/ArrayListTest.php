@@ -77,6 +77,7 @@ class ArrayListTest extends TestCase
 		$arr = new ArrayList(["test", "test2"]);
 
 		$this->expectException(InvalidOffsetException::class);
+		$this->expectExceptionMessage("Offset '123' does not exist.");
 
 		$arr->get(123);
 	}
