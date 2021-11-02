@@ -1,0 +1,9 @@
+name: Split submodules
+on: [push]
+
+jobs:
+  Split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: bin/split.sh
