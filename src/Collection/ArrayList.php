@@ -5,6 +5,7 @@ namespace Philly\Collection;
 use ArrayAccess;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
+use Philly\Collection\Contract\ArrayConvertible;
 use Philly\Collection\Contract\GenericList;
 
 /**
@@ -12,8 +13,9 @@ use Philly\Collection\Contract\GenericList;
  *
  * @template-implements GenericList<T>
  * @template-implements  ArrayAccess<int, T>
+ * @template-implements ArrayConvertible<int, T>
  */
-class ArrayList implements GenericList, ArrayAccess
+class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 {
     /** @var array<int, T> */
     private array $list = [];
@@ -126,4 +128,9 @@ class ArrayList implements GenericList, ArrayAccess
     {
         return empty($this->list);
     }
+
+	public function asArray(): array
+	{
+		return $this->list;
+	}
 }
