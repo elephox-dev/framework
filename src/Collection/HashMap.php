@@ -91,7 +91,7 @@ class HashMap implements GenericMap
 		return $result;
 	}
 
-	public function hasKey(mixed $key, bool $safe = true): bool
+	public function hasKey(mixed $key): bool
 	{
 		$internalKey = $this->getHashForKey($key);
 
