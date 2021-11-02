@@ -11,7 +11,7 @@ CURRENT_BRANCH="main"
 
 function split()
 {
-    SHA1=$(./bin/splitsh-lite --prefix="$1")
+    SHA1=$(./bin/splitsh-lite --prefix="$1" --origin=FETCH_HEAD)
     git push "$2" "$SHA1:refs/heads/$CURRENT_BRANCH" -f
 }
 
