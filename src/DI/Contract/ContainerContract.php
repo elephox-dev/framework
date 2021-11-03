@@ -2,7 +2,7 @@
 
 namespace Philly\DI\Contract;
 
-use Philly\DI\InjectionLifetime;
+use Philly\DI\BindingLifetime;
 
 interface ContainerContract
 {
@@ -18,7 +18,7 @@ interface ContainerContract
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|callable(ContainerContract): T $implementation
 	 */
-	public function register(string $contract, string|callable|object $implementation, InjectionLifetime $lifetime = InjectionLifetime::Request): void;
+	public function register(string $contract, string|callable|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request): void;
 
 	/**
 	 * @template T

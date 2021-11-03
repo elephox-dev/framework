@@ -13,16 +13,11 @@ use Philly\DI\Contract\InjectionBindingContract;
 class Binding implements InjectionBindingContract
 {
 	/**
-	 * @var class-string<T>
-	 */
-	private string $contract;
-
-	/**
 	 * @var callable(ContainerContract): T
 	 */
 	private $builder;
 
-	private InjectionLifetime $lifetime;
+	private BindingLifetime $lifetime;
 
 	/**
 	 * @var T|null
@@ -30,23 +25,16 @@ class Binding implements InjectionBindingContract
 	private ?object $instance = null;
 
 	/**
-	 * @param class-string<T> $contract
 	 * @param callable(ContainerContract): T $builder
-	 * @param InjectionLifetime $lifetime
+	 * @param BindingLifetime $lifetime
 	 */
-	public function __construct(string $contract, callable $builder, InjectionLifetime $lifetime)
+	public function __construct(callable $builder, BindingLifetime $lifetime)
 	{
-		$this->contract = $contract;
 		$this->builder = $builder;
 		$this->lifetime = $lifetime;
 	}
 
-	public function getContract(): string
-	{
-		return $this->contract;
-	}
-
-	public function getLifetime(): InjectionLifetime
+	public function getLifetime(): BindingLifetime
 	{
 		return $this->lifetime;
 	}

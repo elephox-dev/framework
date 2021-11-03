@@ -5,9 +5,9 @@ namespace Philly\DI;
 use Philly\Collection\HashMap;
 use Philly\DI\Contract\ContainerContract;
 use ReflectionClass;
-use ReflectionNamedType;
-use ReflectionUnionType;
-use RuntimeException;
+use ReflectionMethod;
+use ReflectionParameter;
+use ReflectionException;
 
 class Container implements ContainerContract
 {
@@ -29,20 +29,20 @@ class Container implements ContainerContract
 	 *
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|callable(ContainerContract): T $implementation
-	 * @param InjectionLifetime $lifetime
+	 * @param BindingLifetime $lifetime
 	 */
-	public function register(string $contract, callable|string|object $implementation, InjectionLifetime $lifetime = InjectionLifetime::Request): void
+	public function register(string $contract, callable|string|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request): void
 	{
 		/** @var callable(Container): T $builder */
 		if (is_callable($implementation)) {
 			$builder = $implementation;
 		} else if (is_object($implementation)) {
-			$builder = static fn (): object => $implementation;
+			$builder = static fn(): object => $implementation;
 		} else {
 			$builder = static fn(ContainerContract $container): object => $container->instantiate($implementation);
 		}
 
-		$binding = new Binding($contract, $builder, $lifetime);
+		$binding = new Binding($builder, $lifetime);
 
 		$this->map->put($contract, $binding);
 	}
@@ -53,26 +53,26 @@ class Container implements ContainerContract
 	 * @param class-string<T> $class
 	 *
 	 * @return T
-	 *
-	 * @throws \Philly\DI\NotRegisteredException
 	 */
 	public function get(string $class): object
 	{
 		if (!$this->has($class)) {
-			throw new NotRegisteredException();
+			throw new BindingNotFoundException($class);
 		}
 
 		/** @var Binding<T> $binding */
 		$binding = $this->map->get($class);
-		if ($binding->getContract() !== $class) {
-			throw new RuntimeException("Invalid binding contract for requested class!");
-		}
-
 		$builder = $binding->getBuilder();
 		switch ($binding->getLifetime()) {
-			case InjectionLifetime::Transient:
-				return $builder($this);
-			case InjectionLifetime::Request:
+			case BindingLifetime::Transient:
+				$instance = $builder($this);
+
+				if (!($instance instanceof $class)) {
+					throw new InvalidBindingInstanceException($instance, $class);
+				}
+
+				return $instance;
+			case BindingLifetime::Request:
 				$instance = $binding->getInstance();
 				if ($instance === null) {
 					$instance = $builder($this);
@@ -80,10 +80,14 @@ class Container implements ContainerContract
 					$binding->setInstance($instance);
 				}
 
+				if (!($instance instanceof $class)) {
+					throw new InvalidBindingInstanceException($instance, $class);
+				}
+
 				return $instance;
 		}
 
-		throw new RuntimeException("Unexpected injection lifetime value.");
+		throw new BindingException("Unexpected injection lifetime value.");
 	}
 
 	/**
@@ -91,8 +95,7 @@ class Container implements ContainerContract
 	 *
 	 * @param class-string<T> $contract
 	 * @return T
-	 * @throws \ReflectionException
-	 * @throws \Philly\DI\NotRegisteredException
+	 * @throws ReflectionException
 	 */
 	public function instantiate(string $contract): object
 	{
@@ -102,102 +105,44 @@ class Container implements ContainerContract
 			return $reflectionClass->newInstance();
 		}
 
-		$constructorParameters = $constructor->getParameters();
-		$parameters = [];
-		foreach ($constructorParameters as $index => $constructorParameter) {
-			$parameterType = $constructorParameter->getType();
-			if ($parameterType === null) {
-				throw new RuntimeException("Missing type parameter in constructor for $contract");
-			}
-
-			$requiredTypes = [];
-			$optionalTypes = [];
-			if ($parameterType instanceof ReflectionNamedType) {
-				if ($parameterType->allowsNull()) {
-					$optionalTypes[$index] = $parameterType;
-				} else {
-					$requiredTypes[$index] = $parameterType;
-				}
-			} else if ($parameterType instanceof ReflectionUnionType) {
-				$optionalTypes[$index] = [];
-				$requiredTypes[$index] = [];
-
-				foreach ($parameterType->getTypes() as $innerIndex => $parameterTypeOption) {
-					if ($parameterTypeOption->allowsNull()) {
-						$optionalTypes[$index][$innerIndex] = $parameterTypeOption;
-					} else {
-						$requiredTypes[$index][$innerIndex] = $parameterTypeOption;
-					}
-				}
-			} else {
-				throw new RuntimeException("Unexpected parameter type.");
-			}
-
-			foreach ($requiredTypes as $requiredType) {
-				if (is_array($requiredType)) {
-					foreach ($requiredType as $type) {
-						try {
-							/** @var class-string $typeName */
-							$typeName = $type->getName();
-
-							$instance = $this->get($typeName);
-						} catch (NotRegisteredException) {
-							continue;
-						}
-
-						$parameters[$index] = $instance;
-					}
-
-					if (!isset($parameters[$index])) {
-						throw new NotRegisteredException("Unable to create instance of $contract: Cannot call constructor.");
-					}
-
-					break;
-				}
-
-				/** @var class-string $typeName */
-				$typeName = $requiredType->getName();
-
-				$parameters[$index] = $this->get($typeName);
-
-				break;
-			}
-
-			foreach ($optionalTypes as $optionalType) {
-				if (is_array($optionalType)) {
-					foreach ($optionalType as $type) {
-						try {
-							/** @var class-string $typeName */
-							$typeName = $type->getName();
-
-							$instance = $this->get($typeName);
-						} catch (NotRegisteredException) {
-							continue;
-						}
-
-						$parameters[$index] = $instance;
-					}
-
-					if (!isset($parameters[$index])) {
-						$parameters[$index] = null;
-					}
-
-					break;
-				}
-
-				/** @var class-string $typeName */
-				$typeName = $optionalType->getName();
-
-				try {
-					$parameters[$index] = $this->get($typeName);
-				} catch (NotRegisteredException) {
-					$parameters[$index] = null;
-				}
-
-				break;
-			}
-		}
+		$parameters = $this->resolveParameterValues($constructor);
 
 		return $reflectionClass->newInstanceArgs($parameters);
+	}
+
+	private function resolveParameterValues(ReflectionMethod $method): array
+	{
+		$values = [];
+		$parameters = $method->getParameters();
+
+		foreach ($parameters as $parameter) {
+			$values[] = $this->resolveParameterValue($parameter);
+		}
+
+		return $values;
+	}
+
+	private function resolveParameterValue(ReflectionParameter $parameter): ?object
+	{
+		$type = $parameter->getType();
+		if ($type === null) {
+			throw new MissingTypeHintException(
+				$parameter->getName(),
+				$parameter->getDeclaringClass()?->getName(),
+				$parameter->getDeclaringFunction()->getName()
+			);
+		}
+
+		$typeName = $type->getName();
+
+		if (!$this->has($typeName)) {
+			if (!$parameter->allowsNull()) {
+				throw new BindingNotFoundException($typeName);
+			}
+
+			return null;
+		}
+
+		return $this->get($typeName);
 	}
 }

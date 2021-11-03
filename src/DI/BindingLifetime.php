@@ -2,7 +2,7 @@
 
 namespace Philly\DI;
 
-enum InjectionLifetime
+enum BindingLifetime
 {
 	case Transient;
 	case Request;

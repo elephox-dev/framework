@@ -2,19 +2,14 @@
 
 namespace Philly\DI\Contract;
 
-use Philly\DI\InjectionLifetime;
+use Philly\DI\BindingLifetime;
 
 /**
  * @template T
  */
 interface InjectionBindingContract
 {
-	/**
-	 * @return class-string<T>
-	 */
-	public function getContract(): string;
-
-	public function getLifetime(): InjectionLifetime;
+	public function getLifetime(): BindingLifetime;
 
 	/**
 	 * @return callable(ContainerContract): T

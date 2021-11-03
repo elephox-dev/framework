@@ -2,11 +2,11 @@
 
 namespace Philly\DI;
 
-use Exception;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 use Throwable;
 
-class BindingException extends Exception
+class BindingException extends RuntimeException
 {
 	#[Pure] public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
 	{
