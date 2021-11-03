@@ -41,6 +41,19 @@ class ContainerTest extends MockeryTestCase
 		self::assertNotSame($instanceA, $instanceB);
 	}
 
+	public function testStoreFactoryRequest(): void
+	{
+		$container = new Container();
+
+		$factory = static fn(): ContainerTestInterface => new ContainerTestClass();
+		$container->register(ContainerTestInterface::class, $factory);
+
+		$instanceA = $container->get(ContainerTestInterface::class);
+		$instanceB = $container->get(ContainerTestInterface::class);
+
+		self::assertSame($instanceA, $instanceB);
+	}
+
 	public function testStoreClassName(): void
 	{
 		$container = new Container();
