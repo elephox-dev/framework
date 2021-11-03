@@ -2,7 +2,6 @@
 
 namespace Philly\Collection;
 
-use InvalidArgumentException;
 use Philly\Collection\Contract\GenericMap;
 use WeakMap;
 
@@ -27,26 +26,22 @@ class GenericWeakMap implements GenericMap
 		}
 	}
 
-	private function typeSafeKey(mixed $key): object
-	{
-		if (is_object($key)) {
-			return $key;
-		}
-
-		throw new InvalidArgumentException("Cannot use non-object as key.");
-	}
-
 	/**
+	 * @param object $key
 	 * @param TValue $value
 	 */
 	public function put(mixed $key, mixed $value): void
 	{
-		$this->map->offsetSet($this->typeSafeKey($key), $value);
+		$this->map->offsetSet($key, $value);
 	}
 
+	/**
+	 * @param object $key
+	 * @return TValue
+	 */
 	public function get(mixed $key): mixed
 	{
-		if (!$this->map->offsetExists($this->typeSafeKey($key))) {
+		if (!$this->map->offsetExists($key)) {
 			throw new InvalidOffsetException($key);
 		}
 
@@ -124,8 +119,13 @@ class GenericWeakMap implements GenericMap
 		return $result;
 	}
 
-	public function has(mixed $key, bool $safe = true): bool
+	/**
+	 * @param object $key
+	 *
+	 * @return bool
+	 */
+	public function has(mixed $key): bool
 	{
-		return $this->map->offsetExists($this->typeSafeKey($key));
+		return $this->map->offsetExists($key);
 	}
 }
