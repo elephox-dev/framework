@@ -2,7 +2,7 @@
 
 namespace Philly\Http;
 
-enum Method: string
+enum RequestMethod: string
 {
 	case GET = "GET";
 	case HEAD = "HEAD";

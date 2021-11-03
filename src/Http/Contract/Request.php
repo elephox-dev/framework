@@ -2,13 +2,13 @@
 
 namespace Philly\Http\Contract;
 
-use Philly\Http\Method;
+use Philly\Http\RequestMethod;
 
 interface Request
 {
 	public function getUri(): string;
 
-	public function getMethod(): Method;
+	public function getMethod(): RequestMethod;
 
 	public function getHeaders(): ReadonlyHeaderMap;
 }
