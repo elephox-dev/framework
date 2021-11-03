@@ -4,8 +4,8 @@ namespace Philly\Http;
 
 enum ResponseCode: int
 {
-	/* Information responses  */
-	case Continue = 100;
+	/* Information responses */
+	case Continue_ = 100;
 	case SwitchingProtocols = 101;
 	case Processing = 102;
 	case EarlyHints = 103;
