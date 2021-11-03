@@ -126,11 +126,7 @@ class Container implements ContainerContract
 	{
 		$type = $parameter->getType();
 		if ($type === null) {
-			throw new MissingTypeHintException(
-				$parameter->getName(),
-				$parameter->getDeclaringClass()?->getName(),
-				$parameter->getDeclaringFunction()->getName()
-			);
+			throw new MissingTypeHintException($parameter);
 		}
 
 		$typeName = $type->getName();
