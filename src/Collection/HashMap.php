@@ -23,9 +23,9 @@ class HashMap implements GenericMap
 	/**
 	 * @param iterable<TKey, TValue> $items
 	 */
-	public function __construct(iterable $items = [], ?HashGenerator $hashGenerator = null)
+	public function __construct(iterable $items = [])
 	{
-		$this->hashGenerator = $hashGenerator ?? new SplObjectIdHashGenerator();
+		$this->hashGenerator = new SplObjectIdHashGenerator();
 
 		foreach ($items as $key => $value) {
 			$this->put($key, $value);

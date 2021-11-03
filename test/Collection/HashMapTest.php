@@ -64,26 +64,6 @@ class HashMapTest extends TestCase
         $map->put(123.542, "test");
     }
 
-    public function testGenerator(): void
-    {
-        $hashGeneratorMock = M::mock(HashGenerator::class);
-
-        $obj = new stdClass();
-
-        $hashGeneratorMock
-            ->expects('generateHash')
-            ->with($obj)
-            ->twice()
-            ->andReturn("testhash")
-        ;
-
-        $map = new HashMap(hashGenerator: $hashGeneratorMock);
-
-        $map->put($obj, "test");
-
-        self::assertEquals("test", $map->get($obj));
-    }
-
     public function testFirst(): void
     {
         $map = new HashMap(['653', '123', '1543']);
