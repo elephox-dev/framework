@@ -68,6 +68,10 @@ class GenericWeakMap implements GenericMap
 		return null;
 	}
 
+	/**
+	 * @param callable(TValue, object): bool $filter
+	 * @return GenericWeakMap<TValue>
+	 */
 	public function where(callable $filter): GenericWeakMap
 	{
 		$result = new GenericWeakMap();
@@ -77,7 +81,7 @@ class GenericWeakMap implements GenericMap
 		 * @var TValue $value
 		 */
 		foreach ($this->map as $key => $value) {
-			if ($filter($value)) {
+			if ($filter($value, $key)) {
 				$result->put($key, $value);
 			}
 		}
