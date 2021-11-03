@@ -121,4 +121,11 @@ class ArrayListTest extends TestCase
 		self::assertFalse($filled->isEmpty());
 		self::assertTrue($empty->isEmpty());
 	}
+
+	public function testAsArray(): void
+	{
+		$arr = new ArrayList(['123', '456']);
+
+		self::assertEquals(['123', '456'], $arr->asArray());
+	}
 }
