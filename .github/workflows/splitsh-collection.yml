@@ -1,4 +1,4 @@
-name: Deploy to collection repository
+name: Deploy to Collection repository
 on:
   push:
     branches:
