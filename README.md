@@ -7,7 +7,7 @@ This is a class library providing independent building blocks.
 
 ## Goals:
 
-- [ ] Dependency Injection
-  - [ ] Container
-  - [ ] Dynamic lifespan (request/transient)
+- [x] Dependency Injection
+  - [x] Container
+  - [x] Dynamic lifespan (request/transient)
 - [ ] Routing (controller attributes)
