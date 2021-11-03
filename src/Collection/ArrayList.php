@@ -12,7 +12,7 @@ use Philly\Collection\Contract\GenericList;
  * @template T
  *
  * @template-implements GenericList<T>
- * @template-implements  ArrayAccess<int, T>
+ * @template-implements ArrayAccess<int, T>
  * @template-implements ArrayConvertible<int, T>
  */
 class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
@@ -129,6 +129,9 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		return empty($this->list);
 	}
 
+	/**
+	 * @return array<int, T>
+	 */
 	public function asArray(): array
 	{
 		return $this->list;

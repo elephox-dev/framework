@@ -2,6 +2,7 @@
 
 namespace Philly\DI;
 
+use Philly\Collection\ArrayList;
 use Philly\Collection\HashMap;
 use Philly\DI\Contract\ContainerContract;
 use ReflectionClass;
@@ -107,12 +108,13 @@ class Container implements ContainerContract
 
 		$parameters = $this->resolveParameterValues($constructor);
 
-		return $reflectionClass->newInstanceArgs($parameters);
+		return $reflectionClass->newInstanceArgs($parameters->asArray());
 	}
 
-	private function resolveParameterValues(ReflectionMethod $method): array
+	private function resolveParameterValues(ReflectionMethod $method): ArrayList
 	{
-		$values = [];
+		/** @var ArrayList<object|null> $values */
+		$values = new ArrayList();
 		$parameters = $method->getParameters();
 
 		foreach ($parameters as $parameter) {
@@ -129,6 +131,10 @@ class Container implements ContainerContract
 			throw new MissingTypeHintException($parameter);
 		}
 
+		/**
+		 * @var class-string $typeName
+		 * @psalm-suppress UndefinedMethod
+		 */
 		$typeName = $type->getName();
 
 		if (!$this->has($typeName)) {
