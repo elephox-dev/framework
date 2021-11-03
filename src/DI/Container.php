@@ -21,7 +21,7 @@ class Container implements ContainerContract
 
 	public function has(string $class): bool
 	{
-		return $this->map->hasKey($class);
+		return $this->map->has($class);
 	}
 
 	/**

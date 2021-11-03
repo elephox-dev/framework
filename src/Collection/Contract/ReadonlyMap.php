@@ -19,7 +19,7 @@ interface ReadonlyMap extends GenericCollection
 	/**
 	 * @param TKey $key
 	 */
-	public function hasKey(mixed $key): bool;
+	public function has(mixed $key): bool;
 
 	/**
 	 * @param callable(TValue): bool $filter

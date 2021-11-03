@@ -120,7 +120,7 @@ class GenericWeakMap implements GenericMap
 		return $result;
 	}
 
-	public function hasKey(mixed $key, bool $safe = true): bool
+	public function has(mixed $key, bool $safe = true): bool
 	{
 		return $this->map->offsetExists($this->typeSafeKey($key));
 	}
