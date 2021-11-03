@@ -41,7 +41,7 @@
     },
     "scripts": {
         "unit-test": "XDEBUG_MODE=coverage phpunit --coverage-clover=tmp/clover.xml",
-        "mutation-test": "XDEBUG_MODE=coverage infection --threads=$(nproc) --no-progress --show-mutations --logger-github",
+        "mutation-test": "XDEBUG_MODE=coverage infection --threads=$(nproc) --show-mutations --logger-github",
         "static-analysis": "psalm --shepherd"
     }
 }
