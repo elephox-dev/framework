@@ -10,6 +10,7 @@ use stdClass;
  * @covers \Philly\DI\Container
  * @covers \Philly\DI\BindingLifetime
  * @covers \Philly\Collection\HashMap
+ * @covers \Philly\Collection\ArrayList
  * @covers \Philly\DI\Binding
  * @covers \Philly\DI\InvalidBindingInstanceException
  * @covers \Philly\DI\BindingNotFoundException
