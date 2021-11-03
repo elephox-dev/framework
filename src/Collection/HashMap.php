@@ -34,17 +34,17 @@ class HashMap implements GenericMap
 
 	public function put(mixed $key, mixed $value): void
 	{
-		$mapKey = $this->getHashForKey($key);
+		$mapKey = $this->getInternalKey($key);
 
 		$this->values[$mapKey] = $value;
 	}
 
 	public function get(mixed $key): mixed
 	{
-		$internalKey = $this->getHashForKey($key);
+		$internalKey = $this->getInternalKey($key);
 
 		if (!array_key_exists($internalKey, $this->values)) {
-			throw new InvalidOffsetException("The given key was either already destroyed or does not exist.");
+			throw new InvalidOffsetException($key);
 		}
 
 		return $this->values[$internalKey];
@@ -54,7 +54,7 @@ class HashMap implements GenericMap
 	 * @param TKey $key
 	 * @return array-key
 	 */
-	private function getHashForKey(mixed $key): int|string
+	private function getInternalKey(mixed $key): int|string
 	{
 		if (is_int($key) || is_string($key)) {
 			return $key;
@@ -93,7 +93,7 @@ class HashMap implements GenericMap
 
 	public function hasKey(mixed $key): bool
 	{
-		$internalKey = $this->getHashForKey($key);
+		$internalKey = $this->getInternalKey($key);
 
 		return array_key_exists($internalKey, $this->values);
 	}
