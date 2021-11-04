@@ -4,8 +4,9 @@ namespace Philly\Http\Contract;
 
 use DateTime;
 use Philly\Http\CookieSameSite;
+use Philly\Support\Contract\StringConvertible;
 
-interface Cookie
+interface Cookie extends StringConvertible
 {
 	public function setName(string $name): void;
 
@@ -15,9 +16,9 @@ interface Cookie
 
 	public function getValue(): ?string;
 
-	public function setExpires(DateTime $expires): void;
+	public function setExpires(?DateTime $expires): void;
 
-	public function getExpires(): DateTime;
+	public function getExpires(): ?DateTime;
 
 	public function setPath(?string $path): void;
 
@@ -35,11 +36,11 @@ interface Cookie
 
 	public function isHttpOnly(): bool;
 
-	public function setSameSite(CookieSameSite $sameSite): void;
+	public function setSameSite(?CookieSameSite $sameSite): void;
 
-	public function getSameSite(): CookieSameSite;
+	public function getSameSite(): ?CookieSameSite;
 
-	public function setMaxAge(int $maxAge): void;
+	public function setMaxAge(?int $maxAge): void;
 
-	public function getMaxAge(): int;
+	public function getMaxAge(): ?int;
 }

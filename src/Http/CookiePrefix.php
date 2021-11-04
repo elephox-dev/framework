@@ -9,7 +9,7 @@ enum CookiePrefix: string
 	case Host = "__Host-";
 	case Secure = "__Secure-";
 
-	public function complies(Cookie $cookie): bool
+	public function isCompliant(Cookie $cookie): bool
 	{
 		/**
 		 * Suppress until vimeo/psalm#6468 is fixed
