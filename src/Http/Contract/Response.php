@@ -2,7 +2,6 @@
 
 namespace Philly\Http\Contract;
 
-use Philly\Http\HeaderMap;
 use Philly\Http\ResponseCode;
 
 interface Response
