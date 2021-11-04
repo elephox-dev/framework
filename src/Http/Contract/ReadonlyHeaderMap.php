@@ -5,7 +5,7 @@ namespace Philly\Http\Contract;
 use Philly\Collection\Contract\ReadonlyMap;
 
 /**
- * @extends \Philly\Collection\Contract\ReadonlyMap<\Philly\Http\HeaderName, array<int, string>|string>
+ * @extends \Philly\Collection\Contract\ReadonlyMap<\Philly\Http\HeaderName, array<int, string>>
  */
 interface ReadonlyHeaderMap extends ReadonlyMap
 {
