@@ -2,6 +2,9 @@
 
 namespace Philly\Http;
 
+use InvalidArgumentException;
+use Philly\Collection\ArrayList;
+
 enum HeaderName: string
 {
 	/* Authentication */
@@ -104,4 +107,18 @@ enum HeaderName: string
 	case Date = "date";
 	case RetryAfter = "retry-after";
 	case Upgrade = "upgrade";
+
+	public static function fromString(string $name): HeaderName
+	{
+		$lower = strtolower($name);
+
+		/** @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed */
+		$name = ArrayList::fromArray(self::cases())->first(fn (HeaderName $case) => $case->value === $lower);
+
+		if ($name === null) {
+			throw new InvalidArgumentException("Invalid header name: $name");
+		}
+
+		return $name;
+	}
 }
