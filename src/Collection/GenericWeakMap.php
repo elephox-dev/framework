@@ -15,14 +15,19 @@ class GenericWeakMap implements Contract\GenericMap
 	protected WeakMap $map;
 
 	/**
-	 * @param iterable<object, TValue> $items
+	 * @param array<array-key, TKey> $keys
+	 * @param array<array-key, TValue> $values
 	 */
-	public function __construct(iterable $items = [])
+	public function __construct(array $keys = [], array $values = [])
 	{
 		$this->map = new WeakMap();
 
-		foreach ($items as $key => $value) {
-			$this->put($key, $value);
+		foreach ($keys as $index => $key) {
+			if (!array_key_exists($index, $values)) {
+				throw new OffsetNotFoundException($index);
+			}
+
+			$this->put($key, $values[$index]);
 		}
 	}
 
@@ -49,14 +54,14 @@ class GenericWeakMap implements Contract\GenericMap
 		return $this->map->offsetGet($key);
 	}
 
-	public function first(callable $filter): mixed
+	public function first(?callable $filter = null): mixed
 	{
 		/**
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
 		foreach ($this->map as $key => $value) {
-			if ($filter($value, $key)) {
+			if ($filter === null || $filter($value, $key)) {
 				return $value;
 			}
 		}
@@ -119,7 +124,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $map;
 	}
 
-	public function any(callable $filter): bool
+	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}

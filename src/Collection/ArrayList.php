@@ -4,8 +4,8 @@ namespace Philly\Collection;
 
 use ArrayAccess;
 use JetBrains\PhpStorm\Pure;
-use Philly\Support\Contract\ArrayConvertible;
 use Philly\Collection\Contract\GenericList;
+use Philly\Support\Contract\ArrayConvertible;
 
 /**
  * @template T
@@ -42,7 +42,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	/**
 	 * @return T
 	 */
-	#[Pure] public function offsetGet(mixed $offset): mixed
+	public function offsetGet(mixed $offset): mixed
 	{
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
@@ -87,7 +87,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	/**
 	 * @return T
 	 */
-	#[Pure] public function get(int $index): mixed
+	public function get(int $index): mixed
 	{
 		if (!$this->offsetExists($index)) {
 			throw new OffsetNotFoundException($index);
@@ -104,10 +104,10 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		$this->set($this->count(), $value);
 	}
 
-	#[Pure] public function first(callable $filter): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		foreach ($this->list as $item) {
-			if ($filter($item)) {
+			if ($filter === null || $filter($item)) {
 				return $item;
 			}
 		}
@@ -115,12 +115,13 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		return null;
 	}
 
-	public function where(callable $filter): ArrayList
+	#[Pure] public function where(callable $filter): ArrayList
 	{
 		$result = new ArrayList();
 
 		foreach ($this->list as $item) {
 			if ($filter($item)) {
+				/** @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayList. */
 				$result->add($item);
 			}
 		}
@@ -147,26 +148,23 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	 * @param callable(T): TOut $callback
 	 * @return \Philly\Collection\ArrayList<TOut>
 	 */
-	public function map(callable $callback): ArrayList
+	#[Pure] public function map(callable $callback): ArrayList
 	{
 		$arr = new ArrayList();
 
 		foreach ($this->list as $value) {
-			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			/**
+			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
+			 * @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayList.
+			 */
 			$arr->add($callback($value));
 		}
 
 		return $arr;
 	}
 
-	public function any(callable $filter): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
-		foreach ($this->list as $value) {
-			if ($filter($value)) {
-				return true;
-			}
-		}
-
-		return false;
+		return !$this->isEmpty() && $this->first($filter) !== null;
 	}
 }

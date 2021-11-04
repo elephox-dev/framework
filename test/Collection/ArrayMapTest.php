@@ -48,7 +48,8 @@ class ArrayMapTest extends TestCase
 	{
 		$map = new ArrayMap(['653', '123', '1543']);
 
-		self::assertEquals("123", $map->first(fn(string $a) => $a[0] === '1'));
+		self::assertEquals('653', $map->first());
+		self::assertEquals('123', $map->first(fn(string $a) => $a[0] === '1'));
 	}
 
 	public function testWhere(): void
@@ -63,7 +64,7 @@ class ArrayMapTest extends TestCase
 	{
 		$map = new ArrayMap();
 
-		self::assertNull($map->first(fn() => true));
+		self::assertNull($map->first());
 	}
 
 	public function testGetNotSet(): void
@@ -89,6 +90,7 @@ class ArrayMapTest extends TestCase
 	{
 		$map = new ArrayMap([123, 345, 567]);
 
+		self::assertTrue($map->any());
 		self::assertTrue($map->any(fn(int $a) => $a > 500));
 		self::assertFalse($map->any(fn(int $a) => $a < 100));
 	}

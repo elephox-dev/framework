@@ -36,14 +36,14 @@ interface ReadonlyMap extends GenericCollection
 	public function map(callable $callback): GenericMap;
 
 	/**
-	 * @param callable(TValue, TKey): bool $filter
+	 * @param null|callable(TValue, TKey): bool $filter
 	 * @return TValue|null
 	 */
-	public function first(callable $filter): mixed;
+	public function first(?callable $filter = null): mixed;
 
 	/**
-	 * @param callable(TValue, TKey): bool $filter
+	 * @param null|callable(TValue, TKey): bool $filter
 	 * @return bool
 	 */
-	public function any(callable $filter): bool;
+	public function any(?callable $filter = null): bool;
 }

@@ -9,20 +9,20 @@ namespace Philly\Collection\Contract;
 interface Filterable
 {
 	/**
-	 * @param callable(T): bool $filter
+	 * @param null|callable(T): bool $filter
 	 * @return T|null
 	 */
-	public function first(callable $filter): mixed;
+	public function first(?callable $filter = null): mixed;
+
+	/**
+	 * @param null|callable(T): bool $filter
+	 * @return bool
+	 */
+	public function any(?callable $filter = null): bool;
 
 	/**
 	 * @param callable(T): bool $filter
 	 * @return GenericCollection<T>
 	 */
 	public function where(callable $filter): GenericCollection;
-
-	/**
-	 * @param callable(T): bool $filter
-	 * @return bool
-	 */
-	public function any(callable $filter): bool;
 }

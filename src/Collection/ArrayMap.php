@@ -2,6 +2,8 @@
 
 namespace Philly\Collection;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @template TKey as array-key
  * @template TValue
@@ -42,10 +44,10 @@ class ArrayMap implements Contract\GenericMap
 		return $this->values[$key];
 	}
 
-	public function first(callable $filter): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		foreach ($this->values as $key => $value) {
-			if ($filter($value, $key)) {
+			if ($filter === null || $filter($value, $key)) {
 				return $value;
 			}
 		}
@@ -53,12 +55,13 @@ class ArrayMap implements Contract\GenericMap
 		return null;
 	}
 
-	public function where(callable $filter): ArrayMap
+	#[Pure] public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
 		foreach ($this->values as $key => $item) {
 			if ($filter($item)) {
+				/** @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayMap. */
 				$result->put($key, $item);
 			}
 		}
@@ -66,7 +69,7 @@ class ArrayMap implements Contract\GenericMap
 		return $result;
 	}
 
-	public function has(mixed $key): bool
+	#[Pure] public function has(mixed $key): bool
 	{
 		return array_key_exists($key, $this->values);
 	}
@@ -77,19 +80,22 @@ class ArrayMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayMap<TKey, TOut>
 	 */
-	public function map(callable $callback): ArrayMap
+	#[Pure] public function map(callable $callback): ArrayMap
 	{
 		$map = new ArrayMap();
 
 		foreach ($this->values as $key => $value) {
-			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			/**
+			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
+			 * @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayMap.
+			 */
 			$map->put($key, $callback($value, $key));
 		}
 
 		return $map;
 	}
 
-	public function any(callable $filter): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
