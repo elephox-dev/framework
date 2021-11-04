@@ -2,17 +2,17 @@
 
 namespace Philly\Collection;
 
-use Philly\Collection\Contract\GenericMap;
 use WeakMap;
 
 /**
+ * @template TKey as object
  * @template TValue
  *
- * @template-implements GenericMap<object, TValue>
+ * @template-implements Contract\GenericMap<TKey, TValue>
  */
-class GenericWeakMap implements GenericMap
+class GenericWeakMap implements Contract\GenericMap
 {
-	private WeakMap $map;
+	protected WeakMap $map;
 
 	/**
 	 * @param iterable<object, TValue> $items
@@ -42,7 +42,7 @@ class GenericWeakMap implements GenericMap
 	public function get(mixed $key): mixed
 	{
 		if (!$this->map->offsetExists($key)) {
-			throw new InvalidOffsetException($key);
+			throw new OffsetNotFoundException($key);
 		}
 
 		/** @var TValue */
@@ -52,10 +52,11 @@ class GenericWeakMap implements GenericMap
 	public function first(callable $filter): mixed
 	{
 		/**
+		 * @var TKey $key
 		 * @var TValue $value
 		 */
-		foreach ($this->map as $value) {
-			if ($filter($value)) {
+		foreach ($this->map as $key => $value) {
+			if ($filter($value, $key)) {
 				return $value;
 			}
 		}
@@ -64,54 +65,20 @@ class GenericWeakMap implements GenericMap
 	}
 
 	/**
-	 * @param callable(TValue, object): bool $filter
-	 * @return GenericWeakMap<TValue>
+	 * @param callable(TValue, TKey): bool $filter
+	 * @return GenericWeakMap<TKey, TValue>
 	 */
 	public function where(callable $filter): GenericWeakMap
 	{
+		/** @var GenericWeakMap<TKey, TValue> $result */
 		$result = new GenericWeakMap();
 
 		/**
-		 * @var object $key
+		 * @var TKey $key
 		 * @var TValue $value
 		 */
 		foreach ($this->map as $key => $value) {
 			if ($filter($value, $key)) {
-				$result->put($key, $value);
-			}
-		}
-
-		return $result;
-	}
-
-	/**
-	 * @return object|null
-	 */
-	public function firstKey(callable $filter): mixed
-	{
-		/**
-		 * @var object $key
-		 * @var TValue $value
-		 */
-		foreach ($this->map as $key => $value) {
-			if ($filter($key, $value)) {
-				return $key;
-			}
-		}
-
-		return null;
-	}
-
-	public function whereKey(callable $filter): GenericWeakMap
-	{
-		$result = new GenericWeakMap();
-
-		/**
-		 * @var object $key
-		 * @var TValue $value
-		 */
-		foreach ($this->map as $key => $value) {
-			if ($filter($key, $value)) {
 				$result->put($key, $value);
 			}
 		}
@@ -127,5 +94,33 @@ class GenericWeakMap implements GenericMap
 	public function has(mixed $key): bool
 	{
 		return $this->map->offsetExists($key);
+	}
+
+	/**
+	 * @template TOut
+	 *
+	 * @param callable(TValue, TKey): TOut $callback
+	 * @return GenericWeakMap<TKey, TOut>
+	 */
+	public function map(callable $callback): GenericWeakMap
+	{
+		/** @var GenericWeakMap<TKey, TOut> $map */
+		$map = new GenericWeakMap();
+
+		/**
+		 * @var object $key
+		 * @var TValue $value
+		 */
+		foreach ($this->map as $key => $value) {
+			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			$map->put($key, $callback($value, $key));
+		}
+
+		return $map;
+	}
+
+	public function any(callable $filter): bool
+	{
+		return $this->first($filter) !== null;
 	}
 }

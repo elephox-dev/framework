@@ -6,12 +6,12 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
 
-class InvalidOffsetException extends InvalidArgumentException
+abstract class InvalidOffsetException extends InvalidArgumentException
 {
-	#[Pure] public function __construct(mixed $offset)
+	#[Pure] public function __construct(mixed $offset, string $format, int $code = 0, ?Throwable $previous = null)
 	{
 		$message_offset = is_object($offset) ? get_class($offset) : (string)$offset;
 
-		parent::__construct("Offset '$message_offset' does not exist.");
+		parent::__construct(sprintf($format, $message_offset), $code, $previous);
 	}
 }

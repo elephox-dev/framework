@@ -22,5 +22,13 @@ interface ReadonlyList extends GenericCollection, Countable
 	 */
 	public function where(callable $filter): GenericList;
 
+	/**
+	 * @template TOut
+	 *
+	 * @param callable(T): TOut $callback
+	 * @return GenericList<TOut>
+	 */
+	public function map(callable $callback): GenericList;
+
 	public function isEmpty(): bool;
 }

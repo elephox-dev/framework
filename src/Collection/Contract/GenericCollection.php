@@ -7,7 +7,8 @@ namespace Philly\Collection\Contract;
  * @template T
  *
  * @extends \Philly\Collection\Contract\Filterable<T>
+ * @extends \Philly\Collection\Contract\Mappable<T>
  */
-interface GenericCollection extends Filterable
+interface GenericCollection extends Filterable, Mappable
 {
 }

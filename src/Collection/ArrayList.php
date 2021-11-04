@@ -3,9 +3,8 @@
 namespace Philly\Collection;
 
 use ArrayAccess;
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
-use Philly\Collection\Contract\ArrayConvertible;
+use Philly\Support\Contract\ArrayConvertible;
 use Philly\Collection\Contract\GenericList;
 
 /**
@@ -35,7 +34,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		}
 	}
 
-	public function offsetExists($offset): bool
+	#[Pure] public function offsetExists($offset): bool
 	{
 		return array_key_exists($offset, $this->list);
 	}
@@ -43,10 +42,10 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	/**
 	 * @return T
 	 */
-	public function offsetGet(mixed $offset): mixed
+	#[Pure] public function offsetGet(mixed $offset): mixed
 	{
 		if (!is_int($offset)) {
-			throw new InvalidArgumentException("Cannot use offset types other than int.");
+			throw new OffsetNotAllowedException($offset);
 		}
 
 		return $this->get($offset);
@@ -64,7 +63,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		}
 
 		if (!is_int($offset)) {
-			throw new InvalidArgumentException("Cannot use offset types other than int.");
+			throw new OffsetNotAllowedException($offset);
 		}
 
 		$this->set($offset, $value);
@@ -88,10 +87,10 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	/**
 	 * @return T
 	 */
-	public function get(int $index): mixed
+	#[Pure] public function get(int $index): mixed
 	{
 		if (!$this->offsetExists($index)) {
-			throw new InvalidOffsetException($index);
+			throw new OffsetNotFoundException($index);
 		}
 
 		return $this->list[$index];
@@ -105,7 +104,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 		$this->set($this->count(), $value);
 	}
 
-	public function first(callable $filter): mixed
+	#[Pure] public function first(callable $filter): mixed
 	{
 		foreach ($this->list as $item) {
 			if ($filter($item)) {
@@ -137,8 +136,37 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	/**
 	 * @return array<int, T>
 	 */
-	public function asArray(): array
+	#[Pure] public function asArray(): array
 	{
 		return $this->list;
+	}
+
+	/**
+	 * @template TOut
+	 *
+	 * @param callable(T): TOut $callback
+	 * @return \Philly\Collection\ArrayList<TOut>
+	 */
+	public function map(callable $callback): ArrayList
+	{
+		$arr = new ArrayList();
+
+		foreach ($this->list as $value) {
+			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			$arr->add($callback($value));
+		}
+
+		return $arr;
+	}
+
+	public function any(callable $filter): bool
+	{
+		foreach ($this->list as $value) {
+			if ($filter($value)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

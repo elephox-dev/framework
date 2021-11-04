@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Collection\Contract;
+namespace Philly\Support\Contract;
 
 /**
  * Declares the implementation can be represented as a JSON string.

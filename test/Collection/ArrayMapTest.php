@@ -2,24 +2,24 @@
 
 namespace Philly\Collection;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
- * @covers \Philly\Collection\HashMap
+ * @covers \Philly\Collection\ArrayMap
  * @covers \Philly\Support\SplObjectIdHashGenerator
+ * @covers \Philly\Collection\OffsetNotFoundException
+ * @covers \Philly\Collection\OffsetNotAllowedException
  * @covers \Philly\Collection\InvalidOffsetException
  */
-class HashMapTest extends TestCase
+class ArrayMapTest extends TestCase
 {
 	public function testPutAndGet(): void
 	{
 		/**
-		 * @var HashMap<string, mixed> $map
+		 * @var ArrayMap<string, mixed> $map
 		 * @noinspection PhpRedundantVariableDocTypeInspection
 		 */
-		$map = new HashMap();
+		$map = new ArrayMap();
 
 		$map->put('testKey', 'testValue');
 		$map->put('anotherKey', 'anotherValue');
@@ -30,49 +30,30 @@ class HashMapTest extends TestCase
 
 	public function testInitialize(): void
 	{
-		$map = new HashMap(['test' => 'val', 123 => '134']);
+		$map = new ArrayMap(['test' => 'val', 123 => '134']);
 
 		self::assertEquals('val', $map->get('test'));
 	}
 
-	public function testObjectKey(): void
-	{
-		/**
-		 * @var HashMap<stdClass, mixed> $map
-		 * @noinspection PhpRedundantVariableDocTypeInspection
-		 */
-		$map = new HashMap();
-
-		$key = new stdClass();
-		$map->put($key, "test");
-
-		self::assertEquals("test", $map->get($key));
-	}
-
 	public function testInvalidKey(): void
 	{
-		/**
-		 * @var HashMap<float, mixed> $map
-		 * @noinspection PhpRedundantVariableDocTypeInspection
-		 * @psalm-suppress InvalidTemplateParam
-		 */
-		$map = new HashMap();
+		$map = new ArrayMap();
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(OffsetNotAllowedException::class);
 
 		$map->put(123.542, "test");
 	}
 
 	public function testFirst(): void
 	{
-		$map = new HashMap(['653', '123', '1543']);
+		$map = new ArrayMap(['653', '123', '1543']);
 
 		self::assertEquals("123", $map->first(fn(string $a) => $a[0] === '1'));
 	}
 
 	public function testWhere(): void
 	{
-		$map = new HashMap(['653', '123', '154']);
+		$map = new ArrayMap(['653', '123', '154']);
 		$res = $map->where(fn(string $a) => str_ends_with($a, '3'));
 
 		self::assertEquals('653', $res->get(0));
@@ -80,17 +61,35 @@ class HashMapTest extends TestCase
 
 	public function testFirstNull(): void
 	{
-		$map = new HashMap();
+		$map = new ArrayMap();
 
 		self::assertNull($map->first(fn() => true));
 	}
 
 	public function testGetNotSet(): void
 	{
-		$map = new HashMap();
+		$map = new ArrayMap();
 
-		$this->expectException(InvalidOffsetException::class);
+		$this->expectException(OffsetNotFoundException::class);
 
 		$map->get('test');
+	}
+
+	public function testMap(): void
+	{
+		$map = new ArrayMap([123]);
+
+		$stringMap = $map->map(fn(int $a) => (string)$a);
+
+		self::assertNotSame($map, $stringMap);
+		self::assertEquals('123', $stringMap->get(0));
+	}
+
+	public function testAny(): void
+	{
+		$map = new ArrayMap([123, 345, 567]);
+
+		self::assertTrue($map->any(fn(int $a) => $a > 500));
+		self::assertFalse($map->any(fn(int $a) => $a < 100));
 	}
 }

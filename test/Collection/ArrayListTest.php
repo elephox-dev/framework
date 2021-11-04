@@ -2,11 +2,12 @@
 
 namespace Philly\Collection;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Philly\Collection\ArrayList
+ * @covers \Philly\Collection\OffsetNotAllowedException
+ * @covers \Philly\Collection\OffsetNotFoundException
  * @covers \Philly\Collection\InvalidOffsetException
  */
 class ArrayListTest extends TestCase
@@ -54,7 +55,7 @@ class ArrayListTest extends TestCase
 		self::assertArrayHasKey(90, $arr);
 		self::assertArrayHasKey(17, $arr);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(OffsetNotAllowedException::class);
 
 		$arr->offsetSet("not a number", "test");
 	}
@@ -67,7 +68,8 @@ class ArrayListTest extends TestCase
 		self::assertEquals("test", $arr->get(0));
 		self::assertEquals("test", $arr[0]);
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(OffsetNotAllowedException::class);
+		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
 
 		$arr->offsetGet("not a number");
 	}
@@ -76,7 +78,7 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList(["test", "test2"]);
 
-		$this->expectException(InvalidOffsetException::class);
+		$this->expectException(OffsetNotFoundException::class);
 		$this->expectExceptionMessage("Offset '123' does not exist.");
 
 		$arr->get(123);
@@ -127,5 +129,30 @@ class ArrayListTest extends TestCase
 		$arr = new ArrayList(['123', '456']);
 
 		self::assertEquals(['123', '456'], $arr->asArray());
+	}
+
+	public function testMap(): void
+	{
+		$arr = new ArrayList([123]);
+
+		$stringArr = $arr->map(fn(int $a) => (string)$a);
+
+		self::assertEquals('123', $stringArr->get(0));
+	}
+
+	public function testAny(): void
+	{
+		$arr = new ArrayList([123, 456]);
+
+		self::assertTrue($arr->any(fn(int $a) => $a > 400));
+		self::assertFalse($arr->any(fn(int $a) => $a < 100));
+	}
+
+	public function testFromArray(): void
+	{
+		$arr = ArrayList::fromArray(['123', '456']);
+
+		self::assertEquals('123', $arr->get(0));
+		self::assertEquals('456', $arr->get(1));
 	}
 }

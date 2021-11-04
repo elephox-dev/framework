@@ -3,7 +3,7 @@
 namespace Philly\DI;
 
 use Philly\Collection\ArrayList;
-use Philly\Collection\HashMap;
+use Philly\Collection\ArrayMap;
 use Philly\DI\Contract\ContainerContract;
 use ReflectionClass;
 use ReflectionMethod;
@@ -12,12 +12,12 @@ use ReflectionException;
 
 class Container implements ContainerContract
 {
-	/** @var \Philly\Collection\HashMap<class-string, Binding> */
-	private HashMap $map;
+	/** @var \Philly\Collection\ArrayMap<class-string, Binding> */
+	private ArrayMap $map;
 
 	public function __construct()
 	{
-		$this->map = new HashMap();
+		$this->map = new ArrayMap();
 	}
 
 	public function has(string $class): bool

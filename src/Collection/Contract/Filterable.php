@@ -19,4 +19,10 @@ interface Filterable
 	 * @return GenericCollection<T>
 	 */
 	public function where(callable $filter): GenericCollection;
+
+	/**
+	 * @param callable(T): bool $filter
+	 * @return bool
+	 */
+	public function any(callable $filter): bool;
 }
