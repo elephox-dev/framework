@@ -11,7 +11,7 @@ enum ResponseCode: int
 	case EarlyHints = 103;
 
 	/* Successful responses  */
-	case OK = 200;
+	case Ok = 200;
 	case Created = 201;
 	case Accepted = 202;
 	case NonAuthoritativeInformation = 203;
