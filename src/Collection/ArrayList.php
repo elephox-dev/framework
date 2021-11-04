@@ -17,11 +17,16 @@ use Philly\Collection\Contract\GenericList;
  */
 class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 {
+	public static function fromArray(array $array): self
+	{
+		return new self($array);
+	}
+
 	/** @var array<int, T> */
 	private array $list = [];
 
 	/**
-	 * @param array<int, T> $items
+	 * @param array<array-key, T> $items
 	 */
 	public function __construct(array $items = [])
 	{
