@@ -1,0 +1,16 @@
+name: DI Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/DI/**'
+
+jobs:
+  splitsh:
+    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'philly-framework/di'
+      dir: 'modules/DI/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_DI_KEY }}

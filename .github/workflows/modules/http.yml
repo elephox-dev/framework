@@ -1,0 +1,16 @@
+name: Http Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/Http/**'
+
+jobs:
+  splitsh:
+    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'philly-framework/http'
+      dir: 'modules/Http/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_HTTP_KEY }}

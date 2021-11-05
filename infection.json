@@ -8,6 +8,7 @@
             "/Exception\\.php/"
         ]
     },
+    "minCoveredMsi": 100,
     "mutators": {
         "@default": true
     },

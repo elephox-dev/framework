@@ -1,0 +1,16 @@
+name: Collection Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/Collection/**'
+
+jobs:
+  splitsh:
+    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'philly-framework/collection'
+      dir: 'modules/Collection/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_COLLECTION_KEY }}

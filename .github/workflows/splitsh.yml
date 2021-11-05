@@ -1,4 +1,4 @@
-name: Splitsh ✂️
+name: ⏩ Update Module Repository
 on:
   workflow_call:
     inputs:
@@ -14,14 +14,14 @@ on:
 
 jobs:
   splitsh:
-    name: Splitsh ✂️
+    name: ⏩ Update Module Repository
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Sources 📍
+      - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Run Splitsh ✂️
+      - name: ⏩ Run Splitsh
         uses: philly-framework/action-splitsh@master
         with:
           split: ${{ inputs.repo }}

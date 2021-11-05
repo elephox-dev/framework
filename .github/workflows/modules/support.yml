@@ -1,0 +1,16 @@
+name: Support Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/Support/**'
+
+jobs:
+  splitsh:
+    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'philly-framework/support'
+      dir: 'modules/Support/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_SUPPORT_KEY }}
