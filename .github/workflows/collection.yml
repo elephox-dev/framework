@@ -4,6 +4,7 @@ on:
     branches:
       - main
     paths:
+      - 'composer.json'
       - 'composer.lock'
       - 'modules/Collection/**'
       - '.github/workflows/collection.yml'

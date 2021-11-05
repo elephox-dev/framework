@@ -9,6 +9,8 @@
             "email": "contact@ricardoboss.de"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
