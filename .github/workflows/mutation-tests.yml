@@ -19,6 +19,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: 💾 Cache dependencies
