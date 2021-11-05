@@ -33,7 +33,7 @@ jobs:
 
   splitsh:
     needs: check-changes
-    if: jobs.check-changes.outputs.root == 'true'
+    if: ${{ jobs.check-changes.outputs.root == 'true' }}
     uses: philly-framework/base/.github/workflows/splitsh.yml@main
     with:
       repo: 'philly-framework/collection'
