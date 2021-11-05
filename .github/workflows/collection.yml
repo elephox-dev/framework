@@ -19,7 +19,7 @@ jobs:
       php-version: '8.1'
       testsuite: 'Collection'
 
-  check-changes:
+  changes:
     runs-on: ubuntu-latest
     outputs:
       root: ${{ steps.changes.outputs.root }}
@@ -32,8 +32,8 @@ jobs:
               - modules/Collection/
 
   splitsh:
-    needs: check-changes
-    if: ${{ jobs.check-changes.outputs.root == 'true' }}
+    needs: changes
+    if: ${{ needs.changes.outputs.root == 'true' }}
     uses: philly-framework/base/.github/workflows/splitsh.yml@main
     with:
       repo: 'philly-framework/collection'
