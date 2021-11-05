@@ -3,9 +3,12 @@
 namespace Philly\Http;
 
 use DateTime;
+use Philly\Support\ToStringCompatible;
 
 class Cookie implements Contract\Cookie
 {
+	use ToStringCompatible;
+
 	private string $name;
 
 	private ?string $value;
