@@ -43,6 +43,6 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction --no-scripts --no-ansi
       - name: Install dependencies, ignoring lockfile 📦
         if: ${{ inputs.prefer-source }}
-        run: composer install --prefer-source --no-progress --no-interaction --no-scripts --no-ansi
+        run: rm composer.lock && composer install --prefer-source --no-progress --no-interaction --no-scripts --no-ansi
       - name: Run PHPUnit 🧪
         run: vendor/bin/phpunit --testsuite ${{ inputs.testsuite }}
