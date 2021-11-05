@@ -3,11 +3,62 @@
 namespace Philly\Http;
 
 use DateTime;
+use InvalidArgumentException;
+use Philly\Collection\ArrayList;
+use Philly\Collection\ArrayMap;
+use Philly\Collection\KeyValuePair;
 use Philly\Support\ToStringCompatible;
 
 class Cookie implements Contract\Cookie
 {
 	use ToStringCompatible;
+
+	/**
+	 * @param string $cookies
+	 * @return ArrayList<\Philly\Http\Contract\Cookie>
+	 */
+	public static function fromClientString(string $cookies): ArrayList
+	{
+		return ArrayList::fromArray(mb_split(';', $cookies))
+			->map(static function (mixed $cookie): Contract\Cookie {
+				if (!is_string($cookie)) {
+					throw new InvalidArgumentException('Cookie must be a string');
+				}
+
+				[$name, $value] = explode('=', $cookie, 2);
+
+				/** @var Contract\Cookie */
+				return new self($name, $value);
+			});
+	}
+
+	/**
+	 * @param string $cookie
+	 * @return Philly\Http\Contract\Cookie
+	 */
+	public static function fromResponseString(string $cookieString): Contract\Cookie
+	{
+		$propertyMap = ArrayMap::fromKeyValuePairList(ArrayList::fromArray(mb_split(';', $cookieString))
+			->map(static function (mixed $keyValue): Contract\Cookie {
+				if (!is_string($keyValue)) {
+					throw new InvalidArgumentException('Cookie must be a string');
+				}
+
+				[$key, $value] = explode('=', trim($keyValue), 2);
+
+				return new KeyValuePair(mb_strtolower($key), $value);
+			}));
+
+		if (!$propertyMap->has('name')) {
+			throw new InvalidArgumentException('Cookie must have a name');
+		}
+
+		$cookie = new self($propertyMap->get('name'));
+
+		if ($propertyMap->has('value'))
+
+		return $cookie;
+	}
 
 	private string $name;
 

@@ -3,6 +3,7 @@
 namespace Philly\Collection;
 
 use ArrayAccess;
+use ArrayIterator;
 use JetBrains\PhpStorm\Pure;
 use Philly\Collection\Contract\GenericList;
 use Philly\Support\Contract\ArrayConvertible;
@@ -146,7 +147,7 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	 * @template TOut
 	 *
 	 * @param callable(T): TOut $callback
-	 * @return \Philly\Collection\ArrayList<TOut>
+	 * @return ArrayList<TOut>
 	 */
 	#[Pure] public function map(callable $callback): ArrayList
 	{
@@ -166,5 +167,13 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return !$this->isEmpty() && $this->first($filter) !== null;
+	}
+
+	/**
+	 * @return ArrayIterator<int, T>
+	 */
+	public function getIterator(): ArrayIterator
+	{
+		return new ArrayIterator($this->list);
 	}
 }

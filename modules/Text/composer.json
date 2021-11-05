@@ -1,0 +1,21 @@
+{
+    "name": "philly/text",
+    "description": "Philly Text library.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricaro Boss",
+            "email": "contact@ricardoboss.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "philly/collection": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "Philly\\Text\\": "src/"
+        }
+    }
+}

@@ -12,6 +12,24 @@ use JetBrains\PhpStorm\Pure;
  */
 class ArrayMap implements Contract\GenericMap
 {
+	/**
+	 * @template TPairKey as array-key
+	 * @template TPairValue
+	 *
+	 * @param \Philly\Collection\ArrayList<\Philly\Collection\Contract\KeyValuePair<TPairKey, TPairValue>> $list
+	 * @return \Philly\Collection\ArrayMap<TPairKey, TPairValue>
+	 */
+	public static function fromKeyValuePairList(ArrayList $list): self
+	{
+		$map = new ArrayMap();
+
+		foreach ($list as $keyValuePair) {
+			$map->put($keyValuePair->getKey(), $keyValuePair->getValue());
+		}
+
+		return $map;
+	}
+
 	/** @var array<TKey, TValue> */
 	protected array $values = [];
 

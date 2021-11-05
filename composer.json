@@ -14,6 +14,7 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "require-dev": {
@@ -27,7 +28,8 @@
         "philly/collection": "self.version",
         "philly/di": "self.version",
         "philly/http": "self.version",
-        "philly/support": "self.version"
+        "philly/support": "self.version",
+        "philly/text": "self.version"
     },
     "extra": {
         "branch-alias": {
@@ -39,7 +41,8 @@
             "Philly\\Collection\\": "modules/Collection/src",
             "Philly\\DI\\": "modules/DI/src",
             "Philly\\Http\\": "modules/Http/src",
-            "Philly\\Support\\": "modules/Support/src"
+            "Philly\\Support\\": "modules/Support/src",
+            "Philly\\Text\\": "modules/Text/src"
         }
     },
     "autoload-dev": {
@@ -47,7 +50,8 @@
             "Philly\\Collection\\": "modules/Collection/test",
             "Philly\\DI\\": "modules/DI/test",
             "Philly\\Http\\": "modules/Http/test",
-            "Philly\\Support\\": "modules/Support/test"
+            "Philly\\Support\\": "modules/Support/test",
+            "Philly\\Text\\": "modules/Text/test"
         }
     }
 }

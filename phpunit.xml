@@ -29,6 +29,9 @@
         <testsuite name="Support">
             <directory>modules/Support/test</directory>
         </testsuite>
+        <testsuite name="Text">
+            <directory>modules/Text/test</directory>
+        </testsuite>
     </testsuites>
 
     <coverage cacheDirectory=".phpunit.cache/code-coverage"

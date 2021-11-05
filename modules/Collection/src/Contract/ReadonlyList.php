@@ -3,13 +3,15 @@
 namespace Philly\Collection\Contract;
 
 use Countable;
+use IteratorAggregate;
 
 /**
  * @template T
  *
  * @extends \Philly\Collection\Contract\GenericCollection<T>
+ * @extends \IteratorAggregate<int, T>
  */
-interface ReadonlyList extends GenericCollection, Countable
+interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate
 {
 	/**
 	 * @return T
