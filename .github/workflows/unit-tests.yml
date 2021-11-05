@@ -9,8 +9,9 @@ on:
         required: true
         type: string
       testsuite:
-        required: true
+        required: false
         type: string
+        default: 'default'
 
 jobs:
   unit-test:

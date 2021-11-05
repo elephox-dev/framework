@@ -13,12 +13,14 @@ jobs:
     with:
       os: 'ubuntu-latest'
       php-version: '8.1'
+      testsuite: 'Collection'
 
   unit-tests-ubuntu-latest-php-8-2:
     uses: philly-framework/base/.github/workflows/unit-tests.yml@main
     with:
       os: 'ubuntu-latest'
       php-version: '8.2'
+      testsuite: 'Collection'
 
   splitsh:
     uses: philly-framework/base/.github/workflows/splitsh.yml@main
