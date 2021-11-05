@@ -25,4 +25,5 @@ jobs:
     with:
       repo: 'philly-framework/collection'
       dir: '/modules/Collection/'
+    secrets:
       deploy_key: ${{ secrets.SPLITSH_COLLECTION_KEY }}
