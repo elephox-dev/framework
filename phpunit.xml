@@ -5,6 +5,7 @@
          cacheResultFile=".phpunit.cache/test-results"
          executionOrder="random"
          forceCoversAnnotation="true"
+         defaultTestSuite="default"
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
@@ -14,14 +15,26 @@
          verbose="true">
     <testsuites>
         <testsuite name="default">
-            <directory>test</directory>
+            <directory>modules/*/test</directory>
+        </testsuite>
+        <testsuite name="Collection">
+            <directory>modules/Collection/test</directory>
+        </testsuite>
+        <testsuite name="DI">
+            <directory>modules/DI/test</directory>
+        </testsuite>
+        <testsuite name="Http">
+            <directory>modules/Http/test</directory>
+        </testsuite>
+        <testsuite name="Support">
+            <directory>modules/Support/test</directory>
         </testsuite>
     </testsuites>
 
     <coverage cacheDirectory=".phpunit.cache/code-coverage"
-              processUncoveredFiles="true">
+              includeUncoveredFiles="false">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">modules/*/src</directory>
         </include>
         <exclude>
             <file>**/*Exception.php</file>

@@ -1,0 +1,38 @@
+name: Unit Tests 🧪
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      php-version:
+        required: true
+        type: string
+      testsuite:
+        required: true
+        type: string
+
+jobs:
+  unit-test:
+    name: Unit Tests 🧪
+    runs-on: ${{ inputs.os }}
+    steps:
+      - name: Checkout Sources 📍
+        uses: actions/checkout@v2
+      - name: Setup PHP ${{ inputs.php-version }} 🐘
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php-version }}
+      - name: Validate composer.lock ✔️
+        run: composer validate --strict
+      - name: Cache dependencies 💾
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install dependencies 📦
+        run: composer install --prefer-dist --no-progress --no-interaction --no-suggest --no-scripts --no-ansi
+      - name: Run PHPUnit 🧪
+        run: vendor/bin/phpunit --testsuite ${{ inputs.testsuite }}

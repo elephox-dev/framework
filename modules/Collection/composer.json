@@ -1,6 +1,6 @@
 {
-    "name": "philly/support",
-    "description": "Philly support library.",
+    "name": "philly/collection",
+    "description": "Philly collection library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,11 +10,12 @@
         }
     ],
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "philly/support": "dev-main"
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Support\\": ""
+            "Philly\\Collection\\": "src/"
         }
     }
 }

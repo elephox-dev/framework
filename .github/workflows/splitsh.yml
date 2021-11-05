@@ -1,0 +1,30 @@
+name: Splitsh ✂️
+on:
+  workflow_call:
+    inputs:
+      repo:
+        required: true
+        type: string
+      dir:
+        required: true
+        type: string
+    secrets:
+      deploy_key:
+        required: true
+
+jobs:
+  splitsh:
+    name: Splitsh ✂️
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sources 📍
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Run Splitsh ✂️
+        uses: philly-framework/action-splitsh@master
+        with:
+          split: ${{ inputs.repo }}
+          split_deploy_key: ${{ secrets.deploy_key }}
+          split_prefix: ${{ inputs.dir }}
+          split_branch: main

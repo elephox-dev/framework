@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Infection" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/vendor/bin/infection" scriptParameters="--show-mutations --threads=$(nproc) --no-progress">
+  <configuration default="false" name="Infection" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/vendor/bin/infection" scriptParameters="--show-mutations --threads=$(nproc)">
     <CommandLine workingDirectory="$PROJECT_DIR$">
       <envs>
         <env name="XDEBUG_MODE" value="coverage" />

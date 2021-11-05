@@ -1,0 +1,28 @@
+name: Collection Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'modules/Collection/**'
+      - '.github/workflows/collection.yml'
+
+jobs:
+  unit-tests-ubuntu-latest-php-8-1:
+    uses: philly-framework/base/.github/workflows/unit-tests.yml@dev-main
+    with:
+      os: 'ubuntu-latest'
+      php-version: '8.1'
+
+  unit-tests-ubuntu-latest-php-8-2:
+    uses: philly-framework/base/.github/workflows/unit-tests.yml@dev-main
+    with:
+      os: 'ubuntu-latest'
+      php-version: '8.2'
+
+  splitsh:
+    uses: philly-framework/base/.github/workflows/splitsh.yml@dev-main
+    with:
+      repo: 'philly-framework/collection'
+      dir: '/modules/Collection/'
+      deploy_key: ${{ secrets.SPLITSH_COLLECTION_KEY }}

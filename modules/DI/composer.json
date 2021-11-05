@@ -1,6 +1,6 @@
 {
-    "name": "philly/http",
-    "description": "Philly HTTP library.",
+    "name": "philly/di",
+    "description": "Philly dependency injection library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,12 +11,11 @@
     ],
     "require": {
         "php": ">=8.1",
-        "philly/collection": "dev-main",
-        "philly/support": "dev-main"
+        "philly/collection": "dev-main"
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Http\\": ""
+            "Philly\\DI\\": "src/"
         }
     }
 }
