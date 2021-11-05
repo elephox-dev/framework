@@ -8,6 +8,10 @@ on:
       php-version:
         required: true
         type: string
+      prefer-source:
+        required: false
+        type: boolean
+        default: false
       testsuite:
         required: false
         type: string
@@ -25,8 +29,9 @@ jobs:
         with:
           php-version: ${{ inputs.php-version }}
       - name: Validate composer.lock ✔️
-        run: composer validate --strict
+        run: composer validate --strict --no-interaction --no-ansi
       - name: Cache dependencies 💾
+        if: ${{ !inputs.prefer-source }}
         uses: actions/cache@v2
         with:
           path: vendor
@@ -34,6 +39,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ inputs.php-version }}-composer-
       - name: Install dependencies 📦
-        run: composer install --prefer-dist --no-progress --no-interaction --no-suggest --no-scripts --no-ansi
+        if: ${{ !inputs.prefer-source }}
+        run: composer install --prefer-dist --no-progress --no-interaction --no-scripts --no-ansi
+      - name: Install dependencies, ignoring lockfile 📦
+        if: ${{ inputs.prefer-source }}
+        run: composer install --prefer-source --no-progress --no-interaction --no-scripts --no-ansi
       - name: Run PHPUnit 🧪
         run: vendor/bin/phpunit --testsuite ${{ inputs.testsuite }}
