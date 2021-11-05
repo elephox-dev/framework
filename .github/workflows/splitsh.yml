@@ -21,14 +21,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            root:
-              - ${{ inputs.dir }}
-      - if: steps.changes.outputs.root == 'true'
-        name: Run Splitsh ✂️
+      - name: Run Splitsh ✂️
         uses: philly-framework/action-splitsh@master
         with:
           split: ${{ inputs.repo }}

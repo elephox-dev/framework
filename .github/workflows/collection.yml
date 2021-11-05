@@ -19,7 +19,21 @@ jobs:
       php-version: '8.1'
       testsuite: 'Collection'
 
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      root: ${{ steps.changes.outputs.root }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            root:
+              - modules/Collection/
+
   splitsh:
+    needs: check-changes
+    if: jobs.check-changes.outputs.root == 'true'
     uses: philly-framework/base/.github/workflows/splitsh.yml@main
     with:
       repo: 'philly-framework/collection'
