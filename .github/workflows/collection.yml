@@ -24,7 +24,10 @@ jobs:
     outputs:
       root: ${{ steps.changes.outputs.root }}
     steps:
-      - uses: dorny/paths-filter@v2
+      - name: Checkout Sources 📍
+        uses: actions/checkout@v2
+      - name: Check for changes 🔃
+        uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: |
