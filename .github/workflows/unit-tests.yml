@@ -30,9 +30,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-${{ inputs.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-
+            ${{ runner.os }}-${{ inputs.php-version }}-composer-
       - name: Install dependencies 📦
         run: composer install --prefer-dist --no-progress --no-interaction --no-suggest --no-scripts --no-ansi
       - name: Run PHPUnit 🧪

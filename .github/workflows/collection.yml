@@ -4,8 +4,11 @@ on:
     branches:
       - main
     paths:
+      - 'composer.lock'
       - 'modules/Collection/**'
       - '.github/workflows/collection.yml'
+      - '.github/workflows/splitsh.yml'
+      - '.github/workflows/unit-tests.yml'
 
 jobs:
   unit-tests-ubuntu-latest-php-8-1:

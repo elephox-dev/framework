@@ -16,13 +16,16 @@
     },
     "require-dev": {
         "vimeo/psalm": "^4.11.2",
-        "phpunit/phpunit": "^9.5.10",
+        "phpunit/phpunit": "^9.5.10|dev-master",
         "infection/infection": "^0.25.3",
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest"
     },
     "replace": {
-        "philly/http": "self.version"
+        "philly/collection": "self.version",
+        "philly/di": "self.version",
+        "philly/http": "self.version",
+        "philly/support": "self.version"
     },
     "extra": {
         "branch-alias": {
