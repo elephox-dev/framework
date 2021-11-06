@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Philly\Http\HeaderName
  * @covers \Philly\Collection\ArrayList
  * @covers \Philly\Collection\GenericWeakMap
+ * @covers \Philly\Http\InvalidHeaderNameException
+ * @covers \Philly\Http\InvalidHeaderNameTypeException
+ * @covers \Philly\Http\InvalidHeaderTypeException
  */
 class HeaderMapTest extends TestCase
 {
@@ -61,7 +64,7 @@ class HeaderMapTest extends TestCase
 
 	public function testFromArrayInvalidHeaderName(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidHeaderNameException::class);
 
 		HeaderMap::fromArray(['test' => 'test']);
 	}

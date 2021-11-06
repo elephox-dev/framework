@@ -23,16 +23,16 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 					array_map(
 						static fn($val) => is_string($val) ?
 							$val :
-							throw new InvalidArgumentException("Header value array can only contain string values"),
+							throw new InvalidHeaderTypeException($val),
 						$value
 					)
 				);
 			} else {
-				throw new InvalidArgumentException("Header value must be an array or string, " . gettype($value) . " given");
+				throw new InvalidHeaderTypeException($value);
 			}
 
 			if (!is_string($name)) {
-				throw new InvalidArgumentException("Header name must be a string");
+				throw new InvalidHeaderNameTypeException($name);
 			}
 
 			/**
@@ -41,7 +41,7 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 			 */
 			$headerName = HeaderName::tryFrom($name);
 			if ($headerName === null) {
-				throw new InvalidArgumentException("Invalid header name: " . $name);
+				throw new InvalidHeaderNameException($name);
 			}
 
 			$map->put($headerName, $value);

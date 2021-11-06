@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Philly\Http\Cookie
  * @covers \Philly\Http\CookieSameSite
+ * @covers \Philly\Collection\ArrayList
+ * @covers \Philly\Collection\ArrayMap
+ * @covers \Philly\Collection\KeyValuePair
  */
 class CookieTest extends TestCase
 {
@@ -27,9 +30,34 @@ class CookieTest extends TestCase
 		);
 
 		self::assertEquals(
-			'name=value; Expires=' . $timestamp->format('D, d-M-Y H:i:s T') . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234',
+			'name=value; Expires=' . $timestamp->format(Cookie::ExpiresFormat) . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234',
 			(string)$cookie
 		);
+	}
+
+	public function testFromResponseString(): void
+	{
+		$timestamp = (new DateTime('+1 day'))->format(Cookie::ExpiresFormat);
+		$cookie = Cookie::fromResponseString('XSRF_Token=asfdkhjaeo83r; Expires=' . $timestamp . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234');
+
+		self::assertEquals('XSRF_Token', $cookie->getName());
+		self::assertEquals('asfdkhjaeo83r', $cookie->getValue());
+		self::assertEquals(new DateTime($timestamp), $cookie->getExpires());
+		self::assertEquals('/', $cookie->getPath());
+		self::assertEquals('example.com', $cookie->getDomain());
+		self::assertTrue($cookie->isSecure());
+		self::assertTrue($cookie->isHttpOnly());
+		self::assertEquals(CookieSameSite::None, $cookie->getSameSite());
+		self::assertEquals(1234, $cookie->getMaxAge());
+	}
+
+	public function testFromRequestString(): void
+	{
+		$cookies = Cookie::fromRequestString("asdsdf=serser; rsg324=234213; 2sefs3f=");
+
+		self::assertEquals(3, $cookies->count());
+		self::assertEquals('asdsdf', $cookies->get(0)->getName());
+		self::assertEquals('serser', $cookies->get(0)->getValue());
 	}
 
 	public function dataProvider(): array
@@ -40,7 +68,7 @@ class CookieTest extends TestCase
 			[ 'setName', 'getName', 'test', 'test=' ],
 			[ 'setValue', 'getValue', 'test', 'name1=test' ],
 			[ 'setValue', 'getValue', null, 'name1=' ],
-			[ 'setExpires', 'getExpires', $timestamp, 'name1=; Expires=' . $timestamp->format('D, d-M-Y H:i:s T') ],
+			[ 'setExpires', 'getExpires', $timestamp, 'name1=; Expires=' . $timestamp->format(Cookie::ExpiresFormat) ],
 			[ 'setExpires', 'getExpires', null, 'name1=' ],
 			[ 'setPath', 'getPath', '/test', 'name1=; Path=/test' ],
 			[ 'setPath', 'getPath', null, 'name1=' ],

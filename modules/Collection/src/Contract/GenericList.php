@@ -7,7 +7,7 @@ namespace Philly\Collection\Contract;
  *
  * @extends \Philly\Collection\Contract\ReadonlyList<T>
  */
-interface GenericList extends ReadonlyList
+interface GenericList extends ReadonlyList, Stackable
 {
 	/**
 	 * @param T $value

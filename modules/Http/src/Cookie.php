@@ -13,19 +13,19 @@ class Cookie implements Contract\Cookie
 {
 	use ToStringCompatible;
 
+	public const ExpiresFormat = "D, d-M-Y H:i:s T";
+
 	/**
 	 * @param string $cookies
 	 * @return ArrayList<\Philly\Http\Contract\Cookie>
 	 */
-	public static function fromClientString(string $cookies): ArrayList
+	public static function fromRequestString(string $cookies): ArrayList
 	{
 		return ArrayList::fromArray(mb_split(';', $cookies))
 			->map(static function (mixed $cookie): Contract\Cookie {
-				if (!is_string($cookie)) {
-					throw new InvalidArgumentException('Cookie must be a string');
-				}
+				/** @var string $cookie */
 
-				[$name, $value] = explode('=', $cookie, 2);
+				[$name, $value] = explode('=', trim($cookie), 2);
 
 				/** @var Contract\Cookie */
 				return new self($name, $value);
@@ -33,29 +33,77 @@ class Cookie implements Contract\Cookie
 	}
 
 	/**
-	 * @param string $cookie
+	 * @param string $cookieString
 	 * @return \Philly\Http\Contract\Cookie
 	 */
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
-		$propertyMap = ArrayMap::fromKeyValuePairList(ArrayList::fromArray(mb_split(';', $cookieString))
-			->map(static function (mixed $keyValue): KeyValuePair {
-				if (!is_string($keyValue)) {
-					throw new InvalidArgumentException('Cookie must be a string');
-				}
-
-				[$key, $value] = explode('=', trim($keyValue), 2);
-
-				return new KeyValuePair(mb_strtolower($key), $value);
-			}));
-
-		if (!$propertyMap->has('name')) {
-			throw new InvalidArgumentException('Cookie must have a name');
+		$split = mb_split(';', $cookieString);
+		if (!$split) {
+			throw new InvalidArgumentException("Unable to split cookie.");
 		}
 
-		$cookie = new self($propertyMap->get('name'));
+		/** @var ArrayList<string> $propertyList */
+		$propertyList = ArrayList::fromArray($split);
+		$nameValuePair = $propertyList->shift();
+		[$name, $value] = explode('=', trim($nameValuePair), 2);
 
-		if ($propertyMap->has('value'))
+		/** @var ArrayList<\Philly\Collection\Contract\KeyValuePair<string, string>> $propertyList */
+		$propertyList = $propertyList
+			->map(static function (string $keyValue): KeyValuePair {
+				$keyValue = trim($keyValue);
+
+				if (mb_strpos($keyValue, '=') === false) {
+					return new KeyValuePair(mb_strtolower($keyValue), "");
+				}
+
+				[$key, $value] = explode('=', $keyValue, 2);
+
+				return new KeyValuePair(mb_strtolower($key), $value);
+			});
+
+		/** @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones. */
+		$propertyMap = ArrayMap::fromKeyValuePairList($propertyList);
+
+		$cookie = new self($name);
+
+		if ($value !== '') {
+			$cookie->setValue($value);
+		}
+
+		if ($propertyMap->has('expires')) {
+			$cookie->setExpires(DateTime::createFromFormat(self::ExpiresFormat, $propertyMap->get('expires')));
+		}
+
+		if ($propertyMap->has('path')) {
+			$cookie->setPath($propertyMap->get('path'));
+		}
+
+		if ($propertyMap->has('domain')) {
+			$cookie->setDomain($propertyMap->get('domain'));
+		}
+
+		if ($propertyMap->has('secure')) {
+			$cookie->setSecure(true);
+		}
+
+		if ($propertyMap->has('httponly')) {
+			$cookie->setHttpOnly(true);
+		}
+
+		if ($propertyMap->has('samesite')) {
+			/**
+			 * @var \Philly\Http\CookieSameSite $sameSite
+			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+			 */
+			$sameSite = CookieSameSite::from($propertyMap->get('samesite'));
+
+			$cookie->setSameSite($sameSite);
+		}
+
+		if ($propertyMap->has('max-age')) {
+			$cookie->setMaxAge((int)$propertyMap->get('max-age'));
+		}
 
 		return $cookie;
 	}
@@ -196,7 +244,7 @@ class Cookie implements Contract\Cookie
 		$cookie = $this->name . '=' . ($this->value ?? '');
 
 		if ($this->expires) {
-			$cookie .= '; Expires=' . $this->expires->format('D, d-M-Y H:i:s T');
+			$cookie .= '; Expires=' . $this->expires->format(self::ExpiresFormat);
 		}
 
 		if ($this->path) {

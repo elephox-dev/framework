@@ -176,4 +176,55 @@ class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
 	{
 		return new ArrayIterator($this->list);
 	}
+
+	/**
+	 * @param T $value
+	 */
+	public function push(mixed $value): void
+	{
+		$this->add($value);
+	}
+
+	/**
+	 * @return T
+	 */
+	public function pop(): mixed
+	{
+		return array_pop($this->list);
+	}
+
+	/**
+	 * @return T
+	 */
+	public function peek(): mixed
+	{
+		$idx = $this->count() - 1;
+		if ($idx < 0) {
+			throw new OffsetNotFoundException(0);
+		}
+
+		return $this->list[$idx];
+	}
+
+	/**
+	 * @return T
+	 */
+	public function shift(): mixed
+	{
+		$value = array_shift($this->list);
+
+		if ($value === null) {
+			throw new OffsetNotFoundException(0);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param T $value
+	 */
+	public function unshift(mixed $value): void
+	{
+		array_unshift($this->list, $value);
+	}
 }
