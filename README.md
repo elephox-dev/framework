@@ -2,7 +2,9 @@
 
 This is a class library providing independent building blocks.
 
-[![Collection Pipeline](https://github.com/philly-framework/base/actions/workflows/collection.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/collection.yml)
+[![🔎 Static Analysis](https://github.com/philly-framework/base/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/static-analysis.yml)
+[![🧟 Mutation Tests](https://github.com/philly-framework/base/actions/workflows/mutation-tests.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/mutation-tests.yml)
+[![🧪 Unit Tests](https://github.com/philly-framework/base/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/unit-tests.yml)
 
 ## Goals:
 
