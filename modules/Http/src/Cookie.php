@@ -34,12 +34,12 @@ class Cookie implements Contract\Cookie
 
 	/**
 	 * @param string $cookie
-	 * @return Philly\Http\Contract\Cookie
+	 * @return \Philly\Http\Contract\Cookie
 	 */
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
 		$propertyMap = ArrayMap::fromKeyValuePairList(ArrayList::fromArray(mb_split(';', $cookieString))
-			->map(static function (mixed $keyValue): Contract\Cookie {
+			->map(static function (mixed $keyValue): KeyValuePair {
 				if (!is_string($keyValue)) {
 					throw new InvalidArgumentException('Cookie must be a string');
 				}
