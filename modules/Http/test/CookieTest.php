@@ -65,25 +65,25 @@ class CookieTest extends TestCase
 		$timestamp = new DateTime();
 
 		return [
-			[ 'setName', 'getName', 'test', 'test=' ],
-			[ 'setValue', 'getValue', 'test', 'name1=test' ],
-			[ 'setValue', 'getValue', null, 'name1=' ],
-			[ 'setExpires', 'getExpires', $timestamp, 'name1=; Expires=' . $timestamp->format(Cookie::ExpiresFormat) ],
-			[ 'setExpires', 'getExpires', null, 'name1=' ],
-			[ 'setPath', 'getPath', '/test', 'name1=; Path=/test' ],
-			[ 'setPath', 'getPath', null, 'name1=' ],
-			[ 'setDomain', 'getDomain', 'localhost', 'name1=; Domain=localhost' ],
-			[ 'setDomain', 'getDomain', null, 'name1=' ],
-			[ 'setSecure', 'isSecure', true, 'name1=; Secure' ],
-			[ 'setSecure', 'isSecure', false, 'name1=' ],
-			[ 'setHttpOnly', 'isHttpOnly', true, 'name1=; HttpOnly' ],
-			[ 'setHttpOnly', 'isHttpOnly', false, 'name1=' ],
-			[ 'setSameSite', 'getSameSite', CookieSameSite::None, 'name1=; SameSite=None' ],
-			[ 'setSameSite', 'getSameSite', CookieSameSite::Lax, 'name1=; SameSite=Lax' ],
-			[ 'setSameSite', 'getSameSite', CookieSameSite::Strict, 'name1=; SameSite=Strict' ],
-			[ 'setSameSite', 'getSameSite', null, 'name1=' ],
-            [ 'setMaxAge', 'getMaxAge', 1234, 'name1=; Max-Age=1234' ],
-            [ 'setMaxAge', 'getMaxAge', null, 'name1=' ],
+			['setName', 'getName', 'test', 'test='],
+			['setValue', 'getValue', 'test', 'name1=test'],
+			['setValue', 'getValue', null, 'name1='],
+			['setExpires', 'getExpires', $timestamp, 'name1=; Expires=' . $timestamp->format(Cookie::ExpiresFormat)],
+			['setExpires', 'getExpires', null, 'name1='],
+			['setPath', 'getPath', '/test', 'name1=; Path=/test'],
+			['setPath', 'getPath', null, 'name1='],
+			['setDomain', 'getDomain', 'localhost', 'name1=; Domain=localhost'],
+			['setDomain', 'getDomain', null, 'name1='],
+			['setSecure', 'isSecure', true, 'name1=; Secure'],
+			['setSecure', 'isSecure', false, 'name1='],
+			['setHttpOnly', 'isHttpOnly', true, 'name1=; HttpOnly'],
+			['setHttpOnly', 'isHttpOnly', false, 'name1='],
+			['setSameSite', 'getSameSite', CookieSameSite::None, 'name1=; SameSite=None'],
+			['setSameSite', 'getSameSite', CookieSameSite::Lax, 'name1=; SameSite=Lax'],
+			['setSameSite', 'getSameSite', CookieSameSite::Strict, 'name1=; SameSite=Strict'],
+			['setSameSite', 'getSameSite', null, 'name1='],
+			['setMaxAge', 'getMaxAge', 1234, 'name1=; Max-Age=1234'],
+			['setMaxAge', 'getMaxAge', null, 'name1='],
 		];
 	}
 
@@ -96,5 +96,25 @@ class CookieTest extends TestCase
 
 		self::assertSame($value, $cookie->{$getter}());
 		self::assertEquals($cookieString, $cookie->asString());
+	}
+
+	public function testFromRequestStringUnwraps(): void
+	{
+		$cookies = Cookie::fromRequestString("asdsdf= serser  ; rsg324=  234213 ;    2sefs3f=");
+
+		self::assertEquals(3, $cookies->count());
+		self::assertEquals('asdsdf', $cookies->get(0)->getName());
+		self::assertEquals(' serser  ', $cookies->get(0)->getValue());
+		self::assertEquals('rsg324', $cookies->get(1)->getName());
+		self::assertEquals('  234213 ', $cookies->get(1)->getValue());
+		self::assertEquals('2sefs3f', $cookies->get(2)->getName());
+	}
+
+	public function testFromResponseStringUnwraps(): void
+	{
+		$cookie = Cookie::fromResponseString("asdsdf= serser  ; Secure");
+
+		self::assertEquals('asdsdf', $cookie->getName());
+		self::assertEquals(' serser  ', $cookie->getValue());
 	}
 }

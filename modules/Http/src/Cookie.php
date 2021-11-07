@@ -25,10 +25,10 @@ class Cookie implements Contract\Cookie
 			->map(static function (mixed $cookie): Contract\Cookie {
 				/** @var string $cookie */
 
-				[$name, $value] = explode('=', trim($cookie), 2);
+				[$name, $value] = explode('=', $cookie, 2);
 
 				/** @var Contract\Cookie */
-				return new self($name, $value);
+				return new self(trim($name), $value);
 			});
 	}
 
@@ -38,28 +38,24 @@ class Cookie implements Contract\Cookie
 	 */
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
+		/** @var array<string> $split */
 		$split = mb_split(';', $cookieString);
-		if (!$split) {
-			throw new InvalidArgumentException("Unable to split cookie.");
-		}
 
 		/** @var ArrayList<string> $propertyList */
 		$propertyList = ArrayList::fromArray($split);
 		$nameValuePair = $propertyList->shift();
-		[$name, $value] = explode('=', trim($nameValuePair), 2);
+		[$name, $value] = explode('=', $nameValuePair, 2);
 
 		/** @var ArrayList<\Philly\Collection\Contract\KeyValuePair<string, string>> $propertyList */
 		$propertyList = $propertyList
 			->map(static function (string $keyValue): KeyValuePair {
-				$keyValue = trim($keyValue);
-
 				if (mb_strpos($keyValue, '=') === false) {
-					return new KeyValuePair(mb_strtolower($keyValue), "");
+					return new KeyValuePair(mb_strtolower(trim($keyValue)), "");
 				}
 
 				[$key, $value] = explode('=', $keyValue, 2);
 
-				return new KeyValuePair(mb_strtolower($key), $value);
+				return new KeyValuePair(mb_strtolower(trim($key)), $value);
 			});
 
 		/** @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones. */
