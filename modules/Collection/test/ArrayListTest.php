@@ -156,4 +156,71 @@ class ArrayListTest extends TestCase
 		self::assertEquals('123', $arr->get(0));
 		self::assertEquals('456', $arr->get(1));
 	}
+
+	public function testPush(): void
+	{
+		$arr = new ArrayList(['435']);
+
+		self::assertCount(1, $arr);
+
+		$arr->push('test');
+
+		self::assertCount(2, $arr);
+		self::assertEquals('test', $arr->get(1));
+	}
+
+	public function testPopPeek(): void
+	{
+		$arr = new ArrayList(['123', '456']);
+
+		self::assertCount(2, $arr);
+
+		$peeked = $arr->peek();
+
+		self::assertCount(2, $arr);
+
+		$popped = $arr->pop();
+
+		self::assertCount(1, $arr);
+		self::assertEquals('456', $popped);
+		self::assertEquals($popped, $peeked);
+	}
+
+	public function testInvalidPeek(): void
+	{
+		$this->expectException(OffsetNotFoundException::class);
+
+		(new ArrayList())->peek();
+	}
+
+	public function testShift(): void
+	{
+		$arr = new ArrayList([123, 456, 789]);
+
+		self::assertCount(3, $arr);
+
+		$shifted = $arr->shift();
+
+		self::assertCount(2, $arr);
+		self::assertEquals(123, $shifted);
+	}
+
+	public function testInvalidShift(): void
+	{
+		$this->expectException(OffsetNotFoundException::class);
+
+		(new ArrayList())->shift();
+	}
+
+	public function testUnshift(): void
+	{
+		$arr = new ArrayList([456, 789]);
+
+		self::assertCount(2, $arr);
+
+		$arr->unshift(123);
+
+		self::assertCount(3, $arr);
+		self::assertEquals(123, $arr->get(0));
+	}
 }
