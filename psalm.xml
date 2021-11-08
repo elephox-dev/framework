@@ -7,9 +7,5 @@
 >
     <projectFiles>
         <directory name="modules/*/src" />
-        <ignoreFiles>
-            <directory name="vendor" />
-            <directory name="modules/*/test" />
-        </ignoreFiles>
     </projectFiles>
 </psalm>

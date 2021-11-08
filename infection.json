@@ -12,5 +12,5 @@
     "mutators": {
         "@default": true
     },
-    "tmpDir": "tmp/"
+    "tmpDir": "tmp"
 }
