@@ -44,7 +44,7 @@ jobs:
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
         run: |
-          ! git status --porcelain && exit 0 || \
+          git status --porcelain && exit 0 || \
           git config user.email actions@github.com && \
           git config user.name "GitHub Actions" && \
           git add . && \
