@@ -7,35 +7,32 @@ on:
 jobs:
   coverage:
     name: 📊 Coverage
-    strategy:
-      matrix:
-        os: [ 'ubuntu-latest' ]
-        php-version: [ '8.1' ]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
-      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+      - name: 🐘 Setup PHP 8.1
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: '8.1'
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
           path: vendor
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.php-version }}-composer-
+            ${{ runner.os }}-8.1-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEPLOY_KEY_COVERAGE }}
       - name: ⤵️ Checkout coverage repository
         run: |
-          ssh-keyscan github.com > /root/.ssh/known_hosts && \
-          echo "${{ secrets.SPLITSH_COVERAGE_KEY }}" > /root/.ssh/github && \
-          chmod 0600 /root/.ssh/github && \
-          echo "Host github\n    Hostname github.com\n    IdentityFile /root/.ssh/github\n    User git" > /root/.ssh/config && \
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
           git clone git@github.com:philly-framework/coverage.git ./tmp/coverage/html --depth=1
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
