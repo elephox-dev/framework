@@ -39,7 +39,8 @@ jobs:
       - name: ⤵️ Checkout coverage repository
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
-          git clone git@github.com:philly-framework/coverage.git tmp/coverage/html --depth=1
+          git clone git@github.com:philly-framework/coverage.git tmp/coverage/html --depth=1 && \
+          find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
