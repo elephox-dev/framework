@@ -43,8 +43,7 @@ jobs:
       - name: ➕ Commit updated coverage report
         run: |
           git status && \
-          if [ $? -eq 0 ]; then
-            echo "::debug::Nothing to commit"
+          if [[ `git status --porcelain` ]]; then
             exit 0
           fi && \
           git config user.email actions@github.com && \
@@ -52,4 +51,3 @@ jobs:
           git add . && \
           git commit -m "Update coverage report" && \
           git push origin main
-          echo "::debug::Success!"
