@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Philly\DI;
 
+use JetBrains\PhpStorm\Pure;
 use Philly\Collection\ArrayList;
 use Philly\Collection\ArrayMap;
 use Philly\DI\Contract\ContainerContract;
@@ -21,7 +22,7 @@ class Container implements ContainerContract
 		$this->map = new ArrayMap();
 	}
 
-	public function has(string $class): bool
+	#[Pure] public function has(string $class): bool
 	{
 		return $this->map->has($class);
 	}
@@ -64,32 +65,52 @@ class Container implements ContainerContract
 
 		/** @var Binding<T> $binding */
 		$binding = $this->map->get($class);
-		$builder = $binding->getBuilder();
-		switch ($binding->getLifetime()) {
-			case BindingLifetime::Transient:
-				$instance = $builder($this);
 
-				if (!($instance instanceof $class)) {
-					throw new InvalidBindingInstanceException($instance, $class);
-				}
+		$instance = match ($binding->getLifetime()) {
+			BindingLifetime::Transient => $this->buildTransientInstance($binding),
+			BindingLifetime::Request => $this->buildRequestInstance($binding),
+		};
 
-				return $instance;
-			case BindingLifetime::Request:
-				$instance = $binding->getInstance();
-				if ($instance === null) {
-					$instance = $builder($this);
-
-					$binding->setInstance($instance);
-				}
-
-				if (!($instance instanceof $class)) {
-					throw new InvalidBindingInstanceException($instance, $class);
-				}
-
-				return $instance;
+		if (!($instance instanceof $class)) {
+			throw new InvalidBindingInstanceException($instance, $class);
 		}
 
-		throw new BindingException("Unexpected injection lifetime value.");
+		return $instance;
+	}
+
+	/**
+	 * @template T as object
+	 *
+	 * @param Binding<T> $binding
+	 *
+	 * @return T
+	 */
+	private function buildTransientInstance(Binding $binding): object
+	{
+		$builder = $binding->getBuilder();
+
+		return $builder($this);
+	}
+
+	/**
+	 * @template T as object
+	 *
+	 * @param Binding<T> $binding
+	 *
+	 * @return T
+	 */
+	private function buildRequestInstance(Binding $binding): object
+	{
+		$instance = $binding->getInstance();
+
+		if ($instance === null) {
+			$builder = $binding->getBuilder();
+			$instance = $builder($this);
+
+			$binding->setInstance($instance);
+		}
+
+		return $instance;
 	}
 
 	/**
