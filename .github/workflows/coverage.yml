@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-8.1-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
-      - name: Install SSH Key
+      - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.DEPLOY_KEY_COVERAGE }}
@@ -44,9 +44,7 @@ jobs:
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
         run: |
-          if [[ ! `git status --porcelain` ]]; then
-            exit 0
-          fi && \
+          ! git status --porcelain && exit 0 || \
           git config user.email actions@github.com && \
           git config user.name "GitHub Actions" && \
           git add . && \
