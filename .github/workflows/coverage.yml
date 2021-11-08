@@ -43,10 +43,8 @@ jobs:
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
-        run: |
-          git status --porcelain && exit 0 || \
-          git config user.email actions@github.com && \
-          git config user.name "GitHub Actions" && \
-          git add . && \
-          git commit -m "Update coverage report" && \
-          git push origin main
+        uses: EndBug/add-and-commit@v7
+        with:
+          cwd: './tmp/coverage/html'
+          message: ${{ format('Update coverage report ({0}@{1})', 'philly-framework/base', github.sha) }}
+          pull: NO-PULL
