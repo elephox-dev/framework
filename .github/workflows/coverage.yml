@@ -44,9 +44,9 @@ jobs:
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
-      - name: ➕ Commit updated coverage report
+      - name: ⤴️ Push updated coverage report
         uses: EndBug/add-and-commit@v7
         with:
           cwd: './tmp/coverage/html'
-          message: ${{ format('{0} ({1}@{2})', github.events.commits[0].message, 'philly-framework/base', github.sha) }}
+          message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'philly-framework/base', github.sha) }}
           pull: NO-PULL
