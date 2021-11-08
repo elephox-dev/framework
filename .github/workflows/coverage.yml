@@ -18,6 +18,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: 💾 Cache dependencies
@@ -37,7 +39,7 @@ jobs:
       - name: ⤵️ Checkout coverage repository
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
-          git clone git@github.com:philly-framework/coverage.git ./tmp/coverage/html --depth=1
+          git clone git@github.com:philly-framework/coverage.git tmp/coverage/html --depth=1
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
