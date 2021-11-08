@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "modules/"
 
 jobs:
   coverage:
@@ -39,8 +41,14 @@ jobs:
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
         run: |
+          git status && \
+          if [ $? -eq 0 ]; then
+            echo "::debug::Nothing to commit"
+            exit 0
+          fi && \
           git config user.email actions@github.com && \
           git config user.name "GitHub Actions" && \
           git add . && \
           git commit -m "Update coverage report" && \
           git push origin main
+          echo "::debug::Success!"
