@@ -48,5 +48,5 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           cwd: './tmp/coverage/html'
-          message: ${{ format('Update coverage report ({0}@{1})', 'philly-framework/base', github.sha) }}
+          message: ${{ format('{0} ({1}@{2})', github.events.commits[0].message, 'philly-framework/base', github.sha) }}
           pull: NO-PULL
