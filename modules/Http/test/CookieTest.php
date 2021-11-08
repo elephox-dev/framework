@@ -3,6 +3,7 @@
 namespace Philly\Http;
 
 use DateTime;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -116,5 +117,28 @@ class CookieTest extends TestCase
 
 		self::assertEquals('asdsdf', $cookie->getName());
 		self::assertEquals(' serser  ', $cookie->getValue());
+	}
+
+	public function testCookieFromResponseStringCanUseEqualSignInValue(): void
+	{
+		$cookieFromString = Cookie::fromResponseString('name1=value=with=equal=sign; Path=test=path=with=equals');
+
+		self::assertEquals('value=with=equal=sign', $cookieFromString->getValue());
+		self::assertEquals('test=path=with=equals', $cookieFromString->getPath());
+	}
+
+	public function testCookieFromRequestStringCanUseEqualSignInValue(): void
+	{
+		$cookies = Cookie::fromRequestString('name1=value=with=equal=sign');
+
+		self::assertCount(1, $cookies);
+		self::assertEquals('value=with=equal=sign', $cookies->get(0)->getValue());
+	}
+
+	public function testMaxAgeIsInt(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		Cookie::fromResponseString('name1=value; Max-Age=adfa');
 	}
 }

@@ -48,16 +48,16 @@ class HeaderMapTest extends TestCase
 		);
 	}
 
-	public function testFromArrayInvalidNameType(): void
+	public function testFromArrayInvalidNameTypeInt(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidHeaderNameTypeException::class);
 
 		HeaderMap::fromArray([234 => 'test']);
 	}
 
 	public function testFromArrayInvalidValueType(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(InvalidHeaderTypeException::class);
 
 		HeaderMap::fromArray(['Host' => 234.2]);
 	}
@@ -67,5 +67,22 @@ class HeaderMapTest extends TestCase
 		$this->expectException(InvalidHeaderNameException::class);
 
 		HeaderMap::fromArray(['test' => 'test']);
+	}
+
+	public function testFromArrayInvalidValueArrayType(): void
+	{
+		$this->expectException(InvalidHeaderTypeException::class);
+
+        HeaderMap::fromArray(['Cookie' => [234.2, 2343]]);
+	}
+
+	public function testFromArrayProducesNormalizedArrayKeys(): void
+	{
+		$map = HeaderMap::fromArray(['Cookie' => [423 => 'test=value', 3433 => 'asdf=sdfg']]);
+
+		$cookies = $map->get(HeaderName::Cookie);
+
+		self::assertEquals("test=value", $cookies[0]);
+		self::assertEquals("asdf=sdfg", $cookies[1]);
 	}
 }

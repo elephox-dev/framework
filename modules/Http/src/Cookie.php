@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Philly\Http;
 
@@ -49,13 +50,13 @@ class Cookie implements Contract\Cookie
 		/** @var ArrayList<\Philly\Collection\Contract\KeyValuePair<string, string>> $propertyList */
 		$propertyList = $propertyList
 			->map(static function (string $keyValue): KeyValuePair {
-				if (mb_strpos($keyValue, '=') === false) {
-					return new KeyValuePair(mb_strtolower(trim($keyValue)), "");
+				if (!str_contains($keyValue, '=')) {
+					return new KeyValuePair(strtolower(trim($keyValue)), "");
 				}
 
 				[$key, $value] = explode('=', $keyValue, 2);
 
-				return new KeyValuePair(mb_strtolower(trim($key)), $value);
+				return new KeyValuePair(strtolower(trim($key)), $value);
 			});
 
 		/** @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones. */
@@ -98,7 +99,12 @@ class Cookie implements Contract\Cookie
 		}
 
 		if ($propertyMap->has('max-age')) {
-			$cookie->setMaxAge((int)$propertyMap->get('max-age'));
+			$maxAge = $propertyMap->get('max-age');
+			if (!ctype_digit($maxAge)) {
+				throw new InvalidArgumentException("The max-age property must be an integer.");
+			}
+
+			$cookie->setMaxAge((int)$maxAge);
 		}
 
 		return $cookie;

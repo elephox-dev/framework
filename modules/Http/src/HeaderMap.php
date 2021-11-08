@@ -16,6 +16,10 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 
 		/** @var mixed $value */
 		foreach ($headers as $name => $value) {
+			if (!is_string($name)) {
+				throw new InvalidHeaderNameTypeException($name);
+			}
+
 			if (is_string($value)) {
 				$value = [$value];
 			} else if (is_array($value)) {
@@ -29,10 +33,6 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 				);
 			} else {
 				throw new InvalidHeaderTypeException($value);
-			}
-
-			if (!is_string($name)) {
-				throw new InvalidHeaderNameTypeException($name);
 			}
 
 			/**
