@@ -39,6 +39,8 @@ jobs:
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ➕ Commit updated coverage report
         run: |
+          git config user.email actions@github.com && \
+          git config user.name "GitHub Actions" && \
           git add . && \
           git commit -m "Update coverage report" && \
           git push origin main
