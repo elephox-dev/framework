@@ -30,14 +30,17 @@ jobs:
             ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
+      - name: ⤵️ Checkout coverage repository
+        run: |
+          ssh-keyscan github.com > /root/.ssh/known_hosts && \
+          echo "${{ secrets.SPLITSH_COVERAGE_KEY }}" > /root/.ssh/github && \
+          chmod 0600 /root/.ssh/github && \
+          echo "Host github\n    Hostname github.com\n    IdentityFile /root/.ssh/github\n    User git" > /root/.ssh/config && \
+          git clone git@github.com:philly-framework/coverage.git ./tmp/coverage/html --depth=1
       - name: 📊 Run PHPUnit Coverage
         run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
-      - name: Disable jekyll
-        run: touch tmp/coverage/html/.nojekyll
-      - name: ⏩ Run Splitsh
-        uses: philly-framework/action-splitsh@master
-        with:
-          split: 'philly-framework/coverage'
-          split_deploy_key: ${{ secrets.SPLITSH_COVERAGE_KEY }}
-          split_prefix: 'tmp/coverage/html/'
-          split_branch: main
+      - name: ➕ Commit updated coverage report
+        run: |
+          git add . && \
+          git commit -m "Update coverage report" && \
+          git push origin main
