@@ -4,7 +4,8 @@ on:
     branches:
       - main
     paths:
-      - "modules/"
+      - ".github/workflows/static-analysis.yml"
+      - "modules/**"
 
 jobs:
   static-analysis:

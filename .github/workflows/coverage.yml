@@ -4,7 +4,8 @@ on:
     branches:
       - main
     paths:
-      - "modules/"
+      - ".github/workflows/coverage.yml"
+      - "modules/**"
 
 jobs:
   coverage:
