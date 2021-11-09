@@ -4,6 +4,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/di.yml'
       - 'modules/DI/**'
 
 jobs:
