@@ -13,3 +13,4 @@ This is a class library providing independent building blocks.
   - [x] Dynamic lifespan (request/transient)
 - [ ] Routing (controller attributes)
 - [ ] HttpClient/ApiClient/RestClient/GraphQlClient?
+- [ ] composer.json dependency sync across all modules
