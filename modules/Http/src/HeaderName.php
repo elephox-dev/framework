@@ -139,6 +139,7 @@ enum HeaderName: string
 			self::ProxyAuthorization,
 			self::From,
 			self::Referer,
+			self::Cookie,
 			self::UserAgent => true,
 			default => false,
 		};
@@ -160,6 +161,7 @@ enum HeaderName: string
 			self::ProxyAuthenticate,
 			self::AcceptRanges,
 			self::Allow,
+			self::SetCookie,
 			self::Server => true,
 			default => false,
 		};
