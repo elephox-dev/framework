@@ -35,7 +35,7 @@
     </testsuites>
 
     <coverage cacheDirectory="tmp/coverage/cache"
-              includeUncoveredFiles="false">
+              processUncoveredFiles="true">
         <include>
             <directory suffix=".php">modules/*/src</directory>
         </include>
