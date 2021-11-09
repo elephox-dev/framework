@@ -14,7 +14,6 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
-        "ext-mbstring": "*",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "require-dev": {
