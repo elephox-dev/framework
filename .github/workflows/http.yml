@@ -9,6 +9,7 @@ on:
 
 jobs:
   splitsh:
+    name: ⏩ Update Module Repository
     uses: philly-framework/base/.github/workflows/splitsh.yml@main
     with:
       repo: 'philly-framework/http'
