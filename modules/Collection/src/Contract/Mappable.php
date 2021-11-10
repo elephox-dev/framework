@@ -12,7 +12,7 @@ interface Mappable
 	 * @template TOut
 	 *
 	 * @param callable(TIn): TOut $callback
-	 * @return \Philly\Collection\Contract\GenericCollection<TOut>
+	 * @return GenericCollection<TOut>
 	 */
 	public function map(callable $callback): GenericCollection;
 }

@@ -6,7 +6,7 @@ namespace Philly\Collection\Contract;
 /**
  * @template T
  *
- * @extends \Philly\Collection\Contract\ReadonlyList<T>
+ * @extends ReadonlyList<T>
  */
 interface GenericList extends ReadonlyList, Stackable
 {
