@@ -186,9 +186,22 @@ class ArrayListTest extends TestCase
 		self::assertEquals($popped, $peeked);
 	}
 
+	public function testSinglePeek(): void
+	{
+		$arr = new ArrayList(['123']);
+
+		self::assertCount(1, $arr);
+
+		$peeked = $arr->peek();
+
+		self::assertCount(1, $arr);
+		self::assertEquals('123', $peeked);
+	}
+
 	public function testInvalidPeek(): void
 	{
 		$this->expectException(OffsetNotFoundException::class);
+		$this->expectExceptionMessage("Offset '0' does not exist.");
 
 		(new ArrayList())->peek();
 	}
@@ -208,6 +221,7 @@ class ArrayListTest extends TestCase
 	public function testInvalidShift(): void
 	{
 		$this->expectException(OffsetNotFoundException::class);
+		$this->expectExceptionMessage("Offset '0' does not exist.");
 
 		(new ArrayList())->shift();
 	}
