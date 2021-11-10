@@ -17,5 +17,10 @@
         "psr-4": {
             "Philly\\Text\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Philly\\Text\\": "test/"
+        }
     }
 }

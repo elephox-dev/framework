@@ -9,17 +9,16 @@
             "email": "contact@ricardoboss.de"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=8.1",
-        "ext-json": "*",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "wikimedia/composer-merge-plugin": "^2.0.1"
     },
     "require-dev": {
-        "vimeo/psalm": "^4.11.2",
-        "phpunit/phpunit": "^9.5.10|dev-master",
-        "infection/infection": "^0.25.3",
+        "php": ">=8.1",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "vimeo/psalm": "^4.12",
+        "phpunit/phpunit": "^9.5",
+        "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest"
     },
@@ -34,26 +33,31 @@
     "extra": {
         "branch-alias": {
             "dev-main": "0.x-dev"
+        },
+        "merge-plugin": {
+            "require": [
+                "modules/*/composer.json"
+            ]
         }
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Collection\\": "modules/Collection/src",
-            "Philly\\Core\\": "modules/Core/src",
-            "Philly\\DI\\": "modules/DI/src",
-            "Philly\\Http\\": "modules/Http/src",
-            "Philly\\Support\\": "modules/Support/src",
-            "Philly\\Text\\": "modules/Text/src"
+            "Philly\\Collection\\": "modules/Collection/src/",
+            "Philly\\Core\\": "modules/Core/src/",
+            "Philly\\DI\\": "modules/DI/src/",
+            "Philly\\Http\\": "modules/Http/src/",
+            "Philly\\Support\\": "modules/Support/src/",
+            "Philly\\Text\\": "modules/Text/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Philly\\Collection\\": "modules/Collection/test",
-            "Philly\\Core\\": "modules/Core/test",
-            "Philly\\DI\\": "modules/DI/test",
-            "Philly\\Http\\": "modules/Http/test",
-            "Philly\\Support\\": "modules/Support/test",
-            "Philly\\Text\\": "modules/Text/test"
+            "Philly\\Collection\\": "modules/Collection/test/",
+            "Philly\\Core\\": "modules/Core/test/",
+            "Philly\\DI\\": "modules/DI/test/",
+            "Philly\\Http\\": "modules/Http/test/",
+            "Philly\\Support\\": "modules/Support/test/",
+            "Philly\\Text\\": "modules/Text/test/"
         }
     }
 }
