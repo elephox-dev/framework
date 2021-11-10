@@ -44,8 +44,6 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 
 	private function __construct(HeaderMap $map)
 	{
-		parent::__construct();
-
 		$this->map = $map->map;
 	}
 }

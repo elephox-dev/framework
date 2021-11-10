@@ -15,7 +15,7 @@ enum CookiePrefix: string
 		/**
 		 * Suppress until vimeo/psalm#6468 is fixed
 		 * @psalm-suppress MixedArgument
-		 * @psalm-suppress UndefinedThisPropertyFetch
+		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
 		 */
 		if (!str_starts_with($cookie->getName(), $this->value)) {
 			return false;
