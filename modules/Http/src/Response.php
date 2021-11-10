@@ -3,34 +3,59 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
+use InvalidArgumentException;
 use JsonException;
 
 class Response implements Contract\Response
 {
+	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\n]+)\n(?<headers>(?:(?:[^:]+):\s?(?:[^\n]+)\n)*)\n(?<body>.*)/s';
+
+	public static function fromString(string $responseString): self
+	{
+		$result = preg_match(
+			self::Pattern,
+			$responseString,
+			$matches
+		);
+
+		if ($result === 0) {
+			throw new InvalidArgumentException("Invalid response string given.");
+		}
+
+		if ($result === false) {
+			throw new InvalidArgumentException("Error parsing response string: " . preg_last_error());
+		}
+
+		$version = $matches['version'];
+		/**
+		 * @var ResponseCode $code
+		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+		 */
+		$code = ResponseCode::from((int)$matches['code']);
+		$headers = ResponseHeaderMap::fromString($matches['headers']);
+		$body = $matches['body'];
+
+		return new self($body, $code, $headers, $version);
+	}
+
 	/**
 	 * @throws JsonException
 	 */
-	public static function fromJson(mixed $json, ResponseCode $code = ResponseCode::Ok, ?Contract\HeaderMap $headers = null): Contract\Response
+	public static function withJson(mixed $json, ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
 	{
 		$content = json_encode($json, JSON_THROW_ON_ERROR);
 
 		return new Response($content, $code, $headers);
 	}
 
-	private Contract\HeaderMap $headers;
+	private Contract\ResponseHeaderMap $headers;
 
-	private ResponseCode $code;
-
-	private string $content;
-
-	public function __construct(string $content, ResponseCode $code = ResponseCode::Ok, ?Contract\HeaderMap $headers = null)
+	public function __construct(private string $content, private ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
 	{
-		$this->content = $content;
-		$this->code = $code;
-		$this->headers = $headers ?? new HeaderMap();
+		$this->headers = $headers ?? ResponseHeaderMap::empty();
 	}
 
-	public function getHeaders(): Contract\HeaderMap
+	public function getHeaders(): Contract\ResponseHeaderMap
 	{
 		return $this->headers;
 	}
@@ -53,5 +78,10 @@ class Response implements Contract\Response
 	public function getContent(): string
 	{
 		return $this->content;
+	}
+
+	public function getHttpVersion(): string
+	{
+		return $this->httpVersion;
 	}
 }

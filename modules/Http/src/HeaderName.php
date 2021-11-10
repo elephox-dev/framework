@@ -5,7 +5,7 @@ namespace Philly\Http;
 
 use JetBrains\PhpStorm\Pure;
 
-enum HeaderName: string
+enum HeaderName: string implements Contract\HeaderName
 {
 	/* Authentication */
 	case WwwAuthenticate = "WWW-Authenticate";
@@ -165,5 +165,11 @@ enum HeaderName: string
 			self::Server => true,
 			default => false,
 		};
+	}
+
+	public function getValue(): string
+	{
+		/** @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed */
+		return $this->value;
 	}
 }

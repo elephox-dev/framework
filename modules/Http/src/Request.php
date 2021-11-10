@@ -11,7 +11,7 @@ class Request implements Contract\Request
 
 	private Contract\ReadonlyHeaderMap $headers;
 
-	public function __construct(RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [])
+	public function __construct(RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [], private ?string $body = null, private bool $followRedirects = true)
 	{
 		$this->url = is_string($uri) ?
 			Url::fromString($uri) :
@@ -44,5 +44,15 @@ class Request implements Contract\Request
 	public function getHeaders(): Contract\ReadonlyHeaderMap
 	{
 		return $this->headers;
+	}
+
+	public function shouldFollowRedirects(): bool
+	{
+		return $this->followRedirects;
+	}
+
+	public function getBody(): ?string
+	{
+		return $this->body;
 	}
 }

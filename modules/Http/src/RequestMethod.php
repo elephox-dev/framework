@@ -12,4 +12,16 @@ enum RequestMethod: string
 	case DELETE = "DELETE";
 	case OPTIONS = "OPTIONS";
 	case PATCH = "PATCH";
+
+	public function canHaveBody(): bool
+	{
+		return match ($this)
+        {
+			self::POST,
+			self::PUT,
+			self::DELETE,
+			self::PATCH => true,
+			default => false
+		};
+	}
 }

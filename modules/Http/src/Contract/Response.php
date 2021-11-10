@@ -7,7 +7,7 @@ use Philly\Http\ResponseCode;
 
 interface Response
 {
-	public function getHeaders(): HeaderMap;
+	public function getHeaders(): ResponseHeaderMap;
 
 	public function setCode(ResponseCode $code): void;
 
@@ -16,4 +16,6 @@ interface Response
 	public function setContent(string $content): void;
 
 	public function getContent(): string;
+
+	public function getHttpVersion(): string;
 }

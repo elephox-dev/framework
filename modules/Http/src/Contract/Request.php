@@ -12,4 +12,8 @@ interface Request
 	public function getMethod(): RequestMethod;
 
 	public function getHeaders(): ReadonlyHeaderMap;
+
+	public function getBody(): ?string;
+
+	public function shouldFollowRedirects(): bool;
 }

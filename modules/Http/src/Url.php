@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
+use JetBrains\PhpStorm\Pure;
 use Philly\Support\ToStringCompatible;
 
 class Url implements Contract\Url
@@ -68,47 +69,47 @@ class Url implements Contract\Url
 		}
 	}
 
-	public function getScheme(): ?string
+	#[Pure] public function getScheme(): ?string
 	{
 		return $this->scheme;
 	}
 
-	public function getUsername(): ?string
+	#[Pure] public function getUsername(): ?string
 	{
 		return $this->username;
 	}
 
-	public function getPassword(): ?string
+	#[Pure] public function getPassword(): ?string
 	{
 		return $this->password;
 	}
 
-	public function getHost(): ?string
+	#[Pure] public function getHost(): ?string
 	{
 		return $this->host;
 	}
 
-	public function getPort(): ?int
+	#[Pure] public function getPort(): ?int
 	{
 		return $this->port;
 	}
 
-	public function getPath(): string
+	#[Pure] public function getPath(): string
 	{
 		return $this->path;
 	}
 
-	public function getQuery(): ?string
+	#[Pure] public function getQuery(): ?string
 	{
 		return $this->query;
 	}
 
-	public function getFragment(): ?string
+	#[Pure] public function getFragment(): ?string
 	{
 		return $this->fragment;
 	}
 
-	public function asString(): string
+	#[Pure] public function asString(): string
 	{
 		if ($this->scheme !== null) {
 			if (empty($this->scheme)) {

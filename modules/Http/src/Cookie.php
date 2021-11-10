@@ -47,7 +47,7 @@ class Cookie implements Contract\Cookie
 		$nameValuePair = $propertyList->shift();
 		[$name, $value] = explode('=', $nameValuePair, 2);
 
-		/** @var ArrayList<\Philly\Collection\Contract\KeyValuePair<string, string>> $propertyList */
+		/** @var ArrayList<KeyValuePair<string, string>> $propertyList */
 		$propertyList = $propertyList
 			->map(static function (string $keyValue): KeyValuePair {
 				if (!str_contains($keyValue, '=')) {
@@ -59,7 +59,9 @@ class Cookie implements Contract\Cookie
 				return new KeyValuePair(strtolower(trim($key)), $value);
 			});
 
-		/** @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones. */
+		/**
+		 * @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones.
+		 */
 		$propertyMap = ArrayMap::fromKeyValuePairList($propertyList);
 
 		$cookie = new self($name);
@@ -110,45 +112,18 @@ class Cookie implements Contract\Cookie
 		return $cookie;
 	}
 
-	private string $name;
-
-	private ?string $value;
-
-	private ?DateTime $expires;
-
-	private ?string $path;
-
-	private ?string $domain;
-
-	private bool $secure;
-
-	private bool $httpOnly;
-
-	private ?CookieSameSite $sameSite;
-
-	public ?int $maxAge;
-
 	public function __construct(
-		string          $name,
-		?string         $value = null,
-		?DateTime       $expires = null,
-		?string         $path = null,
-		?string         $domain = null,
-		bool            $secure = false,
-		bool            $httpOnly = false,
-		?CookieSameSite $sameSite = null,
-		?int            $maxAge = null
+		private string          $name,
+		private ?string         $value = null,
+		private ?DateTime       $expires = null,
+		private ?string         $path = null,
+		private ?string         $domain = null,
+		private bool            $secure = false,
+		private bool            $httpOnly = false,
+		private ?CookieSameSite $sameSite = null,
+		public ?int             $maxAge = null
 	)
 	{
-		$this->name = $name;
-		$this->value = $value;
-		$this->expires = $expires;
-		$this->path = $path;
-		$this->domain = $domain;
-		$this->secure = $secure;
-		$this->httpOnly = $httpOnly;
-		$this->sameSite = $sameSite;
-		$this->maxAge = $maxAge;
 	}
 
 	public function getName(): string
