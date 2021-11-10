@@ -1,0 +1,18 @@
+name: Text Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/text.yml'
+      - 'modules/Text/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'philly-framework/text'
+      dir: 'modules/Text/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_TEXT_KEY }}
