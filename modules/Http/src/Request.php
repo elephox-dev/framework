@@ -5,16 +5,25 @@ namespace Philly\Http;
 
 class Request implements Contract\Request
 {
-	private string $uri;
+	private Contract\Url $url;
 
 	private RequestMethod $method;
 
 	private Contract\ReadonlyHeaderMap $headers;
 
-	public function __construct(string $uri, RequestMethod $method, Contract\ReadonlyHeaderMap|array $headers)
+	public function __construct(RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [])
 	{
-		$this->uri = $uri;
-		$this->method = $method;
+		$this->url = is_string($uri) ?
+			Url::fromString($uri) :
+			$uri;
+
+		/**
+		 * @var RequestMethod method
+		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+		 */
+		$this->method = is_string($method) ?
+			RequestMethod::from($method) :
+			$method;
 
 		/** @var Contract\ReadonlyHeaderMap headers */
 		$this->headers = $headers instanceof Contract\ReadonlyHeaderMap ?
@@ -22,9 +31,9 @@ class Request implements Contract\Request
 			HeaderMap::fromArray($headers);
 	}
 
-	public function getUri(): string
+	public function getUrl(): Contract\Url
 	{
-		return $this->uri;
+		return $this->url;
 	}
 
 	public function getMethod(): RequestMethod

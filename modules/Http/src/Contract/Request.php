@@ -7,7 +7,7 @@ use Philly\Http\RequestMethod;
 
 interface Request
 {
-	public function getUri(): string;
+	public function getUrl(): Url;
 
 	public function getMethod(): RequestMethod;
 
