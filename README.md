@@ -2,7 +2,8 @@
 
 This is a class library providing independent building blocks.
 
-[📊 Coverage Report](https://github.com/philly-framework/base/actions/workflows/coverage.yml/badge.svg)
+[![Common Workflow](https://github.com/philly-framework/base/actions/workflows/common.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/common.yml)
+[📊 Coverage Report](https://philly.ricardoboss.de/coverage)
 
 ## Goals:
 

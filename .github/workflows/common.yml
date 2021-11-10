@@ -1,4 +1,4 @@
-name: 🧩 Common Workflow
+name: Common Workflow ⚙️
 on:
   push:
     branches:
