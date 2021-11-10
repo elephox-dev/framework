@@ -12,6 +12,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Support/test" isTestSource="true" packagePrefix="Philly\Support\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Text/src" isTestSource="false" packagePrefix="Philly\Text\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" packagePrefix="Philly\Text\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Core/src" isTestSource="false" packagePrefix="Philly\Core\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Core/test" isTestSource="true" packagePrefix="Philly\Core\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-file-iterator" />

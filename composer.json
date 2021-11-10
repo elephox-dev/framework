@@ -25,6 +25,7 @@
     },
     "replace": {
         "philly/collection": "self.version",
+        "philly/core": "self.version",
         "philly/di": "self.version",
         "philly/http": "self.version",
         "philly/support": "self.version",
@@ -38,6 +39,7 @@
     "autoload": {
         "psr-4": {
             "Philly\\Collection\\": "modules/Collection/src",
+            "Philly\\Core\\": "modules/Core/src",
             "Philly\\DI\\": "modules/DI/src",
             "Philly\\Http\\": "modules/Http/src",
             "Philly\\Support\\": "modules/Support/src",
@@ -47,6 +49,7 @@
     "autoload-dev": {
         "psr-4": {
             "Philly\\Collection\\": "modules/Collection/test",
+            "Philly\\Core\\": "modules/Core/test",
             "Philly\\DI\\": "modules/DI/test",
             "Philly\\Http\\": "modules/Http/test",
             "Philly\\Support\\": "modules/Support/test",
