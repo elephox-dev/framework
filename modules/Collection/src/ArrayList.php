@@ -14,9 +14,8 @@ use Philly\Support\Contract\ArrayConvertible;
  *
  * @template-implements GenericList<T>
  * @template-implements ArrayAccess<int, T>
- * @template-implements ArrayConvertible<int, T>
  */
-class ArrayList implements GenericList, ArrayAccess, ArrayConvertible
+class ArrayList implements GenericList, ArrayAccess
 {
 	public static function fromArray(array $array): self
 	{

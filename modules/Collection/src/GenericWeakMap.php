@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Philly\Collection;
 
+use Iterator;
+use Philly\Collection\Contract\GenericList;
 use WeakMap;
 
 /**
@@ -114,7 +116,7 @@ class GenericWeakMap implements Contract\GenericMap
 		$map = new GenericWeakMap();
 
 		/**
-		 * @var object $key
+		 * @var TKey $key
 		 * @var TValue $value
 		 */
 		foreach ($this->map as $key => $value) {
@@ -125,8 +127,60 @@ class GenericWeakMap implements Contract\GenericMap
 		return $map;
 	}
 
+	/**
+	 * @template TOut
+	 *
+	 * @param callable(TValue, TKey): TOut $callback
+	 * @return ArrayList<TOut>
+	 */
+	public function reduce(callable $callback): ArrayList
+	{
+		/** @var ArrayList<TOut> $list */
+		$list = new ArrayList();
+
+		/**
+		 * @var TKey $key
+		 * @var TValue $value
+		 */
+		foreach ($this->map as $key => $value) {
+			$list->add($callback($value, $key));
+		}
+
+		return $list;
+	}
+
 	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
+	}
+
+	public function values(): GenericList
+	{
+		/** @var ArrayList<TValue> $list */
+		$list = new ArrayList();
+
+		/** @var TValue $item */
+		foreach ($this->map as $item) {
+			$list->add($item);
+		}
+
+		return $list;
+	}
+
+	public function keys(): GenericList
+	{
+		/** @var ArrayList<TKey> $list */
+		$list = new ArrayList();
+
+		/** @var Iterator $iterator */
+		$iterator = $this->map->getIterator();
+		while ($iterator->valid()) {
+			/** @var TKey $key */
+			$key = $iterator->key();
+			$list->add($key);
+			$iterator->next();
+		}
+
+		return $list;
 	}
 }

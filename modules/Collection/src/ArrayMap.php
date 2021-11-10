@@ -4,28 +4,35 @@ declare(strict_types=1);
 namespace Philly\Collection;
 
 use JetBrains\PhpStorm\Pure;
+use Philly\Support\Contract\ArrayConvertible;
 
 /**
  * @template TKey as array-key
  * @template TValue
  *
  * @template-implements Contract\GenericMap<TKey, TValue>
+ * @template-implements ArrayConvertible<TKey, TValue>
  */
-class ArrayMap implements Contract\GenericMap
+class ArrayMap implements Contract\GenericMap, ArrayConvertible
 {
 	/**
 	 * @template TPairKey as array-key
 	 * @template TPairValue
 	 *
-	 * @param \Philly\Collection\ArrayList<\Philly\Collection\Contract\KeyValuePair<TPairKey, TPairValue>> $list
-	 * @return \Philly\Collection\ArrayMap<TPairKey, TPairValue>
+	 * @param ArrayList<KeyValuePair<TPairKey, TPairValue>> $list
+	 * @return ArrayMap<TPairKey, TPairValue>
 	 */
 	public static function fromKeyValuePairList(ArrayList $list): self
 	{
 		$map = new ArrayMap();
 
 		foreach ($list as $keyValuePair) {
-			$map->put($keyValuePair->getKey(), $keyValuePair->getValue());
+			$key = $keyValuePair->getKey();
+			if ($map->has($key)) {
+				throw new DuplicateKeyException($key);
+			}
+
+			$map->put($key, $keyValuePair->getValue());
 		}
 
 		return $map;
@@ -117,5 +124,38 @@ class ArrayMap implements Contract\GenericMap
 	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
+	}
+
+	public function values(): ArrayList
+	{
+		return new ArrayList(array_values($this->values));
+	}
+
+	public function keys(): ArrayList
+	{
+		return new ArrayList(array_keys($this->values));
+	}
+
+	/**
+	 * @template TOut
+	 *
+	 * @param callable(TValue, TKey): TOut $callback
+	 * @return ArrayList<TOut>
+	 */
+	public function reduce(callable $callback): ArrayList
+	{
+		/** @var ArrayList<TOut> $list */
+		$list = new ArrayList();
+
+		foreach ($this->values as $key => $value) {
+			$list->add($callback($value, $key));
+		}
+
+		return $list;
+	}
+
+	public function asArray(): array
+	{
+		return $this->values;
 	}
 }

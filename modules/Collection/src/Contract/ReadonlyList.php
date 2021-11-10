@@ -5,14 +5,16 @@ namespace Philly\Collection\Contract;
 
 use Countable;
 use IteratorAggregate;
+use Philly\Support\Contract\ArrayConvertible;
 
 /**
  * @template T
  *
- * @extends \Philly\Collection\Contract\GenericCollection<T>
- * @extends \IteratorAggregate<int, T>
+ * @extends GenericCollection<T>
+ * @extends IteratorAggregate<int, T>
+ * @extends ArrayConvertible<int, T>
  */
-interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate
+interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate, ArrayConvertible
 {
 	/**
 	 * @return T

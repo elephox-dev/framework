@@ -37,6 +37,14 @@ interface ReadonlyMap extends GenericCollection
 	public function map(callable $callback): GenericMap;
 
 	/**
+	 * @template TOut
+	 *
+	 * @param callable(TValue, TKey): TOut $callback
+	 * @return GenericList<TOut>
+	 */
+	public function reduce(callable $callback): GenericList;
+
+	/**
 	 * @param null|callable(TValue, TKey): bool $filter
 	 * @return TValue|null
 	 */
@@ -47,4 +55,14 @@ interface ReadonlyMap extends GenericCollection
 	 * @return bool
 	 */
 	public function any(?callable $filter = null): bool;
+
+	/**
+	 * @return GenericList<TValue>
+	 */
+	public function values(): GenericList;
+
+	/**
+	 * @return GenericList<TKey>
+	 */
+	public function keys(): GenericList;
 }
