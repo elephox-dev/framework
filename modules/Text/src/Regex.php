@@ -15,7 +15,7 @@ class Regex
 	 */
 	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
-		$parts = preg_split($pattern, $subject, $limit);
+		$parts = preg_split($pattern, $subject, $limit,);
 		if ($parts === false) {
 			throw new InvalidArgumentException('An error occurred while splitting: ' . preg_last_error_msg());
 		}
