@@ -2,10 +2,7 @@
 
 This is a class library providing independent building blocks.
 
-[![🔎 Static Analysis](https://github.com/philly-framework/base/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/static-analysis.yml)
-[![🧟 Mutation Tests](https://github.com/philly-framework/base/actions/workflows/mutation-tests.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/mutation-tests.yml)
-[![🧪 Unit Tests](https://github.com/philly-framework/base/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/philly-framework/base/actions/workflows/unit-tests.yml)
-[![📊 Coverage](https://github.com/philly-framework/base/actions/workflows/coverage.yml/badge.svg)](https://philly.ricardoboss.de/coverage/)
+[📊 Coverage Report](https://github.com/philly-framework/base/actions/workflows/coverage.yml/badge.svg)
 
 ## Goals:
 
