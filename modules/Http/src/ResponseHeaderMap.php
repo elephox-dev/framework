@@ -20,7 +20,7 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 	public static function fromString(string $headers): self
 	{
 		/** @var ArrayList<KeyValuePair<string, string>> $headerRows */
-		$headerKeyValueList = Regex::split("[\r\n]", $headers)
+		$headerKeyValueList = Regex::split("\r?\n", $headers)
 			->map(static function (string $row): KeyValuePair {
 				if (!str_contains($row, ':')) {
 					throw new InvalidArgumentException("Invalid header row: $row");
