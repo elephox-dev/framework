@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
+use InvalidArgumentException;
 use LogicException;
 use Philly\Collection\ArrayList;
 use Philly\Collection\ArrayMap;
@@ -21,6 +22,10 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		/** @var ArrayList<KeyValuePair<string, string>> $headerRows */
 		$headerKeyValueList = Regex::split("[\r\n]", $headers)
 			->map(static function (string $row): KeyValuePair {
+				if (!str_contains($row, ':')) {
+					throw new InvalidArgumentException("Invalid header row: $row");
+				}
+
 				[$name, $value] = explode(':', $row, 2);
 				return new KeyValuePair($name, trim($value));
 			});
