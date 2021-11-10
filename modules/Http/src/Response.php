@@ -8,7 +8,7 @@ use JsonException;
 
 class Response implements Contract\Response
 {
-	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\n]+)\n(?<headers>(?:(?:[^:]+):\s?(?:[^\n]+)\n)*)\n(?<body>.*)/s';
+	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\r\n]+)\r?\n(?<headers>(?:(?:[^:]+):\s?(?:[^\r\n]+)\r?\n)*)\r?\n(?<body>.*)/s';
 
 	public static function fromString(string $responseString): self
 	{
