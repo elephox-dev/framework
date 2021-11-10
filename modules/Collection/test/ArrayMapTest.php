@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Philly\Collection\OffsetNotFoundException
  * @covers \Philly\Collection\OffsetNotAllowedException
  * @covers \Philly\Collection\InvalidOffsetException
+ * @covers \Philly\Collection\ArrayList
+ * @covers \Philly\Collection\KeyValuePair
+ * @covers \Philly\Collection\DuplicateKeyException
  */
 class ArrayMapTest extends TestCase
 {
@@ -94,5 +97,43 @@ class ArrayMapTest extends TestCase
 		self::assertTrue($map->any());
 		self::assertTrue($map->any(fn(int $a) => $a > 500));
 		self::assertFalse($map->any(fn(int $a) => $a < 100));
+	}
+
+	public function testFromKeyValuePairList(): void
+	{
+		$list = new ArrayList([
+			new KeyValuePair('test', 'val'),
+		]);
+
+		$map = ArrayMap::fromKeyValuePairList($list);
+		self::assertEquals('val', $map->get('test'));
+
+		$list->add(new KeyValuePair('test', 'val2'));
+
+		$this->expectException(DuplicateKeyException::class);
+		ArrayMap::fromKeyValuePairList($list);
+	}
+
+	public function testValuesAndKeys(): void
+	{
+		$map = new ArrayMap([
+			'a' => '1',
+			'b' => '2',
+			'c' => '3',
+		]);
+
+		self::assertEquals(['1', '2', '3'], $map->values()->asArray());
+		self::assertEquals(['a', 'b', 'c'], $map->keys()->asArray());
+	}
+
+	public function testReduce(): void
+	{
+		$map = new ArrayMap([
+            'a' => '1',
+            'b' => '2',
+            'c' => '3',
+        ]);
+
+        self::assertEquals(['a1', 'b2', 'c3'], $map->reduce(fn(string $val, string $key) => $key . $val)->asArray());
 	}
 }

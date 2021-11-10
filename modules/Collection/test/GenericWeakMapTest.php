@@ -10,6 +10,7 @@ use stdClass;
  * @covers \Philly\Collection\GenericWeakMap
  * @covers \Philly\Collection\OffsetNotFoundException
  * @covers \Philly\Collection\InvalidOffsetException
+ * @covers \Philly\Collection\ArrayList
  */
 class GenericWeakMapTest extends TestCase
 {
@@ -101,5 +102,22 @@ class GenericWeakMapTest extends TestCase
 		$map = new GenericWeakMap([$inst], [123]);
 
 		self::assertTrue($map->any(static fn(int $v) => $v > 100));
+	}
+
+	public function testReduce(): void
+	{
+		$inst = new stdClass();
+		$map = new GenericWeakMap([$inst], [123]);
+
+		self::assertEquals([123], $map->reduce(static fn(int $v) => $v)->asArray());
+	}
+
+	public function testValuesAndKeys(): void
+	{
+		$inst = new stdClass();
+		$map = new GenericWeakMap([$inst], [123]);
+
+		self::assertEquals([$inst], $map->keys()->asArray());
+		self::assertEquals([123], $map->values()->asArray());
 	}
 }
