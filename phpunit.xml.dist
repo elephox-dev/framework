@@ -20,8 +20,14 @@
         <testsuite name="Collection">
             <directory>modules/Collection/test</directory>
         </testsuite>
+        <testsuite name="Core">
+            <directory>modules/Core/test</directory>
+        </testsuite>
         <testsuite name="DI">
             <directory>modules/DI/test</directory>
+        </testsuite>
+        <testsuite name="Files">
+            <directory>modules/Files/test</directory>
         </testsuite>
         <testsuite name="Http">
             <directory>modules/Http/test</directory>

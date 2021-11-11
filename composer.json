@@ -45,6 +45,7 @@
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Core\\": "modules/Core/src/",
             "Elephox\\DI\\": "modules/DI/src/",
+            "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Support\\": "modules/Support/src/",
             "Elephox\\Text\\": "modules/Text/src/"
@@ -55,6 +56,7 @@
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\Core\\": "modules/Core/test/",
             "Elephox\\DI\\": "modules/DI/test/",
+            "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
