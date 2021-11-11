@@ -11,7 +11,7 @@ interface Response
 
 	public function getCode(): ResponseCode;
 
-	public function setContent(string $content): void;
+	public function setContent(string $content, ?MimeType $mimeType = null): void;
 
 	public function getContent(): string;
 

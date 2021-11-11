@@ -45,6 +45,9 @@ class Response implements Contract\Response
 	{
 		$content = json_encode($json, JSON_THROW_ON_ERROR);
 
+		$headers ??= new ResponseHeaderMap();
+		$headers->put(HeaderName::ContentType->getValue(), [MimeType::Applicationjson->getValue()]);
+
 		return new Response($content, $code, $headers);
 	}
 
@@ -72,9 +75,13 @@ class Response implements Contract\Response
 		return $this->code;
 	}
 
-	public function setContent(string $content): void
+	public function setContent(string $content, ?Contract\MimeType $mimeType = null): void
 	{
 		$this->content = $content;
+
+		if ($mimeType !== null) {
+			$this->headers->put(HeaderName::ContentType->getValue(), [$mimeType->getValue()]);
+		}
 	}
 
 	public function getContent(): string

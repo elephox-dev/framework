@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-interface ResponseHeaderMap extends ReadonlyHeaderMap
+interface ResponseHeaderMap extends HeaderMap
 {
 }
