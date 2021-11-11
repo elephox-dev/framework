@@ -73,6 +73,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -81,7 +83,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --colors --verbose
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-html=build/coverage/html
+      - name: 📤 Upload coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: build/coverage/
+          retention-days: 30
 
   mutation-tests:
     name: 🧟 Mutation Tests
@@ -100,8 +108,6 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: xdebug
           ini-values: xdebug.mode=coverage
-      - name: ✔️ Validate composer.lock
-        run: composer validate --strict --no-interaction
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -109,31 +115,22 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php-version }}-composer-
-      - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+      - name: 📥 Download coverage data
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
       - name: 🧟 Run Infection
-        run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --logger-github --no-interaction --no-progress
+        run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
 
   coverage:
     name: 📊 Publish Coverage
     needs: [ unit-tests ]
     runs-on: 'ubuntu-latest'
     steps:
-      - name: ⤵️ Checkout Sources
-        uses: actions/checkout@v2
-      - name: 🐘 Setup PHP 8.1
-        uses: shivammathur/setup-php@v2
+      - name: 📥 Download coverage data
+        uses: actions/download-artifact@v2
         with:
-          php-version: '8.1'
-          coverage: xdebug
-          ini-values: xdebug.mode=coverage
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.1-composer-
+          name: coverage
       - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -142,15 +139,13 @@ jobs:
       - name: ⤵️ Checkout coverage repository
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
-          git clone git@github.com:elephox-dev/coverage.git tmp/coverage/html --depth=1 && \
+          git clone git@github.com:elephox-dev/coverage.git build/coverage/html --depth=1 && \
           cd tmp/coverage/html && \
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
-      - name: 📊 Run PHPUnit Coverage
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html tmp/coverage/html
       - name: ⤴️ Push updated coverage report
         uses: EndBug/add-and-commit@v7
         with:
-          cwd: './tmp/coverage/html'
+          cwd: './build/coverage/html'
           message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'elephox-dev/framework', github.sha) }}
           pull: NO-PULL
 
