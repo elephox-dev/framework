@@ -237,11 +237,6 @@ jobs:
     needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
-      - name: 📥 Download coverage data
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ runner.os }}-8.1-coverage
-          path: build/coverage/
       - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -253,6 +248,11 @@ jobs:
           git clone git@github.com:elephox-dev/coverage.git build/coverage/html --depth=1 && \
           cd build/coverage/html && \
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
+      - name: 📥 Download coverage data
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ runner.os }}-8.1-coverage
+          path: build/coverage/
       - name: ⤴️ Push updated coverage report
         uses: EndBug/add-and-commit@v7
         with:
