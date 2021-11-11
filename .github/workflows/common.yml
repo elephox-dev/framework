@@ -8,12 +8,12 @@ on:
       - "modules/**"
 
 jobs:
-  composer-setup:
+  composer-setup-linux:
+    name: 📦 Composer Setup Linux
     strategy:
       matrix:
-        os: [ 'ubuntu-latest', 'windows-latest' ]
         php-version: [ '8.1' ]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
@@ -33,14 +33,38 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
 
-  static-analysis:
-    name: 🔎 Static Analysis
-    needs: [ composer-setup ]
+  composer-setup-windows:
+    name: 📦 Composer Setup Windows
     strategy:
       matrix:
-        os: [ 'ubuntu-latest', 'windows-latest' ]
         php-version: [ '8.1' ]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+      - name: ✔️ Validate composer.lock
+        run: composer validate --strict --no-interaction
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php-version }}-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
+
+  static-analysis-linux:
+    name: 🔎 Static Analysis
+    needs: [ composer-setup-linux ]
+    strategy:
+      matrix:
+        php-version: [ '8.1' ]
+    runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
@@ -58,14 +82,37 @@ jobs:
       - name: 🔎 Run Psalm
         run: vendor/bin/psalm --shepherd
 
-  unit-tests:
-    name: 🧪 Unit Tests
-    needs: [ composer-setup ]
+  static-analysis-windows:
+    name: 🔎 Static Analysis
+    needs: [ composer-setup-windows ]
     strategy:
       matrix:
-        os: [ 'ubuntu-latest', 'windows-latest' ]
         php-version: [ '8.1' ]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php-version }}-composer-
+      - name: 🔎 Run Psalm
+        run: vendor/bin/psalm --shepherd
+
+  unit-tests-linux:
+    name: 🧪 Unit Tests Linux
+    needs: [ composer-setup-linux ]
+    strategy:
+      matrix:
+        php-version: [ '8.1' ]
+    runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
@@ -91,14 +138,76 @@ jobs:
           path: build/coverage/
           retention-days: 30
 
-  mutation-tests:
-    name: 🧟 Mutation Tests
-    needs: [ unit-tests ]
+  unit-tests-windows:
+    name: 🧪 Unit Tests Windows
+    needs: [ composer-setup-windows ]
     strategy:
       matrix:
-        os: [ 'ubuntu-latest', 'windows-latest' ]
         php-version: [ '8.1' ]
-    runs-on: ${{ matrix.os }}
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php-version }}-composer-
+      - name: 🧪 Run PHPUnit
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-html=build/coverage/html
+      - name: 📤 Upload coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          path: build/coverage/
+          retention-days: 30
+
+  mutation-tests-linux:
+    name: 🧟 Mutation Tests Linux
+    needs: [ unit-tests-linux ]
+    strategy:
+      matrix:
+        php-version: [ '8.1' ]
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php-version }}-composer-
+      - name: 📥 Download coverage data
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          path: build/coverage/
+      - name: 🧟 Run Infection
+        run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
+
+  mutation-tests-windows:
+    name: 🧟 Mutation Tests Windows
+    needs: [ unit-tests-windows ]
+    strategy:
+      matrix:
+        php-version: [ '8.1' ]
+    runs-on: 'windows-latest'
     steps:
       - name: ⤵️ Checkout Sources
         uses: actions/checkout@v2
@@ -125,13 +234,13 @@ jobs:
 
   coverage:
     name: 📊 Publish Coverage
-    needs: [ unit-tests ]
+    needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
-          name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          name: ${{ runner.os }}-8.1-coverage
           path: build/coverage/
       - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
