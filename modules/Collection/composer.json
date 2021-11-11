@@ -1,6 +1,6 @@
 {
-    "name": "philly/collection",
-    "description": "Philly collection library.",
+    "name": "elephox/collection",
+    "description": "Elephox collection library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,17 +11,17 @@
     ],
     "require": {
         "php": ">=8.1",
-        "philly/support": "dev-main",
+        "elephox/support": "dev-main",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Collection\\": "src/"
+            "Elephox\\Collection\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Philly\\Collection\\": "test/"
+            "Elephox\\Collection\\": "test/"
         }
     }
 }

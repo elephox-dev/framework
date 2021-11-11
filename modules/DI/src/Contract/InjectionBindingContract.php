@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\DI\Contract;
+namespace Elephox\DI\Contract;
 
-use Philly\DI\BindingLifetime;
+use Elephox\DI\BindingLifetime;
 
 /**
  * @template T

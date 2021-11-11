@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http\Contract;
+namespace Elephox\Http\Contract;
 
-use Philly\Support\Contract\ArrayConvertible;
-use Philly\Collection\Contract\ReadonlyMap;
+use Elephox\Support\Contract\ArrayConvertible;
+use Elephox\Collection\Contract\ReadonlyMap;
 
 /**
  * @extends ReadonlyMap<string, array<int, string>>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\DI;
+namespace Elephox\DI;
 
 use JetBrains\PhpStorm\Pure;
 use Throwable;

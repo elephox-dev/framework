@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection\Contract;
+namespace Elephox\Collection\Contract;
 
 /**
  * @template TIn

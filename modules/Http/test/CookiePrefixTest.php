@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Philly\Http\Contract\Cookie;
+use Elephox\Http\Contract\Cookie;
 
 /**
- * @covers \Philly\Http\CookiePrefix
+ * @covers \Elephox\Http\CookiePrefix
  */
 class CookiePrefixTest extends MockeryTestCase
 {

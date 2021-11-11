@@ -1,28 +1,28 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Philly\Http\Contract\HttpAdapter;
+use Elephox\Http\Contract\HttpAdapter;
 
 /**
- * @covers \Philly\Http\Client
- * @covers \Philly\Http\ResponseCode
- * @covers \Philly\Collection\ArrayList
- * @covers \Philly\Collection\ArrayMap
- * @covers \Philly\Collection\GenericWeakMap
- * @covers \Philly\Collection\KeyValuePair
- * @covers \Philly\Http\Request
- * @covers \Philly\Http\Response
- * @covers \Philly\Http\Url
- * @covers \Philly\Text\Regex
- * @covers \Philly\Http\RequestMethod
- * @covers \Philly\Http\RequestHeaderMap
- * @covers \Philly\Http\ResponseHeaderMap
- * @covers \Philly\Http\HeaderMap
- * @covers \Philly\Http\HeaderName
+ * @covers \Elephox\Http\Client
+ * @covers \Elephox\Http\ResponseCode
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Collection\KeyValuePair
+ * @covers \Elephox\Http\Request
+ * @covers \Elephox\Http\Response
+ * @covers \Elephox\Http\Url
+ * @covers \Elephox\Text\Regex
+ * @covers \Elephox\Http\RequestMethod
+ * @covers \Elephox\Http\RequestHeaderMap
+ * @covers \Elephox\Http\ResponseHeaderMap
+ * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\Http\HeaderName
  */
 class ClientTest extends MockeryTestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;

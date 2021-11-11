@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\DI;
+namespace Elephox\DI;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
 use stdClass;
 
 /**
- * @covers \Philly\DI\Container
- * @covers \Philly\DI\BindingLifetime
- * @covers \Philly\Collection\ArrayMap
- * @covers \Philly\Collection\ArrayList
- * @covers \Philly\DI\Binding
- * @covers \Philly\DI\InvalidBindingInstanceException
- * @covers \Philly\DI\BindingNotFoundException
- * @covers \Philly\DI\BindingException
- * @covers \Philly\DI\MissingTypeHintException
+ * @covers \Elephox\DI\Container
+ * @covers \Elephox\DI\BindingLifetime
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\DI\Binding
+ * @covers \Elephox\DI\InvalidBindingInstanceException
+ * @covers \Elephox\DI\BindingNotFoundException
+ * @covers \Elephox\DI\BindingException
+ * @covers \Elephox\DI\MissingTypeHintException
  */
 class ContainerTest extends MockeryTestCase
 {

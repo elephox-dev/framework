@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Http\Contract;
+namespace Elephox\Http\Contract;
 
 interface HeaderName
 {

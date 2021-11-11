@@ -1,9 +1,9 @@
 <?php
 
-namespace Philly\Text;
+namespace Elephox\Text;
 
 use InvalidArgumentException;
-use Philly\Collection\ArrayList;
+use Elephox\Collection\ArrayList;
 
 class Regex
 {

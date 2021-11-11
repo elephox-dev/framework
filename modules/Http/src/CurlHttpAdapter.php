@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 if (!function_exists('curl_init')) {
 	return;
@@ -9,7 +9,7 @@ if (!function_exists('curl_init')) {
 
 use CurlHandle;
 use Exception;
-use Philly\Http\Contract\HttpAdapter;
+use Elephox\Http\Contract\HttpAdapter;
 
 class CurlHttpAdapter implements Contract\HttpAdapter
 {

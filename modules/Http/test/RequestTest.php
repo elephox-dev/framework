@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Http\Request
- * @covers \Philly\Collection\GenericWeakMap
- * @covers \Philly\Http\HeaderMap
- * @covers \Philly\Http\RequestMethod
- * @covers \Philly\Http\Url
- * @covers \Philly\Http\UrlScheme
- * @covers \Philly\Collection\ArrayMap
- * @covers \Philly\Http\RequestHeaderMap
- * @covers \Philly\Http\HeaderName
+ * @covers \Elephox\Http\Request
+ * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\Http\RequestMethod
+ * @covers \Elephox\Http\Url
+ * @covers \Elephox\Http\UrlScheme
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Http\RequestHeaderMap
+ * @covers \Elephox\Http\HeaderName
  */
 class RequestTest extends TestCase
 {

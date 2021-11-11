@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use ArrayAccess;
 use ArrayIterator;
 use JetBrains\PhpStorm\Pure;
-use Philly\Collection\Contract\GenericList;
-use Philly\Support\Contract\ArrayConvertible;
+use Elephox\Collection\Contract\GenericList;
+use Elephox\Support\Contract\ArrayConvertible;
 
 /**
  * @template T

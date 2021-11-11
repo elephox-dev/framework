@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http\Contract;
+namespace Elephox\Http\Contract;
 
-use Philly\Support\Contract\StringConvertible;
+use Elephox\Support\Contract\StringConvertible;
 
 interface Url extends StringConvertible
 {

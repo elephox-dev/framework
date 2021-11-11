@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Pure;
-use Philly\Support\ToStringCompatible;
+use Elephox\Support\ToStringCompatible;
 
 class Url implements Contract\Url
 {

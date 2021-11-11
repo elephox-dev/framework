@@ -1,6 +1,6 @@
 {
-    "name": "philly/support",
-    "description": "Philly support library.",
+    "name": "elephox/support",
+    "description": "Elephox support library.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -15,12 +15,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Support\\": "src/"
+            "Elephox\\Support\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Philly\\Support\\": "test/"
+            "Elephox\\Support\\": "test/"
         }
     }
 }

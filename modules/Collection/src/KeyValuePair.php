@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @template-implements \Philly\Collection\Contract\KeyValuePair<TKey, TValue>
+ * @template-implements \Elephox\Collection\Contract\KeyValuePair<TKey, TValue>
  */
 class KeyValuePair implements Contract\KeyValuePair
 {

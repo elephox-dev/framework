@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 class CustomHeaderName implements Contract\HeaderName
 {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
-use Philly\Collection\ArrayMap;
+use Elephox\Collection\ArrayMap;
 
 /**
  * @extends ArrayMap<non-empty-string, array<int, string>>
@@ -27,7 +27,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 			}
 
 			/**
-			 * @var \Philly\Http\Contract\HeaderName|null $headerName
+			 * @var \Elephox\Http\Contract\HeaderName|null $headerName
 			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 			 */
 			$headerName = HeaderName::tryFrom($name);

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
-use Philly\Http\Contract\Cookie;
+use Elephox\Http\Contract\Cookie;
 
 enum CookiePrefix: string
 {

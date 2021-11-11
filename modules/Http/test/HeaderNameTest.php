@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Http\HeaderName
+ * @covers \Elephox\Http\HeaderName
  */
 class HeaderNameTest extends TestCase
 {

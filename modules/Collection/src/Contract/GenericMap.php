@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection\Contract;
+namespace Elephox\Collection\Contract;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @extends \Philly\Collection\Contract\ReadonlyMap<TKey, TValue>
+ * @extends \Elephox\Collection\Contract\ReadonlyMap<TKey, TValue>
  */
 interface GenericMap extends ReadonlyMap
 {

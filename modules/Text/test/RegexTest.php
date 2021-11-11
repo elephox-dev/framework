@@ -1,13 +1,13 @@
 <?php
 
-namespace Philly\Text;
+namespace Elephox\Text;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Text\Regex
- * @covers \Philly\Collection\ArrayList
+ * @covers \Elephox\Text\Regex
+ * @covers \Elephox\Collection\ArrayList
  */
 class RegexTest extends TestCase
 {

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Support;
+namespace Elephox\Support;
 
-use Philly\Support\Contract\HasHash;
-use Philly\Support\Contract\HashGenerator;
+use Elephox\Support\Contract\HasHash;
+use Elephox\Support\Contract\HashGenerator;
 
 class SplObjectIdHashGenerator implements HashGenerator
 {

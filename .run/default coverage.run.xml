@@ -5,7 +5,7 @@
         <env name="XDEBUG_MODE" value="coverage" />
       </envs>
     </CommandLine>
-    <TestRunner configuration_file="/repos/philly-framework/base/phpunit.xml.dist" scope="XML" options="--coverage-html=tmp/coverage/html" />
+    <TestRunner configuration_file="./phpunit.xml.dist" scope="XML" options="--coverage-html=tmp/coverage/html" />
     <method v="2" />
   </configuration>
 </component>

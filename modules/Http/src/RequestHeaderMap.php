@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 class RequestHeaderMap extends HeaderMap implements Contract\RequestHeaderMap
 {

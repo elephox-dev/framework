@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use Iterator;
-use Philly\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericList;
 use WeakMap;
 
 /**

@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
- * @covers \Philly\Collection\GenericWeakMap
- * @covers \Philly\Collection\OffsetNotFoundException
- * @covers \Philly\Collection\InvalidOffsetException
- * @covers \Philly\Collection\ArrayList
+ * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Collection\OffsetNotFoundException
+ * @covers \Elephox\Collection\InvalidOffsetException
+ * @covers \Elephox\Collection\ArrayList
  */
 class GenericWeakMapTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
-use Philly\Http\Contract\HttpAdapter;
+use Elephox\Http\Contract\HttpAdapter;
 
 class Client implements Contract\Client
 {

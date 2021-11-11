@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\DI;
+namespace Elephox\DI;
 
 use JetBrains\PhpStorm\Pure;
-use Philly\Collection\ArrayList;
-use Philly\Collection\ArrayMap;
-use Philly\DI\Contract\ContainerContract;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\ArrayMap;
+use Elephox\DI\Contract\ContainerContract;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -14,7 +14,7 @@ use ReflectionException;
 
 class Container implements ContainerContract
 {
-	/** @var \Philly\Collection\ArrayMap<class-string, Binding> */
+	/** @var \Elephox\Collection\ArrayMap<class-string, Binding> */
 	private ArrayMap $map;
 
 	public function __construct()

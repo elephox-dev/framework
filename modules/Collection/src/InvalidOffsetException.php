@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Support\Contract;
+namespace Elephox\Support\Contract;
 
 /**
  * Declares the implementation can be represented as an array.

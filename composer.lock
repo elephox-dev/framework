@@ -5294,9 +5294,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "roave/security-advisories": 20,
-        "philly/support": 20,
-        "philly/collection": 20,
-        "philly/text": 20
+        "elephox/support": 20,
+        "elephox/collection": 20,
+        "elephox/text": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

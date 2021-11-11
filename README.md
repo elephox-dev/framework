@@ -2,8 +2,8 @@
 
 This is a class library providing independent building blocks.
 
-[![Common Workflow](https://github.com/elephox-dev/base/actions/workflows/common.yml/badge.svg)](https://github.com/elephox-dev/base/actions/workflows/common.yml)
-[📊 Coverage Report](https://philly.ricardoboss.de/coverage)
+[![Common Workflow](https://github.com/elephox-dev/framework/actions/workflows/common.yml/badge.svg)](https://github.com/elephox-dev/framework/actions/workflows/common.yml)
+[📊 Coverage Report](https://elephox.dev/coverage)
 
 ## Goals:
 

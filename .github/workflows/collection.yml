@@ -10,7 +10,7 @@ on:
 jobs:
   splitsh:
     name: ⏩ Update Module Repository
-    uses: elephox-dev/base/.github/workflows/splitsh.yml@main
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
     with:
       repo: 'elephox-dev/collection'
       dir: 'modules/Collection/'

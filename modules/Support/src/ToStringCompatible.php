@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Support;
+namespace Elephox\Support;
 
 /**
- * @see \Philly\Support\Contract\StringConvertible
+ * @see \Elephox\Support\Contract\StringConvertible
  */
 trait ToStringCompatible
 {

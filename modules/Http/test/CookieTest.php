@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Http\Cookie
- * @covers \Philly\Http\CookieSameSite
- * @covers \Philly\Collection\ArrayList
- * @covers \Philly\Collection\ArrayMap
- * @covers \Philly\Collection\KeyValuePair
+ * @covers \Elephox\Http\Cookie
+ * @covers \Elephox\Http\CookieSameSite
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\KeyValuePair
  */
 class CookieTest extends TestCase
 {

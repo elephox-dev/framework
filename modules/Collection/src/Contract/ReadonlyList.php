@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection\Contract;
+namespace Elephox\Collection\Contract;
 
 use Countable;
 use IteratorAggregate;
-use Philly\Support\Contract\ArrayConvertible;
+use Elephox\Support\Contract\ArrayConvertible;
 
 /**
  * @template T

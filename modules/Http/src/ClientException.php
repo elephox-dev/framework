@@ -1,6 +1,6 @@
 <?php
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;

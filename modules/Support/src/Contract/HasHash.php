@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Support\Contract;
+namespace Elephox\Support\Contract;
 
 interface HasHash
 {

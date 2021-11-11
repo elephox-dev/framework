@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http\Contract;
+namespace Elephox\Http\Contract;
 
 use DateTime;
-use Philly\Http\CookieSameSite;
-use Philly\Support\Contract\StringConvertible;
+use Elephox\Http\CookieSameSite;
+use Elephox\Support\Contract\StringConvertible;
 
 interface Cookie extends StringConvertible
 {

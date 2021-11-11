@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Http\Url
- * @covers \Philly\Http\UrlScheme
+ * @covers \Elephox\Http\Url
+ * @covers \Elephox\Http\UrlScheme
  */
 class UrlTest extends TestCase
 {

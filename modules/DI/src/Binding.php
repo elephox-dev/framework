@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\DI;
+namespace Elephox\DI;
 
-use Philly\DI\Contract\ContainerContract;
-use Philly\DI\Contract\InjectionBindingContract;
+use Elephox\DI\Contract\ContainerContract;
+use Elephox\DI\Contract\InjectionBindingContract;
 
 /**
  * @template T as object

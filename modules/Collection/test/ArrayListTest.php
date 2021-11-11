@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Collection;
+namespace Elephox\Collection;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Philly\Collection\ArrayList
- * @covers \Philly\Collection\OffsetNotAllowedException
- * @covers \Philly\Collection\OffsetNotFoundException
- * @covers \Philly\Collection\InvalidOffsetException
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\OffsetNotAllowedException
+ * @covers \Elephox\Collection\OffsetNotFoundException
+ * @covers \Elephox\Collection\InvalidOffsetException
  */
 class ArrayListTest extends TestCase
 {

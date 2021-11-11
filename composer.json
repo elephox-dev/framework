@@ -1,8 +1,8 @@
 {
-    "name": "philly/framework",
+    "name": "elephox/framework",
     "description": "Yet another PHP framework.",
     "license": "MIT",
-    "homepage": "https://philly.ricardoboss.de",
+    "homepage": "https://elephox.dev",
     "authors": [
         {
             "name": "Ricaro Boss",
@@ -23,12 +23,12 @@
         "roave/security-advisories": "dev-latest"
     },
     "replace": {
-        "philly/collection": "self.version",
-        "philly/core": "self.version",
-        "philly/di": "self.version",
-        "philly/http": "self.version",
-        "philly/support": "self.version",
-        "philly/text": "self.version"
+        "elephox/collection": "self.version",
+        "elephox/core": "self.version",
+        "elephox/di": "self.version",
+        "elephox/http": "self.version",
+        "elephox/support": "self.version",
+        "elephox/text": "self.version"
     },
     "extra": {
         "branch-alias": {
@@ -42,22 +42,22 @@
     },
     "autoload": {
         "psr-4": {
-            "Philly\\Collection\\": "modules/Collection/src/",
-            "Philly\\Core\\": "modules/Core/src/",
-            "Philly\\DI\\": "modules/DI/src/",
-            "Philly\\Http\\": "modules/Http/src/",
-            "Philly\\Support\\": "modules/Support/src/",
-            "Philly\\Text\\": "modules/Text/src/"
+            "Elephox\\Collection\\": "modules/Collection/src/",
+            "Elephox\\Core\\": "modules/Core/src/",
+            "Elephox\\DI\\": "modules/DI/src/",
+            "Elephox\\Http\\": "modules/Http/src/",
+            "Elephox\\Support\\": "modules/Support/src/",
+            "Elephox\\Text\\": "modules/Text/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Philly\\Collection\\": "modules/Collection/test/",
-            "Philly\\Core\\": "modules/Core/test/",
-            "Philly\\DI\\": "modules/DI/test/",
-            "Philly\\Http\\": "modules/Http/test/",
-            "Philly\\Support\\": "modules/Support/test/",
-            "Philly\\Text\\": "modules/Text/test/"
+            "Elephox\\Collection\\": "modules/Collection/test/",
+            "Elephox\\Core\\": "modules/Core/test/",
+            "Elephox\\DI\\": "modules/DI/test/",
+            "Elephox\\Http\\": "modules/Http/test/",
+            "Elephox\\Support\\": "modules/Support/test/",
+            "Elephox\\Text\\": "modules/Text/test/"
         }
     }
 }

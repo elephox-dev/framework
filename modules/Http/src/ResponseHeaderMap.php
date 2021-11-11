@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use InvalidArgumentException;
 use LogicException;
-use Philly\Collection\ArrayList;
-use Philly\Collection\ArrayMap;
-use Philly\Collection\KeyValuePair;
-use Philly\Text\Regex;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\ArrayMap;
+use Elephox\Collection\KeyValuePair;
+use Elephox\Text\Regex;
 
 class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 {

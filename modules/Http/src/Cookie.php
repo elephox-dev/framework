@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Http;
+namespace Elephox\Http;
 
 use DateTime;
 use InvalidArgumentException;
-use Philly\Collection\ArrayList;
-use Philly\Collection\ArrayMap;
-use Philly\Collection\KeyValuePair;
-use Philly\Support\ToStringCompatible;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\ArrayMap;
+use Elephox\Collection\KeyValuePair;
+use Elephox\Support\ToStringCompatible;
 
 class Cookie implements Contract\Cookie
 {
@@ -18,7 +18,7 @@ class Cookie implements Contract\Cookie
 
 	/**
 	 * @param string $cookies
-	 * @return ArrayList<\Philly\Http\Contract\Cookie>
+	 * @return ArrayList<\Elephox\Http\Contract\Cookie>
 	 */
 	public static function fromRequestString(string $cookies): ArrayList
 	{
@@ -35,7 +35,7 @@ class Cookie implements Contract\Cookie
 
 	/**
 	 * @param string $cookieString
-	 * @return \Philly\Http\Contract\Cookie
+	 * @return \Elephox\Http\Contract\Cookie
 	 */
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
@@ -92,7 +92,7 @@ class Cookie implements Contract\Cookie
 
 		if ($propertyMap->has('samesite')) {
 			/**
-			 * @var \Philly\Http\CookieSameSite $sameSite
+			 * @var \Elephox\Http\CookieSameSite $sameSite
 			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 			 */
 			$sameSite = CookieSameSite::from($propertyMap->get('samesite'));

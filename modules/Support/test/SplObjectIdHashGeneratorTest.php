@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Philly\Support;
+namespace Elephox\Support;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Philly\Support\Contract\HasHash;
+use Elephox\Support\Contract\HasHash;
 use stdClass;
 
 /**
- * @covers \Philly\Support\SplObjectIdHashGenerator
+ * @covers \Elephox\Support\SplObjectIdHashGenerator
  */
 class SplObjectIdHashGeneratorTest extends MockeryTestCase
 {
