@@ -12,6 +12,7 @@ This is a class library providing independent building blocks.
   - [x] Dynamic lifespan (request/transient)
 - [x] composer.json dependency sync across all modules (achieved using [wikimedia/composer-merge-plugin](https://github.com/wikimedia/composer-merge-plugin))
 - [x] Http Client
+- [ ] Optimize common workflow (re-use coverage data)
 - [ ] Database Adapter
   - [ ] MySql Implementation
   - [ ] Entity Mapping

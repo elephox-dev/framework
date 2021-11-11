@@ -115,7 +115,7 @@ jobs:
         run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --logger-github --no-interaction --no-progress
 
   coverage:
-    name: 📊 Coverage
+    name: 📊 Publish Coverage
     needs: [ unit-tests ]
     runs-on: 'ubuntu-latest'
     steps:
