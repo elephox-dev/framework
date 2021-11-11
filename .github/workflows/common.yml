@@ -9,7 +9,7 @@ on:
 
 jobs:
   composer-setup-linux:
-    name: 📦 Composer Setup Linux
+    name: 📦🐧 Composer Setup
     runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
@@ -31,7 +31,7 @@ jobs:
         run: composer install --no-interaction --no-progress --no-scripts
 
   composer-setup-windows:
-    name: 📦 Composer Setup Windows
+    name: 📦🟦 Composer Setup
     runs-on: 'windows-latest'
     steps:
       - name: ⤵️ Checkout Sources
@@ -53,7 +53,7 @@ jobs:
         run: composer install --no-interaction --no-progress --no-scripts
 
   static-analysis-linux:
-    name: 🔎 Static Analysis
+    name: 🔎🐧 Static Analysis
     needs: [ composer-setup-linux ]
     runs-on: 'ubuntu-latest'
     steps:
@@ -74,7 +74,7 @@ jobs:
         run: vendor/bin/psalm --shepherd
 
   static-analysis-windows:
-    name: 🔎 Static Analysis
+    name: 🔎🟦 Static Analysis
     needs: [ composer-setup-windows ]
     runs-on: 'windows-latest'
     steps:
@@ -95,7 +95,7 @@ jobs:
         run: vendor/bin/psalm --shepherd
 
   unit-tests-linux:
-    name: 🧪 Unit Tests Linux
+    name: 🧪🐧 Unit Tests
     needs: [ composer-setup-linux ]
     runs-on: 'ubuntu-latest'
     steps:
@@ -124,7 +124,7 @@ jobs:
           retention-days: 30
 
   unit-tests-windows:
-    name: 🧪 Unit Tests Windows
+    name: 🧪🟦 Unit Tests
     needs: [ composer-setup-windows ]
     runs-on: 'windows-latest'
     steps:
@@ -153,7 +153,7 @@ jobs:
           retention-days: 30
 
   mutation-tests-linux:
-    name: 🧟 Mutation Tests Linux
+    name: 🧟🐧 Mutation Tests
     needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
@@ -181,7 +181,7 @@ jobs:
         run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
 
   mutation-tests-windows:
-    name: 🧟 Mutation Tests Windows
+    name: 🧟🟦 Mutation Tests
     needs: [ unit-tests-windows ]
     runs-on: 'windows-latest'
     steps:
@@ -209,7 +209,7 @@ jobs:
         run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
 
   coverage:
-    name: 📊 Publish Coverage
+    name: 📊🐧 Publish Coverage
     needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
