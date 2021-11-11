@@ -142,7 +142,7 @@ jobs:
       - name: ⤵️ Checkout coverage repository
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
-          git clone git@github.com:philly-framework/coverage.git tmp/coverage/html --depth=1 && \
+          git clone git@github.com:elephox-dev/coverage.git tmp/coverage/html --depth=1 && \
           cd tmp/coverage/html && \
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: 📊 Run PHPUnit Coverage
@@ -151,6 +151,6 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           cwd: './tmp/coverage/html'
-          message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'philly-framework/base', github.sha) }}
+          message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'elephox-dev/base', github.sha) }}
           pull: NO-PULL
 

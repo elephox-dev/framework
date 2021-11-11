@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: ⏩ Run Splitsh
-        uses: philly-framework/action-splitsh@master
+        uses: elephox-dev/action-splitsh@master
         with:
           split: ${{ inputs.repo }}
           split_deploy_key: ${{ secrets.deploy_key }}

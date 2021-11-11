@@ -10,9 +10,9 @@ on:
 jobs:
   splitsh:
     name: ⏩ Update Module Repository
-    uses: philly-framework/base/.github/workflows/splitsh.yml@main
+    uses: elephox-dev/base/.github/workflows/splitsh.yml@main
     with:
-      repo: 'philly-framework/support'
+      repo: 'elephox-dev/support'
       dir: 'modules/Support/'
     secrets:
       deploy_key: ${{ secrets.SPLITSH_SUPPORT_KEY }}

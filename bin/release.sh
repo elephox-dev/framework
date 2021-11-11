@@ -63,7 +63,7 @@ do
     echo "Releasing $REMOTE";
 
     TMP_DIR="/tmp/split"
-    REMOTE_URL="git@github.com:philly-framework/$REMOTE.git"
+    REMOTE_URL="git@github.com:elephox-dev/$REMOTE.git"
 
     rm -rf $TMP_DIR;
     mkdir $TMP_DIR;
