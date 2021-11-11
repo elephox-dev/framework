@@ -54,7 +54,7 @@ class Response implements Contract\Response
 	public function __construct(private string $content, Contract\ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
 	{
 		$this->code = $code;
-		$this->headers = $headers ?? ResponseHeaderMap::empty();
+		$this->headers = $headers ?? new ResponseHeaderMap();
 	}
 
 	public function getHeaders(): Contract\ResponseHeaderMap

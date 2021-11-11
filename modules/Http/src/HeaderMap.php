@@ -6,7 +6,7 @@ namespace Philly\Http;
 use Philly\Collection\ArrayMap;
 
 /**
- * @extends ArrayMap<string|Contract\HeaderName, array<int, string>>
+ * @extends ArrayMap<non-empty-string, array<int, string>>
  */
 class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {
@@ -15,7 +15,6 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		$map = new self();
 
 		/**
-		 * @var array-key $name
 		 * @var mixed $value
 		 */
 		foreach ($headers as $name => $value) {
@@ -23,12 +22,8 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				throw new InvalidHeaderNameTypeException($name);
 			}
 
-			if (is_string($value)) {
-				$value = [$value];
-			} else if (is_array($value)) {
-				$value = array_values($value);
-			} else {
-				throw new InvalidHeaderTypeException($value);
+			if (empty($name)) {
+				throw new InvalidHeaderNameException($name);
 			}
 
 			/**
@@ -40,12 +35,27 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				$headerName = new CustomHeaderName($name);
 			}
 
-			$map->put($headerName, $value);
+			if (is_string($value)) {
+				$values = [$value];
+			} else if (is_array($value)) {
+				$values = array_values($value);
+			} else {
+				throw new InvalidHeaderTypeException($value);
+			}
+			/** @var array<int, string> $values */
+
+			$map->put($headerName, $values);
 		}
 
 		return $map;
 	}
 
+	/**
+	 * @param non-empty-string|Contract\HeaderName $key
+	 * @param array<int, string> $value
+	 *
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 */
 	public function put(mixed $key, mixed $value): void
 	{
 		if ($key instanceof Contract\HeaderName) {
@@ -55,6 +65,12 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		}
 	}
 
+	/**
+	 * @param non-empty-string|Contract\HeaderName $key
+	 * @return array<int, string>
+	 *
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 */
 	public function get(mixed $key): mixed
 	{
 		if ($key instanceof Contract\HeaderName) {

@@ -20,14 +20,10 @@ class Client implements Contract\Client
 		/** @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed */
 		$headers = $request
 			->getHeaders()
-			->reduce(static fn(array $values, HeaderName $name) => "$name->value: $values[0]")
+			->reduce(static fn(array $values, string $name) => "$name: $values[0]")
 			->asArray();
 
-		/**
-		 * @var string $method
-		 * @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed
-		 */
-		$method = $request->getMethod()->value;
+		$method = $request->getMethod()->getValue();
 
 		try {
 			$this->adapter
