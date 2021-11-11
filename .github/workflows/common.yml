@@ -119,6 +119,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          path: build/coverage/
       - name: 🧟 Run Infection
         run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
 
@@ -131,6 +132,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          path: build/coverage/
       - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -140,7 +142,7 @@ jobs:
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
           git clone git@github.com:elephox-dev/coverage.git build/coverage/html --depth=1 && \
-          cd tmp/coverage/html && \
+          cd build/coverage/html && \
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: ⤴️ Push updated coverage report
         uses: EndBug/add-and-commit@v7
