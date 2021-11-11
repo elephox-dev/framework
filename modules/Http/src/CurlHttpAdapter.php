@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-if (!function_exists('curl_init')) {
-	return;
-}
-
 use CurlHandle;
 use Exception;
 use Elephox\Http\Contract\HttpAdapter;
