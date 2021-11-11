@@ -7,8 +7,8 @@ use Philly\Support\Contract\ArrayConvertible;
 use Philly\Collection\Contract\ReadonlyMap;
 
 /**
- * @extends \Philly\Collection\Contract\ReadonlyMap<\Philly\Http\HeaderName, array<int, string>>
- * @extends \Philly\Support\Contract\ArrayConvertible<string, array<int, string>>
+ * @extends ReadonlyMap<string, array<int, string>>
+ * @extends ArrayConvertible<string, array<int, string>>
  */
 interface ReadonlyHeaderMap extends ReadonlyMap, ArrayConvertible
 {

@@ -28,7 +28,7 @@ class Response implements Contract\Response
 
 		$version = $matches['version'];
 		/**
-		 * @var ResponseCode $code
+		 * @var Contract\ResponseCode $code
 		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 		 */
 		$code = ResponseCode::from((int)$matches['code']);
@@ -48,10 +48,12 @@ class Response implements Contract\Response
 		return new Response($content, $code, $headers);
 	}
 
+	private Contract\ResponseCode $code;
 	private Contract\ResponseHeaderMap $headers;
 
-	public function __construct(private string $content, private ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
+	public function __construct(private string $content, Contract\ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
 	{
+		$this->code = $code;
 		$this->headers = $headers ?? ResponseHeaderMap::empty();
 	}
 
@@ -60,12 +62,12 @@ class Response implements Contract\Response
 		return $this->headers;
 	}
 
-	public function setCode(ResponseCode $code): void
+	public function setCode(Contract\ResponseCode $code): void
 	{
 		$this->code = $code;
 	}
 
-	public function getCode(): ResponseCode
+	public function getCode(): Contract\ResponseCode
 	{
 		return $this->code;
 	}

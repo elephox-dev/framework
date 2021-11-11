@@ -12,11 +12,6 @@ use Philly\Text\Regex;
 
 class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 {
-	public static function empty(): Contract\ResponseHeaderMap
-	{
-		return new self(parent::fromArray([]));
-	}
-
 	public static function fromString(string $headers): self
 	{
 		$rows = Regex::split('/\n/', $headers);
@@ -42,16 +37,9 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 	{
 		$map = parent::fromArray($headers);
 
-		/** @psalm-suppress UnusedClosureParam */
-		if ($map->any(static fn(array $value, HeaderName $name) => $name->isOnlyRequest())) {
-			throw new LogicException("Cannot set request headers in response header map.");
-		}
+		$responseHeaderMap = new self();
+		$responseHeaderMap->values = $map->values;
 
-		return new self($map);
-	}
-
-	private function __construct(HeaderMap $map)
-	{
-		$this->map = $map->map;
+		return $responseHeaderMap;
 	}
 }

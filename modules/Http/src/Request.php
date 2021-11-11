@@ -7,28 +7,38 @@ class Request implements Contract\Request
 {
 	private Contract\Url $url;
 
-	private RequestMethod $method;
+	private Contract\RequestMethod $method;
 
 	private Contract\ReadonlyHeaderMap $headers;
 
-	public function __construct(RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [], private ?string $body = null, private bool $followRedirects = true)
+	/**
+	 * @param Contract\RequestMethod|non-empty-string $method
+	 */
+	public function __construct(Contract\RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [], private ?string $body = null, private bool $followRedirects = true)
 	{
-		$this->url = is_string($uri) ?
-			Url::fromString($uri) :
-			$uri;
+		$this->url = $uri instanceof Contract\Url ?
+			$uri :
+			Url::fromString($uri);
 
-		/**
-		 * @var RequestMethod method
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
-		$this->method = is_string($method) ?
-			RequestMethod::from($method) :
-			$method;
+		if ($method instanceof Contract\RequestMethod) {
+			$this->method = $method;
+		} else {
+			/**
+			 * @var Contract\RequestMethod|null $parsedMethod
+			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+			 */
+			$parsedMethod = RequestMethod::tryFrom($method);
+			if ($parsedMethod === null) {
+				$parsedMethod = new CustomRequestMethod($method);
+			}
+
+			$this->method = $parsedMethod;
+		}
 
 		/** @var Contract\ReadonlyHeaderMap headers */
 		$this->headers = $headers instanceof Contract\ReadonlyHeaderMap ?
 			$headers :
-			HeaderMap::fromArray($headers);
+			RequestHeaderMap::fromArray($headers);
 	}
 
 	public function getUrl(): Contract\Url
@@ -36,7 +46,7 @@ class Request implements Contract\Request
 		return $this->url;
 	}
 
-	public function getMethod(): RequestMethod
+	public function getMethod(): Contract\RequestMethod
 	{
 		return $this->method;
 	}

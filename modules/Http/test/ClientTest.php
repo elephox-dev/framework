@@ -19,6 +19,7 @@ use Philly\Http\Contract\HttpAdapter;
  * @covers \Philly\Http\Url
  * @covers \Philly\Text\Regex
  * @covers \Philly\Http\RequestMethod
+ * @covers \Philly\Http\RequestHeaderMap
  * @covers \Philly\Http\ResponseHeaderMap
  * @covers \Philly\Http\HeaderMap
  * @covers \Philly\Http\HeaderName

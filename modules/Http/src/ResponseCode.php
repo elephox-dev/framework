@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
-enum ResponseCode: int
+enum ResponseCode: int implements Contract\ResponseCode
 {
 	/* Information responses */
 	case Continue_ = 100;
@@ -75,4 +75,22 @@ enum ResponseCode: int
 	case LoopDetected = 508;
 	case NotExtended = 510;
 	case NetworkAuthenticationRequired = 511;
+
+	public function getCode(): int
+	{
+		/**
+		 * @var int value
+		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
+		 */
+		return $this->value;
+	}
+
+	public function getMessage(): string
+	{
+		/**
+		 * @var non-empty-string name
+		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
+		 */
+		return $this->name;
+	}
 }

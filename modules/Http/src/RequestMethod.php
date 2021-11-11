@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
-enum RequestMethod: string
+enum RequestMethod: string implements Contract\RequestMethod
 {
 	case GET = "GET";
 	case HEAD = "HEAD";
@@ -15,13 +15,21 @@ enum RequestMethod: string
 
 	public function canHaveBody(): bool
 	{
-		return match ($this)
-        {
+		return match ($this) {
 			self::POST,
 			self::PUT,
 			self::DELETE,
 			self::PATCH => true,
 			default => false
 		};
+	}
+
+	public function getValue(): string
+	{
+		/**
+		 * @var non-empty-string value
+		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
+		 */
+		return $this->value;
 	}
 }

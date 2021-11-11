@@ -3,19 +3,21 @@ declare(strict_types=1);
 
 namespace Philly\Http;
 
-use InvalidArgumentException;
-use Philly\Collection\GenericWeakMap;
+use Philly\Collection\ArrayMap;
 
 /**
- * @extends \Philly\Collection\GenericWeakMap<\Philly\Http\HeaderName, array<int, string>>
+ * @extends ArrayMap<string|Contract\HeaderName, array<int, string>>
  */
-class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
+class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {
-	public static function fromArray(array $headers): self
+	protected static function fromArray(array $headers): self
 	{
 		$map = new self();
 
-		/** @var mixed $value */
+		/**
+		 * @var array-key $name
+		 * @var mixed $value
+		 */
 		foreach ($headers as $name => $value) {
 			if (!is_string($name)) {
 				throw new InvalidHeaderNameTypeException($name);
@@ -24,25 +26,18 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 			if (is_string($value)) {
 				$value = [$value];
 			} else if (is_array($value)) {
-				$value = array_values(
-					array_map(
-						static fn($val) => is_string($val) ?
-							$val :
-							throw new InvalidHeaderTypeException($val),
-						$value
-					)
-				);
+				$value = array_values($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
 			}
 
 			/**
-			 * @var \Philly\Http\HeaderName|null $headerName
+			 * @var \Philly\Http\Contract\HeaderName|null $headerName
 			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 			 */
 			$headerName = HeaderName::tryFrom($name);
 			if ($headerName === null) {
-				throw new InvalidHeaderNameException($name);
+				$headerName = new CustomHeaderName($name);
 			}
 
 			$map->put($headerName, $value);
@@ -51,23 +46,21 @@ class HeaderMap extends GenericWeakMap implements Contract\HeaderMap
 		return $map;
 	}
 
-	public function asArray(): array
+	public function put(mixed $key, mixed $value): void
 	{
-		$arr = [];
-
-		/**
-		 * @var \Philly\Http\HeaderName $name
-		 * @var array<int, string> $values
-		 */
-		foreach ($this->map as $name => $values) {
-			/**
-			 * @var string $key
-			 * @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed
-			 */
-			$key = $name->value;
-
-			$arr[$key] = $values;
+		if ($key instanceof Contract\HeaderName) {
+			parent::put($key->getValue(), $value);
+		} else {
+			parent::put($key, $value);
 		}
-		return $arr;
+	}
+
+	public function get(mixed $key): mixed
+	{
+		if ($key instanceof Contract\HeaderName) {
+			return parent::get($key->getValue());
+		}
+
+		return parent::get($key);
 	}
 }

@@ -35,7 +35,7 @@ class Client implements Contract\Client
 				->setUrl($url)
 				->setMethod($method)
 				->setHeaders($headers)
-			    ->setBody($request->getBody());
+				->setBody($request->getBody());
 
 			if (!$this->adapter->send()) {
 				throw new ClientException("Failed to send request: {$this->adapter->getLastError()}");

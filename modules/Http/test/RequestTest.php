@@ -12,6 +12,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Philly\Http\RequestMethod
  * @covers \Philly\Http\Url
  * @covers \Philly\Http\UrlScheme
+ * @covers \Philly\Collection\ArrayMap
+ * @covers \Philly\Http\RequestHeaderMap
+ * @covers \Philly\Http\HeaderName
  */
 class RequestTest extends TestCase
 {
