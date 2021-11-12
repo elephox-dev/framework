@@ -5,9 +5,8 @@ namespace Elephox\Collection;
 
 use ArrayAccess;
 use ArrayIterator;
-use JetBrains\PhpStorm\Pure;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Support\Contract\ArrayConvertible;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @template T
