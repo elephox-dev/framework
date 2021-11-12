@@ -116,13 +116,12 @@ class ArrayList implements GenericList, ArrayAccess
 		return null;
 	}
 
-	#[Pure] public function where(callable $filter): ArrayList
+	public function where(callable $filter): ArrayList
 	{
 		$result = new ArrayList();
 
 		foreach ($this->list as $item) {
 			if ($filter($item)) {
-				/** @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayList. */
 				$result->add($item);
 			}
 		}
@@ -149,14 +148,13 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param callable(T): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	#[Pure] public function map(callable $callback): ArrayList
+	public function map(callable $callback): ArrayList
 	{
 		$arr = new ArrayList();
 
 		foreach ($this->list as $value) {
 			/**
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
-			 * @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayList.
 			 */
 			$arr->add($callback($value));
 		}

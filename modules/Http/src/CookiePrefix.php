@@ -13,7 +13,6 @@ enum CookiePrefix: string
 	public function isCompliant(Cookie $cookie): bool
 	{
 		/**
-		 * Suppress until vimeo/psalm#6468 is fixed
 		 * @psalm-suppress MixedArgument
 		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
 		 */

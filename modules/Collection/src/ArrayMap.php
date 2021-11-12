@@ -81,13 +81,12 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible
 		return null;
 	}
 
-	#[Pure] public function where(callable $filter): ArrayMap
+	public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
 		foreach ($this->values as $key => $item) {
 			if ($filter($item)) {
-				/** @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayMap. */
 				$result->put($key, $item);
 			}
 		}
@@ -106,14 +105,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayMap<TKey, TOut>
 	 */
-	#[Pure] public function map(callable $callback): ArrayMap
+	public function map(callable $callback): ArrayMap
 	{
 		$map = new ArrayMap();
 
 		foreach ($this->values as $key => $value) {
 			/**
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
-			 * @psalm-suppress ImpureMethodCall Since this call is on another instance of ArrayMap.
 			 */
 			$map->put($key, $callback($value, $key));
 		}

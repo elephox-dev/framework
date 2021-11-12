@@ -45,7 +45,7 @@ class ArrayMapTest extends TestCase
 
 		$this->expectException(OffsetNotAllowedException::class);
 
-		$map->put(123.542, "test");
+		$map->put(false, "test");
 	}
 
 	public function testFirst(): void
