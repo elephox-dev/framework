@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Support\Contract\MimeType as MimeTypeContract;
+
 interface Response
 {
 	public function getHeaders(): ResponseHeaderMap;
@@ -11,7 +13,7 @@ interface Response
 
 	public function getCode(): ResponseCode;
 
-	public function setContent(string $content, ?MimeType $mimeType = null): void;
+	public function setContent(string $content, ?MimeTypeContract $mimeType = null): void;
 
 	public function getContent(): string;
 

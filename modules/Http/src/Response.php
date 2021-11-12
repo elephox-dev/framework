@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Support\MimeType;
+use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use InvalidArgumentException;
 use JsonException;
 
@@ -75,7 +77,7 @@ class Response implements Contract\Response
 		return $this->code;
 	}
 
-	public function setContent(string $content, ?Contract\MimeType $mimeType = null): void
+	public function setContent(string $content, ?MimeTypeContract $mimeType = null): void
 	{
 		$this->content = $content;
 

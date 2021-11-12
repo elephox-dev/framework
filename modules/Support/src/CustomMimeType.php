@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Http;
+namespace Elephox\Support;
 
 class CustomMimeType implements Contract\MimeType
 {
