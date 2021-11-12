@@ -26,6 +26,7 @@
         "elephox/collection": "self.version",
         "elephox/core": "self.version",
         "elephox/di": "self.version",
+        "elephox/files": "self.version",
         "elephox/http": "self.version",
         "elephox/support": "self.version",
         "elephox/text": "self.version"
