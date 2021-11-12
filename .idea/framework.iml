@@ -14,6 +14,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" packagePrefix="Elephox\Text\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Core/src" isTestSource="false" packagePrefix="Elephox\Core\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Core/test" isTestSource="true" packagePrefix="Elephox\Core\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Files/src" isTestSource="false" packagePrefix="Elephox\Files\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Files/test" isTestSource="true" packagePrefix="Elephox\Files\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/abstract-testframework-adapter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/include-interceptor" />
