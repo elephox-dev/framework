@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Files;
 
 use DateTime;
-use Elephox\Http\Contract\MimeType;
+use Elephox\Support\Contract\MimeType;
 use JetBrains\PhpStorm\Pure;
+use OutOfRangeException;
 
 class File implements Contract\File
 {
@@ -48,14 +50,6 @@ class File implements Contract\File
 		return new DateTime('@' . filemtime($this->path));
 	}
 
-	/**
-	 * @throws \Exception
-	 */
-	public function getCreatedTime(): DateTime
-	{
-		return new DateTime('@' . filectime($this->path));
-	}
-
 	public function getContents(): string
 	{
 		return file_get_contents($this->path);
@@ -64,5 +58,14 @@ class File implements Contract\File
 	#[Pure] public function getHash(): string|int
 	{
 		return md5_file($this->path);
+	}
+
+	public function getParent(int $levels = 1): Contract\Directory
+	{
+		if ($levels < 1) {
+			throw new OutOfRangeException('Levels must be greater than 0');
+		}
+
+		return new Directory(dirname($this->path));
 	}
 }
