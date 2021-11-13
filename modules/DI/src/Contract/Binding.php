@@ -8,12 +8,12 @@ use Elephox\DI\BindingLifetime;
 /**
  * @template T
  */
-interface InjectionBindingContract
+interface Binding
 {
 	public function getLifetime(): BindingLifetime;
 
 	/**
-	 * @return callable(ContainerContract): T
+	 * @return callable(Container): T
 	 */
 	public function getBuilder(): callable;
 

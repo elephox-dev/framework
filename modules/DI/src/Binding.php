@@ -3,18 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-use Elephox\DI\Contract\ContainerContract;
-use Elephox\DI\Contract\InjectionBindingContract;
-
 /**
  * @template T as object
  *
- * @template-implements InjectionBindingContract<T>
+ * @template-implements Contract\Binding<T>
  */
-class Binding implements InjectionBindingContract
+class Binding implements Contract\Binding
 {
 	/**
-	 * @var callable(ContainerContract): T
+	 * @var callable(Contract\Container): T
 	 */
 	private $builder;
 
@@ -26,7 +23,7 @@ class Binding implements InjectionBindingContract
 	private ?object $instance = null;
 
 	/**
-	 * @param callable(ContainerContract): T $builder
+	 * @param callable(Contract\Container): T $builder
 	 * @param BindingLifetime $lifetime
 	 */
 	public function __construct(callable $builder, BindingLifetime $lifetime)
@@ -41,7 +38,7 @@ class Binding implements InjectionBindingContract
 	}
 
 	/**
-	 * @return callable(ContainerContract): T
+	 * @return callable(Contract\Container): T
 	 */
 	public function getBuilder(): callable
 	{
