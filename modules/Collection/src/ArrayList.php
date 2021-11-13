@@ -6,6 +6,7 @@ namespace Elephox\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -104,6 +105,16 @@ class ArrayList implements GenericList, ArrayAccess
 		$this->set($this->count(), $value);
 	}
 
+	/**
+	 * @param T ...$values
+	 */
+	public function addAll(mixed ...$values): void
+	{
+		foreach ($values as $value) {
+			$this->add($value);
+		}
+	}
+
 	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		foreach ($this->list as $item) {
@@ -177,6 +188,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @param T $value
 	 */
+	#[Deprecated(reason: 'Use `add` instead', replacement: '%class%->add(%parametersList%)')]
 	public function push(mixed $value): void
 	{
 		$this->add($value);
