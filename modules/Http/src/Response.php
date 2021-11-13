@@ -7,6 +7,7 @@ use Elephox\Support\MimeType;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use InvalidArgumentException;
 use JsonException;
+use RuntimeException;
 
 class Response implements Contract\Response
 {
@@ -94,5 +95,24 @@ class Response implements Contract\Response
 	public function getHttpVersion(): string
 	{
 		return $this->httpVersion;
+	}
+
+	public function send(): void
+	{
+		if (headers_sent($filename, $line)) {
+			throw new RuntimeException("Headers already sent in $filename:$line");
+		}
+
+		http_response_code($this->code->getCode());
+		$headers = $this->getHeaders()->asArray();
+		foreach ($headers as $header => $value) {
+			header($header . ": " . $value[0]);
+		}
+
+		if (!array_key_exists("X-Powered-By", $headers) && defined("ELEPHOX_VERSION") && ini_get("expose_php")) {
+			header("X-Powered-By: Elephox/" . ELEPHOX_VERSION . " PHP/" . PHP_VERSION);
+		}
+
+		echo $this->content;
 	}
 }

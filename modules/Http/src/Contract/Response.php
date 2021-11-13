@@ -18,4 +18,6 @@ interface Response
 	public function getContent(): string;
 
 	public function getHttpVersion(): string;
+
+	public function send(): void;
 }
