@@ -45,6 +45,7 @@
         "psr-4": {
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Core\\": "modules/Core/src/",
+            "Elephox\\Database\\": "modules/Database/src/",
             "Elephox\\DI\\": "modules/DI/src/",
             "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
@@ -56,6 +57,7 @@
         "psr-4": {
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\Core\\": "modules/Core/test/",
+            "Elephox\\Database\\": "modules/Database/test/",
             "Elephox\\DI\\": "modules/DI/test/",
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
