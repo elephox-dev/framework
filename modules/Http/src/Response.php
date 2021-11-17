@@ -21,12 +21,8 @@ class Response implements Contract\Response
 			$matches
 		);
 
-		if ($result === 0) {
+		if (!$result) {
 			throw new InvalidArgumentException("Invalid response string given.");
-		}
-
-		if ($result === false) {
-			throw new InvalidArgumentException("Error parsing response string: " . preg_last_error());
 		}
 
 		$version = $matches['version'];

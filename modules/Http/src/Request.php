@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Exception;
+use InvalidArgumentException;
 
 class Request implements Contract\Request
 {
@@ -54,10 +55,6 @@ class Request implements Contract\Request
 	 */
 	public function __construct(Contract\RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [], private ?string $body = null, private bool $followRedirects = true)
 	{
-		$this->url = $uri instanceof Contract\Url ?
-			$uri :
-			Url::fromString($uri);
-
 		if ($method instanceof Contract\RequestMethod) {
 			$this->method = $method;
 		} else {
@@ -72,6 +69,14 @@ class Request implements Contract\Request
 
 			$this->method = $parsedMethod;
 		}
+
+		if ($body !== null && !$this->method->canHaveBody()) {
+			throw new InvalidArgumentException("Request method {$this->method->getValue()} cannot have a body.");
+		}
+
+		$this->url = $uri instanceof Contract\Url ?
+			$uri :
+			Url::fromString($uri);
 
 		/** @var Contract\ReadonlyHeaderMap headers */
 		$this->headers = $headers instanceof Contract\ReadonlyHeaderMap ?

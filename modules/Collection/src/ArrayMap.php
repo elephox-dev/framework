@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
-use Exception;
-use JetBrains\PhpStorm\Pure;
 use Elephox\Support\Contract\ArrayConvertible;
-use Traversable;
+use Elephox\Support\Contract\JsonConvertible;
+use JetBrains\PhpStorm\Pure;
+use JsonException;
 
 /**
  * @template TKey as array-key
@@ -16,7 +16,7 @@ use Traversable;
  * @template-implements Contract\GenericMap<TKey, TValue>
  * @template-implements ArrayConvertible<TKey, TValue>
  */
-class ArrayMap implements Contract\GenericMap, ArrayConvertible
+class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 {
 	/**
 	 * @template TPairKey as array-key
@@ -171,5 +171,10 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible
 	public function getIterator(): ArrayIterator
 	{
 		return new ArrayIterator($this->values);
+	}
+
+	public function toJson(int $flags = JSON_THROW_ON_ERROR): string
+	{
+		return json_encode($this->values, JSON_THROW_ON_ERROR);
 	}
 }

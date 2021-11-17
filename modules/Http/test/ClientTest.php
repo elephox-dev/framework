@@ -23,6 +23,7 @@ use Elephox\Http\Contract\HttpAdapter;
  * @covers \Elephox\Http\ResponseHeaderMap
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\HeaderName
+ * @covers \Elephox\Http\ClientException
  */
 class ClientTest extends MockeryTestCase
 {
@@ -50,49 +51,41 @@ MESSAGE;
 
 		$httpAdapterMock
 			->expects('prepare')
-			->once()
 			->withNoArgs()
 			->andReturnSelf()
 		;
 		$httpAdapterMock
 			->expects('setHeaders')
-			->once()
 			->with([])
 			->andReturnSelf()
 		;
 		$httpAdapterMock
 			->expects('setBody')
-			->once()
 			->with(null)
 			->andReturnSelf()
 		;
 		$httpAdapterMock
 			->expects('setMethod')
-			->once()
 			->with($requestMethod)
 			->andReturnSelf()
 		;
 		$httpAdapterMock
 			->expects('setUrl')
-			->once()
 			->with($requestUrl)
 			->andReturnSelf()
 		;
 		$httpAdapterMock
 			->expects('send')
-			->once()
 			->withNoArgs()
 			->andReturn(true)
 		;
 		$httpAdapterMock
 			->expects('getResponse')
-			->once()
 			->withNoArgs()
 			->andReturn($responseText)
 		;
 		$httpAdapterMock
 			->expects('cleanup')
-			->once()
 			->withNoArgs()
 		;
 
@@ -101,5 +94,60 @@ MESSAGE;
 		$response = $client->execute($request);
 
 		self::assertInstanceOf(Response::class, $response);
+	}
+
+	public function testSendFailure(): void
+	{
+		$httpAdapterMock = M::mock(HttpAdapter::class);
+		$requestMethod = 'GET';
+		$requestUrl = 'https://example.com/';
+		$request = new Request($requestMethod, $requestUrl);
+
+		$httpAdapterMock
+			->expects('prepare')
+			->withNoArgs()
+			->andReturnSelf()
+		;
+		$httpAdapterMock
+			->expects('setUrl')
+			->with($requestUrl)
+			->andReturnSelf()
+		;
+		$httpAdapterMock
+			->expects('setMethod')
+			->with($requestMethod)
+			->andReturnSelf()
+		;
+		$httpAdapterMock
+			->expects('setHeaders')
+			->with([])
+			->andReturnSelf()
+		;
+		$httpAdapterMock
+			->expects('setBody')
+			->with(null)
+			->andReturnSelf()
+		;
+		$httpAdapterMock
+			->expects('send')
+			->withNoArgs()
+			->andReturn(false)
+		;
+		$httpAdapterMock
+			->expects('getLastError')
+			->withNoArgs()
+			->andReturn("test")
+		;
+		$httpAdapterMock
+			->expects('cleanup')
+			->once()
+			->withNoArgs()
+		;
+
+		$client = new Client($httpAdapterMock);
+
+		$this->expectException(ClientException::class);
+
+		$client->execute($request);
 	}
 }

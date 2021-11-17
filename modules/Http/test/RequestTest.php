@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,6 +17,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Http\RequestHeaderMap
  * @covers \Elephox\Http\HeaderName
+ * @covers \Elephox\Http\CustomRequestMethod
  */
 class RequestTest extends TestCase
 {
@@ -56,5 +59,46 @@ class RequestTest extends TestCase
 		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(1, $request->getHeaders()->asArray());
 		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Server)[0]);
+	}
+
+	public function testFromGlobals(): void
+	{
+		$_SERVER['REQUEST_METHOD'] = "GET";
+		$_SERVER['REQUEST_URI'] = "/";
+		$_SERVER['HTTP_ACCEPT'] = "application/json";
+
+		$request = Request::fromGlobals();
+
+		self::assertEquals(RequestMethod::GET, $request->getMethod());
+		self::assertEquals('/', $request->getUrl()->toString());
+		self::assertTrue($request->shouldFollowRedirects());
+	}
+
+	public function testFromGlobalsCustomRequestMethod(): void
+	{
+		$_SERVER['REQUEST_METHOD'] = "NEW";
+		$_SERVER['REQUEST_URI'] = "/";
+
+		$request = Request::fromGlobals();
+
+		self::assertInstanceOf(CustomRequestMethod::class, $request->getMethod());
+		self::assertEquals("NEW", $request->getMethod()->getValue());
+		self::assertEquals('/', $request->getUrl()->toString());
+	}
+
+	public function testFromGlobalsInvalid(): void
+	{
+		unset($_SERVER['REQUEST_METHOD']);
+
+		$this->expectException(Exception::class);
+
+		Request::fromGlobals();
+	}
+
+	public function testInvalidRequestMethodBody(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		new Request(RequestMethod::GET, "/", body: "test");
 	}
 }
