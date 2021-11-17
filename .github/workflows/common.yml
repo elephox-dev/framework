@@ -112,7 +112,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-8.1-composer-
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-html=build/coverage/html
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
@@ -141,7 +141,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-8.1-composer-
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
