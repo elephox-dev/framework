@@ -33,9 +33,12 @@ $root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 $src = $root . 'modules' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
 
+echo "Gathering files...\n";
+
 $sourceFiles = gatherSourceFiles($src);
 $pattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/i';
 
+echo "Processing " . count($sourceFiles) . " files...\n";
 $matches = [];
 foreach ($sourceFiles as $sourceFile) {
 	$contents = file_get_contents($sourceFile);
@@ -53,8 +56,10 @@ foreach ($sourceFiles as $sourceFile) {
 
 $readmeContents = file_get_contents($readmeFile);
 $todos = "<!-- start todos -->\n## TODOs Found:\n\n";
+echo count($matches) . " categories found.\n";
 foreach ($matches as $category => $files) {
 	$todos .= "### $category\n\n";
+	echo "Category $category contains " . count($files) . " files.\n";
 	foreach ($files as $file => $entries) {
 		$file = str_replace($src, '', $file);
 		$todos .= "- [ ] $file\n";
@@ -67,3 +72,5 @@ foreach ($matches as $category => $files) {
 $todos .= "<!-- end todos -->";
 $readmeContents = preg_replace('/<!-- start todos -->.*<!-- end todos -->/s', $todos, $readmeContents);
 file_put_contents($readmeFile, $readmeContents);
+
+echo "Done.\n";
