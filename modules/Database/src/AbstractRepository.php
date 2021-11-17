@@ -7,7 +7,7 @@ use Elephox\Collection\Contract\GenericCollection;
 use Elephox\Collection\Contract\GenericList;
 
 /**
- * @template T of Entity
+ * @template T of Contract\Entity
  *
  * @template-implements Contract\Repository<T>
  */

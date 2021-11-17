@@ -5,9 +5,8 @@ namespace Elephox\Database\Contract;
 
 /**
  * @template T of Entity
- * @template TId of string|int
  *
- * @extends ReadonlyRepository<T, TId>
+ * @extends ReadonlyRepository<T>
  */
 interface Repository extends ReadonlyRepository
 {

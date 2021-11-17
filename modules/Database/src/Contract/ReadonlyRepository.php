@@ -8,14 +8,12 @@ use Elephox\Collection\Contract\GenericList;
 
 /**
  * @template T of Entity
- * @template TId of string|int
  *
  * @extends Filterable<T>
  */
 interface ReadonlyRepository extends Filterable
 {
 	/**
-	 * @param TId $id
 	 * @return T
 	 */
 	public function find(string|int $id): Entity;
