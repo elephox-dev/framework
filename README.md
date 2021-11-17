@@ -17,6 +17,6 @@ This is a class library providing independent building blocks.
 - [ ] Database Adapter
   - [ ] MySql Implementation
   - [ ] Entity Mapping
-- [ ] Routing (controller attributes)
+- [x] Routing (controller attributes)
 - [ ] Templating Adapter
   - [ ] Twig Implementation
