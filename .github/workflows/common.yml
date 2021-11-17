@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/common.yml"
-      - "modules/**"
 
 jobs:
   composer-setup-linux:
