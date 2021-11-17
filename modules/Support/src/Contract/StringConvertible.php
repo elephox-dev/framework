@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Support\Contract;
 
-interface StringConvertible
+use Stringable;
+
+interface StringConvertible extends Stringable
 {
-	public function asString(): string;
+	public function toString(): string;
 }
