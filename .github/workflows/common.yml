@@ -210,14 +210,20 @@ jobs:
     needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
           name: ${{ runner.os }}-8.1-coverage
           path: build/coverage/
-      - name: Install coveralls
+      - name: ➕ Install coveralls
         run: composer require php-coveralls/php-coveralls
-      - name: Publish coverage data to coveralls.io
+      - name: 📊 Publish coverage data to coveralls.io
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: vendor/bin/php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v
