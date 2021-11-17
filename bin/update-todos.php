@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-$root = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR;
-
+/**
+ * @param string $dir
+ * @param string[] $results
+ * @return string[]
+ */
 function gatherSourceFiles(string $dir, array &$results = []): array
 {
 	$files = scandir($dir);
@@ -12,9 +15,13 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 
 	foreach ($files as $value) {
 		$path = realpath($dir . DIRECTORY_SEPARATOR . $value);
-		if (is_file($path) && str_ends_with($path, '.php')) {
+		if (is_file($path)) {
+			if (!str_ends_with($path, '.php')) {
+				continue;
+			}
+
 			$results[] = $path;
-		} else if ($value !== "." && $value !== "..") {
+		} else if ($value !== "." && $value !== ".." && !str_ends_with($path, "vendor") && is_dir($path)) {
 			gatherSourceFiles($path, $results);
 		}
 	}
@@ -22,18 +29,41 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 	return $results;
 }
 
-$sourceFiles = gatherSourceFiles($root);
+$root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+$src = $root . 'modules' . DIRECTORY_SEPARATOR;
+$readmeFile = $root . 'README.md';
+
+$sourceFiles = gatherSourceFiles($src);
 $pattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/i';
 
 $matches = [];
 foreach ($sourceFiles as $sourceFile) {
 	$contents = file_get_contents($sourceFile);
 	preg_match_all($pattern, $contents, $fileMatches);
-	if (empty($fileMatches)) {
+	if (empty($fileMatches[0])) {
 		continue;
 	}
 
-	$matches[$sourceFile] = $fileMatches;
+	foreach ($fileMatches[1] as $i => $file) {
+		$matches[$file] = $matches[$file] ?? [];
+		$matches[$file][$sourceFile] = $matches[$file][$sourceFile] ?? [];
+		$matches[$file][$sourceFile][] = $fileMatches[2][$i];
+	}
 }
 
-var_dump(count($sourceFiles), count($matches));
+$readmeContents = file_get_contents($readmeFile);
+$todos = "<!-- start todos -->\n## TODOs Found:\n\n";
+foreach ($matches as $category => $files) {
+	$todos .= "### $category\n\n";
+	foreach ($files as $file => $entries) {
+		$file = str_replace($src, '', $file);
+		$todos .= "- [ ] $file\n";
+		foreach ($entries as $entry) {
+			$todos .= "  - [ ] $entry\n";
+		}
+	}
+	$todos .= "\n";
+}
+$todos .= "<!-- end todos -->";
+$readmeContents = preg_replace('/<!-- start todos -->.*<!-- end todos -->/s', $todos, $readmeContents);
+file_put_contents($readmeFile, $readmeContents);

@@ -1,0 +1,20 @@
+name: ☑️ Update README ToDos
+on:
+  push:
+    paths:
+      - ".github/workflows/update-todos.yml"
+      - "modules/**"
+
+jobs:
+  update-todos:
+    name: ☑️ Update README ToDos
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: ▶️ Run update-todos.php
+        run: php bin/update-todos.php
+      - name: ⤴️ Commit Changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Update README ToDos"
