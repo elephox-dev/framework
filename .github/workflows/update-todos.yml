@@ -4,6 +4,7 @@ on:
     paths:
       - ".github/workflows/update-todos.yml"
       - "modules/**"
+      - "bin/update-todos.php"
 
 jobs:
   update-todos:
