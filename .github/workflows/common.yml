@@ -210,12 +210,6 @@ jobs:
     needs: [ unit-tests-linux ]
     runs-on: 'ubuntu-latest'
     steps:
-      - name: Install coveralls
-        run: composer require php-coveralls/php-coveralls
-      - name: Publish coverage data to coveralls.io
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: vendor/bin/php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v
       - name: 🔑 Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -225,8 +219,7 @@ jobs:
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
           git clone git@github.com:elephox-dev/coverage.git build/coverage/html --depth=1 && \
-          cd build/coverage/html && \
-          find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
+          find build/coverage/html -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
@@ -238,3 +231,9 @@ jobs:
           cwd: './build/coverage/html'
           message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'elephox-dev/framework', github.sha) }}
           pull: NO-PULL
+      - name: Install coveralls
+        run: composer require php-coveralls/php-coveralls
+      - name: Publish coverage data to coveralls.io
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v
