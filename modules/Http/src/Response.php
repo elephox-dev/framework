@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Support\MimeType;
+use Elephox\Support\Contract\JsonConvertible;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use Elephox\Support\MimeType;
 use InvalidArgumentException;
-use JsonException;
 use RuntimeException;
 
 class Response implements Contract\Response
@@ -41,12 +41,17 @@ class Response implements Contract\Response
 		return new self($body, $code, $headers, $version);
 	}
 
-	/**
-	 * @throws JsonException
-	 */
-	public static function withJson(mixed $json, ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
+	public static function withJson(mixed $json = null, ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
 	{
-		$content = json_encode($json, JSON_THROW_ON_ERROR);
+		if ($json instanceof JsonConvertible) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$content = $json->toJson();
+		} else if ($json !== null) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$content = json_encode($json, JSON_THROW_ON_ERROR);
+		} else {
+			$content = null;
+		}
 
 		$headers ??= new ResponseHeaderMap();
 		$headers->put(HeaderName::ContentType->getValue(), [MimeType::Applicationjson->getValue()]);
@@ -57,7 +62,7 @@ class Response implements Contract\Response
 	private Contract\ResponseCode $code;
 	private Contract\ResponseHeaderMap $headers;
 
-	public function __construct(private string $content, Contract\ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
+	public function __construct(private ?string $content, Contract\ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
 	{
 		$this->code = $code;
 		$this->headers = $headers ?? new ResponseHeaderMap();
@@ -78,7 +83,7 @@ class Response implements Contract\Response
 		return $this->code;
 	}
 
-	public function setContent(string $content, ?MimeTypeContract $mimeType = null): void
+	public function setContent(?string $content, ?MimeTypeContract $mimeType = null): void
 	{
 		$this->content = $content;
 
@@ -87,7 +92,7 @@ class Response implements Contract\Response
 		}
 	}
 
-	public function getContent(): string
+	public function getContent(): ?string
 	{
 		return $this->content;
 	}
@@ -113,6 +118,8 @@ class Response implements Contract\Response
 			header("X-Powered-By: Elephox/" . ELEPHOX_VERSION . " PHP/" . PHP_VERSION);
 		}
 
-		echo $this->content;
+		if (!empty($this->content)) {
+			echo $this->content;
+		}
 	}
 }

@@ -8,11 +8,11 @@ use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\KeyValuePair;
-use Elephox\Support\ToStringCompatible;
+use Elephox\Support\StringableProxy;
 
 class Cookie implements Contract\Cookie
 {
-	use ToStringCompatible;
+	use StringableProxy;
 
 	public const ExpiresFormat = "D, d-M-Y H:i:s T";
 
@@ -216,7 +216,7 @@ class Cookie implements Contract\Cookie
 		$this->maxAge = $maxAge;
 	}
 
-	public function asString(): string
+	public function toString(): string
 	{
 		$cookie = $this->name . '=' . ($this->value ?? '');
 
