@@ -236,4 +236,9 @@ class ArrayList implements GenericList, ArrayAccess
 	{
 		array_unshift($this->list, $value);
 	}
+
+	#[Pure] public function contains(mixed $value): bool
+	{
+		return $this->any(static fn ($item) => $item === $value);
+	}
 }

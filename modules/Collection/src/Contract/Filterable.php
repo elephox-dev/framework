@@ -25,4 +25,10 @@ interface Filterable
 	 * @return GenericCollection<T>
 	 */
 	public function where(callable $filter): GenericCollection;
+
+	/**
+	 * @param T $value
+	 * @return bool
+	 */
+	public function contains(mixed $value): bool;
 }

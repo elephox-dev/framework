@@ -156,4 +156,9 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible
 	{
 		return $this->values;
 	}
+
+	#[Pure] public function contains(mixed $value): bool
+	{
+		return $this->any(static fn($item) => $item === $value);
+	}
 }

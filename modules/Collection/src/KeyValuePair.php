@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @template TKey
  * @template TValue
  *
- * @template-implements \Elephox\Collection\Contract\KeyValuePair<TKey, TValue>
+ * @template-implements Contract\KeyValuePair<TKey, TValue>
  */
 class KeyValuePair implements Contract\KeyValuePair
 {
@@ -21,18 +23,18 @@ class KeyValuePair implements Contract\KeyValuePair
 	 * @param TKey $key
 	 * @param TValue $value
 	 */
-	public function __construct(mixed $key, mixed $value)
+	#[Pure] public function __construct(mixed $key, mixed $value)
 	{
 		$this->key = $key;
 		$this->value = $value;
 	}
 
-	public function getKey(): mixed
+	#[Pure] public function getKey(): mixed
 	{
 		return $this->key;
 	}
 
-	public function getValue(): mixed
+	#[Pure] public function getValue(): mixed
 	{
 		return $this->value;
 	}

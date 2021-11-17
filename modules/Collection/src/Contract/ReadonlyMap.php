@@ -57,6 +57,12 @@ interface ReadonlyMap extends GenericCollection
 	public function any(?callable $filter = null): bool;
 
 	/**
+	 * @param TValue $value
+	 * @return bool
+	 */
+	public function contains(mixed $value): bool;
+
+	/**
 	 * @return GenericList<TValue>
 	 */
 	public function values(): GenericList;

@@ -5,6 +5,7 @@ namespace Elephox\Collection;
 
 use Iterator;
 use Elephox\Collection\Contract\GenericList;
+use JetBrains\PhpStorm\Pure;
 use WeakMap;
 
 /**
@@ -57,7 +58,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $this->map->offsetGet($key);
 	}
 
-	public function first(?callable $filter = null): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		/**
 		 * @var TKey $key
@@ -76,7 +77,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return GenericWeakMap<TKey, TValue>
 	 */
-	public function where(callable $filter): GenericWeakMap
+	#[Pure] public function where(callable $filter): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TValue> $result */
 		$result = new GenericWeakMap();
@@ -110,7 +111,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return GenericWeakMap<TKey, TOut>
 	 */
-	public function map(callable $callback): GenericWeakMap
+	#[Pure] public function map(callable $callback): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TOut> $map */
 		$map = new GenericWeakMap();
@@ -133,7 +134,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	public function reduce(callable $callback): ArrayList
+	#[Pure] public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
@@ -149,7 +150,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function any(?callable $filter = null): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
@@ -182,5 +183,10 @@ class GenericWeakMap implements Contract\GenericMap
 		}
 
 		return $list;
+	}
+
+	#[Pure] public function contains(mixed $value): bool
+	{
+		return $this->any(static fn($item) => $item === $value);
 	}
 }
