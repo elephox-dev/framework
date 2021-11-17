@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Core\Handler\Contract;
+namespace Elephox\Core\Context\Contract;
 
 use Elephox\Core\Handler\ActionType;
 use Elephox\DI\Contract\Container;

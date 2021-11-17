@@ -3,14 +3,21 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
-use Elephox\Core\Handler\Contract\Context;
+use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Handler\Attribute\AbstractHandler;
 
+/**
+ * @template THandler as object
+ * @template TContext as Context
+ *
+ * @template-implements Contract\HandlerBinding<THandler, TContext>
+ */
 class HandlerBinding implements Contract\HandlerBinding
 {
 	public function __construct(
-		private object $handler,
-		private string $method,
-		private ActionType $actionType,
+		private object          $handler,
+		private string          $method,
+		private AbstractHandler $attribute,
 	)
 	{
 	}
@@ -20,13 +27,31 @@ class HandlerBinding implements Contract\HandlerBinding
 		return $this->method;
 	}
 
+	/**
+	 * @return THandler
+	 */
 	public function getHandler(): object
 	{
 		return $this->handler;
 	}
 
+	/**
+	 * @param TContext $context
+	 */
 	public function isApplicable(Context $context): bool
 	{
-		return $context->getActionType() === $this->actionType;
+		if ($context->getActionType() !== $this->attribute->getType()) {
+			return false;
+		}
+
+		return $this->attribute->handles($context);
+	}
+
+	/**
+	 * @param TContext $context
+	 */
+	public function handle(Context $context): void
+	{
+		$this->attribute->invoke($this->handler, $this->method, $context);
 	}
 }

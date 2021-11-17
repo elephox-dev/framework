@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Core;
 
+use Elephox\Core\Context\CommandLineContext;
+use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Handler\Handlers;
-use Elephox\Core\Handler\RequestContext;
 use Elephox\DI\Container;
 use Elephox\Http\Request;
+use Exception;
 use LogicException;
 
 class Core
@@ -15,38 +18,28 @@ class Core
 
 	private static Container $container;
 
+	/**
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 */
 	public static function entrypoint(): void
 	{
-		if (defined("ELEPHOX_ENTRY")) {
+		if (defined("ELEPHOX_VERSION")) {
 			throw new LogicException("Entrypoint already called.");
 		}
 
-		define("ELEPHOX_ENTRY", microtime(true));
 		define("ELEPHOX_VERSION", self::Version);
 
 		self::$container = new Container();
 
-		assert(class_exists("App\\App", true));
-
-		define("ELEPHOX_HANDLER_LOAD", microtime(true));
-
 		Handlers::load(self::$container);
 
-		define("ELEPHOX_HANDLER_LOADED", microtime(true));
-
-		$headers = [];
-		foreach ($_SERVER as $name => $value) {
-			if (str_starts_with($name, 'HTTP_')) {
-				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-			}
-		}
-
-		$context = new RequestContext(self::$container, new Request($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"], $headers));
-
-		define("ELEPHOX_HANDLER_HANDLE", microtime(true));
+		/** @var Context $context */
+		$context = match(PHP_SAPI) {
+			'cli' => new CommandLineContext(self::$container),
+			default => new RequestContext(self::$container, Request::fromGlobals())
+		};
 
 		Handlers::handle($context);
-
-		define("ELEPHOX_HANDLER_HANDLED", microtime(true));
 	}
 }

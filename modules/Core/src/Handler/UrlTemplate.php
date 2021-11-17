@@ -37,10 +37,12 @@ class UrlTemplate
 		return Url::fromString($source);
 	}
 
-	public function matches(string $url): bool
+	public function matches(Contract\Url $url): bool
 	{
-		$source = preg_replace(self::SourceTransformMatch, '*', $this->source);
+		$source = preg_replace(self::SourceTransformMatch, '.*?', $this->source);
+		$source = str_starts_with($source, '/') ? $source : "/$source";
+		$source = preg_replace('/\//', '\\/', $source);
 
-		return preg_match("/^$source$/", $url) === 1;
+		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 }

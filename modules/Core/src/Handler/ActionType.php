@@ -8,4 +8,5 @@ enum ActionType
 	case Command;
 	case Event;
 	case Request;
+	case Exception;
 }

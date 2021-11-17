@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Core\Handler\Contract\Context;
-use Elephox\Core\Handler\Contract\HandlerBinding;
+use Elephox\Core\Context\Contract\Context;
 use Exception;
 
 class HandlerContainer implements Contract\HandlerContainer
 {
 	/**
-	 * @var ArrayList<HandlerBinding>
+	 * @var ArrayList<HandlerBinding<object, Context>>
 	 */
 	private ArrayList $bindings;
 
@@ -20,7 +19,7 @@ class HandlerContainer implements Contract\HandlerContainer
 		$this->bindings = new ArrayList();
 	}
 
-	public function register(HandlerBinding $binding): void
+	public function register(Contract\HandlerBinding $binding): void
 	{
 		$this->bindings[] = $binding;
 	}
@@ -30,14 +29,16 @@ class HandlerContainer implements Contract\HandlerContainer
 	 */
 	public function findHandler(Context $context): HandlerBinding
 	{
-		$binding = $this->bindings->first(static function (HandlerBinding $binding) use ($context): bool {
+		$bindings = $this->bindings->where(static function (HandlerBinding $binding) use ($context): bool {
 			return $binding->isApplicable($context);
 		});
 
-		if ($binding === null) {
+		if ($bindings->isEmpty()) {
 			throw new Exception('No handler found for context');
 		}
 
-		return $binding;
+		// TODO: find a better way to choose the correct binding
+
+		return $bindings->first();
 	}
 }
