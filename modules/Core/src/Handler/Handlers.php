@@ -7,17 +7,15 @@ use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Attribute\AbstractHandler;
 use Elephox\Core\Handler\Contract;
 use Elephox\DI\Contract\Container;
-use Elephox\Http\Contract\Response;
 use Exception;
 use ReflectionAttribute;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
 
 class Handlers
 {
 	/**
-	 * @throws ReflectionException
+	 * @throws \ReflectionException
 	 * @throws \Exception
 	 */
 	public static function load(Container $container): void
@@ -44,13 +42,20 @@ class Handlers
 			throw new Exception('Could not find ComposerAutoloaderInit class. Did you install the dependencies using composer?');
 		}
 
+		/** @var Contract\ComposerClassLoader $classLoader */
 		$classLoader = call_user_func([$autoloaderClassName, 'getLoader']);
-		foreach ($classLoader->getClassMap() as $class => $path) {
+
+		// TODO: find a better way to load the App\ namespace
+
+		$classLoader->loadClass("App\\App");
+		foreach (array_keys($classLoader->getClassMap()) as $class) {
 			if (!str_starts_with($class, 'App\\')) {
 				continue;
 			}
 
-			require_once $path;
+			if ($classLoader->loadClass($class) === null) {
+				throw new Exception('Could not load class ' . $class);
+			}
 		}
 
 		foreach (get_declared_classes() as $class) {

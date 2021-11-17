@@ -6,7 +6,13 @@ namespace Elephox\Core\Handler\Contract;
 interface ComposerClassLoader
 {
 	/**
-	 * @return array<array-key, class-string>
+	 * @return array<class-string, string>
 	 */
 	public function getClassMap(): array;
+
+	/**
+	 * @param class-string $class
+	 * @return null|true
+	 */
+	public function loadClass(string $class): ?bool;
 }

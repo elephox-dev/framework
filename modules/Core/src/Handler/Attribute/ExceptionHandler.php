@@ -31,7 +31,11 @@ class ExceptionHandler extends AbstractHandler
 			return false;
 		}
 
-		return $context->getException() instanceof $this->exceptionClass;
+		if ($this->exceptionClass === null) {
+			return true;
+		}
+
+		return get_class($context->getException()) instanceof $this->exceptionClass;
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace Elephox\Core;
 
 use Elephox\Core\Context\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Context\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Handler\Handlers;
 use Elephox\DI\Container;
@@ -18,10 +19,6 @@ class Core
 
 	private static Container $container;
 
-	/**
-	 * @throws \ReflectionException
-	 * @throws \Exception
-	 */
 	public static function entrypoint(): void
 	{
 		if (defined("ELEPHOX_VERSION")) {
@@ -32,14 +29,28 @@ class Core
 
 		self::$container = new Container();
 
-		Handlers::load(self::$container);
+		try {
+			Handlers::load(self::$container);
+		} catch (Exception $e) {
+			echo "Could not load handlers. " . $e->getMessage();
+		}
 
 		/** @var Context $context */
-		$context = match(PHP_SAPI) {
+		$context = match (PHP_SAPI) {
 			'cli' => new CommandLineContext(self::$container),
 			default => new RequestContext(self::$container, Request::fromGlobals())
 		};
 
-		Handlers::handle($context);
+		try {
+			Handlers::handle($context);
+		} catch (Exception $e) {
+			$exceptionContext = new ExceptionContext(self::$container, $e);
+
+			try {
+				Handlers::handle($exceptionContext);
+			} catch (Exception $e) {
+				echo "Could not handle exception. " . $e->getMessage();
+			}
+		}
 	}
 }
