@@ -219,8 +219,7 @@ jobs:
         run: |
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts && \
           git clone git@github.com:elephox-dev/coverage.git build/coverage/html --depth=1 && \
-          pushd && \
-          cd build/coverage/html && \
+          pushd build/coverage/html && \
           find . -maxdepth 1 ! -name .git ! -name .nojekyll ! -name . -exec rm -rv {} \;
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
