@@ -144,7 +144,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-8.1-composer-
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-html=build/coverage/html
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
@@ -235,3 +235,9 @@ jobs:
           cwd: './build/coverage/html'
           message: ${{ format('{0} ({1}@{2})', github.event.commits[0].message, 'elephox-dev/framework', github.sha) }}
           pull: NO-PULL
+      - name: Install coveralls
+        run: composer global require php-coveralls/php-coveralls
+      - name: Publish coverage data to coveralls.io
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v

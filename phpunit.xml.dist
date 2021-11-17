@@ -48,5 +48,8 @@
         <exclude>
             <file>**/*Exception.php</file>
         </exclude>
+        <report>
+            <clover outputFile="tmp/coverage/clover.xml"/>
+        </report>
     </coverage>
 </phpunit>
