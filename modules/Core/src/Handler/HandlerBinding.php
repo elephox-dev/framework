@@ -14,6 +14,11 @@ use Elephox\Core\Handler\Attribute\AbstractHandler;
  */
 class HandlerBinding implements Contract\HandlerBinding
 {
+	/**
+	 * @param THandler $handler
+	 * @param string $method
+	 * @param AbstractHandler $attribute
+	 */
 	public function __construct(
 		private object          $handler,
 		private string          $method,

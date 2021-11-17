@@ -10,7 +10,7 @@ use Exception;
 class HandlerContainer implements Contract\HandlerContainer
 {
 	/**
-	 * @var ArrayList<HandlerBinding<object, Context>>
+	 * @var ArrayList<Contract\HandlerBinding<object, Context>>
 	 */
 	private ArrayList $bindings;
 
@@ -27,18 +27,19 @@ class HandlerContainer implements Contract\HandlerContainer
 	/**
 	 * @throws Exception
 	 */
-	public function findHandler(Context $context): HandlerBinding
+	public function findHandler(Context $context): Contract\HandlerBinding
 	{
-		$bindings = $this->bindings->where(static function (HandlerBinding $binding) use ($context): bool {
+		$bindings = $this->bindings->where(static function (Contract\HandlerBinding $binding) use ($context): bool {
 			return $binding->isApplicable($context);
 		});
 
-		if ($bindings->isEmpty()) {
+		// TODO: find a better way to choose the correct binding
+
+		$binding = $bindings->first();
+		if ($binding === null) {
 			throw new Exception('No handler found for context');
 		}
 
-		// TODO: find a better way to choose the correct binding
-
-		return $bindings->first();
+		return $binding;
 	}
 }

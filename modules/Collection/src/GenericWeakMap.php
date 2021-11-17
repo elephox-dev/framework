@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Iterator;
 use Elephox\Collection\Contract\GenericList;
-use JetBrains\PhpStorm\Pure;
+use Iterator;
+use Traversable;
 use WeakMap;
 
 /**
@@ -58,7 +58,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $this->map->offsetGet($key);
 	}
 
-	#[Pure] public function first(?callable $filter = null): mixed
+	public function first(?callable $filter = null): mixed
 	{
 		/**
 		 * @var TKey $key
@@ -77,7 +77,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return GenericWeakMap<TKey, TValue>
 	 */
-	#[Pure] public function where(callable $filter): GenericWeakMap
+	public function where(callable $filter): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TValue> $result */
 		$result = new GenericWeakMap();
@@ -111,7 +111,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return GenericWeakMap<TKey, TOut>
 	 */
-	#[Pure] public function map(callable $callback): GenericWeakMap
+	public function map(callable $callback): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TOut> $map */
 		$map = new GenericWeakMap();
@@ -134,7 +134,7 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	#[Pure] public function reduce(callable $callback): ArrayList
+	public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
@@ -150,7 +150,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	#[Pure] public function any(?callable $filter = null): bool
+	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
@@ -185,8 +185,22 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	#[Pure] public function contains(mixed $value): bool
+	public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
+	}
+
+	/**
+	 * @return Traversable<TKey, TValue>
+	 */
+	public function getIterator(): Traversable
+	{
+		/**
+		 * @var TKey $key
+		 * @var TValue $value
+		 */
+		foreach ($this->map as $key => $value) {
+			yield $key => $value;
+		}
 	}
 }

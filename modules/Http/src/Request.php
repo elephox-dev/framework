@@ -3,18 +3,44 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Exception;
+
 class Request implements Contract\Request
 {
+	/**
+	 * @throws \Exception
+	 */
 	public static function fromGlobals(): Contract\Request
 	{
+		/**
+		 * @var array<string, mixed> $headers
+		 */
 		$headers = [];
+
+		/**
+		 * @var string $name
+		 * @var mixed $value
+		 */
 		foreach ($_SERVER as $name => $value) {
 			if (str_starts_with($name, 'HTTP_')) {
-				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+				$normalizedName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+
+				/** @var mixed */
+				$headers[$normalizedName] = $value;
 			}
 		}
 
-		return new static($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"], $headers);
+		if (!array_key_exists("REQUEST_METHOD", $_SERVER) || empty($_SERVER["REQUEST_METHOD"])) {
+			throw new Exception("REQUEST_METHOD is not set.");
+		}
+
+		/** @var non-empty-string $method */
+		$method = $_SERVER["REQUEST_METHOD"];
+
+		/** @var string $uri */
+		$uri = $_SERVER["REQUEST_URI"];
+
+		return new self($method, $uri, $headers);
 	}
 
 	private Contract\Url $url;

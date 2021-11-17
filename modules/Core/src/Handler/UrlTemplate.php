@@ -24,10 +24,10 @@ class UrlTemplate
 	}
 
 	/**
-	 * @param GenericMap<string, string|int|float|bool> $parameters
+	 * @param iterable<string, string> $parameters
 	 * @return Contract\Url
 	 */
-	public function compile(GenericMap $parameters): Contract\Url
+	public function compile(iterable $parameters): Contract\Url
 	{
 		$source = $this->source;
 		foreach ($parameters as $key => $value) {

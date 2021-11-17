@@ -29,7 +29,7 @@ class RequestHandler extends AbstractHandler
 
 	/**
 	 * @param string|UrlTemplate $url
-	 * @param null|string|RequestMethodContract|array<string>|array<RequestMethodContract>|GenericList<string|RequestMethodContract> $methods
+	 * @param null|non-empty-string|RequestMethodContract|array<non-empty-string|RequestMethodContract>|GenericList<non-empty-string|RequestMethodContract> $methods
 	 */
 	public function __construct(
 		string|UrlTemplate                                  $url,
@@ -47,9 +47,16 @@ class RequestHandler extends AbstractHandler
 		}
 
 		$this->methods = new ArrayList();
+		/**
+		 * @var non-empty-string|RequestMethodContract $method_name
+		 */
 		foreach ($methods as $method_name) {
 			/** @var RequestMethodContract $method */
-			if (!($method_name instanceof RequestMethodContract)) {
+			if (!$method_name instanceof RequestMethodContract) {
+				/**
+				 * @var RequestMethod|null $method
+				 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+				 */
 				$method = RequestMethod::tryFrom($method_name);
 
 				if ($method === null) {
@@ -100,6 +107,7 @@ class RequestHandler extends AbstractHandler
 
 		// TODO: extract url parameters and pass them inside the arguments
 
+		/** @var Response|mixed $result */
 		$result = $context->getContainer()->call($handler, $method, ['context' => $context]);
 
 		if (!$result instanceof Response) {

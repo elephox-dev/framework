@@ -3,13 +3,16 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use IteratorAggregate;
+
 /**
  * @template TKey
  * @template TValue
  *
- * @extends \Elephox\Collection\Contract\GenericCollection<TValue>
+ * @extends GenericCollection<TValue>
+ * @extends IteratorAggregate<TKey, TValue>
  */
-interface ReadonlyMap extends GenericCollection
+interface ReadonlyMap extends GenericCollection, IteratorAggregate
 {
 	/**
 	 * @param TKey $key

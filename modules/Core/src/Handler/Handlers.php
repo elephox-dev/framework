@@ -47,6 +47,10 @@ class Handlers
 
 		// TODO: find a better way to load the App\ namespace
 
+		/**
+		 * @psalm-suppress UndefinedClass
+		 * @psalm-suppress ArgumentTypeCoercion
+		 */
 		$classLoader->loadClass("App\\App");
 		foreach (array_keys($classLoader->getClassMap()) as $class) {
 			if (!str_starts_with($class, 'App\\')) {
@@ -75,6 +79,7 @@ class Handlers
 
 				foreach ($handlerAttributes as $handlerAttribute) {
 					$attribute = $handlerAttribute->newInstance();
+					/** @var HandlerBinding<object, Context> $binding */
 					$binding = new HandlerBinding($handler, $method->getName(), $attribute);
 					$handlerContainer->register($binding);
 				}
@@ -83,7 +88,7 @@ class Handlers
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function handle(Context $context): void
 	{

@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use ArrayIterator;
+use Exception;
 use JetBrains\PhpStorm\Pure;
 use Elephox\Support\Contract\ArrayConvertible;
+use Traversable;
 
 /**
  * @template TKey as array-key
@@ -160,5 +163,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible
 	#[Pure] public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
+	}
+
+	/**
+	 * @return ArrayIterator<TKey, TValue>
+	 */
+	public function getIterator(): ArrayIterator
+	{
+		return new ArrayIterator($this->values);
 	}
 }

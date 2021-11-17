@@ -27,7 +27,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 			}
 
 			/**
-			 * @var \Elephox\Http\Contract\HeaderName|null $headerName
+			 * @var Contract\HeaderName|null $headerName
 			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 			 */
 			$headerName = HeaderName::tryFrom($name);

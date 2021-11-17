@@ -15,7 +15,7 @@ class Client implements Contract\Client
 
 	public function execute(Contract\Request $request): Contract\Response
 	{
-		$url = $request->getUrl()->asString();
+		$url = $request->getUrl()->toString();
 
 		/** @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed */
 		$headers = $request
