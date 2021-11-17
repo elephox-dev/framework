@@ -5,6 +5,18 @@ namespace Elephox\Http;
 
 class Request implements Contract\Request
 {
+	public static function fromGlobals(): Contract\Request
+	{
+		$headers = [];
+		foreach ($_SERVER as $name => $value) {
+			if (str_starts_with($name, 'HTTP_')) {
+				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			}
+		}
+
+		return new static($_SERVER["REQUEST_METHOD"], $_SERVER["REQUEST_URI"], $headers);
+	}
+
 	private Contract\Url $url;
 
 	private Contract\RequestMethod $method;
