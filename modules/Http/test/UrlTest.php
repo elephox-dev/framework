@@ -46,6 +46,6 @@ class UrlTest extends TestCase
 		self::assertSame($path, $uri->getPath(), "Unexpected path.");
 		self::assertSame($query, $uri->getQuery(), "Unexpected query.");
 		self::assertSame($fragment, $uri->getFragment(), "Unexpected fragment.");
-		self::assertSame($uriString, $uri->asString());
+		self::assertSame($uriString, (string)$uri);
 	}
 }
