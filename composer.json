@@ -25,6 +25,7 @@
     "replace": {
         "elephox/collection": "self.version",
         "elephox/core": "self.version",
+        "elephox/database": "self.version",
         "elephox/di": "self.version",
         "elephox/files": "self.version",
         "elephox/http": "self.version",
