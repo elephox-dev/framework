@@ -71,6 +71,8 @@ foreach ($matches as $category => $files) {
 }
 $todos .= "<!-- end todos -->";
 $readmeContents = preg_replace('/<!-- start todos -->.*<!-- end todos -->/s', $todos, $readmeContents);
+
+echo "Writing to $readmeFile...\n";
 file_put_contents($readmeFile, $readmeContents);
 
 echo "Done.\n";
