@@ -22,4 +22,27 @@ This is a class library providing independent building blocks.
   - [ ] Twig Implementation
 
 <!-- start todos -->
+## TODOs Found:
+
+### TODO
+
+- [ ] Core/src/Handler/Attribute/ExceptionHandler.php
+  - [ ] do something else with this
+- [ ] Core/src/Handler/Attribute/RequestHandler.php
+  - [ ] extract url parameters and pass them inside the arguments
+- [ ] Core/src/Handler/HandlerContainer.php
+  - [ ] find a better way to choose the correct binding
+- [ ] Core/src/Handler/Handlers.php
+  - [ ] find a better way to load the App\ namespace
+- [ ] Database/src/AbstractRepository.php
+  - [ ] Implement first() method.
+  - [ ] Implement any() method.
+  - [ ] Implement where() method.
+  - [ ] Implement contains() method.
+  - [ ] Implement find() method.
+  - [ ] Implement findAll() method.
+  - [ ] Implement add() method.
+  - [ ] Implement update() method.
+  - [ ] Implement delete() method.
+
 <!-- end todos -->
