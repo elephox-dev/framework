@@ -3,6 +3,8 @@
 This is a class library providing independent building blocks.
 
 [![Common Workflow](https://github.com/elephox-dev/framework/actions/workflows/common.yml/badge.svg)](https://github.com/elephox-dev/framework/actions/workflows/common.yml)
+[![Type Coverage](https://shepherd.dev/github/elephox-dev/framework/coverage.svg)](https://shepherd.dev/github/elephox-dev/framework)
+[![Psalm Level](https://shepherd.dev/github/elephox-dev/framework/level.svg)](https://shepherd.dev/github/elephox-dev/framework)
 [📊 Coverage Report](https://elephox.dev/coverage)
 
 ## Goals:
