@@ -7,7 +7,6 @@ use ArrayIterator;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\JsonConvertible;
 use JetBrains\PhpStorm\Pure;
-use JsonException;
 
 /**
  * @template TKey as array-key

@@ -6,7 +6,7 @@ namespace Elephox\Http;
 use Elephox\Collection\ArrayMap;
 
 /**
- * @extends ArrayMap<non-empty-string, array<int, string>>
+ * @extends ArrayMap<non-empty-string, array<int, string>|string>
  */
 class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {
@@ -15,7 +15,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		$map = new self();
 
 		/**
-		 * @var mixed $value
+		 * @var array|string $value
 		 */
 		foreach ($headers as $name => $value) {
 			if (!is_string($name)) {
@@ -52,7 +52,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	/**
 	 * @param non-empty-string|Contract\HeaderName $key
-	 * @param array<int, string> $value
+	 * @param array<int, string>|string $value
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
@@ -67,14 +67,18 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	/**
 	 * @param non-empty-string|Contract\HeaderName $key
-	 * @return array<int, string>
+	 * @return array<int, string>|string
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	public function get(mixed $key): mixed
+	public function get(mixed $key): array|string
 	{
 		if ($key instanceof Contract\HeaderName) {
-			return parent::get($key->getValue());
+			if ($key->canBeDuplicate()) {
+				return parent::get($key->getValue());
+			}
+
+			return parent::get($key->getValue())[0];
 		}
 
 		return parent::get($key);

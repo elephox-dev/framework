@@ -18,6 +18,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\ResponseCode
  * @covers \Elephox\Http\HeaderName
  * @covers \Elephox\Support\MimeType
+ * @covers \Elephox\Http\CustomResponseCode
+ * @covers \Elephox\Http\InvalidResponseCodeMessageException
  */
 class ResponseTest extends TestCase
 {
@@ -69,5 +71,26 @@ class ResponseTest extends TestCase
 
 		$this->assertEquals("Ok", $response->getCode()->getMessage());
 		$this->assertEquals(null, $response->getContent());
+	}
+
+	public function testCustomResponseCode(): void
+	{
+		$response = Response::fromString("HTTP/1.1 420 Blaze it\n\n");
+		$this->assertEquals(420, $response->getCode()->getCode());
+		$this->assertEquals("Blaze it", $response->getCode()->getMessage());
+	}
+
+	public function testInvalidCustomResponseCodeMessage(): void
+	{
+		$this->expectException(InvalidResponseCodeMessageException::class);
+
+		Response::fromString("HTTP/1.1 999  \n\n");
+	}
+
+	public function testInvalidCustomResponseCode(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		Response::fromString("HTTP/1.1  test\n\n");
 	}
 }

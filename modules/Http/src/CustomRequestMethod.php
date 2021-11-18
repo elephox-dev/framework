@@ -10,7 +10,7 @@ class CustomRequestMethod implements Contract\RequestMethod
 	 */
 	public function __construct(
 		private string $method,
-		private bool $canHaveBody = false
+		private bool $canHaveBody = true
 	)
 	{
 	}

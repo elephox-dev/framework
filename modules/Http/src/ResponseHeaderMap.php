@@ -28,7 +28,10 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 				return new KeyValuePair($name, trim($value));
 			});
 
-		/** @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones. */
+		/**
+		 * @var ArrayMap<array-key, array<int, string>|string> $headers
+		 * @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones.
+		 */
 		$headerMap = ArrayMap::fromKeyValuePairList($headerKeyValueList);
 
 		return self::fromArray($headerMap->asArray());

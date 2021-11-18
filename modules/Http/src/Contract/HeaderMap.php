@@ -6,7 +6,7 @@ namespace Elephox\Http\Contract;
 use Elephox\Collection\Contract\GenericMap;
 
 /**
- * @extends GenericMap<string, array<int, string>>
+ * @extends GenericMap<string, array<int, string>|string>
  */
 interface HeaderMap extends GenericMap, ReadonlyHeaderMap
 {

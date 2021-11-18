@@ -27,10 +27,17 @@ class Response implements Contract\Response
 
 		$version = $matches['version'];
 		/**
-		 * @var Contract\ResponseCode $code
+		 * @var Contract\ResponseCode|null $code
 		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
 		 */
-		$code = ResponseCode::from((int)$matches['code']);
+		$code = ResponseCode::Tryfrom((int)$matches['code']);
+		if ($code === null) {
+			if (empty(trim($matches['message']))) {
+				throw new InvalidResponseCodeMessageException();
+			}
+
+			$code = new CustomResponseCode((int)$matches['code'], trim($matches['message']));
+		}
 		$headers = ResponseHeaderMap::fromString($matches['headers']);
 		$body = $matches['body'];
 

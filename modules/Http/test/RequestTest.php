@@ -58,7 +58,7 @@ class RequestTest extends TestCase
 		self::assertEquals(RequestMethod::GET, $request->getMethod());
 		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(1, $request->getHeaders()->asArray());
-		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Server)[0]);
+		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Server));
 	}
 
 	public function testFromGlobals(): void
@@ -70,6 +70,7 @@ class RequestTest extends TestCase
 		$request = Request::fromGlobals();
 
 		self::assertEquals(RequestMethod::GET, $request->getMethod());
+		self::assertFalse($request->getMethod()->canHaveBody());
 		self::assertEquals('/', $request->getUrl()->toString());
 		self::assertTrue($request->shouldFollowRedirects());
 	}
@@ -83,6 +84,7 @@ class RequestTest extends TestCase
 
 		self::assertInstanceOf(CustomRequestMethod::class, $request->getMethod());
 		self::assertEquals("NEW", $request->getMethod()->getValue());
+		self::assertTrue($request->getMethod()->canHaveBody());
 		self::assertEquals('/', $request->getUrl()->toString());
 	}
 

@@ -9,10 +9,12 @@ class CustomHeaderName implements Contract\HeaderName
 	 */
 	public function __construct(
 		private string $name,
-		private bool $canBeDuplicate = true,
-		private bool $isOnlyRequest = false,
-		private bool $isOnlyResponse = false
-	) {}
+		private bool   $canBeDuplicate = true,
+		private bool   $isOnlyRequest = false,
+		private bool   $isOnlyResponse = false
+	)
+	{
+	}
 
 	public function getValue(): string
 	{
