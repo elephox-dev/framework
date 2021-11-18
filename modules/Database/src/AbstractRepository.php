@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Database;
 
+use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericCollection;
 use Elephox\Collection\Contract\GenericList;
 
@@ -17,7 +18,8 @@ abstract class AbstractRepository implements Contract\Repository
 	 * @param class-string<T> $entityClass
 	 */
 	public function __construct(
-		private string $entityClass
+		private string $entityClass,
+		private Contract\Storage $storage,
 	)
 	{
 	}
@@ -32,46 +34,60 @@ abstract class AbstractRepository implements Contract\Repository
 
 	public function first(?callable $filter = null): mixed
 	{
-		// TODO: Implement first() method.
+		return $this->findAll()->first($filter);
 	}
 
 	public function any(?callable $filter = null): bool
 	{
-		// TODO: Implement any() method.
+		return $this->findAll()->any($filter);
 	}
 
 	public function where(callable $filter): GenericCollection
 	{
-		// TODO: Implement where() method.
+		return $this->findAll()->where($filter);
 	}
 
 	public function contains(mixed $value): bool
 	{
-		// TODO: Implement contains() method.
+		return $this->findAll()->contains($value);
 	}
 
 	public function find(int|string $id): Contract\Entity
 	{
-		// TODO: Implement find() method.
+		return $this->where(static fn (Contract\Entity $entity) => $entity->getUniqueId() === $id)->first();
 	}
 
 	public function findAll(): GenericList
 	{
-		// TODO: Implement findAll() method.
+		return ArrayList::fromArray($this->storage->all())->map(static fn (array $entity) => ProxyEntity::hydrate($this->entityClass, $entity));
 	}
 
 	public function add(Contract\Entity $entity): void
 	{
-		// TODO: Implement add() method.
+		if (!$entity instanceof ProxyEntity) {
+			$entity = new ProxyEntity($entity);
+		}
+
+		$this->storage->set($entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 	}
 
 	public function update(Contract\Entity $entity): void
 	{
-		// TODO: Implement update() method.
+		if (!$entity instanceof ProxyEntity) {
+			$entity = new ProxyEntity($entity, true);
+		}
+
+		if (!$entity->_proxyIsDirty()) {
+			return;
+		}
+
+		$this->storage->set($entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+
+		$entity->_proxyResetDirty();
 	}
 
 	public function delete(Contract\Entity $entity): void
 	{
-		// TODO: Implement delete() method.
+		$this->storage->delete($entity->getUniqueId());
 	}
 }

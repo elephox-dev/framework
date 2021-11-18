@@ -7,36 +7,25 @@ use BadMethodCallException;
 
 abstract class AbstractEntity implements Contract\Entity
 {
-	public function getUniqueId(): string|int
+	public function getUniqueIdProperty(): string
 	{
-		/** @var string|int|null $idVal */
-		$idVal = null;
-		foreach (['getId', 'getUid', 'getUuid', 'getGuid'] as $idMethod) {
-			if (method_exists($this, $idMethod)) {
-				/** @var mixed $idVal */
-				$idVal = $this->{$idMethod}();
-
-				break;
-			}
-		}
-
-		if (is_int($idVal) || is_string($idVal)) {
-			return $idVal;
-		}
-
 		foreach (['id', 'uid', 'uuid', 'guid'] as $idProperty) {
 			if (property_exists($this, $idProperty)) {
-				/** @var mixed $idVal */
-				$idVal = $this->{$idProperty};
-
-				break;
+				return $idProperty;
 			}
-		}
-
-		if (is_int($idVal) || is_string($idVal)) {
-			return $idVal;
 		}
 
 		throw new BadMethodCallException("Could not find unique id method or property. Please override " . __METHOD__);
+	}
+
+	public function getUniqueId(): null|string|int
+	{
+		$idVal = $this->{$this->getUniqueIdProperty()};
+
+		if ($idVal === null || is_int($idVal) || is_string($idVal)) {
+			return $idVal;
+		}
+
+		throw new BadMethodCallException("Unique id property did not return a valid ID. Please override " . __METHOD__);
 	}
 }

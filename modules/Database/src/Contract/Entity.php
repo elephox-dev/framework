@@ -5,5 +5,6 @@ namespace Elephox\Database\Contract;
 
 interface Entity
 {
-	public function getUniqueId(): string|int;
+	public function getUniqueIdProperty(): string;
+	public function getUniqueId(): null|string|int;
 }
