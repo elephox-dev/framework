@@ -40,16 +40,6 @@ This is a class library providing independent building blocks.
   - [ ] find a better way to choose the correct binding
 - [ ] Core/src/Handler/Handlers.php
   - [ ] find a better way to load the App\ namespace
-- [ ] Database/src/AbstractRepository.php
-  - [ ] Implement first() method.
-  - [ ] Implement any() method.
-  - [ ] Implement where() method.
-  - [ ] Implement contains() method.
-  - [ ] Implement find() method.
-  - [ ] Implement findAll() method.
-  - [ ] Implement add() method.
-  - [ ] Implement update() method.
-  - [ ] Implement delete() method.
 
 
 ## Open issues from other Repositories
