@@ -126,6 +126,10 @@ class ArrayList implements GenericList, ArrayAccess
 		return null;
 	}
 
+	/**
+	 * @param callable(T): bool $filter
+	 * @return ArrayList<T>
+	 */
 	public function where(callable $filter): ArrayList
 	{
 		$result = new ArrayList();

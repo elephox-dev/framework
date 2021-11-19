@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use InvalidArgumentException;
-use LogicException;
-use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\KeyValuePair;
 use Elephox\Text\Regex;
+use InvalidArgumentException;
 
 class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 {
@@ -16,7 +14,6 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 	{
 		$rows = Regex::split('/\n/', $headers);
 
-		/** @var ArrayList<KeyValuePair<string, string>> $headerRows */
 		$headerKeyValueList = $rows
 			->where(static fn (string $row) => trim($row) !== '')
 			->map(static function (string $row): KeyValuePair {
