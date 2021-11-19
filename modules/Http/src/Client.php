@@ -17,10 +17,19 @@ class Client implements Contract\Client
 	{
 		$url = $request->getUrl()->toString();
 
-		/** @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed */
 		$headers = $request
 			->getHeaders()
-			->reduce(static fn(array $values, string $name) => "$name: $values[0]")
+			->reduce(static function (array|string $values, string $name) {
+				if (is_array($values)) {
+					$result = "";
+					foreach ($values as $value) {
+						$result .= "$name: $value";
+					}
+					return $result;
+				}
+
+				return "$name: $values";
+			})
 			->asArray();
 
 		$method = $request->getMethod()->getValue();
