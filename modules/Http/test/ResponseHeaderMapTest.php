@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Text\Regex
  * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\ObjectMap
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\InvalidHeaderNameTypeException
  * @covers \Elephox\Collection\KeyValuePair
@@ -30,14 +31,19 @@ class ResponseHeaderMapTest extends TestCase
 				'name' => 'value',
 				'name2' => 'value2',
 			],
+			'Content-Type' => ['text/html'],
 		]);
 
 		self::assertEquals('localhost', $map->get(HeaderName::Host));
-		self::assertEquals('custom', $map->get('x-custom')[0]);
+		self::assertEquals(['custom'], $map->get('x-custom'));
 		self::assertEquals([
 			'value',
 			'value2',
 		], $map->get(HeaderName::SetCookie));
+
+		$map->put('Set-Cookie', 'test');
+
+		self::assertEquals(['test'], $map->get(HeaderName::SetCookie));
 	}
 
 	public function testInvalidHeaderRow(): void

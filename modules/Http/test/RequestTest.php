@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\Request
- * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Collection\ObjectMap
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\RequestMethod
  * @covers \Elephox\Http\Url
@@ -51,14 +51,14 @@ class RequestTest extends TestCase
 	public function testConstructorHeaderMap(): void
 	{
 		$headers = new HeaderMap();
-		$headers->put(HeaderName::Server, ["test"]);
+		$headers->put(HeaderName::Host, ["test"]);
 
 		$request = new Request("GET", "/test", $headers);
 
 		self::assertEquals(RequestMethod::GET, $request->getMethod());
 		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(1, $request->getHeaders()->asArray());
-		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Server));
+		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Host));
 	}
 
 	public function testFromGlobals(): void

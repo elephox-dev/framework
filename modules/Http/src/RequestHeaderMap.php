@@ -10,7 +10,7 @@ class RequestHeaderMap extends HeaderMap implements Contract\RequestHeaderMap
 		$map = parent::fromArray($headers);
 
 		$requestHeaderMap = new self();
-		$requestHeaderMap->values = $map->values;
+		$requestHeaderMap->map = $map->map;
 
 		return $requestHeaderMap;
 	}

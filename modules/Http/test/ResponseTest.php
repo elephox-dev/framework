@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\ObjectMap
  * @covers \Elephox\Http\ResponseHeaderMap
  * @covers \Elephox\Text\Regex
  * @covers \Elephox\Http\ResponseCode

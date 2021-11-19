@@ -19,16 +19,16 @@ class Client implements Contract\Client
 
 		$headers = $request
 			->getHeaders()
-			->reduce(static function (array|string $values, string $name) {
+			->reduce(static function (array|string $values, Contract\HeaderName $name) {
 				if (is_array($values)) {
 					$result = "";
 					foreach ($values as $value) {
-						$result .= "$name: $value";
+						$result .= "{$name->getValue()}: $value";
 					}
 					return $result;
 				}
 
-				return "$name: $values";
+				return "{$name->getValue()}: $values";
 			})
 			->asArray();
 

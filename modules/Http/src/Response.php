@@ -70,6 +70,10 @@ class Response implements Contract\Response
 	{
 		$this->code = $code;
 		$this->headers = $headers ?? new ResponseHeaderMap();
+
+		if ($this->headers->any(static fn(string|array $value, Contract\HeaderName $name) => $name->isOnlyRequest())) {
+			throw new InvalidArgumentException("Responses cannot contain headers reserved for requests only.");
+		}
 	}
 
 	public function getHeaders(): Contract\ResponseHeaderMap

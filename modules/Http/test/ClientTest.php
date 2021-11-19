@@ -12,7 +12,7 @@ use Elephox\Http\Contract\HttpAdapter;
  * @covers \Elephox\Http\ResponseCode
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
- * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Collection\ObjectMap
  * @covers \Elephox\Collection\KeyValuePair
  * @covers \Elephox\Http\Request
  * @covers \Elephox\Http\Response
@@ -56,7 +56,7 @@ MESSAGE;
 		;
 		$httpAdapterMock
 			->expects('setHeaders')
-			->with([])
+			->with(['Host: localhost'])
 			->andReturnSelf()
 		;
 		$httpAdapterMock
@@ -90,7 +90,7 @@ MESSAGE;
 		;
 
 		$client = new Client($httpAdapterMock);
-		$request = new Request($requestMethod, $requestUrl);
+		$request = new Request($requestMethod, $requestUrl, ['Host' => 'localhost']);
 		$response = $client->execute($request);
 
 		self::assertInstanceOf(Response::class, $response);

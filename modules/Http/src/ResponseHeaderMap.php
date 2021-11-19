@@ -39,7 +39,7 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		$map = parent::fromArray($headers);
 
 		$responseHeaderMap = new self();
-		$responseHeaderMap->values = $map->values;
+		$responseHeaderMap->map = $map->map;
 
 		return $responseHeaderMap;
 	}
