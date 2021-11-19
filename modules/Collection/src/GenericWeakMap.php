@@ -80,7 +80,7 @@ class GenericWeakMap implements Contract\GenericMap
 		 * @var TValue $value
 		 */
 		foreach ($this->map as $key => $value) {
-			if ($filter === null || $filter($value, $key)) {
+			if ($filter === null || $filter($key, $value)) {
 				return $key;
 			}
 		}
@@ -168,6 +168,11 @@ class GenericWeakMap implements Contract\GenericMap
 	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
+	}
+
+	public function anyKey(?callable $filter = null): bool
+	{
+		return $this->firstKey($filter) !== null;
 	}
 
 	public function values(): ArrayList

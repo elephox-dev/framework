@@ -83,10 +83,10 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return null;
 	}
 
-	#[Pure] public function firstKey(?callable $filter = null): string|int|null
+	#[Pure] public function firstKey(?callable $filter = null): mixed
 	{
 		foreach ($this->values as $key => $value) {
-			if ($filter === null || $filter($value, $key)) {
+			if ($filter === null || $filter($key, $value)) {
 				return $key;
 			}
 		}
@@ -135,6 +135,11 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
+	}
+
+	#[Pure] public function anyKey(?callable $filter = null): bool
+	{
+		return $this->firstKey($filter) !== null;
 	}
 
 	public function values(): ArrayList

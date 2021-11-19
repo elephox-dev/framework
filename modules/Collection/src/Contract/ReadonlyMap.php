@@ -54,7 +54,7 @@ interface ReadonlyMap extends GenericCollection, IteratorAggregate
 	public function first(?callable $filter = null): mixed;
 
 	/**
-	 * @param null|callable(TValue, TKey): bool $filter
+	 * @param null|callable(TKey, TValue): bool $filter
 	 * @return TKey|null
 	 */
 	public function firstKey(?callable $filter = null): mixed;
@@ -64,6 +64,12 @@ interface ReadonlyMap extends GenericCollection, IteratorAggregate
 	 * @return bool
 	 */
 	public function any(?callable $filter = null): bool;
+
+	/**
+	 * @param null|callable(TKey, TValue): bool $filter
+	 * @return bool
+	 */
+	public function anyKey(?callable $filter = null): bool;
 
 	/**
 	 * @param TValue $value

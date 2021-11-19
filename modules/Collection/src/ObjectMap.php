@@ -58,11 +58,9 @@ class ObjectMap implements Contract\GenericMap
 
 	public function first(?callable $filter = null): mixed
 	{
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
 			if ($filter === null || $filter($value, $key)) {
 				return $value;
@@ -74,13 +72,11 @@ class ObjectMap implements Contract\GenericMap
 
 	public function firstKey(?callable $filter = null): mixed
 	{
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
-			if ($filter === null || $filter($value, $key)) {
+			if ($filter === null || $filter($key, $value)) {
 				return $key;
 			}
 		}
@@ -97,11 +93,9 @@ class ObjectMap implements Contract\GenericMap
 		/** @var ObjectMap<TKey, TValue> $result */
 		$result = new ObjectMap();
 
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
 			if ($filter($value, $key)) {
 				$result->put($key, $value);
@@ -132,11 +126,9 @@ class ObjectMap implements Contract\GenericMap
 		/** @var ObjectMap<TKey, TOut> $map */
 		$map = new ObjectMap();
 
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
 
 			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
@@ -157,11 +149,9 @@ class ObjectMap implements Contract\GenericMap
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
 
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
 
 			$list->add($callback($value, $key));
@@ -175,6 +165,11 @@ class ObjectMap implements Contract\GenericMap
 		return $this->first($filter) !== null;
 	}
 
+	public function anyKey(?callable $filter = null): bool
+	{
+		return $this->firstKey($filter) !== null;
+	}
+
 	public function values(): ArrayList
 	{
 		/** @var ArrayList<TValue> $list */
@@ -182,6 +177,7 @@ class ObjectMap implements Contract\GenericMap
 
 		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $item */
 			$item = $this->map->offsetGet($key);
 
 			$list->add($item);
@@ -213,11 +209,9 @@ class ObjectMap implements Contract\GenericMap
 	 */
 	public function getIterator(): Traversable
 	{
-		/**
-		 * @var TKey $key
-		 * @var TValue $value
-		 */
+		/** @var TKey $key */
 		foreach ($this->map as $key) {
+			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
 
 			yield $key => $value;
