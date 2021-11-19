@@ -32,11 +32,12 @@ class Response implements Contract\Response
 		 */
 		$code = ResponseCode::Tryfrom((int)$matches['code']);
 		if ($code === null) {
-			if (empty(trim($matches['message']))) {
+			$trimmedMessage = trim($matches['message']);
+			if (empty($trimmedMessage)) {
 				throw new InvalidResponseCodeMessageException();
 			}
 
-			$code = new CustomResponseCode((int)$matches['code'], trim($matches['message']));
+			$code = new CustomResponseCode((int)$matches['code'], $trimmedMessage);
 		}
 		$headers = ResponseHeaderMap::fromString($matches['headers']);
 		$body = $matches['body'];
