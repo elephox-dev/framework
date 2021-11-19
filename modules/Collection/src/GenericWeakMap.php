@@ -155,7 +155,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $this->first($filter) !== null;
 	}
 
-	public function values(): GenericList
+	public function values(): ArrayList
 	{
 		/** @var ArrayList<TValue> $list */
 		$list = new ArrayList();
@@ -168,7 +168,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function keys(): GenericList
+	public function keys(): ArrayList
 	{
 		/** @var ArrayList<TKey> $list */
 		$list = new ArrayList();
