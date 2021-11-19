@@ -129,11 +129,33 @@ class ArrayMapTest extends TestCase
 	public function testReduce(): void
 	{
 		$map = new ArrayMap([
-            'a' => '1',
-            'b' => '2',
-            'c' => '3',
-        ]);
+			'a' => '1',
+			'b' => '2',
+			'c' => '3',
+		]);
 
-        self::assertEquals(['a1', 'b2', 'c3'], $map->reduce(fn(string $val, string $key) => $key . $val)->asArray());
+		self::assertEquals(['a1', 'b2', 'c3'], $map->reduce(fn(string $val, string $key) => $key . $val)->asArray());
+	}
+
+	public function testContains(): void
+	{
+		$map = new ArrayMap([
+			'a' => '1',
+			'b' => '2',
+			'c' => '3',
+		]);
+
+		self::assertTrue($map->contains('1'));
+	}
+
+	public function testIterator(): void
+	{
+		$map = new ArrayMap([
+			'a' => '1',
+		]);
+
+		foreach ($map as $value) {
+			self::assertEquals('1', $value);
+		}
 	}
 }

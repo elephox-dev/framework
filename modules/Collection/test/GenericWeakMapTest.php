@@ -120,4 +120,25 @@ class GenericWeakMapTest extends TestCase
 		self::assertEquals([$inst], $map->keys()->asArray());
 		self::assertEquals([123], $map->values()->asArray());
 	}
+
+	public function testContains(): void
+	{
+		$inst = new stdClass();
+		/** @var GenericWeakMap<stdClass, int> $map */
+		$map = new GenericWeakMap([$inst], [123]);
+
+		self::assertTrue($map->contains(123));
+		self::assertFalse($map->contains(456));
+	}
+
+	public function testIterator(): void
+	{
+		$inst = new stdClass();
+		$map = new GenericWeakMap([$inst], [123]);
+
+		foreach ($map as $key => $value) {
+			self::assertEquals($inst, $key);
+			self::assertEquals(123, $value);
+		}
+	}
 }

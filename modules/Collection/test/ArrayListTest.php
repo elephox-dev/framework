@@ -99,6 +99,19 @@ class ArrayListTest extends TestCase
 		self::assertEquals("test2", $arr->get(1));
 	}
 
+	public function testAddAll(): void
+	{
+		$arr = new ArrayList();
+
+		self::assertCount(0, $arr);
+
+		$arr->addAll("test", "test2");
+
+		self::assertCount(2, $arr);
+		self::assertEquals("test", $arr->get(0));
+		self::assertEquals("test2", $arr->get(1));
+	}
+
 	public function testFirst(): void
 	{
 		$arr = new ArrayList(['653', '123', '1543']);
@@ -236,5 +249,27 @@ class ArrayListTest extends TestCase
 
 		self::assertCount(3, $arr);
 		self::assertEquals(123, $arr->get(0));
+	}
+
+	public function testContains(): void
+	{
+		$map = new ArrayList([
+			'a' => '1',
+			'b' => '2',
+			'c' => '3',
+		]);
+
+		self::assertTrue($map->contains('1'));
+	}
+
+	public function testIterator(): void
+	{
+		$map = new ArrayList([
+			'a' => '1',
+		]);
+
+		foreach ($map as $value) {
+			self::assertEquals('1', $value);
+		}
 	}
 }
