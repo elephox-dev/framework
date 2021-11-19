@@ -36,26 +36,38 @@ $readmeFile = $root . 'README.md';
 echo "Gathering files...\n";
 
 $sourceFiles = gatherSourceFiles($src);
-$pattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/i';
+$todoPattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/i';
+$issuePattern = '/(?:(?<repo>\w+\/\w+)#(?<issue>\d+))/i';
 
 echo "Processing " . count($sourceFiles) . " files...\n";
 $matches = [];
+$issues = [];
 foreach ($sourceFiles as $sourceFile) {
 	$contents = file_get_contents($sourceFile);
-	preg_match_all($pattern, $contents, $fileMatches);
-	if (empty($fileMatches[0])) {
+
+	preg_match_all($todoPattern, $contents, $fileMatches);
+	if (!empty($fileMatches[0])) {
+		foreach ($fileMatches[1] as $i => $file) {
+			$matches[$file] = $matches[$file] ?? [];
+			$matches[$file][$sourceFile] = $matches[$file][$sourceFile] ?? [];
+			$matches[$file][$sourceFile][] = $fileMatches[2][$i];
+		}
+	}
+
+	preg_match_all($issuePattern, $contents, $issueMatches);
+	if (empty($issueMatches['repo'])) {
 		continue;
 	}
 
-	foreach ($fileMatches[1] as $i => $file) {
-		$matches[$file] = $matches[$file] ?? [];
-		$matches[$file][$sourceFile] = $matches[$file][$sourceFile] ?? [];
-		$matches[$file][$sourceFile][] = $fileMatches[2][$i];
+	foreach ($issueMatches['repo'] as $i => $repo) {
+		$issues[$repo] = $issues[$repo] ?? [];
+		$issues[$repo][] = $issueMatches['issue'][$i];
+		$issues[$repo] = array_unique($issues[$repo]);
 	}
 }
 
 $readmeContents = file_get_contents($readmeFile);
-$todos = "<!-- start todos -->\n## TODOs Found:\n\n";
+$todos = "<!-- start todos -->\n\n## TODOs Found:\n\n";
 echo count($matches) . " categories found.\n";
 foreach ($matches as $category => $files) {
 	$todos .= "### $category\n\n";
@@ -66,6 +78,14 @@ foreach ($matches as $category => $files) {
 		foreach ($entries as $entry) {
 			$todos .= "  - [ ] $entry\n";
 		}
+	}
+	$todos .= "\n";
+}
+$todos .= "\n## Open issues from other Repositories\n\n";
+foreach ($issues as $repo => $issueNumbers) {
+	$todos .= "- [$repo](https://github.com/$repo)\n";
+	foreach ($issueNumbers as $issueNumber) {
+		$todos .= "  - [#$issueNumber](https://github.com/$repo/issues/$issueNumber)\n";
 	}
 	$todos .= "\n";
 }
