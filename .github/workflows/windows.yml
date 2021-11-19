@@ -1,0 +1,109 @@
+name: Windows 🪟
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  composer-setup:
+    name: 📦 Composer Setup
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - name: ✔️ Validate composer.lock
+        run: composer validate --strict --no-interaction
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
+
+  static-analysis:
+    name: 🔎 Static Analysis
+    needs: [ composer-setup ]
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mysqli
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-8.1-composer-
+      - name: 🔎 Run Psalm
+        run: vendor/bin/psalm --shepherd
+
+  unit-tests:
+    name: 🧪 Unit Tests
+    needs: [ composer-setup ]
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mysqli
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-8.1-composer-
+      - name: 🧪 Run PHPUnit
+        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+      - name: 📤 Upload coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-8.1-coverage
+          path: build/coverage/
+          retention-days: 30
+
+  mutation-tests:
+    name: 🧟 Mutation Tests
+    needs: [ unit-tests ]
+    runs-on: 'windows-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mysqli
+          coverage: xdebug
+          ini-values: xdebug.mode=coverage
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-8.1-composer-
+      - name: 📥 Download coverage data
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ runner.os }}-8.1-coverage
+          path: build/coverage/
+      - name: 🧟 Run Infection
+        run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
