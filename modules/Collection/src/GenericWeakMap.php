@@ -175,6 +175,7 @@ class GenericWeakMap implements Contract\GenericMap
 
 		/** @var Iterator $iterator */
 		$iterator = $this->map->getIterator();
+		$iterator->rewind();
 		while ($iterator->valid()) {
 			/** @var TKey $key */
 			$key = $iterator->key();
