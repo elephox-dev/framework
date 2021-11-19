@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Database\Contract;
 
 /**
- * @template T of Entitya
+ * @template T of Entity
  *
  * @extends ReadonlyRepository<T>
  */

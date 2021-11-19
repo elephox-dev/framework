@@ -5,18 +5,25 @@ namespace Elephox\Database;
 
 use ReflectionClass;
 
+/**
+ * @template T of Contract\Entity
+ */
 final class ProxyEntity implements Contract\Entity
 {
 	/**
-	 * @template T of Contract\Entity
+	 * @template TEntity of Contract\Entity
 	 *
-	 * @param class-string<T> $class
-	 * @param array $data
-	 * @return T
+	 * @param class-string<TEntity> $class
+	 * @param array<string, mixed> $data
+	 * @return ProxyEntity<TEntity>
 	 */
 	public static function hydrate(string $class, array $data): Contract\Entity
 	{
 		$entity = new $class;
+
+		/**
+		 * @var mixed $value
+		 */
 		foreach ($data as $key => $value) {
 			$entity->$key = $value;
 		}
@@ -24,6 +31,10 @@ final class ProxyEntity implements Contract\Entity
 		return new self($entity);
 	}
 
+	/**
+	 * @param T $entity
+	 * @param bool $dirty
+	 */
 	public function __construct(
 		private Contract\Entity $entity,
 		private bool            $dirty = false,
@@ -45,7 +56,7 @@ final class ProxyEntity implements Contract\Entity
 		return $this->entity->$name;
 	}
 
-	public function __set(string $name, $value)
+	public function __set(string $name, mixed $value)
 	{
 		$this->dirty = true;
 		$this->entity->$name = $value;
@@ -81,12 +92,18 @@ final class ProxyEntity implements Contract\Entity
 		return $this->entity;
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 *
+	 * @throws \ReflectionException
+	 */
 	public function _proxyGetArrayCopy(): array
 	{
 		$data = [];
 
 		$entityReflection = new ReflectionClass($this->entity);
 		foreach ($entityReflection->getProperties() as $property) {
+			/** @var mixed */
 			$data[$property->getName()] = $property->getValue($this->entity);
 		}
 

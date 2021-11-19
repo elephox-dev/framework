@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Database;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\GenericCollection;
-use Elephox\Collection\Contract\GenericList;
 
 /**
  * @template T of Contract\Entity
@@ -16,6 +14,7 @@ abstract class AbstractRepository implements Contract\Repository
 {
 	/**
 	 * @param class-string<T> $entityClass
+	 * @param Contract\Storage<T> $storage
 	 */
 	public function __construct(
 		private string $entityClass,
@@ -42,7 +41,7 @@ abstract class AbstractRepository implements Contract\Repository
 		return $this->findAll()->any($filter);
 	}
 
-	public function where(callable $filter): GenericCollection
+	public function where(callable $filter): ArrayList
 	{
 		return $this->findAll()->where($filter);
 	}
@@ -57,9 +56,15 @@ abstract class AbstractRepository implements Contract\Repository
 		return $this->where(static fn (Contract\Entity $entity) => $entity->getUniqueId() === $id)->first();
 	}
 
-	public function findAll(): GenericList
+	public function findAll(): ArrayList
 	{
-		return ArrayList::fromArray($this->storage->all())->map(static fn (array $entity) => ProxyEntity::hydrate($this->entityClass, $entity));
+		/** @var ArrayList<array<string, mixed>> $entities */
+		$entities = ArrayList::fromArray($this->storage->all());
+
+		return $entities->map(function (array $entity): Contract\Entity {
+				/** @var T */
+				return ProxyEntity::hydrate($this->entityClass, $entity);
+			});
 	}
 
 	public function add(Contract\Entity $entity): void
@@ -67,8 +72,9 @@ abstract class AbstractRepository implements Contract\Repository
 		if (!$entity instanceof ProxyEntity) {
 			$entity = new ProxyEntity($entity);
 		}
+		/** @var ProxyEntity $entity */
 
-		$this->storage->set($entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->set((string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 	}
 
 	public function update(Contract\Entity $entity): void
@@ -76,18 +82,19 @@ abstract class AbstractRepository implements Contract\Repository
 		if (!$entity instanceof ProxyEntity) {
 			$entity = new ProxyEntity($entity, true);
 		}
+		/** @var ProxyEntity $entity */
 
 		if (!$entity->_proxyIsDirty()) {
 			return;
 		}
 
-		$this->storage->set($entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->set((string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 
 		$entity->_proxyResetDirty();
 	}
 
 	public function delete(Contract\Entity $entity): void
 	{
-		$this->storage->delete($entity->getUniqueId());
+		$this->storage->delete((string)$entity->getUniqueId());
 	}
 }

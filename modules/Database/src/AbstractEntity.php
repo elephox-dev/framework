@@ -20,6 +20,7 @@ abstract class AbstractEntity implements Contract\Entity
 
 	public function getUniqueId(): null|string|int
 	{
+		/** @var mixed $idVal */
 		$idVal = $this->{$this->getUniqueIdProperty()};
 
 		if ($idVal === null || is_int($idVal) || is_string($idVal)) {
