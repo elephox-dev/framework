@@ -40,6 +40,16 @@ interface Container
 	public function instantiate(string $contract, array $arguments = []): object;
 
 	/**
+	 * @template T of object
+	 *
+	 * @param class-string<T>|T $implementation
+	 * @param array $properties
+	 *
+	 * @return T
+	 */
+	public function restore(string|object $implementation, array $properties = []): object;
+
+	/**
 	 * @template T as object
 	 * @template TResult
 	 *

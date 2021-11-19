@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Database;
 
 use Elephox\Collection\ArrayList;
+use Elephox\DI\Contract\Container;
 
 /**
  * @template T of Contract\Entity
@@ -15,10 +16,12 @@ abstract class AbstractRepository implements Contract\Repository
 	/**
 	 * @param class-string<T> $entityClass
 	 * @param Contract\Storage<T> $storage
+	 * @param Container $container
 	 */
 	public function __construct(
 		private string $entityClass,
 		private Contract\Storage $storage,
+		private Container $container,
 	)
 	{
 	}
@@ -81,9 +84,8 @@ abstract class AbstractRepository implements Contract\Repository
 		$entities = ArrayList::fromArray($this->storage->all());
 
 		return $entities->map(function (array $entity): Contract\Entity {
-				/** @var T */
-				return ProxyEntity::hydrate($this->entityClass, $entity);
-			});
+			return $this->container->restore($this->getEntityClass(), $entity);
+		});
 	}
 
 	public function add(Contract\Entity $entity): void

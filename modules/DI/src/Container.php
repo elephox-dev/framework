@@ -12,6 +12,7 @@ use ReflectionException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
+use ReflectionProperty;
 
 class Container implements Contract\Container
 {
@@ -134,6 +135,30 @@ class Container implements Contract\Container
 		$parameters = $this->resolveParameterValues($constructor, $arguments);
 
 		return $reflectionClass->newInstanceArgs($parameters->asArray());
+	}
+
+	/**
+	 * @template T of object
+	 *
+	 * @param class-string<T>|T $implementation
+	 * @param array $properties
+	 *
+	 * @return T
+	 * @throws ReflectionException
+	 */
+	public function restore(object|string $implementation, array $properties = []): object
+	{
+		$reflectionClass = new ReflectionClass($implementation);
+		$instance = $reflectionClass->newInstanceWithoutConstructor();
+		$classProperties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
+		$defaultPropertyValues = $reflectionClass->getDefaultProperties();
+
+		foreach ($classProperties as $classProperty) {
+			$classProperty->setAccessible(true);
+			$classProperty->setValue($instance, $properties[$classProperty->getName()] ?? $defaultPropertyValues[$classProperty->getName()]);
+		}
+
+		return $instance;
 	}
 
 	/**

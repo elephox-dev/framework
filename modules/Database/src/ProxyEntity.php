@@ -11,27 +11,6 @@ use ReflectionClass;
 final class ProxyEntity implements Contract\Entity
 {
 	/**
-	 * @template TEntity of Contract\Entity
-	 *
-	 * @param class-string<TEntity> $class
-	 * @param array<string, mixed> $data
-	 * @return ProxyEntity<TEntity>
-	 */
-	public static function hydrate(string $class, array $data): Contract\Entity
-	{
-		$entity = new $class;
-
-		/**
-		 * @var mixed $value
-		 */
-		foreach ($data as $key => $value) {
-			$entity->$key = $value;
-		}
-
-		return new self($entity);
-	}
-
-	/**
 	 * @param T $entity
 	 * @param bool $dirty
 	 */
@@ -103,6 +82,8 @@ final class ProxyEntity implements Contract\Entity
 
 		$entityReflection = new ReflectionClass($this->entity);
 		foreach ($entityReflection->getProperties() as $property) {
+			$property->setAccessible(true);
+
 			/** @var mixed */
 			$data[$property->getName()] = $property->getValue($this->entity);
 		}
