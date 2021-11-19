@@ -15,7 +15,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		$map = new self();
 
 		/**
-		 * @var array|string $value
+		 * @var mixed $value
 		 */
 		foreach ($headers as $name => $value) {
 			if (!is_string($name)) {
@@ -67,6 +67,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	/**
 	 * @param non-empty-string|Contract\HeaderName $key
+	 *
 	 * @return array<int, string>|string
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
