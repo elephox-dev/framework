@@ -10,9 +10,9 @@ interface Storage
 {
 	/**
 	 * @param string $key
-	 * @return array<string, mixed>
+	 * @return null|array
 	 */
-	public function get(string $key): array;
+	public function get(string $key): null|array;
 
 	/**
 	 * @param string $key

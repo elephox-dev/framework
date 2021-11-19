@@ -31,21 +31,37 @@ abstract class AbstractRepository implements Contract\Repository
 		return $this->entityClass;
 	}
 
+	/**
+	 * @param null|callable(T): bool $filter
+	 * @return T|null
+	 */
 	public function first(?callable $filter = null): mixed
 	{
 		return $this->findAll()->first($filter);
 	}
 
+	/**
+	 * @param null|callable(T): bool $filter
+	 * @return bool
+	 */
 	public function any(?callable $filter = null): bool
 	{
 		return $this->findAll()->any($filter);
 	}
 
+	/**
+	 * @param callable(T): bool $filter
+	 * @return ArrayList<T>
+	 */
 	public function where(callable $filter): ArrayList
 	{
 		return $this->findAll()->where($filter);
 	}
 
+	/**
+	 * @param T $value
+	 * @return bool
+	 */
 	public function contains(mixed $value): bool
 	{
 		return $this->findAll()->contains($value);
@@ -56,6 +72,9 @@ abstract class AbstractRepository implements Contract\Repository
 		return $this->where(static fn (Contract\Entity $entity) => $entity->getUniqueId() === $id)->first();
 	}
 
+	/**
+	 * @return ArrayList<T>
+	 */
 	public function findAll(): ArrayList
 	{
 		/** @var ArrayList<array<string, mixed>> $entities */

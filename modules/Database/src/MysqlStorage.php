@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Database;
 
 use mysqli;
+use mysqli_result;
 
 /**
  * @template T of Contract\Entity
@@ -19,9 +20,21 @@ class MysqlStorage implements Contract\Storage
 	{
 	}
 
-	public function get(string $key): array
+	/**
+	 * @param string $key
+	 * @return array|null
+	 */
+	public function get(string $key): null|array
 	{
-		return $this->connection->query("SELECT * FROM $this->tableName WHERE id = $key")->fetch_assoc()[0];
+		/** @var mysqli_result $query */
+		$query = $this->connection->query("SELECT * FROM $this->tableName WHERE id = $key");
+
+		$result = $query->fetch_row();
+		if (empty($result)) {
+			return null;
+		}
+
+		return $result;
 	}
 
 	public function set(string $key, array $values): void
@@ -37,7 +50,7 @@ class MysqlStorage implements Contract\Storage
 
 		$this->connection->query("INSERT INTO $this->tableName SET $params");
 
-		return $this->connection->insert_id;
+		return (string)$this->connection->insert_id;
 	}
 
 	public function delete(string $key): void
@@ -47,11 +60,23 @@ class MysqlStorage implements Contract\Storage
 
 	public function exists(string $key): bool
 	{
-		return $this->connection->query("SELECT COUNT(*) FROM $this->tableName WHERE id = $key")->num_rows > 0;
+		/** @var mysqli_result $query */
+		$query = $this->connection->query("SELECT COUNT(*) FROM $this->tableName WHERE id = $key");
+
+		return $query->num_rows > 0;
 	}
 
 	public function all(): array
 	{
-		return $this->connection->query('SELECT * FROM ' . $this->tableName)->fetch_assoc();
+		/** @var mysqli_result $query */
+		$query = $this->connection->query('SELECT * FROM ' . $this->tableName);
+
+		/** @var array<string, array<string, mixed>> $result */
+		$result = $query->fetch_all(MYSQLI_ASSOC);
+		if (!$result) {
+			return [];
+		}
+
+		return $result;
 	}
 }
