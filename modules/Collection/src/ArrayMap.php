@@ -83,6 +83,17 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return null;
 	}
 
+	#[Pure] public function firstKey(?callable $filter = null): string|int|null
+	{
+		foreach ($this->values as $key => $value) {
+			if ($filter === null || $filter($value, $key)) {
+				return $key;
+			}
+		}
+
+		return null;
+	}
+
 	public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();

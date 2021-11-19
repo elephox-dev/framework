@@ -73,6 +73,21 @@ class GenericWeakMap implements Contract\GenericMap
 		return null;
 	}
 
+	public function firstKey(?callable $filter = null): mixed
+	{
+		/**
+		 * @var TKey $key
+		 * @var TValue $value
+		 */
+		foreach ($this->map as $key => $value) {
+			if ($filter === null || $filter($value, $key)) {
+				return $key;
+			}
+		}
+
+		return null;
+	}
+
 	/**
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return GenericWeakMap<TKey, TValue>
