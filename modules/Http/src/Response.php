@@ -58,7 +58,7 @@ class Response implements Contract\Response
 		}
 
 		$headers ??= new ResponseHeaderMap();
-		$headers->put(HeaderName::ContentType->getValue(), [MimeType::Applicationjson->getValue()]);
+		$headers->put(HeaderName::ContentType, MimeType::Applicationjson->getValue());
 
 		return new Response($content, $code, $headers);
 	}
@@ -71,7 +71,7 @@ class Response implements Contract\Response
 		$this->code = $code;
 		$this->headers = $headers ?? new ResponseHeaderMap();
 
-		if ($this->headers->any(static fn(string|array $value, Contract\HeaderName $name) => $name->isOnlyRequest())) {
+		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyRequest())) {
 			throw new InvalidArgumentException("Responses cannot contain headers reserved for requests only.");
 		}
 	}
@@ -96,7 +96,7 @@ class Response implements Contract\Response
 		$this->content = $content;
 
 		if ($mimeType !== null) {
-			$this->headers->put(HeaderName::ContentType->getValue(), [$mimeType->getValue()]);
+			$this->headers->put(HeaderName::ContentType, $mimeType->getValue());
 		}
 	}
 

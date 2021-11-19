@@ -83,7 +83,7 @@ class Request implements Contract\Request
 			$headers :
 			RequestHeaderMap::fromArray($headers);
 
-		if ($this->headers->any(static fn(string|array $value, Contract\HeaderName $name) => $name->isOnlyResponse())) {
+		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
 			throw new InvalidArgumentException("Requests cannot contain headers reserved for responses only.");
 		}
 	}

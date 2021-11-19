@@ -103,7 +103,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		$obj = $this->firstKey(static fn (array|string $value, Contract\HeaderName $name) => $name->getValue() === $key->getValue());
+		$obj = $this->firstKey(static fn (Contract\HeaderName $name) => $name->getValue() === $key->getValue());
 		if ($obj === null) {
 			throw new OffsetNotFoundException($key->getValue());
 		}
@@ -115,9 +115,6 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	{
 		$headers = [];
 
-		/**
-		 * @var Contract\HeaderName $key
-		 */
 		foreach ($this as $key => $value) {
 			$headers[$key->getValue()] = $value;
 		}
