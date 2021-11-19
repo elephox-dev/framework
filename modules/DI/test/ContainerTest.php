@@ -168,11 +168,43 @@ class ContainerTest extends MockeryTestCase
 
 		$container->get(ContainerTestInterface::class);
 	}
+
+	public function testCall(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		self::assertInstanceOf(ContainerTestInterface::class, $container->call(ContainerTestInterface::class, 'method'));
+	}
+
+	public function testCallWithInstance(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->get(ContainerTestInterface::class);
+
+		self::assertInstanceOf(ContainerTestInterface::class, $container->call($instance, 'method'));
+	}
+
+	public function testCallback(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+		$container->register(ContainerTestClass::class, ContainerTestClass::class);
+
+		self::assertInstanceOf(ContainerTestInterface::class, $container->callback(fn(ContainerTestClass $class, ContainerTestInterface $interface) => $class->method($interface)));
+	}
 }
 
 interface ContainerTestInterface{}
 interface ContainerTestInterface2{}
-class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2 {}
+class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2 {
+	public function method(ContainerTestInterface $instance): ContainerTestInterface
+	{
+		return $instance;
+	}
+}
 class ContainerTestClassWithConstructor {
 	public ContainerTestInterface $testInterface;
 
