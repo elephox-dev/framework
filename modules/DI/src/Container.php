@@ -16,20 +16,24 @@ use ReflectionProperty;
 
 class Container implements Contract\Container
 {
-	/** @var \Elephox\Collection\ArrayMap<class-string, Binding> */
+	/** @var \Elephox\Collection\ArrayMap<non-empty-string, Binding> */
 	private ArrayMap $map;
+
+	/** @var \Elephox\Collection\ArrayMap<non-empty-string, class-string> */
+	private ArrayMap $aliases;
 
 	public function __construct()
 	{
 		$this->map = new ArrayMap();
+		$this->aliases = new ArrayMap();
 
 		$this->register(Contract\Container::class, $this);
 		$this->register(__CLASS__, $this);
 	}
 
-	#[Pure] public function has(string $class): bool
+	#[Pure] public function has(string $name): bool
 	{
-		return $this->map->has($class);
+		return $this->map->has($name) || $this->aliases->has($name);
 	}
 
 	/**
@@ -38,8 +42,9 @@ class Container implements Contract\Container
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|callable(Contract\Container): T $implementation
 	 * @param BindingLifetime $lifetime
+	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, callable|string|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request): void
+	public function register(string $contract, callable|string|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void
 	{
 		/** @var callable(Contract\Container): T $builder */
 		if (is_callable($implementation)) {
@@ -53,31 +58,38 @@ class Container implements Contract\Container
 		$binding = new Binding($builder, $lifetime);
 
 		$this->map->put($contract, $binding);
+
+		foreach ($aliases as $alias) {
+			$this->aliases->put($alias, $contract);
+		}
 	}
 
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $class
+	 * @param class-string<T>|non-empty-string $name
 	 *
 	 * @return T
 	 */
-	public function get(string $class): object
+	public function get(string $name): object
 	{
-		if (!$this->has($class)) {
-			throw new BindingNotFoundException($class);
+		if (!$this->map->has($name)) {
+			if (!$this->aliases->has($name)) {
+				throw new BindingNotFoundException($name);
+			}
+
+			$name = $this->aliases->get($name);
 		}
 
-		/** @var Binding<T> $binding */
-		$binding = $this->map->get($class);
+		$binding = $this->map->get($name);
 
 		$instance = match ($binding->getLifetime()) {
 			BindingLifetime::Transient => $this->buildTransientInstance($binding),
 			BindingLifetime::Request => $this->buildRequestInstance($binding),
 		};
 
-		if (!($instance instanceof $class)) {
-			throw new InvalidBindingInstanceException($instance, $class);
+		if (!($instance instanceof $name)) {
+			throw new InvalidBindingInstanceException($instance, $name);
 		}
 
 		return $instance;
@@ -121,7 +133,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $contract
+	 * @param class-string<T>|non-empty-string $contract
 	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return T
@@ -129,6 +141,11 @@ class Container implements Contract\Container
 	 */
 	public function instantiate(string $contract, array $overrideArguments = []): object
 	{
+		if ($this->aliases->has($contract)) {
+			$contract = $this->aliases->get($contract);
+		}
+		/** @var class-string<T> $contract */
+
 		$reflectionClass = new ReflectionClass($contract);
 		$constructor = $reflectionClass->getConstructor();
 		if ($constructor === null) {
@@ -143,7 +160,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T of object
 	 *
-	 * @param class-string<T>|T $implementation
+	 * @param class-string<T>|T|non-empty-string $implementation
 	 * @param array $properties
 	 *
 	 * @return T
@@ -151,6 +168,12 @@ class Container implements Contract\Container
 	 */
 	public function restore(object|string $implementation, array $properties = []): object
 	{
+		/** @var T|non-empty-string $implementation */
+		if (is_string($implementation) && $this->aliases->has($implementation)) {
+			$implementation = $this->aliases->get($implementation);
+		}
+		/** @var T|class-string<T> $implementation */
+
 		$reflectionClass = new ReflectionClass($implementation);
 		$instance = $reflectionClass->newInstanceWithoutConstructor();
 		$classProperties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED | ReflectionProperty::IS_PRIVATE);
@@ -168,7 +191,7 @@ class Container implements Contract\Container
 	 * @template T as object
 	 * @template TResult
 	 *
-	 * @param class-string<T>|T $implementation
+	 * @param class-string<T>|T|non-empty-string $implementation
 	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return TResult
@@ -176,7 +199,6 @@ class Container implements Contract\Container
 	 */
 	public function call(string|object $implementation, string $method, array $overrideArguments = []): mixed
 	{
-		/** @var T $object */
 		if (is_string($implementation)) {
 			$object = $this->get($implementation);
 		} else {
@@ -262,5 +284,10 @@ class Container implements Contract\Container
 		}
 
 		return $this->get($typeName);
+	}
+
+	public function alias(string $alias, string $contract): void
+	{
+		$this->aliases->put($alias, $contract);
 	}
 }

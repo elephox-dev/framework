@@ -8,31 +8,38 @@ use Elephox\DI\BindingLifetime;
 interface Container
 {
 	/**
-	 * @param class-string $class
+	 * @param non-empty-string $name
 	 * @return bool
 	 */
-	public function has(string $class): bool;
+	public function has(string $name): bool;
 
 	/**
 	 * @template T
 	 *
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|callable(Container): T $implementation
+	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, string|callable|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request): void;
+	public function register(string $contract, string|callable|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void;
+
+	/**
+	 * @param non-empty-string $alias
+	 * @param class-string $contract
+	 */
+	public function alias(string $alias, string $contract): void;
 
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $class
+	 * @param class-string<T>|non-empty-string $name
 	 * @return T
 	 */
-	public function get(string $class): object;
+	public function get(string $name): object;
 
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $contract
+	 * @param class-string<T>|non-empty-string $contract
 	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return T
@@ -42,7 +49,7 @@ interface Container
 	/**
 	 * @template T of object
 	 *
-	 * @param class-string<T>|T $implementation
+	 * @param class-string<T>|non-empty-string|T $implementation
 	 * @param array $properties
 	 *
 	 * @return T
@@ -53,7 +60,7 @@ interface Container
 	 * @template T as object
 	 * @template TResult
 	 *
-	 * @param class-string<T>|T $implementation
+	 * @param class-string<T>|non-empty-string|T $implementation
 	 * @param string $method
 	 * @param array<array-key, object|null> $overrideArguments
 	 *
