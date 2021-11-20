@@ -15,6 +15,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
+      - name: ↔️ Check package sync
+        run: php bin/check-composer-config.php
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: 💾 Cache dependencies

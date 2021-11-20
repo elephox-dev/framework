@@ -11,12 +11,12 @@
     ],
     "require": {
         "php": ">=8.1",
-        "wikimedia/composer-merge-plugin": "^2.0.1"
-    },
-    "require-dev": {
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
+        "jetbrains/phpstorm-attributes": "^1.0"
+    },
+    "require-dev": {
         "vimeo/psalm": "^4.12",
         "phpunit/phpunit": "^9.5",
         "infection/infection": "^0.25",
@@ -36,11 +36,6 @@
     "extra": {
         "branch-alias": {
             "dev-main": "0.x-dev"
-        },
-        "merge-plugin": {
-            "require": [
-                "modules/*/composer.json"
-            ]
         }
     },
     "autoload": {
