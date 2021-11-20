@@ -127,6 +127,7 @@ class Request implements Contract\Request
 	public function getJson(): array
 	{
 		if ($this->headers->has(HeaderName::ContentType)) {
+			/** @var string $contentType */
 			$contentType = $this->headers->get(HeaderName::ContentType);
 			if (!str_starts_with($contentType, "application/json")) {
 				throw new LogicException("Content-Type is not application/json");
