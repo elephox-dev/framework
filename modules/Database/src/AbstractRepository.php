@@ -15,7 +15,7 @@ abstract class AbstractRepository implements Contract\Repository
 {
 	/**
 	 * @param class-string<T> $entityClass
-	 * @param Contract\Storage<T> $storage
+	 * @param Contract\Storage $storage
 	 * @param Container $container
 	 */
 	public function __construct(
@@ -81,7 +81,7 @@ abstract class AbstractRepository implements Contract\Repository
 	public function findAll(): ArrayList
 	{
 		/** @var ArrayList<array<string, mixed>> $entities */
-		$entities = ArrayList::fromArray($this->storage->all());
+		$entities = ArrayList::fromArray($this->storage->all($this->entityClass));
 
 		return $entities->map(function (array $entity): Contract\Entity {
 			return $this->container->restore($this->getEntityClass(), $entity);
@@ -95,7 +95,7 @@ abstract class AbstractRepository implements Contract\Repository
 		}
 		/** @var ProxyEntity $entity */
 
-		$this->storage->set((string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->set($this->entityClass, (string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 	}
 
 	public function update(Contract\Entity $entity): void
@@ -109,13 +109,13 @@ abstract class AbstractRepository implements Contract\Repository
 			return;
 		}
 
-		$this->storage->set((string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->set($this->entityClass, (string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 
 		$entity->_proxyResetDirty();
 	}
 
 	public function delete(Contract\Entity $entity): void
 	{
-		$this->storage->delete((string)$entity->getUniqueId());
+		$this->storage->delete($this->entityClass, (string)$entity->getUniqueId());
 	}
 }

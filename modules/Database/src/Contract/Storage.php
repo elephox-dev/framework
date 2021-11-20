@@ -3,34 +3,26 @@ declare(strict_types=1);
 
 namespace Elephox\Database\Contract;
 
-/**
- * @template T
- */
 interface Storage
 {
-	/**
-	 * @param string $key
-	 * @return null|array
-	 */
-	public function get(string $key): null|array;
-
-	/**
-	 * @param string $key
-	 * @param array<string, mixed> $values
-	 */
-	public function set(string $key, array $values): void;
+	public function get(string $entityName, string $key): null|array;
 
 	/**
 	 * @param array<string, mixed> $values
 	 */
-	public function add(array $values): string;
+	public function set(string $entityName, string $key, array $values): void;
 
-	public function delete(string $key): void;
+	/**
+	 * @param array<string, mixed> $values
+	 */
+	public function add(string $entityName, array $values): string;
 
-	public function exists(string $key): bool;
+	public function delete(string $entityName, string $key): void;
+
+	public function exists(string $entityName, string $key): bool;
 
 	/**
 	 * @return array<string, array<string, mixed>>
 	 */
-	public function all(): array;
+	public function all(string $entityName): array;
 }
