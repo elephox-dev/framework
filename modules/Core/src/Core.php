@@ -50,15 +50,15 @@ class Core
 		}
 
 		define("ELEPHOX_VERSION", self::Version);
+
+		if (!self::getContainer()->has(HandlerContainerContract::class)) {
+			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
+		}
 	}
 
 	public static function setApp(App $app): void
 	{
 		self::getContainer()->register(App::class, $app);
-
-		if (!self::getContainer()->has(HandlerContainerContract::class)) {
-			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
-		}
 
 		try {
 			self::loadHandlers($app::class);
