@@ -123,4 +123,21 @@ class Request implements Contract\Request
 	{
 		return $this->body;
 	}
+
+	public function getJson(): array
+	{
+		if ($this->headers->has(HeaderName::ContentType)) {
+			$contentType = $this->headers->get(HeaderName::ContentType);
+			if ($contentType !== "application/json") {
+				throw new LogicException("Content-Type is not application/json");
+			}
+		}
+
+		if ($this->body === null) {
+			return [];
+		}
+
+		/** @var array */
+		return json_decode($this->body, true, flags: JSON_THROW_ON_ERROR);
+	}
 }
