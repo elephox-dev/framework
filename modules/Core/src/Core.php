@@ -44,7 +44,7 @@ class Core
 		return self::$container;
 	}
 
-	public static function entrypoint(): void
+	public static function entrypoint(?string $root = null): void
 	{
 		if (defined("ELEPHOX_VERSION")) {
 			throw new LogicException("Entrypoint already called.");
@@ -52,7 +52,14 @@ class Core
 
 		define("ELEPHOX_VERSION", self::Version);
 
-		Dotenv::createImmutable(dirname(__DIR__, 6))->load();
+		if ($root === null) {
+			$root = dirname(__DIR__, 5);
+			if (!is_dir($root . "/vendor")) {
+				$root = dirname(__DIR__, 2);
+			}
+		}
+
+		Dotenv::createImmutable($root)->load();
 
 		if (!self::getContainer()->has(HandlerContainerContract::class)) {
 			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
