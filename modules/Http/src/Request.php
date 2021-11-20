@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Exception;
+use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
 
 class Request implements Contract\Request
 {
-	/**
-	 * @throws \Exception
-	 */
 	public static function fromGlobals(): Contract\Request
 	{
 		/**
@@ -23,16 +22,20 @@ class Request implements Contract\Request
 		 * @var mixed $value
 		 */
 		foreach ($_SERVER as $name => $value) {
-			if (str_starts_with($name, 'HTTP_')) {
-				$normalizedName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
-
-				/** @var mixed */
-				$headers[$normalizedName] = $value;
+			if (!str_starts_with($name, 'HTTP_')) {
+				continue;
 			}
+
+			$normalizedName = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+
+			/** @var mixed */
+			$headers[$normalizedName] = $value;
 		}
 
+		$headerMap = RequestHeaderMap::fromArray($headers);
+
 		if (!array_key_exists("REQUEST_METHOD", $_SERVER) || empty($_SERVER["REQUEST_METHOD"])) {
-			throw new Exception("REQUEST_METHOD is not set.");
+			throw new RuntimeException("REQUEST_METHOD is not set.");
 		}
 
 		/** @var non-empty-string $method */
@@ -41,7 +44,15 @@ class Request implements Contract\Request
 		/** @var string $uri */
 		$uri = $_SERVER["REQUEST_URI"];
 
-		return new self($method, $uri, $headers);
+		try {
+			$contentLength = (int)$headerMap->get(HeaderName::ContentLength);
+		} catch (OffsetNotFoundException) {
+			$contentLength = -1;
+		}
+
+		$body = file_get_contents("php://input", length: $contentLength);
+
+		return new self($method, $uri, $headerMap, $body);
 	}
 
 	private Contract\Url $url;
