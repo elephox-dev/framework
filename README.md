@@ -42,26 +42,6 @@ This is a class library providing independent building blocks.
 - [ ] Core/src/Handler/HandlerContainer.php
   - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
 
-### ideA
-
-- [ ] DI/src/Container.php
-  - [ ] rguments
-  - [ ] rguments = []): object
-  - [ ] rguments);
-  - [ ] rguments
-  - [ ] rguments = []): mixed
-  - [ ] rguments);
-  - [ ] rguments
-  - [ ] rguments = []): mixed
-  - [ ] rguments);
-- [ ] DI/src/Contract/Container.php
-  - [ ] rguments
-  - [ ] rguments = []): object;
-  - [ ] rguments
-  - [ ] rguments = []): mixed;
-  - [ ] rguments
-  - [ ] rguments = []): mixed;
-
 
 ## Open issues from other Repositories
 
