@@ -52,12 +52,10 @@ class Core
 
 		define("ELEPHOX_VERSION", self::Version);
 
+		Dotenv::createImmutable(dirname(__DIR__, 6))->load();
+
 		if (!self::getContainer()->has(HandlerContainerContract::class)) {
 			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
-		}
-
-		if (!self::getContainer()->has(Dotenv::class)) {
-			self::getContainer()->register(Dotenv::class, static fn() => Dotenv::createImmutable(dirname(__DIR__, 6)));
 		}
 	}
 
