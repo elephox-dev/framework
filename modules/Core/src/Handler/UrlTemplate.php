@@ -45,4 +45,14 @@ class UrlTemplate
 
 		return preg_match("/^$source$/", (string)$url) === 1;
 	}
+
+	public function getValues(Contract\Url $url): array
+	{
+		// extract url parameters from template and return a named array
+		$source = preg_replace(self::SourceTransformMatch, '(.*?)', $this->source);
+
+		preg_match_all($source, (string)$url, $matches);
+
+		return $matches;
+	}
 }

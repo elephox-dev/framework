@@ -105,10 +105,10 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new Exception('Invalid context type');
 		}
 
-		// TODO: extract url parameters and pass them inside the arguments
+		$parameters = $this->template->getValues($context->getRequest()->getUrl());
 
 		/** @var Response|mixed $result */
-		$result = $context->getContainer()->call($handler, $method, ['context' => $context]);
+		$result = $context->getContainer()->call($handler, $method, ['context' => $context, ...$parameters]);
 
 		if (!$result instanceof Response) {
 			throw new Exception('Request handler didn\'t return a Response.');

@@ -40,7 +40,7 @@ interface Container
 	 * @template T
 	 *
 	 * @param class-string<T>|non-empty-string $contract
-	 * @param array<array-key, object|null> $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 */
@@ -62,7 +62,7 @@ interface Container
 	 *
 	 * @param class-string<T>|non-empty-string|T $implementation
 	 * @param string $method
-	 * @param array<array-key, object|null> $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return TResult
 	 */
@@ -72,7 +72,7 @@ interface Container
 	 * @template T
 	 *
 	 * @param callable(): T $callback
-	 * @param array<array-key, object|null> $overrideArguments
+	 * @param array $overrideArguments
 	 * @return T
 	 */
 	public function callback(callable $callback, array $overrideArguments = []): mixed;

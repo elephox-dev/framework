@@ -47,10 +47,14 @@ class Request implements Contract\Request
 		try {
 			$contentLength = (int)$headerMap->get(HeaderName::ContentLength);
 		} catch (OffsetNotFoundException) {
-			$contentLength = -1;
+			$contentLength = 0;
 		}
 
-		$body = file_get_contents("php://input", length: $contentLength);
+		if ($contentLength !== 0) {
+			$body = file_get_contents("php://input", length: $contentLength);
+		} else {
+			$body = null;
+		}
 
 		return new self($method, $uri, $headerMap, $body);
 	}
