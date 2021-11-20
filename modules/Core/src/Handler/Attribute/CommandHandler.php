@@ -11,7 +11,7 @@ use Exception;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class CommandHandler extends AbstractHandler
+class CommandHandler extends AbstractHandlerAttribute
 {
 	#[Pure] public function __construct()
 	{

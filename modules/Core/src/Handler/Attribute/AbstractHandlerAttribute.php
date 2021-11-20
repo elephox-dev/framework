@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Handler\ActionType;
+use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute;
+use Elephox\Core\Handler\Contract\ActionType;
 
-abstract class AbstractHandler
+abstract class AbstractHandlerAttribute implements HandlerAttribute
 {
 	public function __construct(
 		private ActionType $type,

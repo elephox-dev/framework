@@ -33,11 +33,11 @@ class HandlerContainer implements Contract\HandlerContainer
 			return $binding->isApplicable($context);
 		});
 
-		// TODO: find a better way to choose the correct binding
+		// TODO: find a better way to choose the correct binding if there are multiple applicable bindings
 
 		$binding = $bindings->first();
 		if ($binding === null) {
-			throw new Exception('No handler found for context');
+			throw new Exception('No handler found for context ' . $context::class);
 		}
 
 		return $binding;

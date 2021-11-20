@@ -11,10 +11,10 @@ use Exception;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class ExceptionHandler extends AbstractHandler
+class ExceptionHandler extends AbstractHandlerAttribute
 {
 	#[Pure] public function __construct(
-		private ?string $exceptionClass = null
+		private ?string $exceptionClass = null,
 	)
 	{
 		parent::__construct(ActionType::Exception);
@@ -39,7 +39,7 @@ class ExceptionHandler extends AbstractHandler
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function invoke(object $handler, string $method, Context $context): void
 	{

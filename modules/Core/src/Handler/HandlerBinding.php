@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler;
 
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Handler\Attribute\AbstractHandler;
+use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute;
 
 /**
  * @template THandler as object
@@ -17,12 +17,12 @@ class HandlerBinding implements Contract\HandlerBinding
 	/**
 	 * @param THandler $handler
 	 * @param string $method
-	 * @param AbstractHandler $attribute
+	 * @param HandlerAttribute $attribute
 	 */
 	public function __construct(
-		private object          $handler,
-		private string          $method,
-		private AbstractHandler $attribute,
+		private object                   $handler,
+		private string                   $method,
+		private HandlerAttribute $attribute,
 	)
 	{
 	}

@@ -18,7 +18,7 @@ use Elephox\Http\RequestMethod;
 use Exception;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class RequestHandler extends AbstractHandler
+class RequestHandler extends AbstractHandlerAttribute
 {
 	private UrlTemplate $template;
 
