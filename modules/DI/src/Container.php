@@ -134,7 +134,7 @@ class Container implements Contract\Container
 	 * @template T
 	 *
 	 * @param class-string<T>|non-empty-string $contract
-	 * @param array<array-key, object|null> $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
@@ -192,7 +192,6 @@ class Container implements Contract\Container
 	 * @template TResult
 	 *
 	 * @param class-string<T>|T|non-empty-string $implementation
-	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return TResult
 	 * @throws ReflectionException
@@ -218,7 +217,7 @@ class Container implements Contract\Container
 	 * @template T
 	 *
 	 * @param callable(): T $callback
-	 * @param array<array-key, object|null> $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
@@ -232,12 +231,9 @@ class Container implements Contract\Container
 		return $reflectionFunction->invokeArgs($arguments->asArray());
 	}
 
-	/**
-	 * @param array<array-key, object|null> $overrides
-	 */
 	private function resolveArguments(ReflectionFunctionAbstract $method, array $overrides): ArrayList
 	{
-		/** @var ArrayList<object|null> $values */
+		/** @var ArrayList<mixed> $values */
 		$values = new ArrayList();
 		$parameters = $method->getParameters();
 
