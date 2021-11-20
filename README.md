@@ -37,8 +37,6 @@ This is a class library providing independent building blocks.
 
 - [ ] Core/src/Handler/Attribute/ExceptionHandler.php
   - [ ] do something else with this
-- [ ] Core/src/Handler/Attribute/RequestHandler.php
-  - [ ] extract url parameters and pass them inside the arguments
 - [ ] Core/src/Handler/HandlerContainer.php
   - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
 
