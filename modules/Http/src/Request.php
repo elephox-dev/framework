@@ -128,7 +128,7 @@ class Request implements Contract\Request
 	{
 		if ($this->headers->has(HeaderName::ContentType)) {
 			$contentType = $this->headers->get(HeaderName::ContentType);
-			if ($contentType !== "application/json") {
+			if (!str_starts_with($contentType, "application/json")) {
 				throw new LogicException("Content-Type is not application/json");
 			}
 		}
