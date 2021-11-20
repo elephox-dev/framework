@@ -33,11 +33,11 @@ interface Container
 	 * @template T
 	 *
 	 * @param class-string<T> $contract
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return T
 	 */
-	public function instantiate(string $contract, array $arguments = []): object;
+	public function instantiate(string $contract, array $overrideArguments = []): object;
 
 	/**
 	 * @template T of object
@@ -55,18 +55,18 @@ interface Container
 	 *
 	 * @param class-string<T>|T $implementation
 	 * @param string $method
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return TResult
 	 */
-	public function call(string|object $implementation, string $method, array $arguments = []): mixed;
+	public function call(string|object $implementation, string $method, array $overrideArguments = []): mixed;
 
 	/**
 	 * @template T
 	 *
 	 * @param callable(): T $callback
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 * @return T
 	 */
-	public function callback(callable $callback, array $arguments = []): mixed;
+	public function callback(callable $callback, array $overrideArguments = []): mixed;
 }

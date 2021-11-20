@@ -122,12 +122,12 @@ class Container implements Contract\Container
 	 * @template T
 	 *
 	 * @param class-string<T> $contract
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
 	 */
-	public function instantiate(string $contract, array $arguments = []): object
+	public function instantiate(string $contract, array $overrideArguments = []): object
 	{
 		$reflectionClass = new ReflectionClass($contract);
 		$constructor = $reflectionClass->getConstructor();
@@ -135,9 +135,9 @@ class Container implements Contract\Container
 			return $reflectionClass->newInstance();
 		}
 
-		$parameters = $this->resolveParameterValues($constructor, $arguments);
+		$arguments = $this->resolveArguments($constructor, $overrideArguments);
 
-		return $reflectionClass->newInstanceArgs($parameters->asArray());
+		return $reflectionClass->newInstanceArgs($arguments->asArray());
 	}
 
 	/**
@@ -169,12 +169,12 @@ class Container implements Contract\Container
 	 * @template TResult
 	 *
 	 * @param class-string<T>|T $implementation
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return TResult
 	 * @throws ReflectionException
 	 */
-	public function call(string|object $implementation, string $method, array $arguments = []): mixed
+	public function call(string|object $implementation, string $method, array $overrideArguments = []): mixed
 	{
 		/** @var T $object */
 		if (is_string($implementation)) {
@@ -186,33 +186,34 @@ class Container implements Contract\Container
 
 		$reflectionClass = new ReflectionClass($object);
 		$reflectionMethod = $reflectionClass->getMethod($method);
-		$parameters = $this->resolveParameterValues($reflectionMethod, $arguments);
+		$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments);
 
 		/** @var TResult */
-		return $reflectionMethod->invokeArgs($object, $parameters->asArray());
+		return $reflectionMethod->invokeArgs($object, $arguments->asArray());
 	}
 
 	/**
 	 * @template T
 	 *
 	 * @param callable(): T $callback
-	 * @param array<array-key, object|null> $arguments
+	 * @param array<array-key, object|null> $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
 	 */
-	public function callback(callable $callback, array $arguments = []): mixed
+	public function callback(callable $callback, array $overrideArguments = []): mixed
 	{
 		$reflectionFunction = new ReflectionFunction(Closure::fromCallable($callback));
-		$parameters = $this->resolveParameterValues($reflectionFunction, $arguments);
+		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments);
+
 		/** @var T */
-		return $reflectionFunction->invokeArgs($parameters->asArray());
+		return $reflectionFunction->invokeArgs($arguments->asArray());
 	}
 
 	/**
-	 * @param array<array-key, object|null> $given
+	 * @param array<array-key, object|null> $overrides
 	 */
-	private function resolveParameterValues(ReflectionFunctionAbstract $method, array $given): ArrayList
+	private function resolveArguments(ReflectionFunctionAbstract $method, array $overrides): ArrayList
 	{
 		/** @var ArrayList<object|null> $values */
 		$values = new ArrayList();
@@ -220,21 +221,21 @@ class Container implements Contract\Container
 
 		foreach ($parameters as $i => $parameter) {
 			if ($parameter->isVariadic()) {
-				$values->addAll(...array_slice($given, $i));
+				$values->addAll(...array_slice($overrides, $i));
 				break;
 			}
 
-			if (array_key_exists($parameter->getName(), $given)) {
-				$values->add($given[$parameter->getName()]);
+			if (array_key_exists($parameter->getName(), $overrides)) {
+				$values->add($overrides[$parameter->getName()]);
 			} else {
-				$values->add($this->resolveParameterValue($parameter));
+				$values->add($this->resolveArgument($parameter));
 			}
 		}
 
 		return $values;
 	}
 
-	private function resolveParameterValue(ReflectionParameter $parameter): ?object
+	private function resolveArgument(ReflectionParameter $parameter): ?object
 	{
 		$type = $parameter->getType();
 		if ($type === null) {
