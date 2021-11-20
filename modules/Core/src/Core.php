@@ -66,12 +66,19 @@ class Core
 		}
 	}
 
-	public static function setApp(App $app): void
+	/**
+	 * @param class-string<App>|App $app
+	 */
+	public static function setApp(string|App $app): void
 	{
 		self::getContainer()->register(App::class, $app);
 
 		try {
-			self::loadHandlers($app::class);
+			if (is_object($app)) {
+				$app = $app::class;
+			}
+
+			self::loadHandlers($app);
 		} catch (ReflectionException $e) {
 			self::handleException($e);
 		}
