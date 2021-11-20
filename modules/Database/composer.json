@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "ext-mysqli": "*",
         "elephox/collection": "dev-main",
         "elephox/di": "dev-main",
         "jetbrains/phpstorm-attributes": "^1.0"

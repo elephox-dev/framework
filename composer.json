@@ -14,8 +14,9 @@
         "wikimedia/composer-merge-plugin": "^2.0.1"
     },
     "require-dev": {
-        "ext-json": "*",
         "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mysqli": "*",
         "vimeo/psalm": "^4.12",
         "phpunit/phpunit": "^9.5",
         "infection/infection": "^0.25",
