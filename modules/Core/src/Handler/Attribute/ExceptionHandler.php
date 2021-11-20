@@ -10,7 +10,7 @@ use Elephox\Core\Handler\ActionType;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class ExceptionHandler extends AbstractHandlerAttribute
 {
 	#[Pure] public function __construct(

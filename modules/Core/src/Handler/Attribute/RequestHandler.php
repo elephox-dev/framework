@@ -17,7 +17,7 @@ use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
 use Exception;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
 {
 	private UrlTemplate $template;
