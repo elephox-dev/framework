@@ -22,6 +22,9 @@ class Container implements Contract\Container
 	public function __construct()
 	{
 		$this->map = new ArrayMap();
+
+		$this->register(Contract\Container::class, $this);
+		$this->register(__CLASS__, $this);
 	}
 
 	#[Pure] public function has(string $class): bool
