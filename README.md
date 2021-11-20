@@ -40,16 +40,34 @@ This is a class library providing independent building blocks.
 - [ ] Core/src/Handler/Attribute/RequestHandler.php
   - [ ] extract url parameters and pass them inside the arguments
 - [ ] Core/src/Handler/HandlerContainer.php
-  - [ ] find a better way to choose the correct binding
-- [ ] Core/src/Handler/Handlers.php
-  - [ ] find a better way to load the App\ namespace
+  - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
+
+### ideA
+
+- [ ] DI/src/Container.php
+  - [ ] rguments
+  - [ ] rguments = []): object
+  - [ ] rguments);
+  - [ ] rguments
+  - [ ] rguments = []): mixed
+  - [ ] rguments);
+  - [ ] rguments
+  - [ ] rguments = []): mixed
+  - [ ] rguments);
+- [ ] DI/src/Contract/Container.php
+  - [ ] rguments
+  - [ ] rguments = []): object;
+  - [ ] rguments
+  - [ ] rguments = []): mixed;
+  - [ ] rguments
+  - [ ] rguments = []): mixed;
 
 
 ## Open issues from other Repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
-  - [#6429](https://github.com/vimeo/psalm/issues/6429)
   - [#6468](https://github.com/vimeo/psalm/issues/6468)
+  - [#6429](https://github.com/vimeo/psalm/issues/6429)
 
 <!-- end todos -->
