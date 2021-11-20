@@ -14,9 +14,14 @@ use Elephox\Collection\Contract\GenericList;
 interface ReadonlyRepository extends Filterable
 {
 	/**
-	 * @return T
+	 * @return T|null
 	 */
-	public function find(string|int $id): Entity;
+	public function find(string|int $id): ?Entity;
+
+	/**
+	 * @return T|null
+	 */
+	public function findBy(string $property, mixed $value): ?Entity;
 
 	/**
 	 * @return GenericList<T>
