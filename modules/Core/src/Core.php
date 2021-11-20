@@ -166,7 +166,7 @@ class Core
 	#[NoReturn]
 	public static function handle(): void
 	{
-		$handlerContainer = self::getContainer()->get(HandlerContainer::class);
+		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
 
 		try {
 			/** @var Context $context */
