@@ -7,6 +7,7 @@ use Elephox\Support\Contract\JsonConvertible;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use Elephox\Support\MimeType;
 use InvalidArgumentException;
+use JsonException;
 use RuntimeException;
 
 class Response implements Contract\Response
@@ -47,20 +48,22 @@ class Response implements Contract\Response
 
 	public static function withJson(mixed $json = null, ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
 	{
-		if ($json instanceof JsonConvertible) {
-			/** @noinspection PhpUnhandledExceptionInspection */
-			$content = $json->toJson();
-		} else if ($json !== null) {
-			/** @noinspection PhpUnhandledExceptionInspection */
-			$content = json_encode($json, JSON_THROW_ON_ERROR);
-		} else {
-			$content = null;
+		try {
+			if ($json instanceof JsonConvertible) {
+				$content = $json->toJson();
+			} else if ($json !== null) {
+				$content = json_encode($json, JSON_THROW_ON_ERROR);
+			} else {
+				$content = null;
+			}
+
+			$headers ??= new ResponseHeaderMap();
+			$headers->put(HeaderName::ContentType, MimeType::Applicationjson->getValue());
+
+			return new Response($content, $code, $headers);
+		} catch (JsonException $e) {
+			throw new InvalidArgumentException("Failed to encode JSON.", 0, $e);
 		}
-
-		$headers ??= new ResponseHeaderMap();
-		$headers->put(HeaderName::ContentType, MimeType::Applicationjson->getValue());
-
-		return new Response($content, $code, $headers);
 	}
 
 	private Contract\ResponseCode $code;
