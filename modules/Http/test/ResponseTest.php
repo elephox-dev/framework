@@ -52,6 +52,7 @@ class ResponseTest extends TestCase
 
 		$this->assertEquals(ResponseCode::Ok, $response->getCode());
 		$this->assertEquals('{"foo":"bar","baz":"qux"}', $response->getContent());
+		$this->assertEquals(MimeType::Applicationjson->getValue(), $response->getHeaders()->get(HeaderName::ContentType));
 	}
 
 	public function testWithJsonConvertibleContent(): void
@@ -93,5 +94,13 @@ class ResponseTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 
 		Response::fromString("HTTP/1.1  test\n\n");
+	}
+
+	public function testMimeTypeGetsSet(): void
+	{
+		$response = Response::fromString("HTTP/1.1 200 OK\n\n");
+		$this->assertFalse($response->getHeaders()->has(HeaderName::ContentType));
+		$response->setContent('<h1>404 Not Found</h1>', MimeType::Texthtml);
+		$this->assertEquals(MimeType::Texthtml->getValue(), $response->getHeaders()->get(HeaderName::ContentType));
 	}
 }

@@ -18,6 +18,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\RequestHeaderMap
  * @covers \Elephox\Http\HeaderName
  * @covers \Elephox\Http\CustomRequestMethod
+ * @covers \Elephox\Collection\InvalidOffsetException
+ * @covers \Elephox\Collection\OffsetNotFoundException
  */
 class RequestTest extends TestCase
 {

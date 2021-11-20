@@ -20,6 +20,15 @@ use stdClass;
  */
 class ContainerTest extends MockeryTestCase
 {
+	public function testConstructor(): void
+	{
+		$container = new Container();
+
+		self::assertInstanceOf(Container::class, $container);
+		self::assertTrue($container->has(\Elephox\DI\Contract\Container::class));
+		self::assertTrue($container->has(Container::class));
+	}
+
 	public function testStoreInstance(): void
 	{
 		$container = new Container();
@@ -142,7 +151,7 @@ class ContainerTest extends MockeryTestCase
 	public function testInvalidBindingRequest(): void
 	{
 		$container = new Container();
-		$container->register(ContainerTestInterface::class, static fn () => new stdClass());
+		$container->register(ContainerTestInterface::class, static fn() => new stdClass());
 
 		$this->expectException(BindingException::class);
 
@@ -197,15 +206,24 @@ class ContainerTest extends MockeryTestCase
 	}
 }
 
-interface ContainerTestInterface{}
-interface ContainerTestInterface2{}
-class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2 {
+interface ContainerTestInterface
+{
+}
+
+interface ContainerTestInterface2
+{
+}
+
+class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2
+{
 	public function method(ContainerTestInterface $instance): ContainerTestInterface
 	{
 		return $instance;
 	}
 }
-class ContainerTestClassWithConstructor {
+
+class ContainerTestClassWithConstructor
+{
 	public ContainerTestInterface $testInterface;
 
 	public function __construct(ContainerTestInterface $testInterface)
@@ -213,23 +231,31 @@ class ContainerTestClassWithConstructor {
 		$this->testInterface = $testInterface;
 	}
 }
-class ContainerTestClassWithoutConstructorTypes implements ContainerTestInterface {
+
+class ContainerTestClassWithoutConstructorTypes implements ContainerTestInterface
+{
 	public function __construct($someVariable)
 	{
 	}
 }
-class ContainerTestClassMultiParameterConstructor implements ContainerTestInterface {
+
+class ContainerTestClassMultiParameterConstructor implements ContainerTestInterface
+{
 	public ContainerTestInterface $testInterface;
 	public ContainerTestInterface2 $testInterface2;
+
 	public function __construct(ContainerTestInterface $testInterface, ContainerTestInterface2 $testInterface2)
 	{
 		$this->testInterface = $testInterface;
 		$this->testInterface2 = $testInterface2;
 	}
 }
-class ContainerTestClassMultiParameterConstructorOptional implements ContainerTestInterface {
+
+class ContainerTestClassMultiParameterConstructorOptional implements ContainerTestInterface
+{
 	public ContainerTestInterface $testInterface;
 	public ?ContainerTestInterface2 $testInterface2;
+
 	public function __construct(ContainerTestInterface $testInterface, ?ContainerTestInterface2 $testInterface2 = null)
 	{
 		$this->testInterface = $testInterface;

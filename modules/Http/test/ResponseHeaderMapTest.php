@@ -46,6 +46,15 @@ class ResponseHeaderMapTest extends TestCase
 		self::assertEquals(['test'], $map->get(HeaderName::SetCookie));
 	}
 
+	public function testFromString(): void
+	{
+		$map = ResponseHeaderMap::fromString("Host: localhost\r\nContent-Type:  text/html \r\nX-Custom: test:value\r\n\r\n");
+
+		self::assertEquals('localhost', $map->get(HeaderName::Host));
+		self::assertEquals('text/html', $map->get(HeaderName::ContentType));
+		self::assertEquals(['test:value'], $map->get("X-Custom"));
+	}
+
 	public function testInvalidHeaderRow(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
