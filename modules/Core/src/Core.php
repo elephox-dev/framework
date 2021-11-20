@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core;
 
+use Dotenv\Dotenv;
 use Elephox\Core\Context\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\ExceptionContext as ExceptionContextContract;
@@ -53,6 +54,10 @@ class Core
 
 		if (!self::getContainer()->has(HandlerContainerContract::class)) {
 			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
+		}
+
+		if (!self::getContainer()->has(Dotenv::class)) {
+			self::getContainer()->register(Dotenv::class, static fn() => Dotenv::createImmutable(dirname(__DIR__, 6)));
 		}
 	}
 

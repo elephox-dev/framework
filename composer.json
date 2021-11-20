@@ -14,7 +14,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
         "vimeo/psalm": "^4.12",
