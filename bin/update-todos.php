@@ -36,8 +36,8 @@ $readmeFile = $root . 'README.md';
 echo "Gathering files...\n";
 
 $sourceFiles = gatherSourceFiles($src);
-$todoPattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/i';
-$issuePattern = '/(?:(?<repo>\w+\/\w+)#(?<issue>\d+))/i';
+$todoPattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/';
+$issuePattern = '/(?:(?<repo>\w+\/\w+)#(?<issue>\d+))/';
 
 echo "Processing " . count($sourceFiles) . " files...\n";
 $matches = [];
