@@ -5,6 +5,7 @@ namespace Elephox\Files;
 
 use DateTime;
 use Elephox\Collection\ArrayList;
+use Elephox\Files\Contract\FilesystemNode;
 use JetBrains\PhpStorm\Pure;
 use OutOfRangeException;
 
@@ -41,14 +42,16 @@ class Directory implements Contract\Directory
 		$nodesArray = ArrayList::fromArray($nodes);
 
 		/** @var ArrayList<Contract\FilesystemNode> */
-		return $nodesArray->map(function (string $name): Contract\FilesystemNode {
-			$path = Path::join($this->path, $name);
-			if (is_dir($path)) {
-				return new Directory($path);
-			}
+		return $nodesArray
+			->where(fn(string $name) => $name !== '.' && $name !== '..')
+			->map(function (string $name): Contract\FilesystemNode {
+				$path = Path::join($this->path, $name);
+				if (is_dir($path)) {
+					return new Directory($path);
+				}
 
-			return new File($path);
-		});
+				return new File($path);
+			});
 	}
 
 	#[Pure] public function isRoot(): bool
@@ -86,5 +89,42 @@ class Directory implements Contract\Directory
 	public function getModifiedTime(): DateTime
 	{
 		return new DateTime('@' . filemtime($this->path));
+	}
+
+	public function getFile(string $filename): ?File
+	{
+		$path = Path::join($this->path, $filename);
+
+		if (!file_exists($path)) {
+			return null;
+		}
+
+		return new File($path);
+	}
+
+	public function getDirectory(string $dirname): ?Directory
+	{
+		$path = Path::join($this->path, $dirname);
+
+		if (!is_dir($path)) {
+			return null;
+		}
+
+		return new Directory($path);
+	}
+
+	public function getChild(string $name): ?FilesystemNode
+	{
+		$path = Path::join($this->path, $name);
+
+		if (file_exists($path)) {
+			return new File($path);
+		}
+
+		if (is_dir($path)) {
+			return new Directory($path);
+		}
+
+		return null;
 	}
 }

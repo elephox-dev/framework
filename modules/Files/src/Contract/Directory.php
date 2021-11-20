@@ -12,15 +12,21 @@ interface Directory extends FilesystemNode
 	 */
 	public function getFiles(): ArrayList;
 
+	public function getFile(string $filename): ?File;
+
 	/**
 	 * @return ArrayList<Directory>
 	 */
 	public function getDirectories(): ArrayList;
 
+	public function getDirectory(string $dirname): ?Directory;
+
 	/**
 	 * @return ArrayList<FilesystemNode>
 	 */
 	public function getChildren(): ArrayList;
+
+	public function getChild(string $name): ?FilesystemNode;
 
 	public function isRoot(): bool;
 
