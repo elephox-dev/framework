@@ -31,17 +31,17 @@ This is a class library providing independent building blocks.
 
 <!-- start todos -->
 
-## TODOs Found:
+## TODO
 
 ### TODO
 
-- [ ] Core/src/Handler/Attribute/ExceptionHandler.php
+- [ ] modules/Core/src/Handler/Attribute/ExceptionHandler.php
   - [ ] do something else with this
-- [ ] Core/src/Handler/HandlerContainer.php
+- [ ] modules/Core/src/Handler/HandlerContainer.php
   - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
 
 
-## Open issues from other Repositories
+### Open issues from other repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
