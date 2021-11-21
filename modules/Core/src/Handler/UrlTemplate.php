@@ -8,9 +8,6 @@ use Elephox\Http\Url;
 
 class UrlTemplate
 {
-	public const ParamNameExtractor = '/[^\{]*\{([^\}]+)\}/';
-	public const SourceTransformMatch = '/(\{[^\}]+\})/';
-
 	public function __construct(
 		private string $source
 	)
@@ -38,20 +35,24 @@ class UrlTemplate
 
 	public function matches(Contract\Url $url): bool
 	{
-		$source = preg_replace(self::SourceTransformMatch, '.*?', $this->source);
-		$source = str_starts_with($source, '/') ? $source : "/$source";
-		$source = preg_replace('/\//', '\\/', $source);
+		$source = $this->getSanitizedSource();
 
 		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 
 	public function getValues(Contract\Url $url): array
 	{
-		// extract url parameters from template and return a named array
-		$source = preg_replace(self::SourceTransformMatch, '(.*?)', $this->source);
+		$source = $this->getSanitizedSource();
 
-		preg_match_all($source, (string)$url, $matches);
+		preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
-		return $matches;
+		return $matches[0];
+	}
+
+	private function getSanitizedSource(): string
+	{
+		$source = $this->source;
+		$source = str_starts_with($source, '/') ? $source : "/$source";
+		return preg_replace('/\//', '\\/', $source);
 	}
 }
