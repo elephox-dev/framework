@@ -17,10 +17,10 @@ interface Container
 	 * @template T
 	 *
 	 * @param class-string<T> $contract
-	 * @param class-string<T>|T|callable(Container): T $implementation
+	 * @param class-string<T>|T|null|callable(Container): T $implementation
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, string|callable|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void;
+	public function register(string $contract, string|callable|object|null $implementation = null, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void;
 
 	/**
 	 * @param non-empty-string $alias

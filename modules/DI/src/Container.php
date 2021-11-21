@@ -6,6 +6,7 @@ namespace Elephox\DI;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use ReflectionClass;
 use ReflectionException;
@@ -40,12 +41,22 @@ class Container implements Contract\Container
 	 * @template T
 	 *
 	 * @param class-string<T> $contract
-	 * @param class-string<T>|T|callable(Contract\Container): T $implementation
+	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
 	 * @param BindingLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, callable|string|object $implementation, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void
+	public function register(string $contract, callable|string|object|null $implementation = null, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void
 	{
+		if ($implementation === null) {
+			if (!class_exists($contract)) {
+				throw new InvalidArgumentException("Class $contract does not exist");
+			}
+
+			self::register($contract, $contract);
+
+			return;
+		}
+
 		/** @var callable(Contract\Container): T $builder */
 		if (is_callable($implementation)) {
 			$builder = $implementation;
