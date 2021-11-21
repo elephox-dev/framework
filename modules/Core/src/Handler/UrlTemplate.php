@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
-use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\Contract;
 use Elephox\Http\Url;
 

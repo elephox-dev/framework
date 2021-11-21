@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\GenericList;
 use Iterator;
 use Traversable;
 use WeakMap;
