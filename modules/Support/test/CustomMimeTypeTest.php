@@ -16,7 +16,7 @@ class CustomMimeTypeTest extends TestCase
 		$mimeType = new CustomMimeType('image/png');
 		$builtIn = MimeType::Imagepng;
 
-		$this->assertInstanceOf(CustomMimeType::class, $mimeType);
-		$this->assertEquals($builtIn->getValue(), $mimeType->getValue());
+		self::assertInstanceOf(CustomMimeType::class, $mimeType);
+		self::assertEquals($builtIn->getValue(), $mimeType->getValue());
 	}
 }

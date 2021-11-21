@@ -12,7 +12,7 @@ enum ResponseCode: int implements Contract\ResponseCode
 	case EarlyHints = 103;
 
 	/* Successful responses  */
-	case Ok = 200;
+	case OK = 200;
 	case Created = 201;
 	case Accepted = 202;
 	case NonAuthoritativeInformation = 203;

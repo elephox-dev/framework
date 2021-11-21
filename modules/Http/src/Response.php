@@ -46,7 +46,7 @@ class Response implements Contract\Response
 		return new self($body, $code, $headers, $version);
 	}
 
-	public static function withJson(mixed $json = null, ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
+	public static function withJson(mixed $json = null, ResponseCode $code = ResponseCode::OK, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
 	{
 		try {
 			if ($json instanceof JsonConvertible) {
@@ -69,10 +69,15 @@ class Response implements Contract\Response
 	private Contract\ResponseCode $code;
 	private Contract\ResponseHeaderMap $headers;
 
-	public function __construct(private ?string $content, Contract\ResponseCode $code = ResponseCode::Ok, ?Contract\ResponseHeaderMap $headers = null, private string $httpVersion = "1.1")
+	public function __construct(private ?string $content, Contract\ResponseCode $code = ResponseCode::OK, null|Contract\ResponseHeaderMap|array $headers = null, private string $httpVersion = "1.1")
 	{
 		$this->code = $code;
-		$this->headers = $headers ?? new ResponseHeaderMap();
+
+		$this->headers = match (true) {
+			$headers === null => new ResponseHeaderMap(),
+			$headers instanceof Contract\ResponseHeaderMap => $headers,
+			is_array($headers) => ResponseHeaderMap::fromArray($headers),
+		};
 
 		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyRequest())) {
 			throw new InvalidArgumentException("Responses cannot contain headers reserved for requests only.");

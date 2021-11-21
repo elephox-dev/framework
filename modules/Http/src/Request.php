@@ -32,6 +32,16 @@ class Request implements Contract\Request
 			$headers[$normalizedName] = $value;
 		}
 
+		if (array_key_exists('CONTENT_TYPE', $_SERVER)) {
+			/** @var mixed */
+			$headers['Content-Type'] = $_SERVER['CONTENT_TYPE'];
+		}
+
+		if (array_key_exists('CONTENT_LENGTH', $_SERVER)) {
+			/** @var mixed */
+			$headers['Content-Length'] = $_SERVER['CONTENT_LENGTH'];
+		}
+
 		$headerMap = RequestHeaderMap::fromArray($headers);
 
 		if (!array_key_exists("REQUEST_METHOD", $_SERVER) || empty($_SERVER["REQUEST_METHOD"])) {
@@ -40,6 +50,10 @@ class Request implements Contract\Request
 
 		/** @var non-empty-string $method */
 		$method = $_SERVER["REQUEST_METHOD"];
+
+		if (!array_key_exists("REQUEST_URI", $_SERVER)) {
+			throw new RuntimeException("REQUEST_URI is not set.");
+		}
 
 		/** @var string $uri */
 		$uri = $_SERVER["REQUEST_URI"];
@@ -50,7 +64,7 @@ class Request implements Contract\Request
 			$contentLength = 0;
 		}
 
-		if ($contentLength !== 0) {
+		if ($contentLength > 0) {
 			$body = file_get_contents("php://input", length: $contentLength);
 		} else {
 			$body = null;
@@ -130,6 +144,10 @@ class Request implements Contract\Request
 
 	public function getJson(): array
 	{
+		if (!$this->method->canHaveBody()) {
+			throw new LogicException("Request method {$this->method->getValue()} cannot have a body.");
+		}
+
 		if ($this->headers->has(HeaderName::ContentType)) {
 			/** @var string $contentType */
 			$contentType = $this->headers->get(HeaderName::ContentType);
