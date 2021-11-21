@@ -237,13 +237,15 @@ class Container implements Contract\Container
 		$values = new ArrayList();
 		$parameters = $method->getParameters();
 
-		foreach ($parameters as $i => $parameter) {
+		$usedOverrides = 0;
+		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
-				$values->addAll(...array_slice($overrides, $i));
+				$values->addAll(...array_slice($overrides, $usedOverrides));
 				break;
 			}
 
 			if (array_key_exists($parameter->getName(), $overrides)) {
+				$usedOverrides++;
 				$values->add($overrides[$parameter->getName()]);
 			} else {
 				$values->add($this->resolveArgument($parameter));
@@ -253,7 +255,7 @@ class Container implements Contract\Container
 		return $values;
 	}
 
-	private function resolveArgument(ReflectionParameter $parameter): ?object
+	private function resolveArgument(ReflectionParameter $parameter): mixed
 	{
 		$type = $parameter->getType();
 		if ($type === null) {
@@ -266,20 +268,20 @@ class Container implements Contract\Container
 		 */
 		$typeName = $type->getName();
 
-		if (!$this->has($typeName)) {
-			if ($parameter->isDefaultValueAvailable()) {
-				/** @var object|null */
-				return $parameter->getDefaultValue();
-			}
-
-			if (!$parameter->allowsNull()) {
-				throw new BindingNotFoundException($typeName);
-			}
-
-			return null;
+		if ($this->has($typeName)) {
+			return $this->get($typeName);
 		}
 
-		return $this->get($typeName);
+		if ($parameter->isDefaultValueAvailable()) {
+			return $parameter->getDefaultValue();
+		}
+
+		if (!$parameter->allowsNull()) {
+			throw new BindingNotFoundException($typeName);
+		}
+
+		return null;
+
 	}
 
 	public function alias(string $alias, string $contract): void
