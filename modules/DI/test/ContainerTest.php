@@ -139,6 +139,21 @@ class ContainerTest extends MockeryTestCase
 		self::assertNull($instance->testInterface2);
 	}
 
+	public function testStoreClassNameWithConstructorMultiParametersNullable(): void
+	{
+		$container = new Container();
+
+		$testInterface = new ContainerTestClass();
+
+		$container->register(ContainerTestInterface::class, $testInterface);
+		$container->register(ContainerTestClassMultiParameterConstructorNullable::class, ContainerTestClassMultiParameterConstructorNullable::class);
+
+		$instance = $container->get(ContainerTestClassMultiParameterConstructorNullable::class);
+
+		self::assertSame($testInterface, $instance->testInterface);
+		self::assertNull($instance->testInterface2);
+	}
+
 	public function testNotRegistered(): void
 	{
 		$container = new Container();
@@ -204,6 +219,31 @@ class ContainerTest extends MockeryTestCase
 
 		self::assertInstanceOf(ContainerTestInterface::class, $container->callback(fn(ContainerTestClass $class, ContainerTestInterface $interface) => $class->method($interface)));
 	}
+
+	public function testWithOverrideArguments(): void
+	{
+		$container = new Container();
+		$interface = new ContainerTestClass();
+
+		$container->register(ContainerTestClassWithConstructor::class, ContainerTestClassWithConstructor::class);
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->instantiate(ContainerTestClassWithConstructor::class, ['testInterface' => $interface]);
+
+		self::assertSame($interface, $instance->testInterface);
+	}
+
+	public function testVariadicCall(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+	    $args = $container->call(ContainerTestInterface::class, 'variadic', ['test', 'test2']);
+
+		self::assertInstanceOf(ContainerTestInterface::class, $args[0]);
+		self::assertEquals('test', $args[1]);
+		self::assertEquals('test2', $args[2]);
+	}
 }
 
 interface ContainerTestInterface
@@ -219,6 +259,11 @@ class ContainerTestClass implements ContainerTestInterface, ContainerTestInterfa
 	public function method(ContainerTestInterface $instance): ContainerTestInterface
 	{
 		return $instance;
+	}
+
+	public function variadic(ContainerTestInterface $instance, string ...$args): array
+	{
+		return [$instance, ...$args];
 	}
 }
 
@@ -257,6 +302,19 @@ class ContainerTestClassMultiParameterConstructorOptional implements ContainerTe
 	public ?ContainerTestInterface2 $testInterface2;
 
 	public function __construct(ContainerTestInterface $testInterface, ?ContainerTestInterface2 $testInterface2 = null)
+	{
+		$this->testInterface = $testInterface;
+		$this->testInterface2 = $testInterface2;
+	}
+}
+
+
+class ContainerTestClassMultiParameterConstructorNullable implements ContainerTestInterface
+{
+	public ContainerTestInterface $testInterface;
+	public ?ContainerTestInterface2 $testInterface2;
+
+	public function __construct(ContainerTestInterface $testInterface, ?ContainerTestInterface2 $testInterface2)
 	{
 		$this->testInterface = $testInterface;
 		$this->testInterface2 = $testInterface2;

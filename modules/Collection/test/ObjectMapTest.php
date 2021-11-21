@@ -7,17 +7,17 @@ use PHPUnit\Framework\TestCase;
 use stdClass;
 
 /**
- * @covers \Elephox\Collection\GenericWeakMap
+ * @covers \Elephox\Collection\ObjectMap
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\ArrayList
  */
-class GenericWeakMapTest extends TestCase
+class ObjectMapTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap(
+		$map = new ObjectMap(
 			[
 				$inst,
 			],
@@ -36,7 +36,7 @@ class GenericWeakMapTest extends TestCase
 
 		$this->expectException(OffsetNotFoundException::class);
 
-		new GenericWeakMap(
+		new ObjectMap(
 			[
 				$inst,
 				$inst2
@@ -49,7 +49,7 @@ class GenericWeakMapTest extends TestCase
 
 	public function testGetInvalidOffset(): void
 	{
-		$map = new GenericWeakMap();
+		$map = new ObjectMap();
 
 		$this->expectException(OffsetNotFoundException::class);
 
@@ -59,7 +59,7 @@ class GenericWeakMapTest extends TestCase
 	public function testFirst(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertEquals(123, $map->first());
 		self::assertEquals(123, $map->first(static fn(int $v) => $v > 100));
@@ -68,25 +68,25 @@ class GenericWeakMapTest extends TestCase
 	public function testFirstKey(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
-		$emptyMap = new GenericWeakMap();
+		$map = new ObjectMap([$inst], [123]);
+		$emptyMap = new ObjectMap();
 
 		self::assertSame($inst, $map->firstKey());
 		self::assertSame($inst, $map->firstKey(static fn(object $k, int $v) => $v > 100));
 		self::assertNull($emptyMap->firstKey());
 	}
 
-	public function testWeakReference(): void
+	public function testReference(): void
 	{
-		$map = new GenericWeakMap([new stdClass()], [123]);
+		$map = new ObjectMap([new stdClass()], [123]);
 
-		self::assertNull($map->first());
+		self::assertInstanceOf(stdClass::class, $map->firstKey());
 	}
 
 	public function testWhere(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertEquals(123, $map->where(static fn(int $v) => $v > 100)->first());
 	}
@@ -94,7 +94,7 @@ class GenericWeakMapTest extends TestCase
 	public function testHas(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertTrue($map->has($inst));
 	}
@@ -102,7 +102,7 @@ class GenericWeakMapTest extends TestCase
 	public function testMap(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertEquals(246, $map->map(static fn(int $v) => $v * 2)->first());
 	}
@@ -110,7 +110,7 @@ class GenericWeakMapTest extends TestCase
 	public function testAny(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertTrue($map->any(static fn(int $v) => $v > 100));
 	}
@@ -118,8 +118,8 @@ class GenericWeakMapTest extends TestCase
 	public function testAnyKey(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
-		$emptyMap = new GenericWeakMap();
+		$map = new ObjectMap([$inst], [123]);
+		$emptyMap = new ObjectMap();
 
 		self::assertTrue($map->anyKey(static fn(object $k) => $k instanceof stdClass));
 		self::assertTrue($map->anyKey());
@@ -129,7 +129,7 @@ class GenericWeakMapTest extends TestCase
 	public function testReduce(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertEquals([123], $map->reduce(static fn(int $v) => $v)->asArray());
 	}
@@ -137,7 +137,7 @@ class GenericWeakMapTest extends TestCase
 	public function testValuesAndKeys(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertEquals([$inst], $map->keys()->asArray());
 		self::assertEquals([123], $map->values()->asArray());
@@ -146,8 +146,8 @@ class GenericWeakMapTest extends TestCase
 	public function testContains(): void
 	{
 		$inst = new stdClass();
-		/** @var GenericWeakMap<stdClass, int> $map */
-		$map = new GenericWeakMap([$inst], [123]);
+		/** @var ObjectMap<stdClass, int> $map */
+		$map = new ObjectMap([$inst], [123]);
 
 		self::assertTrue($map->contains(123));
 		self::assertFalse($map->contains(456));
@@ -156,7 +156,7 @@ class GenericWeakMapTest extends TestCase
 	public function testIterator(): void
 	{
 		$inst = new stdClass();
-		$map = new GenericWeakMap([$inst], [123]);
+		$map = new ObjectMap([$inst], [123]);
 
 		foreach ($map as $key => $value) {
 			self::assertEquals($inst, $key);
