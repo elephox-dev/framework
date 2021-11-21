@@ -18,10 +18,10 @@ This is a class library providing independent building blocks.
 - [x] Dependency Injection
   - [x] Container
   - [x] Dynamic lifespan (request/transient)
-- [x] composer.json dependency sync across all modules (achieved using [wikimedia/composer-merge-plugin](https://github.com/wikimedia/composer-merge-plugin))
+- [x] composer.json dependency sync
 - [x] Http Client
 - [x] Optimize common workflow (re-use coverage data)
-- [ ] Filesystem
+- [x] (basic) Filesystem
 - [ ] Database Adapter
   - [ ] MySql Implementation
   - [ ] Entity Mapping
