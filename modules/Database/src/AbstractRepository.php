@@ -70,12 +70,12 @@ abstract class AbstractRepository implements Contract\Repository
 		return $this->findAll()->contains($value);
 	}
 
-	public function find(int|string $id): Contract\Entity
+	public function find(int|string $id): ?Contract\Entity
 	{
 		return $this->first(static fn (Contract\Entity $entity) => $entity->getUniqueId() === $id);
 	}
 
-	public function findBy(string $property, mixed $value): Contract\Entity
+	public function findBy(string $property, mixed $value): ?Contract\Entity
 	{
 		return $this->first(static fn (Contract\Entity $entity) => $entity->{'get'.ucfirst($property)} === $value);
 	}
