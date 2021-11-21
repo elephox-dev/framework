@@ -67,21 +67,22 @@ foreach ($sourceFiles as $sourceFile) {
 }
 
 $readmeContents = file_get_contents($readmeFile);
-$todos = "<!-- start todos -->\n\n## TODOs Found:\n\n";
+$todos = "<!-- start todos -->\n\n## TODO\n\n";
 echo count($matches) . " categories found.\n";
 foreach ($matches as $category => $files) {
 	$todos .= "### $category\n\n";
 	echo "Category $category contains " . count($files) . " files.\n";
 	foreach ($files as $file => $entries) {
 		$file = str_replace($src, '', $file);
-		$todos .= "- [ ] $file\n";
+		$todos .= "- [ ] modules/$file\n";
 		foreach ($entries as $entry) {
 			$todos .= "  - [ ] $entry\n";
 		}
 	}
 	$todos .= "\n";
 }
-$todos .= "\n## Open issues from other Repositories\n\n";
+
+$todos .= "\n### Open issues from other repositories\n\n";
 foreach ($issues as $repo => $issueNumbers) {
 	$todos .= "- [$repo](https://github.com/$repo)\n";
 	foreach ($issueNumbers as $issueNumber) {
