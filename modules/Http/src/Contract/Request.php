@@ -13,5 +13,7 @@ interface Request
 
 	public function getBody(): ?string;
 
+	public function getJson(): array;
+
 	public function shouldFollowRedirects(): bool;
 }
