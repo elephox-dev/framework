@@ -45,7 +45,7 @@ This is a class library providing independent building blocks.
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
-  - [#6468](https://github.com/vimeo/psalm/issues/6468)
   - [#6429](https://github.com/vimeo/psalm/issues/6429)
+  - [#6964](https://github.com/vimeo/psalm/issues/6964)
 
 <!-- end todos -->

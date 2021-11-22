@@ -169,10 +169,6 @@ enum HeaderName: string implements Contract\HeaderName
 
 	public function getValue(): string
 	{
-		/**
-		 * @var non-empty-string value
-		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
-		 */
 		return $this->value;
 	}
 }

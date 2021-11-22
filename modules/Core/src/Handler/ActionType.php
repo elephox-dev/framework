@@ -12,10 +12,6 @@ enum ActionType implements Contract\ActionType
 
 	public function getName(): string
 	{
-		/**
-		 * @var non-empty-string value
-		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
-		 */
 		return $this->name;
 	}
 }

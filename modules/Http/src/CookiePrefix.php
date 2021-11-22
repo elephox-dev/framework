@@ -12,10 +12,6 @@ enum CookiePrefix: string
 
 	public function isCompliant(Cookie $cookie): bool
 	{
-		/**
-		 * @psalm-suppress MixedArgument
-		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
-		 */
 		if (!str_starts_with($cookie->getName(), $this->value)) {
 			return false;
 		}

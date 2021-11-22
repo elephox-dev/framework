@@ -78,18 +78,15 @@ enum ResponseCode: int implements Contract\ResponseCode
 
 	public function getCode(): int
 	{
-		/**
-		 * @var int value
-		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
-		 */
 		return $this->value;
 	}
 
 	public function getMessage(): string
 	{
 		/**
-		 * @var non-empty-string name
-		 * @psalm-suppress UndefinedThisPropertyFetch Until vimeo/psalm#6468 is fixed
+		 * This annotation can be removed when vimeo/psalm#6964 is resolved.
+		 *
+		 * @var non-empty-string
 		 */
 		return $this->name;
 	}

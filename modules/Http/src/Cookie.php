@@ -241,10 +241,6 @@ class Cookie implements Contract\Cookie
 		}
 
 		if ($this->sameSite) {
-			/**
-			 * @var string $sameSite
-			 * @psalm-suppress UndefinedPropertyFetch Until vimeo/psalm#6468 is fixed
-			 */
 			$sameSite = $this->sameSite->value;
 
 			$cookie .= '; SameSite=' . $sameSite;
