@@ -2,7 +2,7 @@
 
 This is a class library providing independent building blocks.
 
-<p style="text-align: center">
+<p align="center">
   <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/v" alt="Latest Stable Version"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/license" alt="License"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/require/php" alt="PHP Version Require"></a>
