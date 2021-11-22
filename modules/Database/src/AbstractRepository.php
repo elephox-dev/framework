@@ -5,6 +5,8 @@ namespace Elephox\Database;
 
 use Elephox\Collection\ArrayList;
 use Elephox\DI\Contract\Container;
+use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @template T of Contract\Entity
@@ -14,24 +16,57 @@ use Elephox\DI\Contract\Container;
 abstract class AbstractRepository implements Contract\Repository
 {
 	/**
+	 * @param class-string $className
+	 * @return non-empty-string
+	 */
+	public static function getTableNameFromClassName(string $className): string
+	{
+		$lastNamespaceSeparator = strrpos($className, '\\');
+		if (!$lastNamespaceSeparator) {
+			throw new InvalidArgumentException('Class name must be fully qualified');
+		}
+
+		/** @var non-empty-string */
+		return lcfirst(substr($className, $lastNamespaceSeparator + 1));
+	}
+
+	/** @var non-empty-string $tableName */
+	private string $tableName;
+
+	/**
 	 * @param class-string<T> $entityClass
 	 * @param Contract\Storage $storage
 	 * @param Container $container
+	 * @param non-empty-string|null $tableName
 	 */
 	public function __construct(
-		private string $entityClass,
+		private string           $entityClass,
 		private Contract\Storage $storage,
-		private Container $container,
+		private Container        $container,
+		?string                  $tableName = null
 	)
 	{
+		if ($tableName === null) {
+			$tableName = self::getTableNameFromClassName($entityClass);
+		}
+
+		$this->tableName = $tableName;
 	}
 
 	/**
 	 * @return class-string<T>
 	 */
-	public function getEntityClass(): string
+	#[Pure] public function getEntityClass(): string
 	{
 		return $this->entityClass;
+	}
+
+	/**
+	 * @return non-empty-string
+	 */
+	#[Pure] public function getTableName(): string
+	{
+		return $this->tableName;
 	}
 
 	/**
@@ -72,12 +107,12 @@ abstract class AbstractRepository implements Contract\Repository
 
 	public function find(int|string $id): ?Contract\Entity
 	{
-		return $this->first(static fn (Contract\Entity $entity) => $entity->getUniqueId() === $id);
+		return $this->first(static fn(Contract\Entity $entity) => $entity->getUniqueId() === $id);
 	}
 
 	public function findBy(string $property, mixed $value): ?Contract\Entity
 	{
-		return $this->first(static fn (Contract\Entity $entity) => $entity->{'get'.ucfirst($property)} === $value);
+		return $this->first(static fn(Contract\Entity $entity) => $entity->{'get' . ucfirst($property)}() === $value);
 	}
 
 	/**
@@ -86,7 +121,7 @@ abstract class AbstractRepository implements Contract\Repository
 	public function findAll(): ArrayList
 	{
 		/** @var ArrayList<array<string, mixed>> $entities */
-		$entities = ArrayList::fromArray($this->storage->all($this->entityClass));
+		$entities = ArrayList::fromArray($this->storage->all($this->tableName));
 
 		return $entities->map(function (array $entity): Contract\Entity {
 			return $this->container->restore($this->getEntityClass(), $entity);
@@ -100,7 +135,7 @@ abstract class AbstractRepository implements Contract\Repository
 		}
 		/** @var ProxyEntity $entity */
 
-		$this->storage->set($this->entityClass, (string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->add($this->tableName, $entity->_proxyGetArrayCopy());
 	}
 
 	public function update(Contract\Entity $entity): void
@@ -114,13 +149,13 @@ abstract class AbstractRepository implements Contract\Repository
 			return;
 		}
 
-		$this->storage->set($this->entityClass, (string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
+		$this->storage->set($this->tableName, (string)$entity->getUniqueId(), $entity->_proxyGetArrayCopy());
 
 		$entity->_proxyResetDirty();
 	}
 
 	public function delete(Contract\Entity $entity): void
 	{
-		$this->storage->delete($this->entityClass, (string)$entity->getUniqueId());
+		$this->storage->delete($this->tableName, (string)$entity->getUniqueId());
 	}
 }

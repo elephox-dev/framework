@@ -3,7 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Database;
 
+use Elephox\Database\Attributes\AttributeMetaData;
+use Elephox\Database\Attributes\AttributeMetaDataBuilder;
+use Elephox\Database\Attributes\Contract\DatabaseAttribute;
+use Elephox\Database\Attributes\Generated;
+use Elephox\Database\Attributes\Optional;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionProperty;
 
 /**
  * @template T of Contract\Entity
@@ -82,6 +89,21 @@ final class ProxyEntity implements Contract\Entity
 
 		$entityReflection = new ReflectionClass($this->entity);
 		foreach ($entityReflection->getProperties() as $property) {
+			$metaData = $this->_proxyGetAttributeMetaData($property);
+
+			if (!$property->isInitialized($this->entity)) {
+				if ($metaData->optional || $metaData->generated) {
+					if ($property->hasDefaultValue()) {
+						/** @var mixed */
+						$data[$property->getName()] = $property->getDefaultValue();
+					}
+
+					continue;
+				}
+
+				throw new DatabaseException('Property ' . $property->getName() . ' is not initialized and is not optional or generated.');
+			}
+
 			$property->setAccessible(true);
 
 			/** @var mixed */
@@ -89,5 +111,21 @@ final class ProxyEntity implements Contract\Entity
 		}
 
 		return $data;
+	}
+
+	private function _proxyGetAttributeMetaData(ReflectionProperty $property): AttributeMetaData
+	{
+		$metaDataBuilder = new AttributeMetaDataBuilder();
+
+		$attributes = $property->getAttributes(DatabaseAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+		foreach ($attributes as $attribute) {
+			if ($attribute->getName() === Optional::class) {
+				$metaDataBuilder->setIsOptional(true);
+			} else if ($attribute->getName() === Generated::class) {
+				$metaDataBuilder->setIsGenerated(true);
+			}
+		}
+
+		return $metaDataBuilder->build();
 	}
 }
