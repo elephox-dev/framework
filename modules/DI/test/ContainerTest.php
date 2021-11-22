@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
+use InvalidArgumentException;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
 use stdClass;
 
 /**
  * @covers \Elephox\DI\Container
- * @covers \Elephox\DI\BindingLifetime
+ * @covers \Elephox\DI\InstanceLifetime
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\DI\Binding
@@ -44,7 +45,7 @@ class ContainerTest extends MockeryTestCase
 		$container = new Container();
 
 		$factory = static fn(): ContainerTestInterface => new ContainerTestClass();
-		$container->register(ContainerTestInterface::class, $factory, BindingLifetime::Transient);
+		$container->transient(ContainerTestInterface::class, $factory);
 
 		$instanceA = $container->get(ContainerTestInterface::class);
 		$instanceB = $container->get(ContainerTestInterface::class);
@@ -57,7 +58,7 @@ class ContainerTest extends MockeryTestCase
 		$container = new Container();
 
 		$factory = static fn(): ContainerTestInterface => new ContainerTestClass();
-		$container->register(ContainerTestInterface::class, $factory);
+		$container->singleton(ContainerTestInterface::class, $factory);
 
 		$instanceA = $container->get(ContainerTestInterface::class);
 		$instanceB = $container->get(ContainerTestInterface::class);
@@ -69,7 +70,7 @@ class ContainerTest extends MockeryTestCase
 	{
 		$container = new Container();
 
-		$container->register(ContainerTestInterface::class, ContainerTestClass::class, BindingLifetime::Transient);
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class, InstanceLifetime::Transient);
 
 		$instanceA = $container->get(ContainerTestInterface::class);
 		$instanceB = $container->get(ContainerTestInterface::class);
@@ -82,8 +83,8 @@ class ContainerTest extends MockeryTestCase
 		$container = new Container();
 
 		$testClassInstance = new ContainerTestClass();
-		$container->register(ContainerTestInterface::class, $testClassInstance, BindingLifetime::Transient);
-		$container->register(ContainerTestClassWithConstructor::class, ContainerTestClassWithConstructor::class, BindingLifetime::Transient);
+		$container->register(ContainerTestInterface::class, $testClassInstance, InstanceLifetime::Transient);
+		$container->transient(ContainerTestClassWithConstructor::class);
 
 		$instance = $container->get(ContainerTestClassWithConstructor::class);
 		$instance2 = $container->get(ContainerTestClassWithConstructor::class);
@@ -176,7 +177,7 @@ class ContainerTest extends MockeryTestCase
 	public function testInvalidBindingTransient(): void
 	{
 		$container = new Container();
-		$container->register(ContainerTestInterface::class, static fn() => new stdClass(), BindingLifetime::Transient);
+		$container->register(ContainerTestInterface::class, static fn() => new stdClass(), InstanceLifetime::Transient);
 
 		$this->expectException(BindingException::class);
 
@@ -243,6 +244,35 @@ class ContainerTest extends MockeryTestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $args[0]);
 		self::assertEquals('test', $args[1]);
 		self::assertEquals('test2', $args[2]);
+	}
+
+	public function testInterfaceAsClassName(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		$container = new Container();
+		$container->register(ContainerTestInterface::class);
+	}
+
+	public function testGetAlias(): void
+	{
+		$container = new Container();
+		$container->singleton(ContainerTestInterface::class, ContainerTestClass::class, 'test');
+
+		self::assertTrue($container->has('test'));
+
+		$instance = $container->get('test');
+
+		self::assertInstanceOf(ContainerTestInterface::class, $instance);
+
+		$container->alias('test2', 'test');
+
+		self::assertTrue($container->has('test2'));
+
+		$instance2 = $container->get('test2');
+
+		self::assertInstanceOf(ContainerTestInterface::class, $instance);
+		self::assertSame($instance, $instance2);
 	}
 }
 

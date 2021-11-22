@@ -20,7 +20,7 @@ class Container implements Contract\Container
 	/** @var \Elephox\Collection\ArrayMap<non-empty-string, Binding> */
 	private ArrayMap $map;
 
-	/** @var \Elephox\Collection\ArrayMap<non-empty-string, class-string> */
+	/** @var \Elephox\Collection\ArrayMap<non-empty-string, non-empty-string> */
 	private ArrayMap $aliases;
 
 	public function __construct()
@@ -28,8 +28,7 @@ class Container implements Contract\Container
 		$this->map = new ArrayMap();
 		$this->aliases = new ArrayMap();
 
-		$this->register(Contract\Container::class, $this);
-		$this->register(__CLASS__, $this);
+		$this->register(Contract\Container::class, $this, InstanceLifetime::Singleton, __CLASS__, 'container');
 	}
 
 	#[Pure] public function has(string $name): bool
@@ -42,17 +41,17 @@ class Container implements Contract\Container
 	 *
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
-	 * @param BindingLifetime $lifetime
+	 * @param InstanceLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, callable|string|object|null $implementation = null, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void
+	public function register(string $contract, callable|string|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void
 	{
 		if ($implementation === null) {
 			if (!class_exists($contract)) {
 				throw new InvalidArgumentException("Class $contract does not exist");
 			}
 
-			self::register($contract, $contract);
+			self::register($contract, $contract, $lifetime, ...$aliases);
 
 			return;
 		}
@@ -78,25 +77,64 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
+	 * @param class-string<T> $contract
+	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
+	 * @param non-empty-string ...$aliases
+	 */
+	public function singleton(string $contract, callable|string|object|null $implementation = null, string ...$aliases): void
+	{
+		$this->register($contract, $implementation, InstanceLifetime::Singleton, ...$aliases);
+	}
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T> $contract
+	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
+	 * @param non-empty-string ...$aliases
+	 */
+	public function transient(string $contract, callable|string|object|null $implementation = null, string ...$aliases): void
+	{
+		$this->register($contract, $implementation, InstanceLifetime::Transient, ...$aliases);
+	}
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T>|non-empty-string $alias
+	 *
+	 * @return class-string<T>
+	 */
+	private function resolveAlias(string $alias): string
+	{
+		while (!$this->map->has($alias)) {
+			if (!$this->aliases->has($alias)) {
+				throw new BindingNotFoundException($alias);
+			}
+
+			$alias = $this->aliases->get($alias);
+		}
+
+		/** @var class-string<T> $alias */
+		return $alias;
+	}
+
+	/**
+	 * @template T
+	 *
 	 * @param class-string<T>|non-empty-string $name
 	 *
 	 * @return T
 	 */
 	public function get(string $name): object
 	{
-		if (!$this->map->has($name)) {
-			if (!$this->aliases->has($name)) {
-				throw new BindingNotFoundException($name);
-			}
-
-			$name = $this->aliases->get($name);
-		}
+		$name = $this->resolveAlias($name);
 
 		$binding = $this->map->get($name);
 
 		$instance = match ($binding->getLifetime()) {
-			BindingLifetime::Transient => $this->buildTransientInstance($binding),
-			BindingLifetime::Request => $this->buildRequestInstance($binding),
+			InstanceLifetime::Transient => $this->buildTransientInstance($binding),
+			InstanceLifetime::Singleton => $this->buildRequestInstance($binding),
 		};
 
 		if (!($instance instanceof $name)) {
@@ -144,7 +182,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $contract
+	 * @param class-string<T> $contract
 	 * @param array $overrideArguments
 	 *
 	 * @return T
@@ -152,10 +190,9 @@ class Container implements Contract\Container
 	 */
 	public function instantiate(string $contract, array $overrideArguments = []): object
 	{
-		if ($this->aliases->has($contract)) {
-			$contract = $this->aliases->get($contract);
+		if (!class_exists($contract)) {
+			throw new InvalidArgumentException("Class $contract does not exist");
 		}
-		/** @var class-string<T> $contract */
 
 		$reflectionClass = new ReflectionClass($contract);
 		$constructor = $reflectionClass->getConstructor();
@@ -171,7 +208,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T of object
 	 *
-	 * @param class-string<T>|T|non-empty-string $implementation
+	 * @param class-string<T>|T $implementation
 	 * @param array $properties
 	 *
 	 * @return T
@@ -179,11 +216,9 @@ class Container implements Contract\Container
 	 */
 	public function restore(object|string $implementation, array $properties = []): object
 	{
-		/** @var T|non-empty-string $implementation */
-		if (is_string($implementation) && $this->aliases->has($implementation)) {
-			$implementation = $this->aliases->get($implementation);
+		if (is_string($implementation) && !class_exists($implementation)) {
+			throw new InvalidArgumentException("Class $implementation does not exist");
 		}
-		/** @var T|class-string<T> $implementation */
 
 		$reflectionClass = new ReflectionClass($implementation);
 		$instance = $reflectionClass->newInstanceWithoutConstructor();

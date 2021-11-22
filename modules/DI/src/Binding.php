@@ -15,8 +15,6 @@ class Binding implements Contract\Binding
 	 */
 	private $builder;
 
-	private BindingLifetime $lifetime;
-
 	/**
 	 * @var T|null
 	 */
@@ -24,15 +22,14 @@ class Binding implements Contract\Binding
 
 	/**
 	 * @param callable(Contract\Container): T $builder
-	 * @param BindingLifetime $lifetime
+	 * @param InstanceLifetime $lifetime
 	 */
-	public function __construct(callable $builder, BindingLifetime $lifetime)
+	public function __construct(callable $builder, private InstanceLifetime $lifetime)
 	{
 		$this->builder = $builder;
-		$this->lifetime = $lifetime;
 	}
 
-	public function getLifetime(): BindingLifetime
+	public function getLifetime(): InstanceLifetime
 	{
 		return $this->lifetime;
 	}

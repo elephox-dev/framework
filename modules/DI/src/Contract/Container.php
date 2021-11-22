@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Contract;
 
-use Elephox\DI\BindingLifetime;
+use Elephox\DI\InstanceLifetime;
 
 interface Container
 {
@@ -20,11 +20,29 @@ interface Container
 	 * @param class-string<T>|T|null|callable(Container): T $implementation
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, string|callable|object|null $implementation = null, BindingLifetime $lifetime = BindingLifetime::Request, string ...$aliases): void;
+	public function register(string $contract, string|callable|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void;
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T> $contract
+	 * @param class-string<T>|T|null|callable(Container): T $implementation
+	 * @param non-empty-string ...$aliases
+	 */
+	public function singleton(string $contract, string|callable|object|null $implementation = null, string ...$aliases): void;
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T> $contract
+	 * @param class-string<T>|T|null|callable(Container): T $implementation
+	 * @param non-empty-string ...$aliases
+	 */
+	public function transient(string $contract, string|callable|object|null $implementation = null, string ...$aliases): void;
 
 	/**
 	 * @param non-empty-string $alias
-	 * @param class-string $contract
+	 * @param non-empty-string $contract
 	 */
 	public function alias(string $alias, string $contract): void;
 
@@ -39,7 +57,7 @@ interface Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $contract
+	 * @param class-string<T> $contract
 	 * @param array $overrideArguments
 	 *
 	 * @return T
@@ -49,7 +67,7 @@ interface Container
 	/**
 	 * @template T of object
 	 *
-	 * @param class-string<T>|non-empty-string|T $implementation
+	 * @param class-string<T>|T $implementation
 	 * @param array $properties
 	 *
 	 * @return T

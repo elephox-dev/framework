@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-enum BindingLifetime
+enum InstanceLifetime
 {
 	case Transient;
-	case Request;
+	case Singleton;
 }
