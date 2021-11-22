@@ -74,7 +74,7 @@ foreach ($matches as $category => $files) {
 	echo "Category $category contains " . count($files) . " files.\n";
 	foreach ($files as $file => $entries) {
 		$file = str_replace($src, '', $file);
-		$todos .= "- [ ] modules/$file\n";
+		$todos .= "- [ ] [$file](https://github.com/elephox-dev/framework/tree/main/modules/$file)\n";
 		foreach ($entries as $entry) {
 			$todos .= "  - [ ] $entry\n";
 		}
