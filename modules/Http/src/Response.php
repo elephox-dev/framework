@@ -127,7 +127,13 @@ class Response implements Contract\Response
 		http_response_code($this->code->getCode());
 		$headers = $this->getHeaders()->asArray();
 		foreach ($headers as $header => $value) {
-			header($header . ": " . $value[0]);
+			if (is_array($value)) {
+				foreach ($value as $v) {
+					header("$header: $v", false);
+				}
+			} else {
+				header("$header: $value");
+			}
 		}
 
 		if (!array_key_exists("X-Powered-By", $headers) && defined("ELEPHOX_VERSION") && ini_get("expose_php")) {
