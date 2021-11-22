@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'modules/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'infection.json'
+      - 'phpunit.xml.dist'
+      - 'psalm.xml'
 
 jobs:
   composer-setup:
