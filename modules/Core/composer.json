@@ -11,6 +11,9 @@
     ],
     "require": {
         "php": ">=8.1",
+        "elephox/collection": "dev-main",
+        "elephox/di": "dev-main",
+        "elephox/http": "dev-main",
         "jetbrains/phpstorm-attributes": "^1.0",
         "vlucas/phpdotenv": "^5.4"
     },
