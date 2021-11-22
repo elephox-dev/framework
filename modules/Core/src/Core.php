@@ -72,12 +72,14 @@ class Core
 			throw new LogicException("Entrypoint not called.");
 		}
 
-		self::getContainer()->register(App::class, $app, aliases: $app::class);
+		self::getContainer()->register(App::class, $app);
 
 		try {
 			if (is_object($app)) {
 				$app = $app::class;
 			}
+
+			self::getContainer()->alias($app, App::class);
 
 			self::loadHandlers($app);
 		} catch (ReflectionException $e) {
