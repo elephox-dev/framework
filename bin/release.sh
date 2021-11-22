@@ -55,8 +55,8 @@ fi
 git tag "$VERSION"
 git push origin --tags
 
-# Tag Components
-for REMOTE in collection http support di
+# Tag Modules
+for REMOTE in collection core database di files http support text
 do
     echo ""
     echo ""
