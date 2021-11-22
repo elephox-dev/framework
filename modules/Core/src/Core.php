@@ -175,6 +175,8 @@ class Core
 	#[NoReturn]
 	public static function handle(): void
 	{
+		global $argv;
+
 		self::checkEntrypointCalled();
 
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
@@ -182,14 +184,11 @@ class Core
 		try {
 			/** @var Context $context */
 			$context = match (PHP_SAPI) {
-				'cli' => new CommandLineContext(self::getContainer()),
+				'cli' => new CommandLineContext(self::getContainer(), count($argv) > 1 ? $argv[1] : null, array_slice($argv, 2)),
 				default => new RequestContext(self::getContainer(), Request::fromGlobals())
 			};
 
 			$handler = $handlerContainer->findHandler($context);
-
-			self::getContainer()->register(Context::class, $context);
-
 			$handler->handle($context);
 		} catch (Throwable $e) {
 			self::handleException($e);
@@ -205,7 +204,6 @@ class Core
 
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
 		$exceptionContext = new ExceptionContext(self::getContainer(), $throwable);
-		self::getContainer()->register(ExceptionContextContract::class, $exceptionContext);
 
 		try {
 			$handlerContainer->findHandler($exceptionContext)->handle($exceptionContext);

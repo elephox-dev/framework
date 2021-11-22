@@ -13,18 +13,28 @@ use JetBrains\PhpStorm\Pure;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class CommandHandler extends AbstractHandlerAttribute
 {
-	#[Pure] public function __construct()
+	#[Pure] public function __construct(
+		private ?string $commandSignature = null
+	)
 	{
 		parent::__construct(ActionType::Command);
 	}
 
 	public function handles(CommandLineContext|Context $context): bool
 	{
-		return $context instanceof CommandLineContext;
+		if (!$context instanceof CommandLineContext) {
+			return false;
+		}
+
+		if ($this->commandSignature === null) {
+			return true;
+		}
+
+		return preg_match($this->commandSignature, $context->getCommand()) === 1;
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function invoke(object $handler, string $method, CommandLineContext|Context $context): void
 	{

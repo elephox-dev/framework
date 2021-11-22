@@ -16,6 +16,8 @@ class ExceptionContext extends AbstractContext implements Contract\ExceptionCont
 	)
 	{
 		parent::__construct(ActionType::Exception, $container);
+
+		$container->register(Contract\ExceptionContext::class, $this);
 	}
 
 	public function getException(): Throwable

@@ -13,6 +13,8 @@ abstract class AbstractContext implements Contract\Context
 		private Container $container,
 	)
 	{
+		$this->container->register(Contract\Context::class, $this);
+		$this->container->register(self::class, $this);
 	}
 
 	final public function getActionType(): ActionType

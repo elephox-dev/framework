@@ -5,4 +5,6 @@ namespace Elephox\Core\Context\Contract;
 
 interface CommandLineContext extends Context
 {
+	public function getCommand(): ?string;
+	public function getArgs(): array;
 }

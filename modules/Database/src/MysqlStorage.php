@@ -14,6 +14,11 @@ class MysqlStorage implements Contract\Storage
 	{
 	}
 
+	public function getConnection(): mysqli
+	{
+		return $this->connection;
+	}
+
 	public function get(string $entityName, string $key): null|array
 	{
 		/** @var mysqli_result $query */

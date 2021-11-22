@@ -16,6 +16,8 @@ class EventContext extends AbstractContext implements Contract\EventContext
 	)
 	{
 		parent::__construct(ActionType::Event, $container);
+
+		$container->register(Contract\EventContext::class, $this);
 	}
 
 	public function getEvent(): Event

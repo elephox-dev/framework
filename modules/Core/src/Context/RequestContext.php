@@ -16,6 +16,8 @@ class RequestContext extends AbstractContext implements Contract\RequestContext
 	)
 	{
 		parent::__construct(ActionType::Request, $container);
+
+		$container->register(Contract\RequestContext::class, $this);
 	}
 
 	public function getRequest(): Request
