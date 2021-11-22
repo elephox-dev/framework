@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Core;
 
-use Dotenv\Dotenv;
 use Elephox\Core\Context\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\ExceptionContext as ExceptionContextContract;
@@ -44,22 +43,13 @@ class Core
 		return self::$container;
 	}
 
-	public static function entrypoint(?string $root = null): void
+	public static function entrypoint(): void
 	{
 		if (defined("ELEPHOX_VERSION")) {
 			throw new LogicException("Entrypoint already called.");
 		}
 
 		define("ELEPHOX_VERSION", self::Version);
-
-		if ($root === null) {
-			$root = dirname(__DIR__, 5);
-			if (!is_dir($root . "/vendor")) {
-				$root = dirname(__DIR__, 2);
-			}
-		}
-
-		Dotenv::createImmutable($root)->load();
 
 		if (!self::getContainer()->has(HandlerContainerContract::class)) {
 			self::getContainer()->register(HandlerContainerContract::class, new HandlerContainer());
