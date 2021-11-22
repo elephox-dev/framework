@@ -56,7 +56,7 @@ git tag "$VERSION"
 git push origin --tags
 
 # Tag Modules
-for REMOTE in collection core database di files http support text
+for REMOTE in collection core database di files http support text elephox
 do
     echo ""
     echo ""
