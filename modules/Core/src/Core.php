@@ -30,7 +30,7 @@ use Throwable;
 
 class Core
 {
-	public const Version = '0.0.1';
+	public const Version = '0.1';
 
 	private static ?Container $container = null;
 
@@ -56,12 +56,23 @@ class Core
 		}
 	}
 
+	private static function checkEntrypointCalled(): void
+	{
+		if (!defined("ELEPHOX_VERSION")) {
+			throw new LogicException("Core::entrypoint() not called.");
+		}
+	}
+
 	/**
 	 * @param class-string<App>|App $app
 	 */
 	public static function setApp(string|App $app): void
 	{
-		self::getContainer()->register(App::class, $app);
+		if (!defined("ELEPHOX_VERSION")) {
+			throw new LogicException("Entrypoint not called.");
+		}
+
+		self::getContainer()->register(App::class, $app, aliases: $app::class);
 
 		try {
 			if (is_object($app)) {
@@ -76,6 +87,8 @@ class Core
 
 	public static function loadHandlersInNamespace(string $namespace): void
 	{
+		self::checkEntrypointCalled();
+
 		$classLoader = self::getClassLoader();
 		foreach (array_keys($classLoader->getClassMap()) as $class) {
 			if (!str_starts_with($class, $namespace)) {
@@ -106,6 +119,8 @@ class Core
 	 */
 	public static function loadHandlers(string $appClass): void
 	{
+		self::checkEntrypointCalled();
+
 		if (!self::getContainer()->has($appClass)) {
 			self::getContainer()->register($appClass, $appClass);
 		}
@@ -133,6 +148,8 @@ class Core
 
 	public static function getClassLoader(): ComposerClassLoader
 	{
+		self::checkEntrypointCalled();
+
 		/** @var null|class-string<ComposerAutoloaderInit> $autoloaderClassName */
 		$autoloaderClassName = null;
 		foreach (get_declared_classes() as $class) {
@@ -156,6 +173,8 @@ class Core
 	#[NoReturn]
 	public static function handle(): void
 	{
+		self::checkEntrypointCalled();
+
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
 
 		try {
@@ -180,6 +199,8 @@ class Core
 	#[NoReturn]
 	public static function handleException(Throwable $throwable): void
 	{
+		self::checkEntrypointCalled();
+
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
 		$exceptionContext = new ExceptionContext(self::getContainer(), $throwable);
 		self::getContainer()->register(ExceptionContextContract::class, $exceptionContext);
