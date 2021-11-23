@@ -5,12 +5,11 @@ namespace Elephox\Core\Context;
 
 use Elephox\Core\Handler\ActionType;
 use Elephox\DI\Contract\Container;
-use JetBrains\PhpStorm\Pure;
 use Throwable;
 
 class ExceptionContext extends AbstractContext implements Contract\ExceptionContext
 {
-	#[Pure] public function __construct(
+	public function __construct(
 		Container $container,
 		private Throwable $exception
 	)
