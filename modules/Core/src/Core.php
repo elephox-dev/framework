@@ -116,20 +116,23 @@ class Core
 	}
 
 	/**
-	 * @param class-string $appClass
+	 * @param class-string $class
 	 * @throws ReflectionException
 	 */
-	public static function loadHandlers(string $appClass): void
+	public static function loadHandlers(string $class): void
 	{
 		self::checkEntrypointCalled();
 
-		if (!self::getContainer()->has($appClass)) {
-			self::getContainer()->register($appClass, $appClass);
+		if (!self::getContainer()->has($class)) {
+			self::getContainer()->register($class, $class);
 		}
 
-		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
+		$handler = self::getContainer()->get($class);
 
-		$reflection = new ReflectionClass($appClass);
+		self::checkRegistrar($handler);
+
+		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
+		$reflection = new ReflectionClass($class);
 		$methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 		foreach ($methods as $method) {
 			$handlerAttributes = $method->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -137,7 +140,6 @@ class Core
 				continue;
 			}
 
-			$handler = self::getContainer()->get($appClass);
 			foreach ($handlerAttributes as $handlerAttribute) {
 				$attribute = $handlerAttribute->newInstance();
 				/** @var HandlerBinding<object, Context> $binding */
@@ -145,7 +147,16 @@ class Core
 				$handlerContainer->register($binding);
 			}
 		}
+	}
 
+	public static function checkRegistrar(object $potentialRegistrar): void
+	{
+		$traits = class_uses($potentialRegistrar);
+		if (!($potentialRegistrar instanceof Contract\Registrar) || $traits === false || !in_array(Registrar::class, $traits, true)) {
+			return;
+		}
+
+		$potentialRegistrar->registerAll(self::getContainer());
 	}
 
 	public static function getClassLoader(): ComposerClassLoader

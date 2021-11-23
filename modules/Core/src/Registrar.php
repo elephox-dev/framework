@@ -5,6 +5,9 @@ namespace Elephox\Core;
 
 use Elephox\DI\Contract\Container;
 
+/**
+ * @see Contract\Registrar
+ */
 trait Registrar
 {
 	/** @var list<class-string> $classes */
