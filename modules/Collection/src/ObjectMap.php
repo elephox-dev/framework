@@ -139,6 +139,29 @@ class ObjectMap implements Contract\GenericMap
 	}
 
 	/**
+	 * @template TKeyOut of object
+	 *
+	 * @param callable(TKey, TValue): TKeyOut $callback
+	 * @return ObjectMap<TKeyOut, TValue>
+	 */
+	public function mapKeys(callable $callback): ObjectMap
+	{
+		/** @var ObjectMap<TKeyOut, TValue> $map */
+		$map = new ObjectMap();
+
+		/** @var TKey $key */
+		foreach ($this->map as $key) {
+			/** @var TValue $value */
+			$value = $this->map->offsetGet($key);
+
+			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			$map->put($callback($key, $value), $value);
+		}
+
+		return $map;
+	}
+
+	/**
 	 * @template TOut
 	 *
 	 * @param callable(TValue, TKey): TOut $callback

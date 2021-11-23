@@ -40,6 +40,19 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return $map;
 	}
 
+	/**
+	 * @template TMapKey as array-key
+	 * @template TMapValue
+	 *
+	 * @param iterable<TMapKey, TMapValue> $map
+	 *
+	 * @returns ArrayMap<TMapKey, TMapValue>
+	 */
+	public static function fromIterable(iterable $map): self
+	{
+		return new self($map);
+	}
+
 	/** @var array<TKey, TValue> */
 	protected array $values = [];
 
@@ -191,5 +204,24 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	public function toJson(int $flags = JSON_THROW_ON_ERROR): string
 	{
 		return json_encode($this->values, JSON_THROW_ON_ERROR);
+	}
+
+	/**
+	 * @template TKeyOut of array-key
+	 *
+	 * @param callable(TKey, TValue): TKeyOut $callback
+	 * @return ArrayMap<TKeyOut, TValue>
+	 */
+	public function mapKeys(callable $callback): ArrayMap
+	{
+		/** @var ArrayMap<TKeyOut, TValue> $map */
+		$map = new ArrayMap();
+
+		foreach ($this->values as $key => $value) {
+			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			$map->put($callback($key, $value), $value);
+		}
+
+		return $map;
 	}
 }

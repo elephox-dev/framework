@@ -34,10 +34,18 @@ interface ReadonlyMap extends GenericCollection, IteratorAggregate
 	/**
 	 * @template TOut
 	 *
-	 * @param callable(TValue): TOut $callback
+	 * @param callable(TValue, TKey): TOut $callback
 	 * @return GenericMap<TKey, TOut>
 	 */
 	public function map(callable $callback): GenericMap;
+
+	/**
+	 * @template TKeyOut
+	 *
+	 * @param callable(TKey, TValue): TKeyOut $callback
+	 * @return GenericMap<TKeyOut, TValue>
+	 */
+	public function mapKeys(callable $callback): GenericMap;
 
 	/**
 	 * @template TOut

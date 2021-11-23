@@ -143,6 +143,26 @@ class GenericWeakMap implements Contract\GenericMap
 	}
 
 	/**
+	 * @template TKeyOut of object
+	 *
+	 * @param callable(TKey, TValue): TKeyOut $callback
+	 * @return GenericWeakMap<TKeyOut, TValue>
+	 */
+	public function mapKeys(callable $callback): GenericWeakMap
+	{
+		/** @var GenericWeakMap<TKeyOut, TValue> $map */
+		$map = new ObjectMap();
+
+		/** @var TValue $value */
+		foreach ($this->map as $key => $value) {
+			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			$map->put($callback($key, $value), $value);
+		}
+
+		return $map;
+	}
+
+	/**
 	 * @template TOut
 	 *
 	 * @param callable(TValue, TKey): TOut $callback

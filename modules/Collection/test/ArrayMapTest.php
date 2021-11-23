@@ -35,8 +35,10 @@ class ArrayMapTest extends TestCase
 	public function testInitialize(): void
 	{
 		$map = new ArrayMap(['test' => 'val', 123 => '134']);
+		$map2 = ArrayMap::fromIterable(['test' => 'val', 123 => '134']);
 
 		self::assertEquals('val', $map->get('test'));
+		self::assertEquals('134', $map2->get(123));
 	}
 
 	public function testInvalidKey(): void
