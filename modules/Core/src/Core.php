@@ -152,10 +152,11 @@ class Core
 	public static function checkRegistrar(object $potentialRegistrar): void
 	{
 		$traits = class_uses($potentialRegistrar);
-		if (!($potentialRegistrar instanceof Contract\Registrar) || $traits === false || !in_array(Registrar::class, $traits, true)) {
+		if (!($potentialRegistrar instanceof Contract\Registrar) && ($traits === false || !in_array(Registrar::class, $traits, true))) {
 			return;
 		}
 
+		/** @var Contract\Registrar $potentialRegistrar */
 		$potentialRegistrar->registerAll(self::getContainer());
 	}
 
