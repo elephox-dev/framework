@@ -61,6 +61,8 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
       - name: 🔎 Run Psalm
         run: vendor/bin/psalm --shepherd
 
@@ -87,6 +89,8 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
       - name: 🧪 Run PHPUnit
         run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - name: 📤 Upload coverage data
@@ -119,6 +123,8 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
