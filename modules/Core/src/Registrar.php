@@ -7,34 +7,29 @@ use Elephox\DI\Contract\Container;
 
 /**
  * @see Contract\Registrar
+ *
+ * @property-read list<class-string> $classes
+ * @property-read array<non-empty-string, non-empty-string> $aliases
  */
 trait Registrar
 {
-	/** @var list<class-string> $classes */
-	public array $classes;
-
-	/** @var array<non-empty-string, object> $instances */
-	public array $instances;
-
-	/** @var array<non-empty-string, non-empty-string> $aliases */
-	public array $aliases;
-
 	public function registerClasses(Container $container): void
 	{
+		if (!property_exists($this, 'classes')) {
+			return;
+		}
+
 		foreach ($this->classes as $class) {
 			$container->register($class);
 		}
 	}
 
-	public function registerInstances(Container $container): void
-	{
-		foreach ($this->instances as $contract => $instance) {
-			$container->register($contract, $instance);
-		}
-	}
-
 	public function registerAliases(Container $container): void
 	{
+		if (!property_exists($this, 'aliases')) {
+			return;
+		}
+
 		foreach ($this->aliases as $alias => $contract) {
 			$container->alias($alias, $contract);
 		}
@@ -43,7 +38,6 @@ trait Registrar
 	public function registerAll(Container $container): void
 	{
 		$this->registerClasses($container);
-		$this->registerInstances($container);
 		$this->registerAliases($container);
 	}
 }
