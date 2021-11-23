@@ -7,8 +7,8 @@ use Attribute;
 use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\ActionType;
-use Exception;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class CommandHandler extends AbstractHandlerAttribute
@@ -30,16 +30,21 @@ class CommandHandler extends AbstractHandlerAttribute
 			return true;
 		}
 
-		return preg_match($this->commandSignature, $context->getCommand()) === 1;
+		$command = $context->getCommand();
+		if ($command === null) {
+			return false;
+		}
+
+		return preg_match($this->commandSignature, $command) === 1;
 	}
 
 	/**
-	 * @throws Exception
+	 * @throws RuntimeException
 	 */
 	public function invoke(object $handler, string $method, CommandLineContext|Context $context): void
 	{
 		if (!$context instanceof CommandLineContext) {
-			throw new Exception('Invalid context type');
+			throw new RuntimeException('Invalid context type');
 		}
 
 		$context->getContainer()->call($handler, $method, ['context' => $context]);
