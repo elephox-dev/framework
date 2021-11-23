@@ -25,13 +25,15 @@ jobs:
           extensions: mysqli
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.1-composer-
+          restore-keys: ${{ runner.os }}-8.1-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: ↔️ Check package sync
@@ -49,13 +51,15 @@ jobs:
         with:
           php-version: '8.1'
           extensions: mysqli
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.1-composer-
+          restore-keys: ${{ runner.os }}-8.1-composer-
       - name: 🔎 Run Psalm
         run: vendor/bin/psalm --shepherd
 
@@ -73,13 +77,15 @@ jobs:
           extensions: mysqli
           coverage: xdebug
           ini-values: xdebug.mode=coverage
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.1-composer-
+          restore-keys: ${{ runner.os }}-8.1-composer-
       - name: 🧪 Run PHPUnit
         run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - name: 📤 Upload coverage data
@@ -103,13 +109,15 @@ jobs:
           extensions: mysqli
           coverage: xdebug
           ini-values: xdebug.mode=coverage
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.1-composer-
+          restore-keys: ${{ runner.os }}-8.1-composer-
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
