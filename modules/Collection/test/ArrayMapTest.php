@@ -89,7 +89,7 @@ class ArrayMapTest extends TestCase
 		$stringMap = $map->map(fn(int $a) => (string)$a);
 
 		self::assertNotSame($map, $stringMap);
-		self::assertEquals('123', $stringMap->get(0));
+		self::assertSame('123', $stringMap->get(0));
 	}
 
 	public function testAny(): void
