@@ -27,6 +27,8 @@ class UrlTest extends TestCase
 			[ 'someone@somewhere/something', null, 'someone', null, 'somewhere', null, '/something', null, null ],
 			[ 'file:///home/test/file.txt', 'file', null, null, null, null, '/home/test/file.txt', null, null ],
 			[ 'ssh://git@github.com', 'ssh', 'git', null, 'github.com', null, '', null, null ],
+			[ 'mysql://root:root@localhost:3306/test', 'mysql', 'root', 'root', 'localhost', 3306, 'test', null, null ],
+			[ 'custom://localhost/test', 'custom', null, null, 'localhost', null, '/test', null, null ],
 			[ '/get-this?id=123&user_id=23#234', null, null, null, null, null, '/get-this', 'id=123&user_id=23', '234' ],
 			[ 'https://user:password@localhost:5000/path/to/script.php?query=true#fragment', 'https', 'user', 'password', 'localhost', 5000, '/path/to/script.php', 'query=true', 'fragment' ],
 		];
@@ -39,6 +41,7 @@ class UrlTest extends TestCase
 	{
 		$uri = Url::fromString($uriString);
 		self::assertSame($scheme, $uri->getScheme(), "Unexpected scheme.");
+		self::assertSame($scheme !== null ? UrlScheme::tryFrom($scheme) : null, $uri->getUrlScheme(), "Unexpected scheme.");
 		self::assertSame($username, $uri->getUsername(), "Unexpected username.");
 		self::assertSame($password, $uri->getPassword(), "Unexpected password.");
 		self::assertSame($host, $uri->getHost(), "Unexpected host.");
@@ -47,5 +50,15 @@ class UrlTest extends TestCase
 		self::assertSame($query, $uri->getQuery(), "Unexpected query.");
 		self::assertSame($fragment, $uri->getFragment(), "Unexpected fragment.");
 		self::assertSame($uriString, (string)$uri);
+		self::assertEquals([
+			'scheme' => $scheme,
+			'username' => $username,
+			'password' => $password,
+			'host' => $host,
+			'port' => $port,
+			'path' => $path,
+			'query' => $query,
+			'fragment' => $fragment,
+		], $uri->asArray());
 	}
 }

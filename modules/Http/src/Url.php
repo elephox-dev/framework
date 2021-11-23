@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Support\StringableProxy;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 
 class Url implements Contract\Url
@@ -74,6 +75,19 @@ class Url implements Contract\Url
 		return $this->scheme;
 	}
 
+	public function getUrlScheme(): ?UrlScheme
+	{
+		if ($this->scheme === null) {
+			return null;
+		}
+
+		/**
+		 * @var UrlScheme|null
+		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+		 */
+		return UrlScheme::tryFrom($this->scheme);
+	}
+
 	#[Pure] public function getUsername(): ?string
 	{
 		return $this->username;
@@ -94,9 +108,14 @@ class Url implements Contract\Url
 		return $this->port;
 	}
 
-	#[Pure] public function getPath(): string
+	public function getPath(): string
 	{
-		return $this->path;
+		$scheme = $this->getUrlScheme();
+		if ($scheme === null || !$scheme->usesTrimmedPath()) {
+			return $this->path;
+		}
+
+		return trim($this->path, '/');
 	}
 
 	#[Pure] public function getQuery(): ?string
@@ -152,5 +171,29 @@ class Url implements Contract\Url
 		}
 
 		return $uri;
+	}
+
+	#[ArrayShape([
+		'scheme' => "null|string",
+		'username' => "null|string",
+		'password' => "null|string",
+		'host' => "null|string",
+		'port' => "int|null",
+		'path' => "string",
+		'query' => "null|string",
+		'fragment' => "null|string"
+	])]
+	public function asArray(): array
+	{
+		return [
+			'scheme' => $this->getScheme(),
+			'username' => $this->getUsername(),
+			'password' => $this->getPassword(),
+			'host' => $this->getHost(),
+			'port' => $this->getPort(),
+			'path' => $this->getPath(),
+			'query' => $this->getQuery(),
+			'fragment' => $this->getFragment(),
+		];
 	}
 }

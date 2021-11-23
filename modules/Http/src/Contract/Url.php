@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Http\UrlScheme;
+use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\StringConvertible;
 
-interface Url extends StringConvertible
+interface Url extends StringConvertible, ArrayConvertible
 {
 	public function getScheme(): ?string;
+
+	public function getUrlScheme(): ?UrlScheme;
 
 	public function getUsername(): ?string;
 
