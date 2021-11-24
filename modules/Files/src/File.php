@@ -66,6 +66,6 @@ class File implements Contract\File
 			throw new OutOfRangeException('Levels must be greater than 0');
 		}
 
-		return new Directory(dirname($this->path));
+		return new Directory(dirname($this->path, $levels));
 	}
 }

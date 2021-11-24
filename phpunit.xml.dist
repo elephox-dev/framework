@@ -49,7 +49,6 @@
             <file>**/*Exception.php</file>
             <directory>modules/Core/src</directory>
             <directory>modules/Database/src</directory>
-            <directory>modules/Files/src</directory>
         </exclude>
     </coverage>
 </phpunit>

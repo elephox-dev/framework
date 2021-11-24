@@ -56,7 +56,7 @@ class Directory implements Contract\Directory
 
 	#[Pure] public function isRoot(): bool
 	{
-		return dirname($this->path) === trim($this->path, DIRECTORY_SEPARATOR);
+		return trim($this->path, DIRECTORY_SEPARATOR) === '';
 	}
 
 	public function isEmpty(): bool
@@ -117,12 +117,12 @@ class Directory implements Contract\Directory
 	{
 		$path = Path::join($this->path, $name);
 
-		if (file_exists($path)) {
-			return new File($path);
-		}
-
 		if (is_dir($path)) {
 			return new Directory($path);
+		}
+
+		if (file_exists($path)) {
+			return new File($path);
 		}
 
 		return null;

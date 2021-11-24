@@ -1766,6 +1766,7 @@ enum MimeType: string implements Contract\MimeType
 	case Textmarkdown = "text/markdown";
 	case Textmizar = "text/mizar";
 	case Textn3 = "text/n3";
+	case Textplain = "text/plain";
 	case Textparameters = "text/parameters";
 	case Textparityfec = "text/parityfec";
 	case Textprovenancenotation = "text/provenance-notation";
