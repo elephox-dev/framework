@@ -275,6 +275,25 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $instance);
 		self::assertSame($instance, $instance2);
 	}
+
+	public function testInstantiateInvalidClass(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		$container = new Container();
+		$container->instantiate(ContainerTestInterface::class);
+	}
+
+	public function testRestore(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->restore(ContainerTestClassWithConstructor::class);
+
+		self::assertInstanceOf(ContainerTestClassWithConstructor::class, $instance);
+		self::assertInstanceOf(ContainerTestInterface::class, $instance->testInterface);
+	}
 }
 
 interface ContainerTestInterface

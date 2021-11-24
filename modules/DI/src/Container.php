@@ -227,7 +227,20 @@ class Container implements Contract\Container
 
 		foreach ($classProperties as $classProperty) {
 			$classProperty->setAccessible(true);
-			$classProperty->setValue($instance, $properties[$classProperty->getName()] ?? $defaultPropertyValues[$classProperty->getName()]);
+			if (array_key_exists($classProperty->getName(), $properties)) {
+				$classProperty->setValue($instance, $properties[$classProperty->getName()]);
+			} elseif (array_key_exists($classProperty->getName(), $defaultPropertyValues)) {
+				$classProperty->setValue($instance, $defaultPropertyValues[$classProperty->getName()]);
+			} else {
+				/**
+				 * @psalm-suppress UndefinedMethod
+				 * @var class-string|null $type
+				 */
+				$type = $classProperty->getType()?->getName();
+				if ($type !== null && $this->has($type)) {
+					$classProperty->setValue($instance, $this->get($type));
+				}
+			}
 		}
 
 		return $instance;
