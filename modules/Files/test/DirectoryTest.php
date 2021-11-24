@@ -49,7 +49,7 @@ class DirectoryTest extends TestCase
 	public function testGetPath(): void
 	{
 		$directory = new Directory("/test/path");
-		$this->assertEquals("/test/path", $directory->getPath());
+		self::assertEquals("/test/path", $directory->getPath());
 	}
 
 	public function testGetChild(): void
@@ -57,43 +57,43 @@ class DirectoryTest extends TestCase
 		$directory = new Directory($this->dirPath);
 
 		$fileChild = $directory->getChild(pathinfo($this->filePath, PATHINFO_BASENAME));
-		$this->assertInstanceOf(File::class, $fileChild);
-		$this->assertEquals($this->filePath, $fileChild->getPath());
+		self::assertInstanceOf(File::class, $fileChild);
+		self::assertEquals($this->filePath, $fileChild->getPath());
 
 		$dirChild = $directory->getChild("test");
-		$this->assertInstanceOf(Directory::class, $dirChild);
-		$this->assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $dirChild->getPath());
+		self::assertInstanceOf(Directory::class, $dirChild);
+		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $dirChild->getPath());
 
 		$emptyDir = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->assertNull($emptyDir->getChild("test"));
+		self::assertNull($emptyDir->getChild("test"));
 	}
 
 	public function testIsEmpty(): void
 	{
 		$directory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->assertTrue($directory->isEmpty());
+		self::assertTrue($directory->isEmpty());
 	}
 
 	public function testGetModifiedTime(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertEquals(filemtime($this->filePath), $directory->getModifiedTime()->getTimestamp());
+		self::assertEquals(filemtime($this->filePath), $directory->getModifiedTime()->getTimestamp());
 	}
 
 	public function testGetChildren(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertNotEmpty($directory->getChildren());
-		$this->assertContainsOnlyInstancesOf(FilesystemNode::class, $directory->getChildren());
+		self::assertNotEmpty($directory->getChildren());
+		self::assertContainsOnlyInstancesOf(FilesystemNode::class, $directory->getChildren());
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->assertEmpty($testDirectory->getChildren());
+		self::assertEmpty($testDirectory->getChildren());
 	}
 
 	public function testGetParent(): void
 	{
 		$directory = new Directory("/long/path/to/test");
-		$this->assertEquals("/long/path/to", $directory->getParent()->getPath());
+		self::assertEquals("/long/path/to", $directory->getParent()->getPath());
 
 		$this->expectException(OutOfRangeException::class);
 		$directory->getParent(0);
@@ -102,51 +102,51 @@ class DirectoryTest extends TestCase
 	public function testGetFiles(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertNotEmpty($directory->getFiles());
-		$this->assertContainsOnlyInstancesOf(File::class, $directory->getFiles());
+		self::assertNotEmpty($directory->getFiles());
+		self::assertContainsOnlyInstancesOf(File::class, $directory->getFiles());
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->assertEmpty($testDirectory->getFiles());
+		self::assertEmpty($testDirectory->getFiles());
 	}
 
 	public function testIsRoot(): void
 	{
 		$directory = new Directory("/long/path/to/test");
-		$this->assertFalse($directory->isRoot());
+		self::assertFalse($directory->isRoot());
 
 		$rootDirectory = new Directory("/");
-		$this->assertTrue($rootDirectory->isRoot());
+		self::assertTrue($rootDirectory->isRoot());
 	}
 
 	public function testGetFile(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertEquals($this->filePath, $directory->getFile(pathinfo($this->filePath, PATHINFO_BASENAME))->getPath());
+		self::assertEquals($this->filePath, $directory->getFile(pathinfo($this->filePath, PATHINFO_BASENAME))->getPath());
 
-		$this->assertNull($directory->getFile("non-existent-file"));
+		self::assertNull($directory->getFile("non-existent-file"));
 	}
 
 	public function testGetDirectory(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $directory->getDirectory("test")->getPath());
+		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $directory->getDirectory("test")->getPath());
 
-		$this->assertNull($directory->getDirectory("non-existent-dir"));
+		self::assertNull($directory->getDirectory("non-existent-dir"));
 	}
 
 	public function testGetDirectories(): void
 	{
 		$directory = new Directory($this->dirPath);
-		$this->assertNotEmpty($directory->getDirectories());
-		$this->assertContainsOnlyInstancesOf(Directory::class, $directory->getDirectories());
+		self::assertNotEmpty($directory->getDirectories());
+		self::assertContainsOnlyInstancesOf(Directory::class, $directory->getDirectories());
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->assertEmpty($testDirectory->getDirectories());
+		self::assertEmpty($testDirectory->getDirectories());
 	}
 
 	public function testGetName(): void
 	{
 		$directory = new Directory("/path/test");
-		$this->assertEquals("test", $directory->getName());
+		self::assertEquals("test", $directory->getName());
 	}
 }
