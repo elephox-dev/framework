@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
+use Elephox\DI\Contract\Container as ContainerContract;
 use InvalidArgumentException;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
@@ -19,14 +20,14 @@ use stdClass;
  * @covers \Elephox\DI\BindingException
  * @covers \Elephox\DI\MissingTypeHintException
  */
-class ContainerTest extends MockeryTestCase
+class ContainerTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$container = new Container();
 
 		self::assertInstanceOf(Container::class, $container);
-		self::assertTrue($container->has(\Elephox\DI\Contract\Container::class));
+		self::assertTrue($container->has(ContainerContract::class));
 		self::assertTrue($container->has(Container::class));
 	}
 
