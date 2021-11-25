@@ -1,0 +1,27 @@
+{
+    "name": "elephox/logging",
+    "description": "Elephox Logging library.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricaro Boss",
+            "email": "contact@ricardoboss.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "ricardoboss/php-console-logger": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Elephox\\Logging\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Elephox\\Logging\\": "test/"
+        }
+    }
+}

@@ -32,6 +32,9 @@
         <testsuite name="Http">
             <directory>modules/Http/test</directory>
         </testsuite>
+        <testsuite name="Logging">
+            <directory>modules/Logging/test</directory>
+        </testsuite>
         <testsuite name="Support">
             <directory>modules/Support/test</directory>
         </testsuite>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c74d089f2c2f60a881a1e057256a01e7",
+    "content-hash": "5087f14381fc759452a65221982fbc59",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -47,6 +47,46 @@
                 "source": "https://github.com/JetBrains/phpstorm-attributes/tree/1.0"
             },
             "time": "2020-11-17T11:09:47+00:00"
+        },
+        {
+            "name": "ricardoboss/php-console-logger",
+            "version": "v1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ricardoboss/php-console-logger.git",
+                "reference": "55c7a03753142a579154b1fd30c98d65e3a0d86e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/55c7a03753142a579154b1fd30c98d65e3a0d86e",
+                "reference": "55c7a03753142a579154b1fd30c98d65e3a0d86e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ricardoboss\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ricardo Boss",
+                    "email": "contact@ricardoboss.de"
+                }
+            ],
+            "description": "A simple console logger for scripts or small applications.",
+            "support": {
+                "issues": "https://github.com/ricardoboss/php-console-logger/issues",
+                "source": "https://github.com/ricardoboss/php-console-logger/tree/v1.8"
+            },
+            "time": "2021-07-22T19:31:59+00:00"
         }
     ],
     "packages-dev": [

@@ -14,7 +14,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mysqli": "*",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "ricardoboss/php-console-logger": "^1.8"
     },
     "require-dev": {
         "vimeo/psalm": "^4.12",
@@ -30,6 +31,7 @@
         "elephox/di": "self.version",
         "elephox/files": "self.version",
         "elephox/http": "self.version",
+        "elephox/logging": "self.version",
         "elephox/support": "self.version",
         "elephox/text": "self.version"
     },
@@ -46,6 +48,7 @@
             "Elephox\\DI\\": "modules/DI/src/",
             "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
+            "Elephox\\Logging\\": "modules/Logging/src/",
             "Elephox\\Support\\": "modules/Support/src/",
             "Elephox\\Text\\": "modules/Text/src/"
         }
@@ -58,6 +61,7 @@
             "Elephox\\DI\\": "modules/DI/test/",
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
+            "Elephox\\Logging\\": "modules/Logging/test/",
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
         }
