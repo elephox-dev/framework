@@ -31,7 +31,7 @@ This is a library project providing building blocks for building your own applic
 
 <!-- start todos -->
 
-## TODO
+## ✔️ TODO
 
 ### TODO
 
@@ -41,7 +41,7 @@ This is a library project providing building blocks for building your own applic
   - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
 
 
-### Open issues from other repositories
+### 🚧 Open issues from other repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
