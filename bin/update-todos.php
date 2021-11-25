@@ -67,7 +67,7 @@ foreach ($sourceFiles as $sourceFile) {
 }
 
 $readmeContents = file_get_contents($readmeFile);
-$todos = "<!-- start todos -->\n\n## TODO\n\n";
+$todos = "<!-- start todos -->\n\n## ✔️ TODO\n\n";
 echo count($matches) . " categories found.\n";
 foreach ($matches as $category => $files) {
 	$todos .= "### $category\n\n";
@@ -82,7 +82,7 @@ foreach ($matches as $category => $files) {
 	$todos .= "\n";
 }
 
-$todos .= "\n### Open issues from other repositories\n\n";
+$todos .= "\n### 🚧 Open issues from other repositories\n\n";
 foreach ($issues as $repo => $issueNumbers) {
 	$todos .= "- [$repo](https://github.com/$repo)\n";
 	foreach ($issueNumbers as $issueNumber) {
