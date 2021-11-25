@@ -1,10 +1,10 @@
-name: Windows 🪟
+name: CI on Windows
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/windows.yml'
+      - '.github/workflows/ci-windows.yml'
       - 'modules/**'
       - 'composer.json'
       - 'composer.lock'
