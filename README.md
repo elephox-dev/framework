@@ -1,6 +1,6 @@
 # Elephox Framework
 
-This is a class library providing independent building blocks.
+This is a library project providing building blocks for building your own application.
 
 <p align="center">
   <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/v" alt="Latest Stable Version"></a>
@@ -9,11 +9,11 @@ This is a class library providing independent building blocks.
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/level.svg" alt="Psalm Level"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/coverage.svg" alt="Type Coverage"></a>
   <a href="https://coveralls.io/github/elephox-dev/framework?branch=main"><img src="https://coveralls.io/repos/github/elephox-dev/framework/badge.svg?branch=main" alt="Coverage Status"></a>
-  <a href="https://github.com/elephox-dev/framework/actions/workflows/linux.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/linux.yml/badge.svg" alt="Linux 🐧"></a>
-  <a href="https://github.com/elephox-dev/framework/actions/workflows/windows.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/windows.yml/badge.svg" alt="Windows 🪟"></a>
+  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml/badge.svg" alt="CI on Windows"></a>
 </p>
 
-## Goals:
+## 🏁 Goals
 
 - [x] Dependency Injection
   - [x] Container
