@@ -15,6 +15,6 @@ class Path
 			}
 		}
 
-		return preg_replace('#/+#', '/', implode('/', $paths));
+		return preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, implode(DIRECTORY_SEPARATOR, $paths));
 	}
 }
