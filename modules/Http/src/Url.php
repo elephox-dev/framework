@@ -3,14 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Support\StringableProxy;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 
 class Url implements Contract\Url
 {
-	use StringableProxy;
-
 	public const Pattern = '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/\?#]+)(?::(?<port>\d+))?)?(?<path>[^\?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
 	public static function fromString(string $uri): Contract\Url
@@ -128,7 +125,7 @@ class Url implements Contract\Url
 		return $this->fragment;
 	}
 
-	#[Pure] public function toString(): string
+	#[Pure] public function __toString(): string
 	{
 		if ($this->scheme !== null) {
 			if (empty($this->scheme)) {

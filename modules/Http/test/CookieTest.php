@@ -97,7 +97,7 @@ class CookieTest extends TestCase
 		$cookie->{$setter}($value);
 
 		self::assertSame($value, $cookie->{$getter}());
-		self::assertEquals($cookieString, $cookie->toString());
+		self::assertEquals($cookieString, $cookie->__toString());
 	}
 
 	public function testFromRequestStringUnwraps(): void

@@ -5,9 +5,9 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\UrlScheme;
 use Elephox\Support\Contract\ArrayConvertible;
-use Elephox\Support\Contract\StringConvertible;
+use Stringable;
 
-interface Url extends StringConvertible, ArrayConvertible
+interface Url extends Stringable, ArrayConvertible
 {
 	public function getScheme(): ?string;
 

@@ -5,9 +5,9 @@ namespace Elephox\Http\Contract;
 
 use DateTime;
 use Elephox\Http\CookieSameSite;
-use Elephox\Support\Contract\StringConvertible;
+use Stringable;
 
-interface Cookie extends StringConvertible
+interface Cookie extends Stringable
 {
 	public function setName(string $name): void;
 

@@ -77,7 +77,7 @@ class RequestTest extends TestCase
 
 		self::assertEquals(RequestMethod::GET, $request->getMethod());
 		self::assertFalse($request->getMethod()->canHaveBody());
-		self::assertEquals('/', $request->getUrl()->toString());
+		self::assertEquals('/', $request->getUrl()->__toString());
 		self::assertTrue($request->shouldFollowRedirects());
 		self::assertTrue($request->getHeaders()->has(HeaderName::Accept));
 		self::assertTrue($request->getHeaders()->has(HeaderName::UserAgent));
@@ -103,7 +103,7 @@ class RequestTest extends TestCase
 		self::assertInstanceOf(CustomRequestMethod::class, $request->getMethod());
 		self::assertEquals("NEW", $request->getMethod()->getValue());
 		self::assertTrue($request->getMethod()->canHaveBody());
-		self::assertEquals('/', $request->getUrl()->toString());
+		self::assertEquals('/', $request->getUrl()->__toString());
 
 		unset($_SERVER['REQUEST_METHOD']);
 		unset($_SERVER['REQUEST_URI']);

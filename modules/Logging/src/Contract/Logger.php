@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Logging\Contract;
 
-use Elephox\Support\Contract\StringConvertible;
 use Stringable;
 use Throwable;
 
 interface Logger
 {
-	public function log(string|Stringable|StringConvertible|Throwable $message, LogLevel $level, array $metaData = []): void;
+	public function log(string|Stringable|Throwable $message, LogLevel $level, array $metaData = []): void;
 
 	public function emergency(string $message, array $metaData = []): void;
 
