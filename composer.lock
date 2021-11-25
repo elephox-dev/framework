@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5087f14381fc759452a65221982fbc59",
+    "content-hash": "fd5b542ad6e4bff3e2c0190c0f5e4636",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -2309,12 +2309,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "77e3164498038272fa04997a9a8bab22f1d665ab"
+                "reference": "6f99479932347855a56d07958f3ac52e8261dda3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/77e3164498038272fa04997a9a8bab22f1d665ab",
-                "reference": "77e3164498038272fa04997a9a8bab22f1d665ab",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/6f99479932347855a56d07958f3ac52e8261dda3",
+                "reference": "6f99479932347855a56d07958f3ac52e8261dda3",
                 "shasum": ""
             },
             "conflict": {
@@ -2546,8 +2546,8 @@
                 "scheb/two-factor-bundle": ">=0,<3.26|>=4,<4.11",
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
-                "shopware/core": "<=6.4.3",
-                "shopware/platform": "<=6.4.3",
+                "shopware/core": "<=6.4.6",
+                "shopware/platform": "<=6.4.6",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<5.7.6",
                 "showdoc/showdoc": "<=2.9.12",
@@ -2726,7 +2726,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-24T10:16:07+00:00"
+            "time": "2021-11-24T20:15:37+00:00"
         },
         {
             "name": "sanmai/later",
@@ -5296,7 +5296,6 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1",
-        "ext-curl": "*",
         "ext-json": "*",
         "ext-mysqli": "*"
     },
