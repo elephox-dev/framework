@@ -54,9 +54,12 @@ class Directory implements Contract\Directory
 			});
 	}
 
-	#[Pure] public function isRoot(): bool
+	public function isRoot(): bool
 	{
-		return trim($this->path, DIRECTORY_SEPARATOR) === '';
+		return $this->path === '\\' ||
+			$this->path === '/' ||
+			$this->path === dirname($this->path) ||
+			preg_match("/^\w:\\\\$/", $this->path) === 1;
 	}
 
 	public function isEmpty(): bool

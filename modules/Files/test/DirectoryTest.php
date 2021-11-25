@@ -116,6 +116,12 @@ class DirectoryTest extends TestCase
 
 		$rootDirectory = new Directory("/");
 		self::assertTrue($rootDirectory->isRoot());
+
+		$rootDirectory = new Directory("C:\\Windows\\System32");
+		self::assertFalse($rootDirectory->isRoot());
+
+		$rootDirectory = new Directory("C:\\");
+		self::assertTrue($rootDirectory->isRoot());
 	}
 
 	public function testGetFile(): void
