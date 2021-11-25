@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Collection\ArrayMap
- * @covers \Elephox\Support\SplObjectIdHashGenerator
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\OffsetNotAllowedException
  * @covers \Elephox\Collection\InvalidOffsetException
