@@ -28,12 +28,16 @@ class ConsoleSink implements Sink
 			default => "notice",
 		};
 
-		try {
-			$metaDataSuffix = Console::light_gray(json_encode($metaData, JSON_THROW_ON_ERROR));
-		} catch (JsonException $e) {
-			$metaDataSuffix = Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
+		if (empty($metaData)) {
+			$metaDataSuffix = '';
+		} else {
+			try {
+				$metaDataSuffix = " " . Console::light_gray(json_encode($metaData, JSON_THROW_ON_ERROR));
+			} catch (JsonException $e) {
+				$metaDataSuffix = " " . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
+			}
 		}
 
-		Console::$method($message . " " . $metaDataSuffix);
+		Console::$method($message . $metaDataSuffix);
 	}
 }
