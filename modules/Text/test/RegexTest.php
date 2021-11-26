@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Text\Regex
  * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\ArrayMap
  */
 class RegexTest extends TestCase
 {
@@ -27,5 +28,29 @@ class RegexTest extends TestCase
 		$this->expectExceptionMessage('An error occurred while splitting: Backtrack limit exhausted');
 
 		Regex::split('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
+	}
+
+	public function testMatch(): void
+	{
+		$simple = Regex::match('/(?<hello>hello)*/', 'hello world');
+		self::assertEquals([
+			0 => 'hello',
+			1 => 'hello',
+			'hello' => 'hello',
+		], $simple->asArray());
+	}
+
+	public function testMatches(): void
+	{
+		self::assertTrue(Regex::matches('/(?<hello>hello)*/', 'hello world'));
+		self::assertFalse(Regex::matches('/(foo)(bar)(baz)/', 'world'));
+	}
+
+	public function testInvalidMatchPattern(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('An error occurred while matching: Backtrack limit exhausted');
+
+		Regex::match('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
 	}
 }
