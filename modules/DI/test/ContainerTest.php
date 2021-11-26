@@ -294,6 +294,32 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestClassWithConstructor::class, $instance);
 		self::assertInstanceOf(ContainerTestInterface::class, $instance->testInterface);
 	}
+
+	public function testRestoreWithOverrideArguments(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->restore(ContainerTestModel::class, ['interface' => $container->get(ContainerTestInterface::class)]);
+
+		self::assertInstanceOf(ContainerTestModel::class, $instance);
+		self::assertInstanceOf(ContainerTestInterface::class, $instance->interface);
+	}
+
+	public function testRestoreWithClassProperty(): void
+	{
+		$container = new Container();
+		$instance = $container->restore(ContainerTestModel::class);
+		self::assertNull($instance->interface);
+	}
+
+	public function testInvalidRestore(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		$container = new Container();
+		$container->restore(ContainerTestInterface::class);
+	}
 }
 
 interface ContainerTestInterface
@@ -358,7 +384,6 @@ class ContainerTestClassMultiParameterConstructorOptional implements ContainerTe
 	}
 }
 
-
 class ContainerTestClassMultiParameterConstructorNullable implements ContainerTestInterface
 {
 	public ContainerTestInterface $testInterface;
@@ -369,4 +394,9 @@ class ContainerTestClassMultiParameterConstructorNullable implements ContainerTe
 		$this->testInterface = $testInterface;
 		$this->testInterface2 = $testInterface2;
 	}
+}
+
+class ContainerTestModel
+{
+	public ?ContainerTestInterface $interface = null;
 }
