@@ -107,12 +107,33 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return null;
 	}
 
+	/**
+	 * @param callable(TValue, TKey): bool $filter
+	 * @return ArrayMap<TKey, TValue>
+	 */
 	public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
 		foreach ($this->values as $key => $item) {
-			if ($filter($item)) {
+			if ($filter($item, $key)) {
+				$result->put($key, $item);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param callable(TKey, TValue): bool $filter
+	 * @return ArrayMap<TKey, TValue>
+	 */
+	public function whereKey(callable $filter): ArrayMap
+	{
+		$result = new ArrayMap();
+
+		foreach ($this->values as $key => $item) {
+			if ($filter($key, $item)) {
 				$result->put($key, $item);
 			}
 		}

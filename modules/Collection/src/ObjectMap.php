@@ -106,6 +106,27 @@ class ObjectMap implements Contract\GenericMap
 	}
 
 	/**
+	 * @param callable(TKey, TValue): bool $filter
+	 * @return ObjectMap<TKey, TValue>
+	 */
+	public function whereKey(callable $filter): ObjectMap
+	{
+		/** @var ObjectMap<TKey, TValue> $result */
+		$result = new ObjectMap();
+
+		/** @var TKey $key */
+		foreach ($this->map as $key) {
+			/** @var TValue $value */
+			$value = $this->map->offsetGet($key);
+			if ($filter($key, $value)) {
+				$result->put($key, $value);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @param object $key
 	 *
 	 * @return bool

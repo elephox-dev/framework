@@ -26,10 +26,17 @@ interface ReadonlyMap extends GenericCollection, IteratorAggregate
 	public function has(mixed $key): bool;
 
 	/**
-	 * @param callable(TValue): bool $filter
+	 * @param callable(TValue, TKey): bool $filter
 	 * @return GenericMap<TKey, TValue>
 	 */
 	public function where(callable $filter): GenericMap;
+
+
+	/**
+	 * @param callable(TKey, TValue): bool $filter
+	 * @return GenericMap<TKey, TValue>
+	 */
+	public function whereKey(callable $filter): GenericMap;
 
 	/**
 	 * @template TOut

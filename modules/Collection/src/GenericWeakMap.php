@@ -110,6 +110,28 @@ class GenericWeakMap implements Contract\GenericMap
 	}
 
 	/**
+	 * @param callable(TKey, TValue): bool $filter
+	 * @return GenericWeakMap<TKey, TValue>
+	 */
+	public function whereKey(callable $filter): GenericWeakMap
+	{
+		/** @var GenericWeakMap<TKey, TValue> $result */
+		$result = new GenericWeakMap();
+
+		/**
+		 * @var TKey $key
+		 * @var TValue $value
+		 */
+		foreach ($this->map as $key => $value) {
+			if ($filter($key, $value)) {
+				$result->put($key, $value);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @param object $key
 	 *
 	 * @return bool
