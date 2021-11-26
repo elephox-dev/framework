@@ -5,10 +5,12 @@ namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
 use Closure;
+use Elephox\Collection\ArrayMap;
 use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
+use Elephox\Text\Regex;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -47,7 +49,21 @@ class CommandHandler extends AbstractHandlerAttribute
 			return false;
 		}
 
-		return preg_match($this->commandSignature, $commandLine) === 1;
+		return Regex::matches($this->commandSignature, $commandLine);
+	}
+
+
+	/**
+	 * @param CommandLineContext $context
+	 * @return ArrayMap<string|int, string>
+	 */
+	public function getGroupValues(CommandLineContext $context): ArrayMap
+	{
+		if ($this->commandSignature === null) {
+			return new ArrayMap();
+		}
+
+		return Regex::match($this->commandSignature, $context->getCommandLine());
 	}
 
 	public function invoke(Closure $callback, CommandLineContext|Context $context): void
@@ -58,7 +74,7 @@ class CommandHandler extends AbstractHandlerAttribute
 
 		$context->getContainer()->callback($callback, [
 			'context' => $context,
-			...$context->getArgs()
+			...$this->getGroupValues($context)->whereKey(static fn (string|int $key) => is_string($key)),
 		]);
 	}
 }
