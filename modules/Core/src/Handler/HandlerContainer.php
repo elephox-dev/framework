@@ -33,7 +33,7 @@ class HandlerContainer implements Contract\HandlerContainer
 
 		/** @var Contract\HandlerBinding */
 		return $bindings
-			->orderBy(static fn(Contract\HandlerBinding $a, Contract\HandlerBinding $b): int => $a->getWeight() - $b->getWeight())
+			->orderBy(static fn(Contract\HandlerBinding $a, Contract\HandlerBinding $b): int => $b->getWeight() - $a->getWeight())
 			->first();
 	}
 }
