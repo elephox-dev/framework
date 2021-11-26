@@ -244,4 +244,16 @@ class ArrayList implements GenericList, ArrayAccess
 	{
 		return $this->any(static fn ($item) => $item === $value);
 	}
+
+	/**
+	 * @param callable(T, T): int $callback
+	 *
+	 * @return ArrayList<T>
+	 */
+	public function orderBy(callable $callback): ArrayList
+	{
+		usort($this->list, $callback);
+
+		return $this;
+	}
 }
