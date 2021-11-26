@@ -3,20 +3,21 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
+use Closure;
 use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Handler\InvalidContextException;
+use Elephox\Core\Handler\InvalidResultException;
 
 /**
- * @template THandler as object
+ * @template THandler as Closure(): mixed
  * @template TContext as Context
  */
 interface HandlerBinding
 {
-	public function getMethodName(): string;
-
 	/**
 	 * @return THandler
 	 */
-	public function getHandler(): object;
+	public function getHandler(): Closure;
 
 	/**
 	 * @param TContext $context
@@ -25,6 +26,9 @@ interface HandlerBinding
 
 	/**
 	 * @param TContext $context
+	 *
+	 * @throws InvalidContextException
+	 * @throws InvalidResultException
 	 */
 	public function handle(Context $context): void;
 }

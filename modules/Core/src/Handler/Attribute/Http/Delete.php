@@ -8,7 +8,7 @@ use Elephox\Core\Handler\Attribute\RequestHandler;
 use Elephox\Core\Handler\UrlTemplate;
 use Elephox\Http\RequestMethod;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Delete extends RequestHandler
 {
 	public function __construct(string|UrlTemplate $url)

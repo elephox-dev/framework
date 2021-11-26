@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Core;
 
+use Closure;
 use Elephox\Core\Context\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Context\Contract\ExceptionContext as ExceptionContextContract;
 use Elephox\Core\Context\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Contract\App;
@@ -68,9 +68,7 @@ class Core
 	 */
 	public static function setApp(string|App $app): void
 	{
-		if (!defined("ELEPHOX_VERSION")) {
-			throw new LogicException("Entrypoint not called.");
-		}
+		self::checkEntrypointCalled();
 
 		self::getContainer()->register(App::class, $app);
 
@@ -116,36 +114,61 @@ class Core
 	}
 
 	/**
-	 * @param class-string $class
+	 * @param class-string $className
 	 * @throws ReflectionException
 	 */
-	public static function loadHandlers(string $class): void
+	public static function loadHandlers(string $className): void
 	{
 		self::checkEntrypointCalled();
 
-		if (!self::getContainer()->has($class)) {
-			self::getContainer()->register($class, $class);
+		if (!self::getContainer()->has($className)) {
+			self::getContainer()->register($className, $className);
 		}
 
-		$handler = self::getContainer()->get($class);
+		$classInstance = self::getContainer()->get($className);
 
-		self::checkRegistrar($handler);
+		self::checkRegistrar($classInstance);
 
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
-		$reflection = new ReflectionClass($class);
-		$methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-		foreach ($methods as $method) {
-			$handlerAttributes = $method->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
-			if (empty($handlerAttributes)) {
+		$classReflection = new ReflectionClass($className);
+		$classAttributes = $classReflection->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+		if (!empty($classAttributes)) {
+			if (!is_callable($classInstance)) {
+				throw new InvalidClassCallableHandlerException($className);
+			}
+
+			/** @var Closure(): mixed $closure */
+			$closure = Closure::fromCallable($classInstance);
+			self::registerAttributes($handlerContainer, $closure, $classAttributes);
+		}
+
+		$methods = $classReflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		foreach ($methods as $methodReflection) {
+			$methodAttributes = $methodReflection->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			if (empty($methodAttributes)) {
 				continue;
 			}
 
-			foreach ($handlerAttributes as $handlerAttribute) {
-				$attribute = $handlerAttribute->newInstance();
-				/** @var HandlerBinding<object, Context> $binding */
-				$binding = new HandlerBinding($handler, $method->getName(), $attribute);
-				$handlerContainer->register($binding);
-			}
+			/** @var Closure(): mixed $closure */
+			$closure = $methodReflection->getClosure($classInstance);
+			self::registerAttributes($handlerContainer, $closure, $methodAttributes);
+		}
+	}
+
+	/**
+	 * @param HandlerContainerContract $handlerContainer
+	 * @param Closure():mixed $closure
+	 * @param array<array-key, ReflectionAttribute<HandlerAttribute>> $attributes
+	 */
+	private static function registerAttributes(HandlerContainerContract $handlerContainer, Closure $closure, array $attributes): void
+	{
+		foreach ($attributes as $handlerAttribute) {
+			$attributeInstance = $handlerAttribute->newInstance();
+
+			/** @var HandlerBinding<Closure():mixed, Context> $binding */
+			$binding = new HandlerBinding($closure, $attributeInstance);
+
+			$handlerContainer->register($binding);
 		}
 	}
 

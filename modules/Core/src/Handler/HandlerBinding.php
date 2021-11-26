@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
+use Closure;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute;
 
 /**
- * @template THandler as object
+ * @template THandler as Closure(): mixed
  * @template TContext as Context
  *
  * @template-implements Contract\HandlerBinding<THandler, TContext>
@@ -16,26 +17,19 @@ class HandlerBinding implements Contract\HandlerBinding
 {
 	/**
 	 * @param THandler $handler
-	 * @param string $method
 	 * @param HandlerAttribute $attribute
 	 */
 	public function __construct(
-		private object                   $handler,
-		private string                   $method,
+		private Closure $handler,
 		private HandlerAttribute $attribute,
 	)
 	{
 	}
 
-	public function getMethodName(): string
-	{
-		return $this->method;
-	}
-
 	/**
 	 * @return THandler
 	 */
-	public function getHandler(): object
+	public function getHandler(): Closure
 	{
 		return $this->handler;
 	}
@@ -52,11 +46,8 @@ class HandlerBinding implements Contract\HandlerBinding
 		return $this->attribute->handles($context);
 	}
 
-	/**
-	 * @param TContext $context
-	 */
 	public function handle(Context $context): void
 	{
-		$this->attribute->invoke($this->handler, $this->method, $context);
+		$this->attribute->invoke($this->handler, $context);
 	}
 }

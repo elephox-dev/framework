@@ -5,12 +5,13 @@ namespace Elephox\Core\Handler;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\UnhandledContextException;
 use Exception;
 
 class HandlerContainer implements Contract\HandlerContainer
 {
 	/**
-	 * @var ArrayList<Contract\HandlerBinding<object, Context>>
+	 * @var ArrayList<Contract\HandlerBinding<Closure():mixed, Context>>
 	 */
 	private ArrayList $bindings;
 
@@ -24,22 +25,15 @@ class HandlerContainer implements Contract\HandlerContainer
 		$this->bindings[] = $binding;
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public function findHandler(Context $context): Contract\HandlerBinding
 	{
-		$bindings = $this->bindings->where(static function (Contract\HandlerBinding $binding) use ($context): bool {
-			return $binding->isApplicable($context);
-		});
-
-		// TODO: find a better way to choose the correct binding if there are multiple applicable bindings
-
-		$binding = $bindings->first();
-		if ($binding === null) {
-			throw new Exception('No handler found for context ' . $context::class);
+		$bindings = $this->bindings->where(static fn(Contract\HandlerBinding $binding): bool => $binding->isApplicable($context));
+		if ($bindings->isEmpty()) {
+			throw new UnhandledContextException($context);
 		}
 
-		return $binding;
+		// TODO: find a better way to choose the correct binding if there are multiple applicable bindings
+		/** @var Contract\HandlerBinding */
+		return $bindings->first();
 	}
 }

@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
+use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
 use Elephox\Core\Handler\ActionType;
+use Elephox\Core\Handler\InvalidContextException;
+use Elephox\Core\Handler\InvalidResultException;
 use Elephox\Core\Handler\UrlTemplate;
 use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
 use Elephox\Http\Contract\Response;
@@ -17,7 +20,7 @@ use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
 use Exception;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
 {
 	private UrlTemplate $template;
@@ -96,22 +99,19 @@ class RequestHandler extends AbstractHandlerAttribute
 		return $this->template->matches($context->getRequest()->getUrl());
 	}
 
-	/**
-	 * @throws \Exception
-	 */
-	public function invoke(object $handler, string $method, ContextContract $context): void
+	public function invoke(Closure $callback, ContextContract $context): void
 	{
 		if (!$context instanceof RequestContextContract) {
-			throw new Exception('Invalid context type');
+			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
 		$parameters = $this->template->getValues($context->getRequest()->getUrl());
 
 		/** @var Response|mixed $result */
-		$result = $context->getContainer()->call($handler, $method, ['context' => $context, ...$parameters]);
+		$result = $context->getContainer()->callback($callback, ['context' => $context, ...$parameters]);
 
 		if (!$result instanceof Response) {
-			throw new Exception('Request handler didn\'t return a Response.');
+			throw new InvalidResultException($result, Response::class);
 		}
 
 		$result->send();

@@ -4,13 +4,15 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
+use Closure;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\ExceptionContext;
 use Elephox\Core\Handler\ActionType;
+use Elephox\Core\Handler\InvalidContextException;
 use Exception;
 use JetBrains\PhpStorm\Pure;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ExceptionHandler extends AbstractHandlerAttribute
 {
 	#[Pure] public function __construct(
@@ -38,16 +40,13 @@ class ExceptionHandler extends AbstractHandlerAttribute
 		return get_class($context->getException()) instanceof $this->exceptionClass;
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public function invoke(object $handler, string $method, Context $context): void
+	public function invoke(Closure $callback, Context $context): void
 	{
 		if (!$context instanceof ExceptionContext) {
 			// TODO: do something else with this
-			throw new Exception('Invalid context type');
+			throw new InvalidContextException($context, ExceptionContext::class);
 		}
 
-		$context->getContainer()->call($handler, $method, ['context' => $context]);
+		$context->getContainer()->callback($callback, ['context' => $context]);
 	}
 }
