@@ -50,4 +50,9 @@ class HandlerBinding implements Contract\HandlerBinding
 	{
 		$this->attribute->invoke($this->handler, $context);
 	}
+
+	public function getWeight(): int
+	{
+		return $this->attribute->getWeight();
+	}
 }

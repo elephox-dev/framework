@@ -18,7 +18,6 @@ use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
 use Elephox\Http\Contract\Response;
 use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
-use Exception;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
@@ -37,9 +36,10 @@ class RequestHandler extends AbstractHandlerAttribute
 	public function __construct(
 		string|UrlTemplate                                  $url,
 		null|string|RequestMethodContract|array|GenericList $methods = null,
+		int                                                 $weight = 0,
 	)
 	{
-		parent::__construct(ActionType::Request);
+		parent::__construct(ActionType::Request, $weight);
 
 		$this->template = $url instanceof UrlTemplate ? $url : new UrlTemplate($url);
 

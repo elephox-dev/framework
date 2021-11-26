@@ -12,6 +12,7 @@ abstract class AbstractHandlerAttribute implements HandlerAttribute
 {
 	public function __construct(
 		private ActionType $type,
+		private int $weight,
 	)
 	{
 	}
@@ -19,6 +20,11 @@ abstract class AbstractHandlerAttribute implements HandlerAttribute
 	final public function getType(): ActionType
 	{
 		return $this->type;
+	}
+
+	final public function getWeight(): int
+	{
+		return $this->weight;
 	}
 
 	abstract public function handles(Context $context): bool;

@@ -13,6 +13,8 @@ interface HandlerAttribute
 {
 	public function getType(): ActionType;
 
+	public function getWeight(): int;
+
 	public function handles(Context $context): bool;
 
 	/**

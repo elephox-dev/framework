@@ -24,6 +24,8 @@ interface HandlerBinding
 	 */
 	public function isApplicable(Context $context): bool;
 
+	public function getWeight(): int;
+
 	/**
 	 * @param TContext $context
 	 *

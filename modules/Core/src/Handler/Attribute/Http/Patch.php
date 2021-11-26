@@ -11,8 +11,8 @@ use Elephox\Http\RequestMethod;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Patch extends RequestHandler
 {
-	public function __construct(string|UrlTemplate $url)
+	public function __construct(string|UrlTemplate $url, int $weight = 0)
 	{
-		parent::__construct($url, RequestMethod::PATCH);
+		parent::__construct($url, RequestMethod::PATCH, $weight);
 	}
 }

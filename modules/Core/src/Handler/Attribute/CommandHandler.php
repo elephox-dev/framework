@@ -10,16 +10,16 @@ use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
 use JetBrains\PhpStorm\Pure;
-use RuntimeException;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CommandHandler extends AbstractHandlerAttribute
 {
 	#[Pure] public function __construct(
-		private ?string $commandSignature = null
+		private ?string $commandSignature = null,
+		int $weight = 0,
 	)
 	{
-		parent::__construct(ActionType::Command);
+		parent::__construct(ActionType::Command, $weight);
 	}
 
 	public function handles(CommandLineContext|Context $context): bool

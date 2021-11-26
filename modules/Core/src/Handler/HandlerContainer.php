@@ -6,7 +6,6 @@ namespace Elephox\Core\Handler;
 use Elephox\Collection\ArrayList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\UnhandledContextException;
-use Exception;
 
 class HandlerContainer implements Contract\HandlerContainer
 {
@@ -32,8 +31,9 @@ class HandlerContainer implements Contract\HandlerContainer
 			throw new UnhandledContextException($context);
 		}
 
-		// TODO: find a better way to choose the correct binding if there are multiple applicable bindings
 		/** @var Contract\HandlerBinding */
-		return $bindings->first();
+		return $bindings
+			->orderBy(static fn(Contract\HandlerBinding $a, Contract\HandlerBinding $b): int => $a->getWeight() - $b->getWeight())
+			->first();
 	}
 }
