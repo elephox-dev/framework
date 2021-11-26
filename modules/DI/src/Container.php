@@ -304,8 +304,8 @@ class Container implements Contract\Container
 			}
 
 			if (array_key_exists($parameter->getName(), $overrides)) {
-				$usedOverrides++;
 				$values->add($overrides[$parameter->getName()]);
+				$usedOverrides++;
 			} else {
 				$values->add($this->resolveArgument($parameter));
 			}
@@ -336,7 +336,7 @@ class Container implements Contract\Container
 		}
 
 		if (!$parameter->allowsNull()) {
-			throw new BindingNotFoundException($typeName);
+			throw new BindingNotFoundException($typeName, $parameter->name);
 		}
 
 		return null;

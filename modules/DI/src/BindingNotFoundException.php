@@ -8,8 +8,14 @@ use Throwable;
 
 class BindingNotFoundException extends BindingException
 {
-	#[Pure] public function __construct(string $contract, int $code = 0, ?Throwable $previous = null)
+	#[Pure] public function __construct(string $contract, ?string $paramName = null, int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct("Binding not found for contract '$contract'", $code, $previous);
+		$msg = "Binding not found for contract '$contract'";
+		if ($paramName !== null)
+		{
+			$msg .= " (Parameter: $$paramName)";
+		}
+
+		parent::__construct($msg, $code, $previous);
 	}
 }
