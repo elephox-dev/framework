@@ -187,4 +187,26 @@ class ArrayMapTest extends TestCase
 		self::assertTrue($map->anyKey(fn($key) => $key > 'a'));
 		self::assertFalse($emptyMap->anyKey());
 	}
+
+	public function testMapKeys(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		self::assertEquals(['a1' => 1, 'b1' => 2, 'c1' => 3], $map->mapKeys(fn($key) => $key . '1')->asArray());
+	}
+
+	public function testWhereKey(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		self::assertEquals(['b' => 2, 'c' => 3], $map->whereKey(fn($key) => $key > 'a')->asArray());
+	}
 }

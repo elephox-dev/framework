@@ -272,4 +272,15 @@ class ArrayListTest extends TestCase
 			self::assertEquals('1', $value);
 		}
 	}
+
+	public function testOrderBy(): void
+	{
+		$map = new ArrayList([3, 1, 2]);
+
+		$sorted = $map->orderBy(fn(int $a, int $b) => $a - $b);
+
+		self::assertEquals(1, $sorted->get(0));
+		self::assertEquals(2, $sorted->get(1));
+		self::assertEquals(3, $sorted->get(2));
+	}
 }
