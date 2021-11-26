@@ -305,8 +305,11 @@ class Core
 
 		try {
 			$handlerContainer->findHandler($exceptionContext)->handle($exceptionContext);
-		} catch (Throwable) {
-			echo "Could not handle exception. " . $throwable->getMessage();
+		} catch (Throwable $innerThrowable) {
+			echo "Could not handle exception. " . $throwable->getMessage() . "\n";
+			echo "\n";
+			echo "Additionally, the exception handler threw an exception while trying to handle the first exception: " . $innerThrowable->getMessage() . "\n";
+			echo $innerThrowable->getTraceAsString();
 
 			exit(2);
 		}
