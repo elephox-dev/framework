@@ -8,15 +8,26 @@ use Elephox\DI\Contract\Container;
 
 class CommandLineContext extends AbstractContext implements Contract\CommandLineContext
 {
+	private readonly ?string $command;
+	private readonly array $args;
+
 	public function __construct(
 		Container $container,
-		private ?string $command,
-		private array $args,
+		private string $commandLine,
 	)
 	{
 		parent::__construct(ActionType::Command, $container);
 
 		$container->register(Contract\CommandLineContext::class, $this);
+
+		$parts = explode(' ', $commandLine);
+		$this->command = array_shift($parts);
+		$this->args = $parts;
+	}
+
+	public function getCommandLine(): string
+	{
+		return $this->commandLine;
 	}
 
 	public function getCommand(): ?string

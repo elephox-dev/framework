@@ -32,12 +32,12 @@ class CommandHandler extends AbstractHandlerAttribute
 			return true;
 		}
 
-		$command = $context->getCommand();
-		if ($command === null) {
+		$commandLine = $context->getCommandLine();
+		if (empty($commandLine)) {
 			return false;
 		}
 
-		return preg_match($this->commandSignature, $command) === 1;
+		return preg_match($this->commandSignature, $commandLine) === 1;
 	}
 
 	public function invoke(Closure $callback, CommandLineContext|Context $context): void
@@ -46,6 +46,9 @@ class CommandHandler extends AbstractHandlerAttribute
 			throw new InvalidContextException($context, CommandLineContext::class);
 		}
 
-		$context->getContainer()->callback($callback, ['context' => $context]);
+		$context->getContainer()->callback($callback, [
+			'context' => $context,
+			...$context->getArgs()
+		]);
 	}
 }

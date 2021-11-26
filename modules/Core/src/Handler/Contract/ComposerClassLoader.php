@@ -6,9 +6,9 @@ namespace Elephox\Core\Handler\Contract;
 interface ComposerClassLoader
 {
 	/**
-	 * @return array<class-string, string>
+	 * @return array<string, array<int, string>>
 	 */
-	public function getClassMap(): array;
+	public function getPrefixesPsr4(): array;
 
 	/**
 	 * @param class-string $class

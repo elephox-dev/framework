@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Core;
 
 use Closure;
+use Elephox\Collection\ArrayList;
 use Elephox\Core\Context\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\ExceptionContext;
@@ -17,8 +18,10 @@ use Elephox\Core\Handler\HandlerBinding;
 use Elephox\Core\Handler\HandlerContainer;
 use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
+use Elephox\Files\Contract\Directory as DirectoryContract;
+use Elephox\Files\Directory;
 use Elephox\Http\Request;
-use Exception;
+use Elephox\Text\Regex;
 use JetBrains\PhpStorm\NoReturn;
 use LogicException;
 use ReflectionAttribute;
@@ -70,47 +73,93 @@ class Core
 	{
 		self::checkEntrypointCalled();
 
-		self::getContainer()->register(App::class, $app);
+		self::getContainer()->singleton(App::class, $app);
 
 		try {
 			if (is_object($app)) {
-				$app = $app::class;
+				$appClass = $app::class;
+			} else {
+				$appClass = $app;
 			}
 
-			self::getContainer()->alias($app, App::class);
+			self::getContainer()->alias($appClass, App::class);
 
-			self::loadHandlers($app);
+			self::loadHandlers($appClass);
 		} catch (ReflectionException $e) {
 			self::handleException($e);
 		}
 	}
 
+	/**
+	 * @throws ReflectionException
+	 */
 	public static function loadHandlersInNamespace(string $namespace): void
 	{
 		self::checkEntrypointCalled();
 
 		$classLoader = self::getClassLoader();
-		foreach (array_keys($classLoader->getClassMap()) as $class) {
-			if (!str_starts_with($class, $namespace)) {
+		foreach ($classLoader->getPrefixesPsr4() as $nsPrefix => $dirs) {
+			if (!str_starts_with($namespace, $nsPrefix) && !str_starts_with($nsPrefix, $namespace)) {
 				continue;
 			}
 
-			if ($classLoader->loadClass($class) !== true) {
-				throw new RuntimeException('Could not load class ' . $class);
+			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\');
+			// remove first element since it is the alias for the directories we are iterating
+			$root = $parts->shift();
+
+			foreach ($dirs as $dir) {
+				$directory = new Directory($dir);
+
+				self::loadClassesRecursive($root, $parts, new ArrayList(), $directory, $classLoader);
 			}
 		}
+	}
 
-		try {
-			foreach (get_declared_classes() as $class) {
-				if (!str_starts_with($class, $namespace)) {
+	/**
+	 * @param string $rootNs
+	 * @param ArrayList<string> $nsParts
+	 * @param ArrayList<string> $nsPartsUsed
+	 * @param DirectoryContract $directory
+	 * @param ComposerClassLoader $classLoader
+	 * @param int $depth
+	 * @throws ReflectionException
+	 */
+	private static function loadClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, object $classLoader, int $depth = 0): void
+	{
+		if ($depth > 10) {
+			throw new RuntimeException("Recursion limit exceeded. Please choose a more specific namespace.");
+		}
+
+		$lastPart = $nsParts->shift();
+		$nsPartsUsed->push($lastPart);
+		foreach ($directory->getDirectories() as $dir) {
+			if ($dir->getName() !== $lastPart) {
+
+				continue;
+			}
+
+			self::loadClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $classLoader, $depth++);
+		}
+
+		if ($lastPart === '') {
+			foreach ($directory->getFiles() as $file) {
+				$filename = $file->getName();
+				if (!str_ends_with($filename, '.php')) {
 					continue;
 				}
 
-				self::loadHandlers($class);
+				$className = substr($filename, 0, -4);
+
+				/** @var class-string $fqcn */
+				$fqcn = $rootNs . "\\" . implode("\\", $nsPartsUsed->asArray()) . $className;
+
+				$classLoader->loadClass($fqcn);
+
+				self::loadHandlers($fqcn);
 			}
-		} catch (ReflectionException $e) {
-			self::handleException($e);
 		}
+
+		$nsParts->unshift($nsPartsUsed->pop());
 	}
 
 	/**
@@ -125,17 +174,18 @@ class Core
 			self::getContainer()->register($className, $className);
 		}
 
-		$classInstance = self::getContainer()->get($className);
-
-		self::checkRegistrar($classInstance);
-
 		$handlerContainer = self::getContainer()->get(HandlerContainerContract::class);
+
+		$classInstance = null;
+
 		$classReflection = new ReflectionClass($className);
 		$classAttributes = $classReflection->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 		if (!empty($classAttributes)) {
-			if (!is_callable($classInstance)) {
+			if (!method_exists($className, "__invoke")) {
 				throw new InvalidClassCallableHandlerException($className);
 			}
+
+			$classInstance = self::getContainer()->get($className);
 
 			/** @var Closure(): mixed $closure */
 			$closure = Closure::fromCallable($classInstance);
@@ -143,15 +193,25 @@ class Core
 		}
 
 		$methods = $classReflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		if (empty($methods)) {
+			return;
+		}
+
 		foreach ($methods as $methodReflection) {
 			$methodAttributes = $methodReflection->getAttributes(HandlerAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 			if (empty($methodAttributes)) {
 				continue;
 			}
 
+			$classInstance ??= self::getContainer()->get($className);
+
 			/** @var Closure(): mixed $closure */
 			$closure = $methodReflection->getClosure($classInstance);
 			self::registerAttributes($handlerContainer, $closure, $methodAttributes);
+		}
+
+		if ($classInstance !== null) {
+			self::checkRegistrar($classInstance);
 		}
 	}
 
@@ -183,7 +243,10 @@ class Core
 		$potentialRegistrar->registerAll(self::getContainer());
 	}
 
-	public static function getClassLoader(): ComposerClassLoader
+	/**
+	 * @return ComposerClassLoader
+	 */
+	public static function getClassLoader(): object
 	{
 		self::checkEntrypointCalled();
 
@@ -219,7 +282,7 @@ class Core
 		try {
 			/** @var Context $context */
 			$context = match (PHP_SAPI) {
-				'cli' => new CommandLineContext(self::getContainer(), count($argv) > 1 ? $argv[1] : null, array_slice($argv, 2)),
+				'cli' => new CommandLineContext(self::getContainer(), implode(" ", array_splice($argv, 1))),
 				default => new RequestContext(self::getContainer(), Request::fromGlobals())
 			};
 
@@ -242,8 +305,8 @@ class Core
 
 		try {
 			$handlerContainer->findHandler($exceptionContext)->handle($exceptionContext);
-		} catch (Exception $e) {
-			echo "Could not handle exception. " . $e->getMessage();
+		} catch (Throwable) {
+			echo "Could not handle exception. " . $throwable->getMessage();
 
 			exit(2);
 		}
