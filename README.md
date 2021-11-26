@@ -37,8 +37,6 @@ This is a library project providing building blocks for building your own applic
 
 - [ ] [Core/src/Handler/Attribute/ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/Attribute/ExceptionHandler.php)
   - [ ] do something else with this
-- [ ] [Core/src/Handler/HandlerContainer.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/HandlerContainer.php)
-  - [ ] find a better way to choose the correct binding if there are multiple applicable bindings
 
 
 ### 🚧 Open issues from other repositories
