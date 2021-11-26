@@ -275,15 +275,15 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param callable(): T $callback
+	 * @param Closure(): T $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
 	 */
-	public function callback(callable $callback, array $overrideArguments = []): mixed
+	public function callback(Closure $callback, array $overrideArguments = []): mixed
 	{
-		$reflectionFunction = new ReflectionFunction(Closure::fromCallable($callback));
+		$reflectionFunction = new ReflectionFunction($callback);
 		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments);
 
 		/** @var T */

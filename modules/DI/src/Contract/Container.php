@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Contract;
 
+use Closure;
 use Elephox\DI\InstanceLifetime;
 
 interface Container
@@ -89,9 +90,9 @@ interface Container
 	/**
 	 * @template T
 	 *
-	 * @param callable(): T $callback
+	 * @param Closure(): T $callback
 	 * @param array $overrideArguments
 	 * @return T
 	 */
-	public function callback(callable $callback, array $overrideArguments = []): mixed;
+	public function callback(Closure $callback, array $overrideArguments = []): mixed;
 }
