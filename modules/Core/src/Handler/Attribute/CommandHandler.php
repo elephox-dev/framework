@@ -22,6 +22,16 @@ class CommandHandler extends AbstractHandlerAttribute
 		parent::__construct(ActionType::Command, $weight);
 	}
 
+	public function getWeight(): int
+	{
+		if ($this->commandSignature === null && parent::getWeight() === 0)
+		{
+			return -1;
+		}
+
+		return parent::getWeight();
+	}
+
 	public function handles(CommandLineContext|Context $context): bool
 	{
 		if (!$context instanceof CommandLineContext) {

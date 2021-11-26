@@ -22,7 +22,7 @@ abstract class AbstractHandlerAttribute implements HandlerAttribute
 		return $this->type;
 	}
 
-	final public function getWeight(): int
+	public function getWeight(): int
 	{
 		return $this->weight;
 	}
