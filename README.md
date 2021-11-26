@@ -1,6 +1,10 @@
-# Elephox Framework
+<p align=center>
+  <img src="https://raw.githubusercontent.com/elephox-dev/.github/main/profile/logo.svg" alt="Elephox Logo" height=100>
+</p>
 
-This is a library project providing building blocks for building your own application.
+<p align=center>
+  This is a library project providing building blocks for building your own application.
+</p>
 
 <p align="center">
   <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/v" alt="Latest Stable Version"></a>
