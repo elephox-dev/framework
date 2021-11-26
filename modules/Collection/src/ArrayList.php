@@ -192,7 +192,6 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @param T $value
 	 */
-	#[Deprecated(reason: 'Use `add` instead', replacement: '%class%->add(%parametersList%)')]
 	public function push(mixed $value): void
 	{
 		$this->add($value);
