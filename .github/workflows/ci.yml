@@ -27,7 +27,7 @@ jobs:
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: ↔️ Check module requirements
-        run: composer modules:check
+        run: composer modules:check -vvv
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
