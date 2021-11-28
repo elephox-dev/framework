@@ -21,7 +21,8 @@
         "phpunit/phpunit": "^9.5",
         "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "elephox/composer-module-sync": "^1.0"
     },
     "replace": {
         "elephox/collection": "self.version",

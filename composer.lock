@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd5b542ad6e4bff3e2c0190c0f5e4636",
+    "content-hash": "cdca499c349a7a0d5adbbd712d502681",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -506,6 +506,53 @@
                 }
             ],
             "time": "2020-11-10T18:47:58+00:00"
+        },
+        {
+            "name": "elephox/composer-module-sync",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elephox-dev/composer-module-sync.git",
+                "reference": "e032e87a709e5476151edf198e52fdc6bf7ac2e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elephox-dev/composer-module-sync/zipball/e032e87a709e5476151edf198e52fdc6bf7ac2e2",
+                "reference": "e032e87a709e5476151edf198e52fdc6bf7ac2e2",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.1",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Elephox\\ComposerModuleSync\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Elephox\\ComposerModuleSync\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ricardo Boss",
+                    "email": "contact@ricardoboss.de"
+                }
+            ],
+            "description": "A composer plugin to sync requirements between submodules.",
+            "support": {
+                "issues": "https://github.com/elephox-dev/composer-module-sync/issues",
+                "source": "https://github.com/elephox-dev/composer-module-sync/tree/v1.0"
+            },
+            "time": "2021-11-28T23:09:56+00:00"
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
