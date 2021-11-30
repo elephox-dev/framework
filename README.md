@@ -7,9 +7,9 @@
 </p>
 
 <p align="center">
-  <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/v" alt="Latest Stable Version"></a>
-  <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/license" alt="License"></a>
-  <a href="https://packagist.org/packages/elephox/framework"><img src="http://poser.pugx.org/elephox/framework/require/php" alt="PHP Version Require"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://poser.pugx.org/elephox/framework/v" alt="Latest Stable Version"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://poser.pugx.org/elephox/framework/license" alt="License"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://poser.pugx.org/elephox/framework/require/php" alt="PHP Version Require"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/level.svg" alt="Psalm Level"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/coverage.svg" alt="Type Coverage"></a>
   <a href="https://coveralls.io/github/elephox-dev/framework?branch=main"><img src="https://coveralls.io/repos/github/elephox-dev/framework/badge.svg?branch=main" alt="Coverage Status"></a>
@@ -22,8 +22,10 @@
 - [x] Dependency Injection
   - [x] Container
   - [x] Dynamic lifespan (request/transient)
+  - [x] Implement PSR-11
 - [x] composer.json dependency sync
 - [x] Http Client
+  - [ ] Implement PSR-7
 - [x] Optimize common workflow (re-use coverage data)
 - [x] (basic) Filesystem
 - [ ] Database Adapter
@@ -32,6 +34,12 @@
 - [x] Routing (controller attributes)
 - [ ] Templating Adapter
   - [ ] Twig Implementation
+- [ ] Implement PSR-15 in Core
+- [ ] Event Bus
+  - [ ] Implement PSR-14
+- [ ] Caching Services
+  - [ ] Implement PSR-6
+  - [ ] Implement PSR-16
 
 <!-- start todos -->
 
