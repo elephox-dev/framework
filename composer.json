@@ -22,7 +22,7 @@
         "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest",
-        "elephox/composer-module-sync": "^1.0"
+        "elephox/composer-module-sync": "^1.1"
     },
     "replace": {
         "elephox/collection": "self.version",
