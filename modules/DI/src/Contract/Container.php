@@ -5,10 +5,13 @@ namespace Elephox\DI\Contract;
 
 use Closure;
 use Elephox\DI\InstanceLifetime;
+use Psr\Container\ContainerInterface;
 
-interface Container
+interface Container extends ContainerInterface
 {
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 *
 	 * @param non-empty-string $name
 	 * @return bool
 	 */
@@ -48,6 +51,8 @@ interface Container
 	public function alias(string $alias, string $contract): void;
 
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 *
 	 * @template T
 	 *
 	 * @param class-string<T>|non-empty-string $name
