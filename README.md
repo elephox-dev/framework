@@ -17,37 +17,50 @@
   <a href="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml/badge.svg" alt="CI on Windows"></a>
 </p>
 
-## 🏁 Goals
+## 📚 Documentation
+
+Visit [elephox.dev](https://elephox.dev) for the documentation.
+
+## 🎯 Goals
+
+### 🔳 Open
+
+- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
+- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
+- [ ] Event Bus
+- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
+- [ ] Caching Services
+- [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) in Caching Services
+- [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) in Caching Services
+- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) in Logging Services
+- [ ] Database Adapter
+- [ ] MySql Adapter Implementation
+- [ ] Entity Mapping for Database Adapter
+- [ ] Templating Adapter
+- [ ] Twig Adapter Implementation
+- [ ] Maybe: Query Builder for Database Adapter
+- [ ] Maybe: [PSR-13](https://www.php-fig.org/psr/psr-13) for Templating Adapter
+
+### ☑️ Done
 
 - [x] Dependency Injection
-  - [x] Container
-  - [x] Dynamic lifespan (request/transient)
-  - [x] Implement PSR-11
-- [x] composer.json dependency sync
-- [x] Http Client
-  - [ ] Implement PSR-7
+- [x] DI Container
+- [x] DI Dynamic object lifespan (request/transient)
+- [x] Implement [PSR-11](https://www.php-fig.org/psr/psr-11) in DI
+- [x] composer.json dependency sync (see [elephox-dev/composer-module-sync](https://github.com/elephox-dev/composer-module-sync))
+- [x] Http Messages
 - [x] Optimize common workflow (re-use coverage data)
 - [x] (basic) Filesystem
-- [ ] Database Adapter
-  - [ ] MySql Implementation
-  - [ ] Entity Mapping
 - [x] Routing (controller attributes)
-- [ ] Templating Adapter
-  - [ ] Twig Implementation
-- [ ] Implement PSR-15 in Core
-- [ ] Event Bus
-  - [ ] Implement PSR-14
-- [ ] Caching Services
-  - [ ] Implement PSR-6
-  - [ ] Implement PSR-16
+- [x] Logging Services
 
-<!-- start todos -->
+<!-- start annotations -->
 
-## ✔️ TODO
+## 📋 Source code annotations
 
-### TODO
+### ✅ TODO
 
-- [ ] [Core/src/Handler/Attribute/ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/Attribute/ExceptionHandler.php)
+- [ ] [Core\src\Handler\Attribute\ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core\src\Handler\Attribute\ExceptionHandler.php)
   - [ ] do something else with this
 
 
@@ -58,4 +71,4 @@
   - [#6429](https://github.com/vimeo/psalm/issues/6429)
   - [#6964](https://github.com/vimeo/psalm/issues/6964)
 
-<!-- end todos -->
+<!-- end annotations -->

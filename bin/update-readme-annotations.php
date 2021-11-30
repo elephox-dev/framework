@@ -47,10 +47,10 @@ foreach ($sourceFiles as $sourceFile) {
 
 	preg_match_all($todoPattern, $contents, $fileMatches);
 	if (!empty($fileMatches[0])) {
-		foreach ($fileMatches[1] as $i => $file) {
-			$matches[$file] = $matches[$file] ?? [];
-			$matches[$file][$sourceFile] = $matches[$file][$sourceFile] ?? [];
-			$matches[$file][$sourceFile][] = $fileMatches[2][$i];
+		foreach ($fileMatches[1] as $i => $matchedCategory) {
+			$matches[$matchedCategory] ??= [];
+			$matches[$matchedCategory][$sourceFile] ??= [];
+			$matches[$matchedCategory][$sourceFile][] = $fileMatches[2][$i];
 		}
 	}
 
@@ -66,32 +66,38 @@ foreach ($sourceFiles as $sourceFile) {
 	}
 }
 
+$emojiMap = [
+	'FIXME' => '⚠️',
+	'TODO' => '✅',
+	'MAYBE' => '🤔',
+	'IDEA' => '💡',
+];
 $readmeContents = file_get_contents($readmeFile);
-$todos = "<!-- start todos -->\n\n## ✔️ TODO\n\n";
+$annotations = "<!-- start annotations -->\n\n## 📋 Source code annotations\n\n";
 echo count($matches) . " categories found.\n";
 foreach ($matches as $category => $files) {
-	$todos .= "### $category\n\n";
+	$annotations .= "### $emojiMap[$category] $category\n\n";
 	echo "Category $category contains " . count($files) . " files.\n";
-	foreach ($files as $file => $entries) {
-		$file = str_replace($src, '', $file);
-		$todos .= "- [ ] [$file](https://github.com/elephox-dev/framework/tree/main/modules/$file)\n";
+	foreach ($files as $matchedCategory => $entries) {
+		$matchedCategory = str_replace($src, '', $matchedCategory);
+		$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/main/modules/$matchedCategory)\n";
 		foreach ($entries as $entry) {
-			$todos .= "  - [ ] $entry\n";
+			$annotations .= "  - [ ] $entry\n";
 		}
 	}
-	$todos .= "\n";
+	$annotations .= "\n";
 }
 
-$todos .= "\n### 🚧 Open issues from other repositories\n\n";
+$annotations .= "\n### 🚧 Open issues from other repositories\n\n";
 foreach ($issues as $repo => $issueNumbers) {
-	$todos .= "- [$repo](https://github.com/$repo)\n";
+	$annotations .= "- [$repo](https://github.com/$repo)\n";
 	foreach ($issueNumbers as $issueNumber) {
-		$todos .= "  - [#$issueNumber](https://github.com/$repo/issues/$issueNumber)\n";
+		$annotations .= "  - [#$issueNumber](https://github.com/$repo/issues/$issueNumber)\n";
 	}
-	$todos .= "\n";
+	$annotations .= "\n";
 }
-$todos .= "<!-- end todos -->";
-$readmeContents = preg_replace('/<!-- start todos -->.*<!-- end todos -->/s', $todos, $readmeContents);
+$annotations .= "<!-- end annotations -->";
+$readmeContents = preg_replace('/<!-- start annotations -->.*<!-- end annotations -->/s', $annotations, $readmeContents);
 
 echo "Writing to $readmeFile...\n";
 file_put_contents($readmeFile, $readmeContents);

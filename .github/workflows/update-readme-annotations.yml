@@ -1,0 +1,21 @@
+name: 📋 Update README Annotations
+on:
+  push:
+    paths:
+      - ".github/workflows/update-readme-annotations.yml"
+      - "modules/**"
+      - "bin/update-readme-annotations.php"
+
+jobs:
+  update-todos:
+    name: 📋 Update README Annotations
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: ▶️ Run update-readme-annotations.php
+        run: php bin/update-readme-annotations.php
+      - name: ⤴️ Commit Changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Update README.md"
