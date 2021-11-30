@@ -60,7 +60,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### ✅ TODO
 
-- [ ] [Core\src\Handler\Attribute\ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core\src\Handler\Attribute\ExceptionHandler.php)
+- [ ] [Core/src/Handler/Attribute/ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/Attribute/ExceptionHandler.php)
   - [ ] do something else with this
 
 
