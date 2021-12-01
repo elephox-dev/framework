@@ -11,7 +11,6 @@ class ConstructorBench
 {
 	#[Revs(1000)]
 	#[Iterations(10)]
-
 	public function benchConstruct(): void
 	{
 		new ArrayList();
