@@ -6,7 +6,7 @@
     "report.outputs": {
         "html": {
             "renderer": "html",
-            "path": "tmp/benchmark/html/index.html"
+            "path": "build/benchmark/html/index.html"
         }
     }
 }
