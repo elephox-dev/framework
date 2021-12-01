@@ -12,10 +12,10 @@ interface Container extends ContainerInterface
 	/**
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 *
-	 * @param non-empty-string $name
+	 * @param non-empty-string $id
 	 * @return bool
 	 */
-	public function has(string $name): bool;
+	public function has(string $id): bool;
 
 	/**
 	 * @template T
@@ -55,10 +55,10 @@ interface Container extends ContainerInterface
 	 *
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $name
+	 * @param class-string<T>|non-empty-string $id
 	 * @return T
 	 */
-	public function get(string $name): object;
+	public function get(string $id): object;
 
 	/**
 	 * @template T

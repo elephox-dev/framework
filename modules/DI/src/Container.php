@@ -31,9 +31,9 @@ class Container implements Contract\Container
 		$this->register(Contract\Container::class, $this, InstanceLifetime::Singleton, __CLASS__, 'container');
 	}
 
-	#[Pure] public function has(string $name): bool
+	#[Pure] public function has(string $id): bool
 	{
-		return $this->map->has($name) || $this->aliases->has($name);
+		return $this->map->has($id) || $this->aliases->has($id);
 	}
 
 	/**
@@ -120,25 +120,27 @@ class Container implements Contract\Container
 	}
 
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 *
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $name
+	 * @param class-string<T>|non-empty-string $id
 	 *
 	 * @return T
 	 */
-	public function get(string $name): object
+	public function get(string $id): object
 	{
-		$name = $this->resolveAlias($name);
+		$id = $this->resolveAlias($id);
 
-		$binding = $this->map->get($name);
+		$binding = $this->map->get($id);
 
 		$instance = match ($binding->getLifetime()) {
 			InstanceLifetime::Transient => $this->buildTransientInstance($binding),
 			InstanceLifetime::Singleton => $this->buildRequestInstance($binding),
 		};
 
-		if (!($instance instanceof $name)) {
-			throw new InvalidBindingInstanceException($instance, $name);
+		if (!($instance instanceof $id)) {
+			throw new InvalidBindingInstanceException($instance, $id);
 		}
 
 		return $instance;
