@@ -65,6 +65,37 @@ jobs:
       - name: 🔎 Run Psalm
         run: vendor/bin/psalm --shepherd
 
+  benchmark:
+    name: 👟 Benchmark
+    needs: [ composer-setup ]
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
+      - name: 👟 Run PHPBench
+        run: vendor/bin/phpbenchmark --store --tag=${{ github.sha }} --report=overview --retry-threshold=5 --output=html
+      - name: 📤 Upload coverage data
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}-8.1-benchmark
+          path: build/benchmark/
+          retention-days: 30
+
   unit-tests:
     name: 🧪 Unit Tests
     needs: [ composer-setup ]

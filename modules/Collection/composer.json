@@ -21,7 +21,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Elephox\\Collection\\": "test/"
+            "Elephox\\Collection\\": [
+                "test/",
+                "benchmark/"
+            ]
         }
     }
 }

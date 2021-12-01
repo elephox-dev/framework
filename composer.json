@@ -23,7 +23,8 @@
         "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest",
-        "elephox/composer-module-sync": "^1.1"
+        "elephox/composer-module-sync": "^1.1",
+        "phpbench/phpbench": "dev-gh-950-support-glob-paths"
     },
     "provide": {
         "psr/container-implementation": "1.0"
@@ -69,5 +70,11 @@
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:ricardoboss/phpbench.git"
+        }
+    ]
 }
