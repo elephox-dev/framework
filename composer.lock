@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c3bd824988e13db8762786921c47b58",
+    "content-hash": "0c15b9fbe3ea60792a09a0815339f520",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -1916,7 +1916,7 @@
             "version": "dev-gh-950-support-glob-paths",
             "source": {
                 "type": "git",
-                "url": "git@github.com:ricardoboss/phpbench.git",
+                "url": "https://github.com/ricardoboss/phpbench.git",
                 "reference": "65665028d28ae9dba5740ad57936cb3f80b2f34f"
             },
             "require": {
