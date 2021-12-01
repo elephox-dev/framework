@@ -88,7 +88,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: 👟 Run PHPBench
-        run: vendor/bin/phpbenchmark --store --tag=${{ github.sha }} --report=overview --retry-threshold=5 --output=html
+        run: vendor/bin/phpbench --store --tag=${{ github.sha }} --report=overview --retry-threshold=5 --output=html
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
