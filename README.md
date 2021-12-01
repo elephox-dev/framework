@@ -41,6 +41,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Maybe: Query Builder for Database Adapter
 - [ ] Maybe: [PSR-13](https://www.php-fig.org/psr/psr-13) for Templating Adapter
 - [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md)
+- [ ] Publish coverage report
+- [ ] Publish benchmark report
 
 ### ☑️ Done
 
