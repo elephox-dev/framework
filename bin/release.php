@@ -121,8 +121,7 @@ foreach ([
 	'http',
 	'logging',
 	'support',
-	'text',
-	'elephox'
+	'text'
 ] as $remote) {
 	echo "============================================================" . PHP_EOL;
 	echo "Releasing $remote" . PHP_EOL;
