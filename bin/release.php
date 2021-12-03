@@ -8,7 +8,7 @@ if ($argc < 2) {
 
 function rmdirRecursive(string $dir): void
 {
-	if (PHP_OS === 'Windows') {
+	if (PHP_OS === "WINNT") {
 		exec(sprintf("rd /s /q %s", escapeshellarg($dir)));
 	} else {
 		exec(sprintf("rm -rf %s", escapeshellarg($dir)));
