@@ -41,6 +41,15 @@ if (trim(shell_exec("git rev-parse HEAD")) !== trim(shell_exec("git rev-parse or
 shell_exec("git tag $version");
 #shell_exec("git push origin --tags");
 
+function rmdirRecursive($dir): bool
+{
+	$files = array_diff(scandir($dir), array('.', '..'));
+	foreach ($files as $file) {
+		(is_dir("$dir/$file")) ? rmdirRecursive("$dir/$file") : unlink("$dir/$file");
+	}
+	return rmdir($dir);
+}
+
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 $cwd = getcwd();
 foreach ([
@@ -57,7 +66,7 @@ foreach ([
 ] as $remote) {
 	echo "Releasing $remote\n";
 
-	rmdir($tmpDir);
+	rmdirRecursive($tmpDir);
 	if (!mkdir($tmpDir) && !is_dir($tmpDir)) {
 		throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
 	}
