@@ -24,9 +24,6 @@ if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
 	exit(1);
 }
 
-// make sure version starts with v
-$version = "v$version";
-
 // make sure the working directory is clean
 if (shell_exec("git status --porcelain") !== null) {
 	echo "Your working directory is dirty. Did you forget to commit your changes?\n";
@@ -42,7 +39,7 @@ if (trim(shell_exec("git rev-parse HEAD")) !== trim(shell_exec("git rev-parse or
 }
 
 shell_exec("git tag $version");
-shell_exec("git push origin --tags");
+#shell_exec("git push origin --tags");
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 $cwd = getcwd();
@@ -72,8 +69,8 @@ foreach ([
 	if (
 		!shell_exec("git clone $remoteUrl .") ||
 		!shell_exec("git checkout $releaseBranch") ||
-		!shell_exec("git tag $version") ||
-		!shell_exec("git push origin --tags")
+		!shell_exec("git tag $version")
+		#|| !shell_exec("git push origin --tags")
 	) {
 		echo "Failed to release $remote\n";
 
