@@ -57,7 +57,7 @@ foreach ([
 ] as $remote) {
 	echo "Releasing $remote\n";
 
-	unlink($tmpDir);
+	rmdir($tmpDir);
 	if (!mkdir($tmpDir) && !is_dir($tmpDir)) {
 		throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
 	}
