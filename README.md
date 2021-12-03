@@ -78,6 +78,3 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [#6964](https://github.com/vimeo/psalm/issues/6964)
 
 <!-- end annotations -->
-
-- [php-coveralls/php-coveralls](https://github.com/php-coveralls/php-coveralls)
-  - [#333](https://github.com/php-coveralls/php-coveralls/pull/333)
