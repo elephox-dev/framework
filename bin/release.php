@@ -2,52 +2,94 @@
 declare(strict_types=1);
 
 if ($argc < 2) {
-	echo "Usage: release.php <version>\n";
+	echo "Usage: release.php <version>" . PHP_EOL;
 	exit(1);
 }
 
+function rmdirRecursive(string $dir): void
+{
+	if (PHP_OS === 'Windows') {
+		exec(sprintf("rd /s /q %s", escapeshellarg($dir)));
+	} else {
+		exec(sprintf("rm -rf %s", escapeshellarg($dir)));
+	}
+}
+
+function execute(string $commandLine, float|int|string ...$args): bool
+{
+	$commandLine = sprintf($commandLine, ...$args);
+	echo "$ $commandLine" . PHP_EOL;
+	exec($commandLine, $output, $resultCode);
+
+	foreach ($output as $line) {
+		echo "< $line" . PHP_EOL;
+	}
+
+	if ($resultCode === 0) {
+		return true;
+	}
+
+	echo "Failed with exit code $resultCode\n";
+
+	return false;
+}
+
+function executeOutput(string $commandLine, float|int|string ...$args): string
+{
+	$commandLine = sprintf($commandLine, ...$args);
+	echo "$ $commandLine" . PHP_EOL;
+	$output = exec($commandLine, result_code: $resultCode);
+
+	if ($resultCode === 0) {
+		echo "< $output" . PHP_EOL;
+
+		return $output;
+	}
+
+	echo "Failed with exit code $resultCode" . PHP_EOL;
+
+	throw new RuntimeException();
+}
+
 $releaseBranch = "main";
-$currentBranch = trim(shell_exec("git rev-parse --abbrev-ref HEAD"));
+$currentBranch = executeOutput("git rev-parse --abbrev-ref HEAD");
 $version = $argv[1];
 
 // check if we are on the release branch
 if ($releaseBranch !== $currentBranch) {
-	echo "Release branch ($releaseBranch) does not match the current active branch ($currentBranch).\n";
+	echo "Release branch ($releaseBranch) does not match the current active branch ($currentBranch)." . PHP_EOL;
 
 	exit(1);
 }
 
 // check the given version format
 if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
-	echo "Invalid version format. Should be x.x[.x]\n";
+	echo "Invalid version format. Should be x.x[.x]" . PHP_EOL;
 
 	exit(1);
 }
 
 // make sure the working directory is clean
-if (shell_exec("git status --porcelain") !== null) {
-	echo "Your working directory is dirty. Did you forget to commit your changes?\n";
+if (!execute("git status --porcelain")) {
+	echo "Your working directory is dirty. Did you forget to commit your changes?" . PHP_EOL;
 
 	exit(1);
 }
 
 // make sure the release branch is in sync with origin
-if (trim(shell_exec("git rev-parse HEAD")) !== trim(shell_exec("git rev-parse origin/$releaseBranch"))) {
-	echo "Your release branch is not in sync with origin. Did you forget to push your changes?\n";
+if (executeOutput("git rev-parse HEAD") !== executeOutput("git rev-parse origin/%s", $releaseBranch)) {
+	echo "Your release branch is not in sync with origin. Did you forget to push your changes?" . PHP_EOL;
 
 	exit(1);
 }
 
-shell_exec("git tag $version");
-#shell_exec("git push origin --tags");
+if (
+	!execute("git tag %s", $version)
+	#|| !execute("git push origin --tags")
+) {
+	echo "Failed to tag framework!" . PHP_EOL;
 
-function rmdirRecursive($dir): bool
-{
-	$files = array_diff(scandir($dir), array('.', '..'));
-	foreach ($files as $file) {
-		(is_dir("$dir/$file")) ? rmdirRecursive("$dir/$file") : unlink("$dir/$file");
-	}
-	return rmdir($dir);
+	exit(1);
 }
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
@@ -81,12 +123,12 @@ foreach ([
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
 
 	if (
-		!shell_exec("git clone $remoteUrl .") ||
-		!shell_exec("git checkout $releaseBranch") ||
-		!shell_exec("git tag $version")
-		#|| !shell_exec("git push origin --tags")
+		!execute("git clone %s .", $remoteUrl) ||
+		!execute("git checkout %s", $releaseBranch) ||
+		!execute("git tag %s", $version)
+		#|| !execute("git push origin --tags")
 	) {
-		echo "Failed to release $remote\n";
+		echo "Failed to release $remote" . PHP_EOL;
 
 		exit(1);
 	}
