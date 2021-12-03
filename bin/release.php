@@ -66,12 +66,13 @@ foreach ([
 ] as $remote) {
 	echo "Releasing $remote\n";
 
-	rmdirRecursive($tmpDir);
-	if (!mkdir($tmpDir) && !is_dir($tmpDir)) {
-		throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
+	$currentTmpDir = $tmpDir . DIRECTORY_SEPARATOR . $remote;
+
+	if (!mkdir($currentTmpDir) && !is_dir($currentTmpDir)) {
+		throw new RuntimeException(sprintf('Directory "%s" was not created', $currentTmpDir));
 	}
 
-	chdir($tmpDir);
+	chdir($currentTmpDir);
 
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
 
@@ -88,3 +89,4 @@ foreach ([
 
 	chdir($cwd);
 }
+rmdirRecursive($tmpDir);
