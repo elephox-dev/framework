@@ -117,18 +117,18 @@ foreach ([
 
 	if (is_dir($currentTmpDir)) {
 		chdir($currentTmpDir);
-
-		if (!execute("git clone %s .", $remoteUrl)) {
-			echo "Failed to check out $remote" . PHP_EOL;
-
-			exit(1);
-		}
 	} else {
 		if (!mkdir($currentTmpDir) && !is_dir($currentTmpDir)) {
 			throw new RuntimeException(sprintf('Directory "%s" was not created', $currentTmpDir));
 		}
 
 		chdir($currentTmpDir);
+
+		if (!execute("git clone %s .", $remoteUrl)) {
+			echo "Failed to check out $remote" . PHP_EOL;
+
+			exit(1);
+		}
 	}
 
 	if (
