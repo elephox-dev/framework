@@ -24,7 +24,8 @@
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest",
         "elephox/composer-module-sync": "^1.1",
-        "phpbench/phpbench": "dev-gh-950-support-glob-paths"
+        "phpbench/phpbench": "dev-gh-950-support-glob-paths",
+        "php-coveralls/php-coveralls": "^2.5"
     },
     "provide": {
         "psr/container-implementation": "1.0"
