@@ -51,6 +51,10 @@ function rmdirRecursive($dir): bool
 }
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
+if (!mkdir($tmpDir) && !is_dir($tmpDir)) {
+	throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
+}
+
 $cwd = getcwd();
 foreach ([
 	'collection',
