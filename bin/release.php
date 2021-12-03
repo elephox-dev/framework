@@ -93,7 +93,7 @@ if (
 }
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
-if (!mkdir($tmpDir) && !is_dir($tmpDir)) {
+if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
 	throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
 }
 
@@ -113,17 +113,25 @@ foreach ([
 	echo "Releasing $remote\n";
 
 	$currentTmpDir = $tmpDir . DIRECTORY_SEPARATOR . $remote;
-
-	if (!mkdir($currentTmpDir) && !is_dir($currentTmpDir)) {
-		throw new RuntimeException(sprintf('Directory "%s" was not created', $currentTmpDir));
-	}
-
-	chdir($currentTmpDir);
-
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
 
+	if (is_dir($currentTmpDir)) {
+		chdir($currentTmpDir);
+
+		if (!execute("git clone %s .", $remoteUrl)) {
+			echo "Failed to check out $remote" . PHP_EOL;
+
+			exit(1);
+		}
+	} else {
+		if (!mkdir($currentTmpDir) && !is_dir($currentTmpDir)) {
+			throw new RuntimeException(sprintf('Directory "%s" was not created', $currentTmpDir));
+		}
+
+		chdir($currentTmpDir);
+	}
+
 	if (
-		!execute("git clone %s .", $remoteUrl) ||
 		!execute("git checkout %s", $releaseBranch) ||
 		!execute("git tag %s", $version)
 		#|| !execute("git push origin --tags")
