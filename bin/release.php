@@ -70,7 +70,7 @@ if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
 }
 
 // make sure the working directory is clean
-if (!execute("git status --porcelain")) {
+if (!empty(executeOutput("git status --porcelain"))) {
 	echo "Your working directory is dirty. Did you forget to commit your changes?" . PHP_EOL;
 
 	exit(1);
