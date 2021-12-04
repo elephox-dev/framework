@@ -69,6 +69,22 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Core/src/Handler/Attribute/ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/Attribute/ExceptionHandler.php)
   - [ ] do something else with this
+- [ ] [Http/src/Request.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Request.php)
+  - [ ] Implement withoutBody() method.
+  - [ ] Implement withProtocolVersion() method.
+  - [ ] Implement withHeader() method.
+  - [ ] Implement withAddedHeader() method.
+  - [ ] Implement withoutHeader() method.
+  - [ ] Implement withBody() method.
+  - [ ] Implement withAddedHeaderName() method.
+  - [ ] Implement withoutHeaderName() method.
+  - [ ] Implement withRequestMethod() method.
+  - [ ] Implement getRequestTarget() method.
+  - [ ] Implement withRequestTarget() method.
+  - [ ] Implement getMethod() method.
+  - [ ] Implement withMethod() method.
+  - [ ] Implement withUri() method.
+  - [ ] Implement getHeaderMap() method.
 
 
 ### 🚧 Open issues from other repositories
