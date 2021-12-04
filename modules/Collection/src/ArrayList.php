@@ -8,6 +8,7 @@ use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
+use Stringable;
 
 /**
  * @template T
@@ -17,18 +18,40 @@ use JetBrains\PhpStorm\Pure;
  */
 class ArrayList implements GenericList, ArrayAccess
 {
-	public static function fromArray(array $array): self
+	/**
+	 * @template TOut
+	 *
+	 * @param iterable<TOut> $array
+	 * @return self<TOut>
+	 */
+	public static function fromArray(iterable $array): self
 	{
+		if ($array instanceof self)
+		{
+			return $array;
+		}
+
 		return new self($array);
+	}
+
+	/**
+	 * @template TOut
+	 *
+	 * @param TOut $value
+	 * @return self<TOut>
+	 */
+	public static function fromValue(mixed $value): self
+	{
+		return new self([$value]);
 	}
 
 	/** @var array<int, T> */
 	private array $list = [];
 
 	/**
-	 * @param array<array-key, T> $items
+	 * @param iterable<T> $items
 	 */
-	public function __construct(array $items = [])
+	public function __construct(iterable $items = [])
 	{
 		foreach ($items as $item) {
 			$this->add($item);
@@ -255,5 +278,10 @@ class ArrayList implements GenericList, ArrayAccess
 		usort($this->list, $callback);
 
 		return $this;
+	}
+
+	public function join(Stringable|string $separator): string
+	{
+		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
 	}
 }

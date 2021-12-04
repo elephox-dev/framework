@@ -4,11 +4,15 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\OffsetNotFoundException;
+use Elephox\Http\Contract\ReadonlyHeaderMap;
+use Elephox\Http\HeaderName;
+use Elephox\Http\RequestMethod;
 use InvalidArgumentException;
-use LogicException;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
-class Request implements Contract\Request
+class Request extends AbstractHttpMessage implements Contract\Request
 {
 	public static function fromGlobals(): Contract\Request
 	{
@@ -48,8 +52,24 @@ class Request implements Contract\Request
 			throw new RuntimeException("REQUEST_METHOD is not set.");
 		}
 
+		if (array_key_exists("SERVER_PROTOCOL", $_SERVER)) {
+			/** @var non-empty-string $version */
+			$version = $_SERVER['SERVER_PROTOCOL'];
+		} else {
+			$version = "1.1";
+		}
+
 		/** @var non-empty-string $method */
 		$method = $_SERVER["REQUEST_METHOD"];
+
+		/**
+		 * @var Contract\RequestMethod|null $requestMethod
+		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+		 */
+		$requestMethod = RequestMethod::tryFrom($method);
+		if ($requestMethod === null) {
+			$requestMethod = new CustomRequestMethod($method);
+		}
 
 		if (!array_key_exists("REQUEST_URI", $_SERVER)) {
 			throw new RuntimeException("REQUEST_URI is not set.");
@@ -57,6 +77,7 @@ class Request implements Contract\Request
 
 		/** @var string $uri */
 		$uri = $_SERVER["REQUEST_URI"];
+		$parsedUri = Url::fromString($uri);
 
 		try {
 			$contentLength = (int)$headerMap->get(HeaderName::ContentLength);
@@ -65,102 +86,109 @@ class Request implements Contract\Request
 		}
 
 		if ($contentLength > 0) {
-			$body = file_get_contents("php://input", length: $contentLength);
+			$body = new ResourceStream(fopen('php://input', 'rb'));
 		} else {
-			$body = null;
+			$body = new EmptyStream();
 		}
 
-		return new self($method, $uri, $headerMap, $body);
+		return new self($version, $requestMethod, $parsedUri, $body, $headerMap);
 	}
 
-	private Contract\Url $url;
-
-	private Contract\RequestMethod $method;
-
-	private Contract\ReadonlyHeaderMap $headers;
-
-	/**
-	 * @param Contract\RequestMethod|non-empty-string $method
-	 */
-	public function __construct(Contract\RequestMethod|string $method, Contract\Url|string $uri, Contract\ReadonlyHeaderMap|array $headers = [], private ?string $body = null, private bool $followRedirects = true)
+	public function __construct(string $protocolVersion, private Contract\RequestMethod $method, private Contract\Url $url, StreamInterface $body, Contract\RequestHeaderMap $headers)
 	{
-		if ($method instanceof Contract\RequestMethod) {
-			$this->method = $method;
-		} else {
-			/**
-			 * @var Contract\RequestMethod|null $parsedMethod
-			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-			 */
-			$parsedMethod = RequestMethod::tryFrom($method);
-			if ($parsedMethod === null) {
-				$parsedMethod = new CustomRequestMethod($method);
-			}
+		parent::__construct($protocolVersion, $headers, $body);
 
-			$this->method = $parsedMethod;
-		}
-
-		if ($body !== null && !$this->method->canHaveBody()) {
+		if (!$this->method->canHaveBody() && $body->getSize() > 0) {
 			throw new InvalidArgumentException("Request method {$this->method->getValue()} cannot have a body.");
 		}
-
-		$this->url = $uri instanceof Contract\Url ?
-			$uri :
-			Url::fromString($uri);
-
-		/** @var Contract\ReadonlyHeaderMap headers */
-		$this->headers = $headers instanceof Contract\ReadonlyHeaderMap ?
-			$headers :
-			RequestHeaderMap::fromArray($headers);
 
 		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
 			throw new InvalidArgumentException("Requests cannot contain headers reserved for responses only.");
 		}
 	}
 
-	public function getUrl(): Contract\Url
+	public function getUri(): Contract\Url
 	{
 		return $this->url;
 	}
 
-	public function getMethod(): Contract\RequestMethod
+	public function getRequestMethod(): Contract\RequestMethod
 	{
 		return $this->method;
 	}
 
-	public function getHeaders(): Contract\ReadonlyHeaderMap
+	public function withoutBody(): self
 	{
-		return $this->headers;
+		// TODO: Implement withoutBody() method.
 	}
 
-	public function shouldFollowRedirects(): bool
+	public function withProtocolVersion($version): self
 	{
-		return $this->followRedirects;
+		// TODO: Implement withProtocolVersion() method.
 	}
 
-	public function getBody(): ?string
+	public function withHeader($name, $value): self
 	{
-		return $this->body;
+		// TODO: Implement withHeader() method.
 	}
 
-	public function getJson(): array
+	public function withAddedHeader($name, $value): self
 	{
-		if (!$this->method->canHaveBody()) {
-			throw new LogicException("Request method {$this->method->getValue()} cannot have a body.");
-		}
+		// TODO: Implement withAddedHeader() method.
+	}
 
-		if ($this->headers->has(HeaderName::ContentType)) {
-			/** @var string $contentType */
-			$contentType = $this->headers->get(HeaderName::ContentType);
-			if (!str_starts_with($contentType, "application/json")) {
-				throw new LogicException("Content-Type is not application/json");
-			}
-		}
+	public function withoutHeader($name): self
+	{
+		// TODO: Implement withoutHeader() method.
+	}
 
-		if ($this->body === null) {
-			return [];
-		}
+	public function withBody(StreamInterface $body): self
+	{
+		// TODO: Implement withBody() method.
+	}
 
-		/** @var array */
-		return json_decode($this->body, true, flags: JSON_THROW_ON_ERROR);
+	public function withAddedHeaderName(HeaderName $name, array|string $value): self
+	{
+		// TODO: Implement withAddedHeaderName() method.
+	}
+
+	public function withoutHeaderName(HeaderName $name): self
+	{
+		// TODO: Implement withoutHeaderName() method.
+	}
+
+	public function withRequestMethod(RequestMethod $method): self
+	{
+		// TODO: Implement withRequestMethod() method.
+	}
+
+	public function getRequestTarget(): string
+	{
+		// TODO: Implement getRequestTarget() method.
+	}
+
+	public function withRequestTarget($requestTarget): self
+	{
+		// TODO: Implement withRequestTarget() method.
+	}
+
+	public function getMethod(): string
+	{
+		// TODO: Implement getMethod() method.
+	}
+
+	public function withMethod($method): self
+	{
+		// TODO: Implement withMethod() method.
+	}
+
+	public function withUri(UriInterface $uri, $preserveHost = false): self
+	{
+		// TODO: Implement withUri() method.
+	}
+
+	public function getHeaderMap(): Contract\RequestHeaderMap
+	{
+		// TODO: Implement getHeaderMap() method.
 	}
 }

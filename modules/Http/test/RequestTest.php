@@ -29,27 +29,27 @@ class RequestTest extends TestCase
 	{
 		$request = new Request("GET", "/test");
 
-		self::assertEquals(RequestMethod::GET, $request->getMethod());
-		self::assertEquals('/test', $request->getUrl()->getPath());
-		self::assertCount(0, $request->getHeaders()->asArray());
+		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
+		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
 	public function testConstructorMethodObject(): void
 	{
 		$request = new Request(RequestMethod::POST, "/test");
 
-		self::assertEquals(RequestMethod::POST, $request->getMethod());
-		self::assertEquals('/test', $request->getUrl()->getPath());
-		self::assertCount(0, $request->getHeaders()->asArray());
+		self::assertEquals(RequestMethod::POST, $request->getRequestMethod());
+		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
 	public function testConstructorUrlObject(): void
 	{
 		$request = new Request("DELETE", Url::fromString("/test"));
 
-		self::assertEquals(RequestMethod::DELETE, $request->getMethod());
-		self::assertEquals('/test', $request->getUrl()->getPath());
-		self::assertCount(0, $request->getHeaders()->asArray());
+		self::assertEquals(RequestMethod::DELETE, $request->getRequestMethod());
+		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
 	public function testConstructorHeaderMap(): void
@@ -59,10 +59,10 @@ class RequestTest extends TestCase
 
 		$request = new Request("GET", "/test", $headers);
 
-		self::assertEquals(RequestMethod::GET, $request->getMethod());
-		self::assertEquals('/test', $request->getUrl()->getPath());
-		self::assertCount(1, $request->getHeaders()->asArray());
-		self::assertEquals("test", $request->getHeaders()->get(HeaderName::Host));
+		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
+		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertCount(1, $request->getHeaderMap()->asArray());
+		self::assertEquals("test", $request->getHeaderMap()->get(HeaderName::Host));
 	}
 
 	public function testFromGlobals(): void
@@ -75,16 +75,16 @@ class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		self::assertEquals(RequestMethod::GET, $request->getMethod());
-		self::assertFalse($request->getMethod()->canHaveBody());
-		self::assertEquals('/', $request->getUrl()->__toString());
+		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
+		self::assertFalse($request->getRequestMethod()->canHaveBody());
+		self::assertEquals('/', $request->getUri()->__toString());
 		self::assertTrue($request->shouldFollowRedirects());
-		self::assertTrue($request->getHeaders()->has(HeaderName::Accept));
-		self::assertTrue($request->getHeaders()->has(HeaderName::UserAgent));
-		self::assertTrue($request->getHeaders()->anyKey(fn(\Elephox\Http\Contract\HeaderName $header) => $header->getValue() === "X-Custom"));
-		self::assertEquals("application/json", $request->getHeaders()->get(HeaderName::Accept));
-		self::assertEquals("test/1.0.0", $request->getHeaders()->get(HeaderName::UserAgent));
-		self::assertEquals(["custom-test"], $request->getHeaders()->get("X-Custom"));
+		self::assertTrue($request->getHeaderMap()->has(HeaderName::Accept));
+		self::assertTrue($request->getHeaderMap()->has(HeaderName::UserAgent));
+		self::assertTrue($request->getHeaderMap()->anyKey(fn(\Elephox\Http\Contract\HeaderName $header) => $header->getValue() === "X-Custom"));
+		self::assertEquals(["application/json"], $request->getHeaderMap()->get(HeaderName::Accept));
+		self::assertEquals(["test/1.0.0"], $request->getHeaderMap()->get(HeaderName::UserAgent));
+		self::assertEquals(["custom-test"], $request->getHeaderMap()->get("X-Custom"));
 
 		unset($_SERVER['REQUEST_METHOD']);
 		unset($_SERVER['REQUEST_URI']);
@@ -100,10 +100,10 @@ class RequestTest extends TestCase
 
 		$request = Request::fromGlobals();
 
-		self::assertInstanceOf(CustomRequestMethod::class, $request->getMethod());
-		self::assertEquals("NEW", $request->getMethod()->getValue());
-		self::assertTrue($request->getMethod()->canHaveBody());
-		self::assertEquals('/', $request->getUrl()->__toString());
+		self::assertInstanceOf(CustomRequestMethod::class, $request->getRequestMethod());
+		self::assertEquals("NEW", $request->getRequestMethod()->getValue());
+		self::assertTrue($request->getRequestMethod()->canHaveBody());
+		self::assertEquals('/', $request->getUri()->__toString());
 
 		unset($_SERVER['REQUEST_METHOD']);
 		unset($_SERVER['REQUEST_URI']);

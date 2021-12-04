@@ -28,22 +28,22 @@ class ResponseTest extends TestCase
 	public function testConstructor(): void
 	{
 		$response = new Response(null);
-		self::assertEquals(200, $response->getCode()->getCode());
-		self::assertEquals('OK', $response->getCode()->getMessage());
-		self::assertEmpty($response->getHeaders()->asArray());
+		self::assertEquals(200, $response->getResponseCode()->getCode());
+		self::assertEquals('OK', $response->getResponseCode()->getMessage());
+		self::assertEmpty($response->getHeaderMap()->asArray());
 		self::assertNull($response->getContent());
 	}
 
 	public function testFromString(): void
 	{
 		$response = Response::fromString("HTTP/1.1 200 OK\n\n");
-		self::assertEquals(ResponseCode::OK, $response->getCode());
+		self::assertEquals(ResponseCode::OK, $response->getResponseCode());
 		self::assertEquals('1.1', $response->getHttpVersion());
-		self::assertEmpty($response->getHeaders()->asArray());
+		self::assertEmpty($response->getHeaderMap()->asArray());
 
-		$response->setCode(ResponseCode::NotFound);
+		$response->withResponseCode(ResponseCode::NotFound);
 		$response->setContent('<h1>404 Not Found</h1>', MimeType::Texthtml);
-		self::assertEquals(ResponseCode::NotFound, $response->getCode());
+		self::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
 	}
 
 	public function testFromStringInvalidFormat(): void
@@ -60,9 +60,9 @@ class ResponseTest extends TestCase
 			'baz' => 'qux',
 		]);
 
-		self::assertEquals(ResponseCode::OK, $response->getCode());
+		self::assertEquals(ResponseCode::OK, $response->getResponseCode());
 		self::assertEquals('{"foo":"bar","baz":"qux"}', $response->getContent());
-		self::assertEquals(MimeType::Applicationjson->getValue(), $response->getHeaders()->get(HeaderName::ContentType));
+		self::assertEquals([MimeType::Applicationjson->getValue()], $response->getHeaderMap()->get(HeaderName::ContentType));
 	}
 
 	public function testWithInvalidJson(): void
@@ -85,7 +85,7 @@ class ResponseTest extends TestCase
 		]);
 		$response = Response::withJson($map);
 
-		self::assertEquals(200, $response->getCode()->getCode());
+		self::assertEquals(200, $response->getResponseCode()->getCode());
 		self::assertEquals('{"foo":"bar","baz":"qux"}', $response->getContent());
 	}
 
@@ -93,15 +93,15 @@ class ResponseTest extends TestCase
 	{
 		$response = Response::withJson();
 
-		self::assertEquals("OK", $response->getCode()->getMessage());
+		self::assertEquals("OK", $response->getResponseCode()->getMessage());
 		self::assertEquals(null, $response->getContent());
 	}
 
 	public function testCustomResponseCode(): void
 	{
 		$response = Response::fromString("HTTP/1.1 420 Blaze it\n\n");
-		self::assertEquals(420, $response->getCode()->getCode());
-		self::assertEquals("Blaze it", $response->getCode()->getMessage());
+		self::assertEquals(420, $response->getResponseCode()->getCode());
+		self::assertEquals("Blaze it", $response->getResponseCode()->getMessage());
 	}
 
 	public function testInvalidCustomResponseCodeMessage(): void
@@ -121,9 +121,9 @@ class ResponseTest extends TestCase
 	public function testMimeTypeGetsSet(): void
 	{
 		$response = Response::fromString("HTTP/1.1 200 OK\n\n");
-		self::assertFalse($response->getHeaders()->has(HeaderName::ContentType));
+		self::assertFalse($response->getHeaderMap()->has(HeaderName::ContentType));
 		$response->setContent('<h1>404 Not Found</h1>', MimeType::Texthtml);
-		self::assertEquals(MimeType::Texthtml->getValue(), $response->getHeaders()->get(HeaderName::ContentType));
+		self::assertEquals([MimeType::Texthtml->getValue()], $response->getHeaderMap()->get(HeaderName::ContentType));
 	}
 
 	public function testResponseCannotContainRequestOnlyHeaders(): void

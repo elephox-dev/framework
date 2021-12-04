@@ -4,19 +4,25 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ObjectMap;
+use Elephox\Collection\ArrayList;
 use Elephox\Collection\OffsetNotFoundException;
+use InvalidArgumentException;
 
 /**
- * @extends ObjectMap<Contract\HeaderName, array<int, string>|string>
+ * @extends ObjectMap<Contract\HeaderName, ArrayList<string>>
  */
 class HeaderMap extends ObjectMap implements Contract\HeaderMap
 {
 	/**
-	 * @param non-empty-string $name
+	 * @param string $name
 	 * @return Contract\HeaderName
 	 */
 	public static function parseHeaderName(string $name): Contract\HeaderName
 	{
+		if (empty($name)) {
+			throw new InvalidArgumentException('Header name cannot be empty');
+		}
+
 		/**
 		 * @var Contract\HeaderName|null $headerName
 		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
@@ -29,7 +35,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headerName;
 	}
 
-	protected static function fromArray(array $headers): self
+	protected static function fromArray(iterable $headers): self
 	{
 		$map = new self();
 
@@ -46,22 +52,14 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			}
 
 			$headerName = self::parseHeaderName($name);
-			if ($headerName->canBeDuplicate()) {
-				if (is_string($value)) {
-					$values = [$value];
-				} else if (is_array($value)) {
-					$values = array_values($value);
-				} else {
-					throw new InvalidHeaderTypeException($value);
-				}
-			} else if (is_string($value)) {
-				$values = $value;
-			} else if (is_array($value) && !empty($value)) {
-				$values = (string)$value[0];
+			if (is_string($value)) {
+				$values = ArrayList::fromValue($value);
+			} else if (is_array($value)) {
+				$values = ArrayList::fromArray($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
 			}
-			/** @var array<int, string>|string $values */
+			/** @var ArrayList<string> $values */
 
 			$map->put($headerName, $values);
 		}
@@ -70,10 +68,26 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	}
 
 	/**
-	 * @param non-empty-string|Contract\HeaderName $key
-	 * @param array<int, string>|string $value
+	 * @param string|Contract\HeaderName $key
+	 * @return bool
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
+	 */
+	public function has(mixed $key): bool
+	{
+		if (!$key instanceof Contract\HeaderName) {
+			$key = self::parseHeaderName($key);
+		}
+
+		return parent::has($key);
+	}
+
+	/**
+	 * @param string|Contract\HeaderName $key
+	 * @param iterable<string>|string $value
+	 *
+	 * @psalm-suppress MoreSpecificImplementedParamType
+	 * @psalm-suppress DocblockTypeContradiction
 	 */
 	public function put(mixed $key, mixed $value): void
 	{
@@ -81,23 +95,25 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		if (is_array($value) && !$key->canBeDuplicate()) {
-			parent::put($key, $value[0]);
-		} else if (!is_array($value) && $key->canBeDuplicate()) {
-			parent::put($key, [$value]);
+		if (!is_array($value)) {
+			if (!is_string($value)) {
+				throw new InvalidHeaderTypeException($value);
+			}
+
+			parent::put($key, ArrayList::fromValue($value));
 		} else {
-			parent::put($key, $value);
+			parent::put($key, ArrayList::fromArray($value));
 		}
 	}
 
 	/**
-	 * @param non-empty-string|Contract\HeaderName $key
+	 * @param string|Contract\HeaderName $key
 	 *
-	 * @return array<int, string>|string
+	 * @return ArrayList<string>
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	public function get(mixed $key): array|string
+	public function get(mixed $key): ArrayList
 	{
 		if (!$key instanceof Contract\HeaderName) {
 			$key = self::parseHeaderName($key);
@@ -111,12 +127,20 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return parent::get($obj);
 	}
 
+	/**
+	 * @return array<non-empty-string, list<string>>
+	 */
 	public function asArray(): array
 	{
 		$headers = [];
 
 		foreach ($this as $key => $value) {
-			$headers[$key->getValue()] = $value;
+			$headerName = $key->getValue();
+
+			/** @var list<string> $headerValue */
+			$headerValue = $value->asArray();
+
+			$headers[$headerName] = $headerValue;
 		}
 
 		return $headers;

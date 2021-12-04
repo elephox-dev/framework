@@ -34,7 +34,7 @@ class ResponseHeaderMapTest extends TestCase
 			'Content-Type' => ['text/html'],
 		]);
 
-		self::assertEquals('localhost', $map->get(HeaderName::Host));
+		self::assertEquals(['localhost'], $map->get(HeaderName::Host));
 		self::assertEquals(['custom'], $map->get('x-custom'));
 		self::assertEquals([
 			'value',
@@ -50,8 +50,8 @@ class ResponseHeaderMapTest extends TestCase
 	{
 		$map = ResponseHeaderMap::fromString("Host: localhost\r\nContent-Type:  text/html \r\nX-Custom: test:value\r\n\r\n");
 
-		self::assertEquals('localhost', $map->get(HeaderName::Host));
-		self::assertEquals('text/html', $map->get(HeaderName::ContentType));
+		self::assertEquals(['localhost'], $map->get(HeaderName::Host));
+		self::assertEquals(['text/html'], $map->get(HeaderName::ContentType));
 		self::assertEquals(['test:value'], $map->get("X-Custom"));
 	}
 

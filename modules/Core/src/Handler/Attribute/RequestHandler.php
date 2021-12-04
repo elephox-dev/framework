@@ -92,11 +92,11 @@ class RequestHandler extends AbstractHandlerAttribute
 			return false;
 		}
 
-		if (!$this->methods->isEmpty() && !$this->methods->contains($context->getRequest()->getMethod())) {
+		if (!$this->methods->isEmpty() && !$this->methods->contains($context->getRequest()->getRequestMethod())) {
 			return false;
 		}
 
-		return $this->template->matches($context->getRequest()->getUrl());
+		return $this->template->matches($context->getRequest()->getUri());
 	}
 
 	public function invoke(Closure $callback, ContextContract $context): void
@@ -105,7 +105,7 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		$parameters = $this->template->getValues($context->getRequest()->getUrl());
+		$parameters = $this->template->getValues($context->getRequest()->getUri());
 
 		/** @var Response|mixed $result */
 		$result = $context->getContainer()->callback($callback, ['context' => $context, ...$parameters]);

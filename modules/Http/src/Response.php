@@ -84,17 +84,17 @@ class Response implements Contract\Response
 		}
 	}
 
-	public function getHeaders(): Contract\ResponseHeaderMap
+	public function getHeaderMap(): Contract\ResponseHeaderMap
 	{
 		return $this->headers;
 	}
 
-	public function setCode(Contract\ResponseCode $code): void
+	public function withResponseCode(Contract\ResponseCode $code): void
 	{
 		$this->code = $code;
 	}
 
-	public function getCode(): Contract\ResponseCode
+	public function getResponseCode(): Contract\ResponseCode
 	{
 		return $this->code;
 	}
@@ -125,7 +125,7 @@ class Response implements Contract\Response
 		}
 
 		http_response_code($this->code->getCode());
-		$headers = $this->getHeaders()->asArray();
+		$headers = $this->getHeaderMap()->asArray();
 		foreach ($headers as $header => $value) {
 			if (is_array($value)) {
 				foreach ($value as $v) {
