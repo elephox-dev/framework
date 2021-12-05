@@ -14,6 +14,7 @@ use Stringable;
  * @extends GenericCollection<T>
  * @extends IteratorAggregate<int, T>
  * @extends ArrayConvertible<int, T>
+ * @extends iterable<T>
  */
 interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate, ArrayConvertible
 {

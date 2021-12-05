@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 use Stringable;
 
@@ -28,7 +29,7 @@ interface TypedStreamInterface extends StreamInterface, Stringable
 
 	public function eof(): bool;
 
-	public function isSeekable(): bool;
+	#[Pure] public function isSeekable(): bool;
 
 	/**
 	 * @param positive-int|0 $offset
@@ -41,7 +42,7 @@ interface TypedStreamInterface extends StreamInterface, Stringable
 
 	public function rewind(): void;
 
-	public function isWritable(): bool;
+	#[Pure] public function isWritable(): bool;
 
 	/**
 	 * @param string $string
@@ -50,7 +51,7 @@ interface TypedStreamInterface extends StreamInterface, Stringable
 	 */
 	public function write($string): int;
 
-	public function isReadable(): bool;
+	#[Pure] public function isReadable(): bool;
 
 	public function read($length): string;
 

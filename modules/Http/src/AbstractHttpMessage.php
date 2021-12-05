@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 
 abstract class AbstractHttpMessage implements Contract\HttpMessage
 {
-	public function __construct(
+	#[Pure] public function __construct(
 		protected string $protocolVersion,
 		protected Contract\ReadonlyHeaderMap $headers,
 		protected StreamInterface $body

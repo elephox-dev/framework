@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\GenericMap;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 
 /**
- * @extends GenericMap<non-empty-string|HeaderName, ReadonlyList<string>>
+ * @extends GenericMap<non-empty-string|HeaderName, GenericList<string>>
  */
 interface HeaderMap extends GenericMap, ReadonlyHeaderMap
 {

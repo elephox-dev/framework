@@ -34,7 +34,7 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		return self::fromArray($headerMap->asArray());
 	}
 
-	public static function fromArray(array $headers): self
+	public static function fromArray(iterable $headers): self
 	{
 		$map = parent::fromArray($headers);
 

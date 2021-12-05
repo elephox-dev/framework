@@ -8,71 +8,71 @@ use JetBrains\PhpStorm\Pure;
 
 class Url implements Contract\Url
 {
-	public const Pattern = '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/\?#]+)(?::(?<port>\d+))?)?(?<path>[^\?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
+	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
 	public static function fromString(string $uri): Contract\Url
 	{
-		return new Url($uri);
-	}
-
-	private ?string $scheme;
-	private ?string $username;
-	private ?string $password;
-	private ?string $host;
-	private ?int $port;
-	private string $path;
-	private ?string $query;
-	private ?string $fragment;
-
-	final private function __construct(string $source)
-	{
 		preg_match(
 			self::Pattern,
-			$source,
+			$uri,
 			$matches
 		);
 
 		if (str_ends_with($matches['scheme'], '://')) {
-			$this->scheme = substr($matches['scheme'], 0, -3);
+			$scheme = substr($matches['scheme'], 0, -3);
 		} else if ($matches['scheme'] === '//') {
-			$this->scheme = '';
+			$scheme = '';
 		} else {
-			$this->scheme = null;
+			$scheme = null;
 		}
 
-		$this->username = empty($matches['username']) ? null : $matches['username'];
-		$this->password = empty($matches['password']) ? null : $matches['password'];
-		$this->host = empty($matches['host']) ? null : $matches['host'];
-		$this->port = ctype_digit($matches['port']) ? (int)$matches['port'] : null;
-		$this->path = $matches['path'];
+		$username = empty($matches['username']) ? null : $matches['username'];
+		$password = empty($matches['password']) ? null : $matches['password'];
+		$host = empty($matches['host']) ? null : $matches['host'];
+		$port = ctype_digit($matches['port']) ? (int)$matches['port'] : null;
+		$path = $matches['path'];
 
 		if (array_key_exists('query', $matches) && str_starts_with($matches['query'], '?')) {
 			if ($matches['query'] === '?') {
-				$this->query = '';
+				$query = '';
 			} else {
-				$this->query = substr($matches['query'], 1);
+				$query = substr($matches['query'], 1);
 			}
 		} else {
-			$this->query = null;
+			$query = null;
 		}
 
 		if (array_key_exists('fragment', $matches) && str_starts_with($matches['fragment'], '#')) {
 			if ($matches['fragment'] === '#') {
-				$this->fragment = '';
+				$fragment = '';
 			} else {
-				$this->fragment = substr($matches['fragment'], 1);
+				$fragment = substr($matches['fragment'], 1);
 			}
 		} else {
-			$this->fragment = null;
+			$fragment = null;
 		}
+
+		return new self($scheme, $username, $password, $host, $port, $path, $query, $fragment);
 	}
 
-	#[Pure] public function getScheme(): ?string
+	#[Pure] final private function __construct(
+		private ?string $scheme,
+		private ?string $username,
+		private ?string $password,
+		private ?string $host,
+		private ?int    $port,
+		private string  $path,
+		private ?string $query,
+		private ?string $fragment,
+	)
+	{}
+
+	#[Pure] public function getScheme(): string
 	{
-		return $this->scheme;
+		return $this->scheme ?? "";
 	}
 
-	public function getUrlScheme(): ?UrlScheme
+	#[Pure] public function getUrlScheme(): ?UrlScheme
 	{
 		if ($this->scheme === null) {
 			return null;
@@ -85,6 +85,31 @@ class Url implements Contract\Url
 		return UrlScheme::tryFrom($this->scheme);
 	}
 
+	#[Pure] public function getAuthority(): string
+	{
+		if ($this->host === null) {
+			return "";
+		}
+
+		$authority = $this->host;
+
+		if ($this->port !== null) {
+			$authority .= ":$this->port";
+		}
+
+		if ($this->username !== null) {
+			$userInfo = $this->username;
+
+			if ($this->password !== null) {
+				$userInfo .= ":$this->password";
+			}
+
+			$authority = "$userInfo@$authority";
+		}
+
+		return $authority;
+	}
+
 	#[Pure] public function getUsername(): ?string
 	{
 		return $this->username;
@@ -95,69 +120,68 @@ class Url implements Contract\Url
 		return $this->password;
 	}
 
-	#[Pure] public function getHost(): ?string
+	#[Pure] public function getUserInfo(): string
 	{
-		return $this->host;
+		if ($this->username === null) {
+			return "";
+		}
+
+		$userInfo = $this->username;
+
+		if ($this->password !== null) {
+			$userInfo .= ":$this->password";
+		}
+
+		return $userInfo;
+	}
+
+	#[Pure] public function getHost(): string
+	{
+		return $this->host ?? "";
 	}
 
 	#[Pure] public function getPort(): ?int
 	{
-		return $this->port;
+		$default = $this->getUrlScheme()?->getDefaultPort();
+
+		return $default === $this->port ? null : $this->port;
 	}
 
-	public function getPath(): string
+	#[Pure] public function getPath(): string
 	{
-		$scheme = $this->getUrlScheme();
-		if ($scheme === null || !$scheme->usesTrimmedPath()) {
-			return $this->path;
-		}
-
-		return trim($this->path, '/');
+		return $this->path;
 	}
 
-	#[Pure] public function getQuery(): ?string
+	#[Pure] public function getQuery(): string
 	{
-		return $this->query;
+		return $this->query ?? "";
 	}
 
-	#[Pure] public function getFragment(): ?string
+	#[Pure] public function getFragment(): string
 	{
-		return $this->fragment;
+		return $this->fragment ?? "";
 	}
 
 	#[Pure] public function __toString(): string
 	{
 		if ($this->scheme !== null) {
-			if (empty($this->scheme)) {
-				$uri = '//';
-			} else {
-				$uri = $this->scheme . '://';
-			}
+			$uri = $this->scheme . ':';
 		} else {
 			$uri = '';
 		}
 
-		if ($this->username !== null || $this->password !== null) {
-			if ($this->username !== null) {
-				$uri .= $this->username;
+		$authority = $this->getAuthority();
+		if (!empty($authority)) {
+			$uri .= '//' . $authority;
 
-				if ($this->password !== null) {
-					$uri .= ':' . $this->password;
-				}
+			if (!str_starts_with($this->path, '/')) {
+				$uri .= '/';
 			}
 
-			$uri .= '@';
+			$uri .= $this->path;
+		} else {
+			$uri .= '/' . ltrim($this->path, '/');
 		}
-
-		if ($this->host !== null) {
-			$uri .= $this->host;
-
-			if ($this->port !== null) {
-				$uri .= ':' . $this->port;
-			}
-		}
-
-		$uri .= $this->path;
 
 		if ($this->query !== null) {
 			$uri .= '?' . $this->query;
@@ -171,16 +195,18 @@ class Url implements Contract\Url
 	}
 
 	#[ArrayShape([
-		'scheme' => "null|string",
+		'scheme' => "string",
 		'username' => "null|string",
 		'password' => "null|string",
-		'host' => "null|string",
+		'host' => "string",
 		'port' => "int|null",
+		'authority' => "string",
+		'userInfo' => "string",
 		'path' => "string",
-		'query' => "null|string",
-		'fragment' => "null|string"
+		'query' => "string",
+		'fragment' => "string"
 	])]
-	public function asArray(): array
+	#[Pure] public function asArray(): array
 	{
 		return [
 			'scheme' => $this->getScheme(),
@@ -188,9 +214,51 @@ class Url implements Contract\Url
 			'password' => $this->getPassword(),
 			'host' => $this->getHost(),
 			'port' => $this->getPort(),
+			'authority' => $this->getAuthority(),
+			'userInfo' => $this->getUserInfo(),
 			'path' => $this->getPath(),
 			'query' => $this->getQuery(),
 			'fragment' => $this->getFragment(),
 		];
+	}
+
+	#[Pure] public function withScheme($scheme): static
+	{
+		return new static($scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+	}
+
+	#[Pure] public function withUserInfo($user, $password = null): static
+	{
+		return new static($this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+	}
+
+	#[Pure] public function withHost($host): static
+	{
+		return new static($this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
+	}
+
+	#[Pure] public function withPort($port): static
+	{
+		return new static($this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
+	}
+
+	#[Pure] public function withPath($path): static
+	{
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
+	}
+
+	#[Pure] public function withQuery($query): static
+	{
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
+	}
+
+	#[Pure] public function withFragment($fragment): static
+	{
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
+	}
+
+	#[Pure] public function withUrlScheme(UrlScheme $scheme): static
+	{
+		return new static($scheme->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 }

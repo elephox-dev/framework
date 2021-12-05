@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
+use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\ReadonlyMap;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\JsonConvertible;
 use JetBrains\PhpStorm\Pure;
@@ -244,5 +246,15 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		}
 
 		return $map;
+	}
+
+	public function asReadonly(): ReadonlyMap
+	{
+		return $this;
+	}
+
+	public function remove(mixed $key): void
+	{
+		unset($this->values[$key]);
 	}
 }

@@ -6,6 +6,7 @@ namespace Elephox\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\ReadonlyList;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
@@ -19,10 +20,10 @@ use Stringable;
 class ArrayList implements GenericList, ArrayAccess
 {
 	/**
-	 * @template TOut
+	 * @template U
 	 *
-	 * @param iterable<TOut> $array
-	 * @return self<TOut>
+	 * @param iterable<U> $array
+	 * @return self<U>
 	 */
 	public static function fromArray(iterable $array): self
 	{
@@ -35,17 +36,17 @@ class ArrayList implements GenericList, ArrayAccess
 	}
 
 	/**
-	 * @template TOut
+	 * @template U
 	 *
-	 * @param TOut $value
-	 * @return self<TOut>
+	 * @param U $value
+	 * @return self<U>
 	 */
 	public static function fromValue(mixed $value): self
 	{
 		return new self([$value]);
 	}
 
-	/** @var array<int, T> */
+	/** @var list<T> */
 	private array $list = [];
 
 	/**
@@ -129,9 +130,9 @@ class ArrayList implements GenericList, ArrayAccess
 	}
 
 	/**
-	 * @param T ...$values
+	 * @param iterable<T> $values
 	 */
-	public function addAll(mixed ...$values): void
+	public function addAll(iterable $values): void
 	{
 		foreach ($values as $value) {
 			$this->add($value);
@@ -172,7 +173,7 @@ class ArrayList implements GenericList, ArrayAccess
 	}
 
 	/**
-	 * @return array<int, T>
+	 * @return list<T>
 	 */
 	#[Pure] public function asArray(): array
 	{
@@ -283,5 +284,10 @@ class ArrayList implements GenericList, ArrayAccess
 	public function join(Stringable|string $separator): string
 	{
 		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
+	}
+
+	public function asReadonly(): ReadonlyList
+	{
+		return $this;
 	}
 }

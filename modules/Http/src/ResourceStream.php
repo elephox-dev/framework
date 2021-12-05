@@ -5,6 +5,7 @@ namespace Elephox\Http;
 
 use Elephox\Http\Contract\TypedStreamInterface;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
 class ResourceStream implements TypedStreamInterface
@@ -114,7 +115,7 @@ class ResourceStream implements TypedStreamInterface
 		return feof($this->resource);
 	}
 
-	public function isSeekable(): bool
+	#[Pure] public function isSeekable(): bool
 	{
 		return $this->seekable;
 	}
@@ -139,7 +140,7 @@ class ResourceStream implements TypedStreamInterface
 		$this->seek(0);
 	}
 
-	public function isWritable(): bool
+	#[Pure] public function isWritable(): bool
 	{
 		return $this->writable;
 	}
@@ -165,7 +166,7 @@ class ResourceStream implements TypedStreamInterface
 		return $written;
 	}
 
-	public function isReadable(): bool
+	#[Pure] public function isReadable(): bool
 	{
 		return $this->readable;
 	}

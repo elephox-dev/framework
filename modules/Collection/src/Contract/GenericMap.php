@@ -7,7 +7,7 @@ namespace Elephox\Collection\Contract;
  * @template TKey
  * @template TValue
  *
- * @extends \Elephox\Collection\Contract\ReadonlyMap<TKey, TValue>
+ * @extends ReadonlyMap<TKey, TValue>
  */
 interface GenericMap extends ReadonlyMap
 {
@@ -16,4 +16,14 @@ interface GenericMap extends ReadonlyMap
 	 * @param TValue $value
 	 */
 	public function put(mixed $key, mixed $value): void;
+
+	/**
+	 * @param TKey $key
+	 */
+	public function remove(mixed $key): void;
+
+	/**
+	 * @return ReadonlyMap<TKey, TValue>
+	 */
+	public function asReadonly(): ReadonlyMap;
 }

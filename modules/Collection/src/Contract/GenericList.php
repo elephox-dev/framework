@@ -26,4 +26,9 @@ interface GenericList extends ReadonlyList, Stackable
 	 * @return GenericList<T>
 	 */
 	public function orderBy(callable $callback): GenericList;
+
+	/**
+	 * @return ReadonlyList<T>
+	 */
+	public function asReadonly(): ReadonlyList;
 }

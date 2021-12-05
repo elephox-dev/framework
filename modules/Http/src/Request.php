@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\OffsetNotFoundException;
-use Elephox\Http\Contract\ReadonlyHeaderMap;
-use Elephox\Http\HeaderName;
-use Elephox\Http\RequestMethod;
+use Elephox\Collection\ArrayList;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -94,7 +93,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		return new self($version, $requestMethod, $parsedUri, $body, $headerMap);
 	}
 
-	public function __construct(string $protocolVersion, private Contract\RequestMethod $method, private Contract\Url $url, StreamInterface $body, Contract\RequestHeaderMap $headers)
+	final private function __construct(string $protocolVersion, private Contract\RequestMethod $method, private UriInterface $url, StreamInterface $body, Contract\RequestHeaderMap $headers)
 	{
 		parent::__construct($protocolVersion, $headers, $body);
 
@@ -107,88 +106,161 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		}
 	}
 
-	public function getUri(): Contract\Url
+	#[Pure] public function getUri(): UriInterface
 	{
 		return $this->url;
 	}
 
-	public function getRequestMethod(): Contract\RequestMethod
+	#[Pure] public function getRequestMethod(): Contract\RequestMethod
 	{
 		return $this->method;
 	}
 
-	public function withoutBody(): self
+	#[Pure] public function getMethod(): string
 	{
-		// TODO: Implement withoutBody() method.
+		return $this->method->getValue();
 	}
 
-	public function withProtocolVersion($version): self
+	#[Pure] public function getHeaderMap(): Contract\RequestHeaderMap
 	{
-		// TODO: Implement withProtocolVersion() method.
+		return $this->headers->asRequestHeaders();
 	}
 
-	public function withHeader($name, $value): self
+	#[Pure] public function getRequestTarget(): string
 	{
-		// TODO: Implement withHeader() method.
+		return (string)$this->url;
 	}
 
-	public function withAddedHeader($name, $value): self
+	public function withoutBody(): static
 	{
-		// TODO: Implement withAddedHeader() method.
+		return new static($this->protocolVersion, clone $this->method, clone $this->url, new EmptyStream(), (clone $this->headers)->asRequestHeaders());
 	}
 
-	public function withoutHeader($name): self
+	public function withProtocolVersion($version): static
 	{
-		// TODO: Implement withoutHeader() method.
+		return new static($version, clone $this->method, clone $this->url, clone $this->body, (clone $this->headers)->asRequestHeaders());
 	}
 
-	public function withBody(StreamInterface $body): self
+	public function withHeader($name, $value): static
 	{
-		// TODO: Implement withBody() method.
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withHeaderName($headerName, $value);
 	}
 
-	public function withAddedHeaderName(HeaderName $name, array|string $value): self
+	public function withAddedHeader($name, $value): static
 	{
-		// TODO: Implement withAddedHeaderName() method.
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withHeaderName($headerName, $value);
 	}
 
-	public function withoutHeaderName(HeaderName $name): self
+	public function withoutHeader($name): static
 	{
-		// TODO: Implement withoutHeaderName() method.
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withoutHeaderName($headerName);
 	}
 
-	public function withRequestMethod(RequestMethod $method): self
+	public function withBody(StreamInterface $body): static
 	{
-		// TODO: Implement withRequestMethod() method.
+		return new static($this->protocolVersion, clone $this->method, clone $this->url, $body, (clone $this->headers)->asRequestHeaders());
 	}
 
-	public function getRequestTarget(): string
+	public function withHeaderName(Contract\HeaderName $name, array|string $value): static
 	{
-		// TODO: Implement getRequestTarget() method.
+		$headers = (clone $this->headers)->asRequestHeaders();
+		$headers->put($name, $value);
+
+		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
 	}
 
-	public function withRequestTarget($requestTarget): self
+	public function withAddedHeaderName(Contract\HeaderName $name, array|string $value): static
 	{
-		// TODO: Implement withRequestTarget() method.
+		$headers = (clone $this->headers)->asRequestHeaders();
+
+		if ($headers->has($name)) {
+			/** @var ArrayList<string> $values */
+			$values = $headers->get($name);
+			if (is_array($value)) {
+				$values->addAll($value);
+			} else {
+				$values->add($value);
+			}
+		} else {
+			$values = new ArrayList([$value]);
+		}
+
+		/** @var iterable<string> $values */
+		$headers->put($name, $values);
+
+		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
 	}
 
-	public function getMethod(): string
+	public function withoutHeaderName(Contract\HeaderName $name): static
 	{
-		// TODO: Implement getMethod() method.
+		$headers = (clone $this->headers)->asRequestHeaders();
+
+		if ($headers->has($name)) {
+			$headers->remove($name);
+		}
+
+		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
 	}
 
-	public function withMethod($method): self
+	public function withRequestMethod(Contract\RequestMethod $method): static
 	{
-		// TODO: Implement withMethod() method.
+		return new static($this->protocolVersion, $method, clone $this->url, clone $this->body, (clone $this->headers)->asRequestHeaders());
 	}
 
-	public function withUri(UriInterface $uri, $preserveHost = false): self
+	public function withRequestTarget($requestTarget): static
 	{
-		// TODO: Implement withUri() method.
+		if (!is_string($requestTarget)) {
+			throw new InvalidArgumentException("Request target must be a string.");
+		}
+
+		$uri = Url::fromString($requestTarget);
+
+		return $this->withUri($uri);
 	}
 
-	public function getHeaderMap(): Contract\RequestHeaderMap
+	public function withMethod($method): static
 	{
-		// TODO: Implement getHeaderMap() method.
+		if (empty($method)) {
+			throw new InvalidArgumentException('Method cannot be empty.');
+		}
+
+		/**
+		 * @var Contract\RequestMethod|null $requestMethod
+		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
+		 */
+		$requestMethod = RequestMethod::tryFrom($method);
+		if ($requestMethod === null) {
+			$requestMethod = new CustomRequestMethod($method);
+		}
+
+		return $this->withRequestMethod($requestMethod);
+	}
+
+	public function withUri(UriInterface $uri, $preserveHost = false): static
+	{
+		$headers = (clone $this->headers)->asRequestHeaders();
+		if ($preserveHost) {
+			$updateHostHeader = false;
+			if ($headers->has(HeaderName::Host)) {
+				$hostHeader = $headers->get(HeaderName::Host);
+				if ($hostHeader->isEmpty()) {
+					$updateHostHeader = true;
+				}
+			} else {
+				$updateHostHeader = true;
+			}
+
+			if ($updateHostHeader && !empty($uri->getHost())) {
+				$headers->put(HeaderName::Host, $uri->getHost());
+			}
+		}
+
+		return new static($this->protocolVersion, clone $this->method, $uri, clone $this->body, $headers);
 	}
 }

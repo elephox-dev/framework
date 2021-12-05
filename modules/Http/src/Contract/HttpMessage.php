@@ -10,11 +10,11 @@ interface HttpMessage extends MessageInterface
 {
 	public function getHeaderMap(): ReadonlyHeaderMap;
 
-	public function withoutBody(): self;
+	public function withoutBody(): static;
 
 	public function getProtocolVersion(): string;
 
-	public function withProtocolVersion($version): self;
+	public function withProtocolVersion($version): static;
 
 	public function getHeaders(): array;
 
@@ -24,13 +24,13 @@ interface HttpMessage extends MessageInterface
 
 	public function getHeaderLine($name): string;
 
-	public function withHeader($name, $value): self;
+	public function withHeader($name, $value): static;
 
-	public function withAddedHeader($name, $value): self;
+	public function withAddedHeader($name, $value): static;
 
-	public function withoutHeader($name): self;
+	public function withoutHeader($name): static;
 
 	public function getBody(): StreamInterface;
 
-	public function withBody(StreamInterface $body): self;
+	public function withBody(StreamInterface $body): static;
 }

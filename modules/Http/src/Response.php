@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Support\Contract\JsonConvertible;
+use Elephox\Http\Contract\ResponseCode;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
-use Elephox\Support\MimeType;
 use InvalidArgumentException;
-use JsonException;
-use RuntimeException;
+use Psr\Http\Message\StreamInterface;
 
-class Response implements Contract\Response
+class Response extends AbstractHttpMessage implements Contract\Response
 {
 	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\r\n]+)\r?\n(?<headers>(?:(?:[^:]+):\s*(?:[^\r\n]+)\r?\n)*)\r?\n(?<body>.*)/s';
 
@@ -41,57 +39,18 @@ class Response implements Contract\Response
 			$code = new CustomResponseCode((int)$matches['code'], $trimmedMessage);
 		}
 		$headers = ResponseHeaderMap::fromString($matches['headers']);
-		$body = $matches['body'];
+		$body = new StringStream($matches['body']);
 
-		return new self($body, $code, $headers, $version);
+		return new self($body, $version, $code, $headers);
 	}
 
-	public static function withJson(mixed $json = null, ResponseCode $code = ResponseCode::OK, ?Contract\ResponseHeaderMap $headers = null): Contract\Response
+	public function __construct(StreamInterface $body, string $protocolVersion, private Contract\ResponseCode $code, Contract\ResponseHeaderMap $headers)
 	{
-		try {
-			if ($json instanceof JsonConvertible) {
-				$content = $json->toJson();
-			} else if ($json !== null) {
-				$content = json_encode($json, JSON_THROW_ON_ERROR);
-			} else {
-				$content = null;
-			}
-
-			$headers ??= new ResponseHeaderMap();
-			$headers->put(HeaderName::ContentType, MimeType::Applicationjson->getValue());
-
-			return new Response($content, $code, $headers);
-		} catch (JsonException $e) {
-			throw new InvalidArgumentException("Failed to encode JSON.", 0, $e);
-		}
-	}
-
-	private Contract\ResponseCode $code;
-	private Contract\ResponseHeaderMap $headers;
-
-	public function __construct(private ?string $content, Contract\ResponseCode $code = ResponseCode::OK, null|Contract\ResponseHeaderMap|array $headers = null, private string $httpVersion = "1.1")
-	{
-		$this->code = $code;
-
-		$this->headers = match (true) {
-			$headers === null => new ResponseHeaderMap(),
-			$headers instanceof Contract\ResponseHeaderMap => $headers,
-			is_array($headers) => ResponseHeaderMap::fromArray($headers),
-		};
+		parent::__construct($protocolVersion, $headers, $body);
 
 		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyRequest())) {
 			throw new InvalidArgumentException("Responses cannot contain headers reserved for requests only.");
 		}
-	}
-
-	public function getHeaderMap(): Contract\ResponseHeaderMap
-	{
-		return $this->headers;
-	}
-
-	public function withResponseCode(Contract\ResponseCode $code): void
-	{
-		$this->code = $code;
 	}
 
 	public function getResponseCode(): Contract\ResponseCode
@@ -99,49 +58,96 @@ class Response implements Contract\Response
 		return $this->code;
 	}
 
-	public function setContent(?string $content, ?MimeTypeContract $mimeType = null): void
-	{
-		$this->content = $content;
-
-		if ($mimeType !== null) {
-			$this->headers->put(HeaderName::ContentType, $mimeType->getValue());
-		}
-	}
-
-	public function getContent(): ?string
-	{
-		return $this->content;
-	}
-
-	public function getHttpVersion(): string
-	{
-		return $this->httpVersion;
-	}
-
 	public function send(): void
 	{
-		if (headers_sent($filename, $line)) {
-			throw new RuntimeException("Headers already sent in $filename:$line");
-		}
+		// TODO: Implement send() method.
+//		if (headers_sent($filename, $line)) {
+//			throw new RuntimeException("Headers already sent in $filename:$line");
+//		}
+//
+//		http_response_code($this->code->getCode());
+//		$headers = $this->getHeaderMap()->asArray();
+//		foreach ($headers as $header => $value) {
+//			if (is_array($value)) {
+//				foreach ($value as $v) {
+//					header("$header: $v", false);
+//				}
+//			} else {
+//				header("$header: $value");
+//			}
+//		}
+//
+//		if (!array_key_exists("X-Powered-By", $headers) && defined("ELEPHOX_VERSION") && ini_get("expose_php")) {
+//			header("X-Powered-By: Elephox/" . ELEPHOX_VERSION . " PHP/" . PHP_VERSION);
+//		}
+//
+//		if (!empty($this->content)) {
+//			echo $this->content;
+//		}
+	}
 
-		http_response_code($this->code->getCode());
-		$headers = $this->getHeaderMap()->asArray();
-		foreach ($headers as $header => $value) {
-			if (is_array($value)) {
-				foreach ($value as $v) {
-					header("$header: $v", false);
-				}
-			} else {
-				header("$header: $value");
-			}
-		}
+	public function getHeaderMap(): Contract\ResponseHeaderMap
+	{
+		// TODO: Implement getHeaderMap() method.
+	}
 
-		if (!array_key_exists("X-Powered-By", $headers) && defined("ELEPHOX_VERSION") && ini_get("expose_php")) {
-			header("X-Powered-By: Elephox/" . ELEPHOX_VERSION . " PHP/" . PHP_VERSION);
-		}
+	public function withoutBody(): static
+	{
+		// TODO: Implement withoutBody() method.
+	}
 
-		if (!empty($this->content)) {
-			echo $this->content;
-		}
+	public function withProtocolVersion($version): static
+	{
+		// TODO: Implement withProtocolVersion() method.
+	}
+
+	public function withHeader($name, $value): static
+	{
+		// TODO: Implement withHeader() method.
+	}
+
+	public function withAddedHeader($name, $value): static
+	{
+		// TODO: Implement withAddedHeader() method.
+	}
+
+	public function withoutHeader($name): static
+	{
+		// TODO: Implement withoutHeader() method.
+	}
+
+	public function withBody(StreamInterface $body): static
+	{
+		// TODO: Implement withBody() method.
+	}
+
+	public function withResponseCode(ResponseCode $code): Contract\Response
+	{
+		// TODO: Implement withResponseCode() method.
+	}
+
+	public function getMimeType(): ?MimeTypeContract
+	{
+		// TODO: Implement getMimeType() method.
+	}
+
+	public function withMimeType(?MimeTypeContract $mimeType): Contract\Response
+	{
+		// TODO: Implement withMimeType() method.
+	}
+
+	public function getStatusCode()
+	{
+		// TODO: Implement getStatusCode() method.
+	}
+
+	public function withStatus($code, $reasonPhrase = '')
+	{
+		// TODO: Implement withStatus() method.
+	}
+
+	public function getReasonPhrase()
+	{
+		// TODO: Implement getReasonPhrase() method.
 	}
 }

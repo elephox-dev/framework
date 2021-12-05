@@ -38,7 +38,7 @@ class ResponseTest extends TestCase
 	{
 		$response = Response::fromString("HTTP/1.1 200 OK\n\n");
 		self::assertEquals(ResponseCode::OK, $response->getResponseCode());
-		self::assertEquals('1.1', $response->getHttpVersion());
+		self::assertEquals('1.1', $response->getProtocolVersion());
 		self::assertEmpty($response->getHeaderMap()->asArray());
 
 		$response->withResponseCode(ResponseCode::NotFound);

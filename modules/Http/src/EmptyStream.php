@@ -4,40 +4,41 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Http\Contract\TypedStreamInterface;
+use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
 final class EmptyStream implements TypedStreamInterface
 {
-	public function __toString(): string
+	#[Pure] public function __toString(): string
 	{
 		return '';
 	}
 
-	public function detach(): mixed
+	#[Pure] public function detach(): mixed
 	{
 		return null;
 	}
 
-	public function close(): void
+	#[Pure] public function close(): void
 	{
 	}
 
-	public function getSize(): ?int
-	{
-		return 0;
-	}
-
-	public function tell(): int
+	#[Pure] public function getSize(): ?int
 	{
 		return 0;
 	}
 
-	public function eof(): bool
+	#[Pure] public function tell(): int
+	{
+		return 0;
+	}
+
+	#[Pure] public function eof(): bool
 	{
 		return true;
 	}
 
-	public function isSeekable(): bool
+	#[Pure] public function isSeekable(): bool
 	{
 		return false;
 	}
@@ -47,11 +48,11 @@ final class EmptyStream implements TypedStreamInterface
 		throw new RuntimeException('Empty stream is not seekable.');
 	}
 
-	public function rewind(): void
+	#[Pure] public function rewind(): void
 	{
 	}
 
-	public function isWritable(): bool
+	#[Pure] public function isWritable(): bool
 	{
 		return false;
 	}
@@ -61,7 +62,7 @@ final class EmptyStream implements TypedStreamInterface
 		throw new RuntimeException('Empty stream is not writable.');
 	}
 
-	public function isReadable(): bool
+	#[Pure] public function isReadable(): bool
 	{
 		return false;
 	}
@@ -71,12 +72,12 @@ final class EmptyStream implements TypedStreamInterface
 		throw new RuntimeException('Empty stream is not readable.');
 	}
 
-	public function getContents(): string
+	#[Pure] public function getContents(): string
 	{
 		return '';
 	}
 
-	public function getMetadata($key = null): mixed
+	#[Pure] public function getMetadata($key = null): mixed
 	{
 		return null;
 	}

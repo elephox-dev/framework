@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\ReadonlyMap;
 use SplObjectStorage;
 use Traversable;
 
@@ -260,5 +261,15 @@ class ObjectMap implements Contract\GenericMap
 
 			yield $key => $value;
 		}
+	}
+
+	public function asReadonly(): ReadonlyMap
+	{
+		return $this;
+	}
+
+	public function remove(mixed $key): void
+	{
+		$this->map->offsetUnset($key);
 	}
 }
