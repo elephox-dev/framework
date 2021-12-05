@@ -106,13 +106,10 @@ class ArrayList implements GenericList, ArrayAccess
 
 	public function set(int $index, mixed $value): void
 	{
-		if ($index > count($this->list)) {
+		if (!isset($this->list[$index])) {
 			throw new InvalidArgumentException("Index is outside of list.");
 		}
 
-		/**
-		 * @psalm-suppress PropertyTypeCoercion
-		 */
 		$this->list[$index] = $value;
 	}
 
