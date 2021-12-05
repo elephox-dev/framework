@@ -15,14 +15,12 @@ class Cookie implements Contract\Cookie
 
 	/**
 	 * @param string $cookies
-	 * @return ArrayList<\Elephox\Http\Contract\Cookie>
+	 * @return ArrayList<Contract\Cookie>
 	 */
 	public static function fromRequestString(string $cookies): ArrayList
 	{
 		return ArrayList::fromArray(mb_split(';', $cookies))
-			->map(static function (mixed $cookie): Contract\Cookie {
-				/** @var string $cookie */
-
+			->map(static function (string $cookie): Contract\Cookie {
 				[$name, $value] = explode('=', $cookie, 2);
 
 				/** @var Contract\Cookie */
@@ -38,8 +36,6 @@ class Cookie implements Contract\Cookie
 	{
 		/** @var array<string> $split */
 		$split = mb_split(';', $cookieString);
-
-		/** @var ArrayList<string> $propertyList */
 		$propertyList = ArrayList::fromArray($split);
 		$nameValuePair = $propertyList->shift();
 		[$name, $value] = explode('=', $nameValuePair, 2);
@@ -88,10 +84,6 @@ class Cookie implements Contract\Cookie
 		}
 
 		if ($propertyMap->has('samesite')) {
-			/**
-			 * @var \Elephox\Http\CookieSameSite $sameSite
-			 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-			 */
 			$sameSite = CookieSameSite::from($propertyMap->get('samesite'));
 
 			$cookie->setSameSite($sameSite);

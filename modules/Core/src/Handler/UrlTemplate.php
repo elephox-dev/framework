@@ -5,6 +5,7 @@ namespace Elephox\Core\Handler;
 
 use Elephox\Http\Contract;
 use Elephox\Http\Url;
+use Psr\Http\Message\UriInterface;
 
 class UrlTemplate
 {
@@ -33,14 +34,14 @@ class UrlTemplate
 		return Url::fromString($source);
 	}
 
-	public function matches(Contract\Url $url): bool
+	public function matches(UriInterface $url): bool
 	{
 		$source = $this->getSanitizedSource();
 
 		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 
-	public function getValues(Contract\Url $url): array
+	public function getValues(UriInterface $url): array
 	{
 		$source = $this->getSanitizedSource();
 

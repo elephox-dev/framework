@@ -61,10 +61,6 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		/** @var non-empty-string $method */
 		$method = $_SERVER["REQUEST_METHOD"];
 
-		/**
-		 * @var Contract\RequestMethod|null $requestMethod
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
 		$requestMethod = RequestMethod::tryFrom($method);
 		if ($requestMethod === null) {
 			$requestMethod = new CustomRequestMethod($method);
@@ -121,7 +117,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		return $this->method->getValue();
 	}
 
-	#[Pure] public function getHeaderMap(): Contract\RequestHeaderMap
+	public function getHeaderMap(): Contract\RequestHeaderMap
 	{
 		return $this->headers->asRequestHeaders();
 	}
@@ -230,10 +226,6 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			throw new InvalidArgumentException('Method cannot be empty.');
 		}
 
-		/**
-		 * @var Contract\RequestMethod|null $requestMethod
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
 		$requestMethod = RequestMethod::tryFrom($method);
 		if ($requestMethod === null) {
 			$requestMethod = new CustomRequestMethod($method);

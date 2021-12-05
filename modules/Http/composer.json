@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "ext-mbstring": "*",
         "elephox/collection": "dev-main",
         "elephox/support": "dev-main",
         "elephox/text": "dev-main",

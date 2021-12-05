@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\ResponseCode;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
@@ -25,11 +24,7 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		}
 
 		$version = $matches['version'];
-		/**
-		 * @var Contract\ResponseCode|null $code
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
-		$code = ResponseCode::Tryfrom((int)$matches['code']);
+		$code = ResponseCode::tryfrom((int)$matches['code']);
 		if ($code === null) {
 			$trimmedMessage = trim($matches['message']);
 			if (empty($trimmedMessage)) {
@@ -121,7 +116,7 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		// TODO: Implement withBody() method.
 	}
 
-	public function withResponseCode(ResponseCode $code): Contract\Response
+	public function withResponseCode(Contract\ResponseCode $code): Contract\Response
 	{
 		// TODO: Implement withResponseCode() method.
 	}

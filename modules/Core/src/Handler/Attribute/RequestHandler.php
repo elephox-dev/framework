@@ -56,10 +56,6 @@ class RequestHandler extends AbstractHandlerAttribute
 		foreach ($methods as $method_name) {
 			/** @var RequestMethodContract $method */
 			if (!$method_name instanceof RequestMethodContract) {
-				/**
-				 * @var RequestMethod|null $method
-				 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-				 */
 				$method = RequestMethod::tryFrom($method_name);
 
 				if ($method === null) {

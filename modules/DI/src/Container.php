@@ -228,7 +228,6 @@ class Container implements Contract\Container
 		$defaultPropertyValues = $reflectionClass->getDefaultProperties();
 
 		foreach ($classProperties as $classProperty) {
-			$classProperty->setAccessible(true);
 			if (array_key_exists($classProperty->getName(), $properties)) {
 				$classProperty->setValue($instance, $properties[$classProperty->getName()]);
 			} elseif (array_key_exists($classProperty->getName(), $defaultPropertyValues)) {
@@ -301,7 +300,7 @@ class Container implements Contract\Container
 		$usedOverrides = 0;
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
-				$values->addAll(...array_slice($overrides, $usedOverrides));
+				$values->addAll(array_slice($overrides, $usedOverrides));
 				break;
 			}
 

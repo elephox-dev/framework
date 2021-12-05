@@ -12,6 +12,7 @@
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-mysqli": "*",
         "jetbrains/phpstorm-attributes": "^1.0",
         "ricardoboss/php-console-logger": "^1.8",
@@ -19,13 +20,13 @@
         "psr/http-message": "1.0.1"
     },
     "require-dev": {
-        "vimeo/psalm": "^4.12",
+        "vimeo/psalm": "^4.14",
         "phpunit/phpunit": "^9.5",
         "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
         "roave/security-advisories": "dev-latest",
         "elephox/composer-module-sync": "^1.1",
-        "phpbench/phpbench": "dev-gh-950-support-glob-paths",
+        "phpbench/phpbench": "^1.2.1",
         "php-coveralls/php-coveralls": "^2.5"
     },
     "provide": {
@@ -73,11 +74,5 @@
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
         }
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/ricardoboss/phpbench.git"
-        }
-    ]
+    }
 }

@@ -104,8 +104,6 @@ final class ProxyEntity implements Contract\Entity
 				throw new DatabaseException('Property ' . $property->getName() . ' is not initialized and is not optional or generated.');
 			}
 
-			$property->setAccessible(true);
-
 			/** @var mixed */
 			$data[$property->getName()] = $property->getValue($this->entity);
 		}

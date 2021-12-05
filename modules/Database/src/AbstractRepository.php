@@ -120,12 +120,10 @@ abstract class AbstractRepository implements Contract\Repository
 	 */
 	public function findAll(): ArrayList
 	{
-		/** @var ArrayList<array<string, mixed>> $entities */
-		$entities = ArrayList::fromArray($this->storage->all($this->tableName));
-
-		return $entities->map(function (array $entity): Contract\Entity {
-			return $this->container->restore($this->getEntityClass(), $entity);
-		});
+		return ArrayList::fromArray($this->storage->all($this->tableName))
+			->map(function (array $entity): Contract\Entity {
+				return $this->container->restore($this->getEntityClass(), $entity);
+			});
 	}
 
 	public function add(Contract\Entity $entity): void

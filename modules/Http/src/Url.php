@@ -72,16 +72,12 @@ class Url implements Contract\Url
 		return $this->scheme ?? "";
 	}
 
-	#[Pure] public function getUrlScheme(): ?UrlScheme
+	public function getUrlScheme(): ?UrlScheme
 	{
 		if ($this->scheme === null) {
 			return null;
 		}
 
-		/**
-		 * @var UrlScheme|null
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
 		return UrlScheme::tryFrom($this->scheme);
 	}
 
@@ -140,7 +136,7 @@ class Url implements Contract\Url
 		return $this->host ?? "";
 	}
 
-	#[Pure] public function getPort(): ?int
+	public function getPort(): ?int
 	{
 		$default = $this->getUrlScheme()?->getDefaultPort();
 
@@ -206,7 +202,7 @@ class Url implements Contract\Url
 		'query' => "string",
 		'fragment' => "string"
 	])]
-	#[Pure] public function asArray(): array
+	public function asArray(): array
 	{
 		return [
 			'scheme' => $this->getScheme(),

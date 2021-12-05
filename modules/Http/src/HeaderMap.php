@@ -7,7 +7,6 @@ use Elephox\Collection\ObjectMap;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @extends ObjectMap<Contract\HeaderName, ArrayList<string>>
@@ -24,10 +23,6 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			throw new InvalidArgumentException('Header name cannot be empty');
 		}
 
-		/**
-		 * @var Contract\HeaderName|null $headerName
-		 * @psalm-suppress UndefinedMethod Until vimeo/psalm#6429 is fixed.
-		 */
 		$headerName = HeaderName::tryFrom($name);
 		if ($headerName === null) {
 			$headerName = new CustomHeaderName($name);
@@ -137,8 +132,6 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 
 		foreach ($this as $key => $value) {
 			$headerName = $key->getValue();
-
-			/** @var list<string> $headerValue */
 			$headerValue = $value->asArray();
 
 			$headers[$headerName] = $headerValue;
@@ -147,12 +140,12 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headers;
 	}
 
-	#[Pure] public function asRequestHeaders(): RequestHeaderMap
+	public function asRequestHeaders(): RequestHeaderMap
 	{
 		return RequestHeaderMap::fromArray($this);
 	}
 
-	#[Pure] public function asResponseHeaders(): ResponseHeaderMap
+	public function asResponseHeaders(): ResponseHeaderMap
 	{
 		return ResponseHeaderMap::fromArray($this);
 	}

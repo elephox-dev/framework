@@ -7,7 +7,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
-use JetBrains\PhpStorm\Deprecated;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
@@ -106,6 +106,13 @@ class ArrayList implements GenericList, ArrayAccess
 
 	public function set(int $index, mixed $value): void
 	{
+		if ($index > count($this->list)) {
+			throw new InvalidArgumentException("Index is outside of list.");
+		}
+
+		/**
+		 * @psalm-suppress PropertyTypeCoercion
+		 */
 		$this->list[$index] = $value;
 	}
 
