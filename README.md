@@ -95,8 +95,5 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 <!-- end annotations -->
 
-- [phpbench/phpbench](https://github.com/phpbench/phpbench)
-  - [#951](https://github.com/phpbench/phpbench/pull/951)
-
 - [php-coveralls/php-coveralls](https://github.com/php-coveralls/php-coveralls)
   - [#327](https://github.com/php-coveralls/php-coveralls/issues/327)
