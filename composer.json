@@ -74,5 +74,13 @@
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
         }
+    },
+    "scripts": {
+        "update-readme": "@php bin/update-readme-annotations.php",
+        "check-dependencies": "composer modules:check",
+        "unit-test": "vendor/bin/phpunit",
+        "static-analysis": "vendor/bin/psalm --no-cache",
+        "mutation-test": "vendor/bin/infection --show-mutations --threads=$(nproc)",
+        "benchmark": "vendor/bin/phpbench run --report=overview"
     }
 }
