@@ -69,30 +69,29 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Core/src/Handler/Attribute/ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core/src/Handler/Attribute/ExceptionHandler.php)
   - [ ] do something else with this
-- [ ] [Http/src/Request.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Request.php)
+- [ ] [Http/src/Response.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Response.php)
+  - [ ] Implement send() method.
+  - [ ] Implement getHeaderMap() method.
   - [ ] Implement withoutBody() method.
   - [ ] Implement withProtocolVersion() method.
   - [ ] Implement withHeader() method.
   - [ ] Implement withAddedHeader() method.
   - [ ] Implement withoutHeader() method.
   - [ ] Implement withBody() method.
-  - [ ] Implement withAddedHeaderName() method.
-  - [ ] Implement withoutHeaderName() method.
-  - [ ] Implement withRequestMethod() method.
-  - [ ] Implement getRequestTarget() method.
-  - [ ] Implement withRequestTarget() method.
-  - [ ] Implement getMethod() method.
-  - [ ] Implement withMethod() method.
-  - [ ] Implement withUri() method.
-  - [ ] Implement getHeaderMap() method.
+  - [ ] Implement withResponseCode() method.
+  - [ ] Implement getMimeType() method.
+  - [ ] Implement withMimeType() method.
+  - [ ] Implement getStatusCode() method.
+  - [ ] Implement withStatus() method.
+  - [ ] Implement getReasonPhrase() method.
 
 
 ### 🚧 Open issues from other repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
-  - [#6429](https://github.com/vimeo/psalm/issues/6429)
   - [#6964](https://github.com/vimeo/psalm/issues/6964)
+  - [#7062](https://github.com/vimeo/psalm/issues/7062)
 
 <!-- end annotations -->
 
