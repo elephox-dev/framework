@@ -76,11 +76,53 @@
         }
     },
     "scripts": {
-        "update-readme": "@php bin/update-readme-annotations.php",
-        "check-dependencies": "composer modules:check",
-        "unit-test": "vendor/bin/phpunit",
-        "static-analysis": "vendor/bin/psalm --no-cache",
-        "mutation-test": "vendor/bin/infection --show-mutations --threads=$(nproc)",
-        "benchmark": "vendor/bin/phpbench run --report=overview"
+        "env:debug-coverage": "@putenv XDEBUG_MODE=coverage",
+        "env:debug-off": "@putenv XDEBUG_MODE=off",
+
+        "update-readme": [
+            "@composer env:debug-off",
+            "@php bin/update-readme-annotations.php"
+        ],
+        "check-dependencies": [
+            "@composer env:debug-off",
+            "@composer modules:check"
+        ],
+        "unit-test": [
+            "@composer env:debug-coverage",
+            "phpunit --configuration=phpunit.xml.dist"
+        ],
+        "static-analysis": [
+            "@composer env:debug-off",
+            "psalm"
+        ],
+        "mutation-test": [
+            "@composer env:debug-coverage",
+            "infection --show-mutations"
+        ],
+        "benchmark": [
+            "@composer env:debug-off",
+            "phpbench run --report=overview --retry-threshold=5"
+        ],
+
+        "ci:unit-test": [
+            "@composer env:debug-coverage",
+            "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
+        ],
+        "ci:static-analysis": [
+            "@composer env:debug-off",
+            "psalm --shepherd --no-cache --output-format=github --long-progress"
+        ],
+        "ci:mutation-test": [
+            "@composer env:debug-coverage",
+            "infection --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
+        ],
+        "ci:benchmark": [
+            "@composer env:debug-off",
+            "phpbench run --report=overview --retry-threshold=5"
+        ],
+        "ci:publish-coverage": [
+            "@composer env:debug-off",
+            "php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
+        ]
     }
 }

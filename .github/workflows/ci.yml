@@ -23,7 +23,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: elephox/composer-module-sync
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
       - name: ↔️ Check module requirements
@@ -63,7 +62,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: 🔎 Run Psalm
-        run: vendor/bin/psalm --shepherd
+        run: composer run ci:static-analysis
 
   benchmark:
     name: 👟 Benchmark
@@ -89,7 +88,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: 👟 Run PHPBench
-        run: vendor/bin/phpbench run --store --tag=${{ github.sha }} --report=overview --retry-threshold=5 --output=html
+        run: composer run ci:benchmark
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
@@ -109,7 +108,6 @@ jobs:
         with:
           php-version: '8.1'
           coverage: xdebug
-          ini-values: xdebug.mode=coverage
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -122,7 +120,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit --configuration=phpunit.xml.dist --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html
+        run: composer run ci:unit-tests
       - name: 📤 Upload coverage data
         uses: actions/upload-artifact@v2
         with:
@@ -142,7 +140,6 @@ jobs:
         with:
           php-version: '8.1'
           coverage: xdebug
-          ini-values: xdebug.mode=coverage
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -160,7 +157,7 @@ jobs:
           name: ${{ runner.os }}-8.1-coverage
           path: build/coverage/
       - name: 🧟 Run Infection
-        run: vendor/bin/infection --threads=$(nproc) --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction
+        run: composer run ci:mutation-test
 
   coverage:
     name: 📊 Publish Coverage
@@ -183,4 +180,4 @@ jobs:
       - name: 📊 Publish coverage data to coveralls.io
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: vendor/bin/php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v
+        run: composer run ci:publish-coverage
