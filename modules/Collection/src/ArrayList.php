@@ -130,7 +130,7 @@ class ArrayList implements GenericList, ArrayAccess
 	 */
 	public function add(mixed $value): void
 	{
-		$this->set($this->count(), $value);
+		$this->list[] = $value;
 	}
 
 	/**

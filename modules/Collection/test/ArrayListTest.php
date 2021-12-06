@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -44,21 +45,32 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList();
 
-		self::assertArrayNotHasKey(10, $arr);
-		self::assertArrayNotHasKey(90, $arr);
-		self::assertArrayNotHasKey(17, $arr);
+		self::assertArrayNotHasKey(0, $arr);
+		self::assertArrayNotHasKey(1, $arr);
 
-		$arr->offsetSet(10, "test");
-		$arr->set(90, "test2");
-		$arr[17] = "test2";
+		$arr->offsetSet(null, "test");
+		$arr[null] = "test2";
 
-		self::assertArrayHasKey(10, $arr);
-		self::assertArrayHasKey(90, $arr);
-		self::assertArrayHasKey(17, $arr);
+		self::assertArrayHasKey(0, $arr);
+		self::assertArrayHasKey(1, $arr);
+	}
+
+	public function testOffsetSetInvalidType(): void
+	{
+		$arr = new ArrayList();
 
 		$this->expectException(OffsetNotAllowedException::class);
 
 		$arr->offsetSet("not a number", "test");
+	}
+
+	public function testOffsetSetOutsideOfArray(): void
+	{
+		$arr = new ArrayList();
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$arr->offsetSet(10, "test");
 	}
 
 	public function testOffsetGet(): void
@@ -105,7 +117,7 @@ class ArrayListTest extends TestCase
 
 		self::assertCount(0, $arr);
 
-		$arr->addAll("test", "test2");
+		$arr->addAll(["test", "test2"]);
 
 		self::assertCount(2, $arr);
 		self::assertEquals("test", $arr->get(0));

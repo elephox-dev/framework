@@ -81,39 +81,34 @@ class Url implements Contract\Url
 		return UrlScheme::tryFrom($this->scheme);
 	}
 
-	#[Pure] public function getAuthority(): string
+	public function getAuthority(): string
 	{
-		if ($this->host === null) {
+		$authority = $this->getHost();
+		if (empty($authority)) {
 			return "";
 		}
 
-		$authority = $this->host;
-
-		if ($this->port !== null) {
-			$authority .= ":$this->port";
+		$port = $this->getPort();
+		if ($port !== null) {
+			$authority .= ":$port";
 		}
 
-		if ($this->username !== null) {
-			$userInfo = $this->username;
-
-			if ($this->password !== null) {
-				$userInfo .= ":$this->password";
-			}
-
+		$userInfo = $this->getUserInfo();
+		if (!empty($userInfo)) {
 			$authority = "$userInfo@$authority";
 		}
 
 		return $authority;
 	}
 
-	#[Pure] public function getUsername(): ?string
+	#[Pure] public function getUsername(): string
 	{
-		return $this->username;
+		return $this->username ?? "";
 	}
 
-	#[Pure] public function getPassword(): ?string
+	#[Pure] public function getPassword(): string
 	{
-		return $this->password;
+		return $this->password ?? "";
 	}
 
 	#[Pure] public function getUserInfo(): string

@@ -22,16 +22,18 @@ use stdClass;
  * @covers \Elephox\Support\MimeType
  * @covers \Elephox\Http\CustomResponseCode
  * @covers \Elephox\Http\InvalidResponseCodeMessageException
+ * @covers \Elephox\Http\StringStream
+ * @covers \Elephox\Http\EmptyStream
+ * @covers \Elephox\Http\AbstractHttpMessage
  */
 class ResponseTest extends TestCase
 {
 	public function testConstructor(): void
 	{
-		$response = new Response(nullnull);
+		$response = new Response("1.1", (new HeaderMap())->asResponseHeaders(), new EmptyStream(), ResponseCode::OK);
 		self::assertEquals(200, $response->getResponseCode()->getCode());
 		self::assertEquals('OK', $response->getResponseCode()->getMessage());
 		self::assertEmpty($response->getHeaderMap()->asArray());
-		self::assertNull($response->getContent());
 	}
 
 	public function testFromString(): void
@@ -41,9 +43,9 @@ class ResponseTest extends TestCase
 		self::assertEquals('1.1', $response->getProtocolVersion());
 		self::assertEmpty($response->getHeaderMap()->asArray());
 
-		$response->withResponseCode(ResponseCode::NotFound);
-		$response->setContent('<h1>404 Not Found</h1>', MimeType::Texthtml);
-		self::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
+		$responseNotFound = $response->withResponseCode(ResponseCode::NotFound);
+
+		self::assertEquals(ResponseCode::NotFound, $responseNotFound->getResponseCode());
 	}
 
 	public function testFromStringInvalidFormat(): void
@@ -51,50 +53,6 @@ class ResponseTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 
 		Response::fromString("No HTTP Message");
-	}
-
-	public function testWithJson(): void
-	{
-		$response = Response::withJson([
-			'foo' => 'bar',
-			'baz' => 'qux',
-		]);
-
-		self::assertEquals(ResponseCode::OK, $response->getResponseCode());
-		self::assertEquals('{"foo":"bar","baz":"qux"}', $response->getContent());
-		self::assertEquals([MimeType::Applicationjson->getValue()], $response->getHeaderMap()->get(HeaderName::ContentType));
-	}
-
-	public function testWithInvalidJson(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$a = new stdClass();
-		$b = new stdClass();
-		$a->b = $b;
-		$b->a = $a;
-
-		Response::withJson($a);
-	}
-
-	public function testWithJsonConvertibleContent(): void
-	{
-		$map = new ArrayMap([
-			'foo' => 'bar',
-			'baz' => 'qux',
-		]);
-		$response = Response::withJson($map);
-
-		self::assertEquals(200, $response->getResponseCode()->getCode());
-		self::assertEquals('{"foo":"bar","baz":"qux"}', $response->getContent());
-	}
-
-	public function testWithJsonNull(): void
-	{
-		$response = Response::withJson();
-
-		self::assertEquals("OK", $response->getResponseCode()->getMessage());
-		self::assertEquals(null, $response->getContent());
 	}
 
 	public function testCustomResponseCode(): void
@@ -116,20 +74,5 @@ class ResponseTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 
 		Response::fromString("HTTP/1.1  test\n\n");
-	}
-
-	public function testMimeTypeGetsSet(): void
-	{
-		$response = Response::fromString("HTTP/1.1 200 OK\n\n");
-		self::assertFalse($response->getHeaderMap()->has(HeaderName::ContentType));
-		$response->setContent('<h1>404 Not Found</h1>', MimeType::Texthtml);
-		self::assertEquals([MimeType::Texthtml->getValue()], $response->getHeaderMap()->get(HeaderName::ContentType));
-	}
-
-	public function testResponseCannotContainRequestOnlyHeaders(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		new Response(protocolVersion: ['Host' => 'foo'], headers: ['Host' => 'foo'], body: null);
 	}
 }

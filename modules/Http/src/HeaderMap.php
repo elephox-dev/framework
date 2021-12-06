@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use ArrayAccess;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\OffsetNotFoundException;
@@ -39,18 +40,23 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		 * @var mixed $value
 		 */
 		foreach ($headers as $name => $value) {
-			if (!is_string($name)) {
-				throw new InvalidHeaderNameTypeException($name);
+			if ($name instanceof Contract\HeaderName) {
+				$headerName = $name;
+			} else {
+				if (!is_string($name)) {
+					throw new InvalidHeaderNameTypeException($name);
+				}
+
+				if (empty($name)) {
+					throw new InvalidHeaderNameException($name);
+				}
+
+				$headerName = self::parseHeaderName($name);
 			}
 
-			if (empty($name)) {
-				throw new InvalidHeaderNameException($name);
-			}
-
-			$headerName = self::parseHeaderName($name);
 			if (is_string($value)) {
 				$values = ArrayList::fromValue($value);
-			} else if (is_array($value)) {
+			} else if (is_iterable($value)) {
 				$values = ArrayList::fromArray($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
@@ -91,7 +97,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		if (!is_array($value)) {
+		if (!is_iterable($value)) {
 			if (!is_string($value)) {
 				throw new InvalidHeaderTypeException($value);
 			}

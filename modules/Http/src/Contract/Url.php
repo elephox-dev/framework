@@ -18,9 +18,9 @@ interface Url extends Stringable, ArrayConvertible, UriInterface
 
 	public function getUserInfo(): string;
 
-	public function getUsername(): ?string;
+	public function getUsername(): string;
 
-	public function getPassword(): ?string;
+	public function getPassword(): string;
 
 	public function getHost(): string;
 

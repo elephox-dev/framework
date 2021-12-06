@@ -25,7 +25,7 @@ interface ReadonlyHeaderMap extends ReadonlyMap, ArrayConvertible
 	 *
 	 * @return ReadonlyList<string>
 	 */
-	public function get(mixed $key): ReadonlyList;
+	public function get(mixed $key): mixed;
 
 	public function asRequestHeaders(): RequestHeaderMap;
 

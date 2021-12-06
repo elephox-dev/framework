@@ -34,25 +34,25 @@ class ResponseHeaderMapTest extends TestCase
 			'Content-Type' => ['text/html'],
 		]);
 
-		self::assertEquals(['localhost'], $map->get(HeaderName::Host));
-		self::assertEquals(['custom'], $map->get('x-custom'));
+		self::assertEquals(['localhost'], $map->get(HeaderName::Host)->asArray());
+		self::assertEquals(['custom'], $map->get('x-custom')->asArray());
 		self::assertEquals([
 			'value',
 			'value2',
-		], $map->get(HeaderName::SetCookie));
+		], $map->get(HeaderName::SetCookie)->asArray());
 
 		$map->put('Set-Cookie', 'test');
 
-		self::assertEquals(['test'], $map->get(HeaderName::SetCookie));
+		self::assertEquals(['test'], $map->get(HeaderName::SetCookie)->asArray());
 	}
 
 	public function testFromString(): void
 	{
 		$map = ResponseHeaderMap::fromString("Host: localhost\r\nContent-Type:  text/html \r\nX-Custom: test:value\r\n\r\n");
 
-		self::assertEquals(['localhost'], $map->get(HeaderName::Host));
-		self::assertEquals(['text/html'], $map->get(HeaderName::ContentType));
-		self::assertEquals(['test:value'], $map->get("X-Custom"));
+		self::assertEquals(['localhost'], $map->get(HeaderName::Host)->asArray());
+		self::assertEquals(['text/html'], $map->get(HeaderName::ContentType)->asArray());
+		self::assertEquals(['test:value'], $map->get("X-Custom")->asArray());
 	}
 
 	public function testInvalidHeaderRow(): void
