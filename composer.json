@@ -131,7 +131,7 @@
         ],
         "ci:publish-coverage": [
             "@putenv XDEBUG_MODE=off",
-            "php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
+            "vendor/bin/php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
         ]
     }
 }
