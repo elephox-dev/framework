@@ -18,5 +18,11 @@ interface Response extends HttpMessage, ResponseInterface
 
 	public function withMimeType(?MimeTypeContract $mimeType): self;
 
+	public function withStatus($code, $reasonPhrase = ''): self;
+
+	public function getStatusCode(): int;
+
+	public function getReasonPhrase(): string;
+
 	public function send(): void;
 }

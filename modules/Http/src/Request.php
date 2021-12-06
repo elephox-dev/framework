@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\OffsetNotFoundException;
-use Elephox\Collection\ArrayList;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
@@ -86,11 +85,16 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			$body = new EmptyStream();
 		}
 
-		return new self($version, $requestMethod, $parsedUri, $body, $headerMap);
+		return new self($version, $headerMap, $body, $requestMethod, $parsedUri);
 	}
 
-	final private function __construct(string $protocolVersion, private Contract\RequestMethod $method, private UriInterface $url, StreamInterface $body, Contract\RequestHeaderMap $headers)
-	{
+	final public function __construct(
+		string $protocolVersion,
+		Contract\RequestHeaderMap $headers,
+		StreamInterface $body,
+		private Contract\RequestMethod $method,
+		private UriInterface $url
+	) {
 		parent::__construct($protocolVersion, $headers, $body);
 
 		if (!$this->method->canHaveBody() && $body->getSize() > 0) {
@@ -129,12 +133,12 @@ class Request extends AbstractHttpMessage implements Contract\Request
 
 	public function withoutBody(): static
 	{
-		return new static($this->protocolVersion, clone $this->method, clone $this->url, new EmptyStream(), (clone $this->headers)->asRequestHeaders());
+		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), new EmptyStream(), clone $this->method, clone $this->url);
 	}
 
 	public function withProtocolVersion($version): static
 	{
-		return new static($version, clone $this->method, clone $this->url, clone $this->body, (clone $this->headers)->asRequestHeaders());
+		return new static($version, (clone $this->headers)->asRequestHeaders(), clone $this->body, clone $this->method, clone $this->url);
 	}
 
 	public function withHeader($name, $value): static
@@ -158,55 +162,19 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		return $this->withoutHeaderName($headerName);
 	}
 
+	public function withHeaderMap(Contract\HeaderMap $map): static
+	{
+		return new static($this->protocolVersion, $map->asRequestHeaders(), clone $this->body, clone $this->method, clone $this->url);
+	}
+
 	public function withBody(StreamInterface $body): static
 	{
-		return new static($this->protocolVersion, clone $this->method, clone $this->url, $body, (clone $this->headers)->asRequestHeaders());
-	}
-
-	public function withHeaderName(Contract\HeaderName $name, array|string $value): static
-	{
-		$headers = (clone $this->headers)->asRequestHeaders();
-		$headers->put($name, $value);
-
-		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
-	}
-
-	public function withAddedHeaderName(Contract\HeaderName $name, array|string $value): static
-	{
-		$headers = (clone $this->headers)->asRequestHeaders();
-
-		if ($headers->has($name)) {
-			/** @var ArrayList<string> $values */
-			$values = $headers->get($name);
-			if (is_array($value)) {
-				$values->addAll($value);
-			} else {
-				$values->add($value);
-			}
-		} else {
-			$values = new ArrayList([$value]);
-		}
-
-		/** @var iterable<string> $values */
-		$headers->put($name, $values);
-
-		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
-	}
-
-	public function withoutHeaderName(Contract\HeaderName $name): static
-	{
-		$headers = (clone $this->headers)->asRequestHeaders();
-
-		if ($headers->has($name)) {
-			$headers->remove($name);
-		}
-
-		return new static($this->protocolVersion, clone $this->method, clone $this->url, clone $this->body, $headers);
+		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), $body, clone $this->method, clone $this->url);
 	}
 
 	public function withRequestMethod(Contract\RequestMethod $method): static
 	{
-		return new static($this->protocolVersion, $method, clone $this->url, clone $this->body, (clone $this->headers)->asRequestHeaders());
+		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), clone $this->body, $method, clone $this->url);
 	}
 
 	public function withRequestTarget($requestTarget): static
@@ -253,6 +221,6 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			}
 		}
 
-		return new static($this->protocolVersion, clone $this->method, $uri, clone $this->body, $headers);
+		return new static($this->protocolVersion, $headers, clone $this->body, clone $this->method, $uri);
 	}
 }

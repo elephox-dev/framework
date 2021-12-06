@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use Elephox\Support\MimeType;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 
@@ -36,11 +37,15 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		$headers = ResponseHeaderMap::fromString($matches['headers']);
 		$body = new StringStream($matches['body']);
 
-		return new self($body, $version, $code, $headers);
+		return new self($version, $headers, $body, $code);
 	}
 
-	public function __construct(StreamInterface $body, string $protocolVersion, private Contract\ResponseCode $code, Contract\ResponseHeaderMap $headers)
-	{
+	final public function __construct(
+		string $protocolVersion,
+		Contract\ResponseHeaderMap $headers,
+		StreamInterface $body,
+		private Contract\ResponseCode $code
+	) {
 		parent::__construct($protocolVersion, $headers, $body);
 
 		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyRequest())) {
@@ -51,6 +56,104 @@ class Response extends AbstractHttpMessage implements Contract\Response
 	public function getResponseCode(): Contract\ResponseCode
 	{
 		return $this->code;
+	}
+
+	public function getHeaderMap(): Contract\ResponseHeaderMap
+	{
+		return $this->headers->asResponseHeaders();
+	}
+
+	public function withoutBody(): static
+	{
+		return new static($this->protocolVersion, (clone $this->headers)->asResponseHeaders(), new EmptyStream(), clone $this->code);
+	}
+
+	public function withProtocolVersion($version): static
+	{
+		return new static($version, (clone $this->headers)->asResponseHeaders(), clone $this->body, clone $this->code);
+	}
+
+	public function withHeader($name, $value): static
+	{
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withHeaderName($headerName, $value);
+	}
+
+	public function withAddedHeader($name, $value): static
+	{
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withHeaderName($headerName, $value);
+	}
+
+	public function withoutHeader($name): static
+	{
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->withoutHeaderName($headerName);
+	}
+
+	public function withBody(StreamInterface $body): static
+	{
+		return new static($this->protocolVersion, (clone $this->headers)->asResponseHeaders(), $body, clone $this->code);
+	}
+
+	public function withResponseCode(Contract\ResponseCode $code): static
+	{
+		return new static($this->protocolVersion, (clone $this->headers)->asResponseHeaders(), clone $this->body, $code);
+	}
+
+	public function getStatusCode(): int
+	{
+		return $this->code->getCode();
+	}
+
+	public function getReasonPhrase(): string
+	{
+		return $this->code->getMessage();
+	}
+
+	public function withStatus($code, $reasonPhrase = ''): static
+	{
+		$responseCode = ResponseCode::tryfrom($code);
+		if ($responseCode === null) {
+			if (empty($reasonPhrase)) {
+				throw new InvalidArgumentException("Reason phrase cannot be empty for custom response codes.");
+			}
+
+			$responseCode = new CustomResponseCode($code, $reasonPhrase);
+		}
+
+		return $this->withResponseCode($responseCode);
+	}
+
+	public function getMimeType(): ?MimeTypeContract
+	{
+		if (!$this->headers->has(HeaderName::ContentType)) {
+			return null;
+		}
+
+		$value = $this->headers->get(HeaderName::ContentType)->first();
+		if ($value === null) {
+			return null;
+		}
+
+		return MimeType::tryfrom($value);
+	}
+
+	public function withMimeType(?MimeTypeContract $mimeType): static
+	{
+		if ($mimeType === null) {
+			return $this->withoutHeaderName(HeaderName::ContentType);
+		}
+
+		return $this->withHeaderName(HeaderName::ContentType, $mimeType->getValue());
+	}
+
+	public function withHeaderMap(Contract\HeaderMap $map): static
+	{
+		return new static($this->protocolVersion, $map->asResponseHeaders(), clone $this->body, clone $this->code);
 	}
 
 	public function send(): void
@@ -79,70 +182,5 @@ class Response extends AbstractHttpMessage implements Contract\Response
 //		if (!empty($this->content)) {
 //			echo $this->content;
 //		}
-	}
-
-	public function getHeaderMap(): Contract\ResponseHeaderMap
-	{
-		// TODO: Implement getHeaderMap() method.
-	}
-
-	public function withoutBody(): static
-	{
-		// TODO: Implement withoutBody() method.
-	}
-
-	public function withProtocolVersion($version): static
-	{
-		// TODO: Implement withProtocolVersion() method.
-	}
-
-	public function withHeader($name, $value): static
-	{
-		// TODO: Implement withHeader() method.
-	}
-
-	public function withAddedHeader($name, $value): static
-	{
-		// TODO: Implement withAddedHeader() method.
-	}
-
-	public function withoutHeader($name): static
-	{
-		// TODO: Implement withoutHeader() method.
-	}
-
-	public function withBody(StreamInterface $body): static
-	{
-		// TODO: Implement withBody() method.
-	}
-
-	public function withResponseCode(Contract\ResponseCode $code): Contract\Response
-	{
-		// TODO: Implement withResponseCode() method.
-	}
-
-	public function getMimeType(): ?MimeTypeContract
-	{
-		// TODO: Implement getMimeType() method.
-	}
-
-	public function withMimeType(?MimeTypeContract $mimeType): Contract\Response
-	{
-		// TODO: Implement withMimeType() method.
-	}
-
-	public function getStatusCode()
-	{
-		// TODO: Implement getStatusCode() method.
-	}
-
-	public function withStatus($code, $reasonPhrase = '')
-	{
-		// TODO: Implement withStatus() method.
-	}
-
-	public function getReasonPhrase()
-	{
-		// TODO: Implement getReasonPhrase() method.
 	}
 }

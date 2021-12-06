@@ -27,7 +27,7 @@ class ResponseTest extends TestCase
 {
 	public function testConstructor(): void
 	{
-		$response = new Response(null);
+		$response = new Response(nullnull);
 		self::assertEquals(200, $response->getResponseCode()->getCode());
 		self::assertEquals('OK', $response->getResponseCode()->getMessage());
 		self::assertEmpty($response->getHeaderMap()->asArray());
@@ -130,6 +130,6 @@ class ResponseTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Response(null, headers: ['Host' => 'foo']);
+		new Response(protocolVersion: ['Host' => 'foo'], headers: ['Host' => 'foo'], body: null);
 	}
 }

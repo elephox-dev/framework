@@ -30,7 +30,25 @@ interface HttpMessage extends MessageInterface
 
 	public function withoutHeader($name): static;
 
+	/**
+	 * @param HeaderName $name
+	 * @param string|array<string> $value
+	 * @return static
+	 */
+	public function withHeaderName(HeaderName $name, string|array $value): static;
+
+	/**
+	 * @param HeaderName $name
+	 * @param string|array<string> $value
+	 * @return static
+	 */
+	public function withAddedHeaderName(HeaderName $name, string|array $value): static;
+
+	public function withoutHeaderName(HeaderName $name): static;
+
 	public function getBody(): StreamInterface;
 
 	public function withBody(StreamInterface $body): static;
+
+	public function withHeaderMap(HeaderMap $map): static;
 }

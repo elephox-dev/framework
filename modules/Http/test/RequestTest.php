@@ -27,7 +27,7 @@ class RequestTest extends TestCase
 {
 	public function testConstructorStrings(): void
 	{
-		$request = new Request("GET", "/test");
+		$request = new Request("/test""GET", "/test");
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -36,7 +36,7 @@ class RequestTest extends TestCase
 
 	public function testConstructorMethodObject(): void
 	{
-		$request = new Request(RequestMethod::POST, "/test");
+		$request = new Request("/test"RequestMethod::POST, "/test");
 
 		self::assertEquals(RequestMethod::POST, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -45,7 +45,7 @@ class RequestTest extends TestCase
 
 	public function testConstructorUrlObject(): void
 	{
-		$request = new Request("DELETE", Url::fromString("/test"));
+		$request = new Request(Url::fromString("/test")"DELETE", Url::fromString("/test"));
 
 		self::assertEquals(RequestMethod::DELETE, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -57,7 +57,7 @@ class RequestTest extends TestCase
 		$headers = new HeaderMap();
 		$headers->put(HeaderName::Host, ["test"]);
 
-		$request = new Request("GET", "/test", $headers);
+		$request = new Request("GET", "/test", $headers, "/test", $headers);
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -131,26 +131,26 @@ class RequestTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Request(RequestMethod::GET, "/", body: "test");
+		new Request(RequestMethod::GET, "/", body: "test", method: "/", url: "test");
 	}
 
 	public function testGetJson(): void
 	{
-		$request = new Request("POST", "/", body: '{"test": "test"}');
+		$request = new Request("POST", "/", body: '{"test": "test"}', method: "/", url: '{"test": "test"}');
 
 		self::assertEquals(["test" => "test"], $request->getJson());
 	}
 
 	public function testGetJsonEmptyBody(): void
 	{
-		$request = new Request("POST", "/");
+		$request = new Request("/""POST", "/");
 
 		self::assertEquals([], $request->getJson());
 	}
 
 	public function testGetJsonWithContentTypeHeader(): void
 	{
-		$request = new Request("POST", "/", ['Content-Type' => "application/json"], '{"test": "test"}');
+		$request = new Request("POST", "/", '{"test": "test"}', "/", ['Content-Type' => "application/json"]);
 
 		self::assertEquals(["test" => "test"], $request->getJson());
 	}
@@ -159,7 +159,7 @@ class RequestTest extends TestCase
 	{
 		$this->expectException(LogicException::class);
 
-		$request = new Request("POST", "/", ['Content-Type' => "text/xml"], '{"test": "test"}');
+		$request = new Request("POST", "/", '{"test": "test"}', "/", ['Content-Type' => "text/xml"]);
 		$request->getJson();
 	}
 
@@ -167,7 +167,7 @@ class RequestTest extends TestCase
 	{
 		$this->expectException(LogicException::class);
 
-		$request = new Request("GET", "/");
+		$request = new Request("/""GET", "/");
 		$request->getJson();
 	}
 
@@ -175,7 +175,7 @@ class RequestTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new Request("GET", "/", ['Server' => "test"]);
+		new Request("GET", "/", ['Server' => "test"], "/", ['Server' => "test"]);
 	}
 
 	public function testRequestBodyGetsRead(): void

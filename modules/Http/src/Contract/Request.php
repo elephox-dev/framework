@@ -12,22 +12,6 @@ interface Request extends HttpMessage, RequestInterface
 
 	public function getHeaderMap(): RequestHeaderMap;
 
-	/**
-	 * @param HeaderName $name
-	 * @param string|array<string> $value
-	 * @return static
-	 */
-	public function withHeaderName(HeaderName $name, string|array $value): static;
-
-	/**
-	 * @param HeaderName $name
-	 * @param string|array<string> $value
-	 * @return static
-	 */
-	public function withAddedHeaderName(HeaderName $name, string|array $value): static;
-
-	public function withoutHeaderName(HeaderName $name): static;
-
 	public function getRequestMethod(): RequestMethod;
 
 	public function withRequestMethod(RequestMethod $method): static;
