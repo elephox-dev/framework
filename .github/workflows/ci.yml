@@ -37,7 +37,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: ↔️ Check module requirements
-        run: composer check-dependencies -vvv
+        run: composer check-dependencies
 
   static-analysis:
     name: 🔎 Static Analysis
