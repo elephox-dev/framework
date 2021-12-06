@@ -13,8 +13,6 @@ on:
       - 'psalm.xml'
 
 env:
-  operating-systems: '["ubuntu-latest", "windows-latest"]'
-  php-versions: '["8.1"]'
   php-extensions: mysqli,mbstring,json
 
 jobs:
@@ -22,8 +20,8 @@ jobs:
     name: 📦 Composer Setup
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
-        os: ${{ fromJSON(env.operating-systems) }}
+        php-version: [ '8.1' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -54,8 +52,8 @@ jobs:
     needs: [ composer-setup ]
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
-        os: ${{ fromJSON(env.operating-systems) }}
+        php-version: [ '8.1' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -84,8 +82,8 @@ jobs:
     needs: [ composer-setup ]
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
-        os: ${{ fromJSON(env.operating-systems) }}
+        php-version: [ '8.1' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -121,9 +119,8 @@ jobs:
     needs: [ composer-setup ]
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
-        extensions: ${{ env.php-extensions }}
-        os: ${{ fromJSON(env.operating-systems) }}
+        php-version: [ '8.1' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -132,6 +129,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          extensions: ${{ env.php-extensions }}
           coverage: xdebug
       - name: Get composer cache directory
         id: composer-cache
@@ -158,8 +156,8 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
-        os: ${{ fromJSON(env.operating-systems) }}
+        php-version: [ '8.1' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -194,7 +192,7 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: ${{ fromJSON(env.php-versions) }}
+        php-version: [ '8.1' ]
     runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
