@@ -14,7 +14,6 @@
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/coverage.svg" alt="Type Coverage"></a>
   <a href="https://coveralls.io/github/elephox-dev/framework?branch=main"><img src="https://coveralls.io/repos/github/elephox-dev/framework/badge.svg?branch=main" alt="Coverage Status"></a>
   <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci-windows.yml/badge.svg" alt="CI on Windows"></a>
 </p>
 
 ## 📚 Documentation
