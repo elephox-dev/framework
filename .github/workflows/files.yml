@@ -5,7 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/files.yml'
-      - 'modules/Http/**'
+      - 'modules/Files/**'
 
 jobs:
   splitsh:
