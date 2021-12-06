@@ -43,7 +43,7 @@ class ExceptionHandler extends AbstractHandlerAttribute
 	public function invoke(Closure $callback, Context $context): void
 	{
 		if (!$context instanceof ExceptionContext) {
-			// TODO: do something else with this
+			// MAYBE: do something else with this
 			throw new InvalidContextException($context, ExceptionContext::class);
 		}
 
