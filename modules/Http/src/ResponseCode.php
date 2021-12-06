@@ -84,7 +84,7 @@ enum ResponseCode: int implements Contract\ResponseCode
 	public function getMessage(): string
 	{
 		/**
-		 * This annotation can be removed when vimeo/psalm#6964 is resolved.
+		 * This annotation can be removed when vimeo/psalm#7077 is resolved.
 		 *
 		 * @var non-empty-string
 		 */
