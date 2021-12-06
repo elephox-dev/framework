@@ -78,27 +78,27 @@
     "scripts": {
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
-            "@php bin/update-readme-annotations.php"
+            "@php bin/update-readme-annotations.php --"
         ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:check"
+            "@composer modules:check --"
         ],
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist"
+            "phpunit --configuration=phpunit.xml.dist --"
         ],
         "static-analysis": [
             "@putenv XDEBUG_MODE=off",
-            "psalm"
+            "psalm --"
         ],
         "mutation-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "infection --show-mutations"
+            "infection --show-mutations --"
         ],
         "benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5"
+            "phpbench run --report=overview --retry-threshold=5 --"
         ],
         "local-ci": [
             "@update-readme",
@@ -115,7 +115,11 @@
         ],
         "ci:static-analysis": [
             "@putenv XDEBUG_MODE=off",
-            "psalm --shepherd --no-cache --output-format=github --long-progress"
+            "psalm --no-cache --output-format=github --long-progress"
+        ],
+        "ci:static-analysis:publish": [
+            "@putenv XDEBUG_MODE=off",
+            "psalm --no-cache --output-format=github --long-progress --shepherd"
         ],
         "ci:mutation-test": [
             "@putenv XDEBUG_MODE=coverage",
