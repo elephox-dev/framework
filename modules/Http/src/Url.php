@@ -72,16 +72,18 @@ class Url implements Contract\Url
 		return $this->scheme ?? "";
 	}
 
-	public function getUrlScheme(): ?UrlScheme
+	/** @noinspection PhpPureFunctionMayProduceSideEffectsInspection */
+	#[Pure] public function getUrlScheme(): ?UrlScheme
 	{
 		if ($this->scheme === null) {
 			return null;
 		}
 
+		/** @psalm-suppress ImpureMethodCall */
 		return UrlScheme::tryFrom($this->scheme);
 	}
 
-	public function getAuthority(): string
+	#[Pure] public function getAuthority(): string
 	{
 		$authority = $this->getHost();
 		if (empty($authority)) {
@@ -131,7 +133,7 @@ class Url implements Contract\Url
 		return $this->host ?? "";
 	}
 
-	public function getPort(): ?int
+	#[Pure] public function getPort(): ?int
 	{
 		$default = $this->getUrlScheme()?->getDefaultPort();
 
@@ -197,7 +199,7 @@ class Url implements Contract\Url
 		'query' => "string",
 		'fragment' => "string"
 	])]
-	public function asArray(): array
+	#[Pure] public function asArray(): array
 	{
 		return [
 			'scheme' => $this->getScheme(),

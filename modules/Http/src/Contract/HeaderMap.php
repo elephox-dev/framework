@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\GenericMap;
 use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericMap;
 
 /**
- * @extends GenericMap<non-empty-string|HeaderName, GenericList<string>>
+ * @extends GenericMap<HeaderName, GenericList<string>>
  */
 interface HeaderMap extends GenericMap, ReadonlyHeaderMap
 {

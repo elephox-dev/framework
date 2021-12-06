@@ -14,14 +14,6 @@ enum UrlScheme: string {
 	case SSH = 'ssh';
 	case MYSQL = 'mysql';
 
-	#[Pure] public function usesTrimmedPath(): bool
-	{
-		return match ($this) {
-			self::MYSQL => true,
-			default => false
-		};
-	}
-
 	#[Pure] public function getDefaultPort(): ?int
 	{
 		return match ($this) {

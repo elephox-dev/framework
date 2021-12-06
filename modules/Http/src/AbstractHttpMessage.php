@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Http\Contract\HeaderName;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 
@@ -11,7 +13,7 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 {
 	#[Pure] public function __construct(
 		protected string $protocolVersion,
-		protected Contract\ReadonlyHeaderMap $headers,
+		protected Contract\HeaderMap $headers,
 		protected StreamInterface $body
 	) {}
 
@@ -27,17 +29,33 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 
 	public function hasHeader($name): bool
 	{
-		return $this->headers->has($name);
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->hasHeaderName($headerName);
 	}
 
 	public function getHeader($name): array
 	{
-		return $this->headers->get($name)->asArray();
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->getHeaderName($headerName)->asArray();
 	}
 
 	public function getHeaderLine($name): string
 	{
-		return $this->headers->get($name)->join(',');
+		$headerName = HeaderMap::parseHeaderName($name);
+
+		return $this->getHeaderName($headerName)->join(',');
+	}
+
+	public function hasHeaderName(HeaderName $name): bool
+	{
+		return $this->headers->has($name);
+	}
+
+	public function getHeaderName(HeaderName $name): ReadonlyList
+	{
+		return $this->headers->get($name);
 	}
 
 	public function getBody(): StreamInterface
@@ -45,22 +63,22 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 		return $this->body;
 	}
 
-	public function withHeaderName(Contract\HeaderName $name, array|string $value): static
+	public function withHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
 		$headers = clone $this->headers;
 		$headers->put($name, $value);
 
-		return self::withHeadMap($headers);
+		return $this->withHeaderMap($headers);
 	}
 
-	public function withAddedHeaderName(Contract\HeaderName $name, array|string $value): static
+	public function withAddedHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
 		$headers = clone $this->headers;
 
 		if ($headers->has($name)) {
 			/** @var ArrayList<string> $values */
 			$values = $headers->get($name);
-			if (is_array($value)) {
+			if (is_iterable($value)) {
 				$values->addAll($value);
 			} else {
 				$values->add($value);
@@ -72,7 +90,8 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 		/** @var iterable<string> $values */
 		$headers->put($name, $values);
 
-		return self::withHeadMap($headers);	}
+		return $this->withHeaderMap($headers);
+	}
 
 	public function withoutHeaderName(Contract\HeaderName $name): static
 	{
@@ -82,6 +101,6 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 			$headers->remove($name);
 		}
 
-		return self::withHeadMap($headers);
+		return $this->withHeaderMap($headers);
 	}
 }

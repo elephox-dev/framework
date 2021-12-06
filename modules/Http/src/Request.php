@@ -74,7 +74,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		$parsedUri = Url::fromString($uri);
 
 		try {
-			$contentLength = (int)$headerMap->get(HeaderName::ContentLength);
+			$contentLength = (int)$headerMap->get(HeaderName::ContentLength)->first();
 		} catch (OffsetNotFoundException) {
 			$contentLength = 0;
 		}

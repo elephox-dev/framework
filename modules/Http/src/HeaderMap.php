@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use ArrayAccess;
-use Elephox\Collection\ObjectMap;
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
 
@@ -122,7 +121,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		}
 
 		$obj = $this->firstKey(static fn (Contract\HeaderName $name) => $name->getValue() === $key->getValue());
-		if ($obj === null) {
+		if (!$obj instanceof Contract\HeaderName) {
 			throw new OffsetNotFoundException($key->getValue());
 		}
 
