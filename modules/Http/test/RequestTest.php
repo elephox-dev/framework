@@ -27,7 +27,7 @@ class RequestTest extends TestCase
 {
 	public function testConstructorStrings(): void
 	{
-		$request = new Request("/test""GET", "/test");
+		$request = new Request("1.1", new RequestHeaderMap(), new EmptyStream(), RequestMethod::GET, Url::fromString("/test"));
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -36,7 +36,7 @@ class RequestTest extends TestCase
 
 	public function testConstructorMethodObject(): void
 	{
-		$request = new Request("/test"RequestMethod::POST, "/test");
+		$request = new Request("1.1", new RequestHeaderMap(), new EmptyStream(), RequestMethod::POST, Url::fromString("/test"));
 
 		self::assertEquals(RequestMethod::POST, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -45,7 +45,7 @@ class RequestTest extends TestCase
 
 	public function testConstructorUrlObject(): void
 	{
-		$request = new Request(Url::fromString("/test")"DELETE", Url::fromString("/test"));
+		$request = new Request("1.1", new RequestHeaderMap(), new EmptyStream(), RequestMethod::DELETE, Url::fromString("/test"));
 
 		self::assertEquals(RequestMethod::DELETE, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -54,10 +54,10 @@ class RequestTest extends TestCase
 
 	public function testConstructorHeaderMap(): void
 	{
-		$headers = new HeaderMap();
+		$headers = new RequestHeaderMap();
 		$headers->put(HeaderName::Host, ["test"]);
 
-		$request = new Request("GET", "/test", $headers, "/test", $headers);
+		$request = new Request("1.1", $headers, new EmptyStream(), RequestMethod::GET, Url::fromString("/test"));
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
 		self::assertEquals('/test', $request->getUri()->getPath());
@@ -78,7 +78,6 @@ class RequestTest extends TestCase
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
 		self::assertFalse($request->getRequestMethod()->canHaveBody());
 		self::assertEquals('/', $request->getUri()->__toString());
-		self::assertTrue($request->shouldFollowRedirects());
 		self::assertTrue($request->getHeaderMap()->has(HeaderName::Accept));
 		self::assertTrue($request->getHeaderMap()->has(HeaderName::UserAgent));
 		self::assertTrue($request->getHeaderMap()->anyKey(fn(\Elephox\Http\Contract\HeaderName $header) => $header->getValue() === "X-Custom"));
@@ -86,11 +85,7 @@ class RequestTest extends TestCase
 		self::assertEquals(["test/1.0.0"], $request->getHeaderMap()->get(HeaderName::UserAgent));
 		self::assertEquals(["custom-test"], $request->getHeaderMap()->get("X-Custom"));
 
-		unset($_SERVER['REQUEST_METHOD']);
-		unset($_SERVER['REQUEST_URI']);
-		unset($_SERVER['HTTP_ACCEPT']);
-		unset($_SERVER['HTTP_USER_AGENT']);
-		unset($_SERVER['HTTP_X_CUSTOM']);
+		unset($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $_SERVER['HTTP_ACCEPT'], $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_X_CUSTOM']);
 	}
 
 	public function testFromGlobalsCustomRequestMethod(): void
@@ -105,8 +100,7 @@ class RequestTest extends TestCase
 		self::assertTrue($request->getRequestMethod()->canHaveBody());
 		self::assertEquals('/', $request->getUri()->__toString());
 
-		unset($_SERVER['REQUEST_METHOD']);
-		unset($_SERVER['REQUEST_URI']);
+		unset($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 	}
 
 	public function testFromGlobalsInvalidRequestMethod(): void
@@ -125,86 +119,5 @@ class RequestTest extends TestCase
 		Request::fromGlobals();
 
 		unset($_SERVER['REQUEST_METHOD']);
-	}
-
-	public function testInvalidRequestMethodBody(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		new Request(RequestMethod::GET, "/", body: "test", method: "/", url: "test");
-	}
-
-	public function testGetJson(): void
-	{
-		$request = new Request("POST", "/", body: '{"test": "test"}', method: "/", url: '{"test": "test"}');
-
-		self::assertEquals(["test" => "test"], $request->getJson());
-	}
-
-	public function testGetJsonEmptyBody(): void
-	{
-		$request = new Request("/""POST", "/");
-
-		self::assertEquals([], $request->getJson());
-	}
-
-	public function testGetJsonWithContentTypeHeader(): void
-	{
-		$request = new Request("POST", "/", '{"test": "test"}', "/", ['Content-Type' => "application/json"]);
-
-		self::assertEquals(["test" => "test"], $request->getJson());
-	}
-
-	public function testGetJsonWithInvalidContentTypeHeader(): void
-	{
-		$this->expectException(LogicException::class);
-
-		$request = new Request("POST", "/", '{"test": "test"}', "/", ['Content-Type' => "text/xml"]);
-		$request->getJson();
-	}
-
-	public function testGetJsonWithInvalidRequestMethod(): void
-	{
-		$this->expectException(LogicException::class);
-
-		$request = new Request("/""GET", "/");
-		$request->getJson();
-	}
-
-	public function testRequestCannotContainResponseOnlyHeaders(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		new Request("GET", "/", ['Server' => "test"], "/", ['Server' => "test"]);
-	}
-
-	public function testRequestBodyGetsRead(): void
-	{
-		$_SERVER['REQUEST_METHOD'] = "POST";
-		$_SERVER['REQUEST_URI'] = "/";
-
-		$request = Request::fromGlobals();
-
-		self::assertNull($request->getBody());
-
-		unset($_SERVER['REQUEST_METHOD']);
-		unset($_SERVER['REQUEST_URI']);
-	}
-
-	public function testRequestBodyGetsReadWithContentLength(): void
-	{
-		$_SERVER['REQUEST_METHOD'] = "POST";
-		$_SERVER['REQUEST_URI'] = "/";
-		$_SERVER['CONTENT_LENGTH'] = "1";
-		$_SERVER['CONTENT_TYPE'] = "text/plain";
-
-		$request = Request::fromGlobals();
-
-		self::assertEquals("", $request->getBody());
-
-		unset($_SERVER['REQUEST_METHOD']);
-		unset($_SERVER['REQUEST_URI']);
-		unset($_SERVER['CONTENT_LENGTH']);
-		unset($_SERVER['CONTENT_TYPE']);
 	}
 }
