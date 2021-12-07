@@ -98,7 +98,9 @@ class Core implements Contract\Core
 				header('Content-Type: text/plain; charset=utf-8');
 			}
 
-			echo "Could not handle exception. " . $throwable->getMessage() . "\n";
+			echo "Could not handle exception: " . $throwable->getMessage() . "\n";
+			echo $throwable->getTraceAsString();
+			echo "\n";
 			echo "\n";
 			echo "Additionally, the exception handler threw an exception while trying to handle the first exception: " . $innerThrowable->getMessage() . "\n";
 			echo $innerThrowable->getTraceAsString();
