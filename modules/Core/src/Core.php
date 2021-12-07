@@ -306,6 +306,11 @@ class Core
 		try {
 			$handlerContainer->findHandler($exceptionContext)->handle($exceptionContext);
 		} catch (Throwable $innerThrowable) {
+			if (!headers_sent()) {
+				header('HTTP/1.1 500 Internal Server Error');
+				header('Content-Type: text/plain; charset=utf-8');
+			}
+
 			echo "Could not handle exception. " . $throwable->getMessage() . "\n";
 			echo "\n";
 			echo "Additionally, the exception handler threw an exception while trying to handle the first exception: " . $innerThrowable->getMessage() . "\n";
