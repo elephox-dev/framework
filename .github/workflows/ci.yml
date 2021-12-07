@@ -206,7 +206,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
-          tools: php-coveralls:^2.5.2
+          tools: php-coveralls/php-coveralls:^2.5.2
         env:
           fail-fast: true
       - name: 📥 Download coverage data
