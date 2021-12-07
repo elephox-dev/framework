@@ -24,7 +24,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
 - [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
 - [ ] Caching Services
@@ -59,6 +58,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] Logging Services
 - [x] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
 - [x] ~~Create a makefile with useful shortcuts~~ Created composer.json scripts instead
+- [x] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
 
 <!-- start annotations -->
 
