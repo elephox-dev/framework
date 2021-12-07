@@ -26,8 +26,4 @@ abstract class AbstractHandlerAttribute implements HandlerAttribute
 	{
 		return $this->weight;
 	}
-
-	abstract public function handles(Context $context): bool;
-
-	abstract public function invoke(Closure $callback, Context $context): void;
 }

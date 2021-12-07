@@ -46,9 +46,9 @@ class HandlerBinding implements Contract\HandlerBinding
 		return $this->attribute->handles($context);
 	}
 
-	public function handle(Context $context): void
+	public function handle(Context $context): mixed
 	{
-		$this->attribute->invoke($this->handler, $context);
+		return $this->attribute->invoke($this->handler, $context);
 	}
 
 	public function getWeight(): int

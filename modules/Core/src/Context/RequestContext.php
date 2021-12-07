@@ -6,12 +6,13 @@ namespace Elephox\Core\Context;
 use Elephox\Core\Handler\ActionType;
 use Elephox\DI\Contract\Container;
 use Elephox\Http\Contract\Request;
+use Psr\Http\Message\RequestInterface;
 
 class RequestContext extends AbstractContext implements Contract\RequestContext
 {
 	public function __construct(
 		Container $container,
-		private Request $request
+		private RequestInterface $request
 	)
 	{
 		parent::__construct(ActionType::Request, $container);
@@ -19,7 +20,7 @@ class RequestContext extends AbstractContext implements Contract\RequestContext
 		$container->register(Contract\RequestContext::class, $this);
 	}
 
-	public function getRequest(): Request
+	public function getRequest(): RequestInterface
 	{
 		return $this->request;
 	}

@@ -32,5 +32,5 @@ interface HandlerBinding
 	 * @throws InvalidContextException
 	 * @throws InvalidResultException
 	 */
-	public function handle(Context $context): void;
+	public function handle(Context $context): mixed;
 }

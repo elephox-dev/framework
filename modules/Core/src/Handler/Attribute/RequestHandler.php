@@ -10,14 +10,20 @@ use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
+use Elephox\Core\Context\RequestContext;
+use Elephox\Core\LegacyCore;
 use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\InvalidResultException;
 use Elephox\Core\Handler\UrlTemplate;
+use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
 use Elephox\Http\Contract\Response;
 use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
@@ -88,14 +94,25 @@ class RequestHandler extends AbstractHandlerAttribute
 			return false;
 		}
 
-		if (!$this->methods->isEmpty() && !$this->methods->contains($context->getRequest()->getRequestMethod())) {
+		$request = $context->getRequest();
+		$method = $request->getMethod();
+		if ($request instanceof RequestContract) {
+			$requestMethod = $request->getRequestMethod();
+		} else if (!empty($method)) {
+			$requestMethod = RequestMethod::tryFrom($method);
+			$requestMethod ??= new CustomRequestMethod($method);
+		} else {
+			return false;
+		}
+
+		if (!$this->methods->isEmpty() && !$this->methods->contains($requestMethod)) {
 			return false;
 		}
 
 		return $this->template->matches($context->getRequest()->getUri());
 	}
 
-	public function invoke(Closure $callback, ContextContract $context): void
+	public function invoke(Closure $callback, ContextContract $context): mixed
 	{
 		if (!$context instanceof RequestContextContract) {
 			throw new InvalidContextException($context, RequestContextContract::class);
@@ -110,6 +127,6 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new InvalidResultException($result, Response::class);
 		}
 
-		$result->send();
+		return $result;
 	}
 }

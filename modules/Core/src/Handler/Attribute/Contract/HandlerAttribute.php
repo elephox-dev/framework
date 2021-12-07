@@ -26,5 +26,5 @@ interface HandlerAttribute
 	 * @throws InvalidResultException
 	 * @throws InvalidContextException
 	 */
-	public function invoke(Closure $callback, Context $context): void;
+	public function invoke(Closure $callback, Context $context): mixed;
 }
