@@ -194,7 +194,7 @@ class Container implements Contract\Container
 	{
 		// check if $id contains a class name
 		if (!class_exists($id)) {
-			// if not, check if $id is an alias (if not this will throw)
+			// if not, check if $id is an alias (if not, this will throw)
 			$id = $this->resolveAlias($id);
 		}
 		// $id is a valid class name and can be instantiated
