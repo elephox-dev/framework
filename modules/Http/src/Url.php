@@ -33,21 +33,13 @@ class Url implements Contract\Url
 		$path = $matches['path'];
 
 		if (array_key_exists('query', $matches) && str_starts_with($matches['query'], '?')) {
-			if ($matches['query'] === '?') {
-				$query = '';
-			} else {
-				$query = substr($matches['query'], 1);
-			}
+			$query = substr($matches['query'], 1);
 		} else {
 			$query = null;
 		}
 
 		if (array_key_exists('fragment', $matches) && str_starts_with($matches['fragment'], '#')) {
-			if ($matches['fragment'] === '#') {
-				$fragment = '';
-			} else {
-				$fragment = substr($matches['fragment'], 1);
-			}
+			$fragment = substr($matches['fragment'], 1);
 		} else {
 			$fragment = null;
 		}
