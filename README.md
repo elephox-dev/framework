@@ -64,14 +64,9 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ## 📋 Source code annotations
 
-### 🤔 MAYBE
-
-- [ ] [Core\src\Handler\Attribute\ExceptionHandler.php](https://github.com/elephox-dev/framework/tree/main/modules/Core\src\Handler\Attribute\ExceptionHandler.php)
-  - [ ] do something else with this
-
 ### ✅ TODO
 
-- [ ] [Http\src\Response.php](https://github.com/elephox-dev/framework/tree/main/modules/Http\src\Response.php)
+- [ ] [Http/src/Response.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Response.php)
   - [ ] Implement send() method.
 
 
