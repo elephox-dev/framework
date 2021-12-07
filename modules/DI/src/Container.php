@@ -184,19 +184,23 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $contract
+	 * @param class-string<T>|non-empty-string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 * @throws ReflectionException
 	 */
-	public function instantiate(string $contract, array $overrideArguments = []): object
+	public function instantiate(string $id, array $overrideArguments = []): object
 	{
-		if (!class_exists($contract)) {
-			throw new InvalidArgumentException("Class $contract does not exist");
+		// check if $id contains a class name
+		if (!class_exists($id)) {
+			// if not, check if $id is an alias (if not this will throw)
+			$id = $this->resolveAlias($id);
 		}
+		// $id is a valid class name and can be instantiated
+		/** @var class-string<T> $id */
 
-		$reflectionClass = new ReflectionClass($contract);
+		$reflectionClass = new ReflectionClass($id);
 		$constructor = $reflectionClass->getConstructor();
 		if ($constructor === null) {
 			return $reflectionClass->newInstance();
@@ -205,6 +209,43 @@ class Container implements Contract\Container
 		$arguments = $this->resolveArguments($constructor, $overrideArguments);
 
 		return $reflectionClass->newInstanceArgs($arguments->asArray());
+	}
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T> $contract
+	 * @param array $overrideArguments
+	 * @param InstanceLifetime $lifetime
+	 * @param non-empty-string ...$aliases
+	 *
+	 * @return T
+	 */
+	public function getOrRegister(string $contract, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object
+	{
+		if (!$this->has($contract)) {
+			$this->register($contract, null, $lifetime, ...$aliases);
+		}
+
+		return $this->get($contract);
+	}
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T>|non-empty-string $id
+	 * @param array $overrideArguments
+	 *
+	 * @return T
+	 * @throws ReflectionException
+	 */
+	public function getOrInstantiate(string $id, array $overrideArguments = []): object
+	{
+		if (!$this->has($id)) {
+			return $this->instantiate($id, $overrideArguments);
+		}
+
+		return $this->get($id);
 	}
 
 	/**

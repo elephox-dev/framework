@@ -56,6 +56,7 @@ interface Container extends ContainerInterface
 	 * @template T
 	 *
 	 * @param class-string<T>|non-empty-string $id
+	 *
 	 * @return T
 	 */
 	public function get(string $id): object;
@@ -63,12 +64,34 @@ interface Container extends ContainerInterface
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T> $contract
+	 * @param class-string<T>|non-empty-string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 */
-	public function instantiate(string $contract, array $overrideArguments = []): object;
+	public function instantiate(string $id, array $overrideArguments = []): object;
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T> $contract
+	 * @param array $overrideArguments
+	 * @param InstanceLifetime $lifetime
+	 * @param non-empty-string ...$aliases
+	 *
+	 * @return T
+	 */
+	public function getOrRegister(string $contract, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object;
+
+	/**
+	 * @template T
+	 *
+	 * @param class-string<T>|non-empty-string $id
+	 * @param array $overrideArguments
+	 *
+	 * @return T
+	 */
+	public function getOrInstantiate(string $id, array $overrideArguments = []): object;
 
 	/**
 	 * @template T of object
