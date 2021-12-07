@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
+use Closure;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\InvalidResultException;
 
-interface HandlerBinding
+interface HandlerMeta
 {
-	public function getHandlerMeta(): HandlerMeta;
+	public function getType(): ActionType;
+
+	public function getWeight(): int;
+
+	public function handles(Context $context): bool;
 
 	/**
 	 * @throws InvalidContextException
-	 * @throws InvalidResultException
 	 */
-	public function handle(Context $context): mixed;
+	public function getHandlerParams(Context $context): array;
 }

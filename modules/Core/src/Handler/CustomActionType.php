@@ -10,6 +10,7 @@ class CustomActionType implements Contract\ActionType
 	 */
 	public function __construct(
 		private string $name,
+		private bool $matchesAny = false,
 	)
 	{
 	}
@@ -17,5 +18,10 @@ class CustomActionType implements Contract\ActionType
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	public function matchesAny(): bool
+	{
+		return $this->matchesAny;
 	}
 }

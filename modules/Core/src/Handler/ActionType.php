@@ -5,6 +5,7 @@ namespace Elephox\Core\Handler;
 
 enum ActionType implements Contract\ActionType
 {
+	case Any;
 	case Command;
 	case Event;
 	case Request;
@@ -13,5 +14,10 @@ enum ActionType implements Contract\ActionType
 	public function getName(): string
 	{
 		return $this->name;
+	}
+
+	public function matchesAny(): bool
+	{
+		return $this === self::Any;
 	}
 }

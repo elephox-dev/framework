@@ -14,6 +14,11 @@ interface Core extends RequestHandlerInterface
 {
 	public function getVersion(): string;
 
+	/**
+	 * @param App|class-string<App> $app
+	 */
+	public function registerApp(App|string $app): App;
+
 	public function handleException(Throwable $throwable): void;
 
 	public function handleContext(Context $context): mixed;

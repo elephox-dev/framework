@@ -8,6 +8,7 @@ use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
+use Elephox\Core\Contract\App;
 use Elephox\Core\Handler\Contract\HandlerContainer as HandlerContainerContract;
 use Elephox\Core\Handler\HandlerContainer;
 use Elephox\DI\Container;
@@ -47,7 +48,7 @@ class Core implements Contract\Core
 		define("ELEPHOX_VERSION", self::$instance->getVersion());
 
 		if (!$container->has(HandlerContainerContract::class)) {
-			$container->register(HandlerContainerContract::class, new HandlerContainer());
+			$container->register(HandlerContainerContract::class, fn (ContainerContract $c) => new HandlerContainer($c));
 		}
 
 		return self::$instance;
@@ -64,6 +65,25 @@ class Core implements Contract\Core
 	public function getVersion(): string
 	{
 		return "1.0";
+	}
+
+	public function registerApp(App|string $app): App
+	{
+		if (is_string($app)) {
+			$appClassName = $app;
+			$registerParameter = $appClassName;
+		} else {
+			$appClassName = $app::class;
+			$registerParameter = $app;
+		}
+
+		$this->container->register(App::class, $registerParameter);
+		$this->container->register($appClassName, $registerParameter);
+
+		$appInstance = $this->container->get($appClassName);
+		$this->getHandlerContainer()->checkRegistrar($appInstance);
+
+		return $appInstance;
 	}
 
 	public function handleException(Throwable $throwable): void

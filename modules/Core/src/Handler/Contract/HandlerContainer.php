@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Contract;
 
 use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Contract\App;
 use Elephox\Core\Contract\Registrar;
 use Elephox\Core\UnhandledContextException;
 
@@ -24,6 +25,8 @@ interface HandlerContainer
 	public function loadFromNamespace(string $namespace): static;
 
 	public function loadFromRegistrar(Registrar $registrar): static;
+
+	public function checkRegistrar(object $potentialRegistrar): static;
 
 	/**
 	 * @throws UnhandledContextException

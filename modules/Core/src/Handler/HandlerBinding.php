@@ -5,54 +5,30 @@ namespace Elephox\Core\Handler;
 
 use Closure;
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute;
+use Elephox\Core\Handler\Contract\HandlerMeta;
 
-/**
- * @template THandler as Closure(): mixed
- * @template TContext as Context
- *
- * @template-implements Contract\HandlerBinding<THandler, TContext>
- */
 class HandlerBinding implements Contract\HandlerBinding
 {
 	/**
-	 * @param THandler $handler
-	 * @param HandlerAttribute $attribute
+	 * @param Closure $closure
+	 * @param HandlerMeta $handlerMeta
 	 */
 	public function __construct(
-		private Closure $handler,
-		private HandlerAttribute $attribute,
+		private Closure     $closure,
+		private HandlerMeta $handlerMeta,
 	)
 	{
 	}
 
-	/**
-	 * @return THandler
-	 */
-	public function getHandler(): Closure
+	public function getHandlerMeta(): HandlerMeta
 	{
-		return $this->handler;
-	}
-
-	/**
-	 * @param TContext $context
-	 */
-	public function isApplicable(Context $context): bool
-	{
-		if ($context->getActionType() !== $this->attribute->getType()) {
-			return false;
-		}
-
-		return $this->attribute->handles($context);
+		return $this->handlerMeta;
 	}
 
 	public function handle(Context $context): mixed
 	{
-		return $this->attribute->invoke($this->handler, $context);
-	}
+		$parameters = $this->getHandlerMeta()->getHandlerParams($context);
 
-	public function getWeight(): int
-	{
-		return $this->attribute->getWeight();
+		return $context->getContainer()->callback($this->closure, ['context' => $context, ...$parameters]);
 	}
 }

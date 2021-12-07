@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
-use Closure;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\EventContext;
 use Elephox\Core\Handler\ActionType;
-use Elephox\Core\Handler\InvalidContextException;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -33,14 +31,5 @@ class EventHandler extends AbstractHandlerAttribute
 		}
 
 		return $this->eventName === $context->getEvent()->getName();
-	}
-
-	public function invoke(Closure $callback, Context $context): void
-	{
-		if (!$context instanceof EventContext) {
-			throw new InvalidContextException($context, EventContext::class);
-		}
-
-		$context->getContainer()->callback($callback, ['context' => $context]);
 	}
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
-use Closure;
-use Elephox\Collection\ArrayMap;
 use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\ActionType;
@@ -52,29 +50,18 @@ class CommandHandler extends AbstractHandlerAttribute
 		return Regex::matches($this->commandSignature, $commandLine);
 	}
 
-
-	/**
-	 * @param CommandLineContext $context
-	 * @return ArrayMap<string|int, string>
-	 */
-	public function getGroupValues(CommandLineContext $context): ArrayMap
-	{
-		if ($this->commandSignature === null) {
-			return new ArrayMap();
-		}
-
-		return Regex::match($this->commandSignature, $context->getCommandLine());
-	}
-
-	public function invoke(Closure $callback, CommandLineContext|Context $context): void
+	public function getHandlerParams(Context $context): array
 	{
 		if (!$context instanceof CommandLineContext) {
 			throw new InvalidContextException($context, CommandLineContext::class);
 		}
 
-		$context->getContainer()->callback($callback, [
-			'context' => $context,
-			...$this->getGroupValues($context)->whereKey(static fn (string|int $key) => is_string($key)),
-		]);
+		if ($this->commandSignature === null) {
+			return [];
+		}
+
+		return Regex::match($this->commandSignature, $context->getCommandLine())
+			->whereKey(static fn(string|int $key) => is_string($key))
+			->asArray();
 	}
 }

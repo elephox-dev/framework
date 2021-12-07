@@ -4,26 +4,18 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
-use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
-use Elephox\Core\Context\RequestContext;
-use Elephox\Core\LegacyCore;
 use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
-use Elephox\Core\Handler\InvalidResultException;
 use Elephox\Core\Handler\UrlTemplate;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
-use Elephox\Http\Contract\Response;
 use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
@@ -38,6 +30,7 @@ class RequestHandler extends AbstractHandlerAttribute
 	/**
 	 * @param string|UrlTemplate $url
 	 * @param null|non-empty-string|RequestMethodContract|array<non-empty-string|RequestMethodContract>|GenericList<non-empty-string|RequestMethodContract> $methods
+	 * @param int $weight
 	 */
 	public function __construct(
 		string|UrlTemplate                                  $url,
@@ -112,21 +105,12 @@ class RequestHandler extends AbstractHandlerAttribute
 		return $this->template->matches($context->getRequest()->getUri());
 	}
 
-	public function invoke(Closure $callback, ContextContract $context): mixed
+	public function getHandlerParams(ContextContract $context): array
 	{
 		if (!$context instanceof RequestContextContract) {
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		$parameters = $this->template->getValues($context->getRequest()->getUri());
-
-		/** @var Response|mixed $result */
-		$result = $context->getContainer()->callback($callback, ['context' => $context, ...$parameters]);
-
-		if (!$result instanceof Response) {
-			throw new InvalidResultException($result, Response::class);
-		}
-
-		return $result;
+		return $this->template->getValues($context->getRequest()->getUri());
 	}
 }
