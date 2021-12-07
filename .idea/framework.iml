@@ -106,6 +106,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-printer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/localheinz/diff" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/composer-module-sync" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-handler" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
