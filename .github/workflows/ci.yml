@@ -33,6 +33,8 @@ jobs:
           extensions: ${{ env.php-extensions }}
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
+      - name: Check composer.json format
+        run: composer modules:normalize --dry-run
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"

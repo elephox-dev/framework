@@ -1,8 +1,8 @@
 {
     "name": "elephox/collection",
     "description": "Elephox collection library.",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Ricaro Boss",

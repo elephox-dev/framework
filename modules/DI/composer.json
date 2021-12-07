@@ -1,8 +1,8 @@
 {
     "name": "elephox/di",
     "description": "Elephox dependency injection library.",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Ricaro Boss",
@@ -13,7 +13,7 @@
         "php": ">=8.1",
         "elephox/collection": "dev-main",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "psr/container": "^1.1|^2.0"
+        "psr/container": "^1.1 || ^2.0"
     },
     "provide": {
         "psr/container-implementation": "1.0"

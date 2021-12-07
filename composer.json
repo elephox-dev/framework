@@ -2,35 +2,32 @@
     "name": "elephox/framework",
     "description": "Yet another PHP framework.",
     "license": "MIT",
-    "homepage": "https://elephox.dev",
     "authors": [
         {
             "name": "Ricaro Boss",
             "email": "contact@ricardoboss.de"
         }
     ],
+    "homepage": "https://elephox.dev",
     "require": {
         "php": ">=8.1",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-mysqli": "*",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "ricardoboss/php-console-logger": "^1.8",
-        "psr/container": "^1.1|^2.0",
-        "psr/http-message": "^1.0"
+        "psr/container": "^1.1 || ^2.0",
+        "psr/http-message": "^1.0",
+        "ricardoboss/php-console-logger": "^1.8"
     },
     "require-dev": {
-        "vimeo/psalm": "^4.14",
-        "phpunit/phpunit": "^9.5",
+        "elephox/composer-module-sync": "^1.2.1",
+        "ergebnis/composer-normalize": "^2.17",
         "infection/infection": "^0.25",
         "mockery/mockery": "^1.4",
+        "phpbench/phpbench": "^1.2.1",
+        "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
-        "elephox/composer-module-sync": "^1.1",
-        "phpbench/phpbench": "^1.2.1"
-    },
-    "provide": {
-        "psr/container-implementation": "1.0",
-        "psr/http-message-implementation": "1.0"
+        "vimeo/psalm": "^4.14"
     },
     "replace": {
         "elephox/collection": "self.version",
@@ -43,13 +40,12 @@
         "elephox/support": "self.version",
         "elephox/text": "self.version"
     },
+    "provide": {
+        "psr/container-implementation": "1.0",
+        "psr/http-message-implementation": "1.0"
+    },
     "suggest": {
         "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "1.x-dev"
-        }
     },
     "autoload": {
         "psr-4": {
@@ -77,43 +73,31 @@
             "Elephox\\Text\\": "modules/Text/test/"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    },
     "scripts": {
-        "update-readme": [
+        "benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "@php bin/update-readme-annotations.php --"
+            "phpbench run --report=overview --retry-threshold=5 --"
         ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
             "@composer modules:check --"
         ],
-        "unit-test": [
-            "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist --"
-        ],
-        "static-analysis": [
+        "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "psalm --"
+            "phpbench run --report=overview --retry-threshold=5"
         ],
-        "mutation-test": [
+        "ci:mutation-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "infection --show-mutations --"
+            "infection --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
         ],
-        "benchmark": [
+        "ci:publish-coverage": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5 --"
-        ],
-        "local-ci": [
-            "@update-readme",
-            "@check-dependencies",
-            "@static-analysis",
-            "@unit-test",
-            "@mutation-test",
-            "@benchmark"
-        ],
-
-        "ci:unit-test": [
-            "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
+            "php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
         ],
         "ci:static-analysis": [
             "@putenv XDEBUG_MODE=off",
@@ -123,17 +107,33 @@
             "@putenv XDEBUG_MODE=off",
             "psalm --no-cache --output-format=github --long-progress --shepherd"
         ],
-        "ci:mutation-test": [
+        "ci:unit-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "infection --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
+            "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
         ],
-        "ci:benchmark": [
-            "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5"
+        "local-ci": [
+            "@update-readme",
+            "@check-dependencies",
+            "@static-analysis",
+            "@unit-test",
+            "@mutation-test",
+            "@benchmark"
         ],
-        "ci:publish-coverage": [
+        "mutation-test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "infection --show-mutations --"
+        ],
+        "static-analysis": [
             "@putenv XDEBUG_MODE=off",
-            "php-coveralls -x build/coverage/clover.xml -o build/coverage/coveralls-upload.json -v"
+            "psalm --"
+        ],
+        "unit-test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --configuration=phpunit.xml.dist --"
+        ],
+        "update-readme": [
+            "@putenv XDEBUG_MODE=off",
+            "@php bin/update-readme-annotations.php --"
         ]
     }
 }
