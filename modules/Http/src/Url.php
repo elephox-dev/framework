@@ -79,7 +79,7 @@ class Url implements Contract\Url
 			return null;
 		}
 
-		/** @psalm-suppress ImpureMethodCall */
+		/** @psalm-suppress ImpureMethodCall until vimeo/psalm#7086 is fixed */
 		return UrlScheme::tryFrom($this->scheme);
 	}
 
