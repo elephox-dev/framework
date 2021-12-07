@@ -83,13 +83,17 @@
             "@putenv XDEBUG_MODE=off",
             "phpbench run --report=overview --retry-threshold=5 --"
         ],
-        "check-dependencies": [
-            "@putenv XDEBUG_MODE=off",
-            "@composer modules:check --"
-        ],
         "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
             "phpbench run --report=overview --retry-threshold=5"
+        ],
+        "ci:check-dependencies": [
+            "@putenv XDEBUG_MODE=off",
+            "@composer modules:check --"
+        ],
+        "ci:normalize-composer": [
+            "@putenv XDEBUG_MODE=off",
+            "@composer modules:normalize --"
         ],
         "ci:mutation-test": [
             "@putenv XDEBUG_MODE=coverage",

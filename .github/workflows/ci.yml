@@ -33,9 +33,7 @@ jobs:
           extensions: ${{ env.php-extensions }}
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
-      - name: Check composer.json format
-        run: composer modules:normalize --dry-run
-      - name: Get composer cache directory
+      - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
@@ -47,7 +45,9 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts
       - name: ↔️ Check module requirements
-        run: composer check-dependencies
+        run: composer ci:check-dependencies
+      - name: 🧐 Check composer.json format
+        run: composer ci:normalize-composer
 
   static-analysis:
     name: 🔎 Static Analysis
@@ -65,7 +65,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
-      - name: Get composer cache directory
+      - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
@@ -100,7 +100,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
           coverage: none
-      - name: Get composer cache directory
+      - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
@@ -137,7 +137,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
           coverage: xdebug
-      - name: Get composer cache directory
+      - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
@@ -174,7 +174,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
           coverage: xdebug
-      - name: Get composer cache directory
+      - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: 💾 Cache dependencies
