@@ -19,6 +19,8 @@ interface Core extends RequestHandlerInterface
 	 */
 	public function registerApp(App|string $app): App;
 
+	public function checkRegistrar(object $potentialRegistrar): void;
+
 	public function handleException(Throwable $throwable): void;
 
 	public function handleContext(Context $context): mixed;

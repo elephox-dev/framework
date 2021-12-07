@@ -6,12 +6,10 @@ namespace Elephox\Core\Handler;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Core\Context\Contract\Context as ContextContract;
-use Elephox\Core\Contract\App;
-use Elephox\Core\Contract\Registrar as RegistrarContract;
+use Elephox\Core\Contract\Core as CoreContract;
 use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttributeContract;
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
-use Elephox\Core\Registrar as RegistrarTrait;
 use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Files\Contract\Directory as DirectoryContract;
@@ -123,7 +121,8 @@ class HandlerContainer implements Contract\HandlerContainer
 		}
 
 		if ($classInstance !== null) {
-			$this->checkRegistrar($classInstance);
+			$core = $this->container->get(CoreContract::class);
+			$core->checkRegistrar($classInstance);
 		}
 
 		return $this;
@@ -143,22 +142,6 @@ class HandlerContainer implements Contract\HandlerContainer
 
 			$this->register($binding);
 		}
-	}
-
-	public function checkRegistrar(object $potentialRegistrar): static
-	{
-		$traits = class_uses($potentialRegistrar);
-		if (
-			!($potentialRegistrar instanceof RegistrarContract) &&
-			($traits === false || !in_array(RegistrarTrait::class, $traits, true))
-		) {
-			return $this;
-		}
-
-		/** @var RegistrarContract $potentialRegistrar */
-		$potentialRegistrar->registerAll($this->container);
-
-		return $this;
 	}
 
 	/**

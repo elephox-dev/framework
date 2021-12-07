@@ -24,8 +24,6 @@ interface HandlerContainer
 	 */
 	public function loadFromNamespace(string $namespace): static;
 
-	public function checkRegistrar(object $potentialRegistrar): static;
-
 	/**
 	 * @throws UnhandledContextException
 	 */

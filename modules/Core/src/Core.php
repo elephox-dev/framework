@@ -9,8 +9,10 @@ use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Contract\App;
+use Elephox\Core\Contract\Registrar as RegistrarContract;
 use Elephox\Core\Handler\Contract\HandlerContainer as HandlerContainerContract;
 use Elephox\Core\Handler\HandlerContainer;
+use Elephox\Core\Registrar as RegistrarTrait;
 use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Http\Request;
@@ -45,6 +47,9 @@ class Core implements Contract\Core
 		$container = new Container();
 		self::$instance = new self($container);
 
+		$container->register(Contract\Core::class, self::$instance);
+		$container->register(self::$instance::class, self::$instance);
+
 		define("ELEPHOX_VERSION", self::$instance->getVersion());
 
 		if (!$container->has(HandlerContainerContract::class)) {
@@ -77,13 +82,34 @@ class Core implements Contract\Core
 			$registerParameter = $app;
 		}
 
-		$this->container->register(App::class, $registerParameter);
-		$this->container->register($appClassName, $registerParameter);
+		// register app classes
+		$this->getContainer()->register(App::class, $registerParameter);
+		$this->getContainer()->register($appClassName, $registerParameter);
 
-		$appInstance = $this->container->get($appClassName);
-		$this->getHandlerContainer()->checkRegistrar($appInstance);
+		// get app instance
+		$appInstance = $this->getContainer()->get($appClassName);
+
+		// check if app is registrar and register all services
+		$this->checkRegistrar($appInstance);
+
+		// check for handlers in app
+		$this->getHandlerContainer()->loadFromClass($appClassName);
 
 		return $appInstance;
+	}
+
+	public function checkRegistrar(object $potentialRegistrar): void
+	{
+		$traits = class_uses($potentialRegistrar);
+		if (
+			!($potentialRegistrar instanceof RegistrarContract) &&
+			($traits === false || !in_array(RegistrarTrait::class, $traits, true))
+		) {
+			return;
+		}
+
+		/** @var RegistrarContract $potentialRegistrar */
+		$potentialRegistrar->registerAll($this->getContainer());
 	}
 
 	public function handleException(Throwable $throwable): void
