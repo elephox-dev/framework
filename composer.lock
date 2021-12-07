@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0477d7a3325a5a534e9df42e46b1a3da",
+    "content-hash": "ac89b3efe4b9a04b8130053fb8d8e925",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -840,16 +840,16 @@
         },
         {
             "name": "elephox/composer-module-sync",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/composer-module-sync.git",
-                "reference": "ca0c5d91e02528c57707be412a39c38d95ad7ba7"
+                "reference": "a702c825706d7fb7c912ee454663b0563b8ef914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/composer-module-sync/zipball/ca0c5d91e02528c57707be412a39c38d95ad7ba7",
-                "reference": "ca0c5d91e02528c57707be412a39c38d95ad7ba7",
+                "url": "https://api.github.com/repos/elephox-dev/composer-module-sync/zipball/a702c825706d7fb7c912ee454663b0563b8ef914",
+                "reference": "a702c825706d7fb7c912ee454663b0563b8ef914",
                 "shasum": ""
             },
             "require": {
@@ -885,9 +885,9 @@
             "description": "A composer plugin to sync requirements between submodules.",
             "support": {
                 "issues": "https://github.com/elephox-dev/composer-module-sync/issues",
-                "source": "https://github.com/elephox-dev/composer-module-sync/tree/v1.2.1"
+                "source": "https://github.com/elephox-dev/composer-module-sync/tree/v1.2.2"
             },
-            "time": "2021-12-07T01:11:24+00:00"
+            "time": "2021-12-07T11:09:22+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
