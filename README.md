@@ -3,7 +3,7 @@
 </p>
 
 <p align=center>
-  This is a library project providing building blocks for building your own application.
+  This is a library project providing building blocks for building your own PHP application.
 </p>
 
 <p align="center">
@@ -24,7 +24,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
 - [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
@@ -40,12 +39,11 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Maybe: Query Builder for Database Adapter
 - [ ] Maybe: [PSR-13](https://www.php-fig.org/psr/psr-13) for Templating Adapter
 - [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md)
-- [ ] Publish coverage report
-- [ ] Publish benchmark report
+- [ ] Publish PHPUnit HTML coverage report
+- [ ] Publish/compare benchmark report against baseline
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] New documentation solution
-- [ ] Create a makefile with useful shortcuts
 
 ### ☑️ Done
 
@@ -59,6 +57,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] (basic) Filesystem
 - [x] Routing (controller attributes)
 - [x] Logging Services
+- [x] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
+- [x] ~~Create a makefile with useful shortcuts~~ Created composer.json scripts instead
 
 <!-- start annotations -->
 
