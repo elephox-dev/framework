@@ -94,7 +94,7 @@ class HandlerContainer implements Contract\HandlerContainer
 				throw new InvalidClassCallableHandlerException($className);
 			}
 
-			$classInstance = $this->container->get($className);
+			$classInstance = $this->container->getOrInstantiate($className);
 
 			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#6412 or vimeo/psalm#6989 */
 			$closure = Closure::fromCallable($classInstance);
@@ -112,7 +112,8 @@ class HandlerContainer implements Contract\HandlerContainer
 				continue;
 			}
 
-			$classInstance ??= $this->container->get($className);
+			$classInstance ??= $this->container->getOrInstantiate($className);
+
 			$closure = $methodReflection->getClosure($classInstance);
 
 			/** @noinspection PhpConditionAlreadyCheckedInspection */
@@ -144,13 +145,6 @@ class HandlerContainer implements Contract\HandlerContainer
 		}
 	}
 
-	public function loadFromRegistrar(RegistrarContract $registrar): static
-	{
-		$registrar->registerAll($this->container);
-
-		return $this;
-	}
-
 	public function checkRegistrar(object $potentialRegistrar): static
 	{
 		$traits = class_uses($potentialRegistrar);
@@ -162,7 +156,9 @@ class HandlerContainer implements Contract\HandlerContainer
 		}
 
 		/** @var RegistrarContract $potentialRegistrar */
-		return $this->loadFromRegistrar($potentialRegistrar);
+		$potentialRegistrar->registerAll($this->container);
+
+		return $this;
 	}
 
 	/**
