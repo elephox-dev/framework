@@ -233,7 +233,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $id
+	 * @param class-string<T>|string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
@@ -276,7 +276,7 @@ class Container implements Contract\Container
 			} else {
 				/**
 				 * @psalm-suppress UndefinedMethod
-				 * @var class-string|null $type
+				 * @var class-string<T>|null $type
 				 */
 				$type = $classProperty->getType()?->getName();
 				if ($type !== null && $this->has($type)) {

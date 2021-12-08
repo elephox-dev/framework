@@ -10,9 +10,7 @@ use Psr\Container\ContainerInterface;
 interface Container extends ContainerInterface
 {
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType
-	 *
-	 * @param non-empty-string $id
+	 * @param string $id
 	 * @return bool
 	 */
 	public function has(string $id): bool;
@@ -86,7 +84,7 @@ interface Container extends ContainerInterface
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $id
+	 * @param class-string<T>|string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
