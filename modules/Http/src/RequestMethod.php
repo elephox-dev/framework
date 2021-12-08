@@ -30,4 +30,9 @@ enum RequestMethod: string implements Contract\RequestMethod
 	{
 		return $this->value;
 	}
+
+	#[Pure] public function copy(): static
+	{
+		return $this;
+	}
 }

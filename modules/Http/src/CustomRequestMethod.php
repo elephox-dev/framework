@@ -5,6 +5,9 @@ namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class CustomRequestMethod implements Contract\RequestMethod
 {
 	/**
@@ -25,5 +28,10 @@ class CustomRequestMethod implements Contract\RequestMethod
 	#[Pure] public function canHaveBody(): bool
 	{
 		return $this->canHaveBody;
+	}
+
+	#[Pure] public function copy(): static
+	{
+		return new static($this->method, $this->canHaveBody);
 	}
 }

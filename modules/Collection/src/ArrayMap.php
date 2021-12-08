@@ -257,4 +257,9 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	{
 		unset($this->values[$key]);
 	}
+
+	public function __clone()
+	{
+		$this->values = clone $this->values;
+	}
 }

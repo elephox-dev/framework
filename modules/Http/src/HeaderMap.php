@@ -23,7 +23,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			throw new InvalidArgumentException('Header name cannot be empty');
 		}
 
-		$headerName = HeaderName::tryFrom($name);
+		$headerName = HeaderName::tryFromIgnoreCase($name);
 		if ($headerName === null) {
 			$headerName = new CustomHeaderName($name);
 		}
@@ -46,7 +46,8 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 					throw new InvalidHeaderNameTypeException($name);
 				}
 
-				if (empty($name)) {
+				$trimmedName = trim($name, " \t\n\r\0\x0B\\/():=");
+				if ($trimmedName !== $name) {
 					throw new InvalidHeaderNameException($name);
 				}
 
@@ -54,15 +55,21 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			}
 
 			if (is_string($value)) {
-				$values = ArrayList::fromValue($value);
-			} else if (is_iterable($value)) {
+				$value = explode(', ', $value);
+			}
+
+			if (is_iterable($value)) {
 				$values = ArrayList::fromArray($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
 			}
 			/** @var ArrayList<string> $values */
 
-			$map->put($headerName, $values);
+			if ($map->has($headerName)) {
+				$map->get($headerName)->addAll($values);
+			} else {
+				$map->put($headerName, $values);
+			}
 		}
 
 		return $map;
@@ -80,10 +87,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => $name->getValue() === $key->getValue());
-		$obj ??= $key;
-
-		return parent::has($obj);
+		return $this->firstKey(static fn(Contract\HeaderName $name) => strtolower($name->getValue()) === strtolower($key->getValue())) !== null;
 	}
 
 	/**
@@ -99,8 +103,8 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => $name->getValue() === $key->getValue());
-		$obj ??=  $key;
+		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => strtolower($name->getValue()) === strtolower($key->getValue()));
+		$obj ??= $key;
 
 		if (!is_iterable($value)) {
 			if (!is_string($value)) {
@@ -126,7 +130,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		$obj = $this->firstKey(static fn (Contract\HeaderName $name) => $name->getValue() === $key->getValue());
+		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => strtolower($name->getValue()) === strtolower($key->getValue()));
 		if (!$obj instanceof Contract\HeaderName) {
 			throw new OffsetNotFoundException($key->getValue());
 		}
@@ -147,6 +151,18 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 
 			$headers[$headerName] = $headerValue;
 		}
+
+		uksort($headers, static function (string $a, string $b) {
+			if ($a === "Host") {
+				return -1;
+			}
+
+			if ($b === "Host") {
+				return 1;
+			}
+
+			return strcasecmp($a, $b);
+		});
 
 		return $headers;
 	}

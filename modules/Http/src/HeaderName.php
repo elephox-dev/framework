@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 enum HeaderName: string implements Contract\HeaderName
@@ -170,5 +171,21 @@ enum HeaderName: string implements Contract\HeaderName
 	public function getValue(): string
 	{
 		return $this->value;
+	}
+
+	public static function tryFromIgnoreCase(string $value): ?HeaderName
+	{
+		if (empty($value)) {
+			throw new InvalidArgumentException("Header name cannot be empty");
+		}
+
+		$value = strtolower($value);
+		foreach (self::cases() as $name) {
+			if (strtolower($name->value) === $value) {
+				return $name;
+			}
+		}
+
+		return null;
 	}
 }

@@ -6,6 +6,7 @@ namespace Elephox\Http;
 use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
+use LogicException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -73,40 +74,49 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		$uri = $_SERVER["REQUEST_URI"];
 		$parsedUri = Url::fromString($uri);
 
-		try {
-			$contentLength = (int)$headerMap->get(HeaderName::ContentLength)->first();
-		} catch (OffsetNotFoundException) {
-			$contentLength = 0;
-		}
+		$body = new LazyResourceStream(static function () {
+			$stream = fopen('php://input', 'rb');
+			if ($stream === false) {
+				throw new RuntimeException("Failed to open php://input.");
+			}
+			return $stream;
+		});
 
-		if ($contentLength > 0) {
-			$body = new ResourceStream(fopen('php://input', 'rb'));
-		} else {
-			$body = new EmptyStream();
-		}
-
-		return new self($version, $headerMap, $body, $requestMethod, $parsedUri);
+		return new self($requestMethod, $parsedUri, $headerMap, $body, $version);
 	}
 
-	final public function __construct(
-		string $protocolVersion,
-		Contract\RequestHeaderMap $headers,
-		StreamInterface $body,
-		private Contract\RequestMethod $method,
-		private UriInterface $url
-	) {
-		parent::__construct($protocolVersion, $headers, $body);
+	protected static function createHeaderMap(): Contract\RequestHeaderMap
+	{
+		return new RequestHeaderMap();
+	}
 
-		if (!$this->method->canHaveBody() && $body->getSize() > 0) {
-			throw new InvalidArgumentException("Request method {$this->method->getValue()} cannot have a body.");
+	private UriInterface $url;
+
+	final public function __construct(
+		private Contract\RequestMethod $method = RequestMethod::GET,
+		?UriInterface $url = null,
+		?Contract\RequestHeaderMap $headers = null,
+		?StreamInterface $body = null,
+		string $protocolVersion = "1.1"
+	) {
+		parent::__construct($headers, $body, $protocolVersion);
+
+		$this->url = $url ?? Url::fromString("");
+
+		if (!$this->getRequestMethod()->canHaveBody() && $this->getBody()->getSize() > 0) {
+			throw new InvalidArgumentException("Request method {$this->getRequestMethod()->getValue()} cannot have a body.");
 		}
 
-		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
+		if (!$this->getHeaderMap()->has(HeaderName::Host)) {
+			$this->updateHostHeader();
+		}
+
+		if ($this->getHeaderMap()->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
 			throw new InvalidArgumentException("Requests cannot contain headers reserved for responses only.");
 		}
 	}
 
-	#[Pure] public function getUri()
+	#[Pure] public function getUri(): UriInterface
 	{
 		return $this->url;
 	}
@@ -123,22 +133,32 @@ class Request extends AbstractHttpMessage implements Contract\Request
 
 	public function getHeaderMap(): Contract\RequestHeaderMap
 	{
-		return $this->headers->asRequestHeaders();
+		if (!$this->headers instanceof Contract\RequestHeaderMap) {
+			throw new LogicException("Headers do not implement Contract\RequestHeaderMap.");
+		}
+
+		return $this->headers;
 	}
 
 	#[Pure] public function getRequestTarget(): string
 	{
-		return (string)$this->url;
+		$original = $this->url->getOriginal();
+
+		return empty($original) ? "/" : $original;
 	}
 
 	public function withoutBody(): static
 	{
-		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), new EmptyStream(), clone $this->method, clone $this->url);
+		return new static($this->method->copy(), clone $this->url, (clone $this->headers)->asRequestHeaders(), new EmptyStream(), $this->protocolVersion);
 	}
 
 	public function withProtocolVersion($version): static
 	{
-		return new static($version, (clone $this->headers)->asRequestHeaders(), clone $this->body, clone $this->method, clone $this->url);
+		if ($version === $this->protocolVersion) {
+			return $this;
+		}
+
+		return new static($this->method->copy(), clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $version);
 	}
 
 	public function withHeader($name, $value): static
@@ -164,23 +184,39 @@ class Request extends AbstractHttpMessage implements Contract\Request
 
 	public function withHeaderMap(Contract\HeaderMap $map): static
 	{
-		return new static($this->protocolVersion, $map->asRequestHeaders(), clone $this->body, clone $this->method, clone $this->url);
+		if ($map === $this->headers) {
+			return $this;
+		}
+
+		return new static($this->method->copy(), clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
 	public function withBody(StreamInterface $body): static
 	{
-		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), $body, clone $this->method, clone $this->url);
+		if ($body === $this->body) {
+			return $this;
+		}
+
+		return new static($this->method->copy(), clone $this->url, (clone $this->headers)->asRequestHeaders(), $body, $this->protocolVersion);
 	}
 
 	public function withRequestMethod(Contract\RequestMethod $method): static
 	{
-		return new static($this->protocolVersion, (clone $this->headers)->asRequestHeaders(), clone $this->body, $method, clone $this->url);
+		if ($method === $this->method) {
+			return $this;
+		}
+
+		return new static($method, clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
 	public function withRequestTarget($requestTarget): static
 	{
 		if (!is_string($requestTarget)) {
 			throw new InvalidArgumentException("Request target must be a string.");
+		}
+
+		if (str_contains($requestTarget, ' ')) {
+			throw new InvalidArgumentException("Request target cannot contain spaces.");
 		}
 
 		$uri = Url::fromString($requestTarget);
@@ -194,6 +230,12 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			throw new InvalidArgumentException('Method cannot be empty.');
 		}
 
+		$method = strtoupper($method);
+
+		if ($method === $this->method->getValue()) {
+			return $this;
+		}
+
 		$requestMethod = RequestMethod::tryFrom($method);
 		if ($requestMethod === null) {
 			$requestMethod = new CustomRequestMethod($method);
@@ -204,23 +246,33 @@ class Request extends AbstractHttpMessage implements Contract\Request
 
 	public function withUri(UriInterface $uri, $preserveHost = false): static
 	{
-		$headers = (clone $this->headers)->asRequestHeaders();
-		if ($preserveHost) {
-			$updateHostHeader = false;
-			if ($headers->has(HeaderName::Host)) {
-				$hostHeader = $headers->get(HeaderName::Host);
-				if ($hostHeader->isEmpty()) {
-					$updateHostHeader = true;
-				}
-			} else {
-				$updateHostHeader = true;
-			}
-
-			if ($updateHostHeader && !empty($uri->getHost())) {
-				$headers->put(HeaderName::Host, $uri->getHost());
-			}
+		if ($uri === $this->url) {
+			return $this;
 		}
 
-		return new static($this->protocolVersion, $headers, clone $this->body, clone $this->method, $uri);
+		$newRequest = new static($this->method->copy(), $uri, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+
+		if (!$preserveHost) {
+			$newRequest->updateHostHeader();
+		}
+
+		return $newRequest;
+	}
+
+	protected function updateHostHeader(): void
+	{
+		$uri = $this->getUri();
+
+		$host = $uri->getHost();
+		if (empty($host)) {
+			return;
+		}
+
+		$port = $uri->getPort();
+		if ($port !== null) {
+			$host .= ":" . $port;
+		}
+
+		$this->getHeaderMap()->put(HeaderName::Host, $host);
 	}
 }

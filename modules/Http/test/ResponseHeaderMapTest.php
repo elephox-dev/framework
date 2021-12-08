@@ -67,7 +67,7 @@ class ResponseHeaderMapTest extends TestCase
 
 	public function testInvalidHeaderName(): void
 	{
-		$this->expectException(InvalidHeaderNameException::class);
+		$this->expectException(InvalidArgumentException::class);
 
 		ResponseHeaderMap::fromString(": no name");
 	}

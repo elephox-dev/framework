@@ -5,32 +5,35 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\UrlScheme;
 use Elephox\Support\Contract\ArrayConvertible;
+use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\UriInterface;
 use Stringable;
 
 interface Url extends Stringable, ArrayConvertible, UriInterface
 {
-	public function getScheme(): string;
+	#[Pure] public function getScheme(): string;
 
-	public function getUrlScheme(): ?UrlScheme;
+	#[Pure] public function getUrlScheme(): ?UrlScheme;
 
-	public function getAuthority(): string;
+	#[Pure] public function getAuthority(): string;
 
-	public function getUserInfo(): string;
+	#[Pure] public function getUserInfo(): string;
 
-	public function getUsername(): string;
+	#[Pure] public function getUsername(): string;
 
-	public function getPassword(): string;
+	#[Pure] public function getPassword(): string;
 
-	public function getHost(): string;
+	#[Pure] public function getHost(): string;
 
-	public function getPort(): ?int;
+	#[Pure] public function getPort(): ?int;
 
-	public function getPath(): string;
+	#[Pure] public function getPath(): string;
 
-	public function getQuery(): string;
+	#[Pure] public function getQuery(): string;
 
-	public function getFragment(): string;
+	#[Pure] public function getFragment(): string;
+
+	#[Pure] public function getOriginal(): string;
 
 	public function withScheme($scheme): static;
 

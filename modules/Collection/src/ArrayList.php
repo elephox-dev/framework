@@ -294,4 +294,9 @@ class ArrayList implements GenericList, ArrayAccess
 	{
 		return $this;
 	}
+
+	public function __clone()
+	{
+		$this->list = clone $this->list;
+	}
 }

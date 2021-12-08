@@ -18,11 +18,11 @@ class ResourceStream implements TypedStreamInterface
 	 * @param null|positive-int|0 $size
 	 */
 	public function __construct(
-		private $resource,
-		private bool $readable = true,
-		private bool $writable = true,
-		private bool $seekable = true,
-		private ?int $size = null
+		protected $resource,
+		protected bool $readable = true,
+		protected bool $writable = true,
+		protected bool $seekable = true,
+		protected ?int $size = null
 	)
 	{
 		if (!is_resource($this->resource)) {
@@ -81,10 +81,6 @@ class ResourceStream implements TypedStreamInterface
 		if (is_array($stats) && isset($stats['size'])) {
 			/** @var positive-int|0 */
 			$this->size = $stats['size'];
-		}
-
-		if ($this->size === null) {
-			throw new RuntimeException('Could not determine stream size');
 		}
 
 		return $this->size;

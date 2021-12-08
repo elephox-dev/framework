@@ -30,7 +30,7 @@ class ResponseTest extends TestCase
 {
 	public function testConstructor(): void
 	{
-		$response = new Response("1.1", (new HeaderMap())->asResponseHeaders(), new EmptyStream(), ResponseCode::OK);
+		$response = new Response();
 		self::assertEquals(200, $response->getResponseCode()->getCode());
 		self::assertEquals('OK', $response->getResponseCode()->getMessage());
 		self::assertEmpty($response->getHeaderMap()->asArray());

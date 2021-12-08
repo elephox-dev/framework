@@ -5,17 +5,29 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\OffsetNotFoundException;
 use Elephox\Http\Contract\HeaderName;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
 
 abstract class AbstractHttpMessage implements Contract\HttpMessage
 {
-	#[Pure] public function __construct(
-		protected string $protocolVersion,
-		protected Contract\HeaderMap $headers,
-		protected StreamInterface $body
-	) {}
+	protected StreamInterface $body;
+	protected Contract\HeaderMap $headers;
+
+	protected static function createHeaderMap(): Contract\HeaderMap
+	{
+		return new HeaderMap();
+	}
+
+	public function __construct(
+		?Contract\HeaderMap $headers = null,
+		?StreamInterface $body = null,
+		protected string $protocolVersion = "1.1"
+	) {
+		$this->headers = $headers ?? static::createHeaderMap();
+		$this->body = $body ?? new EmptyStream();
+	}
 
 	public function getProtocolVersion()
 	{
@@ -45,7 +57,11 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 	{
 		$headerName = HeaderMap::parseHeaderName($name);
 
-		return $this->getHeaderName($headerName)->join(',');
+		try {
+			return $this->getHeaderName($headerName)->join(', ');
+		} catch (OffsetNotFoundException) {
+			return "";
+		}
 	}
 
 	public function hasHeaderName(HeaderName $name): bool

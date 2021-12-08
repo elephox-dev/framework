@@ -31,6 +31,9 @@ class Url implements Contract\Url
 		$host = empty($matches['host']) ? null : $matches['host'];
 		$port = ctype_digit($matches['port']) ? (int)$matches['port'] : null;
 		$path = $matches['path'];
+		if (str_contains($path, ' ')) {
+			$path = str_replace(' ', '%20', $path);
+		}
 
 		if (array_key_exists('query', $matches) && str_starts_with($matches['query'], '?')) {
 			$query = substr($matches['query'], 1);
@@ -44,10 +47,11 @@ class Url implements Contract\Url
 			$fragment = null;
 		}
 
-		return new self($scheme, $username, $password, $host, $port, $path, $query, $fragment);
+		return new self($uri, $scheme, $username, $password, $host, $port, $path, $query, $fragment);
 	}
 
 	#[Pure] final private function __construct(
+		private string $original,
 		private ?string $scheme,
 		private ?string $username,
 		private ?string $password,
@@ -55,7 +59,7 @@ class Url implements Contract\Url
 		private ?int    $port,
 		private string  $path,
 		private ?string $query,
-		private ?string $fragment,
+		private ?string $fragment
 	)
 	{}
 
@@ -147,6 +151,11 @@ class Url implements Contract\Url
 		return $this->fragment ?? "";
 	}
 
+	#[Pure] public function getOriginal(): string
+	{
+		return $this->original;
+	}
+
 	#[Pure] public function __toString(): string
 	{
 		if ($this->scheme !== null) {
@@ -209,41 +218,41 @@ class Url implements Contract\Url
 
 	#[Pure] public function withScheme($scheme): static
 	{
-		return new static($scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withUserInfo($user, $password = null): static
 	{
-		return new static($this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withHost($host): static
 	{
-		return new static($this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withPort($port): static
 	{
-		return new static($this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withPath($path): static
 	{
-		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
+		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withQuery($query): static
 	{
-		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
+		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
 	}
 
 	#[Pure] public function withFragment($fragment): static
 	{
-		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
+		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
 	}
 
 	#[Pure] public function withUrlScheme(UrlScheme $scheme): static
 	{
-		return new static($scheme->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $scheme->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 }
