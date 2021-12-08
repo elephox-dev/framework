@@ -24,6 +24,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
+- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
 - [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
@@ -57,7 +58,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] (basic) Filesystem
 - [x] Routing (controller attributes)
 - [x] Logging Services
-- [x] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
 - [x] ~~Create a makefile with useful shortcuts~~ Created composer.json scripts instead
 
 <!-- start annotations -->
