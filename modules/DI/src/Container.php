@@ -194,8 +194,12 @@ class Container implements Contract\Container
 	{
 		// check if $id contains a class name
 		if (!class_exists($id)) {
-			// if not, check if $id is an alias (if not, this will throw)
-			$id = $this->resolveAlias($id);
+			try {
+				// if not, check if $id is an alias (if not, this will throw)
+				$id = $this->resolveAlias($id);
+			} catch (BindingNotFoundException $e) {
+				throw new InvalidArgumentException("Class or alias $id does not exist", previous: $e);
+			}
 		}
 		// $id is a valid class name and can be instantiated
 		/** @var class-string<T> $id */
