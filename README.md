@@ -71,8 +71,12 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [ ] Implement send() method.
 - [ ] [Http/src/ServerRequest.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ServerRequest.php)
   - [ ] Implement getServerParams() method.
+  - [ ] Implement getServerParamsMap() method.
   - [ ] Implement getCookieParams() method.
+  - [ ] Implement getCookies() method.
   - [ ] Implement withCookieParams() method.
+  - [ ] Implement withCookies() method.
+  - [ ] Implement withCookie() method.
   - [ ] Implement getQueryParams() method.
   - [ ] Implement withQueryParams() method.
   - [ ] Implement getUploadedFiles() method.
