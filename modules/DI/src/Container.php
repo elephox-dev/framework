@@ -317,7 +317,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param Closure(): T $callback
+	 * @param Closure: T $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T
