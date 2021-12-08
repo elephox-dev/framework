@@ -106,7 +106,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		}
 	}
 
-	#[Pure] public function getUri(): UriInterface
+	#[Pure] public function getUri()
 	{
 		return $this->url;
 	}

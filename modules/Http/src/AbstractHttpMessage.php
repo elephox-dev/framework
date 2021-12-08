@@ -17,31 +17,31 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 		protected StreamInterface $body
 	) {}
 
-	public function getProtocolVersion(): string
+	public function getProtocolVersion()
 	{
 		return $this->protocolVersion;
 	}
 
-	public function getHeaders(): array
+	public function getHeaders()
 	{
 		return $this->headers->asArray();
 	}
 
-	public function hasHeader($name): bool
+	public function hasHeader($name)
 	{
 		$headerName = HeaderMap::parseHeaderName($name);
 
 		return $this->hasHeaderName($headerName);
 	}
 
-	public function getHeader($name): array
+	public function getHeader($name)
 	{
 		$headerName = HeaderMap::parseHeaderName($name);
 
 		return $this->getHeaderName($headerName)->asArray();
 	}
 
-	public function getHeaderLine($name): string
+	public function getHeaderLine($name)
 	{
 		$headerName = HeaderMap::parseHeaderName($name);
 

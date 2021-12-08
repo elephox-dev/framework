@@ -13,35 +13,24 @@ interface HttpMessage extends MessageInterface
 
 	public function withoutBody(): static;
 
-	public function getProtocolVersion(): string;
-
-	public function withProtocolVersion($version): static;
-
-	public function getHeaders(): array;
-
-	public function hasHeader($name): bool;
-
 	public function hasHeaderName(HeaderName $name): bool;
+
+	/**
+	 * @return array<non-empty-string, list<string>>
+	 */
+	public function getHeaders();
 
 	/**
 	 * @param string $name
 	 * @return array<string>
 	 */
-	public function getHeader($name): array;
+	public function getHeader($name);
 
 	/**
 	 * @param HeaderName $name
 	 * @return ReadonlyList<string>
 	 */
 	public function getHeaderName(HeaderName $name): ReadonlyList;
-
-	public function getHeaderLine($name): string;
-
-	public function withHeader($name, $value): static;
-
-	public function withAddedHeader($name, $value): static;
-
-	public function withoutHeader($name): static;
 
 	/**
 	 * @param HeaderName $name
@@ -58,10 +47,6 @@ interface HttpMessage extends MessageInterface
 	public function withAddedHeaderName(HeaderName $name, string|iterable $value): static;
 
 	public function withoutHeaderName(HeaderName $name): static;
-
-	public function getBody(): StreamInterface;
-
-	public function withBody(StreamInterface $body): static;
 
 	public function withHeaderMap(HeaderMap $map): static;
 }

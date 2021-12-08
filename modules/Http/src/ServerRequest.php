@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericMap;
+use Elephox\Http\Contract\Cookie;
+
 class ServerRequest extends Request implements Contract\ServerRequest
 {
 	public function getServerParams(): array
@@ -10,14 +14,34 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		// TODO: Implement getServerParams() method.
 	}
 
+	public function getServerParamsMap(): GenericMap
+	{
+		// TODO: Implement getServerParamsMap() method.
+	}
+
 	public function getCookieParams(): array
 	{
 		// TODO: Implement getCookieParams() method.
 	}
 
+	public function getCookies(): GenericList
+	{
+		// TODO: Implement getCookies() method.
+	}
+
 	public function withCookieParams(array $cookies): static
 	{
 		// TODO: Implement withCookieParams() method.
+	}
+
+	public function withCookies(iterable $cookies): static
+	{
+		// TODO: Implement withCookies() method.
+	}
+
+	public function withCookie(Cookie $cookie): static
+	{
+		// TODO: Implement withCookie() method.
 	}
 
 	public function getQueryParams(): array
