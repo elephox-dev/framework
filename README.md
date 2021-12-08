@@ -25,6 +25,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 ### 🔳 Open
 
 - [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
+- [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-15) in HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
 - [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
