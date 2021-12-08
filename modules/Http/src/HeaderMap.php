@@ -80,7 +80,10 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
-		return parent::has($key);
+		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => $name->getValue() === $key->getValue());
+		$obj ??= $key;
+
+		return parent::has($obj);
 	}
 
 	/**
@@ -96,14 +99,17 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			$key = self::parseHeaderName($key);
 		}
 
+		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => $name->getValue() === $key->getValue());
+		$obj ??=  $key;
+
 		if (!is_iterable($value)) {
 			if (!is_string($value)) {
 				throw new InvalidHeaderTypeException($value);
 			}
 
-			parent::put($key, ArrayList::fromValue($value));
+			parent::put($obj, ArrayList::fromValue($value));
 		} else {
-			parent::put($key, ArrayList::fromArray($value));
+			parent::put($obj, ArrayList::fromArray($value));
 		}
 	}
 

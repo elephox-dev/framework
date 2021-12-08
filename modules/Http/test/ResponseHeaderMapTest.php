@@ -50,6 +50,9 @@ class ResponseHeaderMapTest extends TestCase
 	{
 		$map = ResponseHeaderMap::fromString("Host: localhost\r\nContent-Type:  text/html \r\nX-Custom: test:value\r\n\r\n");
 
+		self::assertTrue($map->has(HeaderName::Host));
+		self::assertTrue($map->has(HeaderName::ContentType));
+		self::assertTrue($map->has('X-Custom'));
 		self::assertEquals(['localhost'], $map->get(HeaderName::Host)->asArray());
 		self::assertEquals(['text/html'], $map->get(HeaderName::ContentType)->asArray());
 		self::assertEquals(['test:value'], $map->get("X-Custom")->asArray());
@@ -78,12 +81,23 @@ class ResponseHeaderMapTest extends TestCase
 		]);
 	}
 
-	public function testInvalidHeaderValueType(): void
+	public function testInvalidHeaderValueTypeFromArray(): void
 	{
 		$this->expectException(InvalidHeaderTypeException::class);
 
 		ResponseHeaderMap::fromArray([
 			'Host' => 123
 		]);
+	}
+
+	public function testInvalidHeaderValueTypePut(): void
+	{
+		$this->expectException(InvalidHeaderTypeException::class);
+
+		$map = ResponseHeaderMap::fromArray([
+			'Host' => 'localhost'
+		]);
+
+		$map->put('Host', 123);
 	}
 }

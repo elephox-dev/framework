@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,5 +21,13 @@ class HeaderMapTest extends TestCase
 		self::assertInstanceOf(HeaderName::class, $contentType);
 		self::assertInstanceOf(CustomHeaderName::class, $custom);
 		self::assertEquals('X-Custom', $custom->getValue());
+	}
+
+	public function testInvalidHeaderNameEmpty(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Header name cannot be empty');
+
+		HeaderMap::parseHeaderName('');
 	}
 }
