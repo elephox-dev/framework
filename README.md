@@ -69,6 +69,27 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Http/src/Response.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Response.php)
   - [ ] Implement send() method.
+- [ ] [Http/src/ServerRequest.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ServerRequest.php)
+  - [ ] Implement getServerParams() method.
+  - [ ] Implement getCookieParams() method.
+  - [ ] Implement withCookieParams() method.
+  - [ ] Implement getQueryParams() method.
+  - [ ] Implement withQueryParams() method.
+  - [ ] Implement getUploadedFiles() method.
+  - [ ] Implement withUploadedFiles() method.
+  - [ ] Implement getParsedBody() method.
+  - [ ] Implement withParsedBody() method.
+  - [ ] Implement getAttributes() method.
+  - [ ] Implement getAttribute() method.
+  - [ ] Implement withAttribute() method.
+  - [ ] Implement withoutAttribute() method.
+- [ ] [Http/src/UploadedFile.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/UploadedFile.php)
+  - [ ] Implement getStream() method.
+  - [ ] Implement moveTo() method.
+  - [ ] Implement getSize() method.
+  - [ ] Implement getError() method.
+  - [ ] Implement getClientFilename() method.
+  - [ ] Implement getClientMediaType() method.
 
 
 ### 🚧 Open issues from other repositories
