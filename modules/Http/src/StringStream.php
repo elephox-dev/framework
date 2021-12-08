@@ -44,10 +44,6 @@ class StringStream implements TypedStreamInterface
 
 	#[Pure] public function getSize(): ?int
 	{
-		/**
-		 * Only keep this until vimeo/psalm#7062 is fixed
-		 * @var positive-int|0
-		 */
 		return strlen($this->string);
 	}
 
@@ -77,10 +73,6 @@ class StringStream implements TypedStreamInterface
 		} elseif ($whence === SEEK_CUR) {
 			$this->pointer += $offset;
 		} elseif ($whence === SEEK_END) {
-			/**
-			 * Only keep this until vimeo/psalm#7062 is fixed
-			 * @var positive-int|0
-			 */
 			$this->pointer = strlen($this->string) + $offset;
 		} else {
 			throw new InvalidArgumentException('Invalid whence');
@@ -105,10 +97,6 @@ class StringStream implements TypedStreamInterface
 
 		$this->string .= $string;
 
-		/**
-		 * Only keep this until vimeo/psalm#7062 is fixed
-		 * @var positive-int|0
-		 */
 		return strlen($string);
 	}
 
@@ -129,10 +117,6 @@ class StringStream implements TypedStreamInterface
 			return "";
 		}
 
-		/**
-		 * Only keep this until vimeo/psalm#7062 is fixed
-		 * @var positive-int|0
-		 */
 		$this->pointer += strlen($string);
 
 		return $string;
