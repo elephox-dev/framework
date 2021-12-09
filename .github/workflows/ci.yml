@@ -151,6 +151,7 @@ jobs:
       - name: 🧪 Run PHPUnit
         run: composer run ci:unit-test
       - name: 📤 Upload coverage data
+        if: ${{ matrix.os == 'ubuntu-latest' }} # remove this when actions/upload-artifact#270 is resolved
         uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
@@ -163,7 +164,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '8.1' ]
-        os: [ 'ubuntu-latest', 'windows-latest' ]
+        os: [ 'ubuntu-latest' ] # re-add 'windows-latest' when actions/upload-artifact#270 is resolved
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
