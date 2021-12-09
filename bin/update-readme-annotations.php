@@ -16,10 +16,6 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 	foreach ($files as $value) {
 		$path = realpath($dir . DIRECTORY_SEPARATOR . $value);
 		if (is_file($path)) {
-			if (!str_ends_with($path, '.php')) {
-				continue;
-			}
-
 			$results[] = $path;
 		} else if ($value !== "." && $value !== ".." && !str_ends_with($path, "vendor") && is_dir($path)) {
 			gatherSourceFiles($path, $results);
@@ -35,9 +31,9 @@ $readmeFile = $root . 'README.md';
 
 echo "Gathering files...\n";
 
-$sourceFiles = gatherSourceFiles($src);
-$todoPattern = '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/';
-$issuePattern = '/(?:(?<repo>\w+\/\w+)#(?<issue>\d+))/';
+$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src));
+$todoPattern = /** @lang RegExp */ '/\N*(TODO|FIXME|MAYBE|IDEA):?\s*(\N*)/';
+$issuePattern = /** @lang RegExp */ '/\s(?<repo>[A-Za-z0-9\-_]+?\/[A-Za-z0-9\-_]+?)#(?<issue>\d+)/';
 
 echo "Processing " . count($sourceFiles) . " files...\n";
 $matches = [];
@@ -45,12 +41,12 @@ $issues = [];
 foreach ($sourceFiles as $sourceFile) {
 	$contents = file_get_contents($sourceFile);
 
-	preg_match_all($todoPattern, $contents, $fileMatches);
-	if (!empty($fileMatches[0])) {
-		foreach ($fileMatches[1] as $i => $matchedCategory) {
+	preg_match_all($todoPattern, $contents, $todoMatches);
+	if (!empty($todoMatches[0])) {
+		foreach ($todoMatches[1] as $i => $matchedCategory) {
 			$matches[$matchedCategory] ??= [];
 			$matches[$matchedCategory][$sourceFile] ??= [];
-			$matches[$matchedCategory][$sourceFile][] = $fileMatches[2][$i];
+			$matches[$matchedCategory][$sourceFile][] = $todoMatches[2][$i];
 		}
 	}
 
