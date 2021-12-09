@@ -297,6 +297,11 @@ class ArrayList implements GenericList, ArrayAccess
 
 	public function __clone()
 	{
-		$this->list = clone $this->list;
+		/** @var list<T> */
+		$this->list = [];
+
+		foreach ((clone $this)->list as $item) {
+			$this->list[] = is_object($item) ? clone $item : $item;
+		}
 	}
 }

@@ -9,7 +9,7 @@ use Elephox\Collection\Contract\ReadonlyList;
 
 /**
  * @extends ReadonlyMap<HeaderName, ReadonlyList<string>>
- * @extends ArrayConvertible<string, list<string>>
+ * @extends ArrayConvertible<non-empty-string, list<string>>
  */
 interface ReadonlyHeaderMap extends ReadonlyMap, ArrayConvertible
 {

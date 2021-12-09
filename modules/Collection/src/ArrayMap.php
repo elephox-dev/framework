@@ -260,6 +260,10 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 
 	public function __clone()
 	{
-		$this->values = clone $this->values;
+		$this->values = [];
+
+		foreach ((clone $this)->values as $key => $value) {
+			$this->values[$key] = is_object($value) ? clone $value : $value;
+		}
 	}
 }

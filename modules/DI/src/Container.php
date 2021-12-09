@@ -17,10 +17,10 @@ use ReflectionProperty;
 
 class Container implements Contract\Container
 {
-	/** @var \Elephox\Collection\ArrayMap<non-empty-string, Binding> */
+	/** @var \Elephox\Collection\ArrayMap<string, Binding> */
 	private ArrayMap $map;
 
-	/** @var \Elephox\Collection\ArrayMap<non-empty-string, non-empty-string> */
+	/** @var \Elephox\Collection\ArrayMap<string, non-empty-string> */
 	private ArrayMap $aliases;
 
 	public function __construct()
@@ -101,7 +101,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $alias
+	 * @param class-string<T>|string $alias
 	 *
 	 * @return class-string<T>
 	 */
@@ -124,7 +124,7 @@ class Container implements Contract\Container
 	 *
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $id
+	 * @param class-string<T>|string $id
 	 *
 	 * @return T
 	 */
@@ -184,7 +184,7 @@ class Container implements Contract\Container
 	/**
 	 * @template T
 	 *
-	 * @param class-string<T>|non-empty-string $id
+	 * @param class-string<T>|string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
