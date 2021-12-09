@@ -24,23 +24,24 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) in HTTP
-- [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-15) in HTTP
-- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) in Core
+- [ ] Split existing PSR implementations into different third-party adapters
+- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
+- [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-15) adapter for HTTP
+- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
 - [ ] Event Bus
-- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) in Event Bus
+- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Caching Services
-- [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) in Caching Services
-- [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) in Caching Services
-- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) in Logging Services
+- [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
+- [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) adapter for Caching Services
+- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) adapter for Logging Services
 - [ ] Database Adapter
 - [ ] MySql Adapter Implementation
 - [ ] Entity Mapping for Database Adapter
 - [ ] Templating Adapter
 - [ ] Twig Adapter Implementation
 - [ ] Maybe: Query Builder for Database Adapter
-- [ ] Maybe: [PSR-13](https://www.php-fig.org/psr/psr-13) for Templating Adapter
-- [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md)
+- [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
+- [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
 - [ ] Publish PHPUnit HTML coverage report
 - [ ] Publish/compare benchmark report against baseline
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
