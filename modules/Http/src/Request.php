@@ -97,7 +97,8 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		?UriInterface $url = null,
 		?Contract\RequestHeaderMap $headers = null,
 		?StreamInterface $body = null,
-		string $protocolVersion = "1.1"
+		string $protocolVersion = "1.1",
+		bool $inferHostHeader = true
 	) {
 		parent::__construct($headers, $body, $protocolVersion);
 
@@ -107,7 +108,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			throw new InvalidArgumentException("Request method {$this->getRequestMethod()->getValue()} cannot have a body.");
 		}
 
-		if (!$this->getHeaderMap()->has(HeaderName::Host)) {
+		if ($inferHostHeader && !$this->getHeaderMap()->has(HeaderName::Host)) {
 			$this->updateHostHeader();
 		}
 
@@ -140,11 +141,25 @@ class Request extends AbstractHttpMessage implements Contract\Request
 		return $this->headers;
 	}
 
-	#[Pure] public function getRequestTarget(): string
+	public function getRequestTarget(): string
 	{
-		$original = $this->url->getOriginal();
+		$path = $this->url->getPath();
+		$query = $this->url->getQuery();
+		$fragment = $this->url->getFragment();
 
-		return empty($original) ? "/" : $original;
+		if (empty($path)) {
+			$path = "/";
+		}
+
+		if ($query !== '') {
+			$path .= "?" . $query;
+		}
+
+		if ($fragment !== '') {
+			$path .= "#" . $fragment;
+		}
+
+		return $path;
 	}
 
 	public function withoutBody(): static
@@ -188,7 +203,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method->copy(), clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($this->method->copy(), clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion, false);
 	}
 
 	public function withBody(StreamInterface $body): static

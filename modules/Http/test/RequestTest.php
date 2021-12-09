@@ -28,6 +28,7 @@ use Psr\Http\Message\StreamInterface;
  * @covers \Elephox\Http\StringStream
  * @covers \Elephox\Http\EmptyStream
  * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Http\InvalidHeaderNameException
  */
 class RequestTest extends TestCase
 {
