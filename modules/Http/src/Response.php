@@ -164,7 +164,6 @@ class Response extends AbstractHttpMessage implements Contract\Response
 
 	public function send(): void
 	{
-		// TODO: Implement send() method.
 		if (headers_sent($filename, $line)) {
 			throw new RuntimeException("Headers already sent in $filename:$line");
 		}
