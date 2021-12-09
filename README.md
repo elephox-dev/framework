@@ -68,8 +68,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### ✅ TODO
 
-- [ ] [Http/src/Response.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/Response.php)
-  - [ ] Implement send() method.
 - [ ] [Http/src/ServerRequest.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ServerRequest.php)
   - [ ] Implement getServerParams() method.
   - [ ] Implement getServerParamsMap() method.
