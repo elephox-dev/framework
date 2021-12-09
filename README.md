@@ -98,6 +98,9 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🚧 Open issues from other repositories
 
+- [actions/upload-artifact](https://github.com/actions/upload-artifact)
+  - [#270](https://github.com/actions/upload-artifact/issues/270)
+
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
   - [#6412](https://github.com/vimeo/psalm/issues/6412)
