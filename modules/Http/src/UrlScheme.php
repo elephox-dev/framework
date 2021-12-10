@@ -5,7 +5,7 @@ namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Pure;
 
-enum UrlScheme: string {
+enum UrlScheme: string implements Contract\UrlScheme {
 	case HTTPS = 'https';
 	case HTTP = 'http';
 	case FTP = 'ftp';
@@ -24,5 +24,10 @@ enum UrlScheme: string {
 			self::MYSQL => 3306,
 			default => null
 		};
+	}
+
+	public function getScheme(): string
+	{
+		return $this->value;
 	}
 }
