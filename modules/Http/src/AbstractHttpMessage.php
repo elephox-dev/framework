@@ -5,14 +5,13 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\ReadonlyList;
-use Elephox\Collection\OffsetNotFoundException;
 use Elephox\Http\Contract\HeaderName;
+use Elephox\Http\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
-use Psr\Http\Message\StreamInterface;
 
 abstract class AbstractHttpMessage implements Contract\HttpMessage
 {
-	protected StreamInterface $body;
+	protected Stream $body;
 	protected Contract\HeaderMap $headers;
 
 	protected static function createHeaderMap(): Contract\HeaderMap
@@ -22,59 +21,29 @@ abstract class AbstractHttpMessage implements Contract\HttpMessage
 
 	public function __construct(
 		?Contract\HeaderMap $headers = null,
-		?StreamInterface $body = null,
+		?Stream $body = null,
 		protected string $protocolVersion = "1.1"
 	) {
 		$this->headers = $headers ?? static::createHeaderMap();
 		$this->body = $body ?? new EmptyStream();
 	}
 
-	public function getProtocolVersion()
+	#[Pure] public function getProtocolVersion(): string
 	{
 		return $this->protocolVersion;
 	}
 
-	public function getHeaders()
-	{
-		return $this->headers->asArray();
-	}
-
-	public function hasHeader($name)
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		return $this->hasHeaderName($headerName);
-	}
-
-	public function getHeader($name)
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		return $this->getHeaderName($headerName)->asArray();
-	}
-
-	public function getHeaderLine($name)
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		try {
-			return $this->getHeaderName($headerName)->join(', ');
-		} catch (OffsetNotFoundException) {
-			return "";
-		}
-	}
-
-	public function hasHeaderName(HeaderName $name): bool
+	#[Pure] public function hasHeaderName(HeaderName $name): bool
 	{
 		return $this->headers->has($name);
 	}
 
-	public function getHeaderName(HeaderName $name): ReadonlyList
+	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList
 	{
 		return $this->headers->get($name);
 	}
 
-	public function getBody(): StreamInterface
+	#[Pure] public function getBody(): Stream
 	{
 		return $this->body;
 	}

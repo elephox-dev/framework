@@ -6,6 +6,9 @@ namespace Elephox\Http;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class Url implements Contract\Url
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
@@ -50,7 +53,7 @@ class Url implements Contract\Url
 		return new self($uri, $scheme, $username, $password, $host, $port, $path, $query, $fragment);
 	}
 
-	#[Pure] final private function __construct(
+	#[Pure] public function __construct(
 		private string $original,
 		private ?string $scheme,
 		private ?string $username,
@@ -216,43 +219,38 @@ class Url implements Contract\Url
 		];
 	}
 
-	#[Pure] public function withScheme($scheme): static
-	{
-		return new static($this->original, $scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
-	}
-
-	#[Pure] public function withUserInfo($user, $password = null): static
+	#[Pure] public function withUserInfo(?string $user, ?string $password = null): static
 	{
 		return new static($this->original, $this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
-	#[Pure] public function withHost($host): static
+	#[Pure] public function withHost(?string $host): static
 	{
 		return new static($this->original, $this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
-	#[Pure] public function withPort($port): static
+	#[Pure] public function withPort(?int $port): static
 	{
 		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
 	}
 
-	#[Pure] public function withPath($path): static
+	#[Pure] public function withPath(string $path): static
 	{
 		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
 	}
 
-	#[Pure] public function withQuery($query): static
+	#[Pure] public function withQuery(?string $query): static
 	{
 		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
 	}
 
-	#[Pure] public function withFragment($fragment): static
+	#[Pure] public function withFragment(?string $fragment): static
 	{
 		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
 	}
 
-	#[Pure] public function withUrlScheme(UrlScheme $scheme): static
+	#[Pure] public function withScheme(?UrlScheme $scheme): static
 	{
-		return new static($this->original, $scheme->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $scheme?->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 }

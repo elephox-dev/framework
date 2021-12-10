@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\TypedStreamInterface;
+use Elephox\Http\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-class ResourceStream implements TypedStreamInterface
+class ResourceStream implements Stream
 {
 	/**
 	 * @param closed-resource|resource|null $resource

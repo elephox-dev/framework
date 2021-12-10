@@ -4,33 +4,25 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\ReadonlyList;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\StreamInterface;
+use JetBrains\PhpStorm\Pure;
 
-interface HttpMessage extends MessageInterface
+interface HttpMessage
 {
-	public function getHeaderMap(): ReadonlyHeaderMap;
+	#[Pure] public function getProtocolVersion(): string;
 
-	public function withoutBody(): static;
+	public function withProtocolVersion(string $version): static;
 
-	public function hasHeaderName(HeaderName $name): bool;
+	#[Pure] public function getBody(): Stream;
 
-	/**
-	 * @return array<non-empty-string, list<string>>
-	 */
-	public function getHeaders();
+	public function withBody(Stream $body): static;
 
-	/**
-	 * @param string $name
-	 * @return array<string>
-	 */
-	public function getHeader($name);
+	#[Pure] public function hasHeaderName(HeaderName $name): bool;
 
 	/**
 	 * @param HeaderName $name
 	 * @return ReadonlyList<string>
 	 */
-	public function getHeaderName(HeaderName $name): ReadonlyList;
+	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList;
 
 	/**
 	 * @param HeaderName $name
@@ -47,6 +39,8 @@ interface HttpMessage extends MessageInterface
 	public function withAddedHeaderName(HeaderName $name, string|iterable $value): static;
 
 	public function withoutHeaderName(HeaderName $name): static;
+
+	public function getHeaderMap(): ReadonlyHeaderMap;
 
 	public function withHeaderMap(HeaderMap $map): static;
 }

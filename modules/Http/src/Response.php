@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Http\Contract\Stream;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use Elephox\Support\MimeType;
 use InvalidArgumentException;
-use Psr\Http\Message\StreamInterface;
+use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class Response extends AbstractHttpMessage implements Contract\Response
 {
 	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\r\n]+)\r?\n(?<headers>(?:(?:[^:]+):\s*(?:[^\r\n]+)\r?\n)*)\r?\n(?<body>.*)/s';
@@ -46,10 +50,10 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		return new self($code, $headers, $body, $version);
 	}
 
-	final public function __construct(
+	public function __construct(
 		private Contract\ResponseCode $code = ResponseCode::OK,
 		?Contract\ResponseHeaderMap $headers = null,
-		?StreamInterface $body = null,
+		?Stream $body = null,
 		string $protocolVersion = "1.1"
 	) {
 		parent::__construct($headers, $body, $protocolVersion);
@@ -59,12 +63,12 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		}
 	}
 
-	public function getResponseCode(): Contract\ResponseCode
+	#[Pure] public function getResponseCode(): Contract\ResponseCode
 	{
 		return $this->code;
 	}
 
-	public function getHeaderMap(): Contract\ResponseHeaderMap
+	#[Pure] public function getHeaderMap(): Contract\ResponseHeaderMap
 	{
 		return $this->headers->asResponseHeaders();
 	}
@@ -74,33 +78,12 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), new EmptyStream(), $this->protocolVersion);
 	}
 
-	public function withProtocolVersion($version): static
+	public function withProtocolVersion(string $version): static
 	{
 		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $version);
 	}
 
-	public function withHeader($name, $value): static
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		return $this->withHeaderName($headerName, $value);
-	}
-
-	public function withAddedHeader($name, $value): static
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		return $this->withHeaderName($headerName, $value);
-	}
-
-	public function withoutHeader($name): static
-	{
-		$headerName = HeaderMap::parseHeaderName($name);
-
-		return $this->withoutHeaderName($headerName);
-	}
-
-	public function withBody(StreamInterface $body): static
+	public function withBody(Stream $body): static
 	{
 		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), $body, $this->protocolVersion);
 	}
@@ -110,31 +93,7 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		return new static($code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
-	public function getStatusCode(): int
-	{
-		return $this->code->getCode();
-	}
-
-	public function getReasonPhrase(): string
-	{
-		return $this->code->getMessage();
-	}
-
-	public function withStatus($code, $reasonPhrase = ''): static
-	{
-		$responseCode = ResponseCode::tryfrom($code);
-		if ($responseCode === null) {
-			if (empty($reasonPhrase)) {
-				throw new InvalidArgumentException("Reason phrase cannot be empty for custom response codes.");
-			}
-
-			$responseCode = new CustomResponseCode($code, $reasonPhrase);
-		}
-
-		return $this->withResponseCode($responseCode);
-	}
-
-	public function getMimeType(): ?MimeTypeContract
+	#[Pure] public function getContentType(): ?MimeTypeContract
 	{
 		if (!$this->headers->has(HeaderName::ContentType)) {
 			return null;
@@ -148,7 +107,7 @@ class Response extends AbstractHttpMessage implements Contract\Response
 		return MimeType::tryfrom($value);
 	}
 
-	public function withMimeType(?MimeTypeContract $mimeType): static
+	public function withContentType(?MimeTypeContract $mimeType): static
 	{
 		if ($mimeType === null) {
 			return $this->withoutHeaderName(HeaderName::ContentType);

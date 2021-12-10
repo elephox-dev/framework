@@ -4,25 +4,19 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
-use Psr\Http\Message\ResponseInterface;
+use JetBrains\PhpStorm\Pure;
 
-interface Response extends HttpMessage, ResponseInterface
+interface Response extends HttpMessage
 {
 	public function getHeaderMap(): ResponseHeaderMap;
 
-	public function getResponseCode(): ResponseCode;
+	#[Pure] public function getResponseCode(): ResponseCode;
 
-	public function withResponseCode(ResponseCode $code): self;
+	public function withResponseCode(ResponseCode $code): static;
 
-	public function getMimeType(): ?MimeTypeContract;
+	#[Pure] public function getContentType(): ?MimeTypeContract;
 
-	public function withMimeType(?MimeTypeContract $mimeType): self;
-
-	public function withStatus($code, $reasonPhrase = ''): self;
-
-	public function getStatusCode(): int;
-
-	public function getReasonPhrase(): string;
+	public function withContentType(?MimeTypeContract $mimeType, bool $updateHeader = true): static;
 
 	public function send(): void;
 }

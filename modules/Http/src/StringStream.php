@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\TypedStreamInterface;
+use Elephox\Http\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-class StringStream implements TypedStreamInterface
+class StringStream implements Stream
 {
 	private bool $detached = false;
 
@@ -75,7 +75,7 @@ class StringStream implements TypedStreamInterface
 		} elseif ($whence === SEEK_END) {
 			$this->pointer = strlen($this->string) + $offset;
 		} else {
-			throw new InvalidArgumentException('Invalid whence');
+			throw new InvalidArgumentException('Invalid whence: ' . $whence);
 		}
 	}
 
@@ -89,7 +89,7 @@ class StringStream implements TypedStreamInterface
 		return $this->writable;
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		if (!$this->isWritable()) {
 			throw new RuntimeException('Stream is not writable');
@@ -105,7 +105,7 @@ class StringStream implements TypedStreamInterface
 		return $this->readable;
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		if (!$this->isReadable()) {
 			throw new RuntimeException('Stream is not readable');
@@ -127,7 +127,7 @@ class StringStream implements TypedStreamInterface
 		return $this->string;
 	}
 
-	#[Pure] public function getMetadata($key = null): array
+	#[Pure] public function getMetadata(string $key = null): array
 	{
 		return [];
 	}

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Closure;
-use Elephox\Http\Contract\TypedStreamInterface;
+use Elephox\Http\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 
-class LazyResourceStream implements TypedStreamInterface
+class LazyResourceStream implements Stream
 {
 	protected ?ResourceStream $resourceStream = null;
 

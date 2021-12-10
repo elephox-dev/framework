@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\TypedStreamInterface;
+use Elephox\Http\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-final class EmptyStream implements TypedStreamInterface
+final class EmptyStream implements Stream
 {
 	#[Pure] public function __toString(): string
 	{
@@ -57,7 +57,7 @@ final class EmptyStream implements TypedStreamInterface
 		return false;
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		throw new RuntimeException('Empty stream is not writable.');
 	}
@@ -67,7 +67,7 @@ final class EmptyStream implements TypedStreamInterface
 		return false;
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		throw new RuntimeException('Empty stream is not readable.');
 	}
@@ -77,7 +77,7 @@ final class EmptyStream implements TypedStreamInterface
 		return '';
 	}
 
-	#[Pure] public function getMetadata($key = null): mixed
+	#[Pure] public function getMetadata(string $key = null): mixed
 	{
 		return null;
 	}
