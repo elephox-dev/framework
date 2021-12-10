@@ -47,6 +47,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] New documentation solution
+- [ ] Improve integration of PHPStorm attributes
 
 ### ☑️ Done
 
