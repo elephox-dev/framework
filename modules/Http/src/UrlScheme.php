@@ -26,7 +26,7 @@ enum UrlScheme: string implements Contract\UrlScheme {
 		};
 	}
 
-	public function getScheme(): string
+	#[Pure] public function getScheme(): string
 	{
 		return $this->value;
 	}

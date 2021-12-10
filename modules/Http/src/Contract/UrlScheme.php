@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use JetBrains\PhpStorm\Pure;
+
 interface UrlScheme
 {
-	public function getScheme(): string;
+	#[Pure] public function getScheme(): string;
 
-	public function getDefaultPort(): ?int;
+	#[Pure] public function getDefaultPort(): ?int;
 }

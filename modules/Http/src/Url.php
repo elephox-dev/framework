@@ -249,8 +249,8 @@ class Url implements Contract\Url
 		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
 	}
 
-	#[Pure] public function withScheme(?UrlScheme $scheme): static
+	#[Pure] public function withScheme(?Contract\UrlScheme $scheme): static
 	{
-		return new static($this->original, $scheme?->value, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->original, $scheme?->getScheme(), $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 }
