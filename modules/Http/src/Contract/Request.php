@@ -5,7 +5,7 @@ namespace Elephox\Http\Contract;
 
 use JetBrains\PhpStorm\Pure;
 
-interface Request extends HttpMessage
+interface Request extends Message
 {
 	public function getHeaderMap(): RequestHeaderMap;
 

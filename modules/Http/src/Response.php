@@ -13,7 +13,7 @@ use RuntimeException;
 /**
  * @psalm-consistent-constructor
  */
-class Response extends AbstractHttpMessage implements Contract\Response
+class Response extends AbstractMessage implements Contract\Response
 {
 	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\r\n]+)\r?\n(?<headers>(?:(?:[^:]+):\s*(?:[^\r\n]+)\r?\n)*)\r?\n(?<body>.*)/s';
 

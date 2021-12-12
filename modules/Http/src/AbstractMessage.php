@@ -9,7 +9,7 @@ use Elephox\Http\Contract\HeaderName;
 use Elephox\Http\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 
-abstract class AbstractHttpMessage implements Contract\HttpMessage
+abstract class AbstractMessage implements Contract\Message
 {
 	protected Stream $body;
 	protected Contract\HeaderMap $headers;

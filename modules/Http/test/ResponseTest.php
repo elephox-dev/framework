@@ -24,7 +24,7 @@ use stdClass;
  * @covers \Elephox\Http\InvalidResponseCodeMessageException
  * @covers \Elephox\Http\StringStream
  * @covers \Elephox\Http\EmptyStream
- * @covers \Elephox\Http\AbstractHttpMessage
+ * @covers \Elephox\Http\AbstractMessage
  */
 class ResponseTest extends TestCase
 {

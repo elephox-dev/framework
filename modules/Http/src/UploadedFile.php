@@ -3,35 +3,56 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Files\Contract\File;
+use Elephox\Support\Contract\MimeType;
+
 class UploadedFile implements Contract\UploadedFile
 {
-	public function getStream()
-	{
-		// TODO: Implement getStream() method.
+	/**
+	 * @param string $clientName
+	 * @param string $clientPath
+	 * @param UploadError $error
+	 * @param positive-int|0 $size
+	 * @param MimeType $type
+	 * @param File $file
+	 */
+	public function __construct(
+		private string $clientName,
+		private string $clientPath,
+		private UploadError $error,
+		private int $size,
+		private MimeType $type,
+		private File $file
+	) {
 	}
 
-	public function moveTo($targetPath)
+	public function getClientName(): string
 	{
-		// TODO: Implement moveTo() method.
+		return $this->clientName;
 	}
 
-	public function getSize()
+	public function getClientPath(): string
 	{
-		// TODO: Implement getSize() method.
+		return $this->clientPath;
 	}
 
-	public function getError()
+	public function getError(): UploadError
 	{
-		// TODO: Implement getError() method.
+		return $this->error;
 	}
 
-	public function getClientFilename()
+	public function getSize(): int
 	{
-		// TODO: Implement getClientFilename() method.
+		return $this->size;
 	}
 
-	public function getClientMediaType()
+	public function getMimeType(): MimeType
 	{
-		// TODO: Implement getClientMediaType() method.
+		return $this->type;
+	}
+
+	public function getFile(): File
+	{
+		return $this->file;
 	}
 }

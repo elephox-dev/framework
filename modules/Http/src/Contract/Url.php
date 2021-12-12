@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Collection\ArrayMap;
+use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\UrlScheme;
 use Elephox\Support\Contract\ArrayConvertible;
 use JetBrains\PhpStorm\Pure;
@@ -30,9 +32,12 @@ interface Url extends Stringable, ArrayConvertible
 
 	#[Pure] public function getQuery(): string;
 
-	#[Pure] public function getFragment(): string;
+	/**
+	 * @return GenericMap<string, string|array>
+	 */
+	public function getQueryMap(): GenericMap;
 
-	#[Pure] public function getOriginal(): string;
+	#[Pure] public function getFragment(): string;
 
 	#[Pure] public function withScheme(?UrlScheme $scheme): static;
 
@@ -45,6 +50,11 @@ interface Url extends Stringable, ArrayConvertible
 	#[Pure] public function withPath(string $path): static;
 
 	#[Pure] public function withQuery(?string $query): static;
+
+	/**
+	 * @param ArrayMap<string, string|array> $query
+	 */
+	#[Pure] public function withQueryMap(ArrayMap $query): static;
 
 	#[Pure] public function withFragment(?string $fragment): static;
 }

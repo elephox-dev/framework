@@ -6,7 +6,7 @@ namespace Elephox\Http\Contract;
 use Elephox\Collection\Contract\ReadonlyList;
 use JetBrains\PhpStorm\Pure;
 
-interface HttpMessage
+interface Message
 {
 	#[Pure] public function getProtocolVersion(): string;
 

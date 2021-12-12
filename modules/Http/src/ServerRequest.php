@@ -9,9 +9,17 @@ use Elephox\Http\Contract\Cookie;
 
 class ServerRequest extends Request implements Contract\ServerRequest
 {
-	public function getServerParams(): array
+
+	public function __construct(
+		Contract\RequestMethod $method = RequestMethod::GET,
+		?Contract\Url                  $url = null,
+		?Contract\RequestHeaderMap     $headers = null,
+		?Contract\Stream               $body = null,
+		string                         $protocolVersion = "1.1",
+		bool                           $inferHostHeader = true
+	)
 	{
-		// TODO: Implement getServerParams() method.
+		parent::__construct($method, $url, $headers, $body, $protocolVersion, $inferHostHeader);
 	}
 
 	public function getServerParamsMap(): GenericMap
@@ -19,19 +27,9 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		// TODO: Implement getServerParamsMap() method.
 	}
 
-	public function getCookieParams(): array
-	{
-		// TODO: Implement getCookieParams() method.
-	}
-
 	public function getCookies(): GenericList
 	{
 		// TODO: Implement getCookies() method.
-	}
-
-	public function withCookieParams(array $cookies): static
-	{
-		// TODO: Implement withCookieParams() method.
 	}
 
 	public function withCookies(iterable $cookies): static
@@ -44,22 +42,12 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		// TODO: Implement withCookie() method.
 	}
 
-	public function getQueryParams(): array
-	{
-		// TODO: Implement getQueryParams() method.
-	}
-
-	public function withQueryParams(array $query): static
-	{
-		// TODO: Implement withQueryParams() method.
-	}
-
-	public function getUploadedFiles(): array
+	public function getUploadedFiles(): GenericList
 	{
 		// TODO: Implement getUploadedFiles() method.
 	}
 
-	public function withUploadedFiles(array $uploadedFiles): static
+	public function withUploadedFiles(iterable $uploadedFiles): static
 	{
 		// TODO: Implement withUploadedFiles() method.
 	}
@@ -67,30 +55,5 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	public function getParsedBody(): null|array|object
 	{
 		// TODO: Implement getParsedBody() method.
-	}
-
-	public function withParsedBody($data): static
-	{
-		// TODO: Implement withParsedBody() method.
-	}
-
-	public function getAttributes(): array
-	{
-		// TODO: Implement getAttributes() method.
-	}
-
-	public function getAttribute($name, $default = null): mixed
-	{
-		// TODO: Implement getAttribute() method.
-	}
-
-	public function withAttribute($name, $value): static
-	{
-		// TODO: Implement withAttribute() method.
-	}
-
-	public function withoutAttribute($name): static
-	{
-		// TODO: Implement withoutAttribute() method.
 	}
 }

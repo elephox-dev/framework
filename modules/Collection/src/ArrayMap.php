@@ -23,10 +23,10 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @template TPairKey as array-key
 	 * @template TPairValue
 	 *
-	 * @param ArrayList<KeyValuePair<TPairKey, TPairValue>> $list
+	 * @param list<KeyValuePair<TPairKey, TPairValue>> $list
 	 * @return ArrayMap<TPairKey, TPairValue>
 	 */
-	public static function fromKeyValuePairList(ArrayList $list): self
+	public static function fromKeyValuePairList(iterable $list): self
 	{
 		$map = new ArrayMap();
 

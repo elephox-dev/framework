@@ -22,7 +22,7 @@ use Psr\Http\Message\StreamInterface;
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Http\CustomHeaderName
- * @covers \Elephox\Http\AbstractHttpMessage
+ * @covers \Elephox\Http\AbstractMessage
  * @covers \Elephox\Http\LazyResourceStream
  * @covers \Elephox\Http\ResourceStream
  * @covers \Elephox\Http\StringStream

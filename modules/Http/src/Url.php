@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\ArrayMap;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 
@@ -50,11 +51,10 @@ class Url implements Contract\Url
 			$fragment = null;
 		}
 
-		return new self($uri, $scheme, $username, $password, $host, $port, $path, $query, $fragment);
+		return new self($scheme, $username, $password, $host, $port, $path, $query, $fragment);
 	}
 
 	#[Pure] public function __construct(
-		private string $original,
 		private ?string $scheme,
 		private ?string $username,
 		private ?string $password,
@@ -154,11 +154,6 @@ class Url implements Contract\Url
 		return $this->fragment ?? "";
 	}
 
-	#[Pure] public function getOriginal(): string
-	{
-		return $this->original;
-	}
-
 	#[Pure] public function __toString(): string
 	{
 		if ($this->scheme !== null) {
@@ -221,36 +216,54 @@ class Url implements Contract\Url
 
 	#[Pure] public function withUserInfo(?string $user, ?string $password = null): static
 	{
-		return new static($this->original, $this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->scheme, $user, $password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withHost(?string $host): static
 	{
-		return new static($this->original, $this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($this->scheme, $this->username, $this->password, $host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withPort(?int $port): static
 	{
-		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
+		return new static($this->scheme, $this->username, $this->password, $this->host, $port, $this->path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withPath(string $path): static
 	{
-		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $path, $this->query, $this->fragment);
 	}
 
 	#[Pure] public function withQuery(?string $query): static
 	{
-		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $query, $this->fragment);
 	}
 
 	#[Pure] public function withFragment(?string $fragment): static
 	{
-		return new static($this->original, $this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
+		return new static($this->scheme, $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $fragment);
 	}
 
 	#[Pure] public function withScheme(?Contract\UrlScheme $scheme): static
 	{
-		return new static($this->original, $scheme?->getScheme(), $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+		return new static($scheme?->getScheme(), $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
+	}
+
+	public function getQueryMap(): ArrayMap
+	{
+		if ($this->query === null) {
+			return new ArrayMap();
+		}
+
+		parse_str($this->query, $query);
+
+		return ArrayMap::fromIterable($query);
+	}
+
+	#[Pure] public function withQueryMap(ArrayMap $query): static
+	{
+		$queryString = http_build_query($query->asArray());
+
+		return $this->withQuery($queryString);
 	}
 }

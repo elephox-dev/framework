@@ -8,7 +8,10 @@ use JetBrains\PhpStorm\Pure;
 use LogicException;
 use RuntimeException;
 
-class Request extends AbstractHttpMessage implements Contract\Request
+/**
+ * @psalm-consistent-constructor
+ */
+class Request extends AbstractMessage implements Contract\Request
 {
 	public static function fromGlobals(): Contract\Request
 	{
@@ -89,7 +92,7 @@ class Request extends AbstractHttpMessage implements Contract\Request
 
 	private Contract\Url $url;
 
-	final public function __construct(
+	public function __construct(
 		private Contract\RequestMethod $method = RequestMethod::GET,
 		?Contract\Url $url = null,
 		?Contract\RequestHeaderMap $headers = null,
