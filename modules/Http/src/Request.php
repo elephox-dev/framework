@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\LazyResourceStream;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 use RuntimeException;
@@ -12,6 +14,7 @@ use RuntimeException;
 /**
  * @psalm-consistent-constructor
  */
+#[Immutable]
 class Request extends AbstractMessage implements Contract\Request
 {
 	public static function fromGlobals(): Contract\Request
@@ -94,12 +97,12 @@ class Request extends AbstractMessage implements Contract\Request
 	private Contract\Url $url;
 
 	public function __construct(
-		private Contract\RequestMethod   $method = RequestMethod::GET,
-		?Contract\Url                    $url = null,
-		?Contract\RequestHeaderMap       $headers = null,
-		?\Elephox\Stream\Contract\Stream $body = null,
-		string                           $protocolVersion = "1.1",
-		bool                             $inferHostHeader = true
+		private Contract\RequestMethod $method = RequestMethod::GET,
+		?Contract\Url                  $url = null,
+		?Contract\RequestHeaderMap     $headers = null,
+		?Stream                        $body = null,
+		string                         $protocolVersion = "1.1",
+		bool                           $inferHostHeader = true
 	) {
 		parent::__construct($headers, $body, $protocolVersion);
 
@@ -160,7 +163,7 @@ class Request extends AbstractMessage implements Contract\Request
 		return new static($this->method->copy(), clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion, false);
 	}
 
-	public function withBody(\Elephox\Stream\Contract\Stream $body): static
+	public function withBody(Stream $body): static
 	{
 		if ($body === $this->body) {
 			return $this;

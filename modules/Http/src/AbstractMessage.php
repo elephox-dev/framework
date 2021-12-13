@@ -8,8 +8,10 @@ use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Http\Contract\HeaderName;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 abstract class AbstractMessage implements Contract\Message
 {
 	protected Stream $body;

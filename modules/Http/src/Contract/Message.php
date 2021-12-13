@@ -5,8 +5,10 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Stream\Contract\Stream;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 interface Message
 {
 	#[Pure] public function getProtocolVersion(): string;

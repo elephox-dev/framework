@@ -5,7 +5,9 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\GenericMap;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 interface ServerRequest extends Request
 {
 	/**

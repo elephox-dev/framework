@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 interface Response extends Message
 {
 	public function getHeaderMap(): ResponseHeaderMap;
