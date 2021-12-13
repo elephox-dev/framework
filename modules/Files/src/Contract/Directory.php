@@ -31,4 +31,6 @@ interface Directory extends FilesystemNode
 	public function isRoot(): bool;
 
 	public function isEmpty(): bool;
+
+	public function isReadonly(): bool;
 }

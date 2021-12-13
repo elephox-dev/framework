@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Files;
 
 use DateTime;
+use Elephox\Stream\Contract\Stream;
+use Elephox\Stream\ResourceStream;
 use Elephox\Support\Contract\MimeType;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use OutOfRangeException;
 
@@ -50,9 +53,33 @@ class File implements Contract\File
 		return new DateTime('@' . filemtime($this->path));
 	}
 
-	public function getContents(): string
+	public function getContents(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream
 	{
-		return file_get_contents($this->path);
+		if ($readable && !$this->isReadable()) {
+			throw new UnreadableFileException($this->path);
+		}
+
+		if (($writeable || $append) && !$this->isWritable()) {
+			throw new UnwritableFileException($this->path);
+		}
+
+		if ($create && $this->getParent()->isReadonly()) {
+			throw new ReadonlyParentException($this->path);
+		}
+
+		$flags = match (true) {
+			 $readable &&  $writeable &&  $append &&  $create => 'a+',
+			!$readable &&  $writeable &&  $append &&  $create => 'a',
+			 $readable &&  $writeable && !$append &&  $create && $truncate => 'wb+',
+			!$readable &&  $writeable && !$append &&  $create && $truncate => 'wb',
+			 $readable &&  $writeable && !$append &&  $create => 'c+',
+			!$readable &&  $writeable && !$append &&  $create => 'c',
+			 $readable &&  $writeable && !$append && !$create => 'rb+',
+			 $readable && !$writeable && !$append && !$create => 'rb',
+			default => throw new InvalidArgumentException('Invalid combination of flags'),
+		};
+
+		return new ResourceStream(fopen($this->path, $flags));
 	}
 
 	#[Pure] public function getHash(): string|int
@@ -67,5 +94,20 @@ class File implements Contract\File
 		}
 
 		return new Directory(dirname($this->path, $levels));
+	}
+
+	 public function isReadable(): bool
+	{
+		return is_readable($this->path);
+	}
+
+	#[Pure] public function isWritable(): bool
+	{
+		return is_writable($this->path);
+	}
+
+	#[Pure] public function isExecutable(): bool
+	{
+		return is_executable($this->path);
 	}
 }

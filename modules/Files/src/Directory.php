@@ -127,4 +127,9 @@ class Directory implements Contract\Directory
 
 		return null;
 	}
+
+	public function isReadonly(): bool
+	{
+		return !is_writable($this->path);
+	}
 }

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
-use DateTime;
-use Elephox\Support\Contract\MimeType;
+use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
+use Elephox\Support\Contract\MimeType;
 
 interface File extends FilesystemNode, HasHash
 {
@@ -15,7 +15,11 @@ interface File extends FilesystemNode, HasHash
 
 	public function getMimeType(): ?MimeType;
 
-	public function getModifiedTime(): DateTime;
+	public function getContents(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream;
 
-	public function getContents(): string;
+	public function isReadable(): bool;
+
+	public function isWritable(): bool;
+
+	public function isExecutable(): bool;
 }
