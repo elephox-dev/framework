@@ -127,7 +127,7 @@ class StringStream implements Stream
 		return $this->string;
 	}
 
-	#[Pure] public function getMetadata(string $key = null): array
+	#[Pure] public function getMetadata(?string $key = null): array
 	{
 		return [];
 	}

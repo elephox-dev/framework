@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Http\Contract\Cookie;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 enum CookiePrefix: string
 {
 	case Host = "__Host-";

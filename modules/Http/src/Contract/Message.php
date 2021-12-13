@@ -5,10 +5,8 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Stream\Contract\Stream;
-use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
-#[Immutable]
 interface Message
 {
 	#[Pure] public function getProtocolVersion(): string;
@@ -19,13 +17,13 @@ interface Message
 
 	public function withBody(Stream $body): static;
 
-	#[Pure] public function hasHeaderName(HeaderName $name): bool;
+	public function hasHeaderName(HeaderName $name): bool;
 
 	/**
 	 * @param HeaderName $name
 	 * @return ReadonlyList<string>
 	 */
-	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList;
+	public function getHeaderName(HeaderName $name): ReadonlyList;
 
 	/**
 	 * @param HeaderName $name

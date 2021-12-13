@@ -141,7 +141,7 @@ class ResourceStream implements Stream
 		return $this->writable;
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		if (!is_resource($this->resource)) {
 			throw new RuntimeException('Resource is not available');
@@ -167,7 +167,7 @@ class ResourceStream implements Stream
 		return $this->readable;
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		if ($length < 0) {
 			throw new InvalidArgumentException('Length parameter cannot be negative');
@@ -207,7 +207,7 @@ class ResourceStream implements Stream
 		return $contents;
 	}
 
-	public function getMetadata($key = null): mixed
+	public function getMetadata(?string $key = null): mixed
 	{
 		if (!is_resource($this->resource)) {
 			return $key ? null : [];

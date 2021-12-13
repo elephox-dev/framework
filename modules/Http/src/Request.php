@@ -6,7 +6,6 @@ namespace Elephox\Http;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\LazyResourceStream;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 use RuntimeException;
@@ -14,7 +13,6 @@ use RuntimeException;
 /**
  * @psalm-consistent-constructor
  */
-#[Immutable]
 class Request extends AbstractMessage implements Contract\Request
 {
 	public static function fromGlobals(): Contract\Request
@@ -151,7 +149,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method->copy(), clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $version);
+		return new static($this->method, clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $version);
 	}
 
 	public function withHeaderMap(Contract\HeaderMap $map): static
@@ -160,7 +158,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method->copy(), clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion, false);
+		return new static($this->method, clone $this->url, $map->asRequestHeaders(), clone $this->body, $this->protocolVersion, false);
 	}
 
 	public function withBody(Stream $body): static
@@ -169,7 +167,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method->copy(), clone $this->url, (clone $this->headers)->asRequestHeaders(), $body, $this->protocolVersion);
+		return new static($this->method, clone $this->url, (clone $this->headers)->asRequestHeaders(), $body, $this->protocolVersion);
 	}
 
 	public function withRequestMethod(Contract\RequestMethod $method): static
@@ -187,7 +185,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		$newRequest = new static($this->method->copy(), $url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		$newRequest = new static($this->method, $url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
 
 		if (!$preserveHost) {
 			$newRequest->updateHostHeader();

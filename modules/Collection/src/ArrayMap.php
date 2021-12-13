@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
-use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Collection\Contract\ReadonlyMap;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\JsonConvertible;
@@ -26,7 +25,7 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param list<KeyValuePair<TPairKey, TPairValue>> $list
 	 * @return ArrayMap<TPairKey, TPairValue>
 	 */
-	public static function fromKeyValuePairList(iterable $list): self
+	#[Pure] public static function fromKeyValuePairList(iterable $list): self
 	{
 		$map = new ArrayMap();
 
@@ -36,6 +35,7 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 				throw new DuplicateKeyException($key);
 			}
 
+			/** @psalm-suppress ImpureMethodCall */
 			$map->put($key, $keyValuePair->getValue());
 		}
 
@@ -46,11 +46,11 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @template TMapKey as array-key
 	 * @template TMapValue
 	 *
-	 * @param iterable<TMapKey, TMapValue> $map
+	 * @param array<TMapKey, TMapValue> $map
 	 *
 	 * @returns ArrayMap<TMapKey, TMapValue>
 	 */
-	public static function fromIterable(iterable $map): self
+	#[Pure] public static function fromIterable(iterable $map): self
 	{
 		return new self($map);
 	}
@@ -59,13 +59,11 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	protected array $values = [];
 
 	/**
-	 * @param iterable<TKey, TValue> $items
+	 * @param array<TKey, TValue> $items
 	 */
-	public function __construct(iterable $items = [])
+	#[Pure] public function __construct(iterable $items = [])
 	{
-		foreach ($items as $key => $value) {
-			$this->put($key, $value);
-		}
+		$this->values = $items;
 	}
 
 	public function put(mixed $key, mixed $value): void
@@ -78,7 +76,7 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		$this->values[$key] = $value;
 	}
 
-	public function get(mixed $key): mixed
+	#[Pure] public function get(mixed $key): mixed
 	{
 		if (!array_key_exists($key, $this->values)) {
 			throw new OffsetNotFoundException($key);
@@ -102,6 +100,7 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	{
 		foreach ($this->values as $key => $value) {
 			if ($filter === null || $filter($key, $value)) {
+				/** @var TKey|null */
 				return $key;
 			}
 		}
@@ -113,12 +112,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return ArrayMap<TKey, TValue>
 	 */
-	public function where(callable $filter): ArrayMap
+	#[Pure] public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
 		foreach ($this->values as $key => $item) {
 			if ($filter($item, $key)) {
+				/** @psalm-suppress ImpureMethodCall */
 				$result->put($key, $item);
 			}
 		}
@@ -130,12 +130,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param callable(TKey, TValue): bool $filter
 	 * @return ArrayMap<TKey, TValue>
 	 */
-	public function whereKey(callable $filter): ArrayMap
+	#[Pure] public function whereKey(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
 		foreach ($this->values as $key => $item) {
 			if ($filter($key, $item)) {
+				/** @psalm-suppress ImpureMethodCall */
 				$result->put($key, $item);
 			}
 		}
@@ -154,12 +155,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayMap<TKey, TOut>
 	 */
-	public function map(callable $callback): ArrayMap
+	#[Pure] public function map(callable $callback): ArrayMap
 	{
 		$map = new ArrayMap();
 
 		foreach ($this->values as $key => $value) {
 			/**
+			 * @psalm-suppress ImpureMethodCall
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
 			 */
 			$map->put($key, $callback($value, $key));
@@ -178,12 +180,12 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return $this->firstKey($filter) !== null;
 	}
 
-	public function values(): ArrayList
+	#[Pure] public function values(): ArrayList
 	{
 		return new ArrayList(array_values($this->values));
 	}
 
-	public function keys(): ArrayList
+	#[Pure] public function keys(): ArrayList
 	{
 		return new ArrayList(array_keys($this->values));
 	}
@@ -194,12 +196,13 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	public function reduce(callable $callback): ArrayList
+	#[Pure] public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
 
 		foreach ($this->values as $key => $value) {
+			/** @psalm-suppress ImpureMethodCall */
 			$list->add($callback($value, $key));
 		}
 
@@ -235,20 +238,23 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 	 * @param callable(TKey, TValue): TKeyOut $callback
 	 * @return ArrayMap<TKeyOut, TValue>
 	 */
-	public function mapKeys(callable $callback): ArrayMap
+	#[Pure] public function mapKeys(callable $callback): ArrayMap
 	{
 		/** @var ArrayMap<TKeyOut, TValue> $map */
 		$map = new ArrayMap();
 
 		foreach ($this->values as $key => $value) {
-			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
+			/**
+			 * @psalm-suppress ImpureMethodCall
+			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
+			 */
 			$map->put($callback($key, $value), $value);
 		}
 
 		return $map;
 	}
 
-	public function asReadonly(): ReadonlyMap
+	#[Pure] public function asReadonly(): ReadonlyMap
 	{
 		return $this;
 	}

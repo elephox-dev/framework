@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use JetBrains\PhpStorm\Immutable;
+
+#[Immutable]
 enum UploadError: int
 {
 	case UPLOAD_ERR_OK = 0;

@@ -96,12 +96,12 @@ class LazyResourceStream implements Stream
 		$this->getResourceStream()->rewind();
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		return $this->getResourceStream()->write($string);
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		return $this->getResourceStream()->read($length);
 	}
@@ -111,7 +111,7 @@ class LazyResourceStream implements Stream
 		return $this->getResourceStream()->getContents();
 	}
 
-	public function getMetadata($key = null): mixed
+	public function getMetadata(?string $key = null): mixed
 	{
 		return $this->getResourceStream()->getMetadata($key);
 	}

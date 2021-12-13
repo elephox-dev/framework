@@ -7,6 +7,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @extends ObjectMap<Contract\HeaderName, ArrayList<string>>
@@ -17,7 +18,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	 * @param string $name
 	 * @return Contract\HeaderName
 	 */
-	public static function parseHeaderName(string $name): Contract\HeaderName
+	#[Pure] public static function parseHeaderName(string $name): Contract\HeaderName
 	{
 		if (empty($name)) {
 			throw new InvalidArgumentException('Header name cannot be empty');
@@ -31,7 +32,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headerName;
 	}
 
-	protected static function fromArray(iterable $headers): self
+	#[Pure] protected static function fromArray(iterable $headers): self
 	{
 		$map = new self();
 
@@ -58,7 +59,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 				$value = explode(', ', $value);
 			}
 
-			if (is_iterable($value)) {
+			if (is_array($value) && array_is_list($value)) {
 				$values = ArrayList::fromArray($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
@@ -66,8 +67,10 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 			/** @var ArrayList<string> $values */
 
 			if ($map->has($headerName)) {
+				/** @psalm-suppress ImpureMethodCall */
 				$map->get($headerName)->addAll($values);
 			} else {
+				/** @psalm-suppress ImpureMethodCall */
 				$map->put($headerName, $values);
 			}
 		}
@@ -81,7 +84,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	public function has(mixed $key): bool
+	#[Pure] public function has(mixed $key): bool
 	{
 		if (!$key instanceof Contract\HeaderName) {
 			$key = self::parseHeaderName($key);
@@ -92,7 +95,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 
 	/**
 	 * @param string|Contract\HeaderName $key
-	 * @param iterable<string>|string $value
+	 * @param ArrayList<string>|list<string>|string $value
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 * @psalm-suppress DocblockTypeContradiction
@@ -106,7 +109,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => strtolower($name->getValue()) === strtolower($key->getValue()));
 		$obj ??= $key;
 
-		if (!is_iterable($value)) {
+		if (!is_array($value)) {
 			if (!is_string($value)) {
 				throw new InvalidHeaderTypeException($value);
 			}
@@ -124,7 +127,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	public function get(mixed $key): ArrayList
+	#[Pure] public function get(mixed $key): ArrayList
 	{
 		if (!$key instanceof Contract\HeaderName) {
 			$key = self::parseHeaderName($key);
@@ -167,12 +170,12 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headers;
 	}
 
-	public function asRequestHeaders(): RequestHeaderMap
+	#[Pure] public function asRequestHeaders(): RequestHeaderMap
 	{
 		return RequestHeaderMap::fromArray($this);
 	}
 
-	public function asResponseHeaders(): ResponseHeaderMap
+	#[Pure] public function asResponseHeaders(): ResponseHeaderMap
 	{
 		return ResponseHeaderMap::fromArray($this);
 	}

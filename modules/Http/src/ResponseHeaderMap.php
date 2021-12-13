@@ -7,10 +7,11 @@ use Elephox\Collection\ArrayMap;
 use Elephox\Collection\KeyValuePair;
 use Elephox\Text\Regex;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 
 class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 {
-	public static function fromString(string $headers): self
+	#[Pure] public static function fromString(string $headers): self
 	{
 		$rows = Regex::split('/\n/', $headers);
 
@@ -34,11 +35,13 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		return self::fromArray($headerMap->asArray());
 	}
 
-	public static function fromArray(iterable $headers): self
+	#[Pure] public static function fromArray(iterable $headers): self
 	{
 		$map = parent::fromArray($headers);
 
 		$responseHeaderMap = new self();
+
+		/** @psalm-suppress ImpurePropertyAssignment */
 		$responseHeaderMap->map = $map->map;
 
 		return $responseHeaderMap;

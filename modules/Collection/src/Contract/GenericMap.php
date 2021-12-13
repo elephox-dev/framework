@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @template TKey
  * @template TValue
@@ -25,5 +27,5 @@ interface GenericMap extends ReadonlyMap
 	/**
 	 * @return ReadonlyMap<TKey, TValue>
 	 */
-	public function asReadonly(): ReadonlyMap;
+	#[Pure] public function asReadonly(): ReadonlyMap;
 }

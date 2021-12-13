@@ -22,7 +22,7 @@ interface Storage
 	public function exists(string $entityName, string $key): bool;
 
 	/**
-	 * @return array<string, array<string, mixed>>
+	 * @return list<array<string, mixed>>
 	 */
 	public function all(string $entityName): array;
 }

@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
-use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
-#[Immutable]
 interface Response extends Message
 {
 	public function getHeaderMap(): ResponseHeaderMap;
@@ -18,7 +16,7 @@ interface Response extends Message
 
 	#[Pure] public function getContentType(): ?MimeTypeContract;
 
-	public function withContentType(?MimeTypeContract $mimeType, bool $updateHeader = true): static;
+	public function withContentType(?MimeTypeContract $mimeType): static;
 
 	public function send(): void;
 }

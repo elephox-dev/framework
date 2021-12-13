@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\ReadonlyMap;
+use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 use Traversable;
 
@@ -47,19 +48,26 @@ class ObjectMap implements Contract\GenericMap
 	 * @param object $key
 	 * @return TValue
 	 */
-	public function get(mixed $key): mixed
+	#[Pure] public function get(mixed $key): mixed
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		if (!$this->map->offsetExists($key)) {
 			throw new OffsetNotFoundException($key);
 		}
 
-		/** @var TValue */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TValue
+		 */
 		return $this->map->offsetGet($key);
 	}
 
-	public function first(?callable $filter = null): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -71,11 +79,17 @@ class ObjectMap implements Contract\GenericMap
 		return null;
 	}
 
-	public function firstKey(?callable $filter = null): mixed
+	#[Pure] public function firstKey(?callable $filter = null): mixed
 	{
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
-			/** @var TValue $value */
+			/**
+			 * @psalm-suppress ImpureMethodCall
+			 * @var TValue $value
+			 */
 			$value = $this->map->offsetGet($key);
 			if ($filter === null || $filter($key, $value)) {
 				return $key;
@@ -89,12 +103,15 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return ObjectMap<TKey, TValue>
 	 */
-	public function where(callable $filter): ObjectMap
+	#[Pure] public function where(callable $filter): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TValue> $result */
 		$result = new ObjectMap();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -110,12 +127,15 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): bool $filter
 	 * @return ObjectMap<TKey, TValue>
 	 */
-	public function whereKey(callable $filter): ObjectMap
+	#[Pure] public function whereKey(callable $filter): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TValue> $result */
 		$result = new ObjectMap();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -132,8 +152,9 @@ class ObjectMap implements Contract\GenericMap
 	 *
 	 * @return bool
 	 */
-	public function has(mixed $key): bool
+	#[Pure] public function has(mixed $key): bool
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		return $this->map->offsetExists($key);
 	}
 
@@ -143,12 +164,15 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ObjectMap<TKey, TOut>
 	 */
-	public function map(callable $callback): ObjectMap
+	#[Pure] public function map(callable $callback): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TOut> $map */
 		$map = new ObjectMap();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -166,12 +190,15 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): TKeyOut $callback
 	 * @return ObjectMap<TKeyOut, TValue>
 	 */
-	public function mapKeys(callable $callback): ObjectMap
+	#[Pure] public function mapKeys(callable $callback): ObjectMap
 	{
 		/** @var ObjectMap<TKeyOut, TValue> $map */
 		$map = new ObjectMap();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -189,12 +216,15 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	public function reduce(callable $callback): ArrayList
+	#[Pure] public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $value */
 			$value = $this->map->offsetGet($key);
@@ -205,22 +235,25 @@ class ObjectMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function any(?callable $filter = null): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
 
-	public function anyKey(?callable $filter = null): bool
+	#[Pure] public function anyKey(?callable $filter = null): bool
 	{
 		return $this->firstKey($filter) !== null;
 	}
 
-	public function values(): ArrayList
+	#[Pure] public function values(): ArrayList
 	{
 		/** @var ArrayList<TValue> $list */
 		$list = new ArrayList();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			/** @var TValue $item */
 			$item = $this->map->offsetGet($key);
@@ -231,12 +264,15 @@ class ObjectMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function keys(): ArrayList
+	#[Pure] public function keys(): ArrayList
 	{
 		/** @var ArrayList<TKey> $list */
 		$list = new ArrayList();
 
-		/** @var TKey $key */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TKey $key
+		 */
 		foreach ($this->map as $key) {
 			$list->add($key);
 		}
@@ -244,7 +280,7 @@ class ObjectMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function contains(mixed $value): bool
+	#[Pure] public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
 	}
@@ -263,7 +299,7 @@ class ObjectMap implements Contract\GenericMap
 		}
 	}
 
-	public function asReadonly(): ReadonlyMap
+	#[Pure] public function asReadonly(): ReadonlyMap
 	{
 		return $this;
 	}

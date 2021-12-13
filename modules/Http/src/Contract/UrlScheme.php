@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use JetBrains\PhpStorm\Pure;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 interface UrlScheme
 {
-	#[Pure] public function getScheme(): string;
+	public function getScheme(): string;
 
-	#[Pure] public function getDefaultPort(): ?int;
+	public function getDefaultPort(): ?int;
 }

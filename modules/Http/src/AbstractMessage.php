@@ -11,7 +11,6 @@ use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
-#[Immutable]
 abstract class AbstractMessage implements Contract\Message
 {
 	protected Stream $body;
@@ -36,12 +35,12 @@ abstract class AbstractMessage implements Contract\Message
 		return $this->protocolVersion;
 	}
 
-	#[Pure] public function hasHeaderName(HeaderName $name): bool
+	public function hasHeaderName(HeaderName $name): bool
 	{
 		return $this->headers->has($name);
 	}
 
-	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList
+	public function getHeaderName(HeaderName $name): ReadonlyList
 	{
 		return $this->headers->get($name);
 	}

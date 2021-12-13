@@ -106,6 +106,7 @@ class Response extends AbstractMessage implements Contract\Response
 			return null;
 		}
 
+		/** @psalm-suppress ImpureMethodCall */
 		return MimeType::tryfrom($value);
 	}
 

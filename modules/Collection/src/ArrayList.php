@@ -22,10 +22,10 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @template U
 	 *
-	 * @param iterable<U> $array
+	 * @param list<U>|self<U> $array
 	 * @return self<U>
 	 */
-	public static function fromArray(iterable $array): self
+	#[Pure] public static function fromArray(iterable $array): self
 	{
 		if ($array instanceof self)
 		{
@@ -41,22 +41,20 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param U $value
 	 * @return self<U>
 	 */
-	public static function fromValue(mixed $value): self
+	#[Pure] public static function fromValue(mixed $value): self
 	{
 		return new self([$value]);
 	}
 
 	/** @var list<T> */
-	private array $list = [];
+	private array $list;
 
 	/**
-	 * @param iterable<T> $items
+	 * @param list<T> $items
 	 */
-	public function __construct(iterable $items = [])
+	#[Pure] public function __construct(iterable $items = [])
 	{
-		foreach ($items as $item) {
-			$this->add($item);
-		}
+		$this->list = $items;
 	}
 
 	#[Pure] public function offsetExists($offset): bool
@@ -116,7 +114,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @return T
 	 */
-	public function get(int $index): mixed
+	#[Pure] public function get(int $index): mixed
 	{
 		if (!$this->offsetExists($index)) {
 			throw new OffsetNotFoundException($index);
@@ -158,12 +156,13 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param callable(T): bool $filter
 	 * @return ArrayList<T>
 	 */
-	public function where(callable $filter): ArrayList
+	#[Pure] public function where(callable $filter): ArrayList
 	{
 		$result = new ArrayList();
 
 		foreach ($this->list as $item) {
 			if ($filter($item)) {
+				/** @psalm-suppress ImpureMethodCall */
 				$result->add($item);
 			}
 		}
@@ -190,12 +189,13 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param callable(T): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	public function map(callable $callback): ArrayList
+	#[Pure] public function map(callable $callback): ArrayList
 	{
 		$arr = new ArrayList();
 
 		foreach ($this->list as $value) {
 			/**
+			 * @psalm-suppress ImpureMethodCall
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
 			 */
 			$arr->add($callback($value));
@@ -236,7 +236,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @return T
 	 */
-	public function peek(): mixed
+	#[Pure] public function peek(): mixed
 	{
 		$idx = $this->count() - 1;
 		if ($idx < 0) {
@@ -285,12 +285,12 @@ class ArrayList implements GenericList, ArrayAccess
 		return $this;
 	}
 
-	public function join(Stringable|string $separator): string
+	#[Pure] public function join(Stringable|string $separator): string
 	{
 		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
 	}
 
-	public function asReadonly(): ReadonlyList
+	#[Pure] public function asReadonly(): ReadonlyList
 	{
 		return $this;
 	}

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @template T
  *
@@ -30,5 +32,5 @@ interface GenericList extends ReadonlyList, Stackable
 	/**
 	 * @return ReadonlyList<T>
 	 */
-	public function asReadonly(): ReadonlyList;
+	#[Pure] public function asReadonly(): ReadonlyList;
 }

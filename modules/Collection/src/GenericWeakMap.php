@@ -5,6 +5,7 @@ namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\ReadonlyMap;
 use Iterator;
+use JetBrains\PhpStorm\Pure;
 use Traversable;
 use WeakMap;
 
@@ -48,19 +49,24 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param object $key
 	 * @return TValue
 	 */
-	public function get(mixed $key): mixed
+	#[Pure] public function get(mixed $key): mixed
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		if (!$this->map->offsetExists($key)) {
 			throw new OffsetNotFoundException($key);
 		}
 
-		/** @var TValue */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TValue
+		 */
 		return $this->map->offsetGet($key);
 	}
 
-	public function first(?callable $filter = null): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -73,9 +79,10 @@ class GenericWeakMap implements Contract\GenericMap
 		return null;
 	}
 
-	public function firstKey(?callable $filter = null): mixed
+	#[Pure] public function firstKey(?callable $filter = null): mixed
 	{
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -92,12 +99,13 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return GenericWeakMap<TKey, TValue>
 	 */
-	public function where(callable $filter): GenericWeakMap
+	#[Pure] public function where(callable $filter): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TValue> $result */
 		$result = new GenericWeakMap();
 
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -114,12 +122,13 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): bool $filter
 	 * @return GenericWeakMap<TKey, TValue>
 	 */
-	public function whereKey(callable $filter): GenericWeakMap
+	#[Pure] public function whereKey(callable $filter): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TValue> $result */
 		$result = new GenericWeakMap();
 
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -137,8 +146,9 @@ class GenericWeakMap implements Contract\GenericMap
 	 *
 	 * @return bool
 	 */
-	public function has(mixed $key): bool
+	#[Pure] public function has(mixed $key): bool
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		return $this->map->offsetExists($key);
 	}
 
@@ -148,12 +158,13 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return GenericWeakMap<TKey, TOut>
 	 */
-	public function map(callable $callback): GenericWeakMap
+	#[Pure] public function map(callable $callback): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKey, TOut> $map */
 		$map = new GenericWeakMap();
 
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -171,12 +182,15 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): TKeyOut $callback
 	 * @return GenericWeakMap<TKeyOut, TValue>
 	 */
-	public function mapKeys(callable $callback): GenericWeakMap
+	#[Pure] public function mapKeys(callable $callback): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKeyOut, TValue> $map */
 		$map = new ObjectMap();
 
-		/** @var TValue $value */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TValue $value
+		 */
 		foreach ($this->map as $key => $value) {
 			/** @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed */
 			$map->put($callback($key, $value), $value);
@@ -191,12 +205,13 @@ class GenericWeakMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	public function reduce(callable $callback): ArrayList
+	#[Pure] public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
 
 		/**
+		 * @psalm-suppress ImpureMethodCall
 		 * @var TKey $key
 		 * @var TValue $value
 		 */
@@ -207,22 +222,25 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function any(?callable $filter = null): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
 
-	public function anyKey(?callable $filter = null): bool
+	#[Pure] public function anyKey(?callable $filter = null): bool
 	{
 		return $this->firstKey($filter) !== null;
 	}
 
-	public function values(): ArrayList
+	#[Pure] public function values(): ArrayList
 	{
 		/** @var ArrayList<TValue> $list */
 		$list = new ArrayList();
 
-		/** @var TValue $item */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var TValue $item
+		 */
 		foreach ($this->map as $item) {
 			$list->add($item);
 		}
@@ -230,14 +248,20 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function keys(): ArrayList
+	#[Pure] public function keys(): ArrayList
 	{
 		/** @var ArrayList<TKey> $list */
 		$list = new ArrayList();
 
-		/** @var Iterator $iterator */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var Iterator $iterator
+		 */
 		$iterator = $this->map->getIterator();
+
+		/** @psalm-suppress ImpureMethodCall */
 		$iterator->rewind();
+		/** @psalm-suppress ImpureMethodCall */
 		while ($iterator->valid()) {
 			/** @var TKey $key */
 			$key = $iterator->key();
@@ -248,7 +272,7 @@ class GenericWeakMap implements Contract\GenericMap
 		return $list;
 	}
 
-	public function contains(mixed $value): bool
+	#[Pure] public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
 	}
@@ -267,7 +291,7 @@ class GenericWeakMap implements Contract\GenericMap
 		}
 	}
 
-	public function asReadonly(): ReadonlyMap
+	#[Pure] public function asReadonly(): ReadonlyMap
 	{
 		return $this;
 	}

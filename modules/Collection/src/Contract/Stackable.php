@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * @template T
  */
@@ -21,7 +23,7 @@ interface Stackable
 	/**
 	 * @return T
 	 */
-	public function peek(): mixed;
+	#[Pure] public function peek(): mixed;
 
 	/**
 	 * @return T

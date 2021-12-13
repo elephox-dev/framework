@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use JetBrains\PhpStorm\Immutable;
+
+#[Immutable]
 interface HeaderName
 {
 	/**

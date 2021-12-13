@@ -73,7 +73,7 @@ abstract class AbstractRepository implements Contract\Repository
 	 * @param null|callable(T): bool $filter
 	 * @return T|null
 	 */
-	public function first(?callable $filter = null): mixed
+	#[Pure] public function first(?callable $filter = null): mixed
 	{
 		return $this->findAll()->first($filter);
 	}
@@ -82,7 +82,7 @@ abstract class AbstractRepository implements Contract\Repository
 	 * @param null|callable(T): bool $filter
 	 * @return bool
 	 */
-	public function any(?callable $filter = null): bool
+	#[Pure] public function any(?callable $filter = null): bool
 	{
 		return $this->findAll()->any($filter);
 	}
@@ -91,7 +91,7 @@ abstract class AbstractRepository implements Contract\Repository
 	 * @param callable(T): bool $filter
 	 * @return ArrayList<T>
 	 */
-	public function where(callable $filter): ArrayList
+	#[Pure] public function where(callable $filter): ArrayList
 	{
 		return $this->findAll()->where($filter);
 	}
@@ -100,17 +100,17 @@ abstract class AbstractRepository implements Contract\Repository
 	 * @param T $value
 	 * @return bool
 	 */
-	public function contains(mixed $value): bool
+	#[Pure] public function contains(mixed $value): bool
 	{
 		return $this->findAll()->contains($value);
 	}
 
-	public function find(int|string $id): ?Contract\Entity
+	#[Pure] public function find(int|string $id): ?Contract\Entity
 	{
 		return $this->first(static fn(Contract\Entity $entity) => $entity->getUniqueId() === $id);
 	}
 
-	public function findBy(string $property, mixed $value): ?Contract\Entity
+	#[Pure] public function findBy(string $property, mixed $value): ?Contract\Entity
 	{
 		return $this->first(static fn(Contract\Entity $entity) => $entity->{'get' . ucfirst($property)}() === $value);
 	}
@@ -118,8 +118,9 @@ abstract class AbstractRepository implements Contract\Repository
 	/**
 	 * @return ArrayList<T>
 	 */
-	public function findAll(): ArrayList
+	#[Pure] public function findAll(): ArrayList
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		return ArrayList::fromArray($this->storage->all($this->tableName))
 			->map(function (array $entity): Contract\Entity {
 				return $this->container->restore($this->getEntityClass(), $entity);

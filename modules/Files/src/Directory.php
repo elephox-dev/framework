@@ -35,7 +35,7 @@ class Directory implements Contract\Directory
 
 	public function getChildren(): ArrayList
 	{
-		/** @var string[] $nodes */
+		/** @var list<string> $nodes */
 		$nodes = scandir($this->path);
 
 		/** @var ArrayList<Contract\FilesystemNode> */

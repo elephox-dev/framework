@@ -5,15 +5,16 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\Contract\Cookie;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Support\MimeType;
-use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 use JsonException;
 
-#[Immutable]
+/**
+ * @psalm-consistent-constructor
+ */
 class ServerRequest extends Request implements Contract\ServerRequest
 {
 	/** @var ArrayList<Contract\UploadedFile> $files */
@@ -26,7 +27,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	 * @param Stream|null $body
 	 * @param string $protocolVersion
 	 * @param bool $inferHostHeader
-	 * @param iterable<Contract\UploadedFile> $files
+	 * @param list<Contract\UploadedFile> $files
 	 */
 	public function __construct(
 		Contract\RequestMethod $method = RequestMethod::GET,
@@ -35,7 +36,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		?Stream $body = null,
 		string $protocolVersion = "1.1",
 		bool $inferHostHeader = true,
-		iterable $files = [],
+		array $files = [],
 	)
 	{
 		parent::__construct($method, $url, $headers, $body, $protocolVersion, $inferHostHeader);
@@ -43,23 +44,25 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		$this->files = new ArrayList($files);
 	}
 
-	public function getServerParamsMap(): GenericMap
+	#[Pure] public function getServerParamsMap(): GenericMap
 	{
 		return new ArrayMap($_SERVER);
 	}
 
-	public function getCookies(): GenericList
+	#[Pure] public function getCookies(): ArrayList
 	{
+		/** @var ArrayList<Cookie> */
 		return $this->headers->get(HeaderName::Cookie);
 	}
 
 	public function withCookies(iterable $cookies): static
 	{
 		$headers = (clone $this->headers)->asRequestHeaders();
+		/** @var ArrayList<Cookie> $cookieHeader */
 		$cookieHeader = $headers->get(HeaderName::Cookie);
 		$cookieHeader->addAll($cookies);
 
-		return new self($this->getRequestMethod()->copy(), clone $this->getUrl(), $headers, clone $this->getBody(), $this->getProtocolVersion(), files: clone $this->files);
+		return new static($this->getRequestMethod(), clone $this->getUrl(), $headers, clone $this->getBody(), $this->getProtocolVersion(), files: (clone $this->files)->asArray());
 	}
 
 	public function withCookie(Cookie $cookie): static
@@ -77,13 +80,11 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		$clonedFiles = clone $this->files;
 		$clonedFiles->addAll($uploadedFiles);
 
-		return new self($this->getRequestMethod()->copy(), clone $this->getUrl(), (clone $this->headers)->asRequestHeaders(), clone $this->getBody(), $this->getProtocolVersion(), files: $clonedFiles);
+		return new static($this->getRequestMethod(), clone $this->getUrl(), (clone $this->headers)->asRequestHeaders(), clone $this->getBody(), $this->getProtocolVersion(), files: $clonedFiles->asArray());
 	}
 
 	/**
-	 * @template T of object
-	 *
-	 * @return array|array<T>|T|null
+	 * @return array|object|null
 	 */
 	public function getParsedBody(): null|array|object
 	{
@@ -94,15 +95,16 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		switch ($this->headers->get(HeaderName::ContentType)->first()) {
 			case MimeType::Applicationjson->value:
 				try {
-					/** @var T|array<T>|array|object|null */
+					/** @var array|object|null */
 					return json_decode($this->getBody()->getContents(), true, flags: JSON_THROW_ON_ERROR);
 				} catch (JsonException) {
 					return null;
 				}
 			case MimeType::Applicationxwwwformurlencoded->value:
+				/** @psalm-suppress ImpureMethodCall */
 				parse_str($this->getBody()->getContents(), $parsedBody);
 
-				/** @var array<T>|array */
+				/** @var array */
 				return $parsedBody;
 			default:
 				return null;

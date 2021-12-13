@@ -6,6 +6,8 @@ namespace Elephox\Http\Contract;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Collection\Contract\ReadonlyMap;
 use Elephox\Collection\Contract\ReadonlyList;
+use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @extends ReadonlyMap<HeaderName, ReadonlyList<string>>
@@ -18,16 +20,16 @@ interface ReadonlyHeaderMap extends ReadonlyMap, ArrayConvertible
 	 *
 	 * @return bool
 	 */
-	public function has(mixed $key): bool;
+	#[Pure] public function has(mixed $key): bool;
 
 	/**
 	 * @param string|HeaderName $key
 	 *
 	 * @return ReadonlyList<string>
 	 */
-	public function get(mixed $key): mixed;
+	#[Pure] public function get(mixed $key): mixed;
 
-	public function asRequestHeaders(): RequestHeaderMap;
+	#[Pure] public function asRequestHeaders(): RequestHeaderMap;
 
-	public function asResponseHeaders(): ResponseHeaderMap;
+	#[Pure] public function asResponseHeaders(): ResponseHeaderMap;
 }

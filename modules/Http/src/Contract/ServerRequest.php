@@ -5,9 +5,7 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\GenericMap;
-use JetBrains\PhpStorm\Immutable;
 
-#[Immutable]
 interface ServerRequest extends Request
 {
 	/**
@@ -38,9 +36,7 @@ interface ServerRequest extends Request
 	public function withUploadedFiles(iterable $uploadedFiles): static;
 
 	/**
-	 * @template T of object
-	 *
-	 * @return array|array<T>|T|null
+	 * @return array|object|null
 	 */
 	public function getParsedBody(): null|array|object;
 }

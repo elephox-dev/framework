@@ -6,6 +6,7 @@ namespace Elephox\Core\Context;
 use Elephox\Collection\ArrayList;
 use Elephox\Core\Handler\ActionType;
 use Elephox\DI\Contract\Container as ContainerContract;
+use JetBrains\PhpStorm\Pure;
 
 class CommandLineContext extends AbstractContext implements Contract\CommandLineContext
 {
@@ -16,11 +17,11 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 
 	/**
 	 * @param ContainerContract $container
-	 * @param string|iterable $commandLine
+	 * @param string|list<string> $commandLine
 	 */
 	public function __construct(
 		ContainerContract $container,
-		string|iterable   $commandLine,
+		string|array   $commandLine,
 	)
 	{
 		parent::__construct(ActionType::Command, $container);
@@ -30,7 +31,7 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		if (is_string($commandLine)) {
 			$this->args = ArrayList::fromArray(explode(' ', $commandLine));
 		} else {
-			$this->args = ArrayList::fromArray($commandLine)->map(fn (mixed $val) => (string)$val);
+			$this->args = ArrayList::fromArray($commandLine);
 		}
 
 		if ($this->args->isEmpty()) {
@@ -40,12 +41,12 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		}
 	}
 
-	public function getCommandLine(): string
+	#[Pure] public function getCommandLine(): string
 	{
 		$line = $this->command;
 
 		if (!$this->args->isEmpty()) {
-			$line . ' ' . $this->args->join(' ');
+			return $line . ' ' . $this->args->join(' ');
 		}
 
 		return $line;

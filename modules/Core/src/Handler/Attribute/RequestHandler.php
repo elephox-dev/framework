@@ -88,21 +88,13 @@ class RequestHandler extends AbstractHandlerAttribute
 		}
 
 		$request = $context->getRequest();
-		$method = $request->getMethod();
-		if ($request instanceof RequestContract) {
-			$requestMethod = $request->getRequestMethod();
-		} else if (!empty($method)) {
-			$requestMethod = RequestMethod::tryFrom($method);
-			$requestMethod ??= new CustomRequestMethod($method);
-		} else {
-			return false;
-		}
+		$requestMethod = $request->getRequestMethod();
 
 		if (!$this->methods->isEmpty() && !$this->methods->contains($requestMethod)) {
 			return false;
 		}
 
-		return $this->template->matches($context->getRequest()->getUri());
+		return $this->template->matches($context->getRequest()->getUrl());
 	}
 
 	public function getHandlerParams(ContextContract $context): array
@@ -111,6 +103,6 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		return $this->template->getValues($context->getRequest()->getUri());
+		return $this->template->getValues($context->getRequest()->getUrl());
 	}
 }

@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\KeyValuePair;
+use JetBrains\PhpStorm\Pure;
 
 class Cookie implements Contract\Cookie
 {
@@ -17,7 +18,7 @@ class Cookie implements Contract\Cookie
 	 * @param string $cookies
 	 * @return ArrayList<Contract\Cookie>
 	 */
-	public static function fromRequestString(string $cookies): ArrayList
+	#[Pure] public static function fromRequestString(string $cookies): ArrayList
 	{
 		return ArrayList::fromArray(mb_split(';', $cookies))
 			->map(static function (string $cookie): Contract\Cookie {
@@ -30,11 +31,10 @@ class Cookie implements Contract\Cookie
 
 	/**
 	 * @param string $cookieString
-	 * @return \Elephox\Http\Contract\Cookie
+	 * @return Contract\Cookie
 	 */
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
-		/** @var array<string> $split */
 		$split = mb_split(';', $cookieString);
 		$propertyList = ArrayList::fromArray($split);
 		$nameValuePair = $propertyList->shift();
@@ -64,15 +64,15 @@ class Cookie implements Contract\Cookie
 		}
 
 		if ($propertyMap->has('expires')) {
-			$cookie->setExpires(DateTime::createFromFormat(self::ExpiresFormat, $propertyMap->get('expires')));
+			$cookie->setExpires(DateTime::createFromFormat(self::ExpiresFormat, (string)$propertyMap->get('expires')));
 		}
 
 		if ($propertyMap->has('path')) {
-			$cookie->setPath($propertyMap->get('path'));
+			$cookie->setPath((string)$propertyMap->get('path'));
 		}
 
 		if ($propertyMap->has('domain')) {
-			$cookie->setDomain($propertyMap->get('domain'));
+			$cookie->setDomain((string)$propertyMap->get('domain'));
 		}
 
 		if ($propertyMap->has('secure')) {
@@ -84,13 +84,13 @@ class Cookie implements Contract\Cookie
 		}
 
 		if ($propertyMap->has('samesite')) {
-			$sameSite = CookieSameSite::from($propertyMap->get('samesite'));
+			$sameSite = CookieSameSite::from((string)$propertyMap->get('samesite'));
 
 			$cookie->setSameSite($sameSite);
 		}
 
 		if ($propertyMap->has('max-age')) {
-			$maxAge = $propertyMap->get('max-age');
+			$maxAge = (string)$propertyMap->get('max-age');
 			if (!ctype_digit($maxAge)) {
 				throw new InvalidArgumentException("The max-age property must be an integer.");
 			}
@@ -115,7 +115,7 @@ class Cookie implements Contract\Cookie
 	{
 	}
 
-	public function getName(): string
+	#[Pure] public function getName(): string
 	{
 		return $this->name;
 	}
@@ -125,7 +125,7 @@ class Cookie implements Contract\Cookie
 		$this->name = $name;
 	}
 
-	public function getValue(): ?string
+	#[Pure] public function getValue(): ?string
 	{
 		return $this->value;
 	}
@@ -135,7 +135,7 @@ class Cookie implements Contract\Cookie
 		$this->value = $value;
 	}
 
-	public function getExpires(): ?DateTime
+	#[Pure] public function getExpires(): ?DateTime
 	{
 		return $this->expires;
 	}
@@ -145,7 +145,7 @@ class Cookie implements Contract\Cookie
 		$this->expires = $expires;
 	}
 
-	public function getPath(): ?string
+	#[Pure] public function getPath(): ?string
 	{
 		return $this->path;
 	}
@@ -155,7 +155,7 @@ class Cookie implements Contract\Cookie
 		$this->path = $path;
 	}
 
-	public function getDomain(): ?string
+	#[Pure] public function getDomain(): ?string
 	{
 		return $this->domain;
 	}
@@ -165,7 +165,7 @@ class Cookie implements Contract\Cookie
 		$this->domain = $domain;
 	}
 
-	public function isSecure(): bool
+	#[Pure] public function isSecure(): bool
 	{
 		return $this->secure;
 	}
@@ -175,7 +175,7 @@ class Cookie implements Contract\Cookie
 		$this->secure = $secure;
 	}
 
-	public function isHttpOnly(): bool
+	#[Pure] public function isHttpOnly(): bool
 	{
 		return $this->httpOnly;
 	}
@@ -185,7 +185,7 @@ class Cookie implements Contract\Cookie
 		$this->httpOnly = $httpOnly;
 	}
 
-	public function getSameSite(): ?CookieSameSite
+	#[Pure] public function getSameSite(): ?CookieSameSite
 	{
 		return $this->sameSite;
 	}
@@ -195,7 +195,7 @@ class Cookie implements Contract\Cookie
 		$this->sameSite = $sameSite;
 	}
 
-	public function getMaxAge(): ?int
+	#[Pure] public function getMaxAge(): ?int
 	{
 		return $this->maxAge;
 	}

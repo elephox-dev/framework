@@ -51,5 +51,5 @@ interface Stream extends Stringable
 
 	public function getContents(): string;
 
-	public function getMetadata(string $key = null): mixed;
+	public function getMetadata(?string $key = null): mixed;
 }

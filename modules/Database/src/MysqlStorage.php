@@ -66,7 +66,7 @@ class MysqlStorage implements Contract\Storage
 		/** @var mysqli_result $query */
 		$query = $this->connection->query("SELECT * FROM $entityName");
 
-		/** @var array<string, array<string, mixed>> $result */
+		/** @var list<array<string, mixed>> $result */
 		$result = $query->fetch_all(MYSQLI_ASSOC);
 		if (!$result) {
 			return [];

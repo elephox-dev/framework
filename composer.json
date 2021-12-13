@@ -137,7 +137,7 @@
         ],
         "static-analysis": [
             "@putenv XDEBUG_MODE=off",
-            "psalm --"
+            "psalm --monochrome --no-cache"
         ],
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",

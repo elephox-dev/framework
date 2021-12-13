@@ -6,11 +6,11 @@ namespace Elephox\Core\Contract;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Contract\HandlerContainer;
 use Elephox\DI\Contract\Container;
+use Elephox\Http\Contract\Request;
 use JetBrains\PhpStorm\NoReturn;
-use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-interface Core extends RequestHandlerInterface
+interface Core
 {
 	public function getVersion(): string;
 
@@ -24,6 +24,8 @@ interface Core extends RequestHandlerInterface
 	public function handleException(Throwable $throwable): void;
 
 	public function handleContext(Context $context): mixed;
+
+	public function handle(Request $request): mixed;
 
 	public function getGlobalContext(): Context;
 

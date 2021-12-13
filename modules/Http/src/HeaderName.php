@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 enum HeaderName: string implements Contract\HeaderName
 {
 	/* Authentication */
@@ -173,13 +175,14 @@ enum HeaderName: string implements Contract\HeaderName
 		return $this->value;
 	}
 
-	public static function tryFromIgnoreCase(string $value): ?HeaderName
+	#[Pure] public static function tryFromIgnoreCase(string $value): ?HeaderName
 	{
 		if (empty($value)) {
 			throw new InvalidArgumentException("Header name cannot be empty");
 		}
 
 		$value = strtolower($value);
+		/** @psalm-suppress ImpureMethodCall */
 		foreach (self::cases() as $name) {
 			if (strtolower($name->value) === $value) {
 				return $name;

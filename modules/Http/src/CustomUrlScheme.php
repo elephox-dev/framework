@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use JetBrains\PhpStorm\Pure;
+use JetBrains\PhpStorm\Immutable;
 
+#[Immutable]
 class CustomUrlScheme implements Contract\UrlScheme
 {
 	public function __construct(
@@ -13,12 +14,12 @@ class CustomUrlScheme implements Contract\UrlScheme
 	) {
 	}
 
-	#[Pure] public function getScheme(): string
+	public function getScheme(): string
 	{
 		return $this->scheme;
 	}
 
-	#[Pure] public function getDefaultPort(): ?int
+	public function getDefaultPort(): ?int
 	{
 		return $this->defaultPort;
 	}

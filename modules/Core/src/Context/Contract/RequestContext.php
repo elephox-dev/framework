@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Context\Contract;
 
-use Psr\Http\Message\RequestInterface;
+use Elephox\Http\Contract\Request;
 
 interface RequestContext extends Context
 {
-	public function getRequest(): RequestInterface;
+	public function getRequest(): Request;
 }

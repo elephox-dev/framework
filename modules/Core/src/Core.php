@@ -15,6 +15,7 @@ use Elephox\Core\Handler\HandlerContainer;
 use Elephox\Core\Registrar as RegistrarTrait;
 use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
+use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Request;
 use JetBrains\PhpStorm\NoReturn;
 use LogicException;
@@ -168,7 +169,7 @@ class Core implements Contract\Core
 		return $this->handlerContainer;
 	}
 
-	public function handle(ServerRequestInterface $request): ResponseInterface
+	public function handle(RequestContract $request): ResponseInterface
 	{
 		$context = new RequestContext($this->getContainer(), $request);
 

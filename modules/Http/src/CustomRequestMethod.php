@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 /**
  * @psalm-consistent-constructor
  */
+#[Immutable]
 class CustomRequestMethod implements Contract\RequestMethod
 {
 	/**
@@ -20,17 +22,17 @@ class CustomRequestMethod implements Contract\RequestMethod
 	{
 	}
 
-	#[Pure] public function getValue(): string
+	public function getValue(): string
 	{
 		return $this->method;
 	}
 
-	#[Pure] public function canHaveBody(): bool
+	public function canHaveBody(): bool
 	{
 		return $this->canHaveBody;
 	}
 
-	#[Pure] public function copy(): static
+	public function copy(): static
 	{
 		return new static($this->method, $this->canHaveBody);
 	}

@@ -6,6 +6,8 @@ namespace Elephox\Text;
 use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
+use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 class Regex
 {
@@ -15,7 +17,7 @@ class Regex
 	 * @param int $limit
 	 * @return ArrayList<string>
 	 */
-	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
+	#[Pure] public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
 		$parts = preg_split($pattern, $subject, $limit);
 		if ($parts === false) {
@@ -31,7 +33,7 @@ class Regex
 	 * @param string $subject
 	 * @return ArrayMap<int|string, string>
 	 */
-	public static function match(string $pattern, string $subject): ArrayMap
+	#[Pure] public static function match(string $pattern, string $subject): ArrayMap
 	{
 		$matches = [];
 		if (preg_match($pattern, $subject, $matches) === false) {
@@ -42,7 +44,7 @@ class Regex
 		return ArrayMap::fromIterable($matches);
 	}
 
-	public static function matches(string $pattern, string $subject): bool
+	#[Pure] public static function matches(string $pattern, string $subject): bool
 	{
 		return preg_match($pattern, $subject) === 1;
 	}

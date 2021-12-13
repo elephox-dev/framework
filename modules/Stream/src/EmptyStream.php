@@ -77,7 +77,7 @@ final class EmptyStream implements Stream
 		return '';
 	}
 
-	#[Pure] public function getMetadata(string $key = null): mixed
+	#[Pure] public function getMetadata(?string $key = null): mixed
 	{
 		return null;
 	}
