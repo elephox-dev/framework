@@ -9,18 +9,18 @@ use Elephox\Support\Contract\MimeType;
 
 interface UploadedFile
 {
-	public function getClientName(): string;
+	public function getClientFilename(): string;
 
 	public function getClientPath(): string;
 
 	public function getError(): UploadError;
 
 	/**
-	 * @return positive-int|0
+	 * @return null|positive-int|0
 	 */
-	public function getSize(): int;
+	public function getSize(): ?int;
 
-	public function getMimeType(): MimeType;
+	public function getClientMimeType(): ?MimeType;
 
 	public function getFile(): File;
 }

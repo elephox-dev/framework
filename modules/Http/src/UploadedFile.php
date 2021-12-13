@@ -11,22 +11,22 @@ class UploadedFile implements Contract\UploadedFile
 	/**
 	 * @param string $clientName
 	 * @param string $clientPath
-	 * @param UploadError $error
-	 * @param positive-int|0 $size
-	 * @param MimeType $type
 	 * @param File $file
+	 * @param null|MimeType $type
+	 * @param null|positive-int|0 $size
+	 * @param UploadError $error
 	 */
 	public function __construct(
 		private string $clientName,
 		private string $clientPath,
-		private UploadError $error,
-		private int $size,
-		private MimeType $type,
-		private File $file
+		private File $file,
+		private ?MimeType $type = null,
+		private ?int $size = null,
+		private UploadError $error = UploadError::UPLOAD_ERR_OK,
 	) {
 	}
 
-	public function getClientName(): string
+	public function getClientFilename(): string
 	{
 		return $this->clientName;
 	}
@@ -41,12 +41,12 @@ class UploadedFile implements Contract\UploadedFile
 		return $this->error;
 	}
 
-	public function getSize(): int
+	public function getSize(): ?int
 	{
 		return $this->size;
 	}
 
-	public function getMimeType(): MimeType
+	public function getClientMimeType(): ?MimeType
 	{
 		return $this->type;
 	}
