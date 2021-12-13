@@ -17,6 +17,8 @@ interface File extends FilesystemNode, HasHash
 
 	public function getStream(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream;
 
+	public function moveTo(string $path): bool;
+
 	public function isReadable(): bool;
 
 	public function isWritable(): bool;

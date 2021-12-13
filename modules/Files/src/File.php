@@ -16,8 +16,7 @@ class File implements Contract\File
 	#[Pure] public function __construct(
 		private string    $path,
 		private ?MimeType $mimeType = null,
-	)
-	{
+	) {
 	}
 
 	#[Pure] public function getPath(): string
@@ -109,5 +108,14 @@ class File implements Contract\File
 	#[Pure] public function isExecutable(): bool
 	{
 		return is_executable($this->path);
+	}
+
+	public function moveTo(string $path): bool
+	{
+		if (is_uploaded_file($this->path)) {
+			return move_uploaded_file($this->path, $path);
+		}
+
+		return rename($this->path, $path);
 	}
 }
