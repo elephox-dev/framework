@@ -15,7 +15,7 @@ interface File extends FilesystemNode, HasHash
 
 	public function getMimeType(): ?MimeType;
 
-	public function getContents(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream;
+	public function getStream(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream;
 
 	public function isReadable(): bool;
 

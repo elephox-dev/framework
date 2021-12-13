@@ -103,7 +103,7 @@ class FileTest extends TestCase
 	public function testGetContents(): void
 	{
 		$file = new File($this->filePath);
-		self::assertEquals(self::FileContents, $file->getContents());
+		self::assertEquals(self::FileContents, $file->getStream());
 	}
 
 	public function testGetName(): void

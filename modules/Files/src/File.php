@@ -53,7 +53,7 @@ class File implements Contract\File
 		return new DateTime('@' . filemtime($this->path));
 	}
 
-	public function getContents(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream
+	public function getStream(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream
 	{
 		if ($readable && !$this->isReadable()) {
 			throw new UnreadableFileException($this->path);
@@ -79,7 +79,7 @@ class File implements Contract\File
 			default => throw new InvalidArgumentException('Invalid combination of flags'),
 		};
 
-		return new ResourceStream(fopen($this->path, $flags));
+		return new ResourceStream(fopen($this->path, $flags), $readable, $writeable, $readable);
 	}
 
 	#[Pure] public function getHash(): string|int
