@@ -67,17 +67,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ## 📋 Source code annotations
 
-### ✅ TODO
-
-- [ ] [Http/src/ServerRequest.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ServerRequest.php)
-  - [ ] Implement getServerParamsMap() method.
-  - [ ] Implement getCookies() method.
-  - [ ] Implement withCookies() method.
-  - [ ] Implement withCookie() method.
-  - [ ] Implement getUploadedFiles() method.
-  - [ ] Implement withUploadedFiles() method.
-  - [ ] Implement getParsedBody() method.
-
 
 ### 🚧 Open issues from other repositories
 
