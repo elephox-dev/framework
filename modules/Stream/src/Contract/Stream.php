@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Http\Contract;
+namespace Elephox\Stream\Contract;
 
 use JetBrains\PhpStorm\Pure;
 use Stringable;

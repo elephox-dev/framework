@@ -6,7 +6,8 @@ namespace Elephox\Http;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Http\Contract\HeaderName;
-use Elephox\Http\Contract\Stream;
+use Elephox\Stream\Contract\Stream;
+use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
 
 abstract class AbstractMessage implements Contract\Message

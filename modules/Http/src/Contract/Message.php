@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 
 interface Message

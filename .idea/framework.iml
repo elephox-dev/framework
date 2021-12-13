@@ -20,6 +20,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Database/test" isTestSource="true" packagePrefix="Elephox\Database\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/src" isTestSource="false" packagePrefix="Elephox\Logging\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/test" isTestSource="true" packagePrefix="Elephox\Logging\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Stream/src" isTestSource="false" packagePrefix="Elephox\Stream\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Stream/test" isTestSource="true" packagePrefix="Elephox\Stream\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/abstract-testframework-adapter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/include-interceptor" />

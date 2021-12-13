@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Http;
+namespace Elephox\Stream;
 
 use Closure;
-use Elephox\Http\Contract\Stream;
+use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 
 class LazyResourceStream implements Stream

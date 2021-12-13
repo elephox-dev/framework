@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\Stream;
+use Elephox\Stream\Contract\Stream;
+use Elephox\Stream\EmptyStream;
+use Elephox\Stream\StringStream;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use Elephox\Support\MimeType;
 use InvalidArgumentException;

@@ -120,6 +120,7 @@ foreach ([
 	'files',
 	'http',
 	'logging',
+	'stream',
 	'support',
 	'text'
 ] as $remote) {

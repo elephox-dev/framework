@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Http;
+namespace Elephox\Stream;
 
-use Elephox\Http\Contract\Stream;
+use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 

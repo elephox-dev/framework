@@ -6,17 +6,18 @@ namespace Elephox\Http;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\Contract\Cookie;
+use Elephox\Stream\Contract\Stream;
 
 class ServerRequest extends Request implements Contract\ServerRequest
 {
 
 	public function __construct(
-		Contract\RequestMethod $method = RequestMethod::GET,
-		?Contract\Url                  $url = null,
-		?Contract\RequestHeaderMap     $headers = null,
-		?Contract\Stream               $body = null,
-		string                         $protocolVersion = "1.1",
-		bool                           $inferHostHeader = true
+		Contract\RequestMethod     $method = RequestMethod::GET,
+		?Contract\Url              $url = null,
+		?Contract\RequestHeaderMap $headers = null,
+		?Stream                    $body = null,
+		string                     $protocolVersion = "1.1",
+		bool                       $inferHostHeader = true
 	)
 	{
 		parent::__construct($method, $url, $headers, $body, $protocolVersion, $inferHostHeader);

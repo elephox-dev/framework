@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Collection\ArrayMap;
-use Elephox\Support\MimeType;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * @covers \Elephox\Http\Response
@@ -22,8 +19,8 @@ use stdClass;
  * @covers \Elephox\Support\MimeType
  * @covers \Elephox\Http\CustomResponseCode
  * @covers \Elephox\Http\InvalidResponseCodeMessageException
- * @covers \Elephox\Http\StringStream
- * @covers \Elephox\Http\EmptyStream
+ * @covers \Elephox\Stream\StringStream
+ * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Http\AbstractMessage
  */
 class ResponseTest extends TestCase
