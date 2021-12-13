@@ -12,6 +12,7 @@ use RuntimeException;
  * @covers \Elephox\Files\File
  * @covers \Elephox\Files\Directory
  * @covers \Elephox\Support\MimeType
+ * @covers \Elephox\Stream\ResourceStream
  */
 class FileTest extends TestCase
 {

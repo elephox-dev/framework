@@ -67,17 +67,10 @@ class UrlTest extends TestCase
 		], $uri->asArray());
 	}
 
-	public function testWithScheme(): void
-	{
-		$uri = Url::fromString('http://localhost/test');
-		$uri = $uri->withScheme('https');
-		self::assertSame('https://localhost/test', (string)$uri);
-	}
-
 	public function testWithUrlScheme(): void
 	{
 		$uri = Url::fromString('http://localhost/test');
-		$uri = $uri->withUrlScheme(UrlScheme::HTTPS);
+		$uri = $uri->withScheme(UrlScheme::HTTPS);
 		self::assertSame('https://localhost/test', (string)$uri);
 	}
 

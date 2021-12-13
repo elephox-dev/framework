@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
 use InvalidArgumentException;
@@ -59,7 +60,13 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 				$value = explode(', ', $value);
 			}
 
-			if (is_array($value) && array_is_list($value)) {
+			if ($value instanceof ArrayList) {
+				$values = $value;
+			} else if (is_array($value)) {
+				if (!array_is_list($value)) {
+					$value = array_values($value);
+				}
+
 				$values = ArrayList::fromArray($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
@@ -109,7 +116,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		$obj = $this->firstKey(static fn(Contract\HeaderName $name) => strtolower($name->getValue()) === strtolower($key->getValue()));
 		$obj ??= $key;
 
-		if (!is_array($value)) {
+		if (!is_array($value) && !$value instanceof GenericList) {
 			if (!is_string($value)) {
 				throw new InvalidHeaderTypeException($value);
 			}

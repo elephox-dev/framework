@@ -25,7 +25,7 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param list<U>|self<U> $array
 	 * @return self<U>
 	 */
-	#[Pure] public static function fromArray(iterable $array): self
+	#[Pure] public static function fromArray(iterable|self $array): self
 	{
 		if ($array instanceof self)
 		{
