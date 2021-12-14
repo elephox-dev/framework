@@ -129,11 +129,6 @@ class Request extends AbstractMessage implements Contract\Request
 		return $this->method;
 	}
 
-	#[Pure] public function getMethod(): string
-	{
-		return $this->method->getValue();
-	}
-
 	public function getHeaderMap(): Contract\RequestHeaderMap
 	{
 		if (!$this->headers instanceof Contract\RequestHeaderMap) {

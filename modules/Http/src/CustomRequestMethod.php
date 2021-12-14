@@ -31,9 +31,4 @@ class CustomRequestMethod implements Contract\RequestMethod
 	{
 		return $this->canHaveBody;
 	}
-
-	public function copy(): static
-	{
-		return new static($this->method, $this->canHaveBody);
-	}
 }

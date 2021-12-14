@@ -75,11 +75,6 @@ class Response extends AbstractMessage implements Contract\Response
 		return $this->headers->asResponseHeaders();
 	}
 
-	public function withoutBody(): static
-	{
-		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), new EmptyStream(), $this->protocolVersion);
-	}
-
 	public function withProtocolVersion(string $version): static
 	{
 		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $version);
