@@ -76,7 +76,7 @@ trait DeepCloneable
 			$clone = clone $object;
 			$this->clonedObjects[$hash] = $clone;
 		} else {
-			$clone = $reflection->newInstanceWithoutConstructor();
+			$clone = $reflection->newInstance();
 		}
 
 		$properties = $reflection->getProperties();

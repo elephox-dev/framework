@@ -15,10 +15,7 @@ abstract class AbstractMessage implements Contract\Message
 	protected Stream $body;
 	protected Contract\HeaderMap $headers;
 
-	protected static function createHeaderMap(): Contract\HeaderMap
-	{
-		return new HeaderMap();
-	}
+	abstract protected static function createHeaderMap(): Contract\HeaderMap;
 
 	public function __construct(
 		?Contract\HeaderMap $headers = null,
