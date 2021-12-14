@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\Contract\GenericMap;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\ArrayMap;
 
 interface ServerRequest extends Request
 {
 	/**
-	 * @return GenericMap<string, string>
+	 * @return ArrayMap<string, string>
 	 */
-	public function getServerParamsMap(): GenericMap;
+	public function getServerParamsMap(): ArrayMap;
 
 	/**
-	 * @return GenericList<Cookie>
+	 * @return ArrayList<Cookie>
 	 */
-	public function getCookies(): GenericList;
+	public function getCookies(): ArrayList;
 
 	/**
 	 * @param iterable<Cookie> $cookies
@@ -26,9 +26,9 @@ interface ServerRequest extends Request
 	public function withCookie(Cookie $cookie): static;
 
 	/**
-	 * @return GenericList<UploadedFile>
+	 * @return ArrayList<UploadedFile>
 	 */
-	public function getUploadedFiles(): GenericList;
+	public function getUploadedFiles(): ArrayList;
 
 	/**
 	 * @param iterable<UploadedFile> $uploadedFiles

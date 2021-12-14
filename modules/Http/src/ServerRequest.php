@@ -5,7 +5,6 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\Contract\Cookie;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Support\MimeType;
@@ -44,8 +43,9 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		$this->files = new ArrayList($files);
 	}
 
-	#[Pure] public function getServerParamsMap(): GenericMap
+	#[Pure] public function getServerParamsMap(): ArrayMap
 	{
+		/** @var ArrayMap<string, string> */
 		return new ArrayMap($_SERVER);
 	}
 
