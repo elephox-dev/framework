@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\ReadonlyList;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @covers \Elephox\Collection\ArrayList
@@ -47,12 +49,17 @@ class ArrayListTest extends TestCase
 
 		self::assertArrayNotHasKey(0, $arr);
 		self::assertArrayNotHasKey(1, $arr);
+		self::assertArrayNotHasKey(2, $arr);
 
 		$arr->offsetSet(null, "test");
-		$arr[null] = "test2";
+		$arr->set(0, "test2");
+		$arr[null] = "test3";
 
 		self::assertArrayHasKey(0, $arr);
 		self::assertArrayHasKey(1, $arr);
+		self::assertArrayNotHasKey(2, $arr);
+		self::assertEquals("test2", $arr[0]);
+		self::assertEquals("test3", $arr[1]);
 	}
 
 	public function testOffsetSetInvalidType(): void
@@ -294,5 +301,27 @@ class ArrayListTest extends TestCase
 		self::assertEquals(1, $sorted->get(0));
 		self::assertEquals(2, $sorted->get(1));
 		self::assertEquals(3, $sorted->get(2));
+	}
+
+	public function testAsReadonly(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+		$readonly = $list->asReadonly();
+
+		self::assertInstanceOf(ReadonlyList::class, $readonly);
+	}
+
+	public function testDeepClone(): void
+	{
+		$anObject = new stdClass();
+		$anObject->test = true;
+		$list = new ArrayList([$anObject, 2, $anObject]);
+		$clone = $list->deepClone();
+
+		self::assertInstanceOf(ArrayList::class, $clone);
+		self::assertNotSame($list, $clone);
+		self::assertNotSame($list[0], $clone[0]);
+		self::assertNotSame($list[2], $clone[2]);
+		self::assertSame($clone[0], $clone[2]);
 	}
 }

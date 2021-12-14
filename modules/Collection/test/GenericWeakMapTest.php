@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\ReadonlyMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -162,5 +163,74 @@ class GenericWeakMapTest extends TestCase
 			self::assertEquals($inst, $key);
 			self::assertEquals(123, $value);
 		}
+	}
+
+	public function testWhereKey(): void
+	{
+		$a = new stdClass();
+		$a->test = 'a';
+
+		$b = new stdClass();
+		$b->test = 'b';
+
+		$map = new GenericWeakMap([$a, $b], [1, 2]);
+
+		$filteredMap = $map->whereKey(static fn(object $k) => $k->test === 'a');
+
+		self::assertEquals([$a], $filteredMap->keys()->asArray());
+	}
+
+	public function testMapKey(): void
+	{
+		$a = new stdClass();
+		$a->test = 'a';
+
+		$b = new stdClass();
+		$b->test = 'b';
+
+		$map = new GenericWeakMap([$a, $b], [1, 2]);
+
+		$mapped = $map->mapKeys(static function (object $k) {
+			$k->test .= '1';
+
+			return $k;
+		});
+
+		self::assertEquals('a1', $mapped->keys()->first()->test);
+	}
+
+	public function testAsReadonly(): void
+	{
+		$inst = new stdClass();
+		$map = new GenericWeakMap([$inst], [123]);
+
+		$readonlyMap = $map->asReadonly();
+
+		self::assertInstanceOf(ReadonlyMap::class, $readonlyMap);
+	}
+
+	public function testRemove(): void
+	{
+		$inst = new stdClass();
+		$map = new GenericWeakMap([$inst], [123]);
+
+		$map->remove($inst);
+
+		self::assertFalse($map->has($inst));
+	}
+
+	public function testDeepClone(): void
+	{
+		$anObject = new stdClass();
+		$anObject->test = true;
+		$anotherObject = new stdClass();
+		$anotherObject->test = false;
+
+		$map = new GenericWeakMap([$anObject, $anotherObject], [1, 2]);
+		$clone = $map->deepClone();
+
+		self::assertInstanceOf(GenericWeakMap::class, $clone);
+		self::assertNotSame($map, $clone);
+		self::assertNotSame($anObject, $clone->keys()[0]);
 	}
 }

@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\ReadonlyMap;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\JsonConvertible;
+use Elephox\Support\DeepCloneable;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -15,9 +17,12 @@ use JetBrains\PhpStorm\Pure;
  *
  * @template-implements Contract\GenericMap<TKey, TValue>
  * @template-implements ArrayConvertible<TKey, TValue>
+ * @template-implements ArrayAccess<TKey, TValue>
  */
-class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
+class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, JsonConvertible
 {
+	use DeepCloneable;
+
 	/**
 	 * @template TPairKey as array-key
 	 * @template TPairValue
@@ -227,9 +232,9 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		return new ArrayIterator($this->values);
 	}
 
-	public function toJson(int $flags = JSON_THROW_ON_ERROR): string
+	public function toJson(int $flags = 0): string
 	{
-		return json_encode($this->values, JSON_THROW_ON_ERROR);
+		return json_encode($this->values, $flags | JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -264,12 +269,23 @@ class ArrayMap implements Contract\GenericMap, ArrayConvertible, JsonConvertible
 		unset($this->values[$key]);
 	}
 
-	public function __clone()
+	public function offsetExists(mixed $offset): bool
 	{
-		$this->values = [];
+		return $this->has($offset);
+	}
 
-		foreach ((clone $this)->values as $key => $value) {
-			$this->values[$key] = is_object($value) ? clone $value : $value;
-		}
+	public function offsetGet(mixed $offset): mixed
+	{
+		return $this->get($offset);
+	}
+
+	public function offsetSet(mixed $offset, mixed $value): void
+	{
+		$this->put($offset, $value);
+	}
+
+	public function offsetUnset(mixed $offset): void
+	{
+		$this->remove($offset);
 	}
 }

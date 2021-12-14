@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\ReadonlyMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -162,5 +163,48 @@ class ObjectMapTest extends TestCase
 			self::assertEquals($inst, $key);
 			self::assertEquals(123, $value);
 		}
+	}
+
+	public function testAsReadonly(): void
+	{
+		$inst = new stdClass();
+		$map = new ObjectMap([$inst], [123]);
+		$readonlyMap = $map->asReadonly();
+
+		self::assertInstanceOf(ReadonlyMap::class, $readonlyMap);
+	}
+
+	public function testWhereKey(): void
+	{
+		$a = new stdClass();
+		$a->test = 'a';
+
+		$b = new stdClass();
+		$b->test = 'b';
+
+		$map = new ObjectMap([$a, $b], [1, 2]);
+
+		$filteredMap = $map->whereKey(static fn(object $k) => $k->test === 'a');
+
+		self::assertEquals([$a], $filteredMap->keys()->asArray());
+	}
+
+	public function testMapKey(): void
+	{
+		$a = new stdClass();
+		$a->test = 'a';
+
+		$b = new stdClass();
+		$b->test = 'b';
+
+		$map = new ObjectMap([$a, $b], [1, 2]);
+
+		$mapped = $map->mapKeys(static function (object $k) {
+			$k->test .= '1';
+
+			return $k;
+		});
+
+		self::assertEquals('a1', $mapped->keys()->first()->test);
 	}
 }

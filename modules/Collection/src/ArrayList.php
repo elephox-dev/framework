@@ -7,6 +7,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
@@ -19,6 +20,8 @@ use Stringable;
  */
 class ArrayList implements GenericList, ArrayAccess
 {
+	use DeepCloneable;
+
 	/**
 	 * @template U
 	 *
@@ -293,15 +296,5 @@ class ArrayList implements GenericList, ArrayAccess
 	#[Pure] public function asReadonly(): ReadonlyList
 	{
 		return $this;
-	}
-
-	public function __clone()
-	{
-		/** @var list<T> */
-		$this->list = [];
-
-		foreach ((clone $this)->list as $item) {
-			$this->list[] = is_object($item) ? clone $item : $item;
-		}
 	}
 }

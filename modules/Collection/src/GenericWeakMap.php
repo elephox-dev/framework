@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\ReadonlyMap;
+use Elephox\Support\DeepCloneable;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
 use Traversable;
@@ -17,6 +18,8 @@ use WeakMap;
  */
 class GenericWeakMap implements Contract\GenericMap
 {
+	use DeepCloneable;
+
 	protected WeakMap $map;
 
 	/**
@@ -185,7 +188,7 @@ class GenericWeakMap implements Contract\GenericMap
 	#[Pure] public function mapKeys(callable $callback): GenericWeakMap
 	{
 		/** @var GenericWeakMap<TKeyOut, TValue> $map */
-		$map = new ObjectMap();
+		$map = new GenericWeakMap();
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -299,10 +302,5 @@ class GenericWeakMap implements Contract\GenericMap
 	public function remove(mixed $key): void
 	{
 		$this->map->offsetUnset($key);
-	}
-
-	public function __clone()
-	{
-		$this->map = clone $this->map;
 	}
 }

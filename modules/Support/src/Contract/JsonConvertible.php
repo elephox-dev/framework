@@ -19,5 +19,5 @@ interface JsonConvertible
 	 * @throws JsonException
 	 * @see json_encode()
 	 */
-	public function toJson(int $flags = JSON_THROW_ON_ERROR): string;
+	public function toJson(int $flags = 0): string;
 }

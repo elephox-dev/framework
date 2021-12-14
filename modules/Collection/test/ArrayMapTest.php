@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\ReadonlyMap;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @covers \Elephox\Collection\ArrayMap
@@ -208,5 +210,95 @@ class ArrayMapTest extends TestCase
 		]);
 
 		self::assertEquals(['b' => 2, 'c' => 3], $map->whereKey(fn($key) => $key > 'a')->asArray());
+	}
+
+	public function testToJson(): void
+	{
+		$map = new ArrayMap(['test' => 123, 'arr' => ['abc', 'def', 'ghi']]);
+		$json = $map->toJson();
+
+		self::assertEquals('{"test":123,"arr":["abc","def","ghi"]}', $json);
+	}
+
+	public function testAsReadonly(): void
+	{
+		$map = new ArrayMap([123, 456]);
+		$readonly = $map->asReadonly();
+
+		self::assertInstanceOf(ReadonlyMap::class, $readonly);
+	}
+
+	public function testRemove(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		$map->remove('a');
+
+		self::assertCount(2, $map);
+		self::assertFalse($map->has('a'));
+	}
+
+	public function testDeepClone(): void
+	{
+		$anObject = new stdClass();
+		$anObject->test = true;
+		$map = new ArrayMap(['obj' => $anObject, 'test' => 2, 'obj2' => $anObject]);
+		$clone = $map->deepClone();
+
+		self::assertInstanceOf(ArrayMap::class, $clone);
+		self::assertNotSame($map, $clone);
+		self::assertNotSame($map['obj'], $clone['obj']);
+		self::assertNotSame($map['obj2'], $clone['obj2']);
+		self::assertSame($clone['obj'], $clone['obj2']);
+	}
+
+	public function testOffsetExists(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		self::assertTrue($map->offsetExists('a'));
+		self::assertTrue($map->offsetExists('b'));
+		self::assertTrue($map->offsetExists('c'));
+		self::assertFalse($map->offsetExists('d'));
+		self::assertFalse($map->offsetExists(null));
+	}
+
+	public function testOffsetSet(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		$map->offsetSet('a', 4);
+		$map->offsetSet('d', 5);
+
+		self::assertEquals(4, $map->get('a'));
+		self::assertEquals(2, $map->get('b'));
+		self::assertEquals(3, $map->get('c'));
+		self::assertEquals(5, $map->get('d'));
+	}
+
+	public function testOffsetUnset(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		$map->offsetUnset('a');
+
+		self::assertFalse($map->offsetExists('a'));
+		self::assertTrue($map->offsetExists('b'));
 	}
 }
