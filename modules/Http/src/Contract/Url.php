@@ -33,9 +33,9 @@ interface Url extends Stringable, ArrayConvertible
 	#[Pure] public function getQuery(): string;
 
 	/**
-	 * @return GenericMap<string, string|array>
+	 * @return ArrayMap<string, string|array>
 	 */
-	public function getQueryMap(): GenericMap;
+	public function getQueryMap(): ArrayMap;
 
 	#[Pure] public function getFragment(): string;
 
