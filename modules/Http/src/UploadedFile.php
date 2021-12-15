@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Files\Contract\File;
+use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\MimeType;
 
 class UploadedFile implements Contract\UploadedFile
@@ -11,7 +11,7 @@ class UploadedFile implements Contract\UploadedFile
 	/**
 	 * @param string $clientName
 	 * @param string $clientPath
-	 * @param File $file
+	 * @param Stream $stream
 	 * @param null|MimeType $type
 	 * @param null|positive-int|0 $size
 	 * @param UploadError $error
@@ -19,7 +19,7 @@ class UploadedFile implements Contract\UploadedFile
 	public function __construct(
 		private string $clientName,
 		private string $clientPath,
-		private File $file,
+		private Stream $stream,
 		private ?MimeType $type = null,
 		private ?int $size = null,
 		private UploadError $error = UploadError::UPLOAD_ERR_OK,
@@ -51,8 +51,8 @@ class UploadedFile implements Contract\UploadedFile
 		return $this->type;
 	}
 
-	public function getFile(): File
+	public function getStream(): Stream
 	{
-		return $this->file;
+		return $this->stream;
 	}
 }

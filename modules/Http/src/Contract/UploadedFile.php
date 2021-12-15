@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Files\Contract\File;
 use Elephox\Http\UploadError;
+use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\MimeType;
 
 interface UploadedFile
@@ -22,5 +22,5 @@ interface UploadedFile
 
 	public function getClientMimeType(): ?MimeType;
 
-	public function getFile(): File;
+	public function getStream(): Stream;
 }
