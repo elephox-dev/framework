@@ -6,8 +6,8 @@ namespace Elephox\Files;
 use DateTime;
 use Elephox\Collection\ArrayList;
 use Elephox\Files\Contract\FilesystemNode;
+use Exception;
 use JetBrains\PhpStorm\Pure;
-use OutOfRangeException;
 
 class Directory implements Contract\Directory
 {
@@ -77,18 +77,19 @@ class Directory implements Contract\Directory
 	public function getParent(int $levels = 1): Contract\Directory
 	{
 		if ($levels < 1) {
-			throw new OutOfRangeException('Levels must be greater than 0');
+			throw new InvalidParentLevelException($levels);
 		}
 
 		return new Directory(dirname($this->path, $levels));
 	}
 
-	/**
-	 * @throws \Exception
-	 */
 	public function getModifiedTime(): DateTime
 	{
-		return new DateTime('@' . filemtime($this->path));
+		try {
+			return new DateTime('@' . filemtime($this->path));
+		} catch (Exception $e) {
+			throw new UnreadableModifiedTimeException($this->path, previous: $e);
+		}
 	}
 
 	public function getFile(string $filename): ?File

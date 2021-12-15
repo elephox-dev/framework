@@ -4,12 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Files;
 
 use DateTime;
-use Elephox\Stream\Contract\Stream;
-use Elephox\Stream\ResourceStream;
 use Elephox\Support\Contract\MimeType;
-use InvalidArgumentException;
+use Exception;
 use JetBrains\PhpStorm\Pure;
-use OutOfRangeException;
 
 class File implements Contract\File
 {
@@ -44,41 +41,13 @@ class File implements Contract\File
 		return $this->mimeType;
 	}
 
-	/**
-	 * @throws \Exception
-	 */
 	public function getModifiedTime(): DateTime
 	{
-		return new DateTime('@' . filemtime($this->path));
-	}
-
-	public function getStream(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream
-	{
-		if ($readable && !$this->isReadable()) {
-			throw new UnreadableFileException($this->path);
+		try {
+			return new DateTime('@' . filemtime($this->path));
+		} catch (Exception $e) {
+			throw new UnreadableModifiedTimeException($this->path, previous: $e);
 		}
-
-		if (($writeable || $append) && !$this->isWritable()) {
-			throw new UnwritableFileException($this->path);
-		}
-
-		if ($create && $this->getParent()->isReadonly()) {
-			throw new ReadonlyParentException($this->path);
-		}
-
-		$flags = match (true) {
-			 $readable &&  $writeable &&  $append &&  $create => 'a+',
-			!$readable &&  $writeable &&  $append &&  $create => 'a',
-			 $readable &&  $writeable && !$append &&  $create && $truncate => 'wb+',
-			!$readable &&  $writeable && !$append &&  $create && $truncate => 'wb',
-			 $readable &&  $writeable && !$append &&  $create => 'c+',
-			!$readable &&  $writeable && !$append &&  $create => 'c',
-			 $readable &&  $writeable && !$append && !$create => 'rb+',
-			 $readable && !$writeable && !$append && !$create => 'rb',
-			default => throw new InvalidArgumentException('Invalid combination of flags'),
-		};
-
-		return new ResourceStream(fopen($this->path, $flags), $readable, $writeable, $readable);
 	}
 
 	#[Pure] public function getHash(): string|int
@@ -89,7 +58,7 @@ class File implements Contract\File
 	public function getParent(int $levels = 1): Contract\Directory
 	{
 		if ($levels < 1) {
-			throw new OutOfRangeException('Levels must be greater than 0');
+			throw new InvalidParentLevelException($levels);
 		}
 
 		return new Directory(dirname($this->path, $levels));
@@ -117,5 +86,10 @@ class File implements Contract\File
 		}
 
 		return rename($this->path, $path);
+	}
+
+	public function exists(): bool
+	{
+		return file_exists($this->path);
 	}
 }

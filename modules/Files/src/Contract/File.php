@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
-use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
 use Elephox\Support\Contract\MimeType;
 
@@ -15,9 +14,9 @@ interface File extends FilesystemNode, HasHash
 
 	public function getMimeType(): ?MimeType;
 
-	public function getStream(bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): Stream;
-
 	public function moveTo(string $path): bool;
+
+	public function exists(): bool;
 
 	public function isReadable(): bool;
 

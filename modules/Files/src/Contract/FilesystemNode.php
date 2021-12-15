@@ -13,5 +13,9 @@ interface FilesystemNode
 
 	public function getModifiedTime(): DateTime;
 
+	/**
+	 * @param positive-int $levels
+	 * @return Directory
+	 */
 	public function getParent(int $levels = 1): Directory;
 }

@@ -12,7 +12,6 @@
     "require": {
         "php": ">=8.1",
         "elephox/collection": "dev-main",
-        "elephox/stream": "dev-main",
         "elephox/support": "dev-main",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
