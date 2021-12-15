@@ -7,14 +7,8 @@ class Path
 {
 	public static function join(string... $args): string
 	{
-		$paths = array();
-
-		foreach ($args as $arg) {
-			if ($arg !== '') {
-				$paths[] = $arg;
-			}
-		}
-
-		return preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, implode(DIRECTORY_SEPARATOR, $paths));
+		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
+		$path = implode(DIRECTORY_SEPARATOR, $parts);
+		return preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
 	}
 }
