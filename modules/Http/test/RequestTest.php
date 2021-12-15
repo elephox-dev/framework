@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Http\CustomHeaderName
  * @covers \Elephox\Http\AbstractMessage
- * @covers \Elephox\Stream\LazyResourceStream
+ * @covers \Elephox\Stream\LazyStream
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Stream\EmptyStream

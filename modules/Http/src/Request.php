@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Stream\Contract\Stream;
-use Elephox\Stream\LazyResourceStream;
+use Elephox\Stream\LazyStream;
+use Elephox\Stream\ResourceStream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
@@ -76,13 +77,7 @@ class Request extends AbstractMessage implements Contract\Request
 		$uri = $_SERVER["REQUEST_URI"];
 		$parsedUri = Url::fromString($uri);
 
-		$body = new LazyResourceStream(static function () {
-			$stream = fopen('php://input', 'rb');
-			if ($stream === false) {
-				throw new RuntimeException("Failed to open php://input.");
-			}
-			return $stream;
-		});
+		$body = new LazyStream(static fn() => new ResourceStream(STDIN));
 
 		return new self($requestMethod, $parsedUri, $headerMap, $body, $version);
 	}

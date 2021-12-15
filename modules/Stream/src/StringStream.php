@@ -20,8 +20,8 @@ class StringStream implements Stream
 		private bool $seekable = true,
 		private bool $writable = true,
 		private bool $readable = true
-	)
-	{}
+	) {
+	}
 
 	#[Pure] public function __toString(): string
 	{

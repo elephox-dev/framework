@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Files;
+namespace Elephox\Stream;
 
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 use Throwable;
 
-class UnreadableFileException extends FileException
+class UnreadableFileException extends RuntimeException
 {
 	#[Pure] public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{
