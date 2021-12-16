@@ -32,7 +32,7 @@ class CommandHandler extends AbstractHandlerAttribute
 		return parent::getWeight();
 	}
 
-	public function handles(CommandLineContext|Context $context): bool
+	public function handles(Context $context): bool
 	{
 		if (!$context instanceof CommandLineContext) {
 			return false;

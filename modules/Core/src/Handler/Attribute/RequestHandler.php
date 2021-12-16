@@ -7,12 +7,11 @@ use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\ReadonlyList;
-use Elephox\Core\Context\Contract\Context as ContextContract;
+use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
 use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\UrlTemplate;
-use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
 use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
@@ -36,8 +35,7 @@ class RequestHandler extends AbstractHandlerAttribute
 		string|UrlTemplate                                  $url,
 		null|string|RequestMethodContract|array|GenericList $methods = null,
 		int                                                 $weight = 0,
-	)
-	{
+	) {
 		parent::__construct(ActionType::Request, $weight);
 
 		$this->template = $url instanceof UrlTemplate ? $url : new UrlTemplate($url);
@@ -81,7 +79,7 @@ class RequestHandler extends AbstractHandlerAttribute
 		return $this->methods;
 	}
 
-	public function handles(ContextContract $context): bool
+	public function handles(Context $context): bool
 	{
 		if (!$context instanceof RequestContextContract) {
 			return false;
@@ -97,7 +95,7 @@ class RequestHandler extends AbstractHandlerAttribute
 		return $this->template->matches($context->getRequest()->getUrl());
 	}
 
-	public function getHandlerParams(ContextContract $context): array
+	public function getHandlerParams(Context $context): array
 	{
 		if (!$context instanceof RequestContextContract) {
 			throw new InvalidContextException($context, RequestContextContract::class);
