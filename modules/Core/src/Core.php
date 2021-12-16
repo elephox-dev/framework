@@ -16,11 +16,10 @@ use Elephox\Core\Registrar as RegistrarTrait;
 use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Http\Contract\Request as RequestContract;
+use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Request;
 use JetBrains\PhpStorm\NoReturn;
 use LogicException;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 
 /**
@@ -33,29 +32,25 @@ class Core implements Contract\Core
 	public static function instance(): Contract\Core
 	{
 		if (self::$instance === null) {
-			self::$instance = self::entrypoint();
+			self::$instance = self::create();
 		}
 
 		return self::$instance;
 	}
 
-	public static function entrypoint(): Contract\Core
+	public static function create(): Contract\Core
 	{
 		if (defined("ELEPHOX_VERSION")) {
-			throw new LogicException("Entrypoint already called.");
+			throw new LogicException("Core already created.");
 		}
 
 		$container = new Container();
-		self::$instance = new self($container);
+		self::$instance = new static($container);
 
-		$container->register(Contract\Core::class, self::$instance);
 		$container->register(self::$instance::class, self::$instance);
+		$container->alias(Contract\Core::class, self::$instance::class);
 
 		define("ELEPHOX_VERSION", self::$instance->getVersion());
-
-		if (!$container->has(HandlerContainerContract::class)) {
-			$container->register(HandlerContainerContract::class, fn (ContainerContract $c) => new HandlerContainer($c));
-		}
 
 		return self::$instance;
 	}
@@ -163,19 +158,23 @@ class Core implements Contract\Core
 	public function getHandlerContainer(): HandlerContainerContract
 	{
 		if ($this->handlerContainer === null) {
+			if (!$this->container->has(HandlerContainerContract::class)) {
+				$this->container->register(HandlerContainerContract::class, fn(ContainerContract $c) => new HandlerContainer($c));
+			}
+
 			$this->handlerContainer = $this->getContainer()->get(HandlerContainerContract::class);
 		}
 
 		return $this->handlerContainer;
 	}
 
-	public function handle(RequestContract $request): ResponseInterface
+	public function handle(RequestContract $request): ResponseContract
 	{
 		$context = new RequestContext($this->getContainer(), $request);
 
 		$result = $this->handleContext($context);
-		if (!$result instanceof ResponseInterface) {
-			throw new LogicException("Result must be an instance of ResponseInterface.");
+		if (!$result instanceof ResponseContract) {
+			throw new LogicException("Result must be an instance of Response.");
 		}
 
 		return $result;
