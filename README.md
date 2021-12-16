@@ -67,6 +67,11 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ## 📋 Source code annotations
 
+### ✅ TODO
+
+- [ ] [Stream/src/AppendStream.php](https://github.com/elephox-dev/framework/tree/main/modules/Stream/src/AppendStream.php)
+  - [ ] improve append stream to actually be able to seek and write and so on
+
 
 ### 🚧 Open issues from other repositories
 
