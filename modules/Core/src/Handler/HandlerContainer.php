@@ -10,11 +10,15 @@ use Elephox\Core\Contract\Core as CoreContract;
 use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttributeContract;
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
+use Elephox\Core\Middleware\Attribute\Contract\MiddlewareAttribute;
+use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Core\Middleware\Contract\Middleware;
 use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
 use Elephox\Text\Regex;
+use JetBrains\PhpStorm\Pure;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
@@ -53,7 +57,7 @@ class HandlerContainer implements Contract\HandlerContainer
 	 */
 	private ArrayList $bindings;
 
-	public function __construct(
+	#[Pure] public function __construct(
 		private ContainerContract $container,
 	)
 	{
@@ -96,14 +100,11 @@ class HandlerContainer implements Contract\HandlerContainer
 
 			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#6412 or vimeo/psalm#6989 */
 			$closure = Closure::fromCallable($classInstance);
-			$this->registerAttributes($closure, $classAttributes);
+			$middlewareAttributes = $classReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			$this->registerAttributes($closure, $classAttributes, $middlewareAttributes);
 		}
 
 		$methods = $classReflection->getMethods(ReflectionMethod::IS_PUBLIC);
-		if (empty($methods)) {
-			return $this;
-		}
-
 		foreach ($methods as $methodReflection) {
 			$methodAttributes = $methodReflection->getAttributes(HandlerAttributeContract::class, ReflectionAttribute::IS_INSTANCEOF);
 			if (empty($methodAttributes)) {
@@ -112,12 +113,11 @@ class HandlerContainer implements Contract\HandlerContainer
 
 			$classInstance ??= $this->container->getOrInstantiate($className);
 
+			/** @var Closure $closure */
 			$closure = $methodReflection->getClosure($classInstance);
 
-			/** @noinspection PhpConditionAlreadyCheckedInspection */
-			assert($closure !== null);
-
-			$this->registerAttributes($closure, $methodAttributes);
+			$middlewareAttributes = $methodReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			$this->registerAttributes($closure, $methodAttributes, $middlewareAttributes);
 		}
 
 		if ($classInstance !== null) {
@@ -130,15 +130,24 @@ class HandlerContainer implements Contract\HandlerContainer
 
 	/**
 	 * @param Closure $closure
-	 * @param array<array-key, ReflectionAttribute<HandlerAttributeContract>> $attributes
+	 * @param array<array-key, ReflectionAttribute<HandlerAttributeContract>> $handlerAttributes
+	 * @param array<array-key, ReflectionAttribute<MiddlewareAttribute>> $middlewareAttributes
 	 */
-	private function registerAttributes(Closure $closure, array $attributes): void
+	private function registerAttributes(Closure $closure, array $handlerAttributes, array $middlewareAttributes): void
 	{
-		foreach ($attributes as $handlerAttribute) {
-			$attributeInstance = $handlerAttribute->newInstance();
+		foreach ($handlerAttributes as $handlerAttribute) {
+			/**
+			 * @psalm-suppress UnnecessaryVarAnnotation
+			 * @var HandlerAttributeContract $handlerAttributeInstance
+			 */
+			$handlerAttributeInstance = $handlerAttribute->newInstance();
 
-			/** @noinspection PhpParamsInspection */
-			$binding = new HandlerBinding($closure, $attributeInstance);
+			/** @var ReadonlyList<Middleware> $middlewares */
+			$middlewares = ArrayList::fromArray($middlewareAttributes)
+				->map(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
+				->where(static fn(Middleware $middleware): bool => $middleware->getType()->matchesAny() || $middleware->getType() === $handlerAttributeInstance->getType());
+
+			$binding = new HandlerBinding($closure, $handlerAttributeInstance, $middlewares);
 
 			$this->register($binding);
 		}

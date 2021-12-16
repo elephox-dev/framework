@@ -4,31 +4,59 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler;
 
 use Closure;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Contract\HandlerMeta;
+use Elephox\Core\Middleware\Contract\Middleware;
+use JetBrains\PhpStorm\Pure;
 
 class HandlerBinding implements Contract\HandlerBinding
 {
 	/**
+	 * @var GenericList<Middleware> $middlewares
+	 */
+	private GenericList $middlewares;
+
+	/**
 	 * @param Closure $closure
 	 * @param HandlerMeta $handlerMeta
+	 * @param ReadonlyList<Middleware> $middlewares
 	 */
 	public function __construct(
-		private Closure     $closure,
-		private HandlerMeta $handlerMeta,
-	)
-	{
+		private Closure      $closure,
+		private HandlerMeta  $handlerMeta,
+		ReadonlyList $middlewares,
+	) {
+		$this->middlewares = ArrayList::fromArray($middlewares)
+			->orderBy(static fn(Middleware $a, Middleware $b): int => $b->getWeight() - $a->getWeight());
 	}
 
-	public function getHandlerMeta(): HandlerMeta
+	#[Pure] public function getHandlerMeta(): HandlerMeta
 	{
 		return $this->handlerMeta;
 	}
 
+	#[Pure] public function getMiddlewares(): ReadonlyList
+	{
+		return $this->middlewares->asReadonly();
+	}
+
 	public function handle(Context $context): mixed
 	{
-		$parameters = $this->getHandlerMeta()->getHandlerParams($context);
+		$contextHandler = function (Context $ctx): mixed {
+			$parameters = $this->getHandlerMeta()->getHandlerParams($ctx);
 
-		return $context->getContainer()->callback($this->closure, ['context' => $context, ...$parameters]);
+			return $ctx->getContainer()->callback($this->closure, ['context' => $ctx, ...$parameters]);
+		};
+
+		$middlewares = $this
+			->getMiddlewares();
+		foreach ($middlewares as $middleware) {
+			$contextHandler = static fn (Context $ctx): mixed => $middleware->handle($ctx, $contextHandler);
+		}
+
+		return $contextHandler($context);
 	}
 }
