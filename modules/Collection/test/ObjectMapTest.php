@@ -207,4 +207,20 @@ class ObjectMapTest extends TestCase
 
 		self::assertEquals('a1', $mapped->keys()->first()->test);
 	}
+
+	public function testDeepClone(): void
+	{
+		$anObject = new stdClass();
+		$anObject->test = true;
+		$anotherObject = new stdClass();
+		$anotherObject->test = false;
+
+		$map = new ObjectMap([$anObject], [$anotherObject]);
+		$clone = $map->deepClone();
+
+		self::assertInstanceOf(ObjectMap::class, $clone);
+		self::assertNotSame($map, $clone);
+		self::assertNotSame($anObject, $clone->keys()[0]);
+		self::assertNotSame($anotherObject, $clone->values()[0]);
+	}
 }
