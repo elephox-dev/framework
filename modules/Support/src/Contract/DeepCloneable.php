@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection\Contract;
+namespace Elephox\Support\Contract;
 
 interface DeepCloneable
 {
