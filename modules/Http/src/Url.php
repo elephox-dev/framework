@@ -257,6 +257,7 @@ class Url implements Contract\Url
 
 		parse_str($this->query, $query);
 
+		/** @var ArrayMap<string, string|array> */
 		return ArrayMap::fromIterable($query);
 	}
 
