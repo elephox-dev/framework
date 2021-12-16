@@ -83,8 +83,6 @@ trait DeepCloneable
 		self::$clonedObjects[$hash] = $clone;
 
 		if ($object instanceof WeakMap) {
-			/** @var WeakMap $clone */
-
 			/** @var Iterator<object, mixed> $iterator */
 			$iterator = $object->getIterator();
 
@@ -101,6 +99,7 @@ trait DeepCloneable
 				/** @var mixed $clonedValue */
 				$clonedValue = $this->cloneRecursive($value);
 
+				/** @var WeakMap $clone */
 				$clone->offsetSet($clonedKey, $clonedValue);
 				$iterator->next();
 			}
@@ -109,12 +108,9 @@ trait DeepCloneable
 		}
 
 		if ($object instanceof SplObjectStorage) {
-			/** @var SplObjectStorage $clone */
-
-			$iterator = $object;
-			while ($iterator->valid()) {
-				/** @var object $key */
-				$key = $iterator->current();
+			$object->rewind();
+			while ($object->valid()) {
+				$key = $object->current();
 				/** @var mixed $value */
 				$value = $object->offsetGet($key);
 
@@ -123,8 +119,9 @@ trait DeepCloneable
 				/** @var mixed $clonedValue */
 				$clonedValue = $this->cloneRecursive($value);
 
+				/** @var SplObjectStorage $clone */
 				$clone->offsetSet($clonedKey, $clonedValue);
-				$iterator->next();
+				$object->next();
 			}
 
 			return $clone;
