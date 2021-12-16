@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
-use Closure;
 use Elephox\Core\Context\Contract\Context;
+use Elephox\Core\Contract\HandlerStackMeta;
 use Elephox\Core\Handler\InvalidContextException;
-use Elephox\Core\Handler\InvalidResultException;
 
-interface HandlerMeta
+interface HandlerMeta extends HandlerStackMeta
 {
-	public function getType(): ActionType;
-
-	public function getWeight(): int;
-
 	public function handles(Context $context): bool;
 
 	/**
