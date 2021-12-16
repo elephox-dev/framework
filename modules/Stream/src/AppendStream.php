@@ -8,6 +8,8 @@ use JetBrains\PhpStorm\Pure;
 
 class AppendStream implements Stream
 {
+	// TODO: improve append stream to actually be able to seek and write and so on
+
 	public function __construct(
 		private Stream $stream,
 		private Stream $appendedStream
@@ -21,7 +23,7 @@ class AppendStream implements Stream
 
 	public function __toString(): string
 	{
-		return (string)$this->getStream();
+		return $this->stream . $this->appendedStream;
 	}
 
 	public function detach()
@@ -51,7 +53,7 @@ class AppendStream implements Stream
 
 	#[Pure] public function isSeekable(): bool
 	{
-		return $this->getStream()->isSeekable();
+		return $this->stream->isSeekable();
 	}
 
 	public function seek($offset, $whence = SEEK_SET): void
@@ -66,7 +68,7 @@ class AppendStream implements Stream
 
 	#[Pure] public function isWritable(): bool
 	{
-		return $this->getStream()->isWritable();
+		return $this->stream->isWritable();
 	}
 
 	public function write(string $string): int
@@ -76,7 +78,7 @@ class AppendStream implements Stream
 
 	#[Pure] public function isReadable(): bool
 	{
-		return $this->getStream()->isReadable();
+		return $this->stream->isReadable();
 	}
 
 	public function read(int $length): string
@@ -86,7 +88,7 @@ class AppendStream implements Stream
 
 	public function getContents(): string
 	{
-		return $this->getStream()->getContents();
+		return $this->stream->getContents() . $this->appendedStream->getContents();
 	}
 
 	public function getMetadata(?string $key = null): mixed
