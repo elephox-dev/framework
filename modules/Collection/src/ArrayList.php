@@ -30,9 +30,12 @@ class ArrayList implements GenericList, ArrayAccess
 	 */
 	#[Pure] public static function fromArray(iterable|ReadonlyList $array): self
 	{
-		if ($array instanceof self)
-		{
-			return $array;
+		if ($array instanceof ReadonlyList) {
+			if ($array instanceof self) {
+				return $array;
+			}
+
+			return new self($array->asArray());
 		}
 
 		return new self(array_values($array));
@@ -273,7 +276,7 @@ class ArrayList implements GenericList, ArrayAccess
 
 	#[Pure] public function contains(mixed $value): bool
 	{
-		return $this->any(static fn ($item) => $item === $value);
+		return $this->any(static fn($item) => $item === $value);
 	}
 
 	/**
