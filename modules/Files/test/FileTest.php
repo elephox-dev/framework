@@ -13,6 +13,7 @@ use RuntimeException;
  * @covers \Elephox\Files\Directory
  * @covers \Elephox\Support\MimeType
  * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Files\InvalidParentLevelException
  */
 class FileTest extends TestCase
 {
@@ -97,14 +98,8 @@ class FileTest extends TestCase
 		self::assertInstanceOf(Directory::class, $upperDir);
 		self::assertEquals('/tmp/nested/deep', $upperDir->getPath());
 
-		$this->expectException(OutOfRangeException::class);
+		$this->expectException(InvalidParentLevelException::class);
 		$file->getParent(0);
-	}
-
-	public function testGetContents(): void
-	{
-		$file = new File($this->filePath);
-		self::assertEquals(self::FileContents, $file->getStream());
 	}
 
 	public function testGetName(): void

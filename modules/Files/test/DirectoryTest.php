@@ -13,6 +13,7 @@ use RuntimeException;
  * @covers \Elephox\Files\File
  * @covers \Elephox\Files\Path
  * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Files\InvalidParentLevelException
  */
 class DirectoryTest extends TestCase
 {
@@ -95,7 +96,7 @@ class DirectoryTest extends TestCase
 		$directory = new Directory("/long/path/to/test");
 		self::assertEquals("/long/path/to", $directory->getParent()->getPath());
 
-		$this->expectException(OutOfRangeException::class);
+		$this->expectException(InvalidParentLevelException::class);
 		$directory->getParent(0);
 	}
 
