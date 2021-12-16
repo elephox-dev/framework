@@ -79,25 +79,14 @@ trait DeepCloneable
 		}
 
 		$reflection = new ReflectionClass($object);
-		$iterator = null;
+		$clone = $reflection->newInstance();
+		self::$clonedObjects[$hash] = $clone;
+
 		if ($object instanceof WeakMap) {
+			/** @var WeakMap $clone */
+
 			/** @var Iterator<object, mixed> $iterator */
 			$iterator = $object->getIterator();
-			/** @var WeakMap $clone */
-			$clone = $reflection->newInstance();
-		} else if ($object instanceof SplObjectStorage) {
-			$iterator = $object;
-			/** @var SplObjectStorage $clone */
-			$clone = $reflection->newInstance();
-		} else if ($reflection->isCloneable()) {
-			$clone = clone $object;
-			self::$clonedObjects[$hash] = $clone;
-		} else {
-			$clone = $reflection->newInstance();
-		}
-
-		if ($iterator) {
-			/** @var WeakMap|SplObjectStorage $clone */
 
 			$iterator->rewind();
 
@@ -119,10 +108,38 @@ trait DeepCloneable
 			return $clone;
 		}
 
-		$properties = $reflection->getProperties();
-		foreach ($properties as $property) {
-			$property->setValue($clone, $this->cloneRecursive($property->getValue($object)));
+		if ($object instanceof SplObjectStorage) {
+			/** @var SplObjectStorage $clone */
+
+			$iterator = $object;
+			while ($iterator->valid()) {
+				/** @var object $key */
+				$key = $iterator->current();
+				/** @var mixed $value */
+				$value = $object->offsetGet($key);
+
+				/** @var object $clonedKey */
+				$clonedKey = $this->cloneRecursive($key);
+				/** @var mixed $clonedValue */
+				$clonedValue = $this->cloneRecursive($value);
+
+				$clone->offsetSet($clonedKey, $clonedValue);
+				$iterator->next();
+			}
+
+			return $clone;
 		}
+
+		do {
+			$properties = $reflection->getProperties();
+			foreach ($properties as $property) {
+				if ($property->isStatic()) {
+					continue;
+				}
+
+				$property->setValue($clone, $this->cloneRecursive($property->getValue($object)));
+			}
+		} while ($reflection = $reflection->getParentClass());
 
 		return $clone;
 	}
