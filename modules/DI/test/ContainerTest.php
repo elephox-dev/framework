@@ -5,6 +5,7 @@ namespace Elephox\DI;
 
 use Elephox\DI\Contract\Container as ContainerContract;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -320,6 +321,53 @@ class ContainerTest extends TestCase
 		$container = new Container();
 		$container->restore(ContainerTestInterface::class);
 	}
+
+	public function testNameResolvingIsPreferred(): void
+	{
+		$container = new Container();
+
+		$testInterfaceInstance = new ContainerTestClass();
+		$otherTestInterfaceInstance = new ContainerTestClass();
+
+		$container->register(ContainerTestInterface3::class, $testInterfaceInstance, alias: 'testInterface');
+		$container->register(ContainerTestInterface::class, $otherTestInterfaceInstance);
+
+		$instance = $container->instantiate(ContainerTestClassMultiParameterConstructorSameType::class);
+
+		self::assertSame($testInterfaceInstance, $instance->testInterface);
+		self::assertSame($otherTestInterfaceInstance, $instance->testInterface2);
+	}
+
+	public function testNameResolvingIsPreferredInvalidType(): void
+	{
+		$container = new Container();
+
+		$testInterfaceInstance = new ContainerTestClass2();
+		$otherTestInterfaceInstance = new ContainerTestClass2();
+
+		$container->register(ContainerTestInterface2::class, $testInterfaceInstance, alias: 'testInterface');
+		$container->register(ContainerTestInterface2::class, $otherTestInterfaceInstance);
+
+		$this->expectException(LogicException::class);
+
+		$container->instantiate(ContainerTestClassMultiParameterConstructorSameType::class);
+	}
+
+	public function testNameResolvingIsPreferredNoType(): void
+	{
+		$container = new Container();
+
+		$testInterfaceInstance = new ContainerTestClass();
+		$testInterfaceInstance2 = new ContainerTestClass();
+
+		$container->register(ContainerTestInterface::class, $testInterfaceInstance, alias: 'testInterface');
+		$container->register(ContainerTestInterface2::class, $testInterfaceInstance2, alias: 'testInterface2');
+
+		$instance = $container->instantiate(ContainerTestClassMultiParameterConstructorNoType::class);
+
+		self::assertSame($testInterfaceInstance, $instance->testInterface);
+		self::assertSame($testInterfaceInstance2, $instance->testInterface2);
+	}
 }
 
 interface ContainerTestInterface
@@ -330,7 +378,11 @@ interface ContainerTestInterface2
 {
 }
 
-class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2
+interface ContainerTestInterface3 extends ContainerTestInterface
+{
+}
+
+class ContainerTestClass implements ContainerTestInterface, ContainerTestInterface2, ContainerTestInterface3
 {
 	public function method(ContainerTestInterface $instance): ContainerTestInterface
 	{
@@ -343,6 +395,9 @@ class ContainerTestClass implements ContainerTestInterface, ContainerTestInterfa
 	}
 }
 
+class ContainerTestClass2 implements ContainerTestInterface2 {
+}
+
 class ContainerTestClassWithConstructor
 {
 	public ContainerTestInterface $testInterface;
@@ -353,19 +408,43 @@ class ContainerTestClassWithConstructor
 	}
 }
 
-class ContainerTestClassWithoutConstructorTypes implements ContainerTestInterface
+class ContainerTestClassWithoutConstructorTypes
 {
 	public function __construct($someVariable)
 	{
 	}
 }
 
-class ContainerTestClassMultiParameterConstructor implements ContainerTestInterface
+class ContainerTestClassMultiParameterConstructor
 {
 	public ContainerTestInterface $testInterface;
 	public ContainerTestInterface2 $testInterface2;
 
 	public function __construct(ContainerTestInterface $testInterface, ContainerTestInterface2 $testInterface2)
+	{
+		$this->testInterface = $testInterface;
+		$this->testInterface2 = $testInterface2;
+	}
+}
+
+class ContainerTestClassMultiParameterConstructorSameType
+{
+	public ContainerTestInterface $testInterface;
+	public ContainerTestInterface $testInterface2;
+
+	public function __construct(ContainerTestInterface $testInterface, ContainerTestInterface $testInterface2)
+	{
+		$this->testInterface = $testInterface;
+		$this->testInterface2 = $testInterface2;
+	}
+}
+
+class ContainerTestClassMultiParameterConstructorNoType
+{
+	public $testInterface;
+	public $testInterface2;
+
+	public function __construct($testInterface, $testInterface2)
 	{
 		$this->testInterface = $testInterface;
 		$this->testInterface2 = $testInterface2;

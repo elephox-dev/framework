@@ -8,6 +8,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
+use LogicException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -362,6 +363,16 @@ class Container implements Contract\Container
 
 	private function resolveArgument(ReflectionParameter $parameter): mixed
 	{
+		$possibleArgument = null;
+		if ($this->has($parameter->getName())) {
+			/** @var mixed $possibleArgument */
+			$possibleArgument = $this->get($parameter->getName());
+
+			if (!$parameter->hasType()) {
+				return $possibleArgument;
+			}
+		}
+
 		$type = $parameter->getType();
 		if ($type === null) {
 			throw new MissingTypeHintException($parameter);
@@ -373,8 +384,19 @@ class Container implements Contract\Container
 		 */
 		$typeName = $type->getName();
 
-		if ($this->has($typeName)) {
-			return $this->get($typeName);
+		if ($possibleArgument === null && $this->has($typeName)) {
+			$possibleArgument = $this->get($typeName);
+		}
+
+		if ($possibleArgument !== null) {
+			if (!$possibleArgument instanceof $typeName) {
+				$paramName = "$" . $parameter->getName();
+				$possibleArgumentType = get_debug_type($possibleArgument);
+
+				throw new LogicException("Argument $paramName was resolved to type $possibleArgumentType, which doesn't match the type hint $typeName");
+			}
+
+			return $possibleArgument;
 		}
 
 		if ($parameter->isDefaultValueAvailable()) {
