@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
+use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\ExceptionContext;
-use Elephox\Core\Handler\ActionType;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Core\Handler;
+namespace Elephox\Core;
 
 enum ActionType implements Contract\ActionType
 {

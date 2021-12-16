@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
-use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Handler\Contract\ActionType;
+use Elephox\Core\Contract\ActionType;
 use Elephox\Core\Handler\Contract\HandlerMeta;
 
 abstract class AbstractHandlerMeta implements HandlerMeta

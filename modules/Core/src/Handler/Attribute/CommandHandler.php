@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler\Attribute;
 
 use Attribute;
+use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
-use Elephox\Core\Handler\ActionType;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Text\Regex;
 use JetBrains\PhpStorm\Pure;
