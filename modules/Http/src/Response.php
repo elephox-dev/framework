@@ -77,12 +77,12 @@ class Response extends AbstractMessage implements Contract\Response
 
 	public function withProtocolVersion(string $version): static
 	{
-		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $version);
+		return new static($this->code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $version);
 	}
 
 	public function withBody(Stream $body): static
 	{
-		return new static(clone $this->code, (clone $this->headers)->asResponseHeaders(), $body, $this->protocolVersion);
+		return new static($this->code, (clone $this->headers)->asResponseHeaders(), $body, $this->protocolVersion);
 	}
 
 	public function withResponseCode(Contract\ResponseCode $code): static
@@ -116,7 +116,7 @@ class Response extends AbstractMessage implements Contract\Response
 
 	public function withHeaderMap(Contract\HeaderMap $map): static
 	{
-		return new static(clone $this->code, $map->asResponseHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($this->code, $map->asResponseHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
 	public function send(): void
