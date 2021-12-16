@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 use RuntimeException;
+use const STDIN;
 
 /**
  * @psalm-consistent-constructor
