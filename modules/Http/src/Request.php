@@ -78,7 +78,7 @@ class Request extends AbstractMessage implements Contract\Request
 		$uri = $_SERVER["REQUEST_URI"];
 		$parsedUri = Url::fromString($uri);
 
-		$body = new LazyStream(static fn() => new ResourceStream(STDIN));
+		$body = new LazyStream(static fn() => new ResourceStream(fopen("php://input", "rb")));
 
 		return new self($requestMethod, $parsedUri, $headerMap, $body, $version);
 	}
