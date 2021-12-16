@@ -311,9 +311,4 @@ class ObjectMap implements Contract\GenericMap
 	{
 		$this->map->offsetUnset($key);
 	}
-
-	public function __clone()
-	{
-		$this->map = clone $this->map;
-	}
 }
