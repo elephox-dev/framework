@@ -9,6 +9,6 @@ namespace Elephox\Collection\Contract;
  * @extends Filterable<T>
  * @extends Mappable<T>
  */
-interface GenericCollection extends Filterable, Mappable
+interface GenericCollection extends Filterable, Mappable, DeepCloneable
 {
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\ReadonlyMap;
+use Elephox\Support\DeepCloneable;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 use Traversable;
@@ -16,6 +17,8 @@ use Traversable;
  */
 class ObjectMap implements Contract\GenericMap
 {
+	use DeepCloneable;
+
 	protected SplObjectStorage $map;
 
 	/**

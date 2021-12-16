@@ -25,17 +25,17 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @template U
 	 *
-	 * @param list<U>|self<U> $array
+	 * @param array<array-key, U>|ReadonlyList<U> $array
 	 * @return self<U>
 	 */
-	#[Pure] public static function fromArray(iterable|self $array): self
+	#[Pure] public static function fromArray(iterable|ReadonlyList $array): self
 	{
 		if ($array instanceof self)
 		{
 			return $array;
 		}
 
-		return new self($array);
+		return new self(array_values($array));
 	}
 
 	/**
