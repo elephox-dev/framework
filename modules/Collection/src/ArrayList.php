@@ -31,6 +31,7 @@ class ArrayList implements GenericList, ArrayAccess
 	#[Pure] public static function fromArray(iterable|ReadonlyList $array): self
 	{
 		if ($array instanceof ReadonlyList) {
+			/** @noinspection PhpConditionAlreadyCheckedInspection */
 			if ($array instanceof self) {
 				return $array;
 			}

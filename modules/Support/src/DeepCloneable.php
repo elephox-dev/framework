@@ -13,10 +13,10 @@ use WeakMap;
 
 trait DeepCloneable
 {
-	public function deepClone(): self
+	public function deepClone(): static
 	{
 		try {
-			/** @var self */
+			/** @var static */
 			return $this->cloneRecursive($this);
 		} catch (ReflectionException $e) {
 			throw new RuntimeException('Cloning of ' . $this::class . ' failed.', previous: $e);

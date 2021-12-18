@@ -31,12 +31,12 @@ abstract class AbstractMessage implements Contract\Message
 		return $this->protocolVersion;
 	}
 
-	public function hasHeaderName(HeaderName $name): bool
+	#[Pure] public function hasHeaderName(HeaderName $name): bool
 	{
 		return $this->headers->has($name);
 	}
 
-	public function getHeaderName(HeaderName $name): ReadonlyList
+	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList
 	{
 		return $this->headers->get($name);
 	}
@@ -48,7 +48,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
-		$headers = clone $this->headers;
+		$headers = $this->headers->deepClone();
 		$headers->put($name, $value);
 
 		return $this->withHeaderMap($headers);
@@ -56,7 +56,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withAddedHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
-		$headers = clone $this->headers;
+		$headers = $this->headers->deepClone();
 
 		if ($headers->has($name)) {
 			/** @var ArrayList<string> $values */
@@ -78,7 +78,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withoutHeaderName(Contract\HeaderName $name): static
 	{
-		$headers = clone $this->headers;
+		$headers = $this->headers->deepClone();
 
 		if ($headers->has($name)) {
 			$headers->remove($name);

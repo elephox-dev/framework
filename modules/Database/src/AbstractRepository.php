@@ -129,6 +129,7 @@ abstract class AbstractRepository implements Contract\Repository
 
 	public function add(Contract\Entity $entity): void
 	{
+		/** @noinspection PhpConditionAlreadyCheckedInspection */
 		if (!$entity instanceof ProxyEntity) {
 			$entity = new ProxyEntity($entity);
 		}
@@ -139,6 +140,7 @@ abstract class AbstractRepository implements Contract\Repository
 
 	public function update(Contract\Entity $entity): void
 	{
+		/** @noinspection PhpConditionAlreadyCheckedInspection */
 		if (!$entity instanceof ProxyEntity) {
 			$entity = new ProxyEntity($entity, true);
 		}

@@ -5,5 +5,5 @@ namespace Elephox\Support\Contract;
 
 interface DeepCloneable
 {
-	public function deepClone(): self;
+	public function deepClone(): static;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
 enum UrlScheme: string implements Contract\UrlScheme
@@ -16,7 +17,7 @@ enum UrlScheme: string implements Contract\UrlScheme
 	case SSH = 'ssh';
 	case MYSQL = 'mysql';
 
-	public function getDefaultPort(): ?int
+	#[Pure] public function getDefaultPort(): ?int
 	{
 		return match ($this) {
 			self::HTTPS => 443,
@@ -28,7 +29,7 @@ enum UrlScheme: string implements Contract\UrlScheme
 		};
 	}
 
-	public function getScheme(): string
+	#[Pure] public function getScheme(): string
 	{
 		return $this->value;
 	}

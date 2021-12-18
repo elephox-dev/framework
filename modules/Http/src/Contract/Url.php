@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericMap;
 use Elephox\Http\UrlScheme;
 use Elephox\Support\Contract\ArrayConvertible;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
+#[Immutable]
 interface Url extends Stringable, ArrayConvertible
 {
 	#[Pure] public function getScheme(): string;
@@ -35,7 +36,7 @@ interface Url extends Stringable, ArrayConvertible
 	/**
 	 * @return ArrayMap<string, string|array>
 	 */
-	public function getQueryMap(): ArrayMap;
+	#[Pure] public function getQueryMap(): ArrayMap;
 
 	#[Pure] public function getFragment(): string;
 

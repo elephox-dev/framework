@@ -10,7 +10,6 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 use RuntimeException;
-use const STDIN;
 
 /**
  * @psalm-consistent-constructor
@@ -140,7 +139,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method, clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $version);
+		return new static($this->method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $version);
 	}
 
 	public function withHeaderMap(Contract\HeaderMap $map): static
@@ -158,7 +157,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method, clone $this->url, (clone $this->headers)->asRequestHeaders(), $body, $this->protocolVersion);
+		return new static($this->method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), $body, $this->protocolVersion);
 	}
 
 	public function withRequestMethod(Contract\RequestMethod $method): static
@@ -167,7 +166,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($method, clone $this->url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
 	public function withUrl(Contract\Url $url, bool $preserveHost = false): static
@@ -176,7 +175,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		$newRequest = new static($this->method, $url, (clone $this->headers)->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		$newRequest = new static($this->method, $url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $this->protocolVersion);
 
 		if (!$preserveHost) {
 			$newRequest->updateHostHeader();

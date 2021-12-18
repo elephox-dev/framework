@@ -5,11 +5,13 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 /**
  * @psalm-consistent-constructor
  */
+#[Immutable]
 class Url implements Contract\Url
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
@@ -249,12 +251,13 @@ class Url implements Contract\Url
 		return new static($scheme?->getScheme(), $this->username, $this->password, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
-	public function getQueryMap(): ArrayMap
+	#[Pure] public function getQueryMap(): ArrayMap
 	{
 		if ($this->query === null) {
 			return new ArrayMap();
 		}
 
+		/** @psalm-suppress ImpureFunctionCall */
 		parse_str($this->query, $query);
 
 		/** @var ArrayMap<string, string|array> */

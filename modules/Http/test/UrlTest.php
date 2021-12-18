@@ -69,57 +69,57 @@ class UrlTest extends TestCase
 
 	public function testWithUrlScheme(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withScheme(UrlScheme::HTTPS);
 		self::assertSame('https://localhost/test', (string)$uri);
 	}
 
 	public function testWithUsername(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withUserInfo('user');
-		self::assertSame('http://user@localhost/test', (string)$uri);
+		self::assertSame('https://user@localhost/test', (string)$uri);
 	}
 
 	public function testWithPassword(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withUserInfo('user', 'password');
-		self::assertSame('http://user:password@localhost/test', (string)$uri);
+		self::assertSame('https://user:password@localhost/test', (string)$uri);
 	}
 
 	public function testWithHost(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withHost('example.com');
-		self::assertSame('http://example.com/test', (string)$uri);
+		self::assertSame('https://example.com/test', (string)$uri);
 	}
 
 	public function testWithPort(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withPort(8080);
-		self::assertSame('http://localhost:8080/test', (string)$uri);
+		self::assertSame('https://localhost:8080/test', (string)$uri);
 	}
 
 	public function testWithPath(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withPath('/path/to/script.php');
-		self::assertSame('http://localhost/path/to/script.php', (string)$uri);
+		self::assertSame('https://localhost/path/to/script.php', (string)$uri);
 	}
 
 	public function testWithQuery(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withQuery('query=true');
-		self::assertSame('http://localhost/test?query=true', (string)$uri);
+		self::assertSame('https://localhost/test?query=true', (string)$uri);
 	}
 
 	public function testWithFragment(): void
 	{
-		$uri = Url::fromString('http://localhost/test');
+		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withFragment('fragment');
-		self::assertSame('http://localhost/test#fragment', (string)$uri);
+		self::assertSame('https://localhost/test#fragment', (string)$uri);
 	}
 }

@@ -269,12 +269,12 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		unset($this->values[$key]);
 	}
 
-	public function offsetExists(mixed $offset): bool
+	#[Pure] public function offsetExists(mixed $offset): bool
 	{
 		return $this->has($offset);
 	}
 
-	public function offsetGet(mixed $offset): mixed
+	#[Pure] public function offsetGet(mixed $offset): mixed
 	{
 		return $this->get($offset);
 	}

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Stream\Contract\Stream;
-use Elephox\Stream\EmptyStream;
 use Elephox\Stream\StringStream;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
 use Elephox\Support\MimeType;
@@ -77,17 +76,17 @@ class Response extends AbstractMessage implements Contract\Response
 
 	public function withProtocolVersion(string $version): static
 	{
-		return new static($this->code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $version);
+		return new static($this->code, $this->headers->deepClone()->asResponseHeaders(), clone $this->body, $version);
 	}
 
 	public function withBody(Stream $body): static
 	{
-		return new static($this->code, (clone $this->headers)->asResponseHeaders(), $body, $this->protocolVersion);
+		return new static($this->code, $this->headers->deepClone()->asResponseHeaders(), $body, $this->protocolVersion);
 	}
 
 	public function withResponseCode(Contract\ResponseCode $code): static
 	{
-		return new static($code, (clone $this->headers)->asResponseHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($code, $this->headers->deepClone()->asResponseHeaders(), clone $this->body, $this->protocolVersion);
 	}
 
 	#[Pure] public function getContentType(): ?MimeTypeContract
