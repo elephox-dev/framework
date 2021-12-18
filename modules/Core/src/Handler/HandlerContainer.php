@@ -116,7 +116,9 @@ class HandlerContainer implements Contract\HandlerContainer
 			/** @var Closure $closure */
 			$closure = $methodReflection->getClosure($classInstance);
 
-			$middlewareAttributes = $methodReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			$methodMiddlewareAttributes = $methodReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			$classMiddlewareAttributes = $classReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+			$middlewareAttributes = [...$methodMiddlewareAttributes, ...$classMiddlewareAttributes];
 			$this->registerAttributes($closure, $methodAttributes, $middlewareAttributes);
 		}
 
