@@ -5,10 +5,12 @@ namespace Elephox\Support;
 
 use Exception;
 use Iterator;
-use ReflectionClass;
 use ReflectionException;
+use ReflectionObject;
 use RuntimeException;
 use SplObjectStorage;
+use Throwable;
+use UnitEnum;
 use WeakMap;
 
 trait DeepCloneable
@@ -16,48 +18,59 @@ trait DeepCloneable
 	public function deepClone(): static
 	{
 		try {
+			$cloneStorage = [];
+
 			/** @var static */
-			return $this->cloneRecursive($this);
-		} catch (ReflectionException $e) {
+			return self::cloneObject($this, $cloneStorage);
+		} catch (Throwable $e) {
 			throw new RuntimeException('Cloning of ' . $this::class . ' failed.', previous: $e);
 		}
 	}
 
-	private static array $clonedObjects = [];
-
 	/**
+	 * @template T
+	 *
+	 * @param T $value
+	 * @param array<string, mixed> $cloneStorage
+	 *
+	 * @return T
+	 *
 	 * @throws ReflectionException
 	 */
-	private function cloneRecursive(mixed $value): mixed
+	private static function cloneRecursive(mixed $value, array &$cloneStorage): mixed
 	{
 		if (is_resource($value)) {
 			return $value;
 		}
 
 		if (is_array($value)) {
-			return $this->cloneArray($value);
+			return self::cloneArray($value, $cloneStorage);
 		}
 
 		if (!is_object($value)) {
 			return $value;
 		}
 
-		return $this->cloneObject($value);
+		if ($value instanceof UnitEnum) {
+			return $value;
+		}
+
+		return self::cloneObject($value, $cloneStorage);
 	}
 
 	/**
 	 * @throws ReflectionException
 	 */
-	private function cloneArray(array $array): array
+	private static function cloneArray(array $array, array &$cloneStorage): array
 	{
 		/**
 		 * @var mixed $value
 		 */
 		foreach ($array as $key => $value) {
 			/** @var array-key $clonedKey */
-			$clonedKey = $this->cloneRecursive($key);
+			$clonedKey = self::cloneRecursive($key, $cloneStorage);
 			/** @var mixed $clonedValue */
-			$clonedValue = $this->cloneRecursive($value);
+			$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 			/** @psalm-suppress MixedAssignment */
 			$array[$clonedKey] = $clonedValue;
@@ -67,20 +80,27 @@ trait DeepCloneable
 	}
 
 	/**
+	 * @template T of object
+	 *
+	 * @param T $object
+	 * @param array<string, mixed> $cloneStorage
+	 *
+	 * @return T
+	 *
 	 * @throws ReflectionException
 	 * @throws Exception
 	 */
-	private function cloneObject(object $object): object
+	private static function cloneObject(object $object, array &$cloneStorage): object
 	{
 		$hash = spl_object_hash($object);
-		if (isset(self::$clonedObjects[$hash])) {
+		if (isset($cloneStorage[$hash])) {
 			/** @var object */
-			return self::$clonedObjects[$hash];
+			return $cloneStorage[$hash];
 		}
 
-		$reflection = new ReflectionClass($object);
+		$reflection = new ReflectionObject($object);
 		$clone = $reflection->newInstance();
-		self::$clonedObjects[$hash] = $clone;
+		$cloneStorage[$hash] = &$clone;
 
 		if ($object instanceof WeakMap) {
 			/** @var Iterator<object, mixed> $iterator */
@@ -94,13 +114,14 @@ trait DeepCloneable
 				/** @var mixed $value */
 				$value = $iterator->current();
 
-				/** @var object $clonedKey */
-				$clonedKey = $this->cloneRecursive($key);
+				// don't clone the key since it is a weak reference to an object and a cloned object
+				// would have no references to it, causing it to be garbage collected.
+
 				/** @var mixed $clonedValue */
-				$clonedValue = $this->cloneRecursive($value);
+				$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 				/** @var WeakMap $clone */
-				$clone->offsetSet($clonedKey, $clonedValue);
+				$clone->offsetSet($key, $clonedValue);
 				$iterator->next();
 			}
 
@@ -115,9 +136,9 @@ trait DeepCloneable
 				$value = $object->offsetGet($key);
 
 				/** @var object $clonedKey */
-				$clonedKey = $this->cloneRecursive($key);
+				$clonedKey = self::cloneRecursive($key, $cloneStorage);
 				/** @var mixed $clonedValue */
-				$clonedValue = $this->cloneRecursive($value);
+				$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 				/** @var SplObjectStorage $clone */
 				$clone->offsetSet($clonedKey, $clonedValue);
@@ -134,7 +155,9 @@ trait DeepCloneable
 					continue;
 				}
 
-				$property->setValue($clone, $this->cloneRecursive($property->getValue($object)));
+				$propertyValue = $property->getValue($object);
+				$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
+				$property->setValue($clone, $clonedPropertyValue);
 			}
 		} while ($reflection = $reflection->getParentClass());
 

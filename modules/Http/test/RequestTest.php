@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Http\InvalidHeaderNameException
+ * @uses \Elephox\Http\Contract\Url
  */
 class RequestTest extends TestCase
 {

@@ -254,6 +254,7 @@ class ArrayMapTest extends TestCase
 		self::assertNotSame($map['obj'], $clone['obj']);
 		self::assertNotSame($map['obj2'], $clone['obj2']);
 		self::assertSame($clone['obj'], $clone['obj2']);
+		self::assertTrue($clone['obj']->test);
 	}
 
 	public function testOffsetExists(): void

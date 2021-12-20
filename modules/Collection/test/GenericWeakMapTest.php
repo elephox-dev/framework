@@ -231,6 +231,7 @@ class GenericWeakMapTest extends TestCase
 
 		self::assertInstanceOf(GenericWeakMap::class, $clone);
 		self::assertNotSame($map, $clone);
-		self::assertNotSame($anObject, $clone->keys()[0]);
+		self::assertSame($anObject, $clone->keys()[0]);
+		self::assertSame($anObject->test, $clone->keys()[0]->test);
 	}
 }
