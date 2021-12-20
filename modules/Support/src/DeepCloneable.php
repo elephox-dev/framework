@@ -141,20 +141,18 @@ trait DeepCloneable
 			return $clone;
 		}
 
-		do {
-			$properties = $reflection->getProperties();
-			foreach ($properties as $property) {
-				if ($property->isStatic()) {
-					continue;
-				}
-
-				/** @var mixed $propertyValue */
-				$propertyValue = $property->getValue($object);
-				/** @var mixed $clonedPropertyValue */
-				$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
-				$property->setValue($clone, $clonedPropertyValue);
+		$properties = $reflection->getProperties();
+		foreach ($properties as $property) {
+			if ($property->isStatic()) {
+				continue;
 			}
-		} while ($reflection = $reflection->getParentClass());
+
+			/** @var mixed $propertyValue */
+			$propertyValue = $property->getValue($object);
+			/** @var mixed $clonedPropertyValue */
+			$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
+			$property->setValue($clone, $clonedPropertyValue);
+		}
 
 		return $clone;
 	}
