@@ -5,6 +5,7 @@ namespace Elephox\Stream;
 
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
@@ -18,7 +19,7 @@ class StringStream implements Stream
 	#[Pure] public function __construct(
 		private string $string,
 		private bool $seekable = true,
-		private bool $writable = true,
+		private bool $writable = false,
 		private bool $readable = true
 	) {
 	}
@@ -62,7 +63,7 @@ class StringStream implements Stream
 		return $this->seekable;
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
 		if (!$this->isSeekable()) {
 			throw new RuntimeException('Stream is not seekable');
@@ -111,11 +112,7 @@ class StringStream implements Stream
 			throw new RuntimeException('Stream is not readable');
 		}
 
-		/** @var false|string $string */
 		$string = substr($this->string, $this->pointer, $length);
-		if ($string === false) {
-			return "";
-		}
 
 		$this->pointer += strlen($string);
 

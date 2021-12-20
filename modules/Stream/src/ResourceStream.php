@@ -39,7 +39,7 @@ class ResourceStream implements Stream
 			!$readable &&  $writeable &&  $create && !$append && !$truncate => 'cb',
 			 $readable &&  $writeable && !$create && !$append && !$truncate => 'rb+',
 			 $readable && !$writeable && !$create && !$append && !$truncate => 'rb',
-			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . $readable . ', writeable=' . $writeable . ', create=' . $create . ', append=' . $append . ', truncate=' . $truncate),
+			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
 		return new ResourceStream(fopen($file->getPath(), $flags), $readable, $writeable, $readable);

@@ -48,8 +48,9 @@ final class EmptyStream implements Stream
 		throw new RuntimeException('Empty stream is not seekable.');
 	}
 
-	#[Pure] public function rewind(): void
+	public function rewind(): void
 	{
+		throw new RuntimeException('Empty stream is not seekable.');
 	}
 
 	#[Pure] public function isWritable(): bool
