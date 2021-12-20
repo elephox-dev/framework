@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Http\Url
  * @covers \Elephox\Http\UrlScheme
+ * @uses \Elephox\Http\Contract\Url
  */
 class UrlTest extends TestCase
 {
