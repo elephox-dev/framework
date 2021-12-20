@@ -180,7 +180,7 @@ class Core implements Contract\Core
 		return $result;
 	}
 
-	#[NoReturn] public function handleGlobal(): void
+	#[NoReturn] public function handleGlobal(): never
 	{
 		$context = $this->getGlobalContext();
 

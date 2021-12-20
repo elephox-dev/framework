@@ -33,5 +33,5 @@ interface Core
 
 	public function getHandlerContainer(): HandlerContainer;
 
-	#[NoReturn] public function handleGlobal(): void;
+	#[NoReturn] public function handleGlobal(): never;
 }
