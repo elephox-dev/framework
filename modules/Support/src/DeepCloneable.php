@@ -99,8 +99,6 @@ trait DeepCloneable
 			/** @var Iterator<object, mixed> $iterator */
 			$iterator = $object->getIterator();
 
-			$iterator->rewind();
-
 			while ($iterator->valid()) {
 				/** @var object $key */
 				$key = $iterator->key();
