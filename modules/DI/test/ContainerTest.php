@@ -368,6 +368,32 @@ class ContainerTest extends TestCase
 		self::assertSame($testInterfaceInstance, $instance->testInterface);
 		self::assertSame($testInterfaceInstance2, $instance->testInterface2);
 	}
+
+	public function testGetOrInstantiate(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->getOrInstantiate(ContainerTestInterface::class);
+		$instance2 = $container->getOrInstantiate(ContainerTestClass2::class);
+
+		self::assertInstanceOf(ContainerTestClass::class, $instance);
+		self::assertInstanceOf(ContainerTestClass2::class, $instance2);
+	}
+
+	public function testGetOrRegister(): void
+	{
+		$container = new Container();
+		$instance = new ContainerTestClass();
+		$container->register(ContainerTestClass::class, $instance);
+
+		$instance2 = $container->getOrRegister(ContainerTestClass::class);
+		$instance3 = $container->getOrRegister(ContainerTestClass2::class);
+
+		self::assertSame($instance, $instance2);
+		self::assertInstanceOf(ContainerTestClass2::class, $instance3);
+		self::assertTrue($container->has(ContainerTestClass2::class));
+	}
 }
 
 interface ContainerTestInterface
