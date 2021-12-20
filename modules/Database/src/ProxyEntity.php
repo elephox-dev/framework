@@ -9,7 +9,7 @@ use Elephox\Database\Attributes\Contract\DatabaseAttribute;
 use Elephox\Database\Attributes\Generated;
 use Elephox\Database\Attributes\Optional;
 use ReflectionAttribute;
-use ReflectionClass;
+use ReflectionObject;
 use ReflectionProperty;
 
 /**
@@ -80,14 +80,12 @@ final class ProxyEntity implements Contract\Entity
 
 	/**
 	 * @return array<string, mixed>
-	 *
-	 * @throws \ReflectionException
 	 */
 	public function _proxyGetArrayCopy(): array
 	{
 		$data = [];
 
-		$entityReflection = new ReflectionClass($this->entity);
+		$entityReflection = new ReflectionObject($this->entity);
 		foreach ($entityReflection->getProperties() as $property) {
 			$metaData = $this->_proxyGetAttributeMetaData($property);
 

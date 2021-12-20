@@ -6,7 +6,6 @@ namespace Elephox\Http\Contract;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Collection\Contract\ReadonlyMap;
 use Elephox\Collection\Contract\ReadonlyList;
-use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 /**

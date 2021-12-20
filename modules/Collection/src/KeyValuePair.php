@@ -13,20 +13,14 @@ use JetBrains\PhpStorm\Pure;
  */
 class KeyValuePair implements Contract\KeyValuePair
 {
-	/** @var TKey $key */
-	private mixed $key;
-
-	/** @var TValue $value */
-	private mixed $value;
-
 	/**
 	 * @param TKey $key
 	 * @param TValue $value
 	 */
-	#[Pure] public function __construct(mixed $key, mixed $value)
-	{
-		$this->key = $key;
-		$this->value = $value;
+	#[Pure] public function __construct(
+		private mixed $key,
+		private mixed $value,
+	) {
 	}
 
 	#[Pure] public function getKey(): mixed

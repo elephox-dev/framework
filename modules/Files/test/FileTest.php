@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Files;
 
 use Elephox\Support\MimeType;
-use OutOfRangeException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 

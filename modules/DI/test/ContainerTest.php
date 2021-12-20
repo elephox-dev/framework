@@ -400,11 +400,8 @@ class ContainerTestClass2 implements ContainerTestInterface2 {
 
 class ContainerTestClassWithConstructor
 {
-	public ContainerTestInterface $testInterface;
-
-	public function __construct(ContainerTestInterface $testInterface)
+	public function __construct(public ContainerTestInterface $testInterface)
 	{
-		$this->testInterface = $testInterface;
 	}
 }
 
@@ -417,61 +414,42 @@ class ContainerTestClassWithoutConstructorTypes
 
 class ContainerTestClassMultiParameterConstructor
 {
-	public ContainerTestInterface $testInterface;
-	public ContainerTestInterface2 $testInterface2;
-
-	public function __construct(ContainerTestInterface $testInterface, ContainerTestInterface2 $testInterface2)
-	{
-		$this->testInterface = $testInterface;
-		$this->testInterface2 = $testInterface2;
+	public function __construct(
+		public ContainerTestInterface $testInterface,
+		public ContainerTestInterface2 $testInterface2
+	) {
 	}
 }
 
 class ContainerTestClassMultiParameterConstructorSameType
 {
-	public ContainerTestInterface $testInterface;
-	public ContainerTestInterface $testInterface2;
 
-	public function __construct(ContainerTestInterface $testInterface, ContainerTestInterface $testInterface2)
+	public function __construct(public ContainerTestInterface $testInterface, public ContainerTestInterface $testInterface2)
 	{
-		$this->testInterface = $testInterface;
-		$this->testInterface2 = $testInterface2;
 	}
 }
 
 class ContainerTestClassMultiParameterConstructorNoType
 {
-	public $testInterface;
-	public $testInterface2;
 
-	public function __construct($testInterface, $testInterface2)
+	public function __construct(public $testInterface, public $testInterface2)
 	{
-		$this->testInterface = $testInterface;
-		$this->testInterface2 = $testInterface2;
 	}
 }
 
 class ContainerTestClassMultiParameterConstructorOptional implements ContainerTestInterface
 {
-	public ContainerTestInterface $testInterface;
-	public ?ContainerTestInterface2 $testInterface2;
 
-	public function __construct(ContainerTestInterface $testInterface, ?ContainerTestInterface2 $testInterface2 = null)
+	public function __construct(public ContainerTestInterface $testInterface, public ?ContainerTestInterface2 $testInterface2 = null)
 	{
-		$this->testInterface = $testInterface;
-		$this->testInterface2 = $testInterface2;
 	}
 }
 
 class ContainerTestClassMultiParameterConstructorNullable implements ContainerTestInterface
 {
-	public ContainerTestInterface $testInterface;
-	public ?ContainerTestInterface2 $testInterface2;
 
-	public function __construct(ContainerTestInterface $testInterface, ?ContainerTestInterface2 $testInterface2)
+	public function __construct(public ContainerTestInterface $testInterface, public ?ContainerTestInterface2 $testInterface2)
 	{
-		$this->testInterface = $testInterface;
-		$this->testInterface2 = $testInterface2;
 	}
 }
 

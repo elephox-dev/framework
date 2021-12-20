@@ -15,9 +15,9 @@ class AttributeMetaDataBuilder
 		$this->isOptional = $isOptional;
 	}
 
-	public function setIsGenerated(bool $true): void
+	public function setIsGenerated(bool $isGenerated): void
 	{
-		$this->isGenerated = true;
+		$this->isGenerated = $isGenerated;
 	}
 
 	#[Pure] public function build(): AttributeMetaData

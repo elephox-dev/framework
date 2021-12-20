@@ -6,7 +6,6 @@ namespace Elephox\Text;
 use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 class Regex
