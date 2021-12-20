@@ -18,22 +18,18 @@ trait DeepCloneable
 	public function deepClone(): static
 	{
 		try {
+			/** @var array<string, object> $cloneStorage */
 			$cloneStorage = [];
 
 			/** @var static */
-			return self::cloneObject($this, $cloneStorage);
+			return self::cloneRecursive($this, $cloneStorage);
 		} catch (Throwable $e) {
 			throw new RuntimeException('Cloning of ' . $this::class . ' failed.', previous: $e);
 		}
 	}
 
 	/**
-	 * @template T
-	 *
-	 * @param T $value
-	 * @param array<string, mixed> $cloneStorage
-	 *
-	 * @return T
+	 * @param array<string, object> $cloneStorage
 	 *
 	 * @throws ReflectionException
 	 */
@@ -59,6 +55,8 @@ trait DeepCloneable
 	}
 
 	/**
+	 * @param array<string, object> $cloneStorage
+	 *
 	 * @throws ReflectionException
 	 */
 	private static function cloneArray(array $array, array &$cloneStorage): array
@@ -80,12 +78,7 @@ trait DeepCloneable
 	}
 
 	/**
-	 * @template T of object
-	 *
-	 * @param T $object
-	 * @param array<string, mixed> $cloneStorage
-	 *
-	 * @return T
+	 * @param array<string, object> $cloneStorage
 	 *
 	 * @throws ReflectionException
 	 * @throws Exception
@@ -155,7 +148,9 @@ trait DeepCloneable
 					continue;
 				}
 
+				/** @var mixed $propertyValue */
 				$propertyValue = $property->getValue($object);
+				/** @var mixed $clonedPropertyValue */
 				$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
 				$property->setValue($clone, $clonedPropertyValue);
 			}
