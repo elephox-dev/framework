@@ -23,6 +23,20 @@ interface GenericList extends ReadonlyList, Stackable
 	public function add(mixed $value): void;
 
 	/**
+	 * @param int $index
+	 *
+	 * @return bool
+	 */
+	public function removeAt(int $index): bool;
+
+	/**
+	 * @param callable(T, int): bool $predicate
+	 *
+	 * @return bool
+	 */
+	public function remove(callable $predicate): bool;
+
+	/**
 	 * @param callable(T, T): int $callback
 	 *
 	 * @return GenericList<T>

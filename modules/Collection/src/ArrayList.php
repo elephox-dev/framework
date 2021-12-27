@@ -301,4 +301,30 @@ class ArrayList implements GenericList, ArrayAccess
 	{
 		return $this;
 	}
+
+	public function removeAt(int $index): bool
+	{
+		if ($index < 0 || $index >= $this->count()) {
+			return false;
+		}
+
+		unset($this->list[$index]);
+
+		return true;
+	}
+
+	public function remove(callable $predicate): bool
+	{
+		$removed = false;
+
+		foreach ($this->list as $index => $item) {
+			if ($predicate($item, $index)) {
+				unset($this->list[$index]);
+
+				$removed = true;
+			}
+		}
+
+		return $removed;
+	}
 }
