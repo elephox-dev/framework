@@ -1,0 +1,18 @@
+name: PIE Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pie.yml'
+      - 'modules/PIE/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/pie'
+      dir: 'modules/PIE/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_PIE_KEY }}
