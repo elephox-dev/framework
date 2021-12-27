@@ -145,5 +145,13 @@
             "@putenv XDEBUG_MODE=off",
             "@php bin/update-readme-annotations.php --"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true,
+            "elephox/composer-module-sync": true
+        }
     }
 }

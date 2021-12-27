@@ -23,5 +23,13 @@
         "psr-4": {
             "Elephox\\Logging\\": "test/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "elephox/composer-module-sync": true,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        }
     }
 }
