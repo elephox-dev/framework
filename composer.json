@@ -38,6 +38,7 @@
         "elephox/files": "self.version",
         "elephox/http": "self.version",
         "elephox/logging": "self.version",
+        "elephox/pie": "self.version",
         "elephox/stream": "self.version",
         "elephox/support": "self.version",
         "elephox/text": "self.version"
@@ -58,6 +59,7 @@
             "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Logging\\": "modules/Logging/src/",
+            "Elephox\\PIE\\": "modules/PIE/src/",
             "Elephox\\Stream\\": "modules/Stream/src/",
             "Elephox\\Support\\": "modules/Support/src/",
             "Elephox\\Text\\": "modules/Text/src/"
@@ -73,6 +75,7 @@
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
             "Elephox\\Logging\\": "modules/Logging/test/",
+            "Elephox\\PIE\\": "modules/PIE/test/",
             "Elephox\\Stream\\": "modules/Stream/test/",
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Text\\": "modules/Text/test/"
