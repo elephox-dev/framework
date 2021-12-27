@@ -6,7 +6,7 @@ namespace Elephox\Events;
 trait ClassNameAsEventName
 {
 	/**
-	 * @return class-string<self>
+	 * @return class-string<static>
 	 */
 	public function getName(): string
 	{
