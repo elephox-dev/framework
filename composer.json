@@ -26,8 +26,8 @@
         "mockery/mockery": "^1.4",
         "phpbench/phpbench": "^1.2.1",
         "phpunit/phpunit": "^9.5",
-        "vimeo/psalm": "^4.14",
-        "roave/no-leaks": "^1.3"
+        "roave/no-leaks": "^1.3",
+        "vimeo/psalm": "^4.14"
     },
     "replace": {
         "elephox/collection": "self.version",
@@ -75,6 +75,14 @@
             "Elephox\\Text\\": "modules/Text/test/"
         }
     },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "elephox/composer-module-sync": true,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-main": "1.x-dev"
@@ -92,6 +100,10 @@
         "ci:check-dependencies": [
             "@putenv XDEBUG_MODE=off",
             "@composer modules:check --"
+        ],
+        "ci:memory-leak-test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
         ],
         "ci:mutation-test": [
             "@putenv XDEBUG_MODE=coverage",
@@ -117,10 +129,6 @@
             "@putenv XDEBUG_MODE=coverage",
             "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
         ],
-        "ci:memory-leak-test": [
-            "@putenv XDEBUG_MODE=coverage",
-            "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
-        ],
         "local-ci": [
             "@update-readme",
             "@check-dependencies",
@@ -145,13 +153,5 @@
             "@putenv XDEBUG_MODE=off",
             "@php bin/update-readme-annotations.php --"
         ]
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "ergebnis/composer-normalize": true,
-            "infection/extension-installer": true,
-            "elephox/composer-module-sync": true
-        }
     }
 }
