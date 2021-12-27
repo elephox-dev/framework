@@ -61,7 +61,7 @@ class EventBus implements Contract\EventBus
 		$this->subscriptionSubscriberMapping->remove($id);
 	}
 
-	public function publish(Event $event): void
+	public function publish(Contract\Event $event): void
 	{
 		$key = $event->getName();
 		if (!$this->eventSubscriptionsMapping->has($key)) {
