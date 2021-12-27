@@ -177,12 +177,12 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headers;
 	}
 
-	#[Pure] public function asRequestHeaders(): RequestHeaderMap
+	#[Pure] public function asRequestHeaders(): Contract\RequestHeaderMap
 	{
 		return RequestHeaderMap::fromArray($this);
 	}
 
-	#[Pure] public function asResponseHeaders(): ResponseHeaderMap
+	#[Pure] public function asResponseHeaders(): Contract\ResponseHeaderMap
 	{
 		return ResponseHeaderMap::fromArray($this);
 	}

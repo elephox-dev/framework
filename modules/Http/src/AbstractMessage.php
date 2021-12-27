@@ -13,16 +13,11 @@ use JetBrains\PhpStorm\Pure;
 abstract class AbstractMessage implements Contract\Message
 {
 	protected Stream $body;
-	protected Contract\HeaderMap $headers;
 
-	abstract protected static function createHeaderMap(): Contract\HeaderMap;
-
-	public function __construct(
-		?Contract\HeaderMap $headers = null,
+	#[Pure] public function __construct(
 		?Stream $body = null,
 		protected string $protocolVersion = "1.1"
 	) {
-		$this->headers = $headers ?? static::createHeaderMap();
 		$this->body = $body ?? new EmptyStream();
 	}
 
@@ -31,14 +26,16 @@ abstract class AbstractMessage implements Contract\Message
 		return $this->protocolVersion;
 	}
 
+	#[Pure] abstract public function getHeaderMap(): Contract\HeaderMap;
+
 	#[Pure] public function hasHeaderName(HeaderName $name): bool
 	{
-		return $this->headers->has($name);
+		return $this->getHeaderMap()->has($name);
 	}
 
 	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList
 	{
-		return $this->headers->get($name);
+		return $this->getHeaderMap()->get($name);
 	}
 
 	#[Pure] public function getBody(): Stream
@@ -48,7 +45,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
-		$headers = $this->headers->deepClone();
+		$headers = $this->getHeaderMap()->deepClone();
 		$headers->put($name, $value);
 
 		return $this->withHeaderMap($headers);
@@ -56,7 +53,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withAddedHeaderName(Contract\HeaderName $name, iterable|string $value): static
 	{
-		$headers = $this->headers->deepClone();
+		$headers = $this->getHeaderMap()->deepClone();
 
 		if ($headers->has($name)) {
 			/** @var ArrayList<string> $values */
@@ -78,7 +75,7 @@ abstract class AbstractMessage implements Contract\Message
 
 	public function withoutHeaderName(Contract\HeaderName $name): static
 	{
-		$headers = $this->headers->deepClone();
+		$headers = $this->getHeaderMap()->deepClone();
 
 		if ($headers->has($name)) {
 			$headers->remove($name);

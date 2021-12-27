@@ -52,6 +52,15 @@ class ResponseTest extends TestCase
 		Response::fromString("No HTTP Message");
 	}
 
+	public function testWithResponseCode(): void
+	{
+		$response = new Response();
+		$responseNotFound = $response->withResponseCode(ResponseCode::NotFound);
+
+		self::assertEquals(ResponseCode::NotFound, $responseNotFound->getResponseCode());
+		self::assertNotSame($response->getBody(), $responseNotFound->getBody());
+	}
+
 	public function testCustomResponseCode(): void
 	{
 		$response = Response::fromString("HTTP/1.1 420 Blaze it\n\n");

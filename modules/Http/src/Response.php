@@ -18,11 +18,6 @@ class Response extends AbstractMessage implements Contract\Response
 {
 	public const Pattern = '/HTTP\/(?<version>\S+)\s(?<code>\S+)\s(?<message>[^\r\n]+)\r?\n(?<headers>(?:(?:[^:]+):\s*(?:[^\r\n]+)\r?\n)*)\r?\n(?<body>.*)/s';
 
-	protected static function createHeaderMap(): Contract\ResponseHeaderMap
-	{
-		return new ResponseHeaderMap();
-	}
-
 	public static function fromString(string $responseString): self
 	{
 		$result = preg_match(
@@ -51,13 +46,17 @@ class Response extends AbstractMessage implements Contract\Response
 		return new self($code, $headers, $body, $version);
 	}
 
+	private Contract\ResponseHeaderMap $headers;
+
 	public function __construct(
 		private Contract\ResponseCode $code = ResponseCode::OK,
 		?Contract\ResponseHeaderMap $headers = null,
 		?Stream $body = null,
 		string $protocolVersion = "1.1"
 	) {
-		parent::__construct($headers, $body, $protocolVersion);
+		parent::__construct($body, $protocolVersion);
+
+		$this->headers = $headers ?? new ResponseHeaderMap();
 
 		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyRequest())) {
 			throw new InvalidArgumentException("Responses cannot contain headers reserved for requests only.");
@@ -71,22 +70,22 @@ class Response extends AbstractMessage implements Contract\Response
 
 	#[Pure] public function getHeaderMap(): Contract\ResponseHeaderMap
 	{
-		return $this->headers->asResponseHeaders();
+		return $this->headers;
 	}
 
 	public function withProtocolVersion(string $version): static
 	{
-		return new static($this->code, $this->headers->deepClone()->asResponseHeaders(), clone $this->body, $version);
+		return new static($this->code, $this->headers->deepClone(), clone $this->body, $version);
 	}
 
 	public function withBody(Stream $body): static
 	{
-		return new static($this->code, $this->headers->deepClone()->asResponseHeaders(), $body, $this->protocolVersion);
+		return new static($this->code, $this->headers->deepClone(), $body, $this->protocolVersion);
 	}
 
 	public function withResponseCode(Contract\ResponseCode $code): static
 	{
-		return new static($code, $this->headers->deepClone()->asResponseHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($code, $this->headers->deepClone(), clone $this->body, $this->protocolVersion);
 	}
 
 	#[Pure] public function getContentType(): ?MimeTypeContract
@@ -125,7 +124,7 @@ class Response extends AbstractMessage implements Contract\Response
 		}
 
 		http_response_code($this->code->getCode());
-		$headers = $this->getHeaderMap()->asArray();
+		$headers = $this->headers->asArray();
 		foreach ($headers as $header => $value) {
 			foreach ($value as $v) {
 				header("$header: $v", false);

@@ -39,7 +39,7 @@ class RequestTest extends TestCase
 		$request = new Request(RequestMethod::GET, Url::fromString("/test"), new RequestHeaderMap(), new EmptyStream(), "1.1");
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
-		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
@@ -48,7 +48,7 @@ class RequestTest extends TestCase
 		$request = new Request(RequestMethod::POST, Url::fromString("/test"), new RequestHeaderMap(), new EmptyStream(), "1.1");
 
 		self::assertEquals(RequestMethod::POST, $request->getRequestMethod());
-		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
@@ -57,7 +57,7 @@ class RequestTest extends TestCase
 		$request = new Request(RequestMethod::DELETE, Url::fromString("/test"), new RequestHeaderMap(), new EmptyStream(), "1.1");
 
 		self::assertEquals(RequestMethod::DELETE, $request->getRequestMethod());
-		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(0, $request->getHeaderMap()->asArray());
 	}
 
@@ -69,7 +69,7 @@ class RequestTest extends TestCase
 		$request = new Request(RequestMethod::GET, Url::fromString("/test"), $headers, new EmptyStream(), "1.1");
 
 		self::assertEquals(RequestMethod::GET, $request->getRequestMethod());
-		self::assertEquals('/test', $request->getUri()->getPath());
+		self::assertEquals('/test', $request->getUrl()->getPath());
 		self::assertCount(1, $request->getHeaderMap()->asArray());
 		self::assertEquals(["test"], $request->getHeaderMap()->get(HeaderName::Host)->asArray());
 	}
@@ -135,14 +135,14 @@ class RequestTest extends TestCase
 	public function testRequestUriMayBeString(): void
 	{
 		$r = new Request(RequestMethod::GET, Url::fromString('/'));
-		self::assertSame('/', (string)$r->getUri());
+		self::assertSame('/', (string)$r->getUrl());
 	}
 
 	public function testRequestUriMayBeUri(): void
 	{
 		$uri = Url::fromString('/');
 		$r = new Request(RequestMethod::GET, $uri);
-		self::assertSame($uri, $r->getUri());
+		self::assertSame($uri, $r->getUrl());
 	}
 
 	public function testCanConstructWithBody(): void
@@ -169,12 +169,12 @@ class RequestTest extends TestCase
 	public function testWithUri(): void
 	{
 		$r1 = new Request(RequestMethod::GET, Url::fromString('/'));
-		$u1 = $r1->getUri();
+		$u1 = $r1->getUrl();
 		$u2 = Url::fromString('https://www.example.com');
 		$r2 = $r1->withUrl($u2);
 		self::assertNotSame($r1, $r2);
-		self::assertSame($u2, $r2->getUri());
-		self::assertSame($u1, $r1->getUri());
+		self::assertSame($u2, $r2->getUrl());
+		self::assertSame($u1, $r1->getUrl());
 	}
 
 	public function testSameInstanceWhenSameUri(): void
@@ -186,11 +186,18 @@ class RequestTest extends TestCase
 
 	public function testHostIsAddedFirst(): void
 	{
-		$r = new Request(RequestMethod::GET, Url::fromString('https://foo.com/baz?bar=bam'), RequestHeaderMap::fromArray(['Foo' => 'Bar']));
-		self::assertSame([
-			'Host' => ['foo.com'],
-			'Foo' => ['Bar']
-		], $r->getHeaderMap()->asArray());
+		$r = new Request(
+			RequestMethod::GET,
+			Url::fromString('https://foo.com/baz?bar=bam'),
+			RequestHeaderMap::fromArray(['Foo' => 'Bar'])
+		);
+		self::assertSame(
+			[
+				'Host' => ['foo.com'],
+				'Foo' => ['Bar']
+			],
+			$r->getHeaderMap()->asArray()
+		);
 	}
 
 	/**
@@ -300,5 +307,15 @@ class RequestTest extends TestCase
 		$r = new Request(RequestMethod::GET, Url::fromString('https://foo.com:8124/bar'));
 		$r = $r->withUrl(Url::fromString('https://foo.com:8125/bar'));
 		self::assertSame('foo.com:8125', $r->getHeaderMap()->get(HeaderName::Host)->first());
+	}
+
+	public function testWithResponseCode(): void
+	{
+		$request = new Request();
+		$withRequestMethod = $request->withRequestMethod(RequestMethod::HEAD);
+
+		self::assertEquals(RequestMethod::HEAD, $withRequestMethod->getRequestMethod());
+		self::assertNotSame($request->getBody(), $withRequestMethod->getBody());
+		self::assertNotSame($request->getUrl(), $withRequestMethod->getBody());
 	}
 }

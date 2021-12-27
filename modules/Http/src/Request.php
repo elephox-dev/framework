@@ -82,11 +82,7 @@ class Request extends AbstractMessage implements Contract\Request
 		return new self($requestMethod, $parsedUri, $headerMap, $body, $version);
 	}
 
-	protected static function createHeaderMap(): Contract\RequestHeaderMap
-	{
-		return new RequestHeaderMap();
-	}
-
+	protected Contract\RequestHeaderMap $headers;
 	private Contract\Url $url;
 
 	public function __construct(
@@ -97,26 +93,22 @@ class Request extends AbstractMessage implements Contract\Request
 		string                         $protocolVersion = "1.1",
 		bool                           $inferHostHeader = true
 	) {
-		parent::__construct($headers, $body, $protocolVersion);
+		parent::__construct($body, $protocolVersion);
 
 		$this->url = $url ?? Url::fromString("");
+		$this->headers = $headers ?? new RequestHeaderMap();
 
 		if (!$this->getRequestMethod()->canHaveBody() && $this->getBody()->getSize() > 0) {
 			throw new InvalidArgumentException("Request method {$this->getRequestMethod()->getValue()} cannot have a body.");
 		}
 
-		if ($inferHostHeader && !$this->getHeaderMap()->has(HeaderName::Host)) {
+		if ($inferHostHeader && !$this->headers->has(HeaderName::Host)) {
 			$this->updateHostHeader();
 		}
 
-		if ($this->getHeaderMap()->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
+		if ($this->headers->anyKey(static fn(Contract\HeaderName $name) => $name->isOnlyResponse())) {
 			throw new InvalidArgumentException("Requests cannot contain headers reserved for responses only.");
 		}
-	}
-
-	#[Pure] public function getUri(): Contract\Url
-	{
-		return $this->url;
 	}
 
 	#[Pure] public function getRequestMethod(): Contract\RequestMethod
@@ -124,12 +116,8 @@ class Request extends AbstractMessage implements Contract\Request
 		return $this->method;
 	}
 
-	public function getHeaderMap(): Contract\RequestHeaderMap
+	#[Pure] public function getHeaderMap(): Contract\RequestHeaderMap
 	{
-		if (!$this->headers instanceof Contract\RequestHeaderMap) {
-			throw new LogicException("Headers do not implement Contract\RequestHeaderMap.");
-		}
-
 		return $this->headers;
 	}
 
@@ -139,7 +127,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $version);
+		return new static($this->method, clone $this->url, $this->headers->deepClone(), clone $this->body, $version);
 	}
 
 	public function withHeaderMap(Contract\HeaderMap $map): static
@@ -157,7 +145,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($this->method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), $body, $this->protocolVersion);
+		return new static($this->method, clone $this->url, $this->headers->deepClone(), $body, $this->protocolVersion);
 	}
 
 	public function withRequestMethod(Contract\RequestMethod $method): static
@@ -166,7 +154,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		return new static($method, clone $this->url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		return new static($method, clone $this->url, $this->headers->deepClone(), clone $this->body, $this->protocolVersion);
 	}
 
 	public function withUrl(Contract\Url $url, bool $preserveHost = false): static
@@ -175,7 +163,7 @@ class Request extends AbstractMessage implements Contract\Request
 			return $this;
 		}
 
-		$newRequest = new static($this->method, $url, $this->headers->deepClone()->asRequestHeaders(), clone $this->body, $this->protocolVersion);
+		$newRequest = new static($this->method, $url, $this->headers->deepClone(), clone $this->body, $this->protocolVersion);
 
 		if (!$preserveHost) {
 			$newRequest->updateHostHeader();
@@ -184,9 +172,9 @@ class Request extends AbstractMessage implements Contract\Request
 		return $newRequest;
 	}
 
-	protected function updateHostHeader(): void
+	private function updateHostHeader(): void
 	{
-		$uri = $this->getUri();
+		$uri = $this->getUrl();
 
 		$host = $uri->getHost();
 		if (empty($host)) {
@@ -198,7 +186,7 @@ class Request extends AbstractMessage implements Contract\Request
 			$host .= ":" . $port;
 		}
 
-		$this->getHeaderMap()->put(HeaderName::Host, $host);
+		$this->headers->put(HeaderName::Host, $host);
 	}
 
 	#[Pure] public function getUrl(): Contract\Url
