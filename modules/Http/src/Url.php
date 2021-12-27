@@ -73,14 +73,12 @@ class Url implements Contract\Url
 		return $this->scheme ?? "";
 	}
 
-	/** @noinspection PhpPureFunctionMayProduceSideEffectsInspection */
 	#[Pure] public function getUrlScheme(): ?UrlScheme
 	{
 		if ($this->scheme === null) {
 			return null;
 		}
 
-		/** @psalm-suppress ImpureMethodCall until vimeo/psalm#7086 is fixed */
 		return UrlScheme::tryFrom($this->scheme);
 	}
 

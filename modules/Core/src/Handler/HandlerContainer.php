@@ -98,7 +98,7 @@ class HandlerContainer implements Contract\HandlerContainer
 
 			$classInstance = $this->container->getOrInstantiate($className);
 
-			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#6412 or vimeo/psalm#6989 */
+			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
 			$closure = Closure::fromCallable($classInstance);
 			$middlewareAttributes = $classReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 			$this->registerAttributes($closure, $classAttributes, $middlewareAttributes);
