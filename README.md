@@ -84,7 +84,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [ ] Implement orderByDescending() method.
   - [ ] Implement prepend() method.
   - [ ] Implement reverse() method.
-  - [ ] Implement select() method.
   - [ ] Implement selectMany() method.
   - [ ] Implement sequenceEqual() method.
   - [ ] Implement single() method.
