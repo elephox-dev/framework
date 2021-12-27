@@ -108,8 +108,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
-  - [#6412](https://github.com/vimeo/psalm/issues/6412)
-  - [#6989](https://github.com/vimeo/psalm/issues/6989)
-  - [#7086](https://github.com/vimeo/psalm/issues/7086)
+  - [#7196](https://github.com/vimeo/psalm/issues/7196)
 
 <!-- end annotations -->
