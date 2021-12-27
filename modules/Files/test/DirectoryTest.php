@@ -95,8 +95,9 @@ class DirectoryTest extends TestCase
 	public function testGetChildren(): void
 	{
 		$directory = new Directory($this->dirPath);
-		self::assertNotEmpty($directory->getChildren());
-		self::assertContainsOnlyInstancesOf(FilesystemNode::class, $directory->getChildren());
+		$children = $directory->getChildren();
+		self::assertNotEmpty($children);
+		self::assertContainsOnlyInstancesOf(FilesystemNode::class, $children);
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
 		self::assertEmpty($testDirectory->getChildren());
@@ -122,8 +123,9 @@ class DirectoryTest extends TestCase
 	public function testGetFiles(): void
 	{
 		$directory = new Directory($this->dirPath);
-		self::assertNotEmpty($directory->getFiles());
-		self::assertContainsOnlyInstancesOf(File::class, $directory->getFiles());
+		$files = $directory->getFiles();
+		self::assertNotEmpty($files);
+		self::assertContainsOnlyInstancesOf(File::class, $files);
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
 		self::assertEmpty($testDirectory->getFiles());
@@ -165,8 +167,9 @@ class DirectoryTest extends TestCase
 	public function testGetDirectories(): void
 	{
 		$directory = new Directory($this->dirPath);
-		self::assertNotEmpty($directory->getDirectories());
-		self::assertContainsOnlyInstancesOf(Directory::class, $directory->getDirectories());
+		$dirs = $directory->getDirectories();
+		self::assertNotEmpty($dirs);
+		self::assertContainsOnlyInstancesOf(Directory::class, $dirs);
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
 		self::assertEmpty($testDirectory->getDirectories());
