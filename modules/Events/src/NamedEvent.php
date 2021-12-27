@@ -5,7 +5,7 @@ namespace Elephox\Events;
 
 use Elephox\Events\Contract\Event;
 
-class NamedEvent implements Event
+abstract class NamedEvent implements Event
 {
 	/**
 	 * @param non-empty-string $name

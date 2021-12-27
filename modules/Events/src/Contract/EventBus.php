@@ -3,15 +3,20 @@ declare(strict_types=1);
 
 namespace Elephox\Events\Contract;
 
-use Elephox\Core\Context\Contract\EventContext;
-
 interface EventBus
 {
 	/**
 	 * @param non-empty-string $eventName
-	 * @param callable(EventContext): void $callback
+	 * @param callable(Event): void $callback
+	 *
+	 * @return non-empty-string
 	 */
-	public function subscribe(string $eventName, callable $callback): void;
+	public function subscribe(string $eventName, callable $callback): string;
 
-	public function publish(Event $eventContext): void;
+	/**
+	 * @param non-empty-string $id
+	 */
+	public function unsubscribe(string $id): void;
+
+	public function publish(Event $event): void;
 }
