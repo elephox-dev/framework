@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Core\Events\Contract;
+namespace Elephox\Events\Contract;
 
 interface Event
 {

@@ -22,6 +22,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/test" isTestSource="true" packagePrefix="Elephox\Logging\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/src" isTestSource="false" packagePrefix="Elephox\Stream\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/test" isTestSource="true" packagePrefix="Elephox\Stream\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Events/src" isTestSource="false" packagePrefix="Elephox\Events\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Events/test" isTestSource="true" packagePrefix="Elephox\Events\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />

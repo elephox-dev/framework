@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Core\Events;
+namespace Elephox\Events;
 
-class NamedEvent implements Contract\Event
+use Elephox\Events\Contract\Event;
+
+class NamedEvent implements Event
 {
 	/**
 	 * @param non-empty-string $name

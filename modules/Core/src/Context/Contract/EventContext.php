@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Context\Contract;
 
-use Elephox\Core\Events\Contract\Event;
+use Elephox\Events\Contract\Event;
 
 interface EventContext extends Context
 {

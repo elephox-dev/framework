@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Core\Events;
+namespace Elephox\Events;
 
 trait ClassNameAsEventName
 {
