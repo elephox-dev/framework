@@ -48,6 +48,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
 - [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-17) adapter for HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
+- [ ] Add a formatter (PHP CS Fixer)
+- [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
 
 ### ☑️ Done
 
