@@ -6,6 +6,9 @@
         errorLevel="1"
 >
     <projectFiles>
-        <directory name="modules/*/src" />
+        <directory name="./modules/*/src" />
+        <ignoreFiles>
+            <directory name="./modules/PIE/src" />
+        </ignoreFiles>
     </projectFiles>
 </psalm>

@@ -409,7 +409,11 @@ trait IsEnumerable
 
 	public function select(callable $selector): GenericEnumerable
 	{
-		// TODO: Implement select() method.
+		return new Enumerable(function () use ($selector) {
+			foreach ($this->getIterator() as $elementKey => $element) {
+				yield $elementKey => $selector($element, $elementKey);
+			}
+		});
 	}
 
 	#[Pure] public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable

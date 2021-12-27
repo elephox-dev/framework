@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use Closure;
+use Generator;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -19,11 +22,32 @@ class Enumerable implements GenericEnumerable
 	use IsEnumerable;
 
 	/**
-	 * @param GenericIterator<T, TKey> $iterator
+	 * @var \Elephox\PIE\GenericIterator<T, TKey>
+	 */
+	private GenericIterator $iterator;
+
+	/**
+	 * @param Closure(): GenericIterator<T, TKey>|GenericIterator<T, TKey>|Generator<T, TKey> $iterator
 	 */
 	#[Pure] public function __construct(
-		private GenericIterator $iterator
+		GenericIterator|Generator|Closure $iterator
 	) {
+		if ($iterator instanceof GenericIterator) {
+			$this->iterator = $iterator;
+		} else if ($iterator instanceof Generator) {
+			$this->iterator = new GeneratorIterator($iterator);
+		} else {
+			$result = $iterator();
+			if ($result instanceof GenericIterator) {
+				$this->iterator = $result;
+			} else if ($result instanceof Generator) {
+				$this->iterator = new GeneratorIterator($result);
+			} else {
+				throw new InvalidArgumentException(
+					'The iterator must be or return an instance of GenericIterator'
+				);
+			}
+		}
 	}
 
 	/**
