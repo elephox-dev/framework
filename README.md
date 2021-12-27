@@ -50,6 +50,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
 - [ ] Add a formatter (PHP CS Fixer)
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
+- [ ] Integrate PIE into Collections
 
 ### ☑️ Done
 
