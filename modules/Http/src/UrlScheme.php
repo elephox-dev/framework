@@ -12,6 +12,7 @@ enum UrlScheme: string implements Contract\UrlScheme
 	case HTTPS = 'https';
 	case HTTP = 'http';
 	case FTP = 'ftp';
+	case SFTP = 'sftp';
 	case FILE = 'file';
 	case MAILTO = 'mailto';
 	case SSH = 'ssh';
@@ -23,7 +24,7 @@ enum UrlScheme: string implements Contract\UrlScheme
 			self::HTTPS => 443,
 			self::HTTP => 80,
 			self::FTP => 21,
-			self::SSH => 22,
+			self::SSH, self::SFTP => 22,
 			self::MYSQL => 3306,
 			default => null
 		};
