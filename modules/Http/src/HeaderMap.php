@@ -33,7 +33,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headerName;
 	}
 
-	#[Pure] protected static function fromArray(iterable $headers): self
+	#[Pure] protected static function fromIterable(iterable $headers): self
 	{
 		$map = new self();
 
@@ -179,11 +179,11 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 
 	#[Pure] public function asRequestHeaders(): Contract\RequestHeaderMap
 	{
-		return RequestHeaderMap::fromArray($this);
+		return RequestHeaderMap::fromIterable($this);
 	}
 
 	#[Pure] public function asResponseHeaders(): Contract\ResponseHeaderMap
 	{
-		return ResponseHeaderMap::fromArray($this);
+		return ResponseHeaderMap::fromIterable($this);
 	}
 }

@@ -7,9 +7,9 @@ use JetBrains\PhpStorm\Pure;
 
 class RequestHeaderMap extends HeaderMap implements Contract\RequestHeaderMap
 {
-	#[Pure] public static function fromArray(iterable $headers): self
+	#[Pure] public static function fromIterable(iterable $headers): self
 	{
-		$map = parent::fromArray($headers);
+		$map = parent::fromIterable($headers);
 
 		$requestHeaderMap = new self();
 

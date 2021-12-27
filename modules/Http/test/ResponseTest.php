@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\ArrayList;
+use Elephox\Stream\StringStream;
+use Elephox\Support\MimeType;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -80,5 +83,69 @@ class ResponseTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 
 		Response::fromString("HTTP/1.1  test\n\n");
+	}
+
+	public function testRequestOnlyHeader(): void
+	{
+		$headers = new HeaderMap([
+			HeaderName::Host
+		], [
+			ArrayList::fromValue('localhost')
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+
+		new Response(headers: $headers->asResponseHeaders());
+	}
+
+	public function testWithProtocolVersion(): void
+	{
+		$response = new Response();
+		$responseWithProtocolVersion = $response->withProtocolVersion('1.0');
+
+		self::assertEquals('1.0', $responseWithProtocolVersion->getProtocolVersion());
+	}
+
+	public function testWithBody(): void
+	{
+		$response = new Response();
+		$responseWithBody = $response->withBody(new StringStream('test'));
+
+		self::assertNotSame($response->getBody(), $responseWithBody->getBody());
+	}
+
+	public function testGetContentType(): void
+	{
+		$response = new Response();
+
+		self::assertNull($response->getContentType());
+
+		$emptyContentType = ResponseHeaderMap::fromIterable(['Content-Type' => []]);
+		$responseWithEmptyContentType = $response->withHeaderMap($emptyContentType);
+
+		self::assertNull($responseWithEmptyContentType->getContentType());
+
+		$contentType = ResponseHeaderMap::fromIterable(['Content-Type' => ['text/html']]);
+		$responseWithContentType = $response->withHeaderMap($contentType);
+
+		self::assertEquals(MimeType::Texthtml, $responseWithContentType->getContentType());
+	}
+
+	public function testWithContentType(): void
+	{
+		$response = new Response();
+		$responseWithContentType = $response->withContentType(MimeType::Texthtml);
+
+		self::assertEquals(MimeType::Texthtml, $responseWithContentType->getContentType());
+
+		$headers = $responseWithContentType->getHeaderMap();
+
+		self::assertTrue($headers->has(HeaderName::ContentType));
+		self::assertEquals(['text/html'], $headers->get(HeaderName::ContentType)->asArray());
+
+		$responseWithoutContentType = $responseWithContentType->withContentType(null);
+
+		self::assertNull($responseWithoutContentType->getContentType());
+		self::assertFalse($responseWithoutContentType->getHeaderMap()->has(HeaderName::ContentType));
 	}
 }

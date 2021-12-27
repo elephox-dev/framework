@@ -48,7 +48,7 @@ class Request extends AbstractMessage implements Contract\Request
 			$headers['Content-Length'] = $_SERVER['CONTENT_LENGTH'];
 		}
 
-		$headerMap = RequestHeaderMap::fromArray($headers);
+		$headerMap = RequestHeaderMap::fromIterable($headers);
 
 		if (!array_key_exists("REQUEST_METHOD", $_SERVER) || empty($_SERVER["REQUEST_METHOD"])) {
 			throw new RuntimeException("REQUEST_METHOD is not set.");

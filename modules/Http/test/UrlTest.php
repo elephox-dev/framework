@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\ArrayMap;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\Url
  * @covers \Elephox\Http\UrlScheme
  * @uses \Elephox\Http\Contract\Url
+ * @covers \Elephox\Collection\ArrayMap
  */
 class UrlTest extends TestCase
 {
@@ -124,10 +126,45 @@ class UrlTest extends TestCase
 		self::assertSame('https://localhost/test?query=true', (string)$uri);
 	}
 
+	public function testWithQueryMap(): void
+	{
+		$uri = Url::fromString('https://localhost/test');
+		$uri = $uri->withQueryMap(ArrayMap::fromIterable(['query' => 'true']));
+		self::assertSame('https://localhost/test?query=true', (string)$uri);
+
+		$uri = $uri->withQueryMap(ArrayMap::fromIterable(['arr' => ['a', 'b']]));
+		self::assertSame('https://localhost/test?arr%5B0%5D=a&arr%5B1%5D=b', (string)$uri);
+	}
+
+	public function testGetQueryMap(): void
+	{
+		$uri = Url::fromString('https://localhost/test?query=true');
+
+		$queryMap = $uri->getQueryMap();
+		self::assertInstanceOf(ArrayMap::class, $queryMap);
+		self::assertSame('true', $queryMap->get('query'));
+	}
+
+	public function testGetEmptyQueryMap(): void
+	{
+		$uri = Url::fromString('https://localhost/test');
+
+		$queryMap = $uri->getQueryMap();
+		self::assertInstanceOf(ArrayMap::class, $queryMap);
+		self::assertEmpty($queryMap->asArray());
+	}
+
 	public function testWithFragment(): void
 	{
 		$uri = Url::fromString('https://localhost/test');
 		$uri = $uri->withFragment('fragment');
 		self::assertSame('https://localhost/test#fragment', (string)$uri);
+	}
+
+	public function testSpacesInPath(): void
+	{
+		$uri = Url::fromString('https://localhost/te st');
+
+		self::assertSame('https://localhost/te%20st', (string)$uri);
 	}
 }

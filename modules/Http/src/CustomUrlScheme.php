@@ -9,7 +9,7 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 class CustomUrlScheme implements Contract\UrlScheme
 {
-	public function __construct(
+	#[Pure] public function __construct(
 		private string $scheme,
 		private ?int $defaultPort = null,
 	) {

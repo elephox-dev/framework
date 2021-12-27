@@ -189,7 +189,7 @@ class RequestTest extends TestCase
 		$r = new Request(
 			RequestMethod::GET,
 			Url::fromString('https://foo.com/baz?bar=bam'),
-			RequestHeaderMap::fromArray(['Foo' => 'Bar'])
+			RequestHeaderMap::fromIterable(['Foo' => 'Bar'])
 		);
 		self::assertSame(
 			[
@@ -214,7 +214,7 @@ class RequestTest extends TestCase
 		new Request(
 			RequestMethod::GET,
 			Url::fromString('https://foo.com/baz?bar=bam'),
-			RequestHeaderMap::fromArray([
+			RequestHeaderMap::fromIterable([
 				$header => 'value'
 			]),
 		);
@@ -233,7 +233,7 @@ class RequestTest extends TestCase
 		$r = new Request(
 			RequestMethod::GET,
 			Url::fromString('https://foo.com/baz?bar=bam'),
-			RequestHeaderMap::fromArray([
+			RequestHeaderMap::fromIterable([
 				$header => 'value'
 			]),
 		);
@@ -264,7 +264,7 @@ class RequestTest extends TestCase
 
 	public function testHostIsNotOverwrittenWhenPreservingHost(): void
 	{
-		$r = new Request(RequestMethod::GET, Url::fromString('https://foo.com/baz?bar=bam'), RequestHeaderMap::fromArray(['Host' => 'a.com']));
+		$r = new Request(RequestMethod::GET, Url::fromString('https://foo.com/baz?bar=bam'), RequestHeaderMap::fromIterable(['Host' => 'a.com']));
 		self::assertSame(['Host' => ['a.com']], $r->getHeaderMap()->asArray());
 		$r2 = $r->withUrl(Url::fromString('https://www.foo.com/bar'), true);
 		self::assertSame('a.com', $r2->getHeaderMap()->get(HeaderName::Host)->first());
@@ -288,7 +288,7 @@ class RequestTest extends TestCase
 
 	public function testAggregatesHeaders(): void
 	{
-		$r = new Request(RequestMethod::GET, Url::fromString(''), RequestHeaderMap::fromArray([
+		$r = new Request(RequestMethod::GET, Url::fromString(''), RequestHeaderMap::fromIterable([
 			'ZOO' => 'zoobar',
 			'zoo' => ['foobar', 'zoobar']
 		]));

@@ -3,18 +3,22 @@ declare(strict_types=1);
 
 namespace Elephox\Support;
 
+use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
+
+#[Immutable]
 class CustomMimeType implements Contract\MimeType
 {
 	/**
 	 * @param non-empty-string $value
 	 */
-	public function __construct(
+	#[Pure] public function __construct(
 		private string $value
 	)
 	{
 	}
 
-	public function getValue(): string
+	#[Pure] public function getValue(): string
 	{
 		return $this->value;
 	}

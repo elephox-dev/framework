@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\UrlScheme
+ * @covers \Elephox\Http\CustomUrlScheme
  */
 class UrlSchemeTest extends TestCase
 {
@@ -28,5 +29,13 @@ class UrlSchemeTest extends TestCase
 	public function testDefaultPorts(UrlScheme $scheme, ?int $port): void
 	{
 		self::assertEquals($scheme->getDefaultPort(), $port);
+	}
+
+	public function testCustomScheme(): void
+	{
+		$scheme = new CustomUrlScheme('custom', 80);
+
+		self::assertEquals('custom', $scheme->getScheme());
+		self::assertEquals(80, $scheme->getDefaultPort());
 	}
 }

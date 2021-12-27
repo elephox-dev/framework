@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\OffsetNotFoundException;
+use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -19,19 +22,21 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\CustomHeaderName
  * @covers \Elephox\Http\HeaderName
  * @covers \Elephox\Http\InvalidHeaderTypeException
+ * @covers \Elephox\Collection\OffsetNotFoundException
+ * @covers \Elephox\Collection\InvalidOffsetException
  */
 class ResponseHeaderMapTest extends TestCase
 {
 	public function testVariousHeaderNames(): void
 	{
-		$map = ResponseHeaderMap::fromArray([
+		$map = ResponseHeaderMap::fromIterable([
 			'Host' => 'localhost',
 			'x-custom' => 'custom',
 			'Set-Cookie' => [
 				'name' => 'value',
 				'name2' => 'value2',
 			],
-			'Content-Type' => ['text/html'],
+			'Content-Type' => ArrayList::fromValue('text/html'),
 		]);
 
 		self::assertEquals(['localhost'], $map->get(HeaderName::Host)->asArray());
@@ -76,7 +81,7 @@ class ResponseHeaderMapTest extends TestCase
 	{
 		$this->expectException(InvalidHeaderNameTypeException::class);
 
-		ResponseHeaderMap::fromArray([
+		ResponseHeaderMap::fromIterable([
 			123 => "test"
 		]);
 	}
@@ -85,7 +90,7 @@ class ResponseHeaderMapTest extends TestCase
 	{
 		$this->expectException(InvalidHeaderTypeException::class);
 
-		ResponseHeaderMap::fromArray([
+		ResponseHeaderMap::fromIterable([
 			'Host' => 123
 		]);
 	}
@@ -94,10 +99,35 @@ class ResponseHeaderMapTest extends TestCase
 	{
 		$this->expectException(InvalidHeaderTypeException::class);
 
-		$map = ResponseHeaderMap::fromArray([
+		$map = ResponseHeaderMap::fromIterable([
 			'Host' => 'localhost'
 		]);
 
 		$map->put('Host', 123);
+	}
+
+	public function produceHeaders(): Generator
+	{
+		yield HeaderName::Host => 'localhost';
+		yield HeaderName::ContentType => 'text/html';
+	}
+
+	public function testFromIterable(): void
+	{
+		$map = ResponseHeaderMap::fromIterable($this->produceHeaders());
+
+		self::assertTrue($map->has(HeaderName::Host));
+		self::assertTrue($map->has(HeaderName::ContentType));
+		self::assertEquals(['localhost'], $map->get(HeaderName::Host)->asArray());
+		self::assertEquals(['text/html'], $map->get(HeaderName::ContentType)->asArray());
+	}
+
+	public function testInvalidOffset(): void
+	{
+		$this->expectException(OffsetNotFoundException::class);
+
+		$map = ResponseHeaderMap::fromIterable($this->produceHeaders());
+
+		$map->get('invalid');
 	}
 }

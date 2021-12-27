@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -59,5 +60,15 @@ class HeaderNameTest extends TestCase
 		self::assertEquals($canBeDuplicate, $name->canBeDuplicate(), $name->name . ' header should ' . ($canBeDuplicate ? 'not ' : '') . 'be able to be duplicate');
 		self::assertEquals($isOnlyRequest, $name->isOnlyRequest(), $name->name . ' header should ' . ($isOnlyRequest ? 'not ' : '') . 'be only request');
 		self::assertEquals($isOnlyResponse, $name->isOnlyResponse(), $name->name . ' header should ' . ($isOnlyResponse ? 'not ' : '') . 'be only response');
+	}
+
+	public function testTryFromIgnoreCase(): void
+	{
+		$name = HeaderName::tryFromIgnoreCase('Content-Type');
+
+		self::assertEquals(HeaderName::ContentType, $name);
+
+		$this->expectException(InvalidArgumentException::class);
+		HeaderName::tryFromIgnoreCase('');
 	}
 }

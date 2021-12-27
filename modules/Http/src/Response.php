@@ -6,6 +6,7 @@ namespace Elephox\Http;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\StringStream;
 use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use Elephox\Support\CustomMimeType;
 use Elephox\Support\MimeType;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -95,12 +96,14 @@ class Response extends AbstractMessage implements Contract\Response
 		}
 
 		$value = $this->headers->get(HeaderName::ContentType)->first();
-		if ($value === null) {
+		if (empty($value)) {
 			return null;
 		}
 
 		/** @psalm-suppress ImpureMethodCall */
-		return MimeType::tryfrom($value);
+		$type = MimeType::tryfrom($value);
+
+		return $type ?? new CustomMimeType($value);
 	}
 
 	public function withContentType(?MimeTypeContract $mimeType): static

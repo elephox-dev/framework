@@ -32,12 +32,12 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		 */
 		$headerMap = ArrayMap::fromKeyValuePairList($headerKeyValueList);
 
-		return self::fromArray($headerMap->asArray());
+		return self::fromIterable($headerMap->asArray());
 	}
 
-	#[Pure] public static function fromArray(iterable $headers): self
+	#[Pure] public static function fromIterable(iterable $headers): self
 	{
-		$map = parent::fromArray($headers);
+		$map = parent::fromIterable($headers);
 
 		$responseHeaderMap = new self();
 
