@@ -13,6 +13,9 @@ use RuntimeException;
  * @covers \Elephox\Files\Path
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Files\InvalidParentLevelException
+ * @covers \Elephox\Files\DirectoryNotFoundException
+ * @covers \Elephox\Files\FileNotFoundException
+ * @covers \Elephox\Files\FileException
  */
 class DirectoryTest extends TestCase
 {
@@ -65,7 +68,8 @@ class DirectoryTest extends TestCase
 		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $dirChild->getPath());
 
 		$emptyDir = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		self::assertNull($emptyDir->getChild("test"));
+		$this->expectException(FileNotFoundException::class);
+		$emptyDir->getChild("test");
 	}
 
 	public function testIsEmpty(): void
@@ -80,6 +84,14 @@ class DirectoryTest extends TestCase
 		self::assertEquals(filemtime($this->filePath), $directory->getModifiedTime()->getTimestamp());
 	}
 
+	public function testGetModifiedTimeNonExistent(): void
+	{
+		$directory = new Directory("/test/path");
+
+		$this->expectException(DirectoryNotFoundException::class);
+		$directory->getModifiedTime();
+	}
+
 	public function testGetChildren(): void
 	{
 		$directory = new Directory($this->dirPath);
@@ -88,6 +100,14 @@ class DirectoryTest extends TestCase
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
 		self::assertEmpty($testDirectory->getChildren());
+	}
+
+	public function testNonExistentGetChildren(): void
+	{
+		$directory = new Directory("/test/path");
+
+		$this->expectException(DirectoryNotFoundException::class);
+		$directory->getChildren();
 	}
 
 	public function testGetParent(): void
@@ -129,7 +149,8 @@ class DirectoryTest extends TestCase
 		$directory = new Directory($this->dirPath);
 		self::assertEquals($this->filePath, $directory->getFile(pathinfo($this->filePath, PATHINFO_BASENAME))->getPath());
 
-		self::assertNull($directory->getFile("non-existent-file"));
+		$this->expectException(FileNotFoundException::class);
+		$directory->getFile("non-existent-file");
 	}
 
 	public function testGetDirectory(): void
@@ -137,7 +158,8 @@ class DirectoryTest extends TestCase
 		$directory = new Directory($this->dirPath);
 		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $directory->getDirectory("test")->getPath());
 
-		self::assertNull($directory->getDirectory("non-existent-dir"));
+		$this->expectException(DirectoryNotFoundException::class);
+		$directory->getDirectory("non-existent-dir");
 	}
 
 	public function testGetDirectories(): void

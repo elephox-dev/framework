@@ -16,8 +16,6 @@ interface File extends FilesystemNode, HasHash
 
 	public function moveTo(string $path): bool;
 
-	public function exists(): bool;
-
 	public function isReadable(): bool;
 
 	public function isWritable(): bool;

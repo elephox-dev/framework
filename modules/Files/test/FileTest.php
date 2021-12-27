@@ -13,6 +13,8 @@ use RuntimeException;
  * @covers \Elephox\Support\MimeType
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\InvalidParentLevelException
+ * @covers \Elephox\Files\FileException
+ * @covers \Elephox\Files\FileNotFoundException
  */
 class FileTest extends TestCase
 {
@@ -50,13 +52,37 @@ class FileTest extends TestCase
 		self::assertEquals('txt', $file->getExtension());
 	}
 
-	/**
-	 * @throws \Exception
-	 */
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
 		self::assertEquals(filemtime($this->filePath), $file->getModifiedTime()->getTimestamp());
+	}
+
+	public function testFileNotFoundModifiedTime(): void
+	{
+		$file = new File("/non-existent-file.txt");
+
+		$this->expectException(FileNotFoundException::class);
+
+		$file->getModifiedTime();
+	}
+
+	public function testFileNotFoundSize(): void
+	{
+		$file = new File("/non-existent-file.txt");
+
+		$this->expectException(FileNotFoundException::class);
+
+		$file->getSize();
+	}
+
+	public function testFileNotFoundHash(): void
+	{
+		$file = new File("/non-existent-file.txt");
+
+		$this->expectException(FileNotFoundException::class);
+
+		$file->getHash();
 	}
 
 	public function testGetPath(): void
@@ -105,5 +131,23 @@ class FileTest extends TestCase
 	{
 		$file = new File('/tmp/test.txt');
 		self::assertEquals('test.txt', $file->getName());
+	}
+
+	public function testIsExecutable(): void
+	{
+		$file = new File($this->filePath);
+		self::assertFalse($file->isExecutable());
+	}
+
+	public function testMoveTo(): void
+	{
+		$oldName = tempnam(sys_get_temp_dir(), 'test');
+		$newName = $oldName . '.new';
+
+		$file = new File($oldName);
+		$success = $file->moveTo($newName);
+
+		self::assertTrue($success);
+		self::assertFileExists($newName);
 	}
 }

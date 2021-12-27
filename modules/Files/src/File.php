@@ -7,6 +7,7 @@ use DateTime;
 use Elephox\Support\Contract\MimeType;
 use Exception;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 
 class File implements Contract\File
 {
@@ -31,8 +32,12 @@ class File implements Contract\File
 		return pathinfo($this->path, PATHINFO_EXTENSION);
 	}
 
-	#[Pure] public function getSize(): int
+	public function getSize(): int
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
 		return filesize($this->path);
 	}
 
@@ -43,15 +48,23 @@ class File implements Contract\File
 
 	public function getModifiedTime(): DateTime
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
 		try {
 			return new DateTime('@' . filemtime($this->path));
 		} catch (Exception $e) {
-			throw new UnreadableModifiedTimeException($this->path, previous: $e);
+			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}
 	}
 
-	#[Pure] public function getHash(): string|int
+	public function getHash(): string|int
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
 		return md5_file($this->path);
 	}
 
@@ -64,8 +77,9 @@ class File implements Contract\File
 		return new Directory(dirname($this->path, $levels));
 	}
 
-	 public function isReadable(): bool
+	#[Pure] public function isReadable(): bool
 	{
+		/** @psalm-suppress ImpureFunctionCall */
 		return is_readable($this->path);
 	}
 
@@ -88,8 +102,9 @@ class File implements Contract\File
 		return rename($this->path, $path);
 	}
 
-	public function exists(): bool
+	#[Pure] public function exists(): bool
 	{
+		/** @psalm-suppress ImpureFunctionCall */
 		return file_exists($this->path);
 	}
 }

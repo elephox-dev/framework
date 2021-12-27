@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
+use JetBrains\PhpStorm\Pure;
+
 class Path
 {
-	public static function join(string... $args): string
+	#[Pure] public static function join(string... $args): string
 	{
 		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
 		$path = implode(DIRECTORY_SEPARATOR, $parts);

@@ -18,4 +18,6 @@ interface FilesystemNode
 	 * @return Directory
 	 */
 	public function getParent(int $levels = 1): Directory;
+
+	public function exists(): bool;
 }

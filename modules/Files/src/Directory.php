@@ -8,6 +8,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Files\Contract\FilesystemNode;
 use Exception;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 
 class Directory implements Contract\Directory
 {
@@ -35,6 +36,10 @@ class Directory implements Contract\Directory
 
 	public function getChildren(): ArrayList
 	{
+		if (!$this->exists()) {
+			throw new DirectoryNotFoundException($this->path);
+		}
+
 		/** @var list<string> $nodes */
 		$nodes = scandir($this->path);
 
@@ -51,7 +56,7 @@ class Directory implements Contract\Directory
 			});
 	}
 
-	public function isRoot(): bool
+	#[Pure] public function isRoot(): bool
 	{
 		return $this->path === '\\' ||
 			$this->path === '/' ||
@@ -74,7 +79,7 @@ class Directory implements Contract\Directory
 		return basename($this->path);
 	}
 
-	public function getParent(int $levels = 1): Contract\Directory
+	public function getParent(int $levels = 1): Directory
 	{
 		if ($levels < 1) {
 			throw new InvalidParentLevelException($levels);
@@ -85,52 +90,66 @@ class Directory implements Contract\Directory
 
 	public function getModifiedTime(): DateTime
 	{
+		if (!$this->exists()) {
+			throw new DirectoryNotFoundException($this->path);
+		}
+
 		try {
 			return new DateTime('@' . filemtime($this->path));
 		} catch (Exception $e) {
-			throw new UnreadableModifiedTimeException($this->path, previous: $e);
+			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}
 	}
 
-	public function getFile(string $filename): ?File
+	public function getFile(string $filename): File
 	{
 		$path = Path::join($this->path, $filename);
 
+		/** @psalm-suppress ImpureFunctionCall */
 		if (!file_exists($path)) {
-			return null;
+			throw new FileNotFoundException($path);
 		}
 
 		return new File($path);
 	}
 
-	public function getDirectory(string $dirname): ?Directory
+	public function getDirectory(string $dirname): Directory
 	{
 		$path = Path::join($this->path, $dirname);
 
+		/** @psalm-suppress ImpureFunctionCall */
 		if (!is_dir($path)) {
-			return null;
+			throw new DirectoryNotFoundException($path);
 		}
 
 		return new Directory($path);
 	}
 
-	public function getChild(string $name): ?FilesystemNode
+	public function getChild(string $name): FilesystemNode
 	{
 		$path = Path::join($this->path, $name);
 
+		/** @psalm-suppress ImpureFunctionCall */
 		if (is_dir($path)) {
 			return new Directory($path);
 		}
 
+		/** @psalm-suppress ImpureFunctionCall */
 		if (file_exists($path)) {
 			return new File($path);
 		}
 
-		return null;
+		throw new FileNotFoundException($path);
 	}
 
-	public function isReadonly(): bool
+	#[Pure] public function isReadonly(): bool
 	{
 		return !is_writable($this->path);
+	}
+
+	#[Pure] public function exists(): bool
+	{
+		/** @psalm-suppress ImpureFunctionCall */
+		return is_dir($this->path);
 	}
 }
