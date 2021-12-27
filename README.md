@@ -24,10 +24,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Split existing PSR implementations into different third-party adapters
-- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
-- [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-15) adapter for HTTP
-- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
 - [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Caching Services
@@ -48,6 +44,10 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] New documentation solution
 - [ ] Improve integration of PHPStorm attributes
+- [ ] Split existing PSR implementations into different third-party adapters
+- [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
+- [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-17) adapter for HTTP
+- [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
 
 ### ☑️ Done
 
