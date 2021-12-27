@@ -82,7 +82,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		self::assertFalse($stream->isWritable());
+		self::assertFalse($stream->isWriteable());
 	}
 
 	public function testWrite(): void

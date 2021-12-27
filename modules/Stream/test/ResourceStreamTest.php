@@ -8,25 +8,44 @@ use Elephox\Files\Contract\File;
 use InvalidArgumentException;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as M;
+use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\File
  * @covers \Elephox\Files\Directory
  * @covers \Elephox\Stream\UnreadableFileException
- * @covers \Elephox\Stream\UnwritableFileException
+ * @covers \Elephox\Stream\ReadOnlyFileException
  * @covers \Elephox\Stream\ReadonlyParentException
  */
 class ResourceStreamTest extends MockeryTestCase
 {
+	private string $tmpName;
+
+	public function setUp(): void
+	{
+		$this->tmpName = tempnam(sys_get_temp_dir(), 'elephox-text-');
+	}
+
+	public function testConstructor(): void
+	{
+		$fh = fopen($this->tmpName, 'rb');
+		$stream = new ResourceStream($fh);
+
+		self::assertTrue($stream->isReadable());
+		self::assertTrue($stream->isSeekable());
+		self::assertFalse($stream->isWriteable());
+		self::assertEquals(0, $stream->getSize());
+	}
+
 	public function testFromFile(): void
 	{
-		$stream = ResourceStream::fromFile(__FILE__);
+		$stream = ResourceStream::fromFile($this->tmpName);
 
 		self::assertInstanceOf(ResourceStream::class, $stream);
 		self::assertTrue($stream->isReadable());
 		self::assertTrue($stream->isSeekable());
-		self::assertFalse($stream->isWritable());
+		self::assertFalse($stream->isWriteable());
 
 		$stream->close();
 	}
@@ -35,42 +54,42 @@ class ResourceStreamTest extends MockeryTestCase
 	public function invalidFopenFlagsProvider(): iterable
 	{
 		$readable = true;
-		$writable = true;
+		$writeable = true;
 		$create = true;
 		$append = true;
 		$truncate = true;
 
 		// append & truncate cannot both be true
-		yield [ $readable,  $writable,  $create,  $append,  $truncate];
-		yield [!$readable,  $writable,  $create,  $append,  $truncate];
-		yield [ $readable, !$writable,  $create,  $append,  $truncate];
-		yield [!$readable, !$writable,  $create,  $append,  $truncate];
-		yield [ $readable,  $writable, !$create,  $append,  $truncate];
-		yield [!$readable,  $writable, !$create,  $append,  $truncate];
-		yield [ $readable, !$writable, !$create,  $append,  $truncate];
-		yield [!$readable, !$writable, !$create,  $append,  $truncate];
+		yield [ $readable,  $writeable,  $create,  $append,  $truncate];
+		yield [!$readable,  $writeable,  $create,  $append,  $truncate];
+		yield [ $readable, !$writeable,  $create,  $append,  $truncate];
+		yield [!$readable, !$writeable,  $create,  $append,  $truncate];
+		yield [ $readable,  $writeable, !$create,  $append,  $truncate];
+		yield [!$readable,  $writeable, !$create,  $append,  $truncate];
+		yield [ $readable, !$writeable, !$create,  $append,  $truncate];
+		yield [!$readable, !$writeable, !$create,  $append,  $truncate];
 
 		// if truncate is true, writeable and create must be true
-		yield [ $readable,  $writable,  !$create, !$append, $truncate];
-		yield [ $readable, !$writable,   $create, !$append, $truncate];
-		yield [ $readable, !$writable,  !$create, !$append, $truncate];
-		yield [!$readable,  $writable,  !$create, !$append, $truncate];
-		yield [!$readable, !$writable,   $create, !$append, $truncate];
-		yield [!$readable, !$writable,  !$create, !$append, $truncate];
+		yield [ $readable,  $writeable,  !$create, !$append, $truncate];
+		yield [ $readable, !$writeable,   $create, !$append, $truncate];
+		yield [ $readable, !$writeable,  !$create, !$append, $truncate];
+		yield [!$readable,  $writeable,  !$create, !$append, $truncate];
+		yield [!$readable, !$writeable,   $create, !$append, $truncate];
+		yield [!$readable, !$writeable,  !$create, !$append, $truncate];
 
 		// if append is true, writeable and create must be true
-		yield [ $readable,  $writable,  !$create,  $append, !$truncate];
-		yield [ $readable, !$writable,   $create,  $append, !$truncate];
-		yield [ $readable, !$writable,  !$create,  $append, !$truncate];
-		yield [!$readable,  $writable,  !$create,  $append, !$truncate];
-		yield [!$readable, !$writable,   $create,  $append, !$truncate];
-		yield [!$readable, !$writable,  !$create,  $append, !$truncate];
+		yield [ $readable,  $writeable,  !$create,  $append, !$truncate];
+		yield [ $readable, !$writeable,   $create,  $append, !$truncate];
+		yield [ $readable, !$writeable,  !$create,  $append, !$truncate];
+		yield [!$readable,  $writeable,  !$create,  $append, !$truncate];
+		yield [!$readable, !$writeable,   $create,  $append, !$truncate];
+		yield [!$readable, !$writeable,  !$create,  $append, !$truncate];
 
 		// if writable is false, create, append and truncate must be false
-		yield [ $readable, !$writable,  $create, !$append,  $truncate];
-		yield [ $readable, !$writable, !$create, !$append,  $truncate];
-		yield [ $readable, !$writable, !$create,  $append, !$truncate];
-		yield [ $readable, !$writable,  $create, !$append, !$truncate];
+		yield [ $readable, !$writeable,  $create, !$append,  $truncate];
+		yield [ $readable, !$writeable, !$create, !$append,  $truncate];
+		yield [ $readable, !$writeable, !$create,  $append, !$truncate];
+		yield [ $readable, !$writeable,  $create, !$append, !$truncate];
 	}
 
 	/**
@@ -79,8 +98,9 @@ class ResourceStreamTest extends MockeryTestCase
 	public function testInvalidFopenFlags(bool $read, bool $write, bool $create, bool $append, bool $truncate): void
 	{
 		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid combination of flags: readable=' . ($read ?: '0') . ', writeable=' . ($write ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0'));
 
-		ResourceStream::fromFile(__FILE__, $read, $write, $create, $append, $truncate);
+		ResourceStream::fromFile($this->tmpName, $read, $write, $create, $append, $truncate);
 	}
 
 	public function testNonReadableFile(): void
@@ -126,7 +146,7 @@ class ResourceStreamTest extends MockeryTestCase
 			->andReturn('/path/to/file')
 		;
 
-		$this->expectException(UnwritableFileException::class);
+		$this->expectException(ReadOnlyFileException::class);
 
 		ResourceStream::fromFile($fileMock, writeable: true);
 	}
@@ -153,7 +173,7 @@ class ResourceStreamTest extends MockeryTestCase
 			->andReturn('/path/to/file')
 		;
 
-		$this->expectException(UnwritableFileException::class);
+		$this->expectException(ReadOnlyFileException::class);
 
 		ResourceStream::fromFile($fileMock, append: true);
 	}
@@ -205,5 +225,54 @@ class ResourceStreamTest extends MockeryTestCase
 		new ResourceStream(null);
 	}
 
-	// TODO: add tests for reading/writing to temporary files via ResourceStream
+	public function testGetSizeFromFstat(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, writeable: true);
+
+		self::assertEquals(0, $stream->getSize());
+
+		$stream->read(1);
+
+		self::assertEquals(0, $stream->getSize());
+
+		$stream->write('a');
+
+		self::assertEquals(1, $stream->getSize());
+	}
+
+	public function testGetInvalidSizeFromFstat(): void
+	{
+		$fh = fopen('php://output', 'rb');
+		$stream = new ResourceStream($fh);
+
+		self::assertNull($stream->getSize());
+	}
+
+	public function testReadFromInvalidStream(): void
+	{
+		$fh = fopen('php://output', 'rb');
+		$stream = new ResourceStream($fh);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage("Unable to read from stream");
+
+		$stream->read(1);
+	}
+
+	public function testStreamGetsDetachedOnceClosed(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		self::assertIsResource($stream->getResource());
+
+		$stream->close();
+
+		self::assertIsNotResource($stream->getResource());
+		self::assertNull($stream->detach());
+
+		$stream->close();
+		self::assertNull($stream->detach());
+	}
 }

@@ -14,13 +14,13 @@ class LazyStream implements Stream
 	/**
 	 * @param Closure(): Stream $closure
 	 * @param bool $readable
-	 * @param bool $writable
+	 * @param bool $writeable
 	 * @param bool $seekable
 	 */
 	public function __construct(
 		protected Closure $closure,
 		protected bool    $readable = true,
-		protected bool    $writable = true,
+		protected bool    $writeable = false,
 		protected bool    $seekable = true
 	) {
 	}
@@ -39,9 +39,9 @@ class LazyStream implements Stream
 		return $this->stream?->isSeekable() ?? $this->seekable;
 	}
 
-	#[Pure] public function isWritable(): bool
+	#[Pure] public function isWriteable(): bool
 	{
-		return $this->stream?->isWritable() ?? $this->writable;
+		return $this->stream?->isWriteable() ?? $this->writeable;
 	}
 
 	#[Pure] public function isReadable(): bool

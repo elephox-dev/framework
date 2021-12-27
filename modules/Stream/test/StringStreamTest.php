@@ -18,7 +18,7 @@ class StringStreamTest extends TestCase
 		self::assertEquals('foo', $stream->getContents());
 		self::assertTrue($stream->isReadable());
 		self::assertTrue($stream->isSeekable());
-		self::assertFalse($stream->isWritable());
+		self::assertFalse($stream->isWriteable());
 	}
 
 	public function testToString(): void
@@ -128,6 +128,7 @@ class StringStreamTest extends TestCase
 		$stream = new StringStream('foo');
 
 		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid whence: 3');
 
 		$stream->seek(1, 3);
 	}
@@ -145,7 +146,7 @@ class StringStreamTest extends TestCase
 
 	public function testWrite(): void
 	{
-		$stream = new StringStream('foo', writable: true);
+		$stream = new StringStream('foo', writeable: true);
 
 		$stream->write('bar');
 

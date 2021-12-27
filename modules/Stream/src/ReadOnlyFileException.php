@@ -7,7 +7,7 @@ use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 use Throwable;
 
-class UnwritableFileException extends RuntimeException
+class ReadOnlyFileException extends RuntimeException
 {
 	#[Pure] public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{

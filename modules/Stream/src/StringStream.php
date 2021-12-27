@@ -18,9 +18,9 @@ class StringStream implements Stream
 
 	#[Pure] public function __construct(
 		private string $string,
-		private bool $seekable = true,
-		private bool $writable = false,
-		private bool $readable = true
+		private bool   $seekable = true,
+		private bool   $writeable = false,
+		private bool   $readable = true
 	) {
 	}
 
@@ -85,14 +85,14 @@ class StringStream implements Stream
 		$this->seek(0);
 	}
 
-	#[Pure] public function isWritable(): bool
+	#[Pure] public function isWriteable(): bool
 	{
-		return $this->writable;
+		return $this->writeable;
 	}
 
 	public function write(string $string): int
 	{
-		if (!$this->isWritable()) {
+		if (!$this->isWriteable()) {
 			throw new RuntimeException('Stream is not writable');
 		}
 

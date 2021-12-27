@@ -66,9 +66,9 @@ class AppendStream implements Stream
 		$this->getStream()->rewind();
 	}
 
-	#[Pure] public function isWritable(): bool
+	#[Pure] public function isWriteable(): bool
 	{
-		return $this->stream->isWritable();
+		return $this->stream->isWriteable();
 	}
 
 	public function write(string $string): int

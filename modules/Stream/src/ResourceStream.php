@@ -23,7 +23,7 @@ class ResourceStream implements Stream
 		}
 
 		if (($writeable || $append) && !$file->isWritable()) {
-			throw new UnwritableFileException($file->getPath());
+			throw new ReadOnlyFileException($file->getPath());
 		}
 
 		if ($create && $file->getParent()->isReadonly()) {
@@ -48,14 +48,14 @@ class ResourceStream implements Stream
 	/**
 	 * @param closed-resource|resource|null $resource
 	 * @param bool $readable
-	 * @param bool $writable
+	 * @param bool $writeable
 	 * @param bool $seekable
 	 * @param null|positive-int|0 $size
 	 */
 	public function __construct(
-		protected $resource,
+		protected      $resource,
 		protected bool $readable = true,
-		protected bool $writable = true,
+		protected bool $writeable = false,
 		protected bool $seekable = true,
 		protected ?int $size = null
 	)
@@ -78,15 +78,23 @@ class ResourceStream implements Stream
 		return $this->getContents();
 	}
 
+	/**
+	 * @return resource|closed-resource|null
+	 */
+	public function getResource()
+	{
+		return $this->resource;
+	}
+
 	public function detach()
 	{
-		if (!is_resource($this->resource)) {
+		if (!isset($this->resource)) {
 			return null;
 		}
 
 		$resource = $this->resource;
 
-		unset($this->resource);
+		$this->resource = null;
 
 		return $resource;
 	}
@@ -113,7 +121,7 @@ class ResourceStream implements Stream
 		}
 
 		$stats = fstat($this->resource);
-		if (is_array($stats) && isset($stats['size'])) {
+		if (is_array($stats)) {
 			/** @var positive-int|0 */
 			$this->size = $stats['size'];
 		}
@@ -171,9 +179,9 @@ class ResourceStream implements Stream
 		$this->seek(0);
 	}
 
-	#[Pure] public function isWritable(): bool
+	#[Pure] public function isWriteable(): bool
 	{
-		return $this->writable;
+		return $this->writeable;
 	}
 
 	public function write(string $string): int
@@ -182,7 +190,7 @@ class ResourceStream implements Stream
 			throw new RuntimeException('Resource is not available');
 		}
 
-		if (!$this->writable) {
+		if (!$this->writeable) {
 			throw new RuntimeException('Cannot write to a non-writable resource');
 		}
 

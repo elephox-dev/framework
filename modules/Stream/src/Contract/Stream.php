@@ -38,7 +38,7 @@ interface Stream extends Stringable
 
 	public function rewind(): void;
 
-	#[Pure] public function isWritable(): bool;
+	#[Pure] public function isWriteable(): bool;
 
 	/**
 	 * @return positive-int|0
