@@ -75,6 +75,13 @@ class UrlTest extends TestCase
 		self::assertSame('https://localhost/test', (string)$uri);
 	}
 
+	public function testWithNullUrlScheme(): void
+	{
+		$uri = Url::fromString('https://localhost/test');
+		$uri = $uri->withScheme(null);
+		self::assertSame('//localhost/test', (string)$uri);
+	}
+
 	public function testWithUsername(): void
 	{
 		$uri = Url::fromString('https://localhost/test');
