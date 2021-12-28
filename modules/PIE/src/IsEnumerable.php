@@ -434,24 +434,22 @@ trait IsEnumerable
 
 		$keys = [];
 		$elements = [];
-		$elementKeys = [];
 
 		foreach ($this->getIterator() as $elementKey => $element) {
 			$key = $keySelector($element, $elementKey);
 
 			$keys[] = $key;
 			$elements[] = $element;
-			$elementKeys[] = $elementKey;
 		}
 
 		$originalKeys = $keys;
 		usort($keys, $comparer);
 
-		return new OrderedEnumerable(function () use ($keys, $elements, $elementKeys, $originalKeys) {
+		return new OrderedEnumerable(function () use ($keys, $elements, $originalKeys) {
 			foreach ($keys as $key) {
 				$originalIndex = array_search($key, $originalKeys, true);
 
-				yield $elementKeys[$originalIndex] => $elements[$originalIndex];
+				yield $elements[$originalIndex];
 			}
 		});
 	}
