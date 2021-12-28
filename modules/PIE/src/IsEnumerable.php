@@ -9,8 +9,6 @@ use JetBrains\PhpStorm\Pure;
 /**
  * @template TSource
  * @template TIteratorKey
- *
- * @psalm-require-implements GenericEnumerable<TSource, TIteratorKey>
  */
 trait IsEnumerable
 {
@@ -19,7 +17,7 @@ trait IsEnumerable
 	 */
 	abstract public function getIterator(): GenericIterator;
 
-	#[Pure] public function aggregate(callable $accumulator, mixed $seed = null, callable $resultSelector = null): mixed
+	public function aggregate(callable $accumulator, mixed $seed = null, callable $resultSelector = null): mixed
 	{
 		$result = $seed;
 
@@ -30,7 +28,7 @@ trait IsEnumerable
 		return $resultSelector ? $resultSelector($result) : $result;
 	}
 
-	#[Pure] public function all(callable $predicate): bool
+	public function all(callable $predicate): bool
 	{
 		foreach ($this->getIterator() as $element) {
 			if (!$predicate($element)) {
@@ -41,7 +39,7 @@ trait IsEnumerable
 		return true;
 	}
 
-	#[Pure] public function any(callable $predicate = null): bool
+	public function any(callable $predicate = null): bool
 	{
 		foreach ($this->getIterator() as $key => $element) {
 			if ($predicate === null || $predicate($element, $key)) {
@@ -57,7 +55,7 @@ trait IsEnumerable
 		return new Enumerable(new AppendIterator($this->getIterator(), new SingleElementIterator($value)));
 	}
 
-	#[Pure] public function average(callable $selector): int|float
+	public function average(callable $selector): int|float
 	{
 		$sum = null;
 		$count = 0;
@@ -112,7 +110,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function contains(mixed $value, ?callable $comparer = null): bool
+	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -125,7 +123,7 @@ trait IsEnumerable
 		return false;
 	}
 
-	#[Pure] public function count(callable $predicate = null): int
+	public function count(callable $predicate = null): int
 	{
 		$count = 0;
 
@@ -152,7 +150,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function distinct(?callable $comparer = null): GenericEnumerable
+	public function distinct(?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -173,7 +171,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -196,7 +194,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function elementAt(int $index): mixed
+	public function elementAt(int $index): mixed
 	{
 		$enumerator = $this->getIterator();
 
@@ -211,7 +209,10 @@ trait IsEnumerable
 		throw new InvalidArgumentException('Index out of range');
 	}
 
-	#[Pure] public function elementAtOrDefault(int $index, mixed $defaultValue): mixed
+	/**
+	 * @noinspection PhpPureAttributeCanBeAddedInspection
+	 */
+	public function elementAtOrDefault(int $index, mixed $defaultValue): mixed
 	{
 		$enumerator = $this->getIterator();
 
@@ -226,7 +227,7 @@ trait IsEnumerable
 		return $defaultValue;
 	}
 
-	#[Pure] public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -244,7 +245,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -268,7 +269,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function first(?callable $predicate = null): mixed
+	public function first(?callable $predicate = null): mixed
 	{
 		foreach ($this->getIterator() as $element) {
 			if ($predicate === null || $predicate($element)) {
@@ -279,7 +280,7 @@ trait IsEnumerable
 		throw new InvalidArgumentException('Sequence contains no matching element');
 	}
 
-	#[Pure] public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
+	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
 		foreach ($this->getIterator() as $element) {
 			if ($predicate === null || $predicate($element)) {
@@ -290,21 +291,21 @@ trait IsEnumerable
 		return $defaultValue;
 	}
 
-//	#[Pure] public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable
+//	public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable
 //	{
 //		$comparer ??= DefaultEqualityComparer::same(...);
 //
 //		// TODO: Implement groupBy() method.
 //	}
 //
-//	#[Pure] public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
+//	public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
 //	{
 //		$comparer ??= DefaultEqualityComparer::same(...);
 //
 //		// TODO: Implement groupJoin() method.
 //	}
 
-	#[Pure] public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -322,7 +323,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -346,7 +347,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
+	public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -372,7 +373,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function last(?callable $predicate = null): mixed
+	public function last(?callable $predicate = null): mixed
 	{
 		$last = null;
 		foreach ($this->getIterator() as $element) {
@@ -388,7 +389,7 @@ trait IsEnumerable
 		return $last;
 	}
 
-	#[Pure] public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed
+	public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
 		$last = null;
 		foreach ($this->getIterator() as $element) {
@@ -400,7 +401,7 @@ trait IsEnumerable
 		return $last ?? $default;
 	}
 
-	#[Pure] public function max(callable $selector): int|float
+	public function max(callable $selector): int|float
 	{
 		$max = null;
 		foreach ($this->getIterator() as $element) {
@@ -414,7 +415,7 @@ trait IsEnumerable
 		return $max;
 	}
 
-	#[Pure] public function min(callable $selector): int|float
+	public function min(callable $selector): int|float
 	{
 		$min = null;
 		foreach ($this->getIterator() as $element) {
@@ -428,7 +429,7 @@ trait IsEnumerable
 		return $min;
 	}
 
-	#[Pure] public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
+	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
@@ -454,7 +455,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
+	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
@@ -497,7 +498,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable
+	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable
 	{
 		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
 			foreach ($this->getIterator() as $elementKey => $element) {
@@ -508,7 +509,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool
+	public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 		$others = $other->toList();
@@ -524,7 +525,7 @@ trait IsEnumerable
 		return true;
 	}
 
-	#[Pure] public function single(?callable $predicate = null): mixed
+	public function single(?callable $predicate = null): mixed
 	{
 		$matched = false;
 		$returnElement = null;
@@ -547,7 +548,7 @@ trait IsEnumerable
 		return $returnElement;
 	}
 
-	#[Pure] public function singleOrDefault(mixed $default, ?callable $predicate = null): mixed
+	public function singleOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
 		$matched = false;
 		$returnElement = null;
@@ -611,7 +612,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function skipWhile(callable $predicate): GenericEnumerable
+	public function skipWhile(callable $predicate): GenericEnumerable
 	{
 		return new Enumerable(function () use ($predicate) {
 			$iterator = $this->getIterator();
@@ -631,7 +632,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function sum(callable $selector): int|float
+	public function sum(callable $selector): int|float
 	{
 		$sum = null;
 
@@ -656,7 +657,7 @@ trait IsEnumerable
 	 *
 	 * @return array{int|float, int}
 	 */
-	#[Pure] protected function sumAndCount(callable $selector): array
+	protected function sumAndCount(callable $selector): array
 	{
 		$sum = null;
 		$count = 0;
@@ -712,7 +713,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function takeWhile(callable $predicate): GenericEnumerable
+	public function takeWhile(callable $predicate): GenericEnumerable
 	{
 		return new Enumerable(function () use ($predicate) {
 			$iterator = $this->getIterator();
@@ -728,24 +729,24 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function toList(): array
+	public function toList(): array
 	{
 		return iterator_to_array($this->getIterator(), false);
 	}
 
-	#[Pure] public function toArray(): array
+	public function toArray(): array
 	{
 		return iterator_to_array($this->getIterator());
 	}
 
-	#[Pure] public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
 		return $this->unionBy($other, static fn (mixed $o) => $o, $comparer);
 	}
 
-	#[Pure] public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
@@ -781,7 +782,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function where(callable $predicate): GenericEnumerable
+	public function where(callable $predicate): GenericEnumerable
 	{
 		return new Enumerable(function () use ($predicate) {
 			foreach ($this->getIterator() as $element) {
@@ -792,7 +793,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
+	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
 	{
 		$resultSelector ??= static fn (mixed $a, mixed $b) => [$a, $b];
 

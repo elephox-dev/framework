@@ -30,7 +30,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TAccumulate
 	 */
-	#[Pure]
 	public function aggregate(callable $accumulator, mixed $seed = null, callable $resultSelector = null): mixed;
 
 	/**
@@ -38,7 +37,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return bool
 	 */
-	#[Pure]
 	public function all(callable $predicate): bool;
 
 	/**
@@ -46,7 +44,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return bool
 	 */
-	#[Pure]
 	public function any(callable $predicate = null): bool;
 
 	/**
@@ -62,7 +59,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return int|float
 	 */
-	#[Pure]
 	public function average(callable $selector): int|float;
 
 	/**
@@ -87,7 +83,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return bool
 	 */
-	#[Pure]
 	public function contains(mixed $value, ?callable $comparer = null): bool;
 
 	/**
@@ -95,7 +90,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return int
 	 */
-	#[Pure]
 	public function count(callable $predicate = null): int;
 
 	/**
@@ -111,7 +105,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function distinct(?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -122,7 +115,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -130,7 +122,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function elementAt(int $index): mixed;
 
 	/**
@@ -139,7 +130,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function elementAtOrDefault(int $index, mixed $defaultValue): mixed;
 
 	/**
@@ -148,7 +138,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -160,7 +149,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -168,7 +156,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function first(?callable $predicate = null): mixed;
 
 	/**
@@ -177,7 +164,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 
 //	/**
@@ -218,7 +204,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -230,7 +215,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -247,14 +231,12 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
 	 * @param null|callable(TSource): bool $predicate
 	 * @return TSource
 	 */
-	#[Pure]
 	public function last(?callable $predicate = null): mixed;
 
 	/**
@@ -263,7 +245,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed;
 
 	/**
@@ -271,7 +252,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return int|float
 	 */
-	#[Pure]
 	public function max(callable $selector): int|float;
 
 	/**
@@ -279,7 +259,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return int|float
 	 */
-	#[Pure]
 	public function min(callable $selector): int|float;
 
 	/**
@@ -290,7 +269,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
 	/**
@@ -301,7 +279,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
 	/**
@@ -336,7 +313,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TResult, TIteratorKey>
 	 */
-	#[Pure]
 	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable;
 
 	/**
@@ -345,7 +321,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return bool
 	 */
-	#[Pure]
 	public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool;
 
 	/**
@@ -353,7 +328,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function single(?callable $predicate = null): mixed;
 
 	/**
@@ -362,7 +336,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TSource
 	 */
-	#[Pure]
 	public function singleOrDefault(mixed $default, ?callable $predicate = null): mixed;
 
 	/**
@@ -386,7 +359,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function skipWhile(callable $predicate): GenericEnumerable;
 
 	/**
@@ -394,7 +366,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return int|float
 	 */
-	#[Pure]
 	public function sum(callable $selector): int|float;
 
 	/**
@@ -418,19 +389,16 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function takeWhile(callable $predicate): GenericEnumerable;
 
 	/**
 	 * @return list<TSource>
 	 */
-	#[Pure]
 	public function toList(): array;
 
 	/**
 	 * @return array<TIteratorKey, TSource>
 	 */
-	#[Pure]
 	public function toArray(): array;
 
 	/**
@@ -439,7 +407,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -451,7 +418,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
@@ -459,7 +425,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function where(callable $predicate): GenericEnumerable;
 
 	/**
@@ -472,6 +437,5 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TResult, TIteratorKey>
 	 */
-	#[Pure]
 	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable;
 }
