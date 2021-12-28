@@ -16,12 +16,13 @@ declare(strict_types=1);
 
 use Elephox\PIE\PIE;
 
-$array = [1, 2, 3, 4, 5];
+$array = [5, 2, 1, 4, 3];
 $pie = PIE::from($array);
 
-$pie->select(function (int $item) {
-    echo $item;
-});
+$pie->orderBy(fn (int $item) => $item)
+    ->select(function (int $item) {
+      echo $item;
+    });
 
 // output: 12345
 
