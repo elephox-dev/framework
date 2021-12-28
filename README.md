@@ -25,6 +25,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 ### 🔳 Open
 
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
+- [ ] Integrate PIE into Collections
 - [ ] Caching Services
 - [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
 - [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) adapter for Caching Services
@@ -34,22 +35,20 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Entity Mapping for Database Adapter
 - [ ] Templating Adapter
 - [ ] Twig Adapter Implementation
-- [ ] Maybe: Query Builder for Database Adapter
-- [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
-- [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
 - [ ] Publish PHPUnit HTML coverage report
 - [ ] Publish/compare benchmark report against baseline
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] New documentation solution
 - [ ] Improve integration of PHPStorm attributes
-- [ ] Split existing PSR implementations into different third-party adapters
 - [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
 - [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-17) adapter for HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
 - [ ] Add a formatter (PHP CS Fixer)
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
-- [ ] Integrate PIE into Collections
+- [ ] Maybe: Query Builder for Database Adapter
+- [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
+- [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
 
 ### ☑️ Done
 
@@ -65,6 +64,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~Logging Services~~
 - [x] ~~Create a makefile with useful shortcuts~~ (Created composer.json scripts instead)
 - [x] ~~Event Bus~~
+- [x] ~~Split existing PSR implementations into different third-party adapters~~
 
 <!-- start annotations -->
 
