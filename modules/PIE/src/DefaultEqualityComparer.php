@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 final class DefaultEqualityComparer
@@ -50,5 +51,42 @@ final class DefaultEqualityComparer
 	#[Pure] public static function comparableEquals(Comparable $a, object $b): bool
 	{
 		return $a->compareTo($b) === 0;
+	}
+
+	#[Pure] public static function compare(mixed $a, mixed $b): int
+	{
+		if (is_object($a) && is_object($b)) {
+			if ($a instanceof Comparable) {
+				return $a->compareTo($b);
+			}
+
+			if ($b instanceof Comparable) {
+				return $b->compareTo($a);
+			}
+		}
+
+		return $a <=> $b;
+	}
+
+	/**
+	 * @param callable(mixed, mixed): mixed $comparer
+	 * @return callable(mixed, mixed): mixed
+	 */
+	#[Pure] public static function invert(callable $comparer): callable
+	{
+		return static function (mixed $a, mixed $b) use ($comparer) {
+			/** @var bool|numeric $result */
+			$result = $comparer($a, $b);
+
+			if (is_bool($result)) {
+				return !$result;
+			}
+
+			if (is_numeric($result)) {
+				return -$result;
+			}
+
+			throw new InvalidArgumentException('Comparer must return a boolean or numeric value');
+		};
 	}
 }

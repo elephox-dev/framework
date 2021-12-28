@@ -180,37 +180,37 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	#[Pure]
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 
-	/**
-	 * @template TKey
-	 * @template TElement
-	 * @template TResult
-	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TSource, TIteratorKey): TElement $elementSelector
-	 * @param null|callable(TKey, GenericEnumerable<TElement, TIteratorKey>): TResult $resultSelector
-	 * @param null|callable(TKey, TKey): bool $comparer
-	 *
-	 * @return GenericEnumerable<GenericGrouping<TKey, TElement>, TIteratorKey>
-	 */
-	#[Pure]
-	public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable;
-
-	/**
-	 * @template TInner
-	 * @template TInnerIteratorKey
-	 * @template TKey
-	 * @template TResult
-	 *
-	 * @param GenericEnumerable<TInner, TInnerIteratorKey> $inner
-	 * @param callable(TSource): TKey $outerKeySelector
-	 * @param callable(TInner): TKey $innerKeySelector
-	 * @param callable(TSource, GenericEnumerable<TInner, TInnerIteratorKey>): TResult $resultSelector
-	 * @param null|callable(TSource, TSource): bool $comparer
-	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
-	 */
-	#[Pure]
-	public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable;
+//	/**
+//	 * @template TKey
+//	 * @template TElement
+//	 * @template TResult
+//	 *
+//	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+//	 * @param null|callable(TSource, TIteratorKey): TElement $elementSelector
+//	 * @param null|callable(TKey, GenericEnumerable<TElement, TIteratorKey>): TResult $resultSelector
+//	 * @param null|callable(TKey, TKey): bool $comparer
+//	 *
+//	 * @return GenericEnumerable<GenericGrouping<TKey, TElement>, TIteratorKey>
+//	 */
+//	#[Pure]
+//	public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable;
+//
+//	/**
+//	 * @template TInner
+//	 * @template TInnerIteratorKey
+//	 * @template TKey
+//	 * @template TResult
+//	 *
+//	 * @param GenericEnumerable<TInner, TInnerIteratorKey> $inner
+//	 * @param callable(TSource): TKey $outerKeySelector
+//	 * @param callable(TInner): TKey $innerKeySelector
+//	 * @param callable(TSource, GenericEnumerable<TInner, TInnerIteratorKey>): TResult $resultSelector
+//	 * @param null|callable(TSource, TSource): bool $comparer
+//	 *
+//	 * @return GenericEnumerable<TSource, TIteratorKey>
+//	 */
+//	#[Pure]
+//	public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
@@ -283,20 +283,10 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function min(callable $selector): int|float;
 
 	/**
-	 * @template TResult
-	 *
-	 * @param class-string<TResult> $type
-	 *
-	 * @return GenericEnumerable<TResult, TIteratorKey>
-	 */
-	#[Pure]
-	public function ofType(string $type): GenericEnumerable;
-
-	/**
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
@@ -307,7 +297,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
@@ -331,7 +321,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @template TResult
 	 *
-	 * @param callable(TSource, int): TResult $selector
+	 * @param callable(TSource, TIteratorKey): TResult $selector
 	 *
 	 * @return GenericEnumerable<TResult, TIteratorKey>
 	 */
@@ -341,7 +331,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TCollection
 	 * @template TResult
 	 *
-	 * @param callable(TSource, int): GenericEnumerable<TCollection, TIteratorKey> $collectionSelector
+	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TIteratorKey> $collectionSelector
 	 * @param callable(TSource, TCollection): TResult $resultSelector
 	 *
 	 * @return GenericEnumerable<TResult, TIteratorKey>
@@ -392,7 +382,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function skipLast(int $count): GenericEnumerable;
 
 	/**
-	 * @param callable(TSource, int): bool $predicate
+	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
@@ -424,7 +414,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function takeLast(int $count): GenericEnumerable;
 
 	/**
-	 * @param callable(TSource, int): bool $predicate
+	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
@@ -445,7 +435,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 
 	/**
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
@@ -473,15 +463,15 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function where(callable $predicate): GenericEnumerable;
 
 	/**
-	 * @template TSecond
-	 * @template TSecondIteratorKey
+	 * @template TOther
+	 * @template TOtherIteratorKey
 	 * @template TResult
 	 *
-	 * @param GenericEnumerable<TSecond, TSecondIteratorKey> $second
-	 * @param null|callable(TSource, TSecond): TResult $resultSelector
+	 * @param GenericEnumerable<TOther, TOtherIteratorKey> $other
+	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
 	 *
 	 * @return GenericEnumerable<TResult, TIteratorKey>
 	 */
 	#[Pure]
-	public function zip(GenericEnumerable $second, ?callable $resultSelector = null): GenericEnumerable;
+	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable;
 }

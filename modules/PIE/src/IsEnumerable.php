@@ -9,18 +9,17 @@ namespace Elephox\PIE;
 
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
-use Traversable;
 
 /**
- * @template T
+ * @template TSource
  * @template TIteratorKey
  *
- * @psalm-require-implements GenericEnumerable<T, TIteratorKey>
+ * @psalm-require-implements GenericEnumerable<TSource, TIteratorKey>
  */
 trait IsEnumerable
 {
 	/**
-	 * @return GenericIterator<T, TIteratorKey>
+	 * @return GenericIterator<TSource, TIteratorKey>
 	 */
 	abstract public function getIterator(): GenericIterator;
 
@@ -295,19 +294,19 @@ trait IsEnumerable
 		return $defaultValue;
 	}
 
-	#[Pure] public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable
-	{
-		$comparer ??= DefaultEqualityComparer::same(...);
-
-		// TODO: Implement groupBy() method.
-	}
-
-	#[Pure] public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
-	{
-		$comparer ??= DefaultEqualityComparer::same(...);
-
-		// TODO: Implement groupJoin() method.
-	}
+//	#[Pure] public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable
+//	{
+//		$comparer ??= DefaultEqualityComparer::same(...);
+//
+//		// TODO: Implement groupBy() method.
+//	}
+//
+//	#[Pure] public function groupJoin(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
+//	{
+//		$comparer ??= DefaultEqualityComparer::same(...);
+//
+//		// TODO: Implement groupJoin() method.
+//	}
 
 	#[Pure] public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
@@ -355,56 +354,144 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		// TODO: Implement join() method.
+		return new Enumerable(function () use ($inner, $outerKeySelector, $innerKeySelector, $resultSelector, $comparer) {
+			$innerKeys = [];
+			$innerElements = [];
+			$innerElementKeys = [];
+			foreach ($inner->getIterator() as $innerElementKey => $innerElement) {
+				$innerKeys[] = $innerKeySelector($innerElement, $innerElementKey);
+				$innerElements[] = $innerElement;
+				$innerElementKeys[] = $innerElementKey;
+			}
+
+			foreach ($this->getIterator() as $outerElementKey => $outerElement) {
+				$outerKey = $outerKeySelector($outerElement, $outerElementKey);
+
+				foreach ($innerKeys as $index => $innerKey) {
+					if ($comparer($outerKey, $innerKey)) {
+						yield $outerElementKey => $resultSelector($outerElement, $innerElements[$index], $outerElementKey, $innerElementKeys[$index]);
+					}
+				}
+			}
+		});
 	}
 
 	#[Pure] public function last(?callable $predicate = null): mixed
 	{
-		// TODO: Implement last() method.
+		$last = null;
+		foreach ($this->getIterator() as $element) {
+			if ($predicate === null || $predicate($element)) {
+				$last = $element;
+			}
+		}
+
+		if ($last === null) {
+			throw new InvalidArgumentException('Sequence contains no matching element');
+		}
+
+		return $last;
 	}
 
 	#[Pure] public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
-		// TODO: Implement lastOrDefault() method.
+		$last = null;
+		foreach ($this->getIterator() as $element) {
+			if ($predicate === null || $predicate($element)) {
+				$last = $element;
+			}
+		}
+
+		return $last ?? $default;
 	}
 
 	#[Pure] public function max(callable $selector): int|float
 	{
-		// TODO: Implement max() method.
+		$max = null;
+		foreach ($this->getIterator() as $element) {
+			$max = max($max, $selector($element));
+		}
+
+		if ($max === null) {
+			throw new InvalidArgumentException('Sequence contains no elements');
+		}
+
+		return $max;
 	}
 
 	#[Pure] public function min(callable $selector): int|float
 	{
-		// TODO: Implement min() method.
-	}
+		$min = null;
+		foreach ($this->getIterator() as $element) {
+			$min = min($min, $selector($element));
+		}
 
-	#[Pure] public function ofType(string $type): GenericEnumerable
-	{
-		// TODO: Implement ofType() method.
+		if ($min === null) {
+			throw new InvalidArgumentException('Sequence contains no elements');
+		}
+
+		return $min;
 	}
 
 	#[Pure] public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::same(...);
+		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		// TODO: Implement orderBy() method.
+		$keys = [];
+		$elements = [];
+		$elementKeys = [];
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$key = $keySelector($element, $elementKey);
+
+			$keys[] = $key;
+			$elements[] = $element;
+			$elementKeys[] = $elementKey;
+		}
+
+		$originalKeys = $keys;
+		usort($keys, $comparer);
+
+		return new OrderedEnumerable(function () use ($keys, $elements, $elementKeys, $originalKeys) {
+			foreach ($keys as $key) {
+				$originalIndex = array_search($key, $originalKeys, true);
+
+				yield $elementKeys[$originalIndex] => $elements[$originalIndex];
+			}
+		});
 	}
 
 	#[Pure] public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::same(...);
+		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		// TODO: Implement orderByDescending() method.
+		return $this->orderBy($keySelector, DefaultEqualityComparer::invert($comparer));
 	}
 
 	#[Pure] public function prepend(mixed $value): GenericEnumerable
 	{
-		// TODO: Implement prepend() method.
+		return new Enumerable(function () use ($value) {
+			yield $value;
+
+			yield from $this->getIterator();
+		});
 	}
 
 	#[Pure] public function reverse(): GenericEnumerable
 	{
-		// TODO: Implement reverse() method.
+		return new Enumerable(function () {
+			$iterator = $this->getIterator();
+			$stack = [];
+
+			while ($iterator->valid()) {
+				$stack[] = $iterator->current();
+
+				$iterator->next();
+			}
+
+			while (count($stack) > 0) {
+				yield array_pop($stack);
+			}
+		});
 	}
 
 	public function select(callable $selector): GenericEnumerable
@@ -418,39 +505,136 @@ trait IsEnumerable
 
 	#[Pure] public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable
 	{
-		// TODO: Implement selectMany() method.
+		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
+			foreach ($this->getIterator() as $elementKey => $element) {
+				foreach ($collectionSelector($element, $elementKey) as $collectionElementKey => $collectionElement) {
+					yield $resultSelector($element, $collectionElement, $elementKey, $collectionElementKey);
+				}
+			}
+		});
 	}
 
 	#[Pure] public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
+		$others = $other->toList();
 
-		// TODO: Implement sequenceEqual() method.
+		foreach ($this->getIterator() as $element) {
+			foreach ($others as $otherElement) {
+				if (!$comparer($element, $otherElement)) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	#[Pure] public function single(?callable $predicate = null): mixed
 	{
-		// TODO: Implement single() method.
+		$matched = false;
+		$returnElement = null;
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				if ($matched) {
+					throw new InvalidArgumentException('Sequence contains more than one matching element');
+				}
+
+				$matched = true;
+				$returnElement = $element;
+			}
+		}
+
+		if (!$matched) {
+			throw new InvalidArgumentException('Sequence contains no matching element');
+		}
+
+		return $returnElement;
 	}
 
 	#[Pure] public function singleOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
-		// TODO: Implement singleOrDefault() method.
+		$matched = false;
+		$returnElement = null;
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				if ($matched) {
+					throw new InvalidArgumentException('Sequence contains more than one matching element');
+				}
+
+				$matched = true;
+				$returnElement = $element;
+			}
+		}
+
+		return $matched ? $returnElement : $default;
 	}
 
 	#[Pure] public function skip(int $count): GenericEnumerable
 	{
-		// TODO: Implement skip() method.
+		return new Enumerable(function () use ($count) {
+			$iterator = $this->getIterator();
+
+			for ($i = 0; $i < $count; $i++) {
+				if (!$iterator->valid()) {
+					return;
+				}
+
+				$iterator->next();
+			}
+
+			while ($iterator->valid()) {
+				yield $iterator->key() => $iterator->current();
+
+				$iterator->next();
+			}
+		});
 	}
 
 	#[Pure] public function skipLast(int $count): GenericEnumerable
 	{
-		// TODO: Implement skipLast() method.
+		return new Enumerable(function () use ($count) {
+			$iterator = $this->getIterator();
+			$queue = [];
+			$keyQueue = [];
+
+			while ($iterator->valid()) {
+				$queue[] = $iterator->current();
+				$keyQueue[] = $iterator->key();
+
+				$iterator->next();
+			}
+
+			if (count($queue) <= $count) {
+				return;
+			}
+
+			for ($i = 0; $i < count($queue) - $count; $i++) {
+				yield $keyQueue[$i] => $queue[$i];
+			}
+		});
 	}
 
 	#[Pure] public function skipWhile(callable $predicate): GenericEnumerable
 	{
-		// TODO: Implement skipWhile() method.
+		return new Enumerable(function () use ($predicate) {
+			$iterator = $this->getIterator();
+			$skip = true;
+
+			while ($iterator->valid()) {
+				if ($skip && !$predicate($iterator->current(), $iterator->key())) {
+					$skip = false;
+				}
+
+				if (!$skip) {
+					yield $iterator->key() => $iterator->current();
+				}
+
+				$iterator->next();
+			}
+		});
 	}
 
 	#[Pure] public function sum(callable $selector): int|float
@@ -536,7 +720,18 @@ trait IsEnumerable
 
 	#[Pure] public function takeWhile(callable $predicate): GenericEnumerable
 	{
-		// TODO: Implement takeWhile() method.
+		return new Enumerable(function () use ($predicate) {
+			$iterator = $this->getIterator();
+
+			while ($iterator->valid()) {
+				if (!$predicate($iterator->current(), $iterator->key())) {
+					break;
+				}
+
+				yield $iterator->key() => $iterator->current();
+				$iterator->next();
+			}
+		});
 	}
 
 	#[Pure] public function toList(): array
@@ -551,16 +746,45 @@ trait IsEnumerable
 
 	#[Pure] public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::same(...);
+		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		// TODO: Implement union() method.
+		return $this->unionBy($other, static fn (mixed $o) => $o, $comparer);
 	}
 
 	#[Pure] public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::same(...);
+		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		// TODO: Implement unionBy() method.
+		return new Enumerable(function () use ($other, $keySelector, $comparer) {
+			$iterator = $this->getIterator();
+			$otherIterator = $other->getIterator();
+
+			while ($iterator->valid() && $otherIterator->valid()) {
+				$compare = $comparer($keySelector($iterator->current(), $iterator->key()), $keySelector($otherIterator->current(), $otherIterator->key()));
+
+				if ($compare === 0) {
+					yield $iterator->key() => $iterator->current();
+					$iterator->next();
+					$otherIterator->next();
+				} elseif ($compare < 0) {
+					yield $iterator->key() => $iterator->current();
+					$iterator->next();
+				} else {
+					yield $otherIterator->key() => $otherIterator->current();
+					$otherIterator->next();
+				}
+			}
+
+			while ($iterator->valid()) {
+				yield $iterator->key() => $iterator->current();
+				$iterator->next();
+			}
+
+			while ($otherIterator->valid()) {
+				yield $otherIterator->key() => $otherIterator->current();
+				$otherIterator->next();
+			}
+		});
 	}
 
 	#[Pure] public function where(callable $predicate): GenericEnumerable
@@ -574,8 +798,19 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function zip(GenericEnumerable $second, ?callable $resultSelector = null): GenericEnumerable
+	#[Pure] public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
 	{
-		// TODO: Implement zip() method.
+		$resultSelector ??= static fn (mixed $a, mixed $b) => [$a, $b];
+
+		return new Enumerable(function () use ($other, $resultSelector) {
+			$iterator = $this->getIterator();
+			$otherIterator = $other->getIterator();
+
+			while ($iterator->valid() && $otherIterator->valid()) {
+				yield $resultSelector($iterator->current(), $otherIterator->current(), $iterator->key(), $otherIterator->key());
+				$iterator->next();
+				$otherIterator->next();
+			}
+		});
 	}
 }

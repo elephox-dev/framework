@@ -14,6 +14,9 @@ use JetBrains\PhpStorm\Pure;
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 {
+	/**
+	 * @param GenericIterator<TSource, TIteratorKey> $iterator
+	 */
 	#[Pure] public function __construct(GenericIterator $iterator)
 	{
 		parent::__construct($iterator);
@@ -21,10 +24,11 @@ class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
+		return $this->orderBy($keySelector, $comparer);
 	}
 
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
-		// TODO: Implement thenByDescending() method.
+		return $this->orderByDescending($keySelector, $comparer);
 	}
 }
