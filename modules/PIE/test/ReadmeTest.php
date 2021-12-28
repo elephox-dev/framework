@@ -7,6 +7,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\PIE\PIE
+ * @covers \Elephox\PIE\DefaultEqualityComparer
+ * @covers \Elephox\PIE\Enumerable
+ * @covers \Elephox\PIE\GeneratorIterator
+ * @covers \Elephox\PIE\ListIterator
+ * @uses   \Elephox\PIE\IsEnumerable
  */
 class ReadmeTest extends TestCase
 {
@@ -15,17 +20,15 @@ class ReadmeTest extends TestCase
 		$array = [5, 2, 1, 4, 3];
 		$pie = PIE::from($array);
 
-		$sum = $pie->sum(fn (int $item) => $item);
+		$identity = static fn(int $item): int => $item;
 
+		$sum = $pie->sum($identity);
 		self::assertEquals(15, $sum);
 
-		$sum2 = $pie->where(fn (int $item) => $item % 2 === 0)
-					->sum(fn (int $item) => $item);
+		$evenSum = $pie->where(fn(int $item) => $item % 2 === 0)->sum($identity);
+		self::assertEquals(6, $evenSum);
 
-		self::assertEquals(6, $sum2);
-
-		$ordered = $pie->orderBy(fn($a, $b) => $a <=> $b);
-
-		self::assertEquals([1, 2, 3, 4, 5], $ordered->toArray());
+		$ordered = $pie->orderBy($identity)->toArray();
+		self::assertEquals([1, 2, 3, 4, 5], $ordered);
 	}
 }
