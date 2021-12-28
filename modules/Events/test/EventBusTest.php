@@ -118,6 +118,31 @@ class EventBusTest extends TestCase
 		self::assertTrue($triggered[1]);
 		self::assertFalse($triggered[2]);
 	}
+
+	public function testPriority(): void
+	{
+		$bus = new EventBus();
+		$triggered = [false, false, false];
+
+		$bus->subscribe(TestEvent::class, function () use (&$triggered) {
+			$triggered[0] = true;
+		});
+
+		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+			$triggered[1] = true;
+			$event->stopPropagation();
+		}, 1);
+
+		$bus->subscribe(TestEvent::class, function () use (&$triggered) {
+			$triggered[2] = true;
+		}, 2);
+
+		$bus->publish(new TestEvent(5));
+
+		self::assertFalse($triggered[0]);
+		self::assertTrue($triggered[1]);
+		self::assertTrue($triggered[2]);
+	}
 }
 
 class TestEvent extends Event

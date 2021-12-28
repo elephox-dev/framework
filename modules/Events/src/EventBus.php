@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 
 class EventBus implements Contract\EventBus
 {
-	/** @var ArrayMap<non-empty-string, ArrayList<non-empty-string>> */
+	/** @var ArrayMap<non-empty-string, ArrayList<Contract\Subscription>> */
 	private readonly ArrayMap $eventSubscriptionsMapping;
 
 	/** @var ArrayMap<non-empty-string, Contract\Subscription> */
@@ -23,19 +23,19 @@ class EventBus implements Contract\EventBus
 		$this->subscriptionSubscriberMapping = new ArrayMap();
 	}
 
-	public function subscribe(string $eventName, callable $callback): Contract\Subscription
+	public function subscribe(string $eventName, callable $callback, int $priority = 0): Contract\Subscription
 	{
 		if ($this->eventSubscriptionsMapping->has($eventName)) {
 			$list = $this->eventSubscriptionsMapping->get($eventName);
 		} else {
-			/** @var ArrayList<non-empty-string> $list */
+			/** @var ArrayList<Contract\Subscription> $list */
 			$list = new ArrayList();
 		}
 
 		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
-		$subscription = new Subscription($eventName, Closure::fromCallable($callback));
+		$subscription = new Subscription($eventName, Closure::fromCallable($callback), $priority);
 
-		$list->add($subscription->getId());
+		$list->add($subscription);
 
 		$this->eventSubscriptionsMapping->put($eventName, $list);
 		$this->subscriptionSubscriberMapping->put($subscription->getId(), $subscription);
@@ -52,7 +52,7 @@ class EventBus implements Contract\EventBus
 		$eventName = $this->subscriptionSubscriberMapping->get($id)->getEventName();
 
 		$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
-		$subscriptions->remove(fn(string $subscription) => $subscription === $id);
+		$subscriptions->remove(fn(Contract\Subscription $subscription) => $subscription->getId() === $id);
 		if ($subscriptions->isEmpty()) {
 			$this->eventSubscriptionsMapping->remove($eventName);
 		} else {
@@ -69,9 +69,10 @@ class EventBus implements Contract\EventBus
 			return;
 		}
 
-		$subscriberIds = $this->eventSubscriptionsMapping->get($key);
-		foreach ($subscriberIds as $id) {
-			$callback = $this->subscriptionSubscriberMapping->get($id)->getCallback();
+		$subscriptions = $this->eventSubscriptionsMapping->get($key)
+			->orderBy(fn(Contract\Subscription $a, Contract\Subscription $b) => $b->getPriority() - $a->getPriority());
+		foreach ($subscriptions as $subscription) {
+			$callback = $subscription->getCallback();
 
 			$callback($event);
 

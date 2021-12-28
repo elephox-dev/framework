@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Elephox\Events;
 
 use Closure;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 class Subscription implements Contract\Subscription
 {
+	/** @var non-empty-string $id */
 	private readonly string $id;
 
 	/**
@@ -16,8 +19,10 @@ class Subscription implements Contract\Subscription
 	 */
 	public function __construct(
 		private readonly string $eventName,
-		private readonly Closure $callback
+		private readonly Closure $callback,
+		private readonly int $priority = 0,
 	) {
+		/** @var non-empty-string */
 		$this->id = spl_object_hash((object)$this);
 	}
 
@@ -34,5 +39,10 @@ class Subscription implements Contract\Subscription
 	#[Pure] public function getCallback(): callable
 	{
 		return $this->callback;
+	}
+
+	#[Pure] public function getPriority(): int
+	{
+		return $this->priority;
 	}
 }
