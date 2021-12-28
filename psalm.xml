@@ -7,8 +7,5 @@
 >
     <projectFiles>
         <directory name="./modules/*/src" />
-        <ignoreFiles>
-            <directory name="./modules/PIE/src" />
-        </ignoreFiles>
     </projectFiles>
 </psalm>

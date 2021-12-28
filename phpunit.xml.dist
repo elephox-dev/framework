@@ -16,7 +16,6 @@
     <testsuites>
         <testsuite name="default">
             <directory>modules/*/test</directory>
-            <exclude>modules/PIE/src</exclude>
         </testsuite>
         <testsuite name="Collection">
             <directory>modules/Collection/test</directory>
@@ -53,7 +52,6 @@
             <file>**/*Exception.php</file>
             <directory>modules/Core/src</directory>
             <directory>modules/Database/src</directory>
-            <directory>modules/PIE/src</directory>
         </exclude>
     </coverage>
 </phpunit>
