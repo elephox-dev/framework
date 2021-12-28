@@ -37,7 +37,12 @@ class DirectoryTest extends TestCase
 		$this->filePath = stream_get_meta_data($this->fileHandle)['uri'];
 		$this->dirPath = dirname($this->filePath);
 
-		mkdir($this->dirPath . DIRECTORY_SEPARATOR . "test");
+		$emptyDir = $this->dirPath . DIRECTORY_SEPARATOR . "test";
+		if (is_dir($emptyDir)) {
+			rmdir($emptyDir);
+		}
+
+		mkdir($emptyDir);
 		fwrite($this->fileHandle, self::FileContents);
 	}
 
