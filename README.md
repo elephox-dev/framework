@@ -24,7 +24,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Event Bus
 - [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Caching Services
 - [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
@@ -65,6 +64,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~Routing (controller attributes)~~
 - [x] ~~Logging Services~~
 - [x] ~~Create a makefile with useful shortcuts~~ (Created composer.json scripts instead)
+- [x] ~~Event Bus~~
 
 <!-- start annotations -->
 
