@@ -1,8 +1,4 @@
 <?php
-/**
- * @noinspection PhpDocMissingThrowsInspection
- * @noinspection PhpUnhandledExceptionInspection
- */
 declare(strict_types=1);
 
 namespace Elephox\PIE;
@@ -658,7 +654,7 @@ trait IsEnumerable
 	}
 
 	/**
-	 * @param callable(T): bool $selector
+	 * @param callable(TSource): bool $selector
 	 *
 	 * @return array{int|float, int}
 	 */

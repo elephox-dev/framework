@@ -9,25 +9,25 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 /**
- * @template T
- * @template TKey
+ * @template TSource
+ * @template TIteratorKey
  *
- * @implements GenericEnumerable<T, TKey>
+ * @implements GenericEnumerable<TSource, TIteratorKey>
  */
 class Enumerable implements GenericEnumerable
 {
 	/**
-	 * @uses IsEnumerable<T, TKey>
+	 * @uses IsEnumerable<TSource, TIteratorKey>
 	 */
 	use IsEnumerable;
 
 	/**
-	 * @var \Elephox\PIE\GenericIterator<T, TKey>
+	 * @var \Elephox\PIE\GenericIterator<TSource, TIteratorKey>
 	 */
 	private GenericIterator $iterator;
 
 	/**
-	 * @param Closure(): GenericIterator<T, TKey>|GenericIterator<T, TKey>|Generator<T, TKey> $iterator
+	 * @param Closure(): GenericIterator<TSource, TIteratorKey>|GenericIterator<TSource, TIteratorKey>|Generator<TSource, TIteratorKey> $iterator
 	 */
 	#[Pure] public function __construct(
 		GenericIterator|Generator|Closure $iterator
@@ -43,15 +43,13 @@ class Enumerable implements GenericEnumerable
 			} else if ($result instanceof Generator) {
 				$this->iterator = new GeneratorIterator($result);
 			} else {
-				throw new InvalidArgumentException(
-					'The iterator must be or return an instance of GenericIterator'
-				);
+				throw new InvalidArgumentException('The iterator must be or return an instance of GenericIterator');
 			}
 		}
 	}
 
 	/**
-	 * @return GenericIterator<T, TKey>
+	 * @return GenericIterator<TSource, TIteratorKey>
 	 */
 	#[Pure] public function getIterator(): GenericIterator
 	{
