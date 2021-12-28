@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
-use JetBrains\PhpStorm\Pure;
-
 /**
  * @template TSource
  * @template TIteratorKey
@@ -14,14 +12,6 @@ use JetBrains\PhpStorm\Pure;
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 {
-	/**
-	 * @param GenericIterator<TSource, TIteratorKey> $iterator
-	 */
-	#[Pure] public function __construct(GenericIterator $iterator)
-	{
-		parent::__construct($iterator);
-	}
-
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		return $this->orderBy($keySelector, $comparer);
