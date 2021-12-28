@@ -9,4 +9,8 @@ interface Event
 	 * @return non-empty-string
 	 */
 	public function getName(): string;
+
+	public function stopPropagation(): void;
+
+	public function isPropagationStopped(): bool;
 }

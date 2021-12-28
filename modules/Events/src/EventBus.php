@@ -3,18 +3,19 @@ declare(strict_types=1);
 
 namespace Elephox\Events;
 
+use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Events\Contract\Event;
+use Elephox\Collection\Contract\ReadonlyList;
 use JetBrains\PhpStorm\Pure;
 
 class EventBus implements Contract\EventBus
 {
 	/** @var ArrayMap<non-empty-string, ArrayList<non-empty-string>> */
-	private ArrayMap $eventSubscriptionsMapping;
+	private readonly ArrayMap $eventSubscriptionsMapping;
 
-	/** @var ArrayMap<non-empty-string, array{non-empty-string, callable(Event): void}> */
-	private ArrayMap $subscriptionSubscriberMapping;
+	/** @var ArrayMap<non-empty-string, Contract\Subscription> */
+	private readonly ArrayMap $subscriptionSubscriberMapping;
 
 	#[Pure] public function __construct()
 	{
@@ -22,7 +23,7 @@ class EventBus implements Contract\EventBus
 		$this->subscriptionSubscriberMapping = new ArrayMap();
 	}
 
-	public function subscribe(string $eventName, callable $callback): string
+	public function subscribe(string $eventName, callable $callback): Contract\Subscription
 	{
 		if ($this->eventSubscriptionsMapping->has($eventName)) {
 			$list = $this->eventSubscriptionsMapping->get($eventName);
@@ -31,15 +32,15 @@ class EventBus implements Contract\EventBus
 			$list = new ArrayList();
 		}
 
-		/** @var non-empty-string $id */
-		$id = spl_object_hash((object)$callback);
+		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
+		$subscription = new Subscription($eventName, Closure::fromCallable($callback));
 
-		$list->add($id);
+		$list->add($subscription->getId());
 
 		$this->eventSubscriptionsMapping->put($eventName, $list);
-		$this->subscriptionSubscriberMapping->put($id, [$eventName, $callback]);
+		$this->subscriptionSubscriberMapping->put($subscription->getId(), $subscription);
 
-		return $id;
+		return $subscription;
 	}
 
 	public function unsubscribe(string $id): void
@@ -48,7 +49,7 @@ class EventBus implements Contract\EventBus
 			return;
 		}
 
-		$eventName = $this->subscriptionSubscriberMapping->get($id)[0];
+		$eventName = $this->subscriptionSubscriberMapping->get($id)->getEventName();
 
 		$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
 		$subscriptions->remove(fn(string $subscription) => $subscription === $id);
@@ -70,9 +71,18 @@ class EventBus implements Contract\EventBus
 
 		$subscriberIds = $this->eventSubscriptionsMapping->get($key);
 		foreach ($subscriberIds as $id) {
-			$subscriber = $this->subscriptionSubscriberMapping->get($id)[1];
+			$callback = $this->subscriptionSubscriberMapping->get($id)->getCallback();
 
-			$subscriber($event);
+			$callback($event);
+
+			if ($event->isPropagationStopped()) {
+				break;
+			}
 		}
+	}
+
+	#[Pure] public function getSubscriptions(): ReadonlyList
+	{
+		return $this->subscriptionSubscriberMapping->values();
 	}
 }

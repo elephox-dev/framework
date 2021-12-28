@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Events;
 
-use Elephox\Events\Contract\Event;
-
-abstract class NamedEvent implements Event
+abstract class NamedEvent implements Contract\Event
 {
+	use StopsPropagation;
+
 	/**
 	 * @param non-empty-string $name
 	 */

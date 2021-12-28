@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Events\NamedEvent
+ * @covers \Elephox\Events\Subscription
  * @uses   \Elephox\Events\ClassNameAsEventName
  */
 class EventBusTest extends TestCase
@@ -19,7 +20,7 @@ class EventBusTest extends TestCase
 		$bus = new EventBus();
 
 		$triggered = false;
-		$id = $bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$subscription = $bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
 			$triggered = true;
 
 			self::assertEquals(5, $event->data);
@@ -29,7 +30,7 @@ class EventBusTest extends TestCase
 
 		self::assertTrue($triggered);
 
-		$bus->unsubscribe($id);
+		$bus->unsubscribe($subscription->getId());
 
 		$triggered = false;
 
@@ -50,7 +51,7 @@ class EventBusTest extends TestCase
 			self::assertEquals(5, $event->data);
 		});
 
-		$idA2 = $bus->subscribe('testA', function () use (&$triggeredA2) {
+		$subscription = $bus->subscribe('testA', function () use (&$triggeredA2) {
 			$triggeredA2 = true;
 		});
 
@@ -70,8 +71,8 @@ class EventBusTest extends TestCase
 
 		self::assertTrue($triggeredB);
 
-		$bus->unsubscribe($idA2);
-		$bus->unsubscribe($idA2);
+		$bus->unsubscribe($subscription->getId());
+		$bus->unsubscribe($subscription->getId());
 	}
 
 	public function testEventNameFromClass(): void
@@ -79,6 +80,43 @@ class EventBusTest extends TestCase
 		$testEvent = new TestEvent(5);
 
 		self::assertEquals(TestEvent::class, $testEvent->getName());
+	}
+
+	public function testGetSubscribers(): void
+	{
+		$bus = new EventBus();
+
+		self::assertEmpty($bus->getSubscriptions());
+
+		$subscription = $bus->subscribe("test", function () {});
+
+		self::assertCount(1, $bus->getSubscriptions());
+		self::assertSame($subscription, $bus->getSubscriptions()[0]);
+	}
+
+	public function testStopPropagation(): void
+	{
+		$bus = new EventBus();
+		$triggered = [false, false, false];
+
+		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+			$triggered[0] = true;
+		});
+
+		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+			$triggered[1] = true;
+			$event->stopPropagation();
+		});
+
+		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+			$triggered[2] = true;
+		});
+
+		$bus->publish(new TestEvent(5));
+
+		self::assertTrue($triggered[0]);
+		self::assertTrue($triggered[1]);
+		self::assertFalse($triggered[2]);
 	}
 }
 
