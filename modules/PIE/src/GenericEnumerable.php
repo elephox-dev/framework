@@ -5,7 +5,6 @@ namespace Elephox\PIE;
 
 use Countable;
 use IteratorAggregate;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @template TSource
@@ -22,11 +21,9 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 
 	/**
 	 * @template TAccumulate
-	 * @template TResult
 	 *
-	 * @param callable(TAccumulate, TSource, TIteratorKey): TAccumulate $accumulator
+	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
 	 * @param TAccumulate|null $seed
-	 * @param null|callable(TAccumulate): TResult $resultSelector
 	 *
 	 * @return TAccumulate
 	 */
@@ -51,22 +48,20 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function append(mixed $value): GenericEnumerable;
 
 	/**
-	 * @param callable(TSource, TIteratorKey): int|float $selector
+	 * @param callable(TSource): numeric $selector
 	 *
-	 * @return int|float
+	 * @return numeric
 	 */
-	public function average(callable $selector): int|float;
+	public function average(callable $selector): int|float|string;
 
 	/**
 	 * @param int $size
 	 *
-	 * @return GenericEnumerable<non-empty-list<TSource>, TIteratorKey>
+	 * @return GenericEnumerable<list<TSource>, int>
 	 */
-	#[Pure]
 	public function chunk(int $size): GenericEnumerable;
 
 	/**
@@ -74,7 +69,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function concat(GenericEnumerable ...$enumerables): GenericEnumerable;
 
 	/**
@@ -97,7 +91,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable;
 
 	/**
@@ -145,7 +138,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
@@ -209,8 +202,8 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @template TKey
 	 *
-	 * @param GenericEnumerable<TKey, TIteratorKey> $other
-	 * @param callable(TSource): TKey $keySelector
+	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
@@ -224,9 +217,9 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TResult
 	 *
 	 * @param GenericEnumerable<TInner, TInnerIteratorKey> $inner
-	 * @param callable(TSource): TKey $outerKeySelector
-	 * @param callable(TInner): TKey $innerKeySelector
-	 * @param callable(TSource, TInner): TResult $resultSelector
+	 * @param callable(TSource, TIteratorKey): TKey $outerKeySelector
+	 * @param callable(TInner, TInnerIteratorKey): TKey $innerKeySelector
+	 * @param callable(TSource, TInner, TIteratorKey, TInnerIteratorKey): TResult $resultSelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
@@ -248,23 +241,23 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed;
 
 	/**
-	 * @param callable(TSource): int|float $selector
+	 * @param callable(TSource): numeric $selector
 	 *
-	 * @return int|float
+	 * @return numeric
 	 */
-	public function max(callable $selector): int|float;
+	public function max(callable $selector): int|float|string;
 
 	/**
-	 * @param callable(TSource): int|float $selector
+	 * @param callable(TSource): numeric $selector
 	 *
-	 * @return int|float
+	 * @return numeric
 	 */
-	public function min(callable $selector): int|float;
+	public function min(callable $selector): int|float|string;
 
 	/**
 	 * @template TKey
 	 *
-	 * @param callable(TSource): TKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
@@ -274,7 +267,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @template TKey
 	 *
-	 * @param callable(TSource): TKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
@@ -286,13 +279,11 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function prepend(mixed $value): GenericEnumerable;
 
 	/**
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function reverse(): GenericEnumerable;
 
 	/**
@@ -306,12 +297,13 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 
 	/**
 	 * @template TCollection
+	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TIteratorKey> $collectionSelector
-	 * @param callable(TSource, TCollection): TResult $resultSelector
+	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TCollectionKey> $collectionSelector
+	 * @param callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
-	 * @return GenericEnumerable<TResult, TIteratorKey>
+	 * @return GenericEnumerable<TResult, TCollectionKey>
 	 */
 	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable;
 
@@ -343,7 +335,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function skip(int $count): GenericEnumerable;
 
 	/**
@@ -351,7 +342,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function skipLast(int $count): GenericEnumerable;
 
 	/**
@@ -362,18 +352,17 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function skipWhile(callable $predicate): GenericEnumerable;
 
 	/**
-	 * @param callable(TSource): int|float $selector
+	 * @param callable(TSource): numeric $selector
 	 *
-	 * @return int|float
+	 * @return numeric
 	 */
-	public function sum(callable $selector): int|float;
+	public function sum(callable $selector): int|float|string;
 
 	/**
 	 * @param int $count
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function take(int $count): GenericEnumerable;
 
 	/**
@@ -381,7 +370,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */
-	#[Pure]
 	public function takeLast(int $count): GenericEnumerable;
 
 	/**
@@ -397,7 +385,9 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function toList(): array;
 
 	/**
-	 * @return array<TIteratorKey, TSource>
+	 * @template TArrayKey as array-key
+	 *
+	 * @return array<TArrayKey, TSource>
 	 */
 	public function toArray(): array;
 
@@ -414,7 +404,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TSource, TSource): int $comparer
 	 *
 	 * @return GenericEnumerable<TSource, TIteratorKey>
 	 */

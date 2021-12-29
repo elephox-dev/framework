@@ -69,24 +69,21 @@ final class DefaultEqualityComparer
 	}
 
 	/**
-	 * @param callable(mixed, mixed): mixed $comparer
-	 * @return callable(mixed, mixed): mixed
+	 * @template TCallable as callable(mixed, mixed): (bool|int)
+	 *
+	 * @param TCallable $comparer
+	 * @return callable(mixed, mixed): (bool|int)
 	 */
 	#[Pure] public static function invert(callable $comparer): callable
 	{
 		return static function (mixed $a, mixed $b) use ($comparer) {
-			/** @var bool|numeric $result */
 			$result = $comparer($a, $b);
 
 			if (is_bool($result)) {
 				return !$result;
 			}
 
-			if (is_numeric($result)) {
-				return -$result;
-			}
-
-			throw new InvalidArgumentException('Comparer must return a boolean or numeric value');
+			return -$result;
 		};
 	}
 }

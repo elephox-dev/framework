@@ -10,6 +10,7 @@ use Iterator;
  * @template TKey
  *
  * @extends Iterator<TValue>
+ * @extends iterable<TValue>
  */
 interface GenericIterator extends Iterator
 {

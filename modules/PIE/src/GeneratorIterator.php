@@ -5,8 +5,17 @@ namespace Elephox\PIE;
 
 use Generator;
 
+/**
+ * @template TSource
+ * @template TIteratorKey
+ *
+ * @implements GenericIterator<TSource, TIteratorKey>
+ */
 class GeneratorIterator implements GenericIterator
 {
+	/**
+	 * @param Generator<TIteratorKey, TSource> $generator
+	 */
 	public function __construct(private Generator $generator)
 	{
 	}

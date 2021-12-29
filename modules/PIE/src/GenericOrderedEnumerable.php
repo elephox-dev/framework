@@ -15,7 +15,7 @@ interface GenericOrderedEnumerable extends GenericEnumerable
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer $comparer
+	 * @param null|callable(TSource, TSource): int $comparer $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
@@ -25,7 +25,7 @@ interface GenericOrderedEnumerable extends GenericEnumerable
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer $comparer
+	 * @param null|callable(TSource, TSource): int $comparer $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */

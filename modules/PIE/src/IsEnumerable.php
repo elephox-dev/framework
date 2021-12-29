@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @template TSource
@@ -17,7 +16,15 @@ trait IsEnumerable
 	 */
 	abstract public function getIterator(): GenericIterator;
 
-	public function aggregate(callable $accumulator, mixed $seed = null, callable $resultSelector = null): mixed
+	/**
+	 * @template TAccumulate
+	 *
+	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
+	 * @param TAccumulate|null $seed
+	 *
+	 * @return TAccumulate
+	 */
+	public function aggregate(callable $accumulator, mixed $seed = null): mixed
 	{
 		$result = $seed;
 
@@ -25,7 +32,7 @@ trait IsEnumerable
 			$result = $accumulator($result, $element, $key);
 		}
 
-		return $resultSelector ? $resultSelector($result) : $result;
+		return $result;
 	}
 
 	public function all(callable $predicate): bool
@@ -50,22 +57,29 @@ trait IsEnumerable
 		return false;
 	}
 
-	#[Pure] public function append(mixed $value): GenericEnumerable
+	public function append(mixed $value): GenericEnumerable
 	{
-		return new Enumerable(new AppendIterator($this->getIterator(), new SingleElementIterator($value)));
+		return new Enumerable(function () use ($value) {
+			yield from $this->getIterator();
+
+			yield $value;
+		});
 	}
 
-	public function average(callable $selector): int|float
+	/**
+	 * @param callable(TSource): numeric $selector
+	 *
+	 * @return numeric
+	 */
+	public function average(callable $selector): int|float|string
 	{
 		$sum = null;
 		$count = 0;
 
-		foreach ($this->getIterator() as $key => $element) {
-			$value = $selector($element, $key);
-			if (!is_numeric($value)) {
-				throw new InvalidArgumentException('The average selector must return a numeric value.');
-			}
+		foreach ($this->getIterator() as $element) {
+			$value = $selector($element);
 
+			/** @var null|numeric $sum */
 			if ($sum === null) {
 				$sum = $value;
 			} else {
@@ -75,18 +89,31 @@ trait IsEnumerable
 			$count++;
 		}
 
+		if ($sum === null) {
+			throw new InvalidArgumentException('The sequence contains no elements');
+		}
+
+		/** @var numeric $sum */
 		return $sum / $count;
 	}
 
-	#[Pure] public function chunk(int $size): GenericEnumerable
+	/**
+	 * @param int $size
+	 *
+	 * @return GenericEnumerable<list<TSource>, int>
+	 */
+	public function chunk(int $size): GenericEnumerable
 	{
+		/** @var Enumerable<list<TSource>, int> */
 		return new Enumerable(function () use ($size) {
 			$index = 0;
+			$chunkCount = 0;
 			$chunk = [];
 			foreach ($this->getIterator() as $element) {
 				if ($index % $size === 0) {
-					yield $chunk;
+					yield $chunkCount => $chunk;
 
+					$chunkCount++;
 					$chunk = [];
 				} else {
 					$chunk[] = $element;
@@ -94,12 +121,12 @@ trait IsEnumerable
 			}
 
 			if ($chunk) {
-				yield $chunk;
+				yield $chunkCount => $chunk;
 			}
 		});
 	}
 
-	#[Pure] public function concat(GenericEnumerable ...$enumerables): GenericEnumerable
+	public function concat(GenericEnumerable ...$enumerables): GenericEnumerable
 	{
 		return new Enumerable(function () use ($enumerables) {
 			yield from $this;
@@ -136,7 +163,7 @@ trait IsEnumerable
 		return $count;
 	}
 
-	#[Pure] public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable
+	public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable
 	{
 		return new Enumerable(function () use ($defaultValue) {
 			$iterator = $this->getIterator();
@@ -171,6 +198,14 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param null|callable(TKey, TKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
@@ -227,32 +262,36 @@ trait IsEnumerable
 		return $defaultValue;
 	}
 
+	/**
+	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($other, $comparer) {
-			$others = $other->toList();
-			foreach ($this->getIterator() as $key => $element) {
-				foreach ($others as $otherElement) {
-					if ($comparer($element, $otherElement)) {
-						continue 2;
-					}
-				}
-
-				yield $key => $element;
-			}
-		});
+		return $this->exceptBy($other, fn (mixed $element): mixed => $element, $comparer);
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param null|callable(TKey, TKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
 		return new Enumerable(function () use ($other, $keySelector, $comparer) {
 			$otherKeys = [];
-			foreach ($other->getIterator() as $otherElement) {
-				$otherKeys[] = $keySelector($otherElement);
+			foreach ($other->getIterator() as $otherElementKey => $otherElement) {
+				$otherKeys[] = $keySelector($otherElement, $otherElementKey);
 			}
 
 			foreach ($this->getIterator() as $elementKey => $element) {
@@ -305,32 +344,36 @@ trait IsEnumerable
 //		// TODO: Implement groupJoin() method.
 //	}
 
+	/**
+	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($other, $comparer) {
-			$others = $other->toList();
-			foreach ($this->getIterator() as $elementKey => $element) {
-				foreach ($others as $otherElement) {
-					if ($comparer($element, $otherElement)) {
-						yield $elementKey => $element;
-
-						continue 2;
-					}
-				}
-			}
-		});
+		return $this->intersectBy($other, fn ($element): mixed => $element, $comparer);
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
 		return new Enumerable(function () use ($other, $keySelector, $comparer) {
 			$otherKeys = [];
-			foreach ($other->getIterator() as $otherElement) {
-				$otherKeys[] = $keySelector($otherElement);
+			foreach ($other->getIterator() as $otherElementKey => $otherElement) {
+				$otherKeys[] = $keySelector($otherElement, $otherElementKey);
 			}
 
 			foreach ($this->getIterator() as $elementKey => $element) {
@@ -347,6 +390,20 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @template TInner
+	 * @template TInnerIteratorKey
+	 * @template TKey
+	 * @template TResult
+	 *
+	 * @param GenericEnumerable<TInner, TInnerIteratorKey> $inner
+	 * @param callable(TSource, TIteratorKey): TKey $outerKeySelector
+	 * @param callable(TInner, TInnerIteratorKey): TKey $innerKeySelector
+	 * @param callable(TSource, TInner, TIteratorKey, TInnerIteratorKey): TResult $resultSelector
+	 * @param null|callable(TKey, TKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
 	public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
@@ -401,7 +458,12 @@ trait IsEnumerable
 		return $last ?? $default;
 	}
 
-	public function max(callable $selector): int|float
+	/**
+	 * @param callable(TSource): numeric $selector
+	 *
+	 * @return numeric
+	 */
+	public function max(callable $selector): int|float|string
 	{
 		$max = null;
 		foreach ($this->getIterator() as $element) {
@@ -415,7 +477,12 @@ trait IsEnumerable
 		return $max;
 	}
 
-	public function min(callable $selector): int|float
+	/**
+	 * @param callable(TSource): numeric $selector
+	 *
+	 * @return numeric
+	 */
+	public function min(callable $selector): int|float|string
 	{
 		$min = null;
 		foreach ($this->getIterator() as $element) {
@@ -429,6 +496,14 @@ trait IsEnumerable
 		return $min;
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param null|callable(TSource, TSource): int $comparer
+	 *
+	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 */
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
@@ -455,14 +530,26 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param null|callable(TSource, TSource): int $comparer
+	 *
+	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 */
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		return $this->orderBy($keySelector, DefaultEqualityComparer::invert($comparer));
+		/** @var callable(TSource, TSource): int $comparer */
+		$invertedComparer = DefaultEqualityComparer::invert($comparer);
+
+		/** @var callable(TSource, TSource): int $invertedComparer */
+		return $this->orderBy($keySelector, $invertedComparer);
 	}
 
-	#[Pure] public function prepend(mixed $value): GenericEnumerable
+	public function prepend(mixed $value): GenericEnumerable
 	{
 		return new Enumerable(function () use ($value) {
 			yield $value;
@@ -471,7 +558,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function reverse(): GenericEnumerable
+	public function reverse(): GenericEnumerable
 	{
 		return new Enumerable(function () {
 			$iterator = $this->getIterator();
@@ -498,12 +585,22 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @template TCollection
+	 * @template TCollectionKey
+	 * @template TResult
+	 *
+	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TCollectionKey> $collectionSelector
+	 * @param callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
+	 *
+	 * @return GenericEnumerable<TResult, TCollectionKey>
+	 */
 	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable
 	{
 		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
 			foreach ($this->getIterator() as $elementKey => $element) {
 				foreach ($collectionSelector($element, $elementKey) as $collectionElementKey => $collectionElement) {
-					yield $resultSelector($element, $collectionElement, $elementKey, $collectionElementKey);
+					yield $collectionElementKey => $resultSelector($element, $collectionElement, $elementKey, $collectionElementKey);
 				}
 			}
 		});
@@ -515,6 +612,9 @@ trait IsEnumerable
 		$others = $other->toList();
 
 		foreach ($this->getIterator() as $element) {
+			/**
+			 * @var TSource $otherElement
+			 */
 			foreach ($others as $otherElement) {
 				if (!$comparer($element, $otherElement)) {
 					return false;
@@ -567,7 +667,7 @@ trait IsEnumerable
 		return $matched ? $returnElement : $default;
 	}
 
-	#[Pure] public function skip(int $count): GenericEnumerable
+	public function skip(int $count): GenericEnumerable
 	{
 		return new Enumerable(function () use ($count) {
 			$iterator = $this->getIterator();
@@ -588,7 +688,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function skipLast(int $count): GenericEnumerable
+	public function skipLast(int $count): GenericEnumerable
 	{
 		return new Enumerable(function () use ($count) {
 			$iterator = $this->getIterator();
@@ -632,16 +732,19 @@ trait IsEnumerable
 		});
 	}
 
-	public function sum(callable $selector): int|float
+	/**
+	 * @param callable(TSource): numeric $selector
+	 *
+	 * @return numeric
+	 */
+	public function sum(callable $selector): int|float|string
 	{
 		$sum = null;
 
 		foreach ($this->getIterator() as $element) {
 			$value = $selector($element);
-			if (!is_numeric($value)) {
-				throw new InvalidArgumentException('The average selector must return a numeric value.');
-			}
 
+			/** @var null|numeric $sum */
 			if ($sum === null) {
 				$sum = $value;
 			} else {
@@ -649,38 +752,15 @@ trait IsEnumerable
 			}
 		}
 
+		if ($sum === null) {
+			throw new InvalidArgumentException('Sequence contains no elements');
+		}
+
+		/** @var numeric $sum */
 		return $sum;
 	}
 
-	/**
-	 * @param callable(TSource): bool $selector
-	 *
-	 * @return array{int|float, int}
-	 */
-	protected function sumAndCount(callable $selector): array
-	{
-		$sum = null;
-		$count = 0;
-
-		foreach ($this->getIterator() as $element) {
-			$value = $selector($element);
-			if (!is_numeric($value)) {
-				throw new InvalidArgumentException('The average selector must return a numeric value.');
-			}
-
-			if ($sum === null) {
-				$sum = $value;
-			} else {
-				$sum += $value;
-			}
-
-			$count++;
-		}
-
-		return [$sum, $count];
-	}
-
-	#[Pure] public function take(int $count): GenericEnumerable
+	public function take(int $count): GenericEnumerable
 	{
 		return new Enumerable(function () use ($count) {
 			$iterator = $this->getIterator();
@@ -694,7 +774,7 @@ trait IsEnumerable
 		});
 	}
 
-	#[Pure] public function takeLast(int $count): GenericEnumerable
+	public function takeLast(int $count): GenericEnumerable
 	{
 		return new Enumerable(function () use ($count) {
 			$valueBuffer = [];
@@ -729,21 +809,43 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @return list<TSource>
+	 */
 	public function toList(): array
 	{
-		return iterator_to_array($this->getIterator(), false);
+		$list = [];
+
+		foreach ($this->getIterator() as $element) {
+			$list[] = $element;
+		}
+
+		return $list;
 	}
 
 	public function toArray(): array
 	{
-		return iterator_to_array($this->getIterator());
+		$array = [];
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if (is_scalar($elementKey)) {
+				$key = $elementKey;
+			} else {
+				$key = (string)$elementKey;
+			}
+
+			/** @var array-key $key */
+			$array[$key] = $element;
+		}
+
+		return $array;
 	}
 
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		return $this->unionBy($other, static fn (mixed $o) => $o, $comparer);
+		return $this->unionBy($other, static fn (mixed $o): mixed => $o, $comparer);
 	}
 
 	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
@@ -755,6 +857,7 @@ trait IsEnumerable
 			$otherIterator = $other->getIterator();
 
 			while ($iterator->valid() && $otherIterator->valid()) {
+				/** @var int $compare */
 				$compare = $comparer($keySelector($iterator->current(), $iterator->key()), $keySelector($otherIterator->current(), $otherIterator->key()));
 
 				if ($compare === 0) {
@@ -793,9 +896,20 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @template TOther
+	 * @template TOtherIteratorKey
+	 * @template TResult
+	 *
+	 * @param GenericEnumerable<TOther, TOtherIteratorKey> $other
+	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
+	 *
+	 * @return GenericEnumerable<TResult, TIteratorKey>
+	 */
 	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
 	{
-		$resultSelector ??= static fn (mixed $a, mixed $b) => [$a, $b];
+		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
+		/** @var callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector */
 
 		return new Enumerable(function () use ($other, $resultSelector) {
 			$iterator = $this->getIterator();

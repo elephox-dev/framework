@@ -27,24 +27,27 @@ class Enumerable implements GenericEnumerable
 	private GenericIterator $iterator;
 
 	/**
-	 * @param Closure(): GenericIterator<TSource, TIteratorKey>|GenericIterator<TSource, TIteratorKey>|Generator<TSource, TIteratorKey> $iterator
+	 * @param Closure(): GenericIterator<TSource, TIteratorKey>|Closure(): Generator<TIteratorKey, TSource>|GenericIterator<TSource, TIteratorKey>|Generator<TIteratorKey, TSource> $iterator
+	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
-	#[Pure] public function __construct(
+	public function __construct(
 		GenericIterator|Generator|Closure $iterator
 	) {
 		if ($iterator instanceof GenericIterator) {
 			$this->iterator = $iterator;
 		} else if ($iterator instanceof Generator) {
 			$this->iterator = new GeneratorIterator($iterator);
-		} else {
+		} else if (is_callable($iterator)) {
 			$result = $iterator();
 			if ($result instanceof GenericIterator) {
 				$this->iterator = $result;
 			} else if ($result instanceof Generator) {
 				$this->iterator = new GeneratorIterator($result);
 			} else {
-				throw new InvalidArgumentException('The iterator must be or return an instance of GenericIterator');
+				throw new InvalidArgumentException('The iterator must return an instance of GenericIterator');
 			}
+		} else {
+			throw new InvalidArgumentException('The iterator must be or return an instance of GenericIterator');
 		}
 	}
 
