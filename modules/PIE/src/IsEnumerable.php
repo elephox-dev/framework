@@ -35,6 +35,8 @@ trait IsEnumerable
 		return $result;
 	}
 
+	// TODO: rewrite some functions to use aggregate
+
 	public function all(callable $predicate): bool
 	{
 		foreach ($this->getIterator() as $element) {
@@ -739,24 +741,23 @@ trait IsEnumerable
 	 */
 	public function sum(callable $selector): int|float|string
 	{
-		$sum = null;
-
-		foreach ($this->getIterator() as $element) {
-			$value = $selector($element);
-
-			/** @var null|numeric $sum */
-			if ($sum === null) {
-				$sum = $value;
-			} else {
-				$sum += $value;
+		/** @var numeric|null $sum */
+		$sum = $this->aggregate(function (mixed $accumulator, mixed $element) use ($selector) {
+			/**
+			 * @var numeric|null $accumulator
+			 * @var TSource $element
+			 */
+			if ($accumulator === null) {
+				return $selector($element);
 			}
-		}
+
+			return $accumulator + $selector($element);
+		});
 
 		if ($sum === null) {
 			throw new InvalidArgumentException('Sequence contains no elements');
 		}
 
-		/** @var numeric $sum */
 		return $sum;
 	}
 
