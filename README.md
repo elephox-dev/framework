@@ -47,6 +47,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Add a formatter (PHP CS Fixer)
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
 - [ ] Finish PIE implementation (grouping)
+- [ ] Add READMEs, LICENSEs and PHPUnit configs for all modules
 - [ ] Maybe: Query Builder for Database Adapter
 - [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
 - [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
