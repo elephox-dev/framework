@@ -92,7 +92,11 @@ trait DeepCloneable
 		}
 
 		$reflection = new ReflectionObject($object);
-		$clone = $reflection->newInstance();
+		if ($reflection->hasMethod('__clone')) {
+			$clone = clone $object;
+		} else {
+			$clone = $reflection->newInstance();
+		}
 		$cloneStorage[$hash] = &$clone;
 
 		if ($object instanceof WeakMap) {
