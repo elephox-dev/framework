@@ -27,7 +27,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @return TAccumulate
 	 */
-	public function aggregate(callable $accumulator, mixed $seed = null, callable $resultSelector = null): mixed;
+	public function aggregate(callable $accumulator, mixed $seed = null): mixed;
 
 	/**
 	 * @param callable(TSource): bool $predicate
