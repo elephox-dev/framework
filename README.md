@@ -74,6 +74,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 ### ✅ TODO
 
 - [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
+  - [ ] rewrite some functions to use aggregate
   - [ ] Implement groupBy() method.
   - [ ] Implement groupJoin() method.
 - [ ] [Stream/src/AppendStream.php](https://github.com/elephox-dev/framework/tree/main/modules/Stream/src/AppendStream.php)
