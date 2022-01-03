@@ -17,60 +17,55 @@ class CachingIterator implements SeekableIterator
 {
 	private array $innerValues = [];
 	private array $innerKeys = [];
-	private int $position = 0;
+	private int $offset = 0;
 
 	public function __construct(
 		private Iterator $inner,
 	) {
 	}
 
+	private function warmCacheUntil(int $offset): void
+	{
+		$innerOffset = count($this->innerKeys) - 1;
+		while ($innerOffset < $offset) {
+			$this->innerKeys[] = $this->inner->key();
+			$this->innerValues[] = $this->inner->current();
+			$this->inner->next();
+			$innerOffset++;
+		}
+	}
+
 	public function current(): mixed
 	{
-		while (count($this->innerValues) < $this->position && $this->inner->valid()) {
-			$this->innerValues[] = $this->inner->current();
-			$this->innerKeys[] = $this->inner->key();
-			$this->inner->next();
-		}
+		$this->warmCacheUntil($this->offset);
 
-		if (count($this->innerValues) < $this->position) {
-			throw new OutOfRangeException("The requested position $this->position is out of range");
-		}
-
-		return $this->innerValues[$this->position];
+		return $this->innerValues[$this->offset];
 	}
 
 	public function next(): void
 	{
-		$this->position++;
+		$this->offset++;
 	}
 
 	public function key(): mixed
 	{
-		while (count($this->innerKeys) < $this->position && $this->inner->valid()) {
-			$this->innerValues[] = $this->inner->current();
-			$this->innerKeys[] = $this->inner->key();
-			$this->inner->next();
-		}
+		$this->warmCacheUntil($this->offset);
 
-		if (count($this->innerKeys) < $this->position) {
-			throw new OutOfRangeException("The requested position $this->position is out of range");
-		}
-
-		return $this->innerKeys[$this->position];
+		return $this->innerKeys[$this->offset];
 	}
 
 	public function valid(): bool
 	{
-		return count($this->innerKeys) < $this->position || $this->inner->valid();
+		return $this->offset < count($this->innerKeys) || $this->inner->valid();
 	}
 
 	public function rewind(): void
 	{
-		$this->position = 0;
+		$this->offset = 0;
 	}
 
 	public function seek(int $offset): void
 	{
-		$this->position = $offset;
+		$this->offset = $offset;
 	}
 }
