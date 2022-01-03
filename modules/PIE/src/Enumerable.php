@@ -6,43 +6,40 @@ namespace Elephox\PIE;
 use Closure;
 use Generator;
 use InvalidArgumentException;
+use Iterator;
 use JetBrains\PhpStorm\Pure;
 
 /**
- * @template TSource
  * @template TIteratorKey
+ * @template TSource
  *
- * @implements GenericEnumerable<TSource, TIteratorKey>
+ * @implements GenericEnumerable<TIteratorKey, TSource>
  */
 class Enumerable implements GenericEnumerable
 {
 	/**
-	 * @uses IsEnumerable<TSource, TIteratorKey>
+	 * @uses IsEnumerable<TIteratorKey, TSource>
 	 */
 	use IsEnumerable;
 
 	/**
-	 * @var \Elephox\PIE\GenericIterator<TSource, TIteratorKey>
+	 * @var Iterator<TIteratorKey, TSource>
 	 */
-	private GenericIterator $iterator;
+	private Iterator $iterator;
 
 	/**
-	 * @param Closure(): GenericIterator<TSource, TIteratorKey>|Closure(): Generator<TIteratorKey, TSource>|GenericIterator<TSource, TIteratorKey>|Generator<TIteratorKey, TSource> $iterator
+	 * @param Closure(): Iterator<TIteratorKey, TSource>|Iterator<TIteratorKey, TSource> $iterator
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(
-		GenericIterator|Generator|Closure $iterator
+		Iterator|Closure $iterator
 	) {
-		if ($iterator instanceof GenericIterator) {
+		if ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;
-		} else if ($iterator instanceof Generator) {
-			$this->iterator = new GeneratorIterator($iterator);
 		} else if (is_callable($iterator)) {
 			$result = $iterator();
-			if ($result instanceof GenericIterator) {
+			if ($result instanceof Iterator) {
 				$this->iterator = $result;
-			} else if ($result instanceof Generator) {
-				$this->iterator = new GeneratorIterator($result);
 			} else {
 				throw new InvalidArgumentException('The iterator must return an instance of GenericIterator');
 			}
@@ -52,9 +49,9 @@ class Enumerable implements GenericEnumerable
 	}
 
 	/**
-	 * @return GenericIterator<TSource, TIteratorKey>
+	 * @return Iterator<TIteratorKey, TSource>
 	 */
-	#[Pure] public function getIterator(): GenericIterator
+	#[Pure] public function getIterator(): Iterator
 	{
 		return $this->iterator;
 	}

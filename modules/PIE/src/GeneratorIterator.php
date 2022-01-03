@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 use Generator;
+use Iterator;
 
 /**
- * @template TSource
  * @template TIteratorKey
+ * @template TSource
  *
- * @implements GenericIterator<TSource, TIteratorKey>
+ * @implements Iterator<TIteratorKey, TSource>
  */
-class GeneratorIterator implements GenericIterator
+class GeneratorIterator implements Iterator
 {
 	/**
 	 * @param Generator<TIteratorKey, TSource> $generator

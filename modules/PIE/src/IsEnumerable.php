@@ -4,17 +4,20 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 use InvalidArgumentException;
+use Iterator;
 
 /**
- * @template TSource
+ * @psalm-type NonNegativeInteger = 0|positive-int
+ *
  * @template TIteratorKey
+ * @template TSource
  */
 trait IsEnumerable
 {
 	/**
-	 * @return GenericIterator<TSource, TIteratorKey>
+	 * @return Iterator<TIteratorKey, TSource>
 	 */
-	abstract public function getIterator(): GenericIterator;
+	abstract public function getIterator(): Iterator;
 
 	/**
 	 * @template TAccumulate
@@ -100,13 +103,13 @@ trait IsEnumerable
 	}
 
 	/**
-	 * @param int $size
+	 * @param NonNegativeInteger $size
 	 *
-	 * @return GenericEnumerable<list<TSource>, int>
+	 * @return GenericEnumerable<NonNegativeInteger, list<TSource>>
 	 */
 	public function chunk(int $size): GenericEnumerable
 	{
-		/** @var Enumerable<list<TSource>, int> */
+		/** @var GenericEnumerable<NonNegativeInteger, list<TSource>> */
 		return new Enumerable(function () use ($size) {
 			$index = 0;
 			$chunkCount = 0;
@@ -206,7 +209,7 @@ trait IsEnumerable
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
@@ -268,7 +271,7 @@ trait IsEnumerable
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
@@ -280,11 +283,11 @@ trait IsEnumerable
 	/**
 	 * @template TKey
 	 *
-	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param GenericEnumerable<TIteratorKey, TSource> $other
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
@@ -350,7 +353,7 @@ trait IsEnumerable
 	 * @param GenericEnumerable<TSource, TIteratorKey> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
@@ -362,11 +365,11 @@ trait IsEnumerable
 	/**
 	 * @template TKey
 	 *
-	 * @param GenericEnumerable<TSource, TIteratorKey> $other
+	 * @param GenericEnumerable<TIteratorKey, TSource> $other
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
@@ -398,13 +401,13 @@ trait IsEnumerable
 	 * @template TKey
 	 * @template TResult
 	 *
-	 * @param GenericEnumerable<TInner, TInnerIteratorKey> $inner
+	 * @param GenericEnumerable<TInnerIteratorKey, TInner> $inner
 	 * @param callable(TSource, TIteratorKey): TKey $outerKeySelector
 	 * @param callable(TInner, TInnerIteratorKey): TKey $innerKeySelector
 	 * @param callable(TSource, TInner, TIteratorKey, TInnerIteratorKey): TResult $resultSelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
 	public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
 	{
@@ -504,7 +507,7 @@ trait IsEnumerable
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 * @return GenericOrderedEnumerable<TIteratorKey, TSource>
 	 */
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
@@ -538,7 +541,7 @@ trait IsEnumerable
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 * @return GenericOrderedEnumerable<TIteratorKey, TSource>
 	 */
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
@@ -592,10 +595,10 @@ trait IsEnumerable
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TCollectionKey> $collectionSelector
+	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollectionKey, TCollection> $collectionSelector
 	 * @param callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
-	 * @return GenericEnumerable<TResult, TCollectionKey>
+	 * @return GenericEnumerable<TCollectionKey, TResult>
 	 */
 	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable
 	{
@@ -889,8 +892,8 @@ trait IsEnumerable
 	public function where(callable $predicate): GenericEnumerable
 	{
 		return new Enumerable(function () use ($predicate) {
-			foreach ($this->getIterator() as $element) {
-				if ($predicate($element)) {
+			foreach ($this->getIterator() as $elementKey => $element) {
+				if ($predicate($element, $elementKey)) {
 					yield $element;
 				}
 			}
@@ -902,10 +905,10 @@ trait IsEnumerable
 	 * @template TOtherIteratorKey
 	 * @template TResult
 	 *
-	 * @param GenericEnumerable<TOther, TOtherIteratorKey> $other
+	 * @param GenericEnumerable<TOtherIteratorKey, TOther> $other
 	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
 	 *
-	 * @return GenericEnumerable<TResult, TIteratorKey>
+	 * @return GenericEnumerable<TIteratorKey, TResult>
 	 */
 	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
 	{

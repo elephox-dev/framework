@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 use InvalidArgumentException;
+use Iterator;
 
 final class PIE
 {
@@ -12,28 +13,25 @@ final class PIE
 	 *
 	 * @param T $value
 	 *
-	 * @return GenericEnumerable<T, mixed>
+	 * @return GenericEnumerable<mixed, T>
 	 */
 	public static function from(mixed $value): GenericEnumerable
 	{
 		if (is_string($value)) {
-			$value = explode('', $value);
+			$value = str_split($value);
 		}
-
 		if (is_array($value)) {
-			if (array_is_list($value)) {
-				return new Enumerable(new ListIterator($value));
-			}
-
 			return new Enumerable(new ArrayIterator($value));
 		}
 
-		if ($value instanceof GenericEnumerable) {
-			return $value;
-		}
+		if (is_object($value)) {
+			if ($value instanceof Iterator) {
+				return new Enumerable($value);
+			}
 
-		if ($value instanceof GenericIterator) {
-			return new Enumerable($value);
+			if ($value instanceof GenericEnumerable) {
+				return $value;
+			}
 		}
 
 		throw new InvalidArgumentException('Value must be iterable');

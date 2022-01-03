@@ -4,63 +4,66 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 use Closure;
+use Iterator;
+use IteratorAggregate;
 
 /**
- * @template TValue
  * @template TKey
+ * @template TValue
  *
- * @implements GenericIterator<TValue, TKey>
+ * @implements Iterator<TKey, TValue>
+ * @implements IteratorAggregate<TKey, TValue>
  */
-final class LazyIterator implements GenericIterator
+class LazyIterator implements Iterator, IteratorAggregate
 {
 	/**
-	 * @var GenericIterator<TValue, TKey>|null $enumerator
+	 * @var Iterator<TKey, TValue>|null $inner
 	 */
-	private ?GenericIterator $enumerator = null;
+	private ?Iterator $inner = null;
 
 	/**
-	 * @param Closure(): GenericIterator<TValue, TKey> $enumeratorGenerator
+	 * @param Closure(): Iterator<TKey, TValue> $callback
 	 */
 	public function __construct(
-		private Closure $enumeratorGenerator,
+		private Closure $callback,
 	) {
 	}
 
 	/**
-	 * @return GenericIterator<TValue, TKey>
+	 * @return Iterator<TKey, TValue>
 	 */
-	private function getEnumerator(): GenericIterator
+	public function getIterator(): Iterator
 	{
-		if ($this->enumerator === null)
+		if ($this->inner === null)
 		{
-			$this->enumerator = ($this->enumeratorGenerator)();
+			$this->inner = ($this->callback)();
 		}
 
-		return $this->enumerator;
+		return $this->inner;
 	}
 
 	public function current(): mixed
 	{
-		return $this->getEnumerator()->current();
+		return $this->getIterator()->current();
 	}
 
 	public function next(): void
 	{
-		$this->getEnumerator()->next();
+		$this->getIterator()->next();
 	}
 
 	public function key(): mixed
 	{
-		return $this->getEnumerator()->key();
+		return $this->getIterator()->key();
 	}
 
 	public function valid(): bool
 	{
-		return $this->getEnumerator()->valid();
+		return $this->getIterator()->valid();
 	}
 
 	public function rewind(): void
 	{
-		$this->getEnumerator()->rewind();
+		$this->getIterator()->rewind();
 	}
 }

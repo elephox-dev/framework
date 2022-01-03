@@ -3,15 +3,19 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use ArrayAccess;
+use BadMethodCallException;
 use JetBrains\PhpStorm\Pure;
+use SeekableIterator;
 
 /**
- * @template TValue
  * @template TKey as array-key
+ * @template TValue
  *
- * @implements GenericIterator<TValue, TKey>
+ * @implements SeekableIterator<TKey, TValue>
+ * @implements ArrayAccess<TKey, TValue>
  */
-class ArrayIterator implements GenericIterator
+class ArrayIterator implements SeekableIterator, ArrayAccess
 {
 	private int $keyIndex = 0;
 
@@ -57,5 +61,36 @@ class ArrayIterator implements GenericIterator
 	public function rewind(): void
 	{
 		$this->keyIndex = 0;
+	}
+
+	public function seek(int $offset): void
+	{
+		$this->keyIndex = $offset;
+	}
+
+	public function offsetExists(mixed $offset): bool
+	{
+		return array_key_exists($offset, $this->keys);
+	}
+
+	public function offsetGet(mixed $offset): mixed
+	{
+		$index = array_search($offset, $this->keys, true);
+		if ($index === false)
+		{
+			throw new BadMethodCallException("Offset $offset does not exist");
+		}
+
+		return $this->values[$index];
+	}
+
+	public function offsetSet(mixed $offset, mixed $value): void
+	{
+		throw new BadMethodCallException('Cannot set values in an array iterator');
+	}
+
+	public function offsetUnset(mixed $offset): void
+	{
+		throw new BadMethodCallException('Cannot unset values in an array iterator');
 	}
 }
