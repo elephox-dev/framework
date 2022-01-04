@@ -92,10 +92,10 @@ class Enumerable implements GenericEnumerable
 			if ($result instanceof Iterator) {
 				$this->iterator = $result;
 			} else {
-				throw new InvalidArgumentException('The iterator must return an instance of GenericIterator');
+				throw new InvalidArgumentException('The iterator must return an instance of Iterator');
 			}
 		} else {
-			throw new InvalidArgumentException('The iterator must be or return an instance of GenericIterator');
+			throw new InvalidArgumentException('The iterator must be or return an instance of Iterator');
 		}
 	}
 
