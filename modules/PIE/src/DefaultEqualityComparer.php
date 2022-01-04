@@ -36,10 +36,6 @@ final class DefaultEqualityComparer
 			return spl_object_hash($a) === spl_object_hash($b);
 		}
 
-		if (!is_object($a) || !is_object($b)) {
-			return false;
-		}
-
 		return $a === $b;
 	}
 
