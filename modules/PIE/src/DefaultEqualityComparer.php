@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 final class DefaultEqualityComparer
@@ -10,11 +11,11 @@ final class DefaultEqualityComparer
 	#[Pure] public static function equals(mixed $a, mixed $b): bool
 	{
 		if ($a instanceof Comparable && is_object($b)) {
-			return self::comparableEquals($a, $b);
+			return $a->compareTo($b) === 0;
 		}
 
 		if ($b instanceof Comparable && is_object($a)) {
-			return self::comparableEquals($b, $a);
+			return $b->compareTo($a) === 0;
 		}
 
 		/** @noinspection TypeUnsafeComparisonInspection */
@@ -25,14 +26,14 @@ final class DefaultEqualityComparer
 	{
 		if (is_object($a) && is_object($b)) {
 			if ($a instanceof Comparable) {
-				return self::comparableEquals($a, $b);
+				return $a->compareTo($b) === 0;
 			}
 
 			if ($b instanceof Comparable) {
-				return self::comparableEquals($b, $a);
+				return $b->compareTo($a) === 0;
 			}
 
-			return self::sameObject($a, $b);
+			return spl_object_hash($a) === spl_object_hash($b);
 		}
 
 		if (!is_object($a) || !is_object($b)) {
@@ -42,47 +43,40 @@ final class DefaultEqualityComparer
 		return $a === $b;
 	}
 
-	#[Pure] public static function sameObject(object $a, object $b): bool
-	{
-		return spl_object_hash($a) === spl_object_hash($b);
-	}
-
-	#[Pure] public static function comparableEquals(Comparable $a, object $b): bool
-	{
-		return $a->compareTo($b) === 0;
-	}
-
 	#[Pure] public static function compare(mixed $a, mixed $b): int
 	{
-		if (is_object($a) && is_object($b)) {
-			if ($a instanceof Comparable) {
-				return $a->compareTo($b);
-			}
+		if ($a instanceof Comparable && is_object($b)) {
+			return $a->compareTo($b);
+		}
 
-			if ($b instanceof Comparable) {
-				return $b->compareTo($a);
-			}
+		if ($b instanceof Comparable && is_object($a)) {
+			return $b->compareTo($a);
 		}
 
 		return $a <=> $b;
 	}
 
 	/**
-	 * @template TCallable as callable(mixed, mixed): (bool|int)
+	 * @template TCallable as callable(...mixed): (bool|int)
 	 *
 	 * @param TCallable $comparer
-	 * @return callable(mixed, mixed): (bool|int)
+	 * @return callable(...mixed): (bool|int)
 	 */
 	#[Pure] public static function invert(callable $comparer): callable
 	{
-		return static function (mixed $a, mixed $b) use ($comparer) {
-			$result = $comparer($a, $b);
+		return static function (mixed ...$args) use ($comparer) {
+			$result = $comparer(...$args);
 
 			if (is_bool($result)) {
 				return !$result;
 			}
 
-			return -$result;
+			/** @psalm-suppress RedundantConditionGivenDocblockType */
+			if (is_numeric($result)) {
+				return -$result;
+			}
+
+			throw new InvalidArgumentException('Invalid comparer result: ' . get_debug_type($result));
 		};
 	}
 }
