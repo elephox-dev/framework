@@ -6,11 +6,10 @@ namespace Elephox\PIE;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\PIE\PIE
  * @covers \Elephox\PIE\DefaultEqualityComparer
  * @covers \Elephox\PIE\Enumerable
- * @covers \Elephox\PIE\GeneratorIterator
- * @covers \Elephox\PIE\ListIterator
+ * @covers \Elephox\PIE\ArrayIterator
+ * @covers \Elephox\PIE\WhereIterator
  * @uses   \Elephox\PIE\IsEnumerable
  */
 class ReadmeTest extends TestCase
@@ -18,7 +17,7 @@ class ReadmeTest extends TestCase
 	public function testReadme(): void
 	{
 		$array = [5, 2, 1, 4, 3];
-		$pie = PIE::from($array);
+		$pie = Enumerable::from($array);
 
 		$identity = static fn(int $item): int => $item;
 

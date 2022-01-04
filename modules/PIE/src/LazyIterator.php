@@ -12,9 +12,8 @@ use IteratorAggregate;
  * @template TValue
  *
  * @implements Iterator<TKey, TValue>
- * @implements IteratorAggregate<TKey, TValue>
  */
-class LazyIterator implements Iterator, IteratorAggregate
+class LazyIterator implements Iterator
 {
 	/**
 	 * @var Iterator<TKey, TValue>|null $inner
@@ -32,7 +31,7 @@ class LazyIterator implements Iterator, IteratorAggregate
 	/**
 	 * @return Iterator<TKey, TValue>
 	 */
-	public function getIterator(): Iterator
+	private function getInnerIterator(): Iterator
 	{
 		if ($this->inner === null)
 		{
@@ -44,26 +43,26 @@ class LazyIterator implements Iterator, IteratorAggregate
 
 	public function current(): mixed
 	{
-		return $this->getIterator()->current();
+		return $this->getInnerIterator()->current();
 	}
 
 	public function next(): void
 	{
-		$this->getIterator()->next();
+		$this->getInnerIterator()->next();
 	}
 
 	public function key(): mixed
 	{
-		return $this->getIterator()->key();
+		return $this->getInnerIterator()->key();
 	}
 
 	public function valid(): bool
 	{
-		return $this->getIterator()->valid();
+		return $this->getInnerIterator()->valid();
 	}
 
 	public function rewind(): void
 	{
-		$this->getIterator()->rewind();
+		$this->getInnerIterator()->rewind();
 	}
 }

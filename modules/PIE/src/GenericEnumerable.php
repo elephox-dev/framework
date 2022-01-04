@@ -207,7 +207,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @param GenericEnumerable<TIteratorKey, TSource> $other
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TSource, TSource): bool $comparer
+	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
@@ -261,7 +261,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TKey
 	 *
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TSource, TSource): int $comparer
+	 * @param null|callable(TKey, TKey): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
@@ -271,7 +271,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TKey
 	 *
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TSource, TSource): int $comparer
+	 * @param null|callable(TKey, TKey): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
 	 */
@@ -304,11 +304,11 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TResult
 	 *
 	 * @param callable(TSource, TIteratorKey): GenericEnumerable<TCollection, TCollectionKey> $collectionSelector
-	 * @param callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
+	 * @param null|callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
 	 * @return GenericEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectMany(callable $collectionSelector, callable $resultSelector): GenericEnumerable;
+	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable;
 
 	/**
 	 * @param GenericEnumerable<TIteratorKey, TSource> $other
