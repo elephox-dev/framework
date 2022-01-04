@@ -17,17 +17,19 @@ class SelectIterator implements Iterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TValue, TKey): TResult $selector
+	 * @param Closure(TValue, TKey): TResult $elementSelector
+	 * @param null|Closure(TKey, TValue): TResult $keySelector
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $selector
+		private Closure $elementSelector,
+		private ?Closure $keySelector = null
 	) {
 	}
 
 	public function current(): mixed
 	{
-		return ($this->selector)($this->iterator->current(), $this->iterator->key());
+		return ($this->elementSelector)($this->iterator->current(), $this->iterator->key());
 	}
 
 	public function next(): void
@@ -37,7 +39,11 @@ class SelectIterator implements Iterator
 
 	public function key(): mixed
 	{
-		return $this->iterator->key();
+		if ($this->keySelector === null) {
+			return $this->iterator->key();
+		}
+
+		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
 	}
 
 	public function valid(): bool

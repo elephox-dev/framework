@@ -5,14 +5,15 @@ namespace Elephox\PIE;
 
 use Closure;
 use Iterator;
+use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @implements Iterator<TKey, TValue>
+ * @implements OuterIterator<TKey, TValue>
  */
-class WhereIterator implements Iterator
+class WhileIterator implements OuterIterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
@@ -31,22 +32,7 @@ class WhereIterator implements Iterator
 
 	public function next(): void
 	{
-		if (($this->predicate)($this->iterator->current(), $this->iterator->key())) {
-			$this->iterator->next();
-		}
-
-		$this->moveToNextMatch();
-	}
-
-	private function moveToNextMatch(): void
-	{
-		while ($this->iterator->valid()) {
-			if (($this->predicate)($this->iterator->current(), $this->iterator->key())) {
-				return;
-			}
-
-			$this->iterator->next();
-		}
+		$this->iterator->next();
 	}
 
 	public function key(): mixed
@@ -56,13 +42,16 @@ class WhereIterator implements Iterator
 
 	public function valid(): bool
 	{
-		return $this->iterator->valid();
+		return $this->iterator->valid() && ($this->predicate)($this->iterator->current(), $this->iterator->key());
 	}
 
 	public function rewind(): void
 	{
 		$this->iterator->rewind();
+	}
 
-		$this->moveToNextMatch();
+	public function getInnerIterator(): Iterator
+	{
+		return $this->iterator;
 	}
 }

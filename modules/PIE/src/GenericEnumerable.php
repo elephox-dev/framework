@@ -414,7 +414,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
 	/**
-	 * @param callable(TSource, TIteratorKey): bool $predicate
+	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
@@ -424,11 +424,13 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TOther
 	 * @template TOtherIteratorKey
 	 * @template TResult
+	 * @template TResultKey
 	 *
 	 * @param GenericEnumerable<TOtherIteratorKey, TOther> $other
 	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
+	 * @param null|callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector
 	 *
-	 * @return GenericEnumerable<TIteratorKey, TResult>
+	 * @return GenericEnumerable<TResultKey, TResult>
 	 */
-	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable;
+	public function zip(GenericEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericEnumerable;
 }

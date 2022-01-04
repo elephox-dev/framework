@@ -3,8 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use CachingIterator;
+use CallbackFilterIterator;
+use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
+use LimitIterator;
+use MultipleIterator;
+use UnexpectedValueException;
 
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
@@ -754,51 +760,29 @@ trait IsEnumerable
 
 	public function take(int $count): GenericEnumerable
 	{
-		return new Enumerable(function () use ($count) {
-			$iterator = $this->getIterator();
-			$i = 0;
-
-			while ($i < $count && $iterator->valid()) {
-				yield $iterator->key() => $iterator->current();
-				$iterator->next();
-				$i++;
-			}
-		});
+		return new Enumerable(new LimitIterator($this->getIterator(), 0, $count));
 	}
 
 	public function takeLast(int $count): GenericEnumerable
 	{
-		return new Enumerable(function () use ($count) {
-			$valueBuffer = [];
-			$keyBuffer = [];
-			foreach ($this->getIterator() as $key => $element) {
-				$keyBuffer[] = $key;
-				$valueBuffer[] = $element;
-			}
+		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
+		$cachedIterator->rewind();
+		while ($cachedIterator->valid()) {
+			$cachedIterator->next();
+		}
 
-			$bufferLength = count($valueBuffer);
-			$bufferOffset = max(count($valueBuffer) - $count, 0);
+		$size = count($cachedIterator);
+		$offset = $size - $count;
+		if ($offset < 0) {
+			return new Enumerable(new EmptyIterator());
+		}
 
-			for ($i = $bufferOffset; $i < $bufferLength - 1; $i++) {
-				yield $keyBuffer[$i] => $valueBuffer[$i];
-			}
-		});
+		return new Enumerable(new LimitIterator($cachedIterator, $offset));
 	}
 
 	public function takeWhile(callable $predicate): GenericEnumerable
 	{
-		return new Enumerable(function () use ($predicate) {
-			$iterator = $this->getIterator();
-
-			while ($iterator->valid()) {
-				if (!$predicate($iterator->current(), $iterator->key())) {
-					break;
-				}
-
-				yield $iterator->key() => $iterator->current();
-				$iterator->next();
-			}
-		});
+		return new Enumerable(new WhileIterator($this->getIterator(), $predicate));
 	}
 
 	/**
@@ -822,6 +806,10 @@ trait IsEnumerable
 		foreach ($this->getIterator() as $elementKey => $element) {
 			if (is_scalar($elementKey)) {
 				$key = $elementKey;
+			} else if (is_array($elementKey)) {
+				throw new UnexpectedValueException('Cannot use array as array key');
+			} else if (is_resource($elementKey)) {
+				throw new UnexpectedValueException('Cannot use resource as array key');
 			} else {
 				$key = (string)$elementKey;
 			}
@@ -879,33 +867,39 @@ trait IsEnumerable
 
 	public function where(callable $predicate): GenericEnumerable
 	{
-		return new Enumerable(new WhereIterator($this->getIterator(), $predicate));
+		return new Enumerable(new CallbackFilterIterator($this->getIterator(), $predicate));
 	}
 
 	/**
 	 * @template TOther
 	 * @template TOtherIteratorKey
 	 * @template TResult
+	 * @template TResultKey
 	 *
 	 * @param GenericEnumerable<TOtherIteratorKey, TOther> $other
 	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
+	 * @param null|callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector
 	 *
-	 * @return GenericEnumerable<TIteratorKey, TResult>
+	 * @return GenericEnumerable<TResultKey, TResult>
 	 */
-	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
+	public function zip(GenericEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericEnumerable
 	{
-		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
 		/** @var callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector */
+		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
 
-		return new Enumerable(function () use ($other, $resultSelector) {
-			$iterator = $this->getIterator();
-			$otherIterator = $other->getIterator();
+		/** @var callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector */
+		$keySelector ??= static fn (mixed $a): mixed => $a;
 
-			while ($iterator->valid() && $otherIterator->valid()) {
-				yield $resultSelector($iterator->current(), $otherIterator->current(), $iterator->key(), $otherIterator->key());
-				$iterator->next();
-				$otherIterator->next();
-			}
-		});
+		$mit = new MultipleIterator(MultipleIterator::MIT_KEYS_NUMERIC | MultipleIterator::MIT_NEED_ALL);
+		$mit->attachIterator($this->getIterator());
+		$mit->attachIterator($other->getIterator());
+
+		return new Enumerable(
+			new SelectIterator(
+				$mit,
+				static fn (array $values, array $keys): mixed => $resultSelector($values[0], $values[1], $keys[0], $keys[1]),
+				static fn (array $keys, array $values): mixed => $keySelector($keys[0], $keys[1], $values[0], $values[1]),
+			)
+		);
 	}
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 
 final class DefaultEqualityComparer

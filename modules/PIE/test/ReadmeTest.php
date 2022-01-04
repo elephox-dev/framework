@@ -8,8 +8,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\PIE\DefaultEqualityComparer
  * @covers \Elephox\PIE\Enumerable
- * @covers \Elephox\PIE\ArrayIterator
- * @covers \Elephox\PIE\WhereIterator
  * @uses   \Elephox\PIE\IsEnumerable
  */
 class ReadmeTest extends TestCase

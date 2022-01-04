@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use ArrayIterator;
 use Closure;
-use Generator;
+use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
@@ -29,6 +30,7 @@ class Enumerable implements GenericEnumerable
 		if (is_string($value)) {
 			$value = str_split($value);
 		}
+
 		if (is_array($value)) {
 			return new self(new ArrayIterator($value));
 		}
@@ -56,6 +58,14 @@ class Enumerable implements GenericEnumerable
 	public static function range(int $start, int $end, int $step = 1): GenericEnumerable
 	{
 		return new self(new RangeIterator($start, $end, $step));
+	}
+
+	/**
+	 * @return GenericEnumerable<never, never>
+	 */
+	public static function empty(): GenericEnumerable
+	{
+		return new self(new EmptyIterator());
 	}
 
 	/**
