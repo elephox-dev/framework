@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Iterator;
 use LimitIterator;
 use MultipleIterator;
+use NoRewindIterator;
 use UnexpectedValueException;
 
 /**
@@ -571,20 +572,7 @@ trait IsEnumerable
 
 	public function reverse(): GenericEnumerable
 	{
-		return new Enumerable(function () {
-			$iterator = $this->getIterator();
-			$stack = [];
-
-			while ($iterator->valid()) {
-				$stack[] = $iterator->current();
-
-				$iterator->next();
-			}
-
-			while (count($stack) > 0) {
-				yield array_pop($stack);
-			}
-		});
+		return new Enumerable(new ReverseIterator($this->getIterator()));
 	}
 
 	public function select(callable $selector): GenericEnumerable
@@ -618,16 +606,14 @@ trait IsEnumerable
 	public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		$others = new CachingIterator($other->getIterator());
 
-		foreach ($this->getIterator() as $element) {
-			/**
-			 * @var TSource $otherElement
-			 */
-			foreach ($others as $otherElement) {
-				if (!$comparer($element, $otherElement)) {
-					return false;
-				}
+		$mit = new MultipleIterator(MultipleIterator::MIT_KEYS_NUMERIC | MultipleIterator::MIT_NEED_ANY);
+		$mit->attachIterator($this->getIterator());
+		$mit->attachIterator($other->getIterator());
+
+		foreach ($mit as $keys => $values) {
+			if (!$comparer($values[0], $values[1], $keys[0], $keys[1])) {
+				return false;
 			}
 		}
 
@@ -678,67 +664,37 @@ trait IsEnumerable
 
 	public function skip(int $count): GenericEnumerable
 	{
-		return new Enumerable(function () use ($count) {
-			$iterator = $this->getIterator();
-
-			for ($i = 0; $i < $count; $i++) {
-				if (!$iterator->valid()) {
-					return;
-				}
-
-				$iterator->next();
-			}
-
-			while ($iterator->valid()) {
-				yield $iterator->key() => $iterator->current();
-
-				$iterator->next();
-			}
-		});
+		return new Enumerable(new LimitIterator($this->getIterator(), $count));
 	}
 
 	public function skipLast(int $count): GenericEnumerable
 	{
-		return new Enumerable(function () use ($count) {
-			$iterator = $this->getIterator();
-			$queue = [];
-			$keyQueue = [];
+		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
+		$cachedIterator->rewind();
+		while ($cachedIterator->valid()) {
+			$cachedIterator->next();
+		}
 
-			while ($iterator->valid()) {
-				$queue[] = $iterator->current();
-				$keyQueue[] = $iterator->key();
+		$size = count($cachedIterator);
+		$offset = $size - $count;
+		if ($offset < 0) {
+			return new Enumerable(new EmptyIterator());
+		}
 
-				$iterator->next();
-			}
-
-			if (count($queue) <= $count) {
-				return;
-			}
-
-			for ($i = 0; $i < count($queue) - $count; $i++) {
-				yield $keyQueue[$i] => $queue[$i];
-			}
-		});
+		return new Enumerable(new LimitIterator($cachedIterator, 0, $offset));
 	}
 
 	public function skipWhile(callable $predicate): GenericEnumerable
 	{
-		return new Enumerable(function () use ($predicate) {
-			$iterator = $this->getIterator();
-			$skip = true;
+		$iterator = $this->getIterator();
 
-			while ($iterator->valid()) {
-				if ($skip && !$predicate($iterator->current(), $iterator->key())) {
-					$skip = false;
-				}
+		$whileIterator = new WhileIterator($iterator, $predicate);
+		$whileIterator->rewind();
+		while ($whileIterator->valid()) {
+			$whileIterator->next();
+		}
 
-				if (!$skip) {
-					yield $iterator->key() => $iterator->current();
-				}
-
-				$iterator->next();
-			}
-		});
+		return new Enumerable(new NoRewindIterator($iterator));
 	}
 
 	/**
