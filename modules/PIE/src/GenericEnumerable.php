@@ -427,8 +427,8 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @template TResultKey
 	 *
 	 * @param GenericEnumerable<TOtherIteratorKey, TOther> $other
-	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
-	 * @param null|callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector
+	 * @param null|callable(TSource, TOther): TResult $resultSelector
+	 * @param null|callable(TIteratorKey, TOtherIteratorKey): TResultKey $keySelector
 	 *
 	 * @return GenericEnumerable<TResultKey, TResult>
 	 */

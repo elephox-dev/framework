@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Elephox\PIE;
 
 /**
+ * @psalm-type NonNegativeInteger = 0|positive-int
+ *
  * @template TSource
  *
- * @extends Enumerable<int, TSource>
+ * @extends Enumerable<NonNegativeInteger, TSource>
  * @implements GenericOrderedEnumerable<TSource>
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable

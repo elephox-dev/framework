@@ -8,6 +8,7 @@ use CallbackFilterIterator;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
+use Closure;
 use LimitIterator;
 use MultipleIterator;
 use NoRewindIterator;
@@ -833,28 +834,31 @@ trait IsEnumerable
 	 * @template TResultKey
 	 *
 	 * @param GenericEnumerable<TOtherIteratorKey, TOther> $other
-	 * @param null|callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector
-	 * @param null|callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector
+	 * @param null|callable(TSource, TOther): TResult $resultSelector
+	 * @param null|callable(TIteratorKey, TOtherIteratorKey): TResultKey $keySelector
 	 *
 	 * @return GenericEnumerable<TResultKey, TResult>
 	 */
 	public function zip(GenericEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericEnumerable
 	{
-		/** @var callable(TSource, TOther, TIteratorKey, TOtherIteratorKey): TResult $resultSelector */
 		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
+		/** @var callable(TSource, TOther): TResult $resultSelector */
 
-		/** @var callable(TIteratorKey, TOtherIteratorKey, TSource, TOther): TResultKey $keySelector */
-		$keySelector ??= static fn (mixed $a): mixed => $a;
+		$keySelector ??= static fn (mixed $a, mixed $b): mixed => $a;
+		/** @var callable(TIteratorKey, TOtherIteratorKey): TResultKey $keySelector */
 
+		/** @var MultipleIterator<array{TIteratorKey, TOtherIteratorKey}, array{TSource, TOther}> $mit */
 		$mit = new MultipleIterator(MultipleIterator::MIT_KEYS_NUMERIC | MultipleIterator::MIT_NEED_ALL);
 		$mit->attachIterator($this->getIterator());
 		$mit->attachIterator($other->getIterator());
 
 		return new Enumerable(
 			new SelectIterator(
-				$mit,
-				static fn (array $values, array $keys): mixed => $resultSelector($values[0], $values[1], $keys[0], $keys[1]),
-				static fn (array $keys, array $values): mixed => $keySelector($keys[0], $keys[1], $values[0], $values[1]),
+				new KeySelectIterator(
+					$mit,
+					static fn(array $keys): mixed => $keySelector($keys[0], $keys[1]),
+				),
+				static fn(array $values): mixed => $resultSelector($values[0], $values[1])
 			)
 		);
 	}

@@ -5,29 +5,31 @@ namespace Elephox\PIE;
 
 use Closure;
 use Iterator;
+use JetBrains\PhpStorm\Internal\TentativeType;
+use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
- * @template TResult
+ * @template TResultKey
  *
- * @implements Iterator<TKey, TResult>
+ * @implements Iterator<TResultKey, TValue>
  */
-class SelectIterator implements Iterator
+class KeySelectIterator implements Iterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TValue, TKey): TResult $elementSelector
+	 * @param Closure(TKey, TValue): TResultKey $keySelector
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $elementSelector
+		private Closure $keySelector
 	) {
 	}
 
 	public function current(): mixed
 	{
-		return ($this->elementSelector)($this->iterator->current(), $this->iterator->key());
+		return $this->iterator->current();
 	}
 
 	public function next(): void
@@ -37,7 +39,7 @@ class SelectIterator implements Iterator
 
 	public function key(): mixed
 	{
-		return $this->iterator->key();
+		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
 	}
 
 	public function valid(): bool

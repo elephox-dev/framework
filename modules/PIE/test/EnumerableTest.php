@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\PIE\Enumerable
  * @covers \Elephox\PIE\RangeIterator
  * @covers \Elephox\PIE\SelectIterator
+ * @covers \Elephox\PIE\KeySelectIterator
  * @covers \Elephox\PIE\WhileIterator
  * @covers \Elephox\PIE\ReverseIterator
  * @covers \Elephox\PIE\DefaultEqualityComparer
