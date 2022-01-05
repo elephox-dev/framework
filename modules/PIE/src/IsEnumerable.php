@@ -514,7 +514,7 @@ trait IsEnumerable
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TKey, TKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<int, TSource>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
@@ -548,7 +548,7 @@ trait IsEnumerable
 	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TKey, TKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<int, TSource>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{

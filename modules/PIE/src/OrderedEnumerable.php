@@ -5,10 +5,9 @@ namespace Elephox\PIE;
 
 /**
  * @template TSource
- * @template TIteratorKey
  *
- * @extends Enumerable<TSource, TIteratorKey>
- * @implements GenericOrderedEnumerable<TSource, TIteratorKey>
+ * @extends Enumerable<int, TSource>
+ * @implements GenericOrderedEnumerable<TSource>
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 {

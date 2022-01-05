@@ -5,9 +5,8 @@ namespace Elephox\PIE;
 
 /**
  * @template TSource
- * @template TIteratorKey
  *
- * @extends GenericEnumerable<TSource, TIteratorKey>
+ * @extends GenericEnumerable<int, TSource>
  */
 interface GenericOrderedEnumerable extends GenericEnumerable
 {
@@ -15,9 +14,9 @@ interface GenericOrderedEnumerable extends GenericEnumerable
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): int $comparer $comparer
+	 * @param null|callable(TKey, TKey): int $comparer $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
@@ -25,9 +24,9 @@ interface GenericOrderedEnumerable extends GenericEnumerable
 	 * @template TKey
 	 *
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): int $comparer $comparer
+	 * @param null|callable(TKey, TKey): int $comparer $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TIteratorKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 }
