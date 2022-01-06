@@ -6,10 +6,11 @@ namespace Elephox\PIE;
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
+ * @template TKey of NonNegativeInteger
  * @template TSource
  *
- * @extends Enumerable<NonNegativeInteger, TSource>
- * @implements GenericOrderedEnumerable<TSource>
+ * @extends Enumerable<TKey, TSource>
+ * @implements GenericOrderedEnumerable<TKey, TSource>
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 {
