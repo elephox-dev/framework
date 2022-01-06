@@ -9,7 +9,6 @@ use CallbackFilterIterator;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
-use Closure;
 use LimitIterator;
 use MultipleIterator;
 use NoRewindIterator;
@@ -600,8 +599,7 @@ trait IsEnumerable
 	 */
 	public function select(callable $selector): GenericEnumerable
 	{
-		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
-		return new Enumerable(new SelectIterator($this->getIterator(), Closure::fromCallable($selector)));
+		return new Enumerable(new SelectIterator($this->getIterator(), $selector(...)));
 	}
 
 	/**
@@ -724,8 +722,7 @@ trait IsEnumerable
 	{
 		$iterator = $this->getIterator();
 
-		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
-		$whileIterator = new WhileIterator($iterator, Closure::fromCallable($predicate));
+		$whileIterator = new WhileIterator($iterator, $predicate(...));
 		$whileIterator->rewind();
 		while ($whileIterator->valid()) {
 			$whileIterator->next();
@@ -780,8 +777,7 @@ trait IsEnumerable
 	 */
 	public function takeWhile(callable $predicate): GenericEnumerable
 	{
-		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
-		return new Enumerable(new WhileIterator($this->getIterator(), Closure::fromCallable($predicate)));
+		return new Enumerable(new WhileIterator($this->getIterator(), $predicate(...)));
 	}
 
 	/**
@@ -821,10 +817,24 @@ trait IsEnumerable
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
+		$identity = static fn(mixed $o): mixed => $o;
 
-		return $this->unionBy($other, static fn (mixed $o): mixed => $o, $comparer);
+		/**
+		 * @var callable(TSource, TSource): bool $comparer
+		 * @var callable(TSource): TSource $identity
+		 */
+		return $this->unionBy($other, $identity, $comparer);
 	}
 
+	/**
+	 * @template TKey
+	 *
+	 * @param GenericEnumerable<TIteratorKey, TSource> $other
+	 * @param callable(TSource): TKey $keySelector
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
 	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
@@ -833,7 +843,11 @@ trait IsEnumerable
 		$append->append($this->getIterator());
 		$append->append($other->getIterator());
 
-		return new Enumerable(new UniqueByIterator($append, $keySelector, $comparer));
+		/**
+		 * @var Closure(TSource): TKey $keySelector
+		 * @var Closure(TKey, TKey): bool $comparer
+		 */
+		return new Enumerable(new UniqueByIterator($append, $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -844,10 +858,7 @@ trait IsEnumerable
 	 */
 	public function where(callable $predicate): GenericEnumerable
 	{
-		/**
-		 * @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196
-		 */
-		return new Enumerable(new CallbackFilterIterator($this->getIterator(), Closure::fromCallable($predicate)));
+		return new Enumerable(new CallbackFilterIterator($this->getIterator(), $predicate(...)));
 	}
 
 	/**
