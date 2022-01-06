@@ -11,7 +11,7 @@
     ],
     "homepage": "https://elephox.dev",
     "require": {
-        "php": ">=8.1",
+        "php": "^8.1 || ^8.2",
         "ext-mbstring": "*",
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/container": "^2.0",
@@ -47,6 +47,7 @@
     "suggest": {
         "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Elephox\\Collection\\": "modules/Collection/src/",
