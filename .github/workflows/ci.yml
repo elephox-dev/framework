@@ -20,7 +20,7 @@ jobs:
     name: 📦 Composer Setup
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ] # add PHP 8.2 to every matrix once phpspec/prophecy#550 is fixed
         os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -54,7 +54,7 @@ jobs:
     needs: [ composer-setup ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ]
         os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -88,7 +88,7 @@ jobs:
 #    needs: [ composer-setup ]
 #    strategy:
 #      matrix:
-#        php-version: [ '8.1', '8.2' ]
+#        php-version: [ '8.1' ]
 #        os: [ 'ubuntu-latest', 'windows-latest' ]
 #    runs-on: ${{ matrix.os }}
 #    steps:
@@ -157,7 +157,7 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ]
         os: [ 'ubuntu-latest' ] # re-add 'windows-latest' when actions/upload-artifact#270 is resolved
     runs-on: ${{ matrix.os }}
     steps:
@@ -193,7 +193,7 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ]
         os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -224,7 +224,7 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ]
     runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
