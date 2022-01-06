@@ -97,6 +97,10 @@
             "@putenv XDEBUG_MODE=off",
             "phpbench run --report=overview --retry-threshold=5 --"
         ],
+        "check-dependencies": [
+            "@putenv XDEBUG_MODE=off",
+            "@composer modules:check --"
+        ],
         "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
             "phpbench run --report=overview --retry-threshold=5"
