@@ -118,6 +118,8 @@ trait IsEnumerable
 	 */
 	public function chunk(int $size): GenericEnumerable
 	{
+		// MAYBE: rewrite this using AppendIterator and LimitIterator
+
 		/** @var GenericEnumerable<NonNegativeInteger, list<TSource>> */
 		return new Enumerable(function () use ($size) {
 			$index = 0;
@@ -342,6 +344,11 @@ trait IsEnumerable
 		}
 
 		return $defaultValue;
+	}
+
+	public function flip(): GenericEnumerable
+	{
+		return new Enumerable(new FlipIterator($this->getIterator()));
 	}
 
 //	public function groupBy(callable $keySelector, ?callable $elementSelector = null, ?callable $resultSelector = null, ?callable $comparer = null): GenericEnumerable

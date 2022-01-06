@@ -162,6 +162,11 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 
+	/**
+	 * @return GenericEnumerable<TSource, TIteratorKey>
+	 */
+	public function flip(): GenericEnumerable;
+
 //	/**
 //	 * @template TKey
 //	 * @template TElement
