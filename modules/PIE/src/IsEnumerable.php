@@ -15,6 +15,7 @@ use NoRewindIterator;
 use UnexpectedValueException;
 
 /**
+ * @psalm-suppress LessSpecificImplementedReturnType For some reason, psalm thinks every enumerable has the templates of OrderedEnumerable...
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TIteratorKey
@@ -510,12 +511,12 @@ trait IsEnumerable
 	}
 
 	/**
-	 * @template TKey of NonNegativeInteger
+	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
@@ -531,33 +532,34 @@ trait IsEnumerable
 			$elements[] = $element;
 		}
 
-		$originalKeys = $keys;
+		$unsortedKeys = $keys;
 		usort($keys, $comparer);
 
-		return new OrderedEnumerable(function () use ($keys, $elements, $originalKeys) {
+		return new OrderedEnumerable(function () use ($keys, $elements, $unsortedKeys) {
+			$newIndex = 0;
 			foreach ($keys as $key) {
-				$originalIndex = array_search($key, $originalKeys, true);
+				$unsortedIndex = array_search($key, $unsortedKeys, true);
 
-				yield $elements[$originalIndex];
+				yield $newIndex++ => $elements[$unsortedIndex];
 			}
 		});
 	}
 
 	/**
-	 * @template TKey of NonNegativeInteger
+	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
-		/** @var callable(TKey, TKey): int $comparer */
+		/** @var callable(TCompareKey, TCompareKey): int $comparer */
 
 		$invertedComparer = DefaultEqualityComparer::invert($comparer);
-		/** @var callable(TKey, TKey): int $invertedComparer */
+		/** @var callable(TCompareKey, TCompareKey): int $invertedComparer */
 
 		return $this->orderBy($keySelector, $invertedComparer);
 	}
@@ -576,9 +578,17 @@ trait IsEnumerable
 		return new Enumerable(new ReverseIterator($this->getIterator()));
 	}
 
+	/**
+	 * @template TResult
+	 *
+	 * @param callable(TSource, TIteratorKey): TResult $selector
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TResult>
+	 */
 	public function select(callable $selector): GenericEnumerable
 	{
-		return new Enumerable(new SelectIterator($this->getIterator(), $selector));
+		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
+		return new Enumerable(new SelectIterator($this->getIterator(), Closure::fromCallable($selector)));
 	}
 
 	/**
@@ -593,7 +603,8 @@ trait IsEnumerable
 	 */
 	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable
 	{
-		$resultSelector ??= static fn ($element, $collectionElement, $elementKey, $collectionElementKey): mixed => $collectionElement;
+		/** @psalm-suppress UnusedClosureParam */
+		$resultSelector ??= static fn (mixed $element, mixed $collectionElement, mixed $elementKey, mixed $collectionElementKey): mixed => $collectionElement;
 		/** @var callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector */
 
 		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
@@ -613,9 +624,12 @@ trait IsEnumerable
 		$mit = new MultipleIterator(MultipleIterator::MIT_KEYS_NUMERIC | MultipleIterator::MIT_NEED_ANY);
 		$mit->attachIterator($this->getIterator());
 		$mit->attachIterator($other->getIterator());
-		/** @var MultipleIterator<array{TSource, TSource}, array{TIteratorKey, TIteratorKey}> $mit */
 
 		foreach ($mit as $keys => $values) {
+			/**
+			 * @var array{TSource, TSource} $values
+			 * @var array{TIteratorKey, TIteratorKey} $keys
+			 */
 			if (!$comparer($values[0], $values[1], $keys[0], $keys[1])) {
 				return false;
 			}
@@ -688,6 +702,11 @@ trait IsEnumerable
 		return new Enumerable(new LimitIterator($cachedIterator, 0, $offset));
 	}
 
+	/**
+	 * @param callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
 	public function skipWhile(callable $predicate): GenericEnumerable
 	{
 		$iterator = $this->getIterator();
@@ -741,6 +760,11 @@ trait IsEnumerable
 		return new Enumerable(new LimitIterator($cachedIterator, $offset));
 	}
 
+	/**
+	 * @param callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
 	public function takeWhile(callable $predicate): GenericEnumerable
 	{
 		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
@@ -825,10 +849,18 @@ trait IsEnumerable
 		});
 	}
 
+	/**
+	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
+	 *
+	 * @psalm-suppress MoreSpecificImplementedParamType mixed is not more specific than TSource
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
 	public function where(callable $predicate): GenericEnumerable
 	{
-		/** @psalm-suppress MixedArgumentTypeCoercion */
-		return new Enumerable(new CallbackFilterIterator($this->getIterator(), $predicate));
+		/**
+		 * @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196
+		 */
+		return new Enumerable(new CallbackFilterIterator($this->getIterator(), Closure::fromCallable($predicate)));
 	}
 
 	/**

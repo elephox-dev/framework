@@ -258,22 +258,22 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function min(callable $selector): int|float|string;
 
 	/**
-	 * @template TKey of NonNegativeInteger
+	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function orderBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
 	/**
-	 * @template TKey of NonNegativeInteger
+	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 

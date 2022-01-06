@@ -14,18 +14,22 @@ namespace Elephox\PIE;
 interface GenericOrderedEnumerable extends GenericEnumerable
 {
 	/**
-	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer $comparer
+	 * @template TCompareKey
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
+	 *
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
 	/**
-	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TKey, TKey): int $comparer $comparer
+	 * @template TCompareKey
 	 *
-	 * @return GenericOrderedEnumerable<TKey, TSource>
+	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
+	 *
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 }

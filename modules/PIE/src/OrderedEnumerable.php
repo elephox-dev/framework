@@ -14,13 +14,31 @@ namespace Elephox\PIE;
  */
 class OrderedEnumerable extends Enumerable implements GenericOrderedEnumerable
 {
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
+	 *
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
+	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
+		/** @psalm-suppress MixedArgumentTypeCoercion Psalm doesn't understand that $this has a TKey of NonNegativeInteger */
 		return $this->orderBy($keySelector, $comparer);
 	}
 
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
+	 *
+	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
+	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
-		return $this->orderByDescending($keySelector, $comparer);
+		/** @psalm-suppress MixedArgumentTypeCoercion Psalm doesn't understand that $this has a TKey of NonNegativeInteger */
+		return $this->orderByDescending($keySelector);
 	}
 }
