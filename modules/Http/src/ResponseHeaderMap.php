@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 
 class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 {
-	#[Pure] public static function fromString(string $headers): self
+	public static function fromString(string $headers): self
 	{
 		$rows = Regex::split('/\n/', $headers);
 
@@ -35,7 +35,7 @@ class ResponseHeaderMap extends HeaderMap implements Contract\ResponseHeaderMap
 		return self::fromIterable($headerMap->asArray());
 	}
 
-	#[Pure] public static function fromIterable(iterable $headers): self
+	public static function fromIterable(iterable $headers): self
 	{
 		$map = parent::fromIterable($headers);
 

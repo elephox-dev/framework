@@ -32,8 +32,7 @@ class EventBus implements Contract\EventBus
 			$list = new ArrayList();
 		}
 
-		/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until psalm supports first class callables: vimeo/psalm#7196 */
-		$subscription = new Subscription($eventName, Closure::fromCallable($callback), $priority);
+		$subscription = new Subscription($eventName, $callback(...), $priority);
 
 		$list->add($subscription);
 

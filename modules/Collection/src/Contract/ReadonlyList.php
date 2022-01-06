@@ -18,7 +18,7 @@ use Stringable;
  * @extends iterable<T>
  * @extends list<T>
  */
-interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate, ArrayConvertible
+interface ReadonlyList extends GenericCollection, Filterable, Mappable, Countable, IteratorAggregate, ArrayConvertible
 {
 	/**
 	 * @return T
@@ -29,7 +29,7 @@ interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate, 
 	 * @param callable(T): bool $filter
 	 * @return GenericList<T>
 	 */
-	#[Pure] public function where(callable $filter): GenericList;
+	public function where(callable $filter): GenericList;
 
 	/**
 	 * @template TOut
@@ -37,11 +37,11 @@ interface ReadonlyList extends GenericCollection, Countable, IteratorAggregate, 
 	 * @param callable(T): TOut $callback
 	 * @return GenericList<TOut>
 	 */
-	#[Pure] public function map(callable $callback): GenericList;
+	public function map(callable $callback): GenericList;
 
 	#[Pure] public function isEmpty(): bool;
 
-	#[Pure] public function join(string|Stringable $separator): string;
+	public function join(string|Stringable $separator): string;
 
 	/**
 	 * @return list<T> Returns this object in its array representation.

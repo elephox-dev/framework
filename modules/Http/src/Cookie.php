@@ -18,7 +18,7 @@ class Cookie implements Contract\Cookie
 	 * @param string $cookies
 	 * @return ArrayList<Contract\Cookie>
 	 */
-	#[Pure] public static function fromRequestString(string $cookies): ArrayList
+	public static function fromRequestString(string $cookies): ArrayList
 	{
 		return ArrayList::fromArray(mb_split(';', $cookies))
 			->map(static function (string $cookie): Contract\Cookie {

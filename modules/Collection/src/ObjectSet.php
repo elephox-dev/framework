@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Closure;
-use Elephox\Collection\Contract\GenericCollection;
 use Elephox\Collection\Contract\GenericSet;
 use Elephox\PIE\DefaultEqualityComparer;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
 /**
@@ -34,21 +32,6 @@ class ObjectSet implements GenericSet
 	public function getIterator(): SplObjectStorageIterator
 	{
 		return new SplObjectStorageIterator($this->storage);
-	}
-
-	#[Pure] public function first(?callable $filter = null): mixed
-	{
-		// TODO: Implement first() method.
-	}
-
-	#[Pure] public function any(?callable $filter = null): bool
-	{
-		// TODO: Implement any() method.
-	}
-
-	#[Pure] public function where(callable $filter): GenericCollection
-	{
-		// TODO: Implement where() method.
 	}
 
 	public function contains(mixed $value): bool
@@ -84,10 +67,5 @@ class ObjectSet implements GenericSet
 		$this->storage->detach($value);
 
 		return $existed;
-	}
-
-	public function map(callable $callback): GenericCollection
-	{
-		// TODO: Implement map() method.
 	}
 }

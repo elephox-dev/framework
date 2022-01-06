@@ -127,6 +127,7 @@ class ArrayList implements GenericList, ArrayAccess
 			throw new OffsetNotFoundException($index);
 		}
 
+		/** @psalm-suppress ImpureMethodCall */
 		return $this->list[$index];
 	}
 
@@ -148,7 +149,7 @@ class ArrayList implements GenericList, ArrayAccess
 		}
 	}
 
-	#[Pure] public function first(?callable $filter = null): mixed
+	public function first(?callable $filter = null): mixed
 	{
 		foreach ($this->list as $item) {
 			if ($filter === null || $filter($item)) {
@@ -163,7 +164,7 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param callable(T): bool $filter
 	 * @return ArrayList<T>
 	 */
-	#[Pure] public function where(callable $filter): ArrayList
+	public function where(callable $filter): ArrayList
 	{
 		$result = new ArrayList();
 
@@ -196,13 +197,12 @@ class ArrayList implements GenericList, ArrayAccess
 	 * @param callable(T): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	#[Pure] public function map(callable $callback): ArrayList
+	public function map(callable $callback): ArrayList
 	{
 		$arr = new ArrayList();
 
 		foreach ($this->list as $value) {
 			/**
-			 * @psalm-suppress ImpureMethodCall
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
 			 */
 			$arr->add($callback($value));
@@ -211,7 +211,7 @@ class ArrayList implements GenericList, ArrayAccess
 		return $arr;
 	}
 
-	#[Pure] public function any(?callable $filter = null): bool
+	public function any(?callable $filter = null): bool
 	{
 		return !$this->isEmpty() && $this->first($filter) !== null;
 	}
@@ -275,7 +275,7 @@ class ArrayList implements GenericList, ArrayAccess
 		array_unshift($this->list, $value);
 	}
 
-	#[Pure] public function contains(mixed $value): bool
+	public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
 	}
@@ -292,7 +292,7 @@ class ArrayList implements GenericList, ArrayAccess
 		return $this;
 	}
 
-	#[Pure] public function join(Stringable|string $separator): string
+	public function join(Stringable|string $separator): string
 	{
 		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
 	}

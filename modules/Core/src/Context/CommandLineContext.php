@@ -41,7 +41,7 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		}
 	}
 
-	#[Pure] public function getCommandLine(): string
+	public function getCommandLine(): string
 	{
 		$line = $this->command;
 

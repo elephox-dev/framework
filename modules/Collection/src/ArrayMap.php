@@ -90,7 +90,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		return $this->values[$key];
 	}
 
-	#[Pure] public function first(?callable $filter = null): mixed
+	public function first(?callable $filter = null): mixed
 	{
 		foreach ($this->values as $key => $value) {
 			if ($filter === null || $filter($value, $key)) {
@@ -101,7 +101,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		return null;
 	}
 
-	#[Pure] public function firstKey(?callable $filter = null): mixed
+	public function firstKey(?callable $filter = null): mixed
 	{
 		foreach ($this->values as $key => $value) {
 			if ($filter === null || $filter($key, $value)) {
@@ -117,7 +117,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return ArrayMap<TKey, TValue>
 	 */
-	#[Pure] public function where(callable $filter): ArrayMap
+	public function where(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
@@ -135,7 +135,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 	 * @param callable(TKey, TValue): bool $filter
 	 * @return ArrayMap<TKey, TValue>
 	 */
-	#[Pure] public function whereKey(callable $filter): ArrayMap
+	public function whereKey(callable $filter): ArrayMap
 	{
 		$result = new ArrayMap();
 
@@ -160,7 +160,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayMap<TKey, TOut>
 	 */
-	#[Pure] public function map(callable $callback): ArrayMap
+	public function map(callable $callback): ArrayMap
 	{
 		$map = new ArrayMap();
 
@@ -175,12 +175,12 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		return $map;
 	}
 
-	#[Pure] public function any(?callable $filter = null): bool
+	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
 
-	#[Pure] public function anyKey(?callable $filter = null): bool
+	public function anyKey(?callable $filter = null): bool
 	{
 		return $this->firstKey($filter) !== null;
 	}
@@ -201,7 +201,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	#[Pure] public function reduce(callable $callback): ArrayList
+	public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
@@ -219,7 +219,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		return $this->values;
 	}
 
-	#[Pure] public function contains(mixed $value): bool
+	public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
 	}
@@ -243,14 +243,13 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 	 * @param callable(TKey, TValue): TKeyOut $callback
 	 * @return ArrayMap<TKeyOut, TValue>
 	 */
-	#[Pure] public function mapKeys(callable $callback): ArrayMap
+	public function mapKeys(callable $callback): ArrayMap
 	{
 		/** @var ArrayMap<TKeyOut, TValue> $map */
 		$map = new ArrayMap();
 
 		foreach ($this->values as $key => $value) {
 			/**
-			 * @psalm-suppress ImpureMethodCall
 			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
 			 */
 			$map->put($callback($key, $value), $value);

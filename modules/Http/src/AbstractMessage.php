@@ -28,12 +28,12 @@ abstract class AbstractMessage implements Contract\Message
 
 	#[Pure] abstract public function getHeaderMap(): Contract\HeaderMap;
 
-	#[Pure] public function hasHeaderName(HeaderName $name): bool
+	public function hasHeaderName(HeaderName $name): bool
 	{
 		return $this->getHeaderMap()->has($name);
 	}
 
-	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList
+	public function getHeaderName(HeaderName $name): ReadonlyList
 	{
 		return $this->getHeaderMap()->get($name);
 	}

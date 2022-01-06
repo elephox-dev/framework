@@ -51,7 +51,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param object $key
 	 * @return TValue
 	 */
-	#[Pure] public function get(mixed $key): mixed
+	public function get(mixed $key): mixed
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		if (!$this->map->offsetExists($key)) {
@@ -65,7 +65,7 @@ class ObjectMap implements Contract\GenericMap
 		return $this->map->offsetGet($key);
 	}
 
-	#[Pure] public function first(?callable $filter = null): mixed
+	public function first(?callable $filter = null): mixed
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -82,7 +82,7 @@ class ObjectMap implements Contract\GenericMap
 		return null;
 	}
 
-	#[Pure] public function firstKey(?callable $filter = null): mixed
+	public function firstKey(?callable $filter = null): mixed
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -106,7 +106,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): bool $filter
 	 * @return ObjectMap<TKey, TValue>
 	 */
-	#[Pure] public function where(callable $filter): ObjectMap
+	public function where(callable $filter): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TValue> $result */
 		$result = new ObjectMap();
@@ -130,7 +130,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): bool $filter
 	 * @return ObjectMap<TKey, TValue>
 	 */
-	#[Pure] public function whereKey(callable $filter): ObjectMap
+	public function whereKey(callable $filter): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TValue> $result */
 		$result = new ObjectMap();
@@ -155,7 +155,7 @@ class ObjectMap implements Contract\GenericMap
 	 *
 	 * @return bool
 	 */
-	#[Pure] public function has(mixed $key): bool
+	public function has(mixed $key): bool
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		return $this->map->offsetExists($key);
@@ -167,7 +167,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ObjectMap<TKey, TOut>
 	 */
-	#[Pure] public function map(callable $callback): ObjectMap
+	public function map(callable $callback): ObjectMap
 	{
 		/** @var ObjectMap<TKey, TOut> $map */
 		$map = new ObjectMap();
@@ -193,7 +193,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TKey, TValue): TKeyOut $callback
 	 * @return ObjectMap<TKeyOut, TValue>
 	 */
-	#[Pure] public function mapKeys(callable $callback): ObjectMap
+	public function mapKeys(callable $callback): ObjectMap
 	{
 		/** @var ObjectMap<TKeyOut, TValue> $map */
 		$map = new ObjectMap();
@@ -219,7 +219,7 @@ class ObjectMap implements Contract\GenericMap
 	 * @param callable(TValue, TKey): TOut $callback
 	 * @return ArrayList<TOut>
 	 */
-	#[Pure] public function reduce(callable $callback): ArrayList
+	public function reduce(callable $callback): ArrayList
 	{
 		/** @var ArrayList<TOut> $list */
 		$list = new ArrayList();
@@ -238,12 +238,12 @@ class ObjectMap implements Contract\GenericMap
 		return $list;
 	}
 
-	#[Pure] public function any(?callable $filter = null): bool
+	public function any(?callable $filter = null): bool
 	{
 		return $this->first($filter) !== null;
 	}
 
-	#[Pure] public function anyKey(?callable $filter = null): bool
+	public function anyKey(?callable $filter = null): bool
 	{
 		return $this->firstKey($filter) !== null;
 	}
@@ -283,7 +283,7 @@ class ObjectMap implements Contract\GenericMap
 		return $list;
 	}
 
-	#[Pure] public function contains(mixed $value): bool
+	public function contains(mixed $value): bool
 	{
 		return $this->any(static fn($item) => $item === $value);
 	}

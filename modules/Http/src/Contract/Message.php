@@ -17,13 +17,13 @@ interface Message
 
 	public function withBody(Stream $body): static;
 
-	#[Pure] public function hasHeaderName(HeaderName $name): bool;
+	public function hasHeaderName(HeaderName $name): bool;
 
 	/**
 	 * @param HeaderName $name
 	 * @return ReadonlyList<string>
 	 */
-	#[Pure] public function getHeaderName(HeaderName $name): ReadonlyList;
+	public function getHeaderName(HeaderName $name): ReadonlyList;
 
 	/**
 	 * @param HeaderName $name

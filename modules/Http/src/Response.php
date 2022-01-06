@@ -89,18 +89,20 @@ class Response extends AbstractMessage implements Contract\Response
 		return new static($code, $this->headers->deepClone(), clone $this->body, $this->protocolVersion);
 	}
 
-	#[Pure] public function getContentType(): ?MimeTypeContract
+	public function getContentType(): ?MimeTypeContract
 	{
 		if (!$this->headers->has(HeaderName::ContentType)) {
 			return null;
 		}
 
+		/**
+		 * @var null|string $value
+		 */
 		$value = $this->headers->get(HeaderName::ContentType)->first();
 		if (empty($value)) {
 			return null;
 		}
 
-		/** @psalm-suppress ImpureMethodCall */
 		$type = MimeType::tryfrom($value);
 
 		return $type ?? new CustomMimeType($value);

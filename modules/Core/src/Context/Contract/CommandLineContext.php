@@ -8,6 +8,7 @@ use Elephox\Collection\Contract\ReadonlyList;
 interface CommandLineContext extends Context
 {
 	public function getCommandLine(): string;
+
 	public function getCommand(): string;
 
 	/**

@@ -13,4 +13,9 @@ use IteratorAggregate;
  */
 interface ReadonlySet extends GenericCollection, IteratorAggregate
 {
+	/**
+	 * @param T $value
+	 * @return bool
+	 */
+	public function contains(mixed $value): bool;
 }

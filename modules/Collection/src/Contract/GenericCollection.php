@@ -11,6 +11,6 @@ use Elephox\Support\Contract\DeepCloneable;
  * @extends Filterable<T>
  * @extends Mappable<T>
  */
-interface GenericCollection extends Filterable, Mappable, DeepCloneable
+interface GenericCollection extends DeepCloneable
 {
 }

@@ -33,7 +33,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headerName;
 	}
 
-	#[Pure] protected static function fromIterable(iterable $headers): self
+	protected static function fromIterable(iterable $headers): self
 	{
 		$map = new self();
 
@@ -91,7 +91,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	#[Pure] public function has(mixed $key): bool
+	public function has(mixed $key): bool
 	{
 		if (!$key instanceof Contract\HeaderName) {
 			$key = self::parseHeaderName($key);
@@ -134,7 +134,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 	 *
 	 * @psalm-suppress MoreSpecificImplementedParamType
 	 */
-	#[Pure] public function get(mixed $key): ArrayList
+	public function get(mixed $key): ArrayList
 	{
 		if (!$key instanceof Contract\HeaderName) {
 			$key = self::parseHeaderName($key);
@@ -177,12 +177,12 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 		return $headers;
 	}
 
-	#[Pure] public function asRequestHeaders(): Contract\RequestHeaderMap
+	public function asRequestHeaders(): Contract\RequestHeaderMap
 	{
 		return RequestHeaderMap::fromIterable($this);
 	}
 
-	#[Pure] public function asResponseHeaders(): Contract\ResponseHeaderMap
+	public function asResponseHeaders(): Contract\ResponseHeaderMap
 	{
 		return ResponseHeaderMap::fromIterable($this);
 	}

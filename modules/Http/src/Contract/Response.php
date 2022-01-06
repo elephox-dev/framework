@@ -14,7 +14,7 @@ interface Response extends Message
 
 	public function withResponseCode(ResponseCode $code): static;
 
-	#[Pure] public function getContentType(): ?MimeTypeContract;
+	public function getContentType(): ?MimeTypeContract;
 
 	public function withContentType(?MimeTypeContract $mimeType): static;
 

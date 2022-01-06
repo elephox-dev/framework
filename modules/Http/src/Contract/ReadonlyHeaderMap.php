@@ -19,16 +19,16 @@ interface ReadonlyHeaderMap extends ReadonlyMap, ArrayConvertible
 	 *
 	 * @return bool
 	 */
-	#[Pure] public function has(mixed $key): bool;
+	public function has(mixed $key): bool;
 
 	/**
 	 * @param string|HeaderName $key
 	 *
 	 * @return ReadonlyList<string>
 	 */
-	#[Pure] public function get(mixed $key): mixed;
+	public function get(mixed $key): mixed;
 
-	#[Pure] public function asRequestHeaders(): RequestHeaderMap;
+	public function asRequestHeaders(): RequestHeaderMap;
 
-	#[Pure] public function asResponseHeaders(): ResponseHeaderMap;
+	public function asResponseHeaders(): ResponseHeaderMap;
 }

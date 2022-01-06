@@ -49,7 +49,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		return new ArrayMap($_SERVER);
 	}
 
-	#[Pure] public function getCookies(): ArrayList
+	public function getCookies(): ArrayList
 	{
 		/** @var ArrayList<Cookie> */
 		return $this->headers->get(HeaderName::Cookie);
