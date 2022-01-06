@@ -74,6 +74,11 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### ✅ TODO
 
+- [ ] [Collection/src/ObjectSet.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/ObjectSet.php)
+  - [ ] Implement first() method.
+  - [ ] Implement any() method.
+  - [ ] Implement where() method.
+  - [ ] Implement map() method.
 - [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
   - [ ] rewrite some functions to use aggregate
   - [ ] Implement groupBy() method.
