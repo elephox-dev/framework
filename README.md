@@ -89,6 +89,9 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🚧 Open issues from other repositories
 
+- [phpspec/prophecy](https://github.com/phpspec/prophecy)
+  - [#550](https://github.com/phpspec/prophecy/issues/550)
+
 - [actions/upload-artifact](https://github.com/actions/upload-artifact)
   - [#270](https://github.com/actions/upload-artifact/issues/270)
 
