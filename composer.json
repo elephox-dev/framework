@@ -48,6 +48,7 @@
         "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Elephox\\Collection\\": "modules/Collection/src/",
