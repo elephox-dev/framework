@@ -22,5 +22,13 @@
         "psr-4": {
             "Elephox\\PIE\\": "test/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true,
+            "elephox/composer-module-sync": true
+        }
     }
 }
