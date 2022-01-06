@@ -396,7 +396,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 
 	/**
 	 * @param GenericEnumerable<TIteratorKey, TSource> $other
-	 * @param null|callable(TSource, TSource): int $comparer
+	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
@@ -407,7 +407,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 *
 	 * @param GenericEnumerable<TIteratorKey, TSource> $other
 	 * @param callable(TSource): TKey $keySelector
-	 * @param null|callable(TSource, TSource): int $comparer
+	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */

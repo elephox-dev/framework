@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use AppendIterator;
 use CachingIterator;
 use CallbackFilterIterator;
 use EmptyIterator;
@@ -479,13 +480,19 @@ trait IsEnumerable
 	 */
 	public function max(callable $selector): int|float|string
 	{
-		$max = null;
-		foreach ($this->getIterator() as $element) {
-			$max = max($max, $selector($element));
+		$iterator = $this->getIterator();
+		$iterator->rewind();
+		if (!$iterator->valid()) {
+			throw new InvalidArgumentException('Sequence contains no elements');
 		}
 
-		if ($max === null) {
-			throw new InvalidArgumentException('Sequence contains no elements');
+		$max = $selector($iterator->current());
+		$iterator->next();
+
+		while ($iterator->valid()) {
+			$max = max($max, $selector($iterator->current()));
+
+			$iterator->next();
 		}
 
 		return $max;
@@ -498,13 +505,19 @@ trait IsEnumerable
 	 */
 	public function min(callable $selector): int|float|string
 	{
-		$min = null;
-		foreach ($this->getIterator() as $element) {
-			$min = min($min, $selector($element));
+		$iterator = $this->getIterator();
+		$iterator->rewind();
+		if (!$iterator->valid()) {
+			throw new InvalidArgumentException('Sequence contains no elements');
 		}
 
-		if ($min === null) {
-			throw new InvalidArgumentException('Sequence contains no elements');
+		$min = $selector($iterator->current());
+		$iterator->next();
+
+		while($iterator->valid()) {
+			$min = min($min, $selector($iterator->current()));
+
+			$iterator->next();
 		}
 
 		return $min;
@@ -807,46 +820,20 @@ trait IsEnumerable
 
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::compare(...);
+		$comparer ??= DefaultEqualityComparer::same(...);
 
 		return $this->unionBy($other, static fn (mixed $o): mixed => $o, $comparer);
 	}
 
 	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{
-		$comparer ??= DefaultEqualityComparer::compare(...);
+		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($other, $keySelector, $comparer) {
-			$iterator = $this->getIterator();
-			$otherIterator = $other->getIterator();
+		$append = new AppendIterator();
+		$append->append($this->getIterator());
+		$append->append($other->getIterator());
 
-			while ($iterator->valid() && $otherIterator->valid()) {
-				/** @var int $compare */
-				$compare = $comparer($keySelector($iterator->current(), $iterator->key()), $keySelector($otherIterator->current(), $otherIterator->key()));
-
-				if ($compare === 0) {
-					yield $iterator->key() => $iterator->current();
-					$iterator->next();
-					$otherIterator->next();
-				} elseif ($compare < 0) {
-					yield $iterator->key() => $iterator->current();
-					$iterator->next();
-				} else {
-					yield $otherIterator->key() => $otherIterator->current();
-					$otherIterator->next();
-				}
-			}
-
-			while ($iterator->valid()) {
-				yield $iterator->key() => $iterator->current();
-				$iterator->next();
-			}
-
-			while ($otherIterator->valid()) {
-				yield $otherIterator->key() => $otherIterator->current();
-				$otherIterator->next();
-			}
-		});
+		return new Enumerable(new UniqueByIterator($append, $keySelector, $comparer));
 	}
 
 	/**
