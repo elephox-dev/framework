@@ -75,7 +75,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 🔎 Run Psalm
         if: ${{ matrix.os != 'ubuntu-latest' }}
         run: composer run ci:static-analysis
@@ -110,7 +110,7 @@ jobs:
 #          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
 #          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
 #      - name: 📦 Install dependencies
-#        run: composer install --no-interaction --no-progress --no-scripts
+#        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
 #      - name: 👟 Run PHPBench
 #        run: composer run ci:benchmark
 
@@ -141,7 +141,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 🧪 Run PHPUnit
         run: composer run ci:unit-test
       - name: 📤 Upload coverage data
@@ -179,7 +179,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
@@ -215,7 +215,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 💉 Run Memory Leak Tests
         run: composer run ci:memory-leak-test
 
