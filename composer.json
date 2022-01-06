@@ -112,6 +112,7 @@
             "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
         ],
         "ci:mutation-test": [
+            "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
             "infection --min-covered-msi=90 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
         ],
@@ -144,6 +145,7 @@
             "@benchmark"
         ],
         "mutation-test": [
+            "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
             "infection --show-mutations --"
         ],
