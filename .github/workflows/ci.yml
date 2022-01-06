@@ -32,7 +32,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
       - name: ✔️ Validate composer.lock
-        run: composer validate --strict --no-interaction --ignore-platform-req=php+
+        run: composer validate --strict --no-interaction
       - name: 📦 Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -43,7 +43,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: ↔️ Check module requirements
         run: composer ci:check-dependencies
       - name: 🧐 Check composer.json format
