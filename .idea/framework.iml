@@ -16,8 +16,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Core/test" isTestSource="true" packagePrefix="Elephox\Core\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/src" isTestSource="false" packagePrefix="Elephox\Files\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/test" isTestSource="true" packagePrefix="Elephox\Files\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Database/src" isTestSource="false" packagePrefix="Elephox\Database\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Database/test" isTestSource="true" packagePrefix="Elephox\Database\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/src" isTestSource="false" packagePrefix="Elephox\Logging\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/test" isTestSource="true" packagePrefix="Elephox\Logging\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/src" isTestSource="false" packagePrefix="Elephox\Stream\" />
@@ -112,6 +110,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/vimeo/psalm" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/phpbench" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-schema-validator" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
