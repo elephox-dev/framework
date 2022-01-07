@@ -189,39 +189,21 @@ trait IsEnumerable
 		return iterator_count($iterator);
 	}
 
-	public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable
-	{
-		return new Enumerable(function () use ($defaultValue) {
-			$iterator = $this->getIterator();
-			$iterator->rewind();
-
-			if ($iterator->valid()) {
-				yield from $iterator;
-			} else {
-				yield $defaultValue;
-			}
-		});
-	}
-
+	/**
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
 	public function distinct(?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
+		$identity = static fn(mixed $element): mixed => $element;
 
-		return new Enumerable(function () use ($comparer) {
-			$seen = [];
-
-			foreach ($this->getIterator() as $key => $element) {
-				foreach ($seen as $seenElement) {
-					if ($comparer($element, $seenElement)) {
-						continue 2;
-					}
-				}
-
-				$seen[] = $element;
-
-				yield $key => $element;
-			}
-		});
+		/**
+		 * @var Closure(TSource, TSource): bool $comparer
+		 * @var Closure(TSource): TSource $identity
+		 */
+		return $this->distinctBy($identity, $comparer);
 	}
 
 	/**

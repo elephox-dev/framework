@@ -90,13 +90,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function count(callable $predicate = null): int;
 
 	/**
-	 * @param TSource|null $defaultValue
-	 *
-	 * @return GenericEnumerable<TIteratorKey, TSource>
-	 */
-	public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable;
-
-	/**
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
