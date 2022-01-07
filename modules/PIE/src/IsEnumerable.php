@@ -165,6 +165,8 @@ trait IsEnumerable
 	}
 
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks the template params are set from OrderedEnumerable...
+	 *
 	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return NonNegativeInteger
@@ -209,7 +211,7 @@ trait IsEnumerable
 	/**
 	 * @template TKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param callable(TSource): TKey $keySelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
@@ -218,6 +220,10 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
+		/**
+		 * @var Closure(TSource, TSource): bool $comparer
+		 * @var Closure(TSource): TSource $keySelector
+		 */
 		return new Enumerable(new UniqueByIterator($this->getIterator(), $keySelector, $comparer));
 	}
 

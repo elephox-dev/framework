@@ -99,7 +99,7 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @template TKey
 	 *
-	 * @param callable(TSource, TIteratorKey): TKey $keySelector
+	 * @param callable(TSource): TKey $keySelector
 	 * @param null|callable(TKey, TKey): bool $comparer
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
