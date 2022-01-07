@@ -34,7 +34,7 @@ class LazyStream implements Stream
 		return $this->stream;
 	}
 
-	#[Pure] public function isSeekable(): bool
+	public function isSeekable(): bool
 	{
 		return $this->stream?->isSeekable() ?? $this->seekable;
 	}
