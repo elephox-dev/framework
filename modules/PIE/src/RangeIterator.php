@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\PIE;
 
+use Countable;
 use SeekableIterator;
 
 /**
  * @implements SeekableIterator<int, int>
  */
-class RangeIterator implements SeekableIterator
+class RangeIterator implements SeekableIterator, Countable
 {
 	private int $offset = 0;
 
@@ -47,5 +48,10 @@ class RangeIterator implements SeekableIterator
 	public function seek(int $offset): void
 	{
 		$this->offset = $offset;
+	}
+
+	public function count(): int
+	{
+		return (int)ceil(($this->end - $this->start + $this->step) / $this->step);
 	}
 }
