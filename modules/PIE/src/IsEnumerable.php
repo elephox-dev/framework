@@ -218,23 +218,7 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($keySelector, $comparer) {
-			$seenKeys = [];
-
-			foreach ($this->getIterator() as $elementKey => $element) {
-				$key = $keySelector($element, $elementKey);
-
-				foreach ($seenKeys as $seenKey) {
-					if ($comparer($key, $seenKey)) {
-						continue 2;
-					}
-				}
-
-				$seenKeys[] = $key;
-
-				yield $elementKey => $element;
-			}
-		});
+		return new Enumerable(new UniqueByIterator($this->getIterator(), $keySelector, $comparer));
 	}
 
 	public function elementAt(int $index): mixed
