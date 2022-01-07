@@ -68,11 +68,11 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function chunk(int $size): GenericEnumerable;
 
 	/**
-	 * @param GenericEnumerable<TIteratorKey, TSource> ...$enumerables
+	 * @param GenericEnumerable<TIteratorKey, TSource> ...$other
 	 *
 	 * @return GenericEnumerable<TIteratorKey, TSource>
 	 */
-	public function concat(GenericEnumerable ...$enumerables): GenericEnumerable;
+	public function concat(GenericEnumerable ...$other): GenericEnumerable;
 
 	/**
 	 * @param TSource $value

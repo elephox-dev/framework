@@ -139,12 +139,12 @@ trait IsEnumerable
 		});
 	}
 
-	public function concat(GenericEnumerable ...$enumerables): GenericEnumerable
+	public function concat(GenericEnumerable ...$other): GenericEnumerable
 	{
-		return new Enumerable(function () use ($enumerables) {
+		return new Enumerable(function () use ($other) {
 			yield from $this;
 
-			foreach ($enumerables as $enumerable) {
+			foreach ($other as $enumerable) {
 				yield from $enumerable;
 			}
 		});
