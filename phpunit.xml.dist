@@ -32,9 +32,6 @@
         <testsuite name="Http">
             <directory>modules/Http/test</directory>
         </testsuite>
-        <testsuite name="Logging">
-            <directory>modules/Logging/test</directory>
-        </testsuite>
         <testsuite name="Support">
             <directory>modules/Support/test</directory>
         </testsuite>
@@ -51,7 +48,7 @@
         <exclude>
             <file>**/*Exception.php</file>
             <directory>modules/Core/src</directory>
-            <directory>modules/Database/src</directory>
+            <directory>modules/Logging/src</directory>
         </exclude>
     </coverage>
 </phpunit>
