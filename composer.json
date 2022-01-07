@@ -96,11 +96,11 @@
     "scripts": {
         "benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5 --"
+            "phpbench run --report=overview --retry-threshold=5"
         ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:check --"
+            "@composer modules:check"
         ],
         "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
@@ -108,7 +108,7 @@
         ],
         "ci:check-dependencies": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:check --"
+            "@composer modules:check"
         ],
         "ci:memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
@@ -121,7 +121,7 @@
         ],
         "ci:normalize-composer": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:normalize --"
+            "@composer modules:normalize"
         ],
         "ci:publish-coverage": [
             "@putenv XDEBUG_MODE=off",
@@ -150,19 +150,19 @@
         "mutation-test": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "infection --show-mutations --"
+            "infection --show-mutations"
         ],
         "static-analysis": [
             "@putenv XDEBUG_MODE=off",
-            "psalm --monochrome --no-cache"
+            "psalm --no-cache"
         ],
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist --"
+            "phpunit --configuration=phpunit.xml.dist"
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
-            "@php bin/update-readme-annotations.php --"
+            "@php bin/update-readme-annotations.php"
         ]
     }
 }
