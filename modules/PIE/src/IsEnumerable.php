@@ -24,6 +24,25 @@ use UnexpectedValueException;
  */
 trait IsEnumerable
 {
+	// TODO: rewrite some functions to use aggregate
+	// TODO: check thrown exceptions and if there would be a better/more specific type
+
+	/**
+	 * @template USource
+	 * @template UKey
+	 *
+	 * @param Iterator<UKey, USource> $iterator
+	 * @return GenericEnumerable<NonNegativeInteger, USource>
+	 */
+	protected static function rekey(Iterator $iterator): GenericEnumerable
+	{
+		$key = 0;
+
+		return new Enumerable(new KeySelectIterator($iterator, function () use (&$key) {
+			return $key++;
+		}));
+	}
+
 	/**
 	 * @return Iterator<TIteratorKey, TSource>
 	 */
@@ -47,8 +66,6 @@ trait IsEnumerable
 
 		return $result;
 	}
-
-	// TODO: rewrite some functions to use aggregate
 
 	public function all(callable $predicate): bool
 	{
@@ -74,10 +91,21 @@ trait IsEnumerable
 
 	public function append(mixed $value): GenericEnumerable
 	{
-		return new Enumerable(function () use ($value) {
+		$appendIterator = function () use ($value) {
 			yield from $this->getIterator();
 
 			yield $value;
+		};
+
+		return self::rekey($appendIterator());
+	}
+
+	public function appendKeyed(mixed $key, mixed $value): GenericEnumerable
+	{
+		return new Enumerable(function () use ($value, $key) {
+			yield from $this->getIterator();
+
+			yield $key => $value;
 		});
 	}
 
@@ -287,10 +315,7 @@ trait IsEnumerable
 		$comparer ??= DefaultEqualityComparer::same(...);
 
 		return new Enumerable(function () use ($other, $keySelector, $comparer) {
-			$otherKeys = [];
-			foreach ($other->getIterator() as $otherElementKey => $otherElement) {
-				$otherKeys[] = $keySelector($otherElement, $otherElementKey);
-			}
+			$otherKeys = new CachingIterator(new SelectIterator($other->getIterator(), $keySelector), CachingIterator::FULL_CACHE);
 
 			foreach ($this->getIterator() as $elementKey => $element) {
 				$key = $keySelector($element, $elementKey);
@@ -567,8 +592,19 @@ trait IsEnumerable
 
 	public function prepend(mixed $value): GenericEnumerable
 	{
-		return new Enumerable(function () use ($value) {
+		$appendIterator = function () use ($value) {
 			yield $value;
+
+			yield from $this->getIterator();
+		};
+
+		return self::rekey($appendIterator());
+	}
+
+	public function prependKeyed(mixed $key, mixed $value): GenericEnumerable
+	{
+		return new Enumerable(function () use ($value, $key) {
+			yield $key => $value;
 
 			yield from $this->getIterator();
 		});

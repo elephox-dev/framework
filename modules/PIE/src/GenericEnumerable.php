@@ -49,9 +49,17 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @param TSource $value
 	 *
-	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 * @return GenericEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function append(mixed $value): GenericEnumerable;
+
+	/**
+	 * @param TIteratorKey $key
+	 * @param TSource $value
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
+	public function appendKeyed(mixed $key, mixed $value): GenericEnumerable;
 
 	/**
 	 * @param callable(TSource): numeric $selector
@@ -278,9 +286,17 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @param TSource $value
 	 *
-	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 * @return GenericEnumerable<NonNegativeInteger, TSource>
 	 */
 	public function prepend(mixed $value): GenericEnumerable;
+
+	/**
+	 * @param TIteratorKey $key
+	 * @param TSource $value
+	 *
+	 * @return GenericEnumerable<TIteratorKey, TSource>
+	 */
+	public function prependKeyed(mixed $key, mixed $value): GenericEnumerable;
 
 	/**
 	 * @return GenericEnumerable<TIteratorKey, TSource>

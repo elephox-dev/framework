@@ -14,11 +14,60 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\PIE\WhileIterator
  * @covers \Elephox\PIE\ReverseIterator
  * @covers \Elephox\PIE\UniqueByIterator
+ * @covers \Elephox\PIE\FlipIterator
  * @covers \Elephox\PIE\DefaultEqualityComparer
  * @uses \Elephox\PIE\IsEnumerable
  */
 class EnumerableTest extends TestCase
 {
+	public function testAggregate(): void
+	{
+		self::assertEquals(
+			120,
+			Enumerable::range(1, 5)->aggregate(fn($a, $b) => $a * $b, 1)
+		);
+
+		self::assertEquals(
+			'abc',
+			Enumerable::from(['a', 'b', 'c'])->aggregate(fn($a, $b) => $a . $b)
+		);
+	}
+
+	public function testAll(): void
+	{
+		self::assertTrue(Enumerable::range(1, 5)->all(fn($x) => $x < 6));
+		self::assertFalse(Enumerable::range(1, 5)->all(fn($x) => $x < 4));
+	}
+
+	public function testAny(): void
+	{
+		self::assertTrue(Enumerable::range(1, 3)->any());
+		self::assertFalse(Enumerable::empty()->any());
+		self::assertTrue(Enumerable::range(1, 3)->any(fn($x) => $x > 1));
+		self::assertFalse(Enumerable::range(1, 3)->any(fn($x) => $x > 4));
+	}
+
+	public function testAppend(): void
+	{
+		self::assertEquals(
+			[1, 2, 3, 4, 5],
+			Enumerable::range(1, 3)->append(4)->append(5)->toArray()
+		);
+	}
+
+	public function testAppendKeyed(): void
+	{
+		self::assertEquals(
+			[1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd', 5 => 'e'],
+			Enumerable::from([1 => 'a', 2 => 'b', 3 => 'c'])->appendKeyed(4, 'd')->appendKeyed(5, 'e')->toArray()
+		);
+	}
+
+	public function testAverage(): void
+	{
+		self::assertEquals(2, Enumerable::range(1, 3)->average(fn (int $x) => $x));
+	}
+
 	public function testChunk(): void
 	{
 		self::assertEquals(
@@ -63,6 +112,134 @@ class EnumerableTest extends TestCase
 		self::assertEquals(
 			[1, 3, 2],
 			Enumerable::from([1, 1, 3, 2, 3, 1, 2, 3])->distinct()->toList()
+		);
+	}
+
+	public function testDistinctBy(): void
+	{
+		self::assertEquals(
+			[1, 2, 3],
+			Enumerable::range(1, 10)->distinctBy(fn(int $x): int => $x % 3)->toList()
+		);
+
+		self::assertEquals(
+			[1, 3, 2],
+			Enumerable::from([1, 1, 3, 2, 3, 1, 2, 3])->distinctBy(fn(int $x): int => $x % 3)->toList()
+		);
+	}
+
+	public function testElementAt(): void
+	{
+		self::assertEquals(1, Enumerable::range(1, 10)->elementAt(0));
+		self::assertEquals(10, Enumerable::range(1, 10)->elementAt(9));
+	}
+
+	public function testElementAtOverflow(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		Enumerable::range(1, 10)->elementAt(10);
+	}
+
+	public function testElementAtUnderflow(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		Enumerable::range(1, 10)->elementAt(-1);
+	}
+
+	public function testElementAtOrDefault(): void
+	{
+		self::assertEquals(1, Enumerable::range(1, 10)->elementAtOrDefault(0, null));
+		self::assertEquals(10, Enumerable::range(1, 10)->elementAtOrDefault(9, null));
+		self::assertNull(Enumerable::range(1, 10)->elementAtOrDefault(10, null));
+		self::assertNull(Enumerable::range(1, 10)->elementAtOrDefault(-1, null));
+	}
+
+	public function testExcept(): void
+	{
+		self::assertEquals(
+			[1, 2, 7, 8, 9, 10],
+			Enumerable::range(1, 10)->except(Enumerable::range(3, 6))->toList()
+		);
+	}
+
+	public function testExceptBy(): void
+	{
+		self::assertEquals(
+			[
+				['name' => 'alice', 'age' => 5],
+				['name' => 'charlie', 'age' => 4],
+			],
+			Enumerable::from([
+					['name' => 'alice', 'age' => 5],
+					['name' => 'bob', 'age' => 10],
+					['name' => 'charlie', 'age' => 4],
+				])
+				->exceptBy(
+					Enumerable::from([
+						['age' => 10]
+					]),
+					fn(array $x): int => $x['age']
+				)
+				->toList()
+		);
+	}
+
+	public function testFirst(): void
+	{
+		self::assertEquals(1, Enumerable::range(1, 10)->first());
+		self::assertEquals(2, Enumerable::range(1, 10)->first(fn(int $x): bool => $x % 2 === 0));
+
+		$this->expectException(InvalidArgumentException::class);
+		Enumerable::empty()->first();
+	}
+
+	public function testFirstOrDefault(): void
+	{
+		self::assertEquals(1, Enumerable::range(1, 10)->firstOrDefault(null));
+		self::assertEquals(2, Enumerable::range(1, 10)->firstOrDefault(null, fn(int $x): bool => $x % 2 === 0));
+		self::assertNull(Enumerable::empty()->firstOrDefault(null));
+	}
+
+	public function testFlip(): void
+	{
+		self::assertEquals(
+			[
+				'a' => 0,
+				'b' => 1,
+				'c' => 2,
+			],
+			Enumerable::from(['a', 'b', 'c'])->flip()->toArray()
+		);
+	}
+
+	public function testIntersect(): void
+	{
+		self::assertEquals(
+			[3, 4, 5],
+			Enumerable::range(1, 5)->intersect(Enumerable::range(3, 8))->toList()
+		);
+	}
+
+	public function testIntersectBy(): void
+	{
+		self::assertEquals(
+			[
+				['name' => 'bob', 'age' => 10],
+			],
+			Enumerable::from([
+				['name' => 'alice', 'age' => 5],
+				['name' => 'bob', 'age' => 10],
+				['name' => 'charlie', 'age' => 4],
+			])
+				->intersectBy(
+					Enumerable::from([
+						['age' => 10]
+					]),
+					fn(array $x): int => $x['age']
+				)
+				->toList()
 		);
 	}
 
@@ -140,8 +317,16 @@ class EnumerableTest extends TestCase
 	public function testPrepend(): void
 	{
 		self::assertEquals(
-			[5, 1, 2, 3],
-			Enumerable::range(1, 3)->prepend(5)->toList()
+			[4, 5, 1, 2, 3],
+			Enumerable::range(1, 3)->prepend(5)->prepend(4)->toList()
+		);
+	}
+
+	public function testPrependKeyed(): void
+	{
+		self::assertEquals(
+			['e' => 5, 'd' => 4, 'a' => 1, 'b' => 2, 'c' => 3],
+			Enumerable::from(['a' => 1, 'b' => 2, 'c' => 3])->prependKeyed('d', 4)->prependKeyed('e', 5)->toArray()
 		);
 	}
 
