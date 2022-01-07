@@ -118,19 +118,16 @@ trait IsEnumerable
 	 */
 	public function chunk(int $size): GenericEnumerable
 	{
-		// MAYBE: rewrite this using AppendIterator and LimitIterator
-
 		/** @var GenericEnumerable<NonNegativeInteger, list<TSource>> */
 		return new Enumerable(function () use ($size) {
-			$index = 0;
 			$chunkCount = 0;
 			$chunk = [];
 			foreach ($this->getIterator() as $element) {
-				if ($index % $size === 0) {
+				if (count($chunk) === $size) {
 					yield $chunkCount => $chunk;
 
 					$chunkCount++;
-					$chunk = [];
+					$chunk = [$element];
 				} else {
 					$chunk[] = $element;
 				}
