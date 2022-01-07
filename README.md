@@ -76,19 +76,12 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
   - [ ] rewrite some functions to use aggregate
+  - [ ] check thrown exceptions and if there would be a better/more specific type
   - [ ] Implement groupBy() method.
   - [ ] Implement groupJoin() method.
 
-### 🤔 MAYBE
-
-- [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
-  - [ ] rewrite this using AppendIterator and LimitIterator
-
 
 ### 🚧 Open issues from other repositories
-
-- [phpspec/prophecy](https://github.com/phpspec/prophecy)
-  - [#550](https://github.com/phpspec/prophecy/issues/550)
 
 - [actions/upload-artifact](https://github.com/actions/upload-artifact)
   - [#270](https://github.com/actions/upload-artifact/issues/270)
@@ -96,5 +89,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
   - [#7322](https://github.com/vimeo/psalm/issues/7322)
+  - [#7331](https://github.com/vimeo/psalm/issues/7331)
 
 <!-- end annotations -->
