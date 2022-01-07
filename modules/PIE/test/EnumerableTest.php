@@ -19,6 +19,66 @@ use PHPUnit\Framework\TestCase;
  */
 class EnumerableTest extends TestCase
 {
+	public function testChunk(): void
+	{
+		self::assertEquals(
+			[
+				[1, 2, 3],
+				[4, 5, 6],
+				[7, 8, 9],
+			],
+			Enumerable::range(1, 9)->chunk(3)->toList()
+		);
+	}
+
+	public function testConcat(): void
+	{
+		self::assertEquals(
+			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+			Enumerable::range(1, 3)
+				->concat(Enumerable::range(4, 7), Enumerable::range(8, 10))
+				->toList()
+		);
+	}
+
+	public function testContains(): void
+	{
+		self::assertTrue(Enumerable::range(1, 10)->contains(5));
+		self::assertFalse(Enumerable::range(1, 10)->contains(11));
+	}
+
+	public function testCount(): void
+	{
+		self::assertEquals(10, Enumerable::range(1, 10)->count());
+		self::assertEquals(5, Enumerable::range(1, 10)->count(fn(int $x): bool => $x % 2 === 0));
+	}
+
+	public function testDefaultIfEmpty(): void
+	{
+		self::assertEquals(
+			[1, 2, 3],
+			Enumerable::range(1, 3)->defaultIfEmpty(1)->toList()
+		);
+
+		self::assertEquals(
+			[1],
+			Enumerable::empty()->defaultIfEmpty(1)->toList()
+		);
+	}
+
+	public function testDistinct(): void
+	{
+		self::assertEquals(
+			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+			Enumerable::range(1, 10)->distinct()->toList()
+		);
+
+		self::assertEquals(
+			[1, 3, 2],
+			Enumerable::from([1, 1, 3, 2, 3, 1, 2, 3])->distinct()->toList()
+		);
+	}
+
 	public function testJoin(): void
 	{
 		self::assertEquals(
