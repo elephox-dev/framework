@@ -27,7 +27,7 @@ interface Stream extends Stringable
 
 	public function eof(): bool;
 
-	#[Pure] public function isSeekable(): bool;
+	public function isSeekable(): bool;
 
 	/**
 	 * @param positive-int|0 $offset
