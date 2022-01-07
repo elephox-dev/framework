@@ -53,19 +53,6 @@ class EnumerableTest extends TestCase
 		self::assertEquals(5, Enumerable::range(1, 10)->count(fn(int $x): bool => $x % 2 === 0));
 	}
 
-	public function testDefaultIfEmpty(): void
-	{
-		self::assertEquals(
-			[1, 2, 3],
-			Enumerable::range(1, 3)->defaultIfEmpty(1)->toList()
-		);
-
-		self::assertEquals(
-			[1],
-			Enumerable::empty()->defaultIfEmpty(1)->toList()
-		);
-	}
-
 	public function testDistinct(): void
 	{
 		self::assertEquals(
