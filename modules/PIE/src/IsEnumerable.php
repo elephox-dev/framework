@@ -6,6 +6,7 @@ namespace Elephox\PIE;
 use AppendIterator;
 use CachingIterator;
 use CallbackFilterIterator;
+use Countable;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
@@ -163,17 +164,29 @@ trait IsEnumerable
 		return false;
 	}
 
+	/**
+	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
+	 *
+	 * @return NonNegativeInteger
+	 */
 	public function count(callable $predicate = null): int
 	{
-		$count = 0;
+		if ($predicate === null) {
+			$iterator = $this->getIterator();
 
-		foreach ($this->getIterator() as $key => $element) {
-			if ($predicate === null || $predicate($element, $key)) {
-				$count++;
+			if ($iterator instanceof Countable) {
+				/** @var NonNegativeInteger */
+				return $iterator->count();
 			}
+		} else {
+			$iterator = new CallbackFilterIterator($this->getIterator(), $predicate);
 		}
 
-		return $count;
+		/**
+		 * This can be removed once vimeo/psalm#7331 is resolved
+		 * @var NonNegativeInteger
+		 */
+		return iterator_count($iterator);
 	}
 
 	public function defaultIfEmpty(mixed $defaultValue = null): GenericEnumerable

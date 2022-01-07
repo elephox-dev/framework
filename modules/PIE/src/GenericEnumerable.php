@@ -83,9 +83,9 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function contains(mixed $value, ?callable $comparer = null): bool;
 
 	/**
-	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
-	 * @return int
+	 * @return NonNegativeInteger
 	 */
 	public function count(callable $predicate = null): int;
 
