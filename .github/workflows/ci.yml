@@ -20,7 +20,7 @@ jobs:
     name: 📦 Composer Setup
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ] # add PHP 8.2 to every matrix once phpspec/prophecy#550 is fixed
+        php-version: [ '8.1', '8.2' ]
         os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
