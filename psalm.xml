@@ -6,6 +6,9 @@
         errorLevel="1"
 >
     <projectFiles>
-        <directory name="./modules/*/src" />
+        <directory name="./modules/*/src"/>
     </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\MockeryPlugin\Plugin"/>
+    </plugins>
 </psalm>
