@@ -8,6 +8,7 @@ use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
 use EmptyIterator;
+use Generator;
 use InvalidArgumentException;
 use Iterator;
 use LimitIterator;
@@ -38,7 +39,10 @@ trait IsEnumerable
 	{
 		$key = 0;
 
-		return new Enumerable(new KeySelectIterator($iterator, function () use (&$key) {
+		return new Enumerable(new KeySelectIterator($iterator, function () use (&$key): int {
+			/**
+			 * @var NonNegativeInteger $key
+			 */
 			return $key++;
 		}));
 	}
@@ -91,7 +95,7 @@ trait IsEnumerable
 
 	public function append(mixed $value): GenericEnumerable
 	{
-		$appendIterator = function () use ($value) {
+		$appendIterator = function () use ($value): Generator {
 			yield from $this->getIterator();
 
 			yield $value;
@@ -315,7 +319,8 @@ trait IsEnumerable
 		$comparer ??= DefaultEqualityComparer::same(...);
 
 		return new Enumerable(function () use ($other, $keySelector, $comparer) {
-			$otherKeys = new CachingIterator(new SelectIterator($other->getIterator(), $keySelector), CachingIterator::FULL_CACHE);
+			/** @var Iterator<TKey, TSource> $otherKeys */
+			$otherKeys = new CachingIterator(new SelectIterator($other->getIterator(), $keySelector(...)), CachingIterator::FULL_CACHE);
 
 			foreach ($this->getIterator() as $elementKey => $element) {
 				$key = $keySelector($element, $elementKey);
@@ -592,7 +597,7 @@ trait IsEnumerable
 
 	public function prepend(mixed $value): GenericEnumerable
 	{
-		$appendIterator = function () use ($value) {
+		$appendIterator = function () use ($value): Generator {
 			yield $value;
 
 			yield from $this->getIterator();
