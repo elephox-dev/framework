@@ -17,7 +17,7 @@ class AppendStream implements Stream
 	) {
 	}
 
-	protected function getStream(): Stream
+	protected function getCurrentStream(): Stream
 	{
 		return $this->stream->eof() ? $this->appendedStream : $this->stream;
 	}

@@ -89,22 +89,22 @@ class AppendStreamTest extends MockeryTestCase
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
 
-		$streamMock->expects('getSize')->andReturns(1);
-		$appendedStreamMock->expects('getSize')->andReturns(1);
+		$streamMock->expects('getSize')->andReturns(3);
+		$appendedStreamMock->expects('getSize')->andReturns(3);
 
 		$streamMock->expects('eof')->andReturns(false);
 		$streamMock->expects('tell')->andReturns(0);
 
-		$streamMock->expects('read')->with(1)->andReturns('a');
-		$appendedStreamMock->expects('read')->with(1)->andReturns('b');
+		$streamMock->expects('read')->with(3)->andReturns('abc');
+		$appendedStreamMock->expects('read')->with(2)->andReturns('de');
 
 		$streamMock->expects('eof')->andReturns(true);
-		$streamMock->expects('getSize')->andReturns(1);
-		$appendedStreamMock->expects('tell')->andReturns(1);
+		$streamMock->expects('getSize')->andReturns(3);
+		$appendedStreamMock->expects('tell')->andReturns(2);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		self::assertEquals('ab', $appendStream->read(2));
-		self::assertEquals(2, $appendStream->tell());
+		self::assertEquals('abcde', $appendStream->read(5));
+		self::assertEquals(5, $appendStream->tell());
 	}
 
 	public function testEof(): void

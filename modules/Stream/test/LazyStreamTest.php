@@ -13,19 +13,7 @@ use Mockery as M;
  */
 class LazyStreamTest extends MockeryTestCase
 {
-
-	public function testConstructor(): void
-	{
-		$streamMock = M::mock(Stream::class);
-
-		$stream = new LazyStream(fn () => $streamMock);
-
-		self::assertTrue($stream->isReadable());
-		self::assertTrue($stream->isSeekable());
-		self::assertFalse($stream->isWriteable());
-	}
-
-	public function testGetStreamOnlyExecutesOnce()
+	public function testGetStream()
 	{
 		$streamMock = M::mock(Stream::class);
 
@@ -37,8 +25,6 @@ class LazyStreamTest extends MockeryTestCase
 
 		$stream = new LazyStream(fn() => $streamMock);
 
-		self::assertTrue($stream->isReadable());
-		self::assertTrue($stream->isReadable());
 		self::assertSame($streamMock, $stream->getStream());
 		self::assertTrue($stream->isReadable());
 	}

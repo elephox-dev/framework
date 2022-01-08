@@ -7,6 +7,7 @@ use Exception;
 use Iterator;
 use ReflectionException;
 use ReflectionObject;
+use ReflectionProperty;
 use RuntimeException;
 use SplObjectStorage;
 use Throwable;

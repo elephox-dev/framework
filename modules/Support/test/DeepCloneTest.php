@@ -55,9 +55,10 @@ class Cloneable
 	use DeepCloneable;
 
 	public ?ThrowOnClone $throwOnClone = null;
+	public static $staticProperty;
+
 	public $resource;
 
-	public static $staticProperty;
 	public static $anotherStaticProperty;
 }
 

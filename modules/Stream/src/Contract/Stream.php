@@ -38,14 +38,14 @@ interface Stream extends Stringable
 
 	public function rewind(): void;
 
-	#[Pure] public function isWriteable(): bool;
+	public function isWriteable(): bool;
 
 	/**
 	 * @return positive-int|0
 	 */
 	public function write(string $string): int;
 
-	#[Pure] public function isReadable(): bool;
+	public function isReadable(): bool;
 
 	public function read(int $length): string;
 

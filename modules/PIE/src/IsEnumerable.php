@@ -35,7 +35,7 @@ trait IsEnumerable
 	 * @param Iterator<UKey, USource> $iterator
 	 * @return GenericEnumerable<NonNegativeInteger, USource>
 	 */
-	protected static function rekey(Iterator $iterator): GenericEnumerable
+	private static function rekey(Iterator $iterator): GenericEnumerable
 	{
 		$key = 0;
 
@@ -153,13 +153,11 @@ trait IsEnumerable
 	{
 		/** @var GenericEnumerable<NonNegativeInteger, list<TSource>> */
 		return new Enumerable(function () use ($size) {
-			$chunkCount = 0;
 			$chunk = [];
 			foreach ($this->getIterator() as $element) {
 				if (count($chunk) === $size) {
-					yield $chunkCount => $chunk;
+					yield $chunk;
 
-					$chunkCount++;
 					$chunk = [$element];
 				} else {
 					$chunk[] = $element;
@@ -167,7 +165,7 @@ trait IsEnumerable
 			}
 
 			if ($chunk) {
-				yield $chunkCount => $chunk;
+				yield $chunk;
 			}
 		});
 	}

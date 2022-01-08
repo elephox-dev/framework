@@ -20,6 +20,20 @@ use PHPUnit\Framework\TestCase;
  */
 class EnumerableTest extends TestCase
 {
+	public function testFromThrows(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		Enumerable::from(null);
+	}
+
+	public function testConstructorClosureThrows(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		new Enumerable(function () {
+			return null;
+		});
+	}
+
 	public function testAggregate(): void
 	{
 		self::assertEquals(

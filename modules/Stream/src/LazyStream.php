@@ -5,7 +5,6 @@ namespace Elephox\Stream;
 
 use Closure;
 use Elephox\Stream\Contract\Stream;
-use JetBrains\PhpStorm\Pure;
 
 class LazyStream implements Stream
 {
@@ -13,15 +12,9 @@ class LazyStream implements Stream
 
 	/**
 	 * @param Closure(): Stream $closure
-	 * @param bool $readable
-	 * @param bool $writeable
-	 * @param bool $seekable
 	 */
 	public function __construct(
-		protected Closure $closure,
-		protected bool    $readable = true,
-		protected bool    $writeable = false,
-		protected bool    $seekable = true
+		protected Closure $closure
 	) {
 	}
 
@@ -36,17 +29,17 @@ class LazyStream implements Stream
 
 	public function isSeekable(): bool
 	{
-		return $this->stream?->isSeekable() ?? $this->seekable;
+		return $this->getStream()->isSeekable();
 	}
 
-	#[Pure] public function isWriteable(): bool
+	public function isWriteable(): bool
 	{
-		return $this->stream?->isWriteable() ?? $this->writeable;
+		return $this->getStream()->isWriteable();
 	}
 
-	#[Pure] public function isReadable(): bool
+	public function isReadable(): bool
 	{
-		return $this->stream?->isReadable() ?? $this->readable;
+		return $this->getStream()->isReadable();
 	}
 
 	public function __toString(): string
