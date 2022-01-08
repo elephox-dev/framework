@@ -77,10 +77,10 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 🔎 Run Psalm
-        if: ${{ matrix.os != 'ubuntu-latest' }}
+        if: ${{ matrix.os != 'ubuntu-latest' || matrix.php-version != '8.1' }}
         run: composer run ci:static-analysis
       - name: 🔎 Run Psalm & publish
-        if: ${{ matrix.os == 'ubuntu-latest' }}
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php-version == '8.1' }}
         run: composer run ci:static-analysis:publish
 
 #  benchmark:
