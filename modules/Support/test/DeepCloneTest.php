@@ -5,6 +5,7 @@ namespace Elephox\Support;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use stdClass;
 
 /**
  * @covers \Elephox\Support\DeepCloneable
@@ -37,11 +38,15 @@ class DeepCloneTest extends TestCase
 	public function testStaticPropertyDoesntChange(): void
 	{
 		$object = new Cloneable();
-		Cloneable::$staticProperty = 'static';
+		$o1 = new stdClass();
+		$o2 = new stdClass();
+		Cloneable::$staticProperty = $o1;
+		Cloneable::$anotherStaticProperty = $o2;
 
 		$object->deepClone();
 
-		self::assertSame('static', Cloneable::$staticProperty);
+		self::assertSame($o1, Cloneable::$staticProperty);
+		self::assertSame($o2, Cloneable::$anotherStaticProperty);
 	}
 }
 
@@ -53,6 +58,7 @@ class Cloneable
 	public $resource;
 
 	public static $staticProperty;
+	public static $anotherStaticProperty;
 }
 
 class ThrowOnClone
