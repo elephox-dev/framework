@@ -117,7 +117,7 @@
         "ci:mutation-test": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "infection --min-covered-msi=85 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
+            "infection --min-covered-msi=85 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction -j$(nproc)"
         ],
         "ci:normalize-composer": [
             "@putenv XDEBUG_MODE=off",
