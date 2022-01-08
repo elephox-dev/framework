@@ -138,7 +138,7 @@ class AppendStream implements Stream
 		$this->appendedStream->rewind();
 	}
 
-	#[Pure] public function isWriteable(): bool
+	public function isWriteable(): bool
 	{
 		return $this->stream->isWriteable() && $this->appendedStream->isWriteable();
 	}
@@ -155,7 +155,7 @@ class AppendStream implements Stream
 		return $written;
 	}
 
-	#[Pure] public function isReadable(): bool
+	public function isReadable(): bool
 	{
 		return $this->stream->isReadable() && $this->appendedStream->isReadable();
 	}
