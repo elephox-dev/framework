@@ -222,9 +222,6 @@ jobs:
   coverage:
     name: 📊 Publish Coverage
     needs: [ unit-tests ]
-    strategy:
-      matrix:
-        php-version: [ '8.1' ]
     runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
@@ -232,7 +229,7 @@ jobs:
       - name: 🐘 Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: '8.1'
           extensions: ${{ env.php-extensions }}
           tools: php-coveralls/php-coveralls:^2.5.2
         env:
@@ -240,7 +237,7 @@ jobs:
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
-          name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
+          name: ${{ runner.os }}-8.1-coverage
           path: build/coverage/
       - name: 📊 Publish coverage data to coveralls.io
         env:
