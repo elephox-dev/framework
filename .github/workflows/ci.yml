@@ -224,7 +224,7 @@ jobs:
     needs: [ unit-tests ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ]
     runs-on: 'ubuntu-latest'
     steps:
       - name: ⤵️ Checkout Sources
