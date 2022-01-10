@@ -16,6 +16,9 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\PIE\UniqueByIterator
  * @covers \Elephox\PIE\FlipIterator
  * @covers \Elephox\PIE\DefaultEqualityComparer
+ * @covers \Elephox\PIE\IndexOutOfRangeException
+ * @covers \Elephox\PIE\EmptySequenceException
+ * @covers \Elephox\PIE\AmbiguousMatchException
  * @uses \Elephox\PIE\IsEnumerable
  */
 class EnumerableTest extends TestCase
@@ -150,14 +153,14 @@ class EnumerableTest extends TestCase
 
 	public function testElementAtOverflow(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(IndexOutOfRangeException::class);
 
 		Enumerable::range(1, 10)->elementAt(10);
 	}
 
 	public function testElementAtUnderflow(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(IndexOutOfRangeException::class);
 
 		Enumerable::range(1, 10)->elementAt(-1);
 	}
@@ -205,7 +208,7 @@ class EnumerableTest extends TestCase
 		self::assertEquals(1, Enumerable::range(1, 10)->first());
 		self::assertEquals(2, Enumerable::range(1, 10)->first(fn(int $x): bool => $x % 2 === 0));
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(EmptySequenceException::class);
 		Enumerable::empty()->first();
 	}
 
@@ -401,13 +404,13 @@ class EnumerableTest extends TestCase
 
 	public function testSingleMultipleElements(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AmbiguousMatchException::class);
 		Enumerable::from([1, 2])->single();
 	}
 
 	public function testSingleNoElements(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(EmptySequenceException::class);
 		Enumerable::empty()->single();
 	}
 

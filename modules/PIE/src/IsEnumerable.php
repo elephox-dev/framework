@@ -14,7 +14,7 @@ use Iterator;
 use LimitIterator;
 use MultipleIterator;
 use NoRewindIterator;
-use UnexpectedValueException;
+use OutOfBoundsException;
 
 /**
  * @psalm-suppress LessSpecificImplementedReturnType For some reason, psalm thinks every enumerable has the templates of OrderedEnumerable...
@@ -25,8 +25,7 @@ use UnexpectedValueException;
  */
 trait IsEnumerable
 {
-	// TODO: rewrite some functions to use aggregate
-	// TODO: check thrown exceptions and if there would be a better/more specific type
+	// TODO: rewrite more functions to use iterators
 
 	/**
 	 * @template USource
@@ -35,7 +34,7 @@ trait IsEnumerable
 	 * @param Iterator<UKey, USource> $iterator
 	 * @return GenericEnumerable<NonNegativeInteger, USource>
 	 */
-	private static function rekey(Iterator $iterator): GenericEnumerable
+	private static function reindex(Iterator $iterator): GenericEnumerable
 	{
 		$key = 0;
 
@@ -101,7 +100,7 @@ trait IsEnumerable
 			yield $value;
 		};
 
-		return self::rekey($appendIterator());
+		return self::reindex($appendIterator());
 	}
 
 	public function appendKeyed(mixed $key, mixed $value): GenericEnumerable
@@ -137,7 +136,7 @@ trait IsEnumerable
 		}
 
 		if ($sum === null) {
-			throw new InvalidArgumentException('The sequence contains no elements');
+			throw new EmptySequenceException();
 		}
 
 		/** @var numeric $sum */
@@ -269,7 +268,7 @@ trait IsEnumerable
 			$index--;
 		}
 
-		throw new InvalidArgumentException('Index out of range');
+		throw new IndexOutOfRangeException($index);
 	}
 
 	/**
@@ -342,7 +341,7 @@ trait IsEnumerable
 			}
 		}
 
-		throw new InvalidArgumentException('Sequence contains no matching element');
+		throw new EmptySequenceException();
 	}
 
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
@@ -471,7 +470,7 @@ trait IsEnumerable
 		}
 
 		if ($last === null) {
-			throw new InvalidArgumentException('Sequence contains no matching element');
+			throw new EmptySequenceException();
 		}
 
 		return $last;
@@ -499,7 +498,7 @@ trait IsEnumerable
 		$iterator = $this->getIterator();
 		$iterator->rewind();
 		if (!$iterator->valid()) {
-			throw new InvalidArgumentException('Sequence contains no elements');
+			throw new EmptySequenceException();
 		}
 
 		$max = $selector($iterator->current());
@@ -524,7 +523,7 @@ trait IsEnumerable
 		$iterator = $this->getIterator();
 		$iterator->rewind();
 		if (!$iterator->valid()) {
-			throw new InvalidArgumentException('Sequence contains no elements');
+			throw new EmptySequenceException();
 		}
 
 		$min = $selector($iterator->current());
@@ -601,7 +600,7 @@ trait IsEnumerable
 			yield from $this->getIterator();
 		};
 
-		return self::rekey($appendIterator());
+		return self::reindex($appendIterator());
 	}
 
 	public function prependKeyed(mixed $key, mixed $value): GenericEnumerable
@@ -685,7 +684,7 @@ trait IsEnumerable
 		foreach ($this->getIterator() as $elementKey => $element) {
 			if ($predicate === null || $predicate($element, $elementKey)) {
 				if ($matched) {
-					throw new InvalidArgumentException('Sequence contains more than one matching element');
+					throw new AmbiguousMatchException();
 				}
 
 				$matched = true;
@@ -694,7 +693,7 @@ trait IsEnumerable
 		}
 
 		if (!$matched) {
-			throw new InvalidArgumentException('Sequence contains no matching element');
+			throw new EmptySequenceException();
 		}
 
 		return $returnElement;
@@ -708,7 +707,7 @@ trait IsEnumerable
 		foreach ($this->getIterator() as $elementKey => $element) {
 			if ($predicate === null || $predicate($element, $elementKey)) {
 				if ($matched) {
-					throw new InvalidArgumentException('Sequence contains more than one matching element');
+					throw new AmbiguousMatchException();
 				}
 
 				$matched = true;
@@ -830,7 +829,7 @@ trait IsEnumerable
 			if (is_scalar($elementKey)) {
 				$key = $elementKey;
 			} else if (is_array($elementKey)) {
-				throw new UnexpectedValueException('Cannot use array as array key');
+				throw new OutOfBoundsException('Cannot use array as array key');
 			} else {
 				$key = (string)$elementKey;
 			}
