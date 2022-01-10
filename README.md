@@ -24,26 +24,26 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Integrate PIE into Collections
+- [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
+- [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
+- [ ] New documentation solution
+- [ ] Publish PHPUnit HTML coverage report
+- [ ] Publish/compare benchmark report against baseline
+- [ ] Improve integration of PHPStorm attributes
 - [ ] Caching Services
-- [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
-- [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) adapter for Caching Services
-- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) adapter for Logging Services
 - [ ] Database Adapter
 - [ ] MySql Adapter Implementation
 - [ ] Entity Mapping for Database Adapter
 - [ ] Templating Adapter
 - [ ] Twig Adapter Implementation
-- [ ] Publish PHPUnit HTML coverage report
-- [ ] Publish/compare benchmark report against baseline
-- [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
-- [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
-- [ ] New documentation solution
-- [ ] Improve integration of PHPStorm attributes
 - [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
 - [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-17) adapter for HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
+- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
+- [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
+- [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) adapter for Caching Services
+- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) adapter for Logging Services
 - [ ] Add a formatter (PHP CS Fixer)
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
 - [ ] Finish PIE implementation (grouping)
