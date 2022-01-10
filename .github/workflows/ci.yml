@@ -185,7 +185,11 @@ jobs:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
           path: build/coverage/
       - name: 🧟 Run Infection
+        if: ${{ matrix.os }} != 'ubuntu-latest'
         run: composer run ci:mutation-test
+      - name: 🧟 Run Infection (auto scale)
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        run: composer run ci:mutation-test:autoscale
 
   memory-leak-tests:
     name: 💉 Memory Leak Tests
