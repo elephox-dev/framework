@@ -8,6 +8,11 @@
             "/Exception\\.php/"
         ]
     },
+    "logs": {
+        "stryker": {
+            "report": "main"
+        }
+    },
     "minCoveredMsi": 85,
     "mutators": {
         "@default": true
