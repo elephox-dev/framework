@@ -8,7 +8,6 @@ use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
 use EmptyIterator;
-use Generator;
 use Iterator;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
@@ -19,19 +18,41 @@ use Stringable;
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
+ * @template TIteratorKey
  * @template TSource
  */
-trait IsEnumerable
+trait IsKeyedEnumerable
 {
+	// TODO: rewrite more functions to use iterators
+
 	/**
-	 * @return Iterator<mixed, TSource>
+	 * @template USource
+	 * @template UKey
+	 *
+	 * @param Iterator<UKey, USource> $iterator
+	 * @return GenericKeyedEnumerable<NonNegativeInteger, USource>
+	 */
+	private static function reindex(Iterator $iterator): GenericKeyedEnumerable
+	{
+		$key = 0;
+
+		return new KeyedEnumerable(new KeySelectIterator($iterator, function () use (&$key): int {
+			/**
+			 * @var NonNegativeInteger $key
+			 */
+			return $key++;
+		}));
+	}
+
+	/**
+	 * @return Iterator<TIteratorKey, TSource>
 	 */
 	abstract public function getIterator(): Iterator;
 
 	/**
 	 * @template TAccumulate
 	 *
-	 * @param callable(TAccumulate|null, TSource): TAccumulate $accumulator
+	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
 	 * @param TAccumulate|null $seed
 	 *
 	 * @return TAccumulate
@@ -40,8 +61,8 @@ trait IsEnumerable
 	{
 		$result = $seed;
 
-		foreach ($this->getIterator() as $element) {
-			$result = $accumulator($result, $element);
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$result = $accumulator($result, $element, $elementKey);
 		}
 
 		return $result;
@@ -49,8 +70,8 @@ trait IsEnumerable
 
 	public function all(callable $predicate): bool
 	{
-		foreach ($this->getIterator() as $element) {
-			if (!$predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if (!$predicate($element, $elementKey)) {
 				return false;
 			}
 		}
@@ -60,8 +81,8 @@ trait IsEnumerable
 
 	public function any(callable $predicate = null): bool
 	{
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				return true;
 			}
 		}
@@ -69,12 +90,12 @@ trait IsEnumerable
 		return false;
 	}
 
-	public function append(mixed $value): GenericEnumerable
+	public function append(mixed $key, mixed $value): GenericKeyedEnumerable
 	{
-		return new Enumerable(function () use ($value) {
+		return new KeyedEnumerable(function () use ($value, $key) {
 			yield from $this->getIterator();
 
-			yield $value;
+			yield $key => $value;
 		});
 	}
 
@@ -88,8 +109,8 @@ trait IsEnumerable
 		$sum = null;
 		$count = 0;
 
-		foreach ($this->getIterator() as $element) {
-			$value = $selector($element);
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$value = $selector($element, $elementKey);
 
 			/** @var null|numeric $sum */
 			if ($sum === null) {
@@ -117,9 +138,7 @@ trait IsEnumerable
 	public function chunk(int $size): GenericEnumerable
 	{
 		return new Enumerable(function () use ($size) {
-			/** @var list<TSource> $chunk */
 			$chunk = [];
-
 			foreach ($this->getIterator() as $element) {
 				if (count($chunk) === $size) {
 					yield $chunk;
@@ -130,15 +149,15 @@ trait IsEnumerable
 				}
 			}
 
-			if (!empty($chunk)) {
+			if ($chunk) {
 				yield $chunk;
 			}
 		});
 	}
 
-	public function concat(GenericEnumerable ...$other): GenericEnumerable
+	public function concat(GenericKeyedEnumerable ...$other): GenericKeyedEnumerable
 	{
-		return new Enumerable(function () use ($other) {
+		return new KeyedEnumerable(function () use ($other) {
 			yield from $this;
 
 			foreach ($other as $enumerable) {
@@ -163,7 +182,7 @@ trait IsEnumerable
 	/**
 	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks the template params are set from OrderedEnumerable...
 	 *
-	 * @param null|callable(TSource, Iterator<mixed, TSource>): bool $predicate
+	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return NonNegativeInteger
 	 */
@@ -190,9 +209,9 @@ trait IsEnumerable
 	/**
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function distinct(?callable $comparer = null): GenericEnumerable
+	public function distinct(?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 		$identity = static fn(mixed $element): mixed => $element;
@@ -210,9 +229,9 @@ trait IsEnumerable
 	 * @param callable(TSource): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -220,41 +239,41 @@ trait IsEnumerable
 		 * @var Closure(TSource, TSource): bool $comparer
 		 * @var Closure(TSource): TSource $keySelector
 		 */
-		return new Enumerable(new UniqueByIterator($this->getIterator(), $keySelector(...), $comparer(...)));
+		return new KeyedEnumerable(new UniqueByIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
-	 * @param GenericEnumerable<TSource> $other
+	 * @param GenericKeyedEnumerable<TSource, TIteratorKey> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<mixed, TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function except(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function except(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->exceptBy($other, fn(mixed $element): mixed => $element, $comparer);
+		return $this->exceptBy($other, fn (mixed $element): mixed => $element, $comparer);
 	}
 
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param GenericEnumerable<TSource> $other
-	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function exceptBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function exceptBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($other, $keySelector, $comparer) {
-			/** @var Iterator<mixed, TCompareKey> $otherKeys */
+		return new KeyedEnumerable(function () use ($other, $keySelector, $comparer) {
+			/** @var Iterator<TCompareKey, TSource> $otherKeys */
 			$otherKeys = new CachingIterator(new SelectIterator($other->getIterator(), $keySelector(...)), CachingIterator::FULL_CACHE);
 
-			foreach ($this->getIterator() as $element) {
-				$key = $keySelector($element);
+			foreach ($this->getIterator() as $elementKey => $element) {
+				$key = $keySelector($element, $elementKey);
 
 				foreach ($otherKeys as $otherKey) {
 					if ($comparer($key, $otherKey)) {
@@ -262,7 +281,7 @@ trait IsEnumerable
 					}
 				}
 
-				yield $element;
+				yield $elementKey => $element;
 			}
 		});
 	}
@@ -289,44 +308,49 @@ trait IsEnumerable
 		return $defaultValue;
 	}
 
+	public function flip(): GenericKeyedEnumerable
+	{
+		return new KeyedEnumerable(new FlipIterator($this->getIterator()));
+	}
+
 	/**
-	 * @param GenericEnumerable<TSource> $other
+	 * @param GenericKeyedEnumerable<TSource, TIteratorKey> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<mixed, TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function intersect(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function intersect(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->intersectBy($other, fn($element): mixed => $element, $comparer);
+		return $this->intersectBy($other, fn ($element): mixed => $element, $comparer);
 	}
 
 	/**
 	 * @template TKey
 	 *
-	 * @param GenericEnumerable<TSource> $other
-	 * @param callable(TSource): TKey $keySelector
+	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
+	 * @param callable(TSource, TIteratorKey): TKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function intersectBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function intersectBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($other, $keySelector, $comparer) {
+		return new KeyedEnumerable(function () use ($other, $keySelector, $comparer) {
 			$otherKeys = [];
 			foreach ($other->getIterator() as $otherElementKey => $otherElement) {
 				$otherKeys[] = $keySelector($otherElement, $otherElementKey);
 			}
 
-			foreach ($this->getIterator() as $element) {
-				$key = $keySelector($element);
+			foreach ($this->getIterator() as $elementKey => $element) {
+				$key = $keySelector($element, $elementKey);
 
 				foreach ($otherKeys as $otherKey) {
 					if ($comparer($key, $otherKey)) {
-						yield $element;
+						yield $elementKey => $element;
 
 						continue 2;
 					}
@@ -337,22 +361,23 @@ trait IsEnumerable
 
 	/**
 	 * @template TInner
+	 * @template TInnerIteratorKey
 	 * @template TCompareKey
 	 * @template TResult
 	 *
-	 * @param GenericEnumerable<TInner> $inner
-	 * @param callable(TSource): TCompareKey $outerKeySelector
-	 * @param callable(TInner): TCompareKey $innerKeySelector
-	 * @param callable(TSource, TInner): TResult $resultSelector
+	 * @param GenericKeyedEnumerable<TInnerIteratorKey, TInner> $inner
+	 * @param callable(TSource, TIteratorKey): TCompareKey $outerKeySelector
+	 * @param callable(TInner, TInnerIteratorKey): TCompareKey $innerKeySelector
+	 * @param callable(TSource, TInner, TIteratorKey, TInnerIteratorKey): TResult $resultSelector
 	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function join(GenericEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericEnumerable
+	public function join(GenericKeyedEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new Enumerable(function () use ($inner, $outerKeySelector, $innerKeySelector, $resultSelector, $comparer): Generator {
+		return new KeyedEnumerable(function () use ($inner, $outerKeySelector, $innerKeySelector, $resultSelector, $comparer) {
 			$innerKeys = [];
 			$innerElements = [];
 			$innerElementKeys = [];
@@ -377,8 +402,8 @@ trait IsEnumerable
 	public function last(?callable $predicate = null): mixed
 	{
 		$last = null;
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				$last = $element;
 			}
 		}
@@ -443,7 +468,7 @@ trait IsEnumerable
 		$min = $selector($iterator->current());
 		$iterator->next();
 
-		while ($iterator->valid()) {
+		while($iterator->valid()) {
 			$min = min($min, $selector($iterator->current()));
 
 			$iterator->next();
@@ -455,7 +480,7 @@ trait IsEnumerable
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
@@ -467,8 +492,8 @@ trait IsEnumerable
 		$keys = [];
 		$elements = [];
 
-		foreach ($this->getIterator() as $element) {
-			$key = $keySelector($element);
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$key = $keySelector($element, $elementKey);
 
 			$keys[] = $key;
 			$elements[] = $element;
@@ -490,7 +515,7 @@ trait IsEnumerable
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
@@ -506,30 +531,30 @@ trait IsEnumerable
 		return $this->orderBy($keySelector, $invertedComparer);
 	}
 
-	public function prepend(mixed $value): GenericEnumerable
+	public function prepend(mixed $key, mixed $value): GenericKeyedEnumerable
 	{
-		return new Enumerable(function () use ($value) {
-			yield $value;
+		return new KeyedEnumerable(function () use ($value, $key) {
+			yield $key => $value;
 
 			yield from $this->getIterator();
 		});
 	}
 
-	public function reverse(): GenericEnumerable
+	public function reverse(): GenericKeyedEnumerable
 	{
-		return new Enumerable(new ReverseIterator($this->getIterator()));
+		return new KeyedEnumerable(new ReverseIterator($this->getIterator()));
 	}
 
 	/**
 	 * @template TResult
 	 *
-	 * @param callable(TSource): TResult $selector
+	 * @param callable(TSource, TIteratorKey): TResult $selector
 	 *
-	 * @return GenericEnumerable<TResult>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TResult>
 	 */
-	public function select(callable $selector): GenericEnumerable
+	public function select(callable $selector): GenericKeyedEnumerable
 	{
-		return new Enumerable(new SelectIterator($this->getIterator(), $selector(...)));
+		return new KeyedEnumerable(new SelectIterator($this->getIterator(), $selector(...)));
 	}
 
 	/**
@@ -537,40 +562,41 @@ trait IsEnumerable
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource): GenericKeyedEnumerable<TCollectionKey, TCollection> $collectionSelector
-	 * @param null|callable(TSource, TCollection, TCollectionKey): TResult $resultSelector
+	 * @param callable(TSource, TIteratorKey): GenericKeyedEnumerable<TCollectionKey, TCollection> $collectionSelector
+	 * @param null|callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
 	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable
 	{
 		/** @psalm-suppress UnusedClosureParam */
-		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
-		/** @var callable(TSource, TCollection, TCollectionKey): TResult $resultSelector */
+		$resultSelector ??= static fn (mixed $element, mixed $collectionElement, mixed $elementKey, mixed $collectionElementKey): mixed => $collectionElement;
+		/** @var callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector */
 
 		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector) {
-			foreach ($this->getIterator() as $element) {
-				foreach ($collectionSelector($element) as $collectionElementKey => $collectionElement) {
-					yield $collectionElementKey => $resultSelector($element, $collectionElement, $collectionElementKey);
+			foreach ($this->getIterator() as $elementKey => $element) {
+				foreach ($collectionSelector($element, $elementKey) as $collectionElementKey => $collectionElement) {
+					yield $collectionElementKey => $resultSelector($element, $collectionElement, $elementKey, $collectionElementKey);
 				}
 			}
 		});
 	}
 
-	public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool
+	public function sequenceEqual(GenericKeyedEnumerable $other, ?callable $comparer = null): bool
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		/** @var callable(TSource, TSource): bool $comparer */
+		/** @var callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer */
 
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ANY);
 		$mit->attachIterator($this->getIterator());
 		$mit->attachIterator($other->getIterator());
 
-		foreach ($mit as $values) {
+		foreach ($mit as $keys => $values) {
 			/**
 			 * @var array{TSource, TSource} $values
+			 * @var array{TIteratorKey, TIteratorKey} $keys
 			 */
-			if (!$comparer($values[0], $values[1])) {
+			if (!$comparer($values[0], $values[1], $keys[0], $keys[1])) {
 				return false;
 			}
 		}
@@ -583,8 +609,8 @@ trait IsEnumerable
 		$matched = false;
 		$returnElement = null;
 
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				if ($matched) {
 					throw new AmbiguousMatchException();
 				}
@@ -606,8 +632,8 @@ trait IsEnumerable
 		$matched = false;
 		$returnElement = null;
 
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				if ($matched) {
 					throw new AmbiguousMatchException();
 				}
@@ -620,12 +646,12 @@ trait IsEnumerable
 		return $matched ? $returnElement : $default;
 	}
 
-	public function skip(int $count): GenericEnumerable
+	public function skip(int $count): GenericKeyedEnumerable
 	{
-		return new Enumerable(new LimitIterator($this->getIterator(), $count));
+		return new KeyedEnumerable(new LimitIterator($this->getIterator(), $count));
 	}
 
-	public function skipLast(int $count): GenericEnumerable
+	public function skipLast(int $count): GenericKeyedEnumerable
 	{
 		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
@@ -641,15 +667,15 @@ trait IsEnumerable
 			$iterator = new EmptyIterator();
 		}
 
-		return new Enumerable($iterator);
+		return new KeyedEnumerable($iterator);
 	}
 
 	/**
-	 * @param callable(TSource): bool $predicate
+	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
-	 * @return GenericEnumerable<TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function skipWhile(callable $predicate): GenericEnumerable
+	public function skipWhile(callable $predicate): GenericKeyedEnumerable
 	{
 		$iterator = $this->getIterator();
 
@@ -659,7 +685,7 @@ trait IsEnumerable
 			$whileIterator->next();
 		}
 
-		return new Enumerable(new NoRewindIterator($iterator));
+		return new KeyedEnumerable(new NoRewindIterator($iterator));
 	}
 
 	/**
@@ -679,12 +705,12 @@ trait IsEnumerable
 		}, 0);
 	}
 
-	public function take(int $count): GenericEnumerable
+	public function take(int $count): GenericKeyedEnumerable
 	{
-		return new Enumerable(new LimitIterator($this->getIterator(), 0, $count));
+		return new KeyedEnumerable(new LimitIterator($this->getIterator(), 0, $count));
 	}
 
-	public function takeLast(int $count): GenericEnumerable
+	public function takeLast(int $count): GenericKeyedEnumerable
 	{
 		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
@@ -695,20 +721,20 @@ trait IsEnumerable
 		$size = count($cachedIterator);
 		$offset = $size - $count;
 		if ($offset < 0) {
-			return new Enumerable(new EmptyIterator());
+			return new KeyedEnumerable(new EmptyIterator());
 		}
 
-		return new Enumerable(new LimitIterator($cachedIterator, $offset));
+		return new KeyedEnumerable(new LimitIterator($cachedIterator, $offset));
 	}
 
 	/**
-	 * @param callable(TSource): bool $predicate
+	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
-	 * @return GenericEnumerable<mixed, TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function takeWhile(callable $predicate): GenericEnumerable
+	public function takeWhile(callable $predicate): GenericKeyedEnumerable
 	{
-		return new Enumerable(new WhileIterator($this->getIterator(), $predicate(...)));
+		return new KeyedEnumerable(new WhileIterator($this->getIterator(), $predicate(...)));
 	}
 
 	/**
@@ -725,24 +751,14 @@ trait IsEnumerable
 		return $list;
 	}
 
-	/**
-	 * @template TArrayKey as array-key
-	 *
-	 * @param null|callable(TSource): TArrayKey $keySelector
-	 *
-	 * @return array<TArrayKey, TSource>
-	 */
 	public function toArray(?callable $keySelector = null): array
 	{
-		$i = 0;
-		$keySelector ??= static function (mixed $value) use (&$i): int {
-			return $i++;
-		};
+		$keySelector ??= static fn(mixed $value, mixed $key): mixed => $key;
 
 		$array = [];
 
-		foreach ($this->getIterator() as $element) {
-			$key = $keySelector($element);
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$key = $keySelector($element, $elementKey);
 
 			if ($key instanceof Stringable) {
 				$key = (string)$key;
@@ -759,14 +775,17 @@ trait IsEnumerable
 		return $array;
 	}
 
-	public function toKeyed(callable $keySelector): GenericKeyedEnumerable
+	public function keys(): GenericEnumerable
 	{
-		$valueProxy = static fn (mixed $key, mixed $value) => $keySelector($value);
-
-		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
+		return new Enumerable(new FlipIterator($this->getIterator()));
 	}
 
-	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
+	public function values(): GenericEnumerable
+	{
+		return new Enumerable($this->getIterator());
+	}
+
+	public function union(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 		$identity = static fn(mixed $o): mixed => $o;
@@ -781,13 +800,13 @@ trait IsEnumerable
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param GenericEnumerable<TSource> $other
+	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param callable(TSource): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
 	 *
-	 * @return GenericEnumerable<mixed, TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function unionBy(GenericEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function unionBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
@@ -799,42 +818,54 @@ trait IsEnumerable
 		 * @var Closure(TSource): TCompareKey $keySelector
 		 * @var Closure(TCompareKey, TCompareKey): bool $comparer
 		 */
-		return new Enumerable(new UniqueByIterator($append, $keySelector(...), $comparer(...)));
+		return new KeyedEnumerable(new UniqueByIterator($append, $keySelector(...), $comparer(...)));
 	}
 
 	/**
-	 * @param callable(TSource, Iterator<mixed, TSource>): bool $predicate
+	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
-	 * @return GenericEnumerable<mixed, TSource>
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function where(callable $predicate): GenericEnumerable
+	public function where(callable $predicate): GenericKeyedEnumerable
 	{
-		return new Enumerable(new CallbackFilterIterator($this->getIterator(), $predicate(...)));
+		return new KeyedEnumerable(new CallbackFilterIterator($this->getIterator(), $predicate(...)));
 	}
 
 	/**
 	 * @template TOther
+	 * @template TOtherIteratorKey
 	 * @template TResult
+	 * @template TResultKey
 	 *
-	 * @param GenericEnumerable<TOther> $other
+	 * @param GenericKeyedEnumerable<TOtherIteratorKey, TOther> $other
 	 * @param null|callable(TSource, TOther): TResult $resultSelector
+	 * @param null|callable(TIteratorKey, TOtherIteratorKey): TResultKey $keySelector
 	 *
-	 * @return GenericEnumerable<TResult>
+	 * @return GenericKeyedEnumerable<TResultKey, TResult>
 	 */
-	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
+	public function zip(GenericKeyedEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable
 	{
-		$resultSelector ??= static fn(mixed $a, mixed $b): array => [$a, $b];
+		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
+		/** @psalm-suppress UnusedClosureParam */
+		$keySelector ??= static fn (mixed $a, mixed $b): mixed => $a;
 
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ALL);
 		$mit->attachIterator($this->getIterator());
 		$mit->attachIterator($other->getIterator());
 		/** @var ParallelIterator $mit */
 
-		/** @var GenericEnumerable<TResult> */
-		return new Enumerable(
-		/** @var SelectIterator<mixed, TResult> */
+		/** @var GenericKeyedEnumerable<TResultKey, TResult> */
+		return new KeyedEnumerable(
+			/** @var SelectIterator<TResultKey, TResult> */
 			new SelectIterator(
-				$mit,
+				/** @var KeySelectIterator<TResultKey, array{TSource, TOther}> */
+				new KeySelectIterator(
+					$mit,
+					static function (mixed $keys) use ($keySelector): mixed {
+						/** @var array{TIteratorKey, TOtherIteratorKey} $keys */
+						return $keySelector($keys[0], $keys[1]);
+					},
+				),
 				static function (mixed $values) use ($resultSelector): mixed {
 					/** @var array{TSource, TOther} $values */
 					return $resultSelector($values[0], $values[1]);

@@ -6,30 +6,29 @@ namespace Elephox\PIE;
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
- * @template TKey of NonNegativeInteger
  * @template TSource
  *
- * @extends GenericEnumerable<TKey, TSource>
+ * @extends GenericKeyedEnumerable<NonNegativeInteger, TSource>
  */
-interface GenericOrderedEnumerable extends GenericEnumerable
+interface GenericOrderedEnumerable extends GenericKeyedEnumerable
 {
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
 	 *
-	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 
 	/**
 	 * @template TCompareKey
 	 *
-	 * @param callable(TSource, TKey): TCompareKey $keySelector
+	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<NonNegativeInteger, TSource>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
 }

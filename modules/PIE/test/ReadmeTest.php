@@ -7,15 +7,15 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\PIE\DefaultEqualityComparer
- * @covers \Elephox\PIE\Enumerable
- * @uses   \Elephox\PIE\IsEnumerable
+ * @covers \Elephox\PIE\KeyedEnumerable
+ * @uses   \Elephox\PIE\IsKeyedEnumerable
  */
 class ReadmeTest extends TestCase
 {
 	public function testReadme(): void
 	{
 		$array = [5, 2, 1, 4, 3];
-		$pie = Enumerable::from($array);
+		$pie = KeyedEnumerable::from($array);
 
 		$identity = static fn(int $item): int => $item;
 
