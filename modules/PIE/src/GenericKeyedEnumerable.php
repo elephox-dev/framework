@@ -64,7 +64,7 @@ interface GenericKeyedEnumerable extends IteratorAggregate, Countable
 	/**
 	 * @param NonNegativeInteger $size
 	 *
-	 * @return GenericEnumerable<list<TSource>>
+	 * @return GenericEnumerable<non-empty-list<TSource>>
 	 */
 	public function chunk(int $size): GenericEnumerable;
 

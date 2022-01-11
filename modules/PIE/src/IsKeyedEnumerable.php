@@ -8,6 +8,7 @@ use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
 use EmptyIterator;
+use InvalidArgumentException;
 use Iterator;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
@@ -16,6 +17,8 @@ use OutOfBoundsException;
 use Stringable;
 
 /**
+ * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always 0|positive-int...
+ *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TIteratorKey
@@ -24,25 +27,6 @@ use Stringable;
 trait IsKeyedEnumerable
 {
 	// TODO: rewrite more functions to use iterators
-
-	/**
-	 * @template USource
-	 * @template UKey
-	 *
-	 * @param Iterator<UKey, USource> $iterator
-	 * @return GenericKeyedEnumerable<NonNegativeInteger, USource>
-	 */
-	private static function reindex(Iterator $iterator): GenericKeyedEnumerable
-	{
-		$key = 0;
-
-		return new KeyedEnumerable(new KeySelectIterator($iterator, function () use (&$key): int {
-			/**
-			 * @var NonNegativeInteger $key
-			 */
-			return $key++;
-		}));
-	}
 
 	/**
 	 * @return Iterator<TIteratorKey, TSource>
@@ -100,7 +84,7 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @param callable(TSource): numeric $selector
+	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
 	 * @return numeric
 	 */
@@ -133,10 +117,15 @@ trait IsKeyedEnumerable
 	/**
 	 * @param NonNegativeInteger $size
 	 *
-	 * @return GenericEnumerable<list<TSource>>
+	 * @return GenericEnumerable<non-empty-list<TSource>>
 	 */
 	public function chunk(int $size): GenericEnumerable
 	{
+		if ($size <= 0) {
+			throw new InvalidArgumentException('Chunk size must be greater than zero.');
+		}
+
+		/** @var GenericEnumerable<non-empty-list<TSource>> */
 		return new Enumerable(function () use ($size) {
 			$chunk = [];
 			foreach ($this->getIterator() as $element) {
@@ -689,7 +678,7 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @param callable(TSource): numeric $selector
+	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
 	 * @return numeric
 	 */
@@ -822,6 +811,8 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks TIteratorKey is always 0|positive-int...
+	 *
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
