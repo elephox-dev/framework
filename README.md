@@ -74,10 +74,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### ✅ TODO
 
-- [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
+- [ ] [PIE/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-  - [ ] Implement groupBy() method.
-  - [ ] Implement groupJoin() method.
 
 
 ### 🚧 Open issues from other repositories
