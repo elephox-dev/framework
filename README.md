@@ -75,16 +75,12 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 ### ✅ TODO
 
 - [ ] [PIE/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsEnumerable.php)
-  - [ ] rewrite some functions to use aggregate
-  - [ ] check thrown exceptions and if there would be a better/more specific type
+  - [ ] rewrite more functions to use iterators
   - [ ] Implement groupBy() method.
   - [ ] Implement groupJoin() method.
 
 
 ### 🚧 Open issues from other repositories
-
-- [actions/upload-artifact](https://github.com/actions/upload-artifact)
-  - [#270](https://github.com/actions/upload-artifact/issues/270)
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
   - [#6821](https://github.com/vimeo/psalm/issues/6821)
