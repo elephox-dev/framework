@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\Comparable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 

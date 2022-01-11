@@ -1,12 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
 use AppendIterator;
 use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
+use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use EmptyIterator;
 use Generator;
 use InvalidArgumentException;
@@ -14,8 +17,6 @@ use Iterator;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
-use OutOfBoundsException;
-use Stringable;
 
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int

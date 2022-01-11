@@ -1,29 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
 use Closure;
 use Iterator;
-use JetBrains\PhpStorm\Internal\TentativeType;
 use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
- * @template TResultKey
  *
- * @implements Iterator<TResultKey, TValue>
+ * @implements OuterIterator<TKey, TValue>
  */
-class KeySelectIterator implements Iterator
+class WhileIterator implements OuterIterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TKey, TValue): TResultKey $keySelector
+	 * @param Closure(TValue, TKey): bool $predicate
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $keySelector
+		private Closure $predicate
 	) {
 	}
 
@@ -39,16 +37,21 @@ class KeySelectIterator implements Iterator
 
 	public function key(): mixed
 	{
-		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
+		return $this->iterator->key();
 	}
 
 	public function valid(): bool
 	{
-		return $this->iterator->valid();
+		return $this->iterator->valid() && ($this->predicate)($this->iterator->current(), $this->iterator->key());
 	}
 
 	public function rewind(): void
 	{
 		$this->iterator->rewind();
+	}
+
+	public function getInnerIterator(): Iterator
+	{
+		return $this->iterator;
 	}
 }

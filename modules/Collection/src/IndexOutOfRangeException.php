@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
 use JetBrains\PhpStorm\Pure;
 use OutOfRangeException;

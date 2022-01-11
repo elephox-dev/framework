@@ -14,10 +14,10 @@ The main idea however is to provide a way to iterate over a collection of object
 <?php
 declare(strict_types=1);
 
-use Elephox\PIE\PIE;
+use Elephox\Collection\Enumerable;
 
 $array = [5, 2, 1, 4, 3];
-$pie = PIE::from($array);
+$pie = Enumerable::from($array);
 
 $pie->orderBy(fn (int $item) => $item)
     ->select(function (int $item) {

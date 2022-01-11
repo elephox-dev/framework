@@ -1,31 +1,31 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
 use ArrayIterator;
 use Closure;
+use Elephox\Collection\Contract\GenericEnumerable;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
 
 /**
- * @template TIteratorKey
  * @template TSource
  *
- * @implements GenericKeyedEnumerable<TIteratorKey, TSource>
+ * @implements GenericEnumerable<TSource>
  */
-class KeyedEnumerable implements GenericKeyedEnumerable
+class Enumerable implements GenericEnumerable
 {
 	/**
 	 * @template T
 	 *
 	 * @param T $value
 	 *
-	 * @return GenericKeyedEnumerable<mixed, T>
+	 * @return GenericEnumerable<T>
 	 */
-	public static function from(mixed $value): GenericKeyedEnumerable
+	public static function from(mixed $value): GenericEnumerable
 	{
 		if (is_string($value)) {
 			$value = str_split($value);
@@ -40,7 +40,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 				return new self($value);
 			}
 
-			if ($value instanceof GenericKeyedEnumerable) {
+			if ($value instanceof GenericEnumerable) {
 				return $value;
 			}
 		}
@@ -53,38 +53,39 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	 * @param int $end Inclusive
 	 * @param int $step
 	 *
-	 * @return GenericKeyedEnumerable<int, int>
+	 * @return GenericEnumerable<int>
 	 */
-	public static function range(int $start, int $end, int $step = 1): GenericKeyedEnumerable
+	public static function range(int $start, int $end, int $step = 1): GenericEnumerable
 	{
 		return new self(new RangeIterator($start, $end, $step));
 	}
 
 	/**
-	 * @return GenericKeyedEnumerable<never, never>
+	 * @return GenericEnumerable<never>
 	 */
-	public static function empty(): GenericKeyedEnumerable
+	public static function empty(): GenericEnumerable
 	{
 		return new self(new EmptyIterator());
 	}
 
 	/**
-	 * @uses IsKeyedEnumerable<TIteratorKey, TSource>
+	 * @uses IsEnumerable<TSource>
 	 */
-	use IsKeyedEnumerable;
+	use IsEnumerable;
 
 	/**
-	 * @var Iterator<TIteratorKey, TSource>
+	 * @var Iterator<mixed, TSource>
 	 */
 	private Iterator $iterator;
 
 	/**
-	 * @param Closure(): Iterator<TIteratorKey, TSource>|Iterator<TIteratorKey, TSource> $iterator
+	 * @param Closure(): Iterator<mixed, TSource>|Iterator<mixed, TSource> $iterator
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(
 		Iterator|Closure $iterator
-	) {
+	)
+	{
 		if ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;
 		} else if (is_callable($iterator)) {
@@ -100,7 +101,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	}
 
 	/**
-	 * @return Iterator<TIteratorKey, TSource>
+	 * @return Iterator<mixed, TSource>
 	 */
 	#[Pure] public function getIterator(): Iterator
 	{

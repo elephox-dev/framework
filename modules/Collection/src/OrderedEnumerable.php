@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
+
+use Elephox\Collection\Contract\GenericOrderedEnumerable;
 
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int

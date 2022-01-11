@@ -1,26 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
+use Elephox\Collection\Contract\GenericEnumerable;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\PIE\Enumerable
- * @covers \Elephox\PIE\KeyedEnumerable
- * @covers \Elephox\PIE\RangeIterator
- * @covers \Elephox\PIE\SelectIterator
- * @covers \Elephox\PIE\KeySelectIterator
- * @covers \Elephox\PIE\WhileIterator
- * @covers \Elephox\PIE\ReverseIterator
- * @covers \Elephox\PIE\UniqueByIterator
- * @covers \Elephox\PIE\FlipIterator
- * @covers \Elephox\PIE\DefaultEqualityComparer
- * @covers \Elephox\PIE\IndexOutOfRangeException
- * @covers \Elephox\PIE\EmptySequenceException
- * @covers \Elephox\PIE\AmbiguousMatchException
- * @uses \Elephox\PIE\IsEnumerable
+ * @covers \Elephox\Collection\Enumerable
+ * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\RangeIterator
+ * @covers \Elephox\Collection\SelectIterator
+ * @covers \Elephox\Collection\KeySelectIterator
+ * @covers \Elephox\Collection\WhileIterator
+ * @covers \Elephox\Collection\ReverseIterator
+ * @covers \Elephox\Collection\UniqueByIterator
+ * @covers \Elephox\Collection\FlipIterator
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\IndexOutOfRangeException
+ * @covers \Elephox\Collection\EmptySequenceException
+ * @covers \Elephox\Collection\AmbiguousMatchException
+ * @uses \Elephox\Collection\IsEnumerable
  */
 class EnumerableTest extends TestCase
 {

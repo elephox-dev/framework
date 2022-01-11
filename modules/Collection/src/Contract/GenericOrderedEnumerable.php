@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection\Contract;
 
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int

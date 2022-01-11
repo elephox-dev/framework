@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE;
+namespace Elephox\Collection;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\PIE\DefaultEqualityComparer
- * @covers \Elephox\PIE\KeyedEnumerable
- * @uses   \Elephox\PIE\IsKeyedEnumerable
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\KeyedEnumerable
+ * @uses   \Elephox\Collection\IsKeyedEnumerable
  */
 class ReadmeTest extends TestCase
 {

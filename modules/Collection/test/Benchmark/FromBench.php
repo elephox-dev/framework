@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\PIE\Benchmark;
+namespace Elephox\Collection\Benchmark;
 
 use ArrayIterator;
-use Elephox\PIE\KeyedEnumerable;
+use Elephox\Collection\KeyedEnumerable;
 use PhpBench\Attributes\Revs;
 
 class FromBench

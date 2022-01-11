@@ -5,7 +5,6 @@ namespace Elephox\Collection;
 
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
-use Elephox\PIE\DefaultEqualityComparer;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
