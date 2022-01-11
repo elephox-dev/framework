@@ -166,23 +166,18 @@ trait IsEnumerable
 	}
 
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks the template params are set from OrderedEnumerable...
-	 *
-	 * @param null|callable(TSource, Iterator<mixed, TSource>): bool $predicate
+	 * @param null|callable(TSource): bool $predicate
 	 *
 	 * @return NonNegativeInteger
 	 */
 	public function count(callable $predicate = null): int
 	{
-		if ($predicate === null) {
-			$iterator = $this->getIterator();
-
-			if ($iterator instanceof Countable) {
-				/** @var NonNegativeInteger */
-				return $iterator->count();
-			}
-		} else {
-			$iterator = new CallbackFilterIterator($this->getIterator(), $predicate);
+		$iterator = $this->getIterator();
+		if ($predicate !== null) {
+			$iterator = new CallbackFilterIterator($iterator, $predicate);
+		} else if ($iterator instanceof Countable) {
+			/** @var NonNegativeInteger */
+			return $iterator->count();
 		}
 
 		/**
@@ -767,6 +762,7 @@ trait IsEnumerable
 
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable
 	{
+		/** @psalm-suppress UnusedClosureParam */
 		$valueProxy = static fn (mixed $key, mixed $value): mixed => $keySelector($value);
 
 		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
@@ -812,13 +808,16 @@ trait IsEnumerable
 	}
 
 	/**
-	 * @param callable(TSource, Iterator<mixed, TSource>): bool $predicate
+	 * @param callable(TSource): bool $predicate
 	 *
 	 * @return GenericEnumerable<TSource>
 	 */
 	public function where(callable $predicate): GenericEnumerable
 	{
-		return new Enumerable(new CallbackFilterIterator($this->getIterator(), $predicate(...)));
+		/** @var Iterator<mixed, TSource> $iterator */
+		$iterator = $this->getIterator();
+
+		return new Enumerable(new CallbackFilterIterator($iterator, $predicate(...)));
 	}
 
 	/**

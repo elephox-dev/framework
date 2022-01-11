@@ -23,6 +23,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
+		/** @psalm-suppress MixedArgumentTypeCoercion */
 		return $this->orderBy($keySelector, $comparer);
 	}
 
@@ -36,6 +37,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
+		/** @psalm-suppress MixedArgumentTypeCoercion */
 		return $this->orderByDescending($keySelector);
 	}
 }

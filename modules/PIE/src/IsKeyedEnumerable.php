@@ -689,6 +689,7 @@ trait IsKeyedEnumerable
 			/**
 			 * @var numeric $accumulator
 			 * @var TSource $element
+			 * @var TIteratorKey $elementKey
 			 */
 			return $accumulator + $selector($element, $elementKey);
 		}, 0);
@@ -742,6 +743,7 @@ trait IsKeyedEnumerable
 
 	public function toArray(?callable $keySelector = null): array
 	{
+		/** @psalm-suppress UnusedClosureParam */
 		$keySelector ??= static fn(mixed $value, mixed $key): mixed => $key;
 
 		$array = [];
