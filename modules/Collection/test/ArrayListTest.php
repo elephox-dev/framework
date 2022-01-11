@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -301,14 +301,6 @@ class ArrayListTest extends TestCase
 		self::assertEquals(1, $sorted->get(0));
 		self::assertEquals(2, $sorted->get(1));
 		self::assertEquals(3, $sorted->get(2));
-	}
-
-	public function testAsReadonly(): void
-	{
-		$list = new ArrayList([1, 2, 3]);
-		$readonly = $list->asReadonly();
-
-		self::assertInstanceOf(ReadonlyList::class, $readonly);
 	}
 
 	public function testDeepClone(): void

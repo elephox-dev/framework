@@ -11,7 +11,7 @@ use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttribute
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
 use Elephox\Core\Middleware\Attribute\Contract\MiddlewareAttribute;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Middleware\Contract\Middleware;
 use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
@@ -144,7 +144,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			 */
 			$handlerAttributeInstance = $handlerAttribute->newInstance();
 
-			/** @var ReadonlyList<Middleware> $middlewares */
+			/** @var GenericList<Middleware> $middlewares */
 			$middlewares = ArrayList::fromArray($middlewareAttributes)
 				->map(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
 				->where(static fn(Middleware $middleware): bool => $middleware->getType()->matchesAny() || $middleware->getType() === $handlerAttributeInstance->getType());

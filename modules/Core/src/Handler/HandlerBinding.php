@@ -6,7 +6,7 @@ namespace Elephox\Core\Handler;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Contract\HandlerMeta;
 use Elephox\Core\Middleware\Contract\Middleware;
@@ -22,12 +22,12 @@ class HandlerBinding implements Contract\HandlerBinding
 	/**
 	 * @param Closure $closure
 	 * @param HandlerMeta $handlerMeta
-	 * @param ReadonlyList<Middleware> $middlewares
+	 * @param GenericList<Middleware> $middlewares
 	 */
 	public function __construct(
-		private Closure      $closure,
-		private HandlerMeta  $handlerMeta,
-		ReadonlyList $middlewares,
+        private Closure     $closure,
+        private HandlerMeta $handlerMeta,
+        GenericList         $middlewares,
 	) {
 		$this->middlewares = ArrayList::fromArray($middlewares)
 			->orderBy(static fn(Middleware $a, Middleware $b): int => $b->getWeight() - $a->getWeight());
@@ -38,7 +38,7 @@ class HandlerBinding implements Contract\HandlerBinding
 		return $this->handlerMeta;
 	}
 
-	#[Pure] public function getMiddlewares(): ReadonlyList
+	#[Pure] public function getMiddlewares(): GenericList
 	{
 		return $this->middlewares->asReadonly();
 	}

@@ -6,7 +6,7 @@ namespace Elephox\Core\Handler\Attribute;
 use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
@@ -72,9 +72,9 @@ class RequestHandler extends AbstractHandlerAttribute
 	}
 
 	/**
-	 * @return ReadonlyList<RequestMethodContract>
+	 * @return GenericList<RequestMethodContract>
 	 */
-	public function getMethods(): ReadonlyList
+	public function getMethods(): GenericList
 	{
 		return $this->methods;
 	}

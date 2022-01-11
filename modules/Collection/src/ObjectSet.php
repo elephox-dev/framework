@@ -8,6 +8,7 @@ use Elephox\Collection\Contract\GenericSet;
 use Elephox\PIE\DefaultEqualityComparer;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
 /**
@@ -22,14 +23,14 @@ class ObjectSet implements GenericSet
 	/** @var SplObjectStorage<object, mixed> */
 	protected SplObjectStorage $storage;
 
-	public function __construct(
+	#[Pure] public function __construct(
 		private ?Closure $comparer = null
 	) {
 		$this->storage = new SplObjectStorage();
 		$this->comparer ??= DefaultEqualityComparer::same(...);
 	}
 
-	public function getIterator(): SplObjectStorageIterator
+	#[Pure] public function getIterator(): SplObjectStorageIterator
 	{
 		return new SplObjectStorageIterator($this->storage);
 	}

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\ReadonlyMap;
+use Elephox\Collection\Contract\GenericMap;
 use Elephox\Support\DeepCloneable;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
@@ -294,7 +294,7 @@ class GenericWeakMap implements Contract\GenericMap
 		}
 	}
 
-	#[Pure] public function asReadonly(): ReadonlyMap
+	#[Pure] public function asReadonly(): GenericMap
 	{
 		return $this;
 	}

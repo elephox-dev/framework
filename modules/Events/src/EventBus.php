@@ -6,7 +6,7 @@ namespace Elephox\Events;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use JetBrains\PhpStorm\Pure;
 
 class EventBus implements Contract\EventBus
@@ -81,7 +81,7 @@ class EventBus implements Contract\EventBus
 		}
 	}
 
-	#[Pure] public function getSubscriptions(): ReadonlyList
+	#[Pure] public function getSubscriptions(): GenericList
 	{
 		return $this->subscriptionSubscriberMapping->values();
 	}

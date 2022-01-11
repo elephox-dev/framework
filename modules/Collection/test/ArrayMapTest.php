@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\ReadonlyMap;
+use Elephox\Collection\Contract\GenericMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -225,7 +225,7 @@ class ArrayMapTest extends TestCase
 		$map = new ArrayMap([123, 456]);
 		$readonly = $map->asReadonly();
 
-		self::assertInstanceOf(ReadonlyMap::class, $readonly);
+		self::assertInstanceOf(GenericMap::class, $readonly);
 	}
 
 	public function testRemove(): void

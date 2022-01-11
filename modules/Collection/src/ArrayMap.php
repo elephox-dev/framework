@@ -5,7 +5,7 @@ namespace Elephox\Collection;
 
 use ArrayAccess;
 use ArrayIterator;
-use Elephox\Collection\Contract\ReadonlyMap;
+use Elephox\Collection\Contract\GenericMap;
 use Elephox\Support\Contract\ArrayConvertible;
 use Elephox\Support\Contract\JsonConvertible;
 use Elephox\Support\DeepCloneable;
@@ -258,7 +258,7 @@ class ArrayMap implements Contract\GenericMap, ArrayAccess, ArrayConvertible, Js
 		return $map;
 	}
 
-	#[Pure] public function asReadonly(): ReadonlyMap
+	#[Pure] public function asReadonly(): GenericMap
 	{
 		return $this;
 	}

@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\Contract\ReadonlyList;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -25,12 +24,12 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @template U
 	 *
-	 * @param array<array-key, U>|ReadonlyList<U> $array
+	 * @param array<array-key, U>|GenericList<U> $array
 	 * @return self<U>
 	 */
-	#[Pure] public static function fromArray(iterable|ReadonlyList $array): self
+	#[Pure] public static function fromArray(iterable|GenericList $array): self
 	{
-		if ($array instanceof ReadonlyList) {
+		if ($array instanceof GenericList) {
 			/** @noinspection PhpConditionAlreadyCheckedInspection */
 			if ($array instanceof self) {
 				return $array;
@@ -121,7 +120,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @return T
 	 */
-	#[Pure] public function get(int $index): mixed
+	public function get(int $index): mixed
 	{
 		if (!$this->offsetExists($index)) {
 			throw new OffsetNotFoundException($index);
@@ -186,7 +185,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @return list<T>
 	 */
-	#[Pure] public function asArray(): array
+	public function asArray(): array
 	{
 		return $this->list;
 	}
@@ -243,7 +242,7 @@ class ArrayList implements GenericList, ArrayAccess
 	/**
 	 * @return T
 	 */
-	#[Pure] public function peek(): mixed
+	public function peek(): mixed
 	{
 		$idx = $this->count() - 1;
 		if ($idx < 0) {
@@ -295,11 +294,6 @@ class ArrayList implements GenericList, ArrayAccess
 	public function join(Stringable|string $separator): string
 	{
 		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
-	}
-
-	#[Pure] public function asReadonly(): ReadonlyList
-	{
-		return $this;
 	}
 
 	public function removeAt(int $index): bool

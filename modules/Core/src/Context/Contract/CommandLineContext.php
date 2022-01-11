@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Context\Contract;
 
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 
 interface CommandLineContext extends Context
 {
@@ -12,7 +12,7 @@ interface CommandLineContext extends Context
 	public function getCommand(): string;
 
 	/**
-	 * @return ReadonlyList<string>
+	 * @return GenericList<string>
 	 */
-	public function getArgs(): ReadonlyList;
+	public function getArgs(): GenericList;
 }

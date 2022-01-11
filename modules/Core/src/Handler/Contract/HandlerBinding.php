@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\InvalidResultException;
@@ -14,9 +14,9 @@ interface HandlerBinding
 	public function getHandlerMeta(): HandlerMeta;
 
 	/**
-	 * @return ReadonlyList<Middleware>
+	 * @return GenericList<Middleware>
 	 */
-	public function getMiddlewares(): ReadonlyList;
+	public function getMiddlewares(): GenericList;
 
 	/**
 	 * @throws InvalidContextException

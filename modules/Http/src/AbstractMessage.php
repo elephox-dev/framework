@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\Contract\HeaderName;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
@@ -33,7 +33,7 @@ abstract class AbstractMessage implements Contract\Message
 		return $this->getHeaderMap()->has($name);
 	}
 
-	public function getHeaderName(HeaderName $name): ReadonlyList
+	public function getHeaderName(HeaderName $name): GenericList
 	{
 		return $this->getHeaderMap()->get($name);
 	}

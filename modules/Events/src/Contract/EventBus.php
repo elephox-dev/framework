@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Events\Contract;
 
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 
 interface EventBus
 {
@@ -21,9 +21,9 @@ interface EventBus
 	public function unsubscribe(string $id): void;
 
 	/**
-	 * @return ReadonlyList<Subscription>
+	 * @return GenericList<Subscription>
 	 */
-	public function getSubscriptions(): ReadonlyList;
+	public function getSubscriptions(): GenericList;
 
 	public function publish(Event $event): void;
 }

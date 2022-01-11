@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\ReadonlyList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 
@@ -21,9 +21,9 @@ interface Message
 
 	/**
 	 * @param HeaderName $name
-	 * @return ReadonlyList<string>
+	 * @return GenericList<string>
 	 */
-	public function getHeaderName(HeaderName $name): ReadonlyList;
+	public function getHeaderName(HeaderName $name): GenericList;
 
 	/**
 	 * @param HeaderName $name

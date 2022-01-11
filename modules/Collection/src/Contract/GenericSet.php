@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use IteratorAggregate;
+
 /**
  * @template T
  *
- * @extends ReadonlySet<T>
+ * @extends GenericCollection<T>
+ * @extends IteratorAggregate<mixed, T>
  */
-interface GenericSet extends ReadonlySet
+interface GenericSet extends GenericCollection, IteratorAggregate
 {
 	/**
 	 * @param T $value
@@ -21,4 +24,10 @@ interface GenericSet extends ReadonlySet
 	 * @return bool
 	 */
 	public function remove(mixed $value): bool;
+
+	/**
+	 * @param T $value
+	 * @return bool
+	 */
+	public function contains(mixed $value): bool;
 }
