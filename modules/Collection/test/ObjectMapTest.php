@@ -78,6 +78,36 @@ class ObjectMapTest extends TestCase
 		}
 	}
 
+	public function testPut(): void
+	{
+		$inst = new stdClass();
+		$map = new ObjectMap([$inst], [123]);
+
+		$added = $map->put($inst, 456);
+
+		self::assertFalse($added);
+		self::assertEquals(456, $map->get($inst));
+
+		$anotherAdded = $map->put(new stdClass(), 789);
+
+		self::assertTrue($anotherAdded);
+	}
+
+	public function testRemove(): void
+	{
+		$inst = new stdClass();
+		$map = new ObjectMap([$inst], [123]);
+
+		$removed = $map->remove($inst);
+
+		self::assertTrue($removed);
+		self::assertFalse($map->has($inst));
+
+		$removedAgain = $map->remove($inst);
+
+		self::assertFalse($removedAgain);
+	}
+
 	public function testDeepClone(): void
 	{
 		$anObject = new stdClass();

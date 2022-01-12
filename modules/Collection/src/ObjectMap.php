@@ -6,9 +6,7 @@ namespace Elephox\Collection;
 use Elephox\Collection\Contract\GenericMap;
 use Elephox\Support\DeepCloneable;
 use Iterator;
-use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
-use Traversable;
 
 /**
  * @template TKey of object
@@ -23,7 +21,7 @@ class ObjectMap implements GenericMap
 	 */
 	use IsKeyedEnumerable, DeepCloneable;
 
-	protected SplObjectStorage $map;
+	private SplObjectStorage $map;
 
 	/**
 	 * @param array<array-key, TKey> $keys
