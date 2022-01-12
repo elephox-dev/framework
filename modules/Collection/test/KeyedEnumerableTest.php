@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use ArrayIterator;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,32 @@ use PHPUnit\Framework\TestCase;
  */
 class KeyedEnumerableTest extends TestCase
 {
+	public function testFromString(): void
+	{
+		self::assertEquals(
+			['a'],
+			KeyedEnumerable::from('a')->toList()
+		);
+	}
+
+	public function testFromIterator(): void
+	{
+		self::assertEquals(
+			['a', 'b', 'c'],
+			KeyedEnumerable::from(new ArrayIterator(['a', 'b', 'c']))->toList()
+		);
+	}
+
+	public function testFromSelf(): void
+	{
+		$keyedEnumerable = KeyedEnumerable::from(['a', 'b', 'c']);
+
+		self::assertSame(
+			$keyedEnumerable,
+			KeyedEnumerable::from($keyedEnumerable)
+		);
+	}
+
 	public function testFromThrows(): void
 	{
 		$this->expectException(InvalidArgumentException::class);

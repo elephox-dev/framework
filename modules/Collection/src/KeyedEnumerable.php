@@ -90,15 +90,13 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	) {
 		if ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;
-		} else if (is_callable($iterator)) {
+		} else {
 			$result = $iterator();
 			if ($result instanceof Iterator) {
 				$this->iterator = $result;
 			} else {
 				throw new InvalidArgumentException('The closure must return an instance of Iterator');
 			}
-		} else {
-			throw new InvalidArgumentException('The first argument must be or return an instance of Iterator');
 		}
 	}
 
