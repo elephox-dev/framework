@@ -7,7 +7,6 @@ use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
@@ -18,21 +17,24 @@ use ReflectionProperty;
 
 class Container implements Contract\Container
 {
-	/** @var \Elephox\Collection\ArrayMap<string, Binding> */
+	/** @var ArrayMap<string, Binding> */
 	private ArrayMap $map;
 
-	/** @var \Elephox\Collection\ArrayMap<string, non-empty-string> */
+	/** @var ArrayMap<string, non-empty-string> */
 	private ArrayMap $aliases;
 
 	public function __construct()
 	{
+		/** @var ArrayMap<string, Binding> */
 		$this->map = new ArrayMap();
+
+		/** @var ArrayMap<string, non-empty-string> */
 		$this->aliases = new ArrayMap();
 
 		$this->register(Contract\Container::class, $this, InstanceLifetime::Singleton, __CLASS__, 'container');
 	}
 
-	#[Pure] public function has(string $id): bool
+	public function has(string $id): bool
 	{
 		return $this->map->has($id) || $this->aliases->has($id);
 	}
@@ -213,7 +215,7 @@ class Container implements Contract\Container
 
 		$arguments = $this->resolveArguments($constructor, $overrideArguments);
 
-		return $reflectionClass->newInstanceArgs($arguments->asArray());
+		return $reflectionClass->newInstanceArgs($arguments->toList());
 	}
 
 	/**
@@ -316,7 +318,7 @@ class Container implements Contract\Container
 		$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments);
 
 		/** @var TResult */
-		return $reflectionMethod->invokeArgs($object, $arguments->asArray());
+		return $reflectionMethod->invokeArgs($object, $arguments->toList());
 	}
 
 	/**
@@ -334,12 +336,11 @@ class Container implements Contract\Container
 		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments);
 
 		/** @var T */
-		return $reflectionFunction->invokeArgs($arguments->asArray());
+		return $reflectionFunction->invokeArgs($arguments->toList());
 	}
 
 	private function resolveArguments(ReflectionFunctionAbstract $method, array $overrides): ArrayList
 	{
-		/** @var ArrayList<mixed> $values */
 		$values = new ArrayList();
 		$parameters = $method->getParameters();
 
