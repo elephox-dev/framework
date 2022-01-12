@@ -3,17 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use JetBrains\PhpStorm\Pure;
+use Elephox\Http\RequestMethod;
 
 interface Request extends Message
 {
-	public function getHeaderMap(): RequestHeaderMap;
+	public function getRequestMethod(): RequestMethod;
 
-	#[Pure] public function getRequestMethod(): RequestMethod;
+	public function getUrl(): Url;
 
-	public function withRequestMethod(RequestMethod $method): static;
-
-	public function withUrl(Url $url, bool $preserveHost = false): static;
-
-	#[Pure] public function getUrl(): Url;
+	public function with(): RequestBuilder;
 }

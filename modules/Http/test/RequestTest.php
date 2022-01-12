@@ -105,7 +105,7 @@ class RequestTest extends TestCase
 		$request = Request::fromGlobals();
 
 		self::assertInstanceOf(CustomRequestMethod::class, $request->getRequestMethod());
-		self::assertEquals("NEW", $request->getRequestMethod()->getValue());
+		self::assertEquals("NEW", $request->getRequestMethod()->value);
 		self::assertTrue($request->getRequestMethod()->canHaveBody());
 		self::assertEquals('/', (string)$request->getUrl());
 

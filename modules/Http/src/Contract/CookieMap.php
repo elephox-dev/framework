@@ -6,8 +6,8 @@ namespace Elephox\Http\Contract;
 use Elephox\Collection\Contract\GenericMap;
 
 /**
- * @extends GenericMap<string, list<string>>
+ * @extends GenericMap<string, Cookie>
  */
-interface HeaderMap extends GenericMap
+interface CookieMap extends GenericMap
 {
 }

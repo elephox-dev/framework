@@ -5,101 +5,13 @@ namespace Elephox\Http;
 
 use DateTime;
 use InvalidArgumentException;
-use Elephox\Collection\ArrayList;
-use Elephox\Collection\ArrayMap;
-use Elephox\Collection\KeyValuePair;
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 
 class Cookie implements Contract\Cookie
 {
 	public const ExpiresFormat = "D, d-M-Y H:i:s T";
-
-	/**
-	 * @param string $cookies
-	 * @return ArrayList<Contract\Cookie>
-	 */
-	public static function fromRequestString(string $cookies): ArrayList
-	{
-		return ArrayList::from(mb_split(';', $cookies))
-			->map(static function (string $cookie): Contract\Cookie {
-				[$name, $value] = explode('=', $cookie, 2);
-
-				/** @var Contract\Cookie */
-				return new self(trim($name), $value);
-			});
-	}
-
-	/**
-	 * @param string $cookieString
-	 * @return Contract\Cookie
-	 */
-	public static function fromResponseString(string $cookieString): Contract\Cookie
-	{
-		$split = mb_split(';', $cookieString);
-		$propertyList = ArrayList::from($split);
-		$nameValuePair = $propertyList->shift();
-		[$name, $value] = explode('=', $nameValuePair, 2);
-
-		/** @var ArrayList<KeyValuePair<string, string>> $propertyList */
-		$propertyList = $propertyList
-			->map(static function (string $keyValue): KeyValuePair {
-				if (!str_contains($keyValue, '=')) {
-					return new KeyValuePair(strtolower(trim($keyValue)), "");
-				}
-
-				[$key, $value] = explode('=', $keyValue, 2);
-
-				return new KeyValuePair(strtolower(trim($key)), $value);
-			});
-
-		/**
-		 * @psalm-suppress InvalidArgument The generic types are subtypes of the expected ones.
-		 */
-		$propertyMap = ArrayMap::fromKeyValuePairList($propertyList);
-
-		$cookie = new self($name);
-
-		if ($value !== '') {
-			$cookie->setValue($value);
-		}
-
-		if ($propertyMap->has('expires')) {
-			$cookie->setExpires(DateTime::createFromFormat(self::ExpiresFormat, (string)$propertyMap->get('expires')));
-		}
-
-		if ($propertyMap->has('path')) {
-			$cookie->setPath((string)$propertyMap->get('path'));
-		}
-
-		if ($propertyMap->has('domain')) {
-			$cookie->setDomain((string)$propertyMap->get('domain'));
-		}
-
-		if ($propertyMap->has('secure')) {
-			$cookie->setSecure(true);
-		}
-
-		if ($propertyMap->has('httponly')) {
-			$cookie->setHttpOnly(true);
-		}
-
-		if ($propertyMap->has('samesite')) {
-			$sameSite = CookieSameSite::from((string)$propertyMap->get('samesite'));
-
-			$cookie->setSameSite($sameSite);
-		}
-
-		if ($propertyMap->has('max-age')) {
-			$maxAge = (string)$propertyMap->get('max-age');
-			if (!ctype_digit($maxAge)) {
-				throw new InvalidArgumentException("The max-age property must be an integer.");
-			}
-
-			$cookie->setMaxAge((int)$maxAge);
-		}
-
-		return $cookie;
-	}
 
 	public function __construct(
 		private string          $name,
@@ -111,8 +23,7 @@ class Cookie implements Contract\Cookie
 		private bool            $httpOnly = false,
 		private ?CookieSameSite $sameSite = null,
 		public ?int             $maxAge = null
-	)
-	{
+	) {
 	}
 
 	#[Pure] public function getName(): string
@@ -240,5 +151,101 @@ class Cookie implements Contract\Cookie
 		}
 
 		return $cookie;
+	}
+
+	#[ArrayShape([
+		'name' => "string",
+		'value' => "null|string",
+		'expires' => "\DateTime|null",
+		'path' => "null|string",
+		'domain' => "null|string",
+		'secure' => "bool",
+		'httpOnly' => "bool",
+		'sameSite' => "\Elephox\Http\CookieSameSite|null"
+	])]
+	public function asArray(): array
+	{
+		return [
+			'name' => $this->name,
+			'value' => $this->value,
+			'expires' => $this->expires,
+			'path' => $this->path,
+			'domain' => $this->domain,
+			'secure' => $this->secure,
+			'httpOnly' => $this->httpOnly,
+			'sameSite' => $this->sameSite,
+		];
+	}
+
+	public function offsetExists(
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		mixed $offset
+	): bool
+	{
+		return match ($offset) {
+			'name', 'value', 'secure', 'httpOnly' => true,
+			'expires' => $this->expires !== null,
+			'path' => $this->path !== null,
+			'domain' => $this->domain !== null,
+			'sameSite' => $this->sameSite !== null,
+			default => false,
+		};
+	}
+
+	public function offsetGet(
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		mixed $offset
+	): string|bool|null|DateTime|CookieSameSite
+	{
+		return match ($offset) {
+			'name' => $this->name,
+			'value' => $this->value,
+			'expires' => $this->expires ?? throw new InvalidArgumentException("Cookie 'expires' is not set"),
+			'path' => $this->path ?? throw new InvalidArgumentException("Cookie 'path' is not set"),
+			'domain' => $this->domain ?? throw new InvalidArgumentException("Cookie 'domain' is not set"),
+			'secure' => $this->secure,
+			'httpOnly' => $this->httpOnly,
+			'sameSite' => $this->sameSite ?? throw new InvalidArgumentException("Cookie 'sameSite' is not set"),
+			default => throw new InvalidArgumentException("Cookie '$offset' is not set")
+		};
+	}
+
+	public function offsetSet(
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		mixed $offset,
+		mixed $value
+	): void
+	{
+		if (!is_string($offset)) {
+			throw new InvalidArgumentException("Cookie '$offset' is not a valid property name");
+		}
+
+		$method = 'set' . ucfirst($offset);
+		if (!method_exists($this, $method)) {
+			throw new InvalidArgumentException("Cookie '$offset' cannot be set");
+		}
+
+		$this->{$method}($value);
+	}
+
+	public function offsetUnset(
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		mixed $offset
+	): void
+	{
+		if (!is_string($offset)) {
+			throw new InvalidArgumentException("Cookie '$offset' is not a valid property name");
+		}
+
+		$method = 'set' . ucfirst($offset);
+		if ($offset === 'name' ||!method_exists($this, $method)) {
+			throw new InvalidArgumentException("Cookie '$offset' cannot be unset");
+		}
+
+		if ($offset === 'secure' || $offset === 'httpOnly') {
+			$this->{$method}(false);
+		} else {
+			$this->{$method}(null);
+		}
 	}
 }

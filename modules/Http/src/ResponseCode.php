@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-enum ResponseCode: int implements Contract\ResponseCode
+enum ResponseCode: int
 {
 	/* Information responses */
 	case Continue_ = 100;
@@ -79,13 +80,72 @@ enum ResponseCode: int implements Contract\ResponseCode
 	case NotExtended = 510;
 	case NetworkAuthenticationRequired = 511;
 
-	public function getCode(): int
+	#[Pure]
+	public function getReasonPhrase(): string
 	{
-		return $this->value;
-	}
-
-	public function getMessage(): string
-	{
-		return $this->name;
+		// TODO: go over the reason phrases and check them against standards
+		return match ($this) {
+			self::Continue_ => "Continue_",
+			self::SwitchingProtocols => "SwitchingProtocols",
+			self::Processing => "Processing",
+			self::EarlyHints => "EarlyHints",
+			self::OK => "OK",
+			self::Created => "Created",
+			self::Accepted => "Accepted",
+			self::NonAuthoritativeInformation => "NonAuthoritativeInformation",
+			self::NoContent => "NoContent",
+			self::ResetContent => "ResetContent",
+			self::PartialContent => "PartialContent",
+			self::MultiStatus => "MultiStatus",
+			self::AlreadyReported => "AlreadyReported",
+			self::IMUsed => "IMUsed",
+			self::MultipleChoice => "MultipleChoice",
+			self::MovedPermanently => "MovedPermanently",
+			self::Found => "Found",
+			self::SeeOther => "SeeOther",
+			self::NotModified => "NotModified",
+			self::TemporaryRedirect => "TemporaryRedirect",
+			self::PermanentRedirect => "PermanentRedirect",
+			self::BadRequest => "BadRequest",
+			self::Unauthorized => "Unauthorized",
+			self::PaymentRequired => "PaymentRequired",
+			self::Forbidden => "Forbidden",
+			self::NotFound => "NotFound",
+			self::MethodNotAllowed => "MethodNotAllowed",
+			self::NotAcceptable => "NotAcceptable",
+			self::ProxyAuthenticationRequired => "ProxyAuthenticationRequired",
+			self::RequestTimeout => "RequestTimeout",
+			self::Conflict => "Conflict",
+			self::Gone => "Gone",
+			self::LengthRequired => "LengthRequired",
+			self::PreconditionFailed => "PreconditionFailed",
+			self::PayloadTooLarge => "PayloadTooLarge",
+			self::RequestURITooLong => "RequestURITooLong",
+			self::UnsupportedMediaType => "UnsupportedMediaType",
+			self::RequestedRangeNotSatisfiable => "RequestedRangeNotSatisfiable",
+			self::ExpectationFailed => "ExpectationFailed",
+			self::ImATeapot => "ImATeapot",
+			self::MisdirectedRequest => "MisdirectedRequest",
+			self::UnprocessableEntity => "UnprocessableEntity",
+			self::Locked => "Locked",
+			self::FailedDependency => "FailedDependency",
+			self::TooEarly => "TooEarly",
+			self::UpgradeRequired => "UpgradeRequired",
+			self::PreconditionRequired => "PreconditionRequired",
+			self::TooManyRequests => "TooManyRequests",
+			self::RequestHeaderFieldsTooLarge => "RequestHeaderFieldsTooLarge",
+			self::UnavailableForLegalReasons => "UnavailableForLegalReasons",
+			self::InternalServerError => "InternalServerError",
+			self::NotImplemented => "NotImplemented",
+			self::BadGateway => "BadGateway",
+			self::ServiceUnavailable => "ServiceUnavailable",
+			self::GatewayTimeout => "GatewayTimeout",
+			self::HTTPVersionNotSupported => "HTTPVersionNotSupported",
+			self::VariantAlsoNegotiates => "VariantAlsoNegotiates",
+			self::InsufficientStorage => "InsufficientStorage",
+			self::LoopDetected => "LoopDetected",
+			self::NotExtended => "NotExtended",
+			self::NetworkAuthenticationRequired => "NetworkAuthenticationRequired"
+		};
 	}
 }

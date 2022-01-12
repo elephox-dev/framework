@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
 enum UploadError: int
@@ -17,6 +18,7 @@ enum UploadError: int
 	case UPLOAD_ERR_CANT_WRITE = 7;
 	case UPLOAD_ERR_EXTENSION = 8;
 
+	#[Pure]
 	public function getMessage(): string
 	{
 		return match ($this) {

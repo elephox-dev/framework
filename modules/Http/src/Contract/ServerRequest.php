@@ -5,38 +5,18 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
+use Elephox\Collection\Contract\GenericList;
 
 interface ServerRequest extends Request
 {
-	/**
-	 * @return ArrayMap<string, string>
-	 */
-	public function getServerParamsMap(): ArrayMap;
+	public function getParameterMap(): ParameterMap;
+
+	public function getCookies(): CookieMap;
 
 	/**
-	 * @return ArrayList<Cookie>
+	 * @return GenericList<UploadedFile>
 	 */
-	public function getCookies(): ArrayList;
+	public function getUploadedFiles(): GenericList;
 
-	/**
-	 * @param iterable<Cookie> $cookies
-	 */
-	public function withCookies(iterable $cookies): static;
-
-	public function withCookie(Cookie $cookie): static;
-
-	/**
-	 * @return ArrayList<UploadedFile>
-	 */
-	public function getUploadedFiles(): ArrayList;
-
-	/**
-	 * @param iterable<UploadedFile> $uploadedFiles
-	 */
-	public function withUploadedFiles(iterable $uploadedFiles): static;
-
-	/**
-	 * @return array|object|null
-	 */
-	public function getParsedBody(): null|array|object;
+	public function with(): ServerRequestBuilder;
 }

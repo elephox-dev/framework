@@ -13,14 +13,14 @@ interface UploadedFile
 
 	public function getClientPath(): string;
 
+	public function getClientMimeType(): ?MimeType;
+
 	public function getError(): UploadError;
 
 	/**
 	 * @return null|positive-int|0
 	 */
 	public function getSize(): ?int;
-
-	public function getClientMimeType(): ?MimeType;
 
 	public function getStream(): Stream;
 }

@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use ArrayAccess;
 use DateTime;
 use Elephox\Http\CookieSameSite;
+use Elephox\Support\Contract\ArrayConvertible;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
-interface Cookie extends Stringable
+interface Cookie extends Stringable, ArrayConvertible, ArrayAccess
 {
 	public function setName(string $name): void;
 
@@ -45,4 +48,16 @@ interface Cookie extends Stringable
 	public function setMaxAge(?int $maxAge): void;
 
 	#[Pure] public function getMaxAge(): ?int;
+
+	#[ArrayShape([
+		'name' => "string",
+		'value' => "null|string",
+		'expires' => DateTime::class . "|null",
+		'path' => "null|string",
+		'domain' => "null|string",
+		'secure' => "bool",
+		'httpOnly' => "bool",
+		'sameSite' => CookieSameSite::class . "|null"
+	])]
+	public function asArray(): array;
 }

@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-enum RequestMethod: string implements Contract\RequestMethod
+enum RequestMethod: string
 {
 	case GET = "GET";
 	case HEAD = "HEAD";
@@ -16,6 +17,7 @@ enum RequestMethod: string implements Contract\RequestMethod
 	case OPTIONS = "OPTIONS";
 	case PATCH = "PATCH";
 
+	#[Pure]
 	public function canHaveBody(): bool
 	{
 		return match ($this) {
@@ -25,10 +27,5 @@ enum RequestMethod: string implements Contract\RequestMethod
 			self::PATCH => true,
 			default => false
 		};
-	}
-
-	public function getValue(): string
-	{
-		return $this->value;
 	}
 }

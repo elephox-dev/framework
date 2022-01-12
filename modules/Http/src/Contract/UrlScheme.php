@@ -9,7 +9,9 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 interface UrlScheme
 {
-	#[Pure] public function getScheme(): string;
+	#[Pure]
+	public function getScheme(): string;
 
-	#[Pure] public function getDefaultPort(): ?int;
+	#[Pure]
+	public function getDefaultPort(): ?int;
 }

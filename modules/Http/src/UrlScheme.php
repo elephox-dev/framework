@@ -18,7 +18,8 @@ enum UrlScheme: string implements Contract\UrlScheme
 	case SSH = 'ssh';
 	case MYSQL = 'mysql';
 
-	#[Pure] public function getDefaultPort(): ?int
+	#[Pure]
+	public function getDefaultPort(): ?int
 	{
 		return match ($this) {
 			self::HTTPS => 443,
@@ -30,7 +31,8 @@ enum UrlScheme: string implements Contract\UrlScheme
 		};
 	}
 
-	#[Pure] public function getScheme(): string
+	#[Pure]
+	public function getScheme(): string
 	{
 		return $this->value;
 	}
