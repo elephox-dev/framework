@@ -17,6 +17,7 @@ use RuntimeException;
  * @covers \Elephox\Stream\UnreadableFileException
  * @covers \Elephox\Stream\ReadOnlyFileException
  * @covers \Elephox\Stream\ReadonlyParentException
+ * @covers \Elephox\Files\FileException
  */
 class ResourceStreamTest extends MockeryTestCase
 {

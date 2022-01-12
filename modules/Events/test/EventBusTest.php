@@ -9,8 +9,13 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Events\EventBus
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\ArraySet
  * @covers \Elephox\Events\NamedEvent
  * @covers \Elephox\Events\Subscription
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\Enumerable
+ * @uses   \Elephox\Collection\IsEnumerable
  * @uses   \Elephox\Events\ClassNameAsEventName
  */
 class EventBusTest extends TestCase

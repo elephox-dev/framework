@@ -13,8 +13,11 @@ use stdClass;
  * @covers \Elephox\Collection\OffsetNotAllowedException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\ArrayList
- * @covers \Elephox\Collection\KeyValuePair
  * @covers \Elephox\Collection\DuplicateKeyException
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\Enumerable
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @uses \Elephox\Collection\IsEnumerable
  */
 class ArrayMapTest extends TestCase
 {

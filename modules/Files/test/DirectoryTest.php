@@ -16,6 +16,8 @@ use RuntimeException;
  * @covers \Elephox\Files\DirectoryNotFoundException
  * @covers \Elephox\Files\FileNotFoundException
  * @covers \Elephox\Files\FileException
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Collection\KeyedEnumerable
  */
 class DirectoryTest extends TestCase
 {

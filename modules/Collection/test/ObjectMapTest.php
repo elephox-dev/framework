@@ -12,6 +12,8 @@ use stdClass;
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Collection\Enumerable
  */
 class ObjectMapTest extends TestCase
 {
