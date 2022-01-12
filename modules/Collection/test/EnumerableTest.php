@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use ArrayIterator;
 use Elephox\Collection\Contract\GenericEnumerable;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,32 @@ use PHPUnit\Framework\TestCase;
  */
 class EnumerableTest extends TestCase
 {
+	public function testFromString(): void
+	{
+		self::assertEquals(
+			['a'],
+			Enumerable::from('a')->toList()
+		);
+	}
+
+	public function testFromIterator(): void
+	{
+		self::assertEquals(
+			['a', 'b', 'c'],
+			Enumerable::from(new ArrayIterator(['a', 'b', 'c']))->toList()
+		);
+	}
+
+	public function testFromSelf(): void
+	{
+		$keyedEnumerable = Enumerable::from(['a', 'b', 'c']);
+
+		self::assertSame(
+			$keyedEnumerable,
+			Enumerable::from($keyedEnumerable)
+		);
+	}
+
 	public function testFromThrows(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -212,6 +239,11 @@ class EnumerableTest extends TestCase
 				)
 				->toList()
 		);
+	}
+
+	public function testIsEmpty(): void
+	{
+		self::assertTrue(Enumerable::empty()->isEmpty());
 	}
 
 	public function testJoin(): void
@@ -402,6 +434,11 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testSum(): void
+	{
+		self::assertEquals(15, Enumerable::range(1, 5)->sum(fn ($x) => $x));
+	}
+
 	public function testTake(): void
 	{
 		self::assertEquals(
@@ -442,6 +479,14 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testToKeyed(): void
+	{
+		self::assertEquals(
+			['a' => 97, 'b' => 98, 'c' => 99],
+			Enumerable::range(97, 99)->toKeyed(fn ($x) => chr($x))->toArray()
+		);
+	}
+
 	public function testUnion(): void
 	{
 		$a = Enumerable::from([5, 3, 9, 7, 5, 9, 3, 7]);
@@ -461,6 +506,14 @@ class EnumerableTest extends TestCase
 		self::assertEquals(
 			[5, 3, 9, 7, 6],
 			$a->unionBy($b, fn(int $a) => $a % 5)->toList()
+		);
+	}
+
+	public function testWhere(): void
+	{
+		self::assertEquals(
+			[5, 6, 7],
+			Enumerable::range(1, 7)->where(fn ($x) => $x > 4)->toList()
 		);
 	}
 

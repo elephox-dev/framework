@@ -37,8 +37,8 @@ class KeyedEnumerableTest extends TestCase
 	public function testFromIterator(): void
 	{
 		self::assertEquals(
-			['a', 'b', 'c'],
-			KeyedEnumerable::from(new ArrayIterator(['a', 'b', 'c']))->toList()
+			['a' => 1, 'b' => 2, 'c' => 3],
+			KeyedEnumerable::from(new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3]))->toArray()
 		);
 	}
 
@@ -251,6 +251,11 @@ class KeyedEnumerableTest extends TestCase
 				)
 				->toList()
 		);
+	}
+
+	public function testIsEmpty(): void
+	{
+		self::assertTrue(KeyedEnumerable::empty()->isEmpty());
 	}
 
 	public function testJoin(): void
