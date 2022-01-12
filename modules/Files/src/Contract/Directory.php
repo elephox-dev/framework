@@ -3,28 +3,28 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
-use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 
 interface Directory extends FilesystemNode
 {
 	/**
-	 * @return ArrayList<File>
+	 * @return GenericKeyedEnumerable<int, File>
 	 */
-	public function getFiles(): ArrayList;
+	public function getFiles(): GenericKeyedEnumerable;
 
 	public function getFile(string $filename): ?File;
 
 	/**
-	 * @return ArrayList<Directory>
+	 * @return GenericKeyedEnumerable<int, Directory>
 	 */
-	public function getDirectories(): ArrayList;
+	public function getDirectories(): GenericKeyedEnumerable;
 
 	public function getDirectory(string $dirname): ?Directory;
 
 	/**
-	 * @return ArrayList<FilesystemNode>
+	 * @return GenericKeyedEnumerable<int, FilesystemNode>
 	 */
-	public function getChildren(): ArrayList;
+	public function getChildren(): GenericKeyedEnumerable;
 
 	public function getChild(string $name): ?FilesystemNode;
 
@@ -33,4 +33,6 @@ interface Directory extends FilesystemNode
 	public function isEmpty(): bool;
 
 	public function isReadonly(): bool;
+
+	public function delete(bool $recursive = true): void;
 }

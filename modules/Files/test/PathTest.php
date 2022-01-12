@@ -18,4 +18,12 @@ class PathTest extends TestCase
 		$path2 = Path::join('foo');
 		self::assertEquals('foo', $path2);
 	}
+
+	public function testIsRoot(): void
+	{
+		self::assertFalse(Path::isRoot("/long/path/to/test"));
+		self::assertTrue(Path::isRoot("/"));
+		self::assertFalse(Path::isRoot("C:\\Windows\\System32"));
+		self::assertTrue(Path::isRoot("C:\\"));
+	}
 }

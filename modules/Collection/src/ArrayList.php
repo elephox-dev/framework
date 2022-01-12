@@ -21,6 +21,13 @@ class ArrayList implements GenericList
 	 */
 	use IsKeyedEnumerable, DeepCloneable;
 
+	/**
+	 * @template UValue
+	 *
+	 * @param ArrayList<UValue>|iterable<UValue>|UValue $value
+	 *
+	 * @return ArrayList<UValue>
+	 */
 	public static function from(mixed $value): self
 	{
 		if ($value instanceof self) {
@@ -35,7 +42,7 @@ class ArrayList implements GenericList
 			return new self(iterator_to_array($value));
 		}
 
-		throw new InvalidArgumentException('Cannot create ArrayList from given value');
+		return new self([$value]);
 	}
 
 	public function __construct(

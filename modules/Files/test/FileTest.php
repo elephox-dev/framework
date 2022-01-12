@@ -142,12 +142,11 @@ class FileTest extends TestCase
 	public function testMoveTo(): void
 	{
 		$oldName = tempnam(sys_get_temp_dir(), 'test');
-		$newName = $oldName . '.new';
+		$newName = new File($oldName . '.new');
 
 		$file = new File($oldName);
-		$success = $file->moveTo($newName);
+		$file->moveTo($newName);
 
-		self::assertTrue($success);
-		self::assertFileExists($newName);
+		self::assertFileExists($newName->getPath());
 	}
 }

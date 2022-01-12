@@ -14,11 +14,26 @@ interface File extends FilesystemNode, HasHash
 
 	public function getMimeType(): ?MimeType;
 
-	public function moveTo(string $path): bool;
+	/**
+	 * @throws \Elephox\Files\FileMoveException
+	 * @throws \Elephox\Files\FileAlreadyExistsException
+	 */
+	public function moveTo(FilesystemNode $node, bool $overwrite = true): void;
+
+	/**
+	 * @throws \Elephox\Files\FileCopyException
+	 * @throws \Elephox\Files\FileAlreadyExistsException
+	 */
+	public function copyTo(FilesystemNode $node, bool $overwrite = true): void;
 
 	public function isReadable(): bool;
 
 	public function isWritable(): bool;
 
 	public function isExecutable(): bool;
+
+	/**
+	 * @throws \Elephox\Files\FileDeleteException
+	 */
+	public function delete(): void;
 }

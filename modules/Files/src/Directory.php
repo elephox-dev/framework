@@ -5,6 +5,7 @@ namespace Elephox\Files;
 
 use DateTime;
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\Contract\FilesystemNode;
 use Exception;
 use JetBrains\PhpStorm\Pure;
@@ -14,27 +15,26 @@ class Directory implements Contract\Directory
 {
 	#[Pure] public function __construct(
 		private string $path,
-	)
-	{
+	) {
 	}
 
-	public function getFiles(): ArrayList
+	public function getFiles(): GenericKeyedEnumerable
 	{
-		/** @var ArrayList<Contract\File> */
+		/** @var GenericKeyedEnumerable<int, Contract\File> */
 		return $this->getChildren()->where(function (Contract\FilesystemNode $node) {
 			return $node instanceof Contract\File;
 		});
 	}
 
-	public function getDirectories(): ArrayList
+	public function getDirectories(): GenericKeyedEnumerable
 	{
-		/** @var ArrayList<Contract\Directory> */
+		/** @var GenericKeyedEnumerable<int, Contract\Directory> */
 		return $this->getChildren()->where(function (Contract\FilesystemNode $node) {
 			return $node instanceof Contract\Directory;
 		});
 	}
 
-	public function getChildren(): ArrayList
+	public function getChildren(): GenericKeyedEnumerable
 	{
 		if (!$this->exists()) {
 			throw new DirectoryNotFoundException($this->path);
@@ -43,10 +43,10 @@ class Directory implements Contract\Directory
 		/** @var list<string> $nodes */
 		$nodes = scandir($this->path);
 
-		/** @var ArrayList<Contract\FilesystemNode> */
+		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
 			->where(fn(string $name) => $name !== '.' && $name !== '..')
-			->map(function (string $name): Contract\FilesystemNode {
+			->select(function (string $name): Contract\FilesystemNode {
 				$path = Path::join($this->path, $name);
 				if (is_dir($path)) {
 					return new Directory($path);
@@ -58,15 +58,12 @@ class Directory implements Contract\Directory
 
 	#[Pure] public function isRoot(): bool
 	{
-		return $this->path === '\\' ||
-			$this->path === '/' ||
-			$this->path === dirname($this->path) ||
-			preg_match("/^\w:\\\\$/", $this->path) === 1;
+		return Path::isRoot($this->path);
 	}
 
 	public function isEmpty(): bool
 	{
-		return $this->getChildren()->isEmpty();
+		return $this->getChildren()->count() === 0;
 	}
 
 	#[Pure] public function getPath(): string
@@ -105,7 +102,6 @@ class Directory implements Contract\Directory
 	{
 		$path = Path::join($this->path, $filename);
 
-		/** @psalm-suppress ImpureFunctionCall */
 		if (!file_exists($path)) {
 			throw new FileNotFoundException($path);
 		}
@@ -117,7 +113,6 @@ class Directory implements Contract\Directory
 	{
 		$path = Path::join($this->path, $dirname);
 
-		/** @psalm-suppress ImpureFunctionCall */
 		if (!is_dir($path)) {
 			throw new DirectoryNotFoundException($path);
 		}
@@ -129,12 +124,10 @@ class Directory implements Contract\Directory
 	{
 		$path = Path::join($this->path, $name);
 
-		/** @psalm-suppress ImpureFunctionCall */
 		if (is_dir($path)) {
 			return new Directory($path);
 		}
 
-		/** @psalm-suppress ImpureFunctionCall */
 		if (file_exists($path)) {
 			return new File($path);
 		}
@@ -147,9 +140,35 @@ class Directory implements Contract\Directory
 		return !is_writable($this->path);
 	}
 
-	#[Pure] public function exists(): bool
+	public function exists(): bool
 	{
-		/** @psalm-suppress ImpureFunctionCall */
 		return is_dir($this->path);
+	}
+
+	public function delete(bool $recursive = true): void
+	{
+		if (!$this->exists()) {
+			throw new DirectoryNotFoundException($this->path);
+		}
+
+		$children = $this->getChildren();
+
+		if ($children->count() === 0) {
+			rmdir($this->path);
+
+			return;
+		}
+
+		if (!$recursive) {
+			throw new DirectoryNotEmptyException($this->path);
+		}
+
+		foreach ($children as $child) {
+			if ($child instanceof Contract\Directory) {
+				$child->delete(true);
+			} else if ($child instanceof Contract\File) {
+				$child->delete();
+			}
+		}
 	}
 }

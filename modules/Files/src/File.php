@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Files;
 
 use DateTime;
+use Elephox\Files\Contract\FilesystemNode;
 use Elephox\Support\Contract\MimeType;
 use Exception;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
@@ -93,18 +95,70 @@ class File implements Contract\File
 		return is_executable($this->path);
 	}
 
-	public function moveTo(string $path): bool
+	public function exists(): bool
 	{
-		if (is_uploaded_file($this->path)) {
-			return move_uploaded_file($this->path, $path);
-		}
-
-		return rename($this->path, $path);
+		return file_exists($this->path);
 	}
 
-	#[Pure] public function exists(): bool
+	public function copyTo(FilesystemNode $node, bool $overwrite = true): void
 	{
-		/** @psalm-suppress ImpureFunctionCall */
-		return file_exists($this->path);
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
+		$destination = $this->getDestination($node, $overwrite);
+
+		$success = copy($this->path, $destination->getPath());
+
+		if (!$success) {
+			throw new FileCopyException($this->path, $destination->getPath());
+		}
+	}
+
+	public function delete(): void
+	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
+		if (!unlink($this->path)) {
+			throw new FileDeleteException($this->path);
+		}
+	}
+
+	public function moveTo(FilesystemNode $node, bool $overwrite = true): void
+	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
+		$destination = $this->getDestination($node, $overwrite);
+
+		if (is_uploaded_file($this->path)) {
+			$success = move_uploaded_file($this->path, $destination->getPath());
+		} else {
+			$success = rename($this->path, $destination->getPath());
+		}
+
+		if (!$success) {
+			throw new FileMoveException($this->path, $destination->getPath());
+		}
+	}
+
+	private function getDestination(FilesystemNode $node, bool $overwrite): Contract\File
+	{
+		if ($node instanceof Contract\Directory) {
+			$destination = new self(Path::join($node->getPath(), $this->getName()));
+		} else if ($node instanceof Contract\File) {
+			$destination = $node;
+		} else {
+			throw new InvalidArgumentException("Given filesystem node is not a file or directory");
+		}
+
+		if (!$overwrite && $destination->exists()) {
+			throw new FileAlreadyExistsException($destination->getPath());
+		}
+
+		return $destination;
 	}
 }
