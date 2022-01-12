@@ -12,22 +12,36 @@ use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
 /**
- * @template T
+ * @template T of object
  *
  * @implements GenericSet<T>
  */
 class ObjectSet implements GenericSet
 {
-	use IsEnumerable, DeepCloneable;
+	/**
+	 * @uses IsEnumerable<T>
+	 */
+	use IsEnumerable {
+		contains as enumerableContains;
+	}
+	use DeepCloneable;
 
-	/** @var SplObjectStorage<object, mixed> */
-	protected SplObjectStorage $storage;
+	/** @var SplObjectStorage<T, mixed> */
+	private SplObjectStorage $storage;
 
+	/**
+	 * @var Closure(T, T): bool
+	 */
+	private Closure $comparer;
+
+	/**
+	 * @param null|Closure(T, T): bool $comparer
+	 */
 	#[Pure] public function __construct(
-		private ?Closure $comparer = null
+		?Closure $comparer = null
 	) {
 		$this->storage = new SplObjectStorage();
-		$this->comparer ??= DefaultEqualityComparer::same(...);
+		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}
 
 	#[Pure] public function getIterator(): SplObjectStorageIterator
@@ -59,5 +73,25 @@ class ObjectSet implements GenericSet
 		$this->storage->detach($value);
 
 		return $existed;
+	}
+
+	public function removeBy(callable $predicate): bool
+	{
+		$anyRemoved = false;
+
+		foreach ($this->getIterator() as $object) {
+			if ($predicate($object)) {
+				$this->storage->detach($object);
+
+				$anyRemoved = true;
+			}
+		}
+
+		return $anyRemoved;
+	}
+
+	public function contains(mixed $value, ?callable $comparer = null): bool
+	{
+		return $this->enumerableContains($value, $comparer ?? $this->comparer);
 	}
 }

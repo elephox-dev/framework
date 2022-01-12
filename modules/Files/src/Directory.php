@@ -153,7 +153,7 @@ class Directory implements Contract\Directory
 
 		$children = $this->getChildren();
 
-		if ($children->count() === 0) {
+		if ($children->isEmpty()) {
 			rmdir($this->path);
 
 			return;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use AppendIterator;
+use ArrayIterator;
 use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
@@ -357,6 +358,11 @@ trait IsKeyedEnumerable
 		});
 	}
 
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
+	}
+
 	/**
 	 * @template TInner
 	 * @template TInnerIteratorKey
@@ -487,27 +493,14 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		$keys = [];
-		$elements = [];
-
+		$map = [];
 		foreach ($this->getIterator() as $elementKey => $element) {
-			$key = $keySelector($element, $elementKey);
-
-			$keys[] = $key;
-			$elements[] = $element;
+			$map[] = ['value' => $element, 'key' => $keySelector($element, $elementKey)];
 		}
 
-		$unsortedKeys = $keys;
-		usort($keys, $comparer);
+		usort($map, static fn(array $a, array $b): int => $comparer($a['key'], $b['key']));
 
-		return new OrderedEnumerable(function () use ($keys, $elements, $unsortedKeys) {
-			$newIndex = 0;
-			foreach ($keys as $key) {
-				$unsortedIndex = array_search($key, $unsortedKeys, true);
-
-				yield $newIndex++ => $elements[$unsortedIndex];
-			}
-		});
+		return new OrderedEnumerable(new ArrayIterator(array_column($map, 'value')));
 	}
 
 	/**

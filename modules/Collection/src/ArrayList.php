@@ -19,7 +19,8 @@ class ArrayList implements GenericList
 	/**
 	 * @uses IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @template UValue
@@ -187,10 +188,5 @@ class ArrayList implements GenericList
 		}
 
 		return $index;
-	}
-
-	public function isEmpty(): bool
-	{
-		return $this->count() === 0;
 	}
 }

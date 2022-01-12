@@ -3,40 +3,42 @@ declare(strict_types=1);
 
 namespace Elephox\Events;
 
-use Closure;
-use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\ArraySet;
+use Elephox\Collection\Contract\GenericEnumerable;
 use JetBrains\PhpStorm\Pure;
 
 class EventBus implements Contract\EventBus
 {
-	/** @var ArrayMap<non-empty-string, ArrayList<Contract\Subscription>> */
+	/** @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> $eventSubscriptionsMapping */
 	private readonly ArrayMap $eventSubscriptionsMapping;
 
-	/** @var ArrayMap<non-empty-string, Contract\Subscription> */
+	/** @var ArrayMap<non-empty-string, Contract\Subscription> $subscriptionSubscriberMapping */
 	private readonly ArrayMap $subscriptionSubscriberMapping;
 
 	#[Pure] public function __construct()
 	{
+		/** @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> */
 		$this->eventSubscriptionsMapping = new ArrayMap();
+
+		/** @var ArrayMap<non-empty-string, Contract\Subscription> */
 		$this->subscriptionSubscriberMapping = new ArrayMap();
 	}
 
 	public function subscribe(string $eventName, callable $callback, int $priority = 0): Contract\Subscription
 	{
 		if ($this->eventSubscriptionsMapping->has($eventName)) {
-			$list = $this->eventSubscriptionsMapping->get($eventName);
+			$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
 		} else {
-			/** @var ArrayList<Contract\Subscription> $list */
-			$list = new ArrayList();
+			/** @var ArraySet<Contract\Subscription> $subscriptions */
+			$subscriptions = new ArraySet();
 		}
 
 		$subscription = new Subscription($eventName, $callback(...), $priority);
 
-		$list->add($subscription);
+		$subscriptions->add($subscription);
 
-		$this->eventSubscriptionsMapping->put($eventName, $list);
+		$this->eventSubscriptionsMapping->put($eventName, $subscriptions);
 		$this->subscriptionSubscriberMapping->put($subscription->getId(), $subscription);
 
 		return $subscription;
@@ -51,7 +53,7 @@ class EventBus implements Contract\EventBus
 		$eventName = $this->subscriptionSubscriberMapping->get($id)->getEventName();
 
 		$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
-		$subscriptions->remove(fn(Contract\Subscription $subscription) => $subscription->getId() === $id);
+		$subscriptions->removeBy(fn(Contract\Subscription $subscription) => $subscription->getId() === $id);
 		if ($subscriptions->isEmpty()) {
 			$this->eventSubscriptionsMapping->remove($eventName);
 		} else {
@@ -68,8 +70,11 @@ class EventBus implements Contract\EventBus
 			return;
 		}
 
-		$subscriptions = $this->eventSubscriptionsMapping->get($key)
-			->orderBy(fn(Contract\Subscription $a, Contract\Subscription $b) => $b->getPriority() - $a->getPriority());
+		$subscriptions = $this->eventSubscriptionsMapping->get($key);
+
+		/** @var \Elephox\Collection\Contract\GenericOrderedEnumerable<Contract\Subscription> $subscriptions */
+		$subscriptions = $subscriptions->orderByDescending(fn(Contract\Subscription $s) => $s->getPriority());
+
 		foreach ($subscriptions as $subscription) {
 			$callback = $subscription->getCallback();
 
@@ -81,8 +86,9 @@ class EventBus implements Contract\EventBus
 		}
 	}
 
-	#[Pure] public function getSubscriptions(): GenericList
+	public function getSubscriptions(): GenericEnumerable
 	{
+		/** @var GenericEnumerable<Contract\Subscription> */
 		return $this->subscriptionSubscriberMapping->values();
 	}
 }

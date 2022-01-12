@@ -12,13 +12,22 @@ interface GenericSet extends GenericEnumerable
 {
 	/**
 	 * @param T $value
+	 *
 	 * @return bool
 	 */
 	public function add(mixed $value): bool;
 
 	/**
 	 * @param T $value
+	 *
 	 * @return bool
 	 */
 	public function remove(mixed $value): bool;
+
+	/**
+	 * @param callable(T): bool $predicate
+	 *
+	 * @return bool
+	 */
+	public function removeBy(callable $predicate): bool;
 }

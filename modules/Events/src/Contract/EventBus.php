@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Events\Contract;
 
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericEnumerable;
 
 interface EventBus
 {
@@ -21,9 +21,9 @@ interface EventBus
 	public function unsubscribe(string $id): void;
 
 	/**
-	 * @return GenericList<Subscription>
+	 * @return GenericEnumerable<Subscription>
 	 */
-	public function getSubscriptions(): GenericList;
+	public function getSubscriptions(): GenericEnumerable;
 
 	public function publish(Event $event): void;
 }

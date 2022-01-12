@@ -43,6 +43,7 @@ class EventBusTest extends TestCase
 	{
 		$bus = new EventBus();
 		$triggeredA1 = false;
+		$triggeredA2 = false;
 		$triggeredB = false;
 
 		$bus->subscribe('testA', function (TestNamedEvent $event) use (&$triggeredA1) {
@@ -91,7 +92,7 @@ class EventBusTest extends TestCase
 		$subscription = $bus->subscribe("test", function () {});
 
 		self::assertCount(1, $bus->getSubscriptions());
-		self::assertSame($subscription, $bus->getSubscriptions()[0]);
+		self::assertSame($subscription, $bus->getSubscriptions()->first());
 	}
 
 	public function testStopPropagation(): void

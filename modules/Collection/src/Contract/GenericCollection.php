@@ -27,6 +27,8 @@ interface GenericCollection extends DeepCloneable
 	 */
 	public function contains(mixed $value, ?callable $comparer = null): bool;
 
+	public function isEmpty(): bool;
+
 	/**
 	 * @return list<TSource>
 	 */
