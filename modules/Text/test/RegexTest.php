@@ -16,10 +16,10 @@ class RegexTest extends TestCase
 	public function testSplit(): void
 	{
 		$simple = Regex::split('/\s+/', 'hello world');
-		self::assertEquals(['hello', 'world'], $simple->asArray());
+		self::assertEquals(['hello', 'world'], $simple->toList());
 
 		$multiline = Regex::split('/\n/', "This is\na multiline\ntest");
-		self::assertEquals(['This is', 'a multiline', 'test'], $multiline->asArray());
+		self::assertEquals(['This is', 'a multiline', 'test'], $multiline->toList());
 	}
 
 	public function testInvalidSplitPattern(): void
@@ -37,7 +37,7 @@ class RegexTest extends TestCase
 			0 => 'hello',
 			1 => 'hello',
 			'hello' => 'hello',
-		], $simple->asArray());
+		], $simple->toArray());
 	}
 
 	public function testMatches(): void

@@ -16,7 +16,7 @@ class Regex
 	 * @param int $limit
 	 * @return ArrayList<string>
 	 */
-	#[Pure] public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
+	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
 		$parts = preg_split($pattern, $subject, $limit);
 		if ($parts === false) {
@@ -32,15 +32,15 @@ class Regex
 	 * @param string $subject
 	 * @return ArrayMap<int|string, string>
 	 */
-	#[Pure] public static function match(string $pattern, string $subject): ArrayMap
+	public static function match(string $pattern, string $subject): ArrayMap
 	{
 		$matches = [];
 		if (preg_match($pattern, $subject, $matches) === false) {
 			throw new InvalidArgumentException('An error occurred while matching: ' . preg_last_error_msg());
 		}
 
-		/** @var ArrayMap<int|string, string> */
-		return ArrayMap::fromIterable($matches);
+		/** @var ArrayMap<array-key, string> */
+		return ArrayMap::from($matches);
 	}
 
 	#[Pure] public static function matches(string $pattern, string $subject): bool
