@@ -12,8 +12,9 @@ use IteratorAggregate;
  * @template TSource
  *
  * @extends IteratorAggregate<mixed, TSource>
+ * @extends GenericCollection<TSource>
  */
-interface GenericEnumerable extends IteratorAggregate, Countable
+interface GenericEnumerable extends GenericCollection, IteratorAggregate, Countable
 {
 	/**
 	 * @template TAccumulate
@@ -54,26 +55,11 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	public function average(callable $selector): int|float|string;
 
 	/**
-	 * @param NonNegativeInteger $size
-	 *
-	 * @return GenericEnumerable<non-empty-list<TSource>>
-	 */
-	public function chunk(int $size): GenericEnumerable;
-
-	/**
 	 * @param GenericEnumerable<TSource> ...$other
 	 *
 	 * @return GenericEnumerable<TSource>
 	 */
 	public function concat(GenericEnumerable ...$other): GenericEnumerable;
-
-	/**
-	 * @param TSource $value
-	 * @param null|callable(TSource, TSource): bool $comparer
-	 *
-	 * @return bool
-	 */
-	public function contains(mixed $value, ?callable $comparer = null): bool;
 
 	/**
 	 * @param null|callable(TSource): bool $predicate
@@ -319,11 +305,6 @@ interface GenericEnumerable extends IteratorAggregate, Countable
 	 * @return GenericEnumerable<TSource>
 	 */
 	public function takeWhile(callable $predicate): GenericEnumerable;
-
-	/**
-	 * @return list<TSource>
-	 */
-	public function toList(): array;
 
 	/**
 	 * @template TArrayKey as array-key

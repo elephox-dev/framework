@@ -3,86 +3,69 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
-use Stringable;
+use Iterator;
 
 /**
  * @template T
  *
- * @template-implements GenericList<T>
- * @template-implements ArrayAccess<int, T>
+ * @implements GenericList<T>
  */
-class ArrayList implements GenericList, ArrayAccess
+class ArrayList implements GenericList
 {
-	use DeepCloneable;
-
 	/**
-	 * @template U
-	 *
-	 * @param array<array-key, U>|GenericList<U> $array
-	 * @return self<U>
+	 * @uses IsKeyedEnumerable<int, T>
 	 */
-	#[Pure] public static function fromArray(iterable|GenericList $array): self
-	{
-		if ($array instanceof GenericList) {
-			/** @noinspection PhpConditionAlreadyCheckedInspection */
-			if ($array instanceof self) {
-				return $array;
-			}
+	use IsKeyedEnumerable, DeepCloneable;
 
-			return new self($array->asArray());
+	public static function from(mixed $value): self
+	{
+		if ($value instanceof self) {
+			return $value;
 		}
 
-		return new self(array_values($array));
+		if (is_array($value)) {
+			return new self($value);
+		}
+
+		if ($value instanceof Iterator) {
+			return new self(iterator_to_array($value));
+		}
+
+		throw new InvalidArgumentException('Cannot create ArrayList from given value');
 	}
 
-	/**
-	 * @template U
-	 *
-	 * @param U $value
-	 * @return self<U>
-	 */
-	#[Pure] public static function fromValue(mixed $value): self
+	public function __construct(
+		private array $items = []
+	) {
+	}
+
+	public function getIterator(): Iterator
 	{
-		return new self([$value]);
+		return new ArrayIterator($this->items);
 	}
 
-	/** @var list<T> */
-	private array $list;
-
-	/**
-	 * @param list<T> $items
-	 */
-	#[Pure] public function __construct(iterable $items = [])
+	public function offsetExists(mixed $offset): bool
 	{
-		$this->list = $items;
+		if (!is_int($offset)) {
+			throw new OffsetNotAllowedException($offset);
+		}
+
+		return $offset < $this->count();
 	}
 
-	#[Pure] public function offsetExists($offset): bool
-	{
-		return array_key_exists($offset, $this->list);
-	}
-
-	/**
-	 * @return T
-	 */
 	public function offsetGet(mixed $offset): mixed
 	{
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
 		}
 
-		return $this->get($offset);
+		return $this->elementAt($offset);
 	}
 
-	/**
-	 * @param T $value
-	 */
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		if ($offset === null) {
@@ -95,230 +78,112 @@ class ArrayList implements GenericList, ArrayAccess
 			throw new OffsetNotAllowedException($offset);
 		}
 
-		$this->set($offset, $value);
+		$this->put($offset, $value);
 	}
 
-	public function offsetUnset($offset): void
+	public function offsetUnset(mixed $offset): void
 	{
-		unset($this->list[$offset]);
-	}
-
-	#[Pure] public function count(): int
-	{
-		return count($this->list);
-	}
-
-	public function set(int $index, mixed $value): void
-	{
-		if (!isset($this->list[$index])) {
-			throw new InvalidArgumentException("Index is outside of list.");
+		if (!is_int($offset)) {
+			throw new OffsetNotAllowedException($offset);
 		}
 
-		$this->list[$index] = $value;
+		$this->removeAt($offset);
 	}
 
-	/**
-	 * @return T
-	 */
-	public function get(int $index): mixed
+	public function add(mixed $value): bool
 	{
-		if (!$this->offsetExists($index)) {
-			throw new OffsetNotFoundException($index);
-		}
-
-		/** @psalm-suppress ImpureMethodCall */
-		return $this->list[$index];
-	}
-
-	/**
-	 * @param T $value
-	 */
-	public function add(mixed $value): void
-	{
-		$this->list[] = $value;
-	}
-
-	/**
-	 * @param iterable<T> $values
-	 */
-	public function addAll(iterable $values): void
-	{
-		foreach ($values as $value) {
-			$this->add($value);
-		}
-	}
-
-	public function first(?callable $filter = null): mixed
-	{
-		foreach ($this->list as $item) {
-			if ($filter === null || $filter($item)) {
-				return $item;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param callable(T): bool $filter
-	 * @return ArrayList<T>
-	 */
-	public function where(callable $filter): ArrayList
-	{
-		$result = new ArrayList();
-
-		foreach ($this->list as $item) {
-			if ($filter($item)) {
-				/** @psalm-suppress ImpureMethodCall */
-				$result->add($item);
-			}
-		}
-
-		return $result;
-	}
-
-	#[Pure] public function isEmpty(): bool
-	{
-		return empty($this->list);
-	}
-
-	/**
-	 * @return list<T>
-	 */
-	public function asArray(): array
-	{
-		return $this->list;
-	}
-
-	/**
-	 * @template TOut
-	 *
-	 * @param callable(T): TOut $callback
-	 * @return ArrayList<TOut>
-	 */
-	public function map(callable $callback): ArrayList
-	{
-		$arr = new ArrayList();
-
-		foreach ($this->list as $value) {
-			/**
-			 * @psalm-suppress InvalidArgument Until vimeo/psalm#6821 is fixed
-			 */
-			$arr->add($callback($value));
-		}
-
-		return $arr;
-	}
-
-	public function any(?callable $filter = null): bool
-	{
-		return !$this->isEmpty() && $this->first($filter) !== null;
-	}
-
-	/**
-	 * @return ArrayIterator<int, T>
-	 */
-	public function getIterator(): ArrayIterator
-	{
-		return new ArrayIterator($this->list);
-	}
-
-	/**
-	 * @param T $value
-	 */
-	public function push(mixed $value): void
-	{
-		$this->add($value);
-	}
-
-	/**
-	 * @return T
-	 */
-	public function pop(): mixed
-	{
-		return array_pop($this->list);
-	}
-
-	/**
-	 * @return T
-	 */
-	public function peek(): mixed
-	{
-		$idx = $this->count() - 1;
-		if ($idx < 0) {
-			throw new OffsetNotFoundException(0);
-		}
-
-		return $this->list[$idx];
-	}
-
-	/**
-	 * @return T
-	 */
-	public function shift(): mixed
-	{
-		$value = array_shift($this->list);
-
-		if ($value === null) {
-			throw new OffsetNotFoundException(0);
-		}
-
-		return $value;
-	}
-
-	/**
-	 * @param T $value
-	 */
-	public function unshift(mixed $value): void
-	{
-		array_unshift($this->list, $value);
-	}
-
-	public function contains(mixed $value): bool
-	{
-		return $this->any(static fn($item) => $item === $value);
-	}
-
-	/**
-	 * @param callable(T, T): int $callback
-	 *
-	 * @return ArrayList<T>
-	 */
-	public function orderBy(callable $callback): ArrayList
-	{
-		usort($this->list, $callback);
-
-		return $this;
-	}
-
-	public function join(Stringable|string $separator): string
-	{
-		return implode((string)$separator, $this->map(fn($item) => (string)$item)->asArray());
-	}
-
-	public function removeAt(int $index): bool
-	{
-		if ($index < 0 || $index >= $this->count()) {
-			return false;
-		}
-
-		unset($this->list[$index]);
+		$this->items[] = $value;
 
 		return true;
 	}
 
-	public function remove(callable $predicate): bool
+	public function addAll(iterable $values): bool
 	{
-		$removed = false;
+		$added = false;
 
-		foreach ($this->list as $index => $item) {
-			if ($predicate($item, $index)) {
-				unset($this->list[$index]);
+		foreach ($values as $value) {
+			$added = $this->add($value) || $added;
+		}
 
-				$removed = true;
+		return $added;
+	}
+
+	public function put(int $index, mixed $value): bool
+	{
+		if ($index < 0 || $index > $this->count()) {
+			throw new OffsetNotAllowedException($index);
+		}
+
+		$this->items[$index] = $value;
+
+		return true;
+	}
+
+	public function remove(mixed $value, ?callable $comparer = null): bool
+	{
+		$index = $this->indexOf($value, $comparer);
+
+		if ($index === -1) {
+			return false;
+		}
+
+		$this->removeAt($index);
+
+		return true;
+	}
+
+	public function elementAt(int $index): mixed
+	{
+		if ($index < 0 || $index >= $this->count()) {
+			throw new OffsetNotFoundException($index);
+		}
+
+		return $this->items[$index];
+	}
+
+	public function removeAt(int $index): mixed
+	{
+		if ($index < 0 || $index >= $this->count()) {
+			throw new OffsetNotFoundException($index);
+		}
+
+		$removed = $this->items[$index];
+
+		array_splice($this->items, $index, 1);
+
+		return $removed;
+	}
+
+	public function indexOf(mixed $value, ?callable $comparer = null): int
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		foreach ($this->items as $index => $item) {
+			if ($comparer($item, $value)) {
+				return $index;
 			}
 		}
 
-		return $removed;
+		return -1;
+	}
+
+	public function lastIndexOf(mixed $value, ?callable $comparer = null): int
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		$index = -1;
+
+		foreach ($this->items as $index => $item) {
+			if ($comparer($item, $value)) {
+				return $index;
+			}
+		}
+
+		return $index;
+	}
+
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
 	}
 }

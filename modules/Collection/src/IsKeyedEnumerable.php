@@ -10,6 +10,12 @@ use Countable;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
+use Elephox\Collection\Iterator\FlipIterator;
+use Elephox\Collection\Iterator\KeySelectIterator;
+use Elephox\Collection\Iterator\ReverseIterator;
+use Elephox\Collection\Iterator\SelectIterator;
+use Elephox\Collection\Iterator\UniqueByIterator;
+use Elephox\Collection\Iterator\WhileIterator;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
@@ -280,8 +286,8 @@ trait IsKeyedEnumerable
 
 	public function first(?callable $predicate = null): mixed
 	{
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				return $element;
 			}
 		}
@@ -291,8 +297,8 @@ trait IsKeyedEnumerable
 
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				return $element;
 			}
 		}
@@ -410,8 +416,8 @@ trait IsKeyedEnumerable
 	public function lastOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
 		$last = null;
-		foreach ($this->getIterator() as $element) {
-			if ($predicate === null || $predicate($element)) {
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
 				$last = $element;
 			}
 		}
@@ -436,7 +442,7 @@ trait IsKeyedEnumerable
 		$iterator->next();
 
 		while ($iterator->valid()) {
-			$max = max($max, $selector($iterator->current()));
+			$max = max($max, $selector($iterator->current(), $iterator->key()));
 
 			$iterator->next();
 		}
@@ -461,7 +467,7 @@ trait IsKeyedEnumerable
 		$iterator->next();
 
 		while($iterator->valid()) {
-			$min = min($min, $selector($iterator->current()));
+			$min = min($min, $selector($iterator->current(), $iterator->key()));
 
 			$iterator->next();
 		}

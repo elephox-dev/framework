@@ -6,6 +6,8 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Collection\Iterator\RangeIterator;
+use Elephox\Support\DeepCloneable;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
@@ -72,7 +74,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	/**
 	 * @uses IsKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	use IsKeyedEnumerable;
+	use IsKeyedEnumerable, DeepCloneable;
 
 	/**
 	 * @var Iterator<TIteratorKey, TSource>

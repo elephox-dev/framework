@@ -24,7 +24,7 @@ class Regex
 		}
 
 		/** @var ArrayList<string> */
-		return ArrayList::fromArray($parts);
+		return ArrayList::from($parts);
 	}
 
 	/**

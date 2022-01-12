@@ -58,8 +58,8 @@ class CookieTest extends TestCase
 		$cookies = Cookie::fromRequestString("asdsdf=serser; rsg324=234213; 2sefs3f=");
 
 		self::assertEquals(3, $cookies->count());
-		self::assertEquals('asdsdf', $cookies->get(0)->getName());
-		self::assertEquals('serser', $cookies->get(0)->getValue());
+		self::assertEquals('asdsdf', $cookies->elementAt(0)->getName());
+		self::assertEquals('serser', $cookies->elementAt(0)->getValue());
 	}
 
 	public function dataProvider(): array
@@ -105,11 +105,11 @@ class CookieTest extends TestCase
 		$cookies = Cookie::fromRequestString("asdsdf= serser  ; rsg324=  234213 ;    2sefs3f=");
 
 		self::assertEquals(3, $cookies->count());
-		self::assertEquals('asdsdf', $cookies->get(0)->getName());
-		self::assertEquals(' serser  ', $cookies->get(0)->getValue());
-		self::assertEquals('rsg324', $cookies->get(1)->getName());
-		self::assertEquals('  234213 ', $cookies->get(1)->getValue());
-		self::assertEquals('2sefs3f', $cookies->get(2)->getName());
+		self::assertEquals('asdsdf', $cookies->elementAt(0)->getName());
+		self::assertEquals(' serser  ', $cookies->elementAt(0)->getValue());
+		self::assertEquals('rsg324', $cookies->elementAt(1)->getName());
+		self::assertEquals('  234213 ', $cookies->elementAt(1)->getValue());
+		self::assertEquals('2sefs3f', $cookies->elementAt(2)->getName());
 	}
 
 	public function testFromResponseStringUnwraps(): void
@@ -133,7 +133,7 @@ class CookieTest extends TestCase
 		$cookies = Cookie::fromRequestString('name1=value=with=equal=sign');
 
 		self::assertCount(1, $cookies);
-		self::assertEquals('value=with=equal=sign', $cookies->get(0)->getValue());
+		self::assertEquals('value=with=equal=sign', $cookies->elementAt(0)->getValue());
 	}
 
 	public function testMaxAgeIsInt(): void

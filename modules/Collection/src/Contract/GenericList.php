@@ -3,79 +3,67 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
-use Countable;
-use Elephox\Support\Contract\ArrayConvertible;
-use IteratorAggregate;
-use JetBrains\PhpStorm\Pure;
-use Stringable;
+use ArrayAccess;
 
 /**
  * @template T
  *
- * @extends GenericCollection<T>
- * @extends IteratorAggregate<int, T>
- * @extends ArrayConvertible<int, T>
- * @extends iterable<T>
- * @extends list<T>
+ * @extends GenericKeyedEnumerable<int, T>
  */
-interface GenericList extends GenericCollection, Filterable, Mappable, Countable, IteratorAggregate, ArrayConvertible, Stackable
+interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 {
 	/**
 	 * @param T $value
 	 */
-	public function set(int $index, mixed $value): void;
+	public function add(mixed $value): bool;
+
+	/**
+	 * @param iterable<T> $values
+	 *
+	 * @return bool
+	 */
+	public function addAll(iterable $values): bool;
 
 	/**
 	 * @param T $value
+	 * @param null|callable(T, T): bool $comparer
+	 *
+	 * @return bool
 	 */
-	public function add(mixed $value): void;
+	public function remove(mixed $value, ?callable $comparer = null): bool;
 
 	/**
 	 * @param int $index
-	 *
+	 * @param T $value
 	 * @return bool
 	 */
-	public function removeAt(int $index): bool;
+	public function put(int $index, mixed $value): bool;
 
 	/**
-	 * @param callable(T, int): bool $predicate
-	 *
-	 * @return bool
-	 */
-	public function remove(callable $predicate): bool;
-
-	/**
-	 * @param callable(T, T): int $callback
-	 *
-	 * @return GenericList<T>
-	 */
-	public function orderBy(callable $callback): GenericList;
-
-	/**
+	 * @param int $index
 	 * @return T
 	 */
-	public function get(int $index): mixed;
+	public function elementAt(int $index): mixed;
 
 	/**
-	 * @param callable(T): bool $filter
-	 * @return GenericList<T>
+	 * @param int $index
+	 * @return T
 	 */
-	public function where(callable $filter): GenericList;
+	public function removeAt(int $index): mixed;
 
 	/**
-	 * @template TOut
-	 *
-	 * @param callable(T): TOut $callback
-	 * @return GenericList<TOut>
+	 * @param T $value
+	 * @param null|callable(T, T): bool $comparer
+	 * @return int|null
 	 */
-	public function map(callable $callback): GenericList;
-
-	#[Pure] public function isEmpty(): bool;
-
-	public function join(string|Stringable $separator): string;
+	public function indexOf(mixed $value, ?callable $comparer = null): ?int;
 
 	/**
-	 * @return list<T> Returns this object in its array representation.
+	 * @param T $value
+	 * @param null|callable(T, T): bool $comparer
+	 * @return int|null
 	 */
-	public function asArray(): array;
+	public function lastIndexOf(mixed $value, ?callable $comparer = null): ?int;
+
+	public function isEmpty(): bool;
 }

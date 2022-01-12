@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection;
+namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
-use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
+ * @template TResultKey
  *
- * @implements OuterIterator<TKey, TValue>
+ * @implements Iterator<TResultKey, TValue>
  */
-class WhileIterator implements OuterIterator
+class KeySelectIterator implements Iterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TValue, TKey): bool $predicate
+	 * @param Closure(TKey, TValue): TResultKey $keySelector
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $predicate
+		private Closure $keySelector
 	) {
 	}
 
@@ -37,21 +37,16 @@ class WhileIterator implements OuterIterator
 
 	public function key(): mixed
 	{
-		return $this->iterator->key();
+		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
 	}
 
 	public function valid(): bool
 	{
-		return $this->iterator->valid() && ($this->predicate)($this->iterator->current(), $this->iterator->key());
+		return $this->iterator->valid();
 	}
 
 	public function rewind(): void
 	{
 		$this->iterator->rewind();
-	}
-
-	public function getInnerIterator(): Iterator
-	{
-		return $this->iterator;
 	}
 }

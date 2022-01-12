@@ -145,7 +145,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			$handlerAttributeInstance = $handlerAttribute->newInstance();
 
 			/** @var GenericList<Middleware> $middlewares */
-			$middlewares = ArrayList::fromArray($middlewareAttributes)
+			$middlewares = ArrayList::from($middlewareAttributes)
 				->map(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
 				->where(static fn(Middleware $middleware): bool => $middleware->getType()->matchesAny() || $middleware->getType() === $handlerAttributeInstance->getType());
 

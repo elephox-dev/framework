@@ -67,7 +67,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 					$value = array_values($value);
 				}
 
-				$values = ArrayList::fromArray($value);
+				$values = ArrayList::from($value);
 			} else {
 				throw new InvalidHeaderTypeException($value);
 			}
@@ -123,7 +123,7 @@ class HeaderMap extends ObjectMap implements Contract\HeaderMap
 
 			parent::put($obj, ArrayList::fromValue($value));
 		} else {
-			parent::put($obj, ArrayList::fromArray($value));
+			parent::put($obj, ArrayList::from($value));
 		}
 	}
 

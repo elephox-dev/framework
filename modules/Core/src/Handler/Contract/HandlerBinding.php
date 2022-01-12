@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\InvalidResultException;
@@ -14,9 +14,9 @@ interface HandlerBinding
 	public function getHandlerMeta(): HandlerMeta;
 
 	/**
-	 * @return GenericList<Middleware>
+	 * @return GenericKeyedEnumerable<Middleware>
 	 */
-	public function getMiddlewares(): GenericList;
+	public function getMiddlewares(): GenericKeyedEnumerable;
 
 	/**
 	 * @throws InvalidContextException

@@ -5,6 +5,7 @@ namespace Elephox\Collection;
 
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
+use Elephox\Collection\Iterator\SplObjectStorageIterator;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -17,7 +18,7 @@ use SplObjectStorage;
  */
 class ObjectSet implements GenericSet
 {
-	use DeepCloneable;
+	use IsEnumerable, DeepCloneable;
 
 	/** @var SplObjectStorage<object, mixed> */
 	protected SplObjectStorage $storage;
@@ -32,15 +33,6 @@ class ObjectSet implements GenericSet
 	#[Pure] public function getIterator(): SplObjectStorageIterator
 	{
 		return new SplObjectStorageIterator($this->storage);
-	}
-
-	public function contains(mixed $value): bool
-	{
-		if (!is_object($value)) {
-			throw new InvalidArgumentException("Cannot add non-object to " . $this::class);
-		}
-
-		return $this->storage->contains($value);
 	}
 
 	public function add(mixed $value): bool

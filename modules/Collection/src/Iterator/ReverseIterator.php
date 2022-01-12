@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection;
+namespace Elephox\Collection\Iterator;
 
 use Countable;
 use Iterator;

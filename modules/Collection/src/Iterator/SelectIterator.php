@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection;
+namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
@@ -9,25 +9,25 @@ use Iterator;
 /**
  * @template TKey
  * @template TValue
- * @template TResultKey
+ * @template TResult
  *
- * @implements Iterator<TResultKey, TValue>
+ * @implements Iterator<TKey, TResult>
  */
-class KeySelectIterator implements Iterator
+class SelectIterator implements Iterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TKey, TValue): TResultKey $keySelector
+	 * @param Closure(TValue, TKey): TResult $elementSelector
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $keySelector
+		private Closure $elementSelector
 	) {
 	}
 
 	public function current(): mixed
 	{
-		return $this->iterator->current();
+		return ($this->elementSelector)($this->iterator->current(), $this->iterator->key());
 	}
 
 	public function next(): void
@@ -37,7 +37,7 @@ class KeySelectIterator implements Iterator
 
 	public function key(): mixed
 	{
-		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
+		return $this->iterator->key();
 	}
 
 	public function valid(): bool

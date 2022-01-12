@@ -6,6 +6,8 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Iterator\RangeIterator;
+use Elephox\Support\DeepCloneable;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
@@ -71,7 +73,7 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @uses IsEnumerable<TSource>
 	 */
-	use IsEnumerable;
+	use IsEnumerable, DeepCloneable;
 
 	/**
 	 * @var Iterator<mixed, TSource>

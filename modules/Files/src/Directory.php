@@ -44,7 +44,7 @@ class Directory implements Contract\Directory
 		$nodes = scandir($this->path);
 
 		/** @var ArrayList<Contract\FilesystemNode> */
-		return ArrayList::fromArray($nodes)
+		return ArrayList::from($nodes)
 			->where(fn(string $name) => $name !== '.' && $name !== '..')
 			->map(function (string $name): Contract\FilesystemNode {
 				$path = Path::join($this->path, $name);

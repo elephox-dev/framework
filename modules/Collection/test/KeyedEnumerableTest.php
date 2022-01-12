@@ -10,13 +10,13 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\Collection\KeyedEnumerable
- * @covers \Elephox\Collection\RangeIterator
- * @covers \Elephox\Collection\SelectIterator
- * @covers \Elephox\Collection\KeySelectIterator
- * @covers \Elephox\Collection\WhileIterator
- * @covers \Elephox\Collection\ReverseIterator
- * @covers \Elephox\Collection\UniqueByIterator
- * @covers \Elephox\Collection\FlipIterator
+ * @covers \Elephox\Collection\Iterator\RangeIterator
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Collection\Iterator\KeySelectIterator
+ * @covers \Elephox\Collection\Iterator\WhileIterator
+ * @covers \Elephox\Collection\Iterator\ReverseIterator
+ * @covers \Elephox\Collection\Iterator\UniqueByIterator
+ * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\IndexOutOfRangeException
  * @covers \Elephox\Collection\EmptySequenceException

@@ -20,7 +20,7 @@ class Cookie implements Contract\Cookie
 	 */
 	public static function fromRequestString(string $cookies): ArrayList
 	{
-		return ArrayList::fromArray(mb_split(';', $cookies))
+		return ArrayList::from(mb_split(';', $cookies))
 			->map(static function (string $cookie): Contract\Cookie {
 				[$name, $value] = explode('=', $cookie, 2);
 
@@ -36,7 +36,7 @@ class Cookie implements Contract\Cookie
 	public static function fromResponseString(string $cookieString): Contract\Cookie
 	{
 		$split = mb_split(';', $cookieString);
-		$propertyList = ArrayList::fromArray($split);
+		$propertyList = ArrayList::from($split);
 		$nameValuePair = $propertyList->shift();
 		[$name, $value] = explode('=', $nameValuePair, 2);
 

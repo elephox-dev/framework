@@ -5,7 +5,7 @@ namespace Elephox\Core\Handler;
 
 use Closure;
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Contract\HandlerMeta;
@@ -15,9 +15,9 @@ use JetBrains\PhpStorm\Pure;
 class HandlerBinding implements Contract\HandlerBinding
 {
 	/**
-	 * @var GenericList<Middleware> $middlewares
+	 * @var GenericKeyedEnumerable<int, Middleware> $middlewares
 	 */
-	private GenericList $middlewares;
+	private GenericKeyedEnumerable $middlewares;
 
 	/**
 	 * @param Closure $closure
@@ -25,12 +25,11 @@ class HandlerBinding implements Contract\HandlerBinding
 	 * @param GenericList<Middleware> $middlewares
 	 */
 	public function __construct(
-        private Closure     $closure,
-        private HandlerMeta $handlerMeta,
-        GenericList         $middlewares,
+		private Closure     $closure,
+		private HandlerMeta $handlerMeta,
+		GenericList         $middlewares,
 	) {
-		$this->middlewares = ArrayList::fromArray($middlewares)
-			->orderBy(static fn(Middleware $a, Middleware $b): int => $b->getWeight() - $a->getWeight());
+		$this->middlewares = ArrayList::from($middlewares)->orderBy(static fn(Middleware $a, Middleware $b): int => $b->getWeight() - $a->getWeight());
 	}
 
 	#[Pure] public function getHandlerMeta(): HandlerMeta
@@ -38,9 +37,9 @@ class HandlerBinding implements Contract\HandlerBinding
 		return $this->handlerMeta;
 	}
 
-	#[Pure] public function getMiddlewares(): GenericList
+	#[Pure] public function getMiddlewares(): GenericKeyedEnumerable
 	{
-		return $this->middlewares->asReadonly();
+		return $this->middlewares;
 	}
 
 	public function handle(Context $context): mixed
@@ -54,7 +53,7 @@ class HandlerBinding implements Contract\HandlerBinding
 		$middlewares = $this
 			->getMiddlewares();
 		foreach ($middlewares as $middleware) {
-			$contextHandler = static fn (Context $ctx): mixed => $middleware->handle($ctx, $contextHandler);
+			$contextHandler = static fn(Context $ctx): mixed => $middleware->handle($ctx, $contextHandler);
 		}
 
 		return $contextHandler($context);

@@ -29,9 +29,9 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		$container->register(Contract\CommandLineContext::class, $this);
 
 		if (is_string($commandLine)) {
-			$this->args = ArrayList::fromArray(explode(' ', $commandLine));
+			$this->args = ArrayList::from(explode(' ', $commandLine));
 		} else {
-			$this->args = ArrayList::fromArray($commandLine);
+			$this->args = ArrayList::from($commandLine);
 		}
 
 		if ($this->args->isEmpty()) {
