@@ -10,6 +10,8 @@ use Elephox\Collection\Contract\GenericOrderedEnumerable;
  *
  * @template TSource
  *
+ * @internal
+ *
  * @extends KeyedEnumerable<NonNegativeInteger, TSource>
  * @implements GenericOrderedEnumerable<TSource>
  */
