@@ -9,30 +9,32 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Http\Url
  * @covers \Elephox\Http\UrlScheme
- * @uses \Elephox\Http\Contract\Url
  * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Http\UrlBuilder
+ * @covers \Elephox\Http\QueryMap
+ * @covers \Elephox\Http\CustomUrlScheme
  */
 class UrlTest extends TestCase
 {
 	public function dataProvider(): array
 	{
 		return [
-			[ '', '/', '', '', '', '', null, '', '', '' ],
-			[ ':', '/:', '', '', '', '', null, ':', '', '' ],
-			[ '?', '/?', '', '', '', '', null, '', '', '' ],
-			[ '#', '/#', '', '', '', '', null, '', '', '' ],
-			[ ':?#', '/:?#', '', '', '', '', null, ':', '', '' ],
-			[ 's//', '//s//', '', '', '', 's', null, '//', '', '' ],
-			[ 'a://', 'a:/', 'a', '', '', '', null, '', '', '' ],
-			[ '/test', '/test', '', '', '', '', null, '/test', '', '' ],
-			[ 'localhost:8001/test', '//localhost:8001/test', '', '', '', 'localhost', 8001, '/test', '', '' ],
-			[ '//domain:123/path', '://domain:123/path', '', '', '', 'domain', 123, '/path', '', '' ],
-			[ 'someone@somewhere/something', '//someone@somewhere/something', '', 'someone', '', 'somewhere', null, '/something', '', '' ],
-			[ 'file:///home/test/file.txt', 'file:/home/test/file.txt', 'file', '', '', '', null, '/home/test/file.txt', '', '' ],
-			[ 'ssh://git@github.com', 'ssh://git@github.com/', 'ssh', 'git', '', 'github.com', null, '', '', '' ],
-			[ 'mysql://root:root@localhost:3306/test', 'mysql://root:root@localhost/test', 'mysql', 'root', 'root', 'localhost', null, '/test', '', '' ],
-			[ 'custom://localhost/test', 'custom://localhost/test', 'custom', '', '', 'localhost', null, '/test', '', '' ],
-			[ '/get-this?id=123&user_id=23#234', '/get-this?id=123&user_id=23#234', '', '', '', '', null, '/get-this', 'id=123&user_id=23', '234' ],
+			[ '', '/', null, null, null, null, null, '', '', null ],
+			[ ':', '/:', null, null, null, null, null, ':', '', null ],
+			[ '?', '/?', null, null, null, null, null, '', '', null ],
+			[ '#', '/#', null, null, null, null, null, '', '', '' ],
+			[ ':?#', '/:?#', null, null, null, null, null, ':', '', '' ],
+			[ 's//', '//s//', null, null, null, 's', null, '//', '', null ],
+			[ 'a://', 'a:/', 'a', null, null, null, null, '', '', null ],
+			[ '/test', '/test', null, null, null, null, null, '/test', '', null ],
+			[ 'localhost:8001/test', '//localhost:8001/test', null, null, null, 'localhost', 8001, '/test', '', null ],
+			[ '//domain:123/path', '//domain:123/path', null, null, null, 'domain', 123, '/path', '', null ],
+			[ 'someone@somewhere/something', '//someone@somewhere/something', null, 'someone', null, 'somewhere', null, '/something', '', null ],
+			[ 'file:///home/test/file.txt', 'file:/home/test/file.txt', 'file', null, null, null, null, '/home/test/file.txt', '', null ],
+			[ 'ssh://git@github.com', 'ssh://git@github.com/', 'ssh', 'git', null, 'github.com', null, '', '', null ],
+			[ 'mysql://root:root@localhost:3306/test', 'mysql://root:root@localhost/test', 'mysql', 'root', 'root', 'localhost', null, '/test', '', null ],
+			[ 'custom://localhost/test', 'custom://localhost/test', 'custom', null, null, 'localhost', null, '/test', '', null ],
+			[ '/get-this?id=123&user_id=23#234', '/get-this?id=123&user_id=23#234', null, null, null, null, null, '/get-this', 'id=123&user_id=23', '234' ],
 			[ 'https://user:password@localhost:5000/path/to/script.php?query=true#fragment', 'https://user:password@localhost:5000/path/to/script.php?query=true#fragment', 'https', 'user', 'password', 'localhost', 5000, '/path/to/script.php', 'query=true', 'fragment' ],
 		];
 	}
@@ -40,24 +42,23 @@ class UrlTest extends TestCase
 	/**
 	 * @dataProvider dataProvider
 	 */
-	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
+	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, string $query, ?string $fragment): void
 	{
 		$uri = Url::fromString($uriString);
-		self::assertSame($scheme, $uri->getScheme(), "Unexpected scheme.");
-		self::assertSame($scheme !== null ? UrlScheme::tryFrom($scheme) : null, $uri->getUrlScheme(), "Unexpected scheme.");
-		self::assertSame($username, $uri->getUsername(), "Unexpected username.");
-		self::assertSame($password, $uri->getPassword(), "Unexpected password.");
-		self::assertSame($host, $uri->getHost(), "Unexpected host.");
-		self::assertSame($port, $uri->getPort(), "Unexpected port.");
-		self::assertSame($path, $uri->getPath(), "Unexpected path.");
-		self::assertSame($query, $uri->getQuery(), "Unexpected query.");
-		self::assertSame($fragment, $uri->getFragment(), "Unexpected fragment.");
+		self::assertSame($scheme, $uri->scheme?->getScheme(), "Unexpected scheme.");
+		self::assertSame($username, $uri->username, "Unexpected username.");
+		self::assertSame($password, $uri->password, "Unexpected password.");
+		self::assertSame($host, $uri->host, "Unexpected host.");
+		self::assertSame($port, $uri->port, "Unexpected port.");
+		self::assertSame($path, $uri->path, "Unexpected path.");
+		self::assertSame($query, (string)$uri->queryMap, "Unexpected query.");
+		self::assertSame($fragment, $uri->fragment, "Unexpected fragment.");
 		self::assertSame($toString, (string)$uri);
 
-		$userInfo = empty($username) ? '' : ($username . (empty($password) ? '' : (':' . $password)));
-		$authority = empty($host) ? '' : ($host . ($port === null ? '' : (':' . $port)));
+		$userInfo = empty($username) ? null : ($username . (empty($password) ? null : (':' . $password)));
+		$authority = empty($host) ? null : ($host . ($port === null ? null : (':' . $port)));
 		self::assertEquals([
-			'scheme' => $scheme,
+			'scheme' => $scheme !== null ? (UrlScheme::tryFrom($scheme) ?? new CustomUrlScheme($scheme)) : null,
 			'username' => $username,
 			'password' => $password,
 			'host' => $host,
@@ -67,104 +68,6 @@ class UrlTest extends TestCase
 			'fragment' => $fragment,
 			'authority' => empty($userInfo) ? $authority : ($userInfo . '@' . $authority),
 			'userInfo' => $userInfo,
-		], $uri->asArray());
-	}
-
-	public function testWithUrlScheme(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withScheme(UrlScheme::HTTPS);
-		self::assertSame('https://localhost/test', (string)$uri);
-	}
-
-	public function testWithNullUrlScheme(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withScheme(null);
-		self::assertSame('//localhost/test', (string)$uri);
-	}
-
-	public function testWithUsername(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withUserInfo('user');
-		self::assertSame('https://user@localhost/test', (string)$uri);
-	}
-
-	public function testWithPassword(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withUserInfo('user', 'password');
-		self::assertSame('https://user:password@localhost/test', (string)$uri);
-	}
-
-	public function testWithHost(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withHost('example.com');
-		self::assertSame('https://example.com/test', (string)$uri);
-	}
-
-	public function testWithPort(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withPort(8080);
-		self::assertSame('https://localhost:8080/test', (string)$uri);
-	}
-
-	public function testWithPath(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withPath('/path/to/script.php');
-		self::assertSame('https://localhost/path/to/script.php', (string)$uri);
-	}
-
-	public function testWithQuery(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withQuery('query=true');
-		self::assertSame('https://localhost/test?query=true', (string)$uri);
-	}
-
-	public function testWithQueryMap(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withQueryMap(ArrayMap::fromIterable(['query' => 'true']));
-		self::assertSame('https://localhost/test?query=true', (string)$uri);
-
-		$uri = $uri->withQueryMap(ArrayMap::fromIterable(['arr' => ['a', 'b']]));
-		self::assertSame('https://localhost/test?arr%5B0%5D=a&arr%5B1%5D=b', (string)$uri);
-	}
-
-	public function testGetQueryMap(): void
-	{
-		$uri = Url::fromString('https://localhost/test?query=true');
-
-		$queryMap = $uri->getQueryMap();
-		self::assertInstanceOf(ArrayMap::class, $queryMap);
-		self::assertSame('true', $queryMap->get('query'));
-	}
-
-	public function testGetEmptyQueryMap(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-
-		$queryMap = $uri->getQueryMap();
-		self::assertInstanceOf(ArrayMap::class, $queryMap);
-		self::assertEmpty($queryMap->asArray());
-	}
-
-	public function testWithFragment(): void
-	{
-		$uri = Url::fromString('https://localhost/test');
-		$uri = $uri->withFragment('fragment');
-		self::assertSame('https://localhost/test#fragment', (string)$uri);
-	}
-
-	public function testSpacesInPath(): void
-	{
-		$uri = Url::fromString('https://localhost/te st');
-
-		self::assertSame('https://localhost/te%20st', (string)$uri);
+		], $uri->toArray());
 	}
 }

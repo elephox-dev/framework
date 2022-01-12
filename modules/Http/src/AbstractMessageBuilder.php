@@ -6,16 +6,10 @@ namespace Elephox\Http;
 use Elephox\Http\Contract\MessageBuilder;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
-use LogicException;
 
-abstract class AbstractMessageBuilder implements MessageBuilder
+abstract class AbstractMessageBuilder extends AbstractBuilder implements MessageBuilder
 {
 	public const DefaultProtocolVersion = '1.1';
-
-	protected static function missingParameterException(string $name): LogicException
-	{
-		return new LogicException("Missing required parameter: $name");
-	}
 
 	#[Pure]
 	public function __construct(

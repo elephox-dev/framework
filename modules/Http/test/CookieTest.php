@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\CookieSameSite
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
- * @covers \Elephox\Collection\KeyValuePair
  */
 class CookieTest extends TestCase
 {
@@ -35,31 +34,6 @@ class CookieTest extends TestCase
 			'name=value; Expires=' . $timestamp->format(Cookie::ExpiresFormat) . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234',
 			(string)$cookie
 		);
-	}
-
-	public function testFromResponseString(): void
-	{
-		$timestamp = (new DateTime('+1 day'))->format(Cookie::ExpiresFormat);
-		$cookie = Cookie::fromResponseString('XSRF_Token=asfdkhjaeo83r; Expires=' . $timestamp . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234');
-
-		self::assertEquals('XSRF_Token', $cookie->getName());
-		self::assertEquals('asfdkhjaeo83r', $cookie->getValue());
-		self::assertEquals(new DateTime($timestamp), $cookie->getExpires());
-		self::assertEquals('/', $cookie->getPath());
-		self::assertEquals('example.com', $cookie->getDomain());
-		self::assertTrue($cookie->isSecure());
-		self::assertTrue($cookie->isHttpOnly());
-		self::assertEquals(CookieSameSite::None, $cookie->getSameSite());
-		self::assertEquals(1234, $cookie->getMaxAge());
-	}
-
-	public function testFromRequestString(): void
-	{
-		$cookies = Cookie::fromRequestString("asdsdf=serser; rsg324=234213; 2sefs3f=");
-
-		self::assertEquals(3, $cookies->count());
-		self::assertEquals('asdsdf', $cookies->elementAt(0)->getName());
-		self::assertEquals('serser', $cookies->elementAt(0)->getValue());
 	}
 
 	public function dataProvider(): array
@@ -98,48 +72,5 @@ class CookieTest extends TestCase
 
 		self::assertSame($value, $cookie->{$getter}());
 		self::assertEquals($cookieString, $cookie->__toString());
-	}
-
-	public function testFromRequestStringUnwraps(): void
-	{
-		$cookies = Cookie::fromRequestString("asdsdf= serser  ; rsg324=  234213 ;    2sefs3f=");
-
-		self::assertEquals(3, $cookies->count());
-		self::assertEquals('asdsdf', $cookies->elementAt(0)->getName());
-		self::assertEquals(' serser  ', $cookies->elementAt(0)->getValue());
-		self::assertEquals('rsg324', $cookies->elementAt(1)->getName());
-		self::assertEquals('  234213 ', $cookies->elementAt(1)->getValue());
-		self::assertEquals('2sefs3f', $cookies->elementAt(2)->getName());
-	}
-
-	public function testFromResponseStringUnwraps(): void
-	{
-		$cookie = Cookie::fromResponseString("asdsdf= serser  ; Secure");
-
-		self::assertEquals('asdsdf', $cookie->getName());
-		self::assertEquals(' serser  ', $cookie->getValue());
-	}
-
-	public function testCookieFromResponseStringCanUseEqualSignInValue(): void
-	{
-		$cookieFromString = Cookie::fromResponseString('name1=value=with=equal=sign; Path=test=path=with=equals');
-
-		self::assertEquals('value=with=equal=sign', $cookieFromString->getValue());
-		self::assertEquals('test=path=with=equals', $cookieFromString->getPath());
-	}
-
-	public function testCookieFromRequestStringCanUseEqualSignInValue(): void
-	{
-		$cookies = Cookie::fromRequestString('name1=value=with=equal=sign');
-
-		self::assertCount(1, $cookies);
-		self::assertEquals('value=with=equal=sign', $cookies->elementAt(0)->getValue());
-	}
-
-	public function testMaxAgeIsInt(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		Cookie::fromResponseString('name1=value; Max-Age=adfa');
 	}
 }

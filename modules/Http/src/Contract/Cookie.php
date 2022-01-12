@@ -59,5 +59,5 @@ interface Cookie extends Stringable, ArrayConvertible, ArrayAccess
 		'httpOnly' => "bool",
 		'sameSite' => CookieSameSite::class . "|null"
 	])]
-	public function asArray(): array;
+	public function toArray(): array;
 }

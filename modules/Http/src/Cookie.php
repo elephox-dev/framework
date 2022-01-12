@@ -163,7 +163,7 @@ class Cookie implements Contract\Cookie
 		'httpOnly' => "bool",
 		'sameSite' => "\Elephox\Http\CookieSameSite|null"
 	])]
-	public function asArray(): array
+	public function toArray(): array
 	{
 		return [
 			'name' => $this->name,

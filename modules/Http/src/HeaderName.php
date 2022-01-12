@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-enum HeaderName: string implements Contract\HeaderName
+enum HeaderName: string
 {
 	/* Authentication */
 	case WwwAuthenticate = "WWW-Authenticate";
@@ -121,7 +121,8 @@ enum HeaderName: string implements Contract\HeaderName
 		};
 	}
 
-	#[Pure] public function isOnlyRequest(): bool
+	#[Pure]
+	public function isOnlyRequest(): bool
 	{
 		return match ($this) {
 			self::Expect,
@@ -148,7 +149,8 @@ enum HeaderName: string implements Contract\HeaderName
 		};
 	}
 
-	#[Pure] public function isOnlyResponse(): bool
+	#[Pure]
+	public function isOnlyResponse(): bool
 	{
 		return match ($this) {
 			self::Age,
@@ -170,12 +172,7 @@ enum HeaderName: string implements Contract\HeaderName
 		};
 	}
 
-	public function getValue(): string
-	{
-		return $this->value;
-	}
-
-	#[Pure] public static function tryFromIgnoreCase(string $value): ?HeaderName
+	public static function tryFromIgnoreCase(string $value): ?HeaderName
 	{
 		if (empty($value)) {
 			throw new InvalidArgumentException("Header name cannot be empty");
