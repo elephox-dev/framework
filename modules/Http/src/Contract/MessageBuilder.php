@@ -11,6 +11,12 @@ interface MessageBuilder
 
 	public function body(Stream $body): MessageBuilder;
 
+	/**
+	 * @param string $name
+	 * @param list<string> $value
+	 *
+	 * @return MessageBuilder
+	 */
 	public function header(string $name, array $value): MessageBuilder;
 
 	public function headerMap(HeaderMap $headers): MessageBuilder;

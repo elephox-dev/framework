@@ -3,14 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Http\ResponseCode;
-use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use JetBrains\PhpStorm\Pure;
 
 interface Response extends Message
 {
-	public function getResponseCode(): ResponseCode;
-
-	public function getContentType(): ?MimeTypeContract;
-
+	#[Pure]
 	public function with(): ResponseBuilder;
 }

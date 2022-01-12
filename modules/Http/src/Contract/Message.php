@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\GenericList;
-use Elephox\Stream\Contract\Stream;
+use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 interface Message
 {
-	public function getProtocolVersion(): string;
-
-	public function getBody(): Stream;
-
-	public function getHeaderMap(): HeaderMap;
-
+	#[Pure]
 	public function with(): MessageBuilder;
 }

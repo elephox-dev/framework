@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Http\RequestMethod;
+use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 interface Request extends Message
 {
-	public function getRequestMethod(): RequestMethod;
-
-	public function getUrl(): Url;
-
-	public function with(): RequestBuilder;
+	#[Pure] public function with(): RequestBuilder;
 }

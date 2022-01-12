@@ -3,20 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\ArrayList;
-use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericList;
+use JetBrains\PhpStorm\Immutable;
+use JetBrains\PhpStorm\Pure;
 
+#[Immutable]
 interface ServerRequest extends Request
 {
-	public function getParameterMap(): ParameterMap;
-
-	public function getCookies(): CookieMap;
-
-	/**
-	 * @return GenericList<UploadedFile>
-	 */
-	public function getUploadedFiles(): GenericList;
-
+	#[Pure]
 	public function with(): ServerRequestBuilder;
 }

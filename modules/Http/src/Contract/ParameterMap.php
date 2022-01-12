@@ -12,7 +12,7 @@ interface ParameterMap
 
 	public function has(string $key, ?ParameterSource $source = null): bool;
 
-	public function set(string $key, mixed $value, ParameterSource $source): void;
+	public function put(string $key, ParameterSource $source, mixed $value): void;
 
 	public function remove(string $key, ?ParameterSource $source = null): void;
 

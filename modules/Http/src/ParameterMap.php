@@ -55,7 +55,7 @@ class ParameterMap implements Contract\ParameterMap
 		return false;
 	}
 
-	public function set(string $key, mixed $value, ParameterSource $source): void
+	public function put(string $key, ParameterSource $source, mixed $value): void
 	{
 		if ($this->parameters->has($source)) {
 			$this->parameters->get($source)->put($key, $value);
