@@ -74,15 +74,14 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### ✅ TODO
 
-- [ ] [PIE/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/PIE/src/IsKeyedEnumerable.php)
+- [ ] [Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
 
 
 ### 🚧 Open issues from other repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
-  - [#6821](https://github.com/vimeo/psalm/issues/6821)
-  - [#7322](https://github.com/vimeo/psalm/issues/7322)
   - [#7331](https://github.com/vimeo/psalm/issues/7331)
+  - [#7322](https://github.com/vimeo/psalm/issues/7322)
 
 <!-- end annotations -->
