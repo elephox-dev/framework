@@ -76,6 +76,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
+- [ ] [Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ResponseCode.php)
+  - [ ] go over the reason phrases and check them against standards
 
 
 ### 🚧 Open issues from other repositories
