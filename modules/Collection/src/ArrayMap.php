@@ -23,6 +23,13 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 */
 	use IsKeyedEnumerable, DeepCloneable;
 
+	/**
+	 * @template UKey of array-key
+	 * @template UValue
+	 *
+	 * @param ArrayMap<UKey, UValue>|iterable<UKey, UValue> $value
+	 * @return self<UKey, UValue>
+	 */
 	public static function from(mixed $value): self
 	{
 		if ($value instanceof self) {
