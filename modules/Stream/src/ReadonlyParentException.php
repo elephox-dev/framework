@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
+use Elephox\Files\FileException;
 use JetBrains\PhpStorm\Pure;
-use RuntimeException;
 use Throwable;
 
-class ReadonlyParentException extends RuntimeException
+class ReadonlyParentException extends FileException
 {
 	#[Pure] public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{
