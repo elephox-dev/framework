@@ -22,8 +22,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/test" isTestSource="true" packagePrefix="Elephox\Stream\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/src" isTestSource="false" packagePrefix="Elephox\Events\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/test" isTestSource="true" packagePrefix="Elephox\Events\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/PIE/src" isTestSource="false" packagePrefix="Elephox\PIE\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/PIE/test" isTestSource="true" packagePrefix="Elephox\PIE\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
