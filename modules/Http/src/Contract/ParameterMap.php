@@ -3,13 +3,22 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\GenericMap;
+use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Http\ParameterSource;
 
-/**
- * @extends GenericMap<string, mixed>
- */
-interface ParameterMap extends GenericMap
+interface ParameterMap
 {
-	public function getSource(string $key): ParameterSource;
+	public function get(string $key, ?ParameterSource $source = null): mixed;
+
+	public function has(string $key, ?ParameterSource $source = null): bool;
+
+	public function set(string $key, mixed $value, ParameterSource $source): void;
+
+	public function remove(string $key, ?ParameterSource $source = null): void;
+
+	/**
+	 * @param ParameterSource|null $source
+	 * @return GenericEnumerable<mixed>
+	 */
+	public function all(?ParameterSource $source = null): GenericEnumerable;
 }

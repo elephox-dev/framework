@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\ParameterSource;
 
 interface ServerRequestBuilder extends RequestBuilder
@@ -18,7 +17,7 @@ interface ServerRequestBuilder extends RequestBuilder
 
 	public function uploadedFile(UploadedFile $uploadedFile): ServerRequestBuilder;
 
-	public function uploadedFiles(GenericList $uploadedFiles): ServerRequestBuilder;
+	public function uploadedFiles(UploadedFileList $uploadedFiles): ServerRequestBuilder;
 
 	public function build(): ServerRequest;
 }
