@@ -76,6 +76,11 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
+- [ ] [Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/OrderedIterator.php)
+  - [ ] Implement current() method.
+  - [ ] Implement next() method.
+  - [ ] Implement key() method.
+  - [ ] Implement valid() method.
 - [ ] [Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
 
