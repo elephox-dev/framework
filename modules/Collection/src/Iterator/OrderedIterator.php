@@ -11,6 +11,8 @@ use Iterator;
  * @template TValue
  * @template TCompareKey
  *
+ * @internal
+ *
  * @implements Iterator<TKey, TValue>
  */
 class OrderedIterator implements Iterator

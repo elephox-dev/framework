@@ -8,9 +8,10 @@ use Iterator;
 use SplObjectStorage;
 
 /**
- * @template T of object
+ * @template TKey of object
+ * @template TValue
  *
- * @implements Iterator<never, T>
+ * @implements Iterator<TKey, TValue>
  */
 class SplObjectStorageIterator implements Iterator
 {
@@ -19,9 +20,9 @@ class SplObjectStorageIterator implements Iterator
 	) {
 	}
 
-	public function current(): object
+	public function current(): mixed
 	{
-		return $this->storage->current();
+		return $this->storage->offsetGet($this->storage->current());
 	}
 
 	public function next(): void
@@ -29,9 +30,9 @@ class SplObjectStorageIterator implements Iterator
 		$this->storage->next();
 	}
 
-	public function key(): never
+	public function key(): object
 	{
-		throw new BadMethodCallException("Cannot access key of " . $this::class);
+		return $this->storage->current();
 	}
 
 	public function valid(): bool

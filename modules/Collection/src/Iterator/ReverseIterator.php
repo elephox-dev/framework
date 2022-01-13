@@ -34,6 +34,8 @@ class ReverseIterator implements OuterIterator, Countable
 	public function next(): void
 	{
 		prev($this->elementStack);
+
+		// MAYBE: only reverse key order if key is numeric
 		next($this->keyQueue);
 	}
 
