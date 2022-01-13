@@ -22,6 +22,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\IndexOutOfRangeException
  * @covers \Elephox\Collection\EmptySequenceException
  * @covers \Elephox\Collection\AmbiguousMatchException
+ * @covers \Elephox\Collection\Iterator\OrderedIterator
+ * @covers \Elephox\Collection\OrderedEnumerable
  * @uses \Elephox\Collection\IsEnumerable
  */
 class EnumerableTest extends TestCase

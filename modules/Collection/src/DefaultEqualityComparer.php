@@ -9,7 +9,8 @@ use JetBrains\PhpStorm\Pure;
 
 final class DefaultEqualityComparer
 {
-	#[Pure] public static function equals(mixed $a, mixed $b): bool
+	#[Pure]
+	public static function equals(mixed $a, mixed $b): bool
 	{
 		if ($a instanceof Comparable && is_object($b)) {
 			return $a->compareTo($b) === 0;
@@ -23,7 +24,8 @@ final class DefaultEqualityComparer
 		return $a == $b;
 	}
 
-	#[Pure] public static function same(mixed $a, mixed $b): bool
+	#[Pure]
+	public static function same(mixed $a, mixed $b): bool
 	{
 		if (is_object($a) && is_object($b)) {
 			if ($a instanceof Comparable) {
@@ -40,7 +42,8 @@ final class DefaultEqualityComparer
 		return $a === $b;
 	}
 
-	#[Pure] public static function compare(mixed $a, mixed $b): int
+	#[Pure]
+	public static function compare(mixed $a, mixed $b): int
 	{
 		if ($a instanceof Comparable && is_object($b)) {
 			return $a->compareTo($b);
@@ -59,7 +62,8 @@ final class DefaultEqualityComparer
 	 * @param TCallable $comparer
 	 * @return callable(...mixed): (bool|int)
 	 */
-	#[Pure] public static function invert(callable $comparer): callable
+	#[Pure]
+	public static function invert(callable $comparer): callable
 	{
 		return static function (mixed ...$args) use ($comparer) {
 			$result = $comparer(...$args);

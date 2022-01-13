@@ -5,6 +5,14 @@ namespace Elephox\Collection;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Elephox\Collection\Enumerable
+ * @covers \Elephox\Collection\OrderedEnumerable
+ * @covers \Elephox\Collection\Iterator\OrderedIterator
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\KeyedEnumerable
+ * @uses \Elephox\Collection\IsKeyedEnumerable
+ */
 class OrderedEnumerableTest extends TestCase
 {
 	public function testThenBy(): void

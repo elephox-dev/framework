@@ -13,6 +13,7 @@ use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use Elephox\Collection\Iterator\FlipIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
+use Elephox\Collection\Iterator\OrderedIterator;
 use Elephox\Collection\Iterator\ReverseIterator;
 use Elephox\Collection\Iterator\SelectIterator;
 use Elephox\Collection\Iterator\UniqueByIterator;
@@ -493,14 +494,7 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		$map = [];
-		foreach ($this->getIterator() as $elementKey => $element) {
-			$map[] = ['value' => $element, 'key' => $keySelector($element, $elementKey)];
-		}
-
-		usort($map, static fn(array $a, array $b): int => $comparer($a['key'], $b['key']));
-
-		return new OrderedEnumerable(new ArrayIterator(array_column($map, 'value')));
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
 	}
 
 	/**
@@ -514,12 +508,9 @@ trait IsKeyedEnumerable
 	public function orderByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
-		/** @var callable(TCompareKey, TCompareKey): int $comparer */
+		$comparer = DefaultEqualityComparer::invert($comparer);
 
-		$invertedComparer = DefaultEqualityComparer::invert($comparer);
-		/** @var callable(TCompareKey, TCompareKey): int $invertedComparer */
-
-		return $this->orderBy($keySelector, $invertedComparer);
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
 	}
 
 	public function prepend(mixed $key, mixed $value): GenericKeyedEnumerable
