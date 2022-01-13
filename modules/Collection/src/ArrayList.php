@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Support\DeepCloneable;
-use InvalidArgumentException;
 use Iterator;
 
 /**
@@ -179,14 +178,12 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		$index = -1;
-
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
 				return $index;
 			}
 		}
 
-		return $index;
+		return -1;
 	}
 }

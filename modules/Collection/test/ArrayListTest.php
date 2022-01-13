@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\GenericList;
+use ArrayIterator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -13,6 +13,7 @@ use stdClass;
  * @covers \Elephox\Collection\OffsetNotAllowedException
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
+ * @covers \Elephox\Collection\DefaultEqualityComparer
  */
 class ArrayListTest extends TestCase
 {
@@ -154,6 +155,29 @@ class ArrayListTest extends TestCase
 		self::assertEquals('456', $arr->elementAt(1));
 	}
 
+	public function testFromSelf(): void
+	{
+		$arr = ArrayList::from(['123', '456']);
+		$arr2 = ArrayList::from($arr);
+
+		self::assertSame($arr, $arr2);
+	}
+
+	public function testFromIterator(): void
+	{
+		$arr = ArrayList::from(new ArrayIterator(['123', '456']));
+
+		self::assertEquals('123', $arr->elementAt(0));
+		self::assertEquals('456', $arr->elementAt(1));
+	}
+
+	public function testFromValue(): void
+	{
+		$arr = ArrayList::from('123');
+
+		self::assertEquals('123', $arr->elementAt(0));
+	}
+
 	public function testIterator(): void
 	{
 		$map = new ArrayList([
@@ -179,18 +203,78 @@ class ArrayListTest extends TestCase
 		self::assertSame($clone[0], $clone[2]);
 	}
 
-	public function testRemove(): void
+	public function testRemoveAt(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		self::assertEquals(5, $list->count());
+		self::assertCount(5, $list);
 
-		$list->removeAt(2);
+		$removed = $list->removeAt(2);
 
+		self::assertEquals(3, $removed);
 		self::assertEquals(4, $list->count());
 		self::assertEquals(1, $list->elementAt(0));
 		self::assertEquals(2, $list->elementAt(1));
 		self::assertEquals(4, $list->elementAt(2));
 		self::assertEquals(5, $list->elementAt(3));
+	}
+
+	public function testRemove(): void
+	{
+		$list = new ArrayList([1, 2, 3, 4, 5]);
+
+		self::assertCount(5, $list);
+
+		$removed = $list->remove(3);
+
+		self::assertTrue($removed);
+		self::assertEquals(4, $list->count());
+		self::assertEquals(1, $list->elementAt(0));
+		self::assertEquals(2, $list->elementAt(1));
+		self::assertEquals(4, $list->elementAt(2));
+		self::assertEquals(5, $list->elementAt(3));
+	}
+
+	public function testOffsetExistThrows(): void
+	{
+		$this->expectException(OffsetNotAllowedException::class);
+		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
+
+		$arr = new ArrayList();
+		$arr->offsetExists("not a number");
+	}
+
+	public function testOffsetUnsetThrows(): void
+	{
+		$this->expectException(OffsetNotAllowedException::class);
+		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
+
+		$arr = new ArrayList();
+		$arr->offsetUnset("not a number");
+	}
+
+	public function testIndexOf(): void
+	{
+		$list = new ArrayList([1, 2, 3, 4, 5]);
+
+		self::assertEquals(0, $list->indexOf(1));
+		self::assertEquals(1, $list->indexOf(2));
+		self::assertEquals(2, $list->indexOf(3));
+		self::assertEquals(3, $list->indexOf(4));
+		self::assertEquals(4, $list->indexOf(5));
+		self::assertEquals(-1, $list->indexOf(6));
+	}
+
+	public function testLastIndexOf(): void
+	{
+		$list = new ArrayList([1, 2, 3, 4, 5]);
+
+		self::assertEquals(4, $list->lastIndexOf(5));
+		self::assertEquals(3, $list->lastIndexOf(4));
+		self::assertEquals(2, $list->lastIndexOf(3));
+		self::assertEquals(1, $list->lastIndexOf(2));
+		self::assertEquals(0, $list->lastIndexOf(1));
+		self::assertEquals(-1, $list->lastIndexOf(0));
+		self::assertEquals(-1, $list->lastIndexOf(7));
 	}
 }
