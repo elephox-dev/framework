@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
-use Elephox\Http\Contract;
 use Elephox\Http\Url;
 
 class UrlTemplate
 {
 	public function __construct(
 		private string $source
-	)
-	{
+	) {
 	}
 
 	public function getSource(): string
@@ -21,9 +19,9 @@ class UrlTemplate
 
 	/**
 	 * @param iterable<string, string> $parameters
-	 * @return Contract\Url
+	 * @return Url
 	 */
-	public function compile(iterable $parameters): Contract\Url
+	public function compile(iterable $parameters): Url
 	{
 		$source = $this->source;
 		foreach ($parameters as $key => $value) {
@@ -33,14 +31,14 @@ class UrlTemplate
 		return Url::fromString($source);
 	}
 
-	public function matches(Contract\Url $url): bool
+	public function matches(Url $url): bool
 	{
 		$source = $this->getSanitizedSource();
 
 		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 
-	public function getValues(Contract\Url $url): array
+	public function getValues(Url $url): array
 	{
 		$source = $this->getSanitizedSource();
 

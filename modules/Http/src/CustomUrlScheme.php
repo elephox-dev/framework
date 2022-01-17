@@ -9,18 +9,21 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 class CustomUrlScheme implements Contract\UrlScheme
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private string $scheme,
 		private ?int $defaultPort = null,
 	) {
 	}
 
-	#[Pure] public function getScheme(): string
+	#[Pure]
+	public function getScheme(): string
 	{
 		return $this->scheme;
 	}
 
-	#[Pure] public function getDefaultPort(): ?int
+	#[Pure]
+	public function getDefaultPort(): ?int
 	{
 		return $this->defaultPort;
 	}

@@ -8,7 +8,8 @@ use JetBrains\PhpStorm\Pure;
 
 abstract class RequestMiddleware extends AbstractMiddlewareAttribute
 {
-	#[Pure] public function __construct(int $weight = 0)
+	#[Pure]
+	public function __construct(int $weight = 0)
 	{
 		parent::__construct(ActionType::Request, $weight);
 	}

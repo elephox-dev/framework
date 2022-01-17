@@ -6,14 +6,11 @@ namespace Elephox\Core\Handler\Attribute;
 use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\UrlTemplate;
-use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
-use Elephox\Http\CustomRequestMethod;
 use Elephox\Http\RequestMethod;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -22,18 +19,18 @@ class RequestHandler extends AbstractHandlerAttribute
 	private UrlTemplate $template;
 
 	/**
-	 * @var GenericList<RequestMethodContract>
+	 * @var GenericList<RequestMethod>
 	 */
 	private GenericList $methods;
 
 	/**
 	 * @param string|UrlTemplate $url
-	 * @param null|non-empty-string|RequestMethodContract|array<non-empty-string|RequestMethodContract>|GenericList<non-empty-string|RequestMethodContract> $methods
+	 * @param null|non-empty-string|RequestMethod|array<non-empty-string|RequestMethod>|GenericList<non-empty-string|RequestMethod> $methods
 	 * @param int $weight
 	 */
 	public function __construct(
 		string|UrlTemplate                                  $url,
-		null|string|RequestMethodContract|array|GenericList $methods = null,
+		null|string|RequestMethod|array|GenericList $methods = null,
 		int                                                 $weight = 0,
 	) {
 		parent::__construct(ActionType::Request, $weight);
@@ -42,22 +39,18 @@ class RequestHandler extends AbstractHandlerAttribute
 
 		if ($methods === null) {
 			$methods = [];
-		} else if (is_string($methods) || $methods instanceof RequestMethodContract) {
+		} else if (is_string($methods) || $methods instanceof RequestMethod) {
 			$methods = [$methods];
 		}
 
 		$this->methods = new ArrayList();
 		/**
-		 * @var non-empty-string|RequestMethodContract $method_name
+		 * @var non-empty-string|RequestMethod $method_name
 		 */
 		foreach ($methods as $method_name) {
-			/** @var RequestMethodContract $method */
-			if (!$method_name instanceof RequestMethodContract) {
-				$method = RequestMethod::tryFrom($method_name);
-
-				if ($method === null) {
-					$method = new CustomRequestMethod($method_name);
-				}
+			/** @var RequestMethod $method */
+			if (!$method_name instanceof RequestMethod) {
+				$method = RequestMethod::from($method_name);
 			} else {
 				$method = $method_name;
 			}
@@ -72,7 +65,7 @@ class RequestHandler extends AbstractHandlerAttribute
 	}
 
 	/**
-	 * @return GenericList<RequestMethodContract>
+	 * @return GenericList<RequestMethod>
 	 */
 	public function getMethods(): GenericList
 	{
@@ -86,7 +79,7 @@ class RequestHandler extends AbstractHandlerAttribute
 		}
 
 		$request = $context->getRequest();
-		$requestMethod = $request->getRequestMethod();
+		$requestMethod = $request->getMethod();
 
 		if (!$this->methods->isEmpty() && !$this->methods->contains($requestMethod)) {
 			return false;

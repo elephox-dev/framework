@@ -113,7 +113,8 @@ enum HeaderName: string
 	case RetryAfter = "Retry-After";
 	case Upgrade = "Upgrade";
 
-	#[Pure] public function canBeDuplicate(): bool
+	#[Pure]
+	public function canBeDuplicate(): bool
 	{
 		return match ($this) {
 			self::SetCookie => true,

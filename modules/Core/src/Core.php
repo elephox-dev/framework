@@ -17,7 +17,7 @@ use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
-use Elephox\Http\Request;
+use Elephox\Http\ServerRequestBuilder;
 use JetBrains\PhpStorm\NoReturn;
 use LogicException;
 use Throwable;
@@ -59,8 +59,7 @@ class Core implements Contract\Core
 
 	protected function __construct(
 		private ContainerContract $container
-	)
-	{
+	) {
 	}
 
 	public function getVersion(): string
@@ -146,7 +145,7 @@ class Core implements Contract\Core
 
 		return match (PHP_SAPI) {
 			'cli' => new CommandLineContext($this->getContainer(), array_splice($argv, 1)),
-			default => new RequestContext($this->getContainer(), Request::fromGlobals())
+			default => new RequestContext($this->getContainer(), ServerRequestBuilder::fromGlobals())
 		};
 	}
 
@@ -180,7 +179,8 @@ class Core implements Contract\Core
 		return $result;
 	}
 
-	#[NoReturn] public function handleGlobal(): never
+	#[NoReturn]
+	public function handleGlobal(): never
 	{
 		$context = $this->getGlobalContext();
 

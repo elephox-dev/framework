@@ -9,7 +9,8 @@ use Throwable;
 
 class UnhandledContextException extends CoreException
 {
-	#[Pure] public function __construct(Context $context, int $code = 0, ?Throwable $previous = null)
+	#[Pure]
+	public function __construct(Context $context, int $code = 0, ?Throwable $previous = null)
 	{
 		parent::__construct("No handler found for context " . $context::class, $code, $previous);
 	}

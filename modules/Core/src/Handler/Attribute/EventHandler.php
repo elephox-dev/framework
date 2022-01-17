@@ -12,7 +12,8 @@ use JetBrains\PhpStorm\Pure;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class EventHandler extends AbstractHandlerAttribute
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private ?string $eventName = null,
 		int $weight = 0,
 	)

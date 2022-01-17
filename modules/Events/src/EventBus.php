@@ -16,7 +16,8 @@ class EventBus implements Contract\EventBus
 	/** @var ArrayMap<non-empty-string, Contract\Subscription> $subscriptionSubscriberMapping */
 	private readonly ArrayMap $subscriptionSubscriberMapping;
 
-	#[Pure] public function __construct()
+	#[Pure]
+	public function __construct()
 	{
 		/** @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> */
 		$this->eventSubscriptionsMapping = new ArrayMap();

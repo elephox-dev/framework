@@ -67,7 +67,7 @@ class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 		return $this;
 	}
 
-	public function build(bool $replaceDefaultPort = true): Url
+	public function get(bool $replaceDefaultPort = true): Url
 	{
 		if ($replaceDefaultPort && $this->port !== null && $this->scheme !== null && $this->port === $this->scheme->getDefaultPort()) {
 			$this->port = null;

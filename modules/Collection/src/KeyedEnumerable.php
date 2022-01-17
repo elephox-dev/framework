@@ -103,7 +103,8 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	/**
 	 * @return Iterator<TIteratorKey, TSource>
 	 */
-	#[Pure] public function getIterator(): Iterator
+	#[Pure]
+	public function getIterator(): Iterator
 	{
 		return $this->iterator;
 	}

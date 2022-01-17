@@ -36,7 +36,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this;
 	}
 
-	public function build(): Contract\Response
+	public function get(): Contract\Response
 	{
 		return new Response(
 			$this->protocolVersion ?? self::DefaultProtocolVersion,

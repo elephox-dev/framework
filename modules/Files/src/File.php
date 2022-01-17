@@ -13,23 +13,27 @@ use RuntimeException;
 
 class File implements Contract\File
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private string    $path,
 		private ?MimeType $mimeType = null,
 	) {
 	}
 
-	#[Pure] public function getPath(): string
+	#[Pure]
+	public function getPath(): string
 	{
 		return $this->path;
 	}
 
-	#[Pure] public function getName(): string
+	#[Pure]
+	public function getName(): string
 	{
 		return basename($this->path);
 	}
 
-	#[Pure] public function getExtension(): string
+	#[Pure]
+	public function getExtension(): string
 	{
 		return pathinfo($this->path, PATHINFO_EXTENSION);
 	}
@@ -43,7 +47,8 @@ class File implements Contract\File
 		return filesize($this->path);
 	}
 
-	#[Pure] public function getMimeType(): ?MimeType
+	#[Pure]
+	public function getMimeType(): ?MimeType
 	{
 		return $this->mimeType;
 	}
@@ -79,18 +84,21 @@ class File implements Contract\File
 		return new Directory(dirname($this->path, $levels));
 	}
 
-	#[Pure] public function isReadable(): bool
+	#[Pure]
+	public function isReadable(): bool
 	{
 		/** @psalm-suppress ImpureFunctionCall */
 		return is_readable($this->path);
 	}
 
-	#[Pure] public function isWritable(): bool
+	#[Pure]
+	public function isWritable(): bool
 	{
 		return is_writable($this->path);
 	}
 
-	#[Pure] public function isExecutable(): bool
+	#[Pure]
+	public function isExecutable(): bool
 	{
 		return is_executable($this->path);
 	}

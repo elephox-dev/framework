@@ -43,7 +43,8 @@ class Regex
 		return ArrayMap::from($matches);
 	}
 
-	#[Pure] public static function matches(string $pattern, string $subject): bool
+	#[Pure]
+	public static function matches(string $pattern, string $subject): bool
 	{
 		return preg_match($pattern, $subject) === 1;
 	}

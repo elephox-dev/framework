@@ -16,7 +16,8 @@ class StringStream implements Stream
 	/** @var positive-int|0 $pointer */
 	private int $pointer = 0;
 
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private string $string,
 		private bool   $seekable = true,
 		private bool   $writeable = false,
@@ -24,7 +25,8 @@ class StringStream implements Stream
 	) {
 	}
 
-	#[Pure] public function __toString(): string
+	#[Pure]
+	public function __toString(): string
 	{
 		return $this->string;
 	}
@@ -43,22 +45,26 @@ class StringStream implements Stream
 		$this->detach();
 	}
 
-	#[Pure] public function getSize(): ?int
+	#[Pure]
+	public function getSize(): ?int
 	{
 		return strlen($this->string);
 	}
 
-	#[Pure] public function tell(): int
+	#[Pure]
+	public function tell(): int
 	{
 		return $this->pointer;
 	}
 
-	#[Pure] public function eof(): bool
+	#[Pure]
+	public function eof(): bool
 	{
 		return $this->pointer >= strlen($this->string);
 	}
 
-	#[Pure] public function isSeekable(): bool
+	#[Pure]
+	public function isSeekable(): bool
 	{
 		return $this->seekable;
 	}
@@ -85,7 +91,8 @@ class StringStream implements Stream
 		$this->seek(0);
 	}
 
-	#[Pure] public function isWriteable(): bool
+	#[Pure]
+	public function isWriteable(): bool
 	{
 		return $this->writeable;
 	}
@@ -101,7 +108,8 @@ class StringStream implements Stream
 		return strlen($string);
 	}
 
-	#[Pure] public function isReadable(): bool
+	#[Pure]
+	public function isReadable(): bool
 	{
 		return $this->readable;
 	}
@@ -119,12 +127,14 @@ class StringStream implements Stream
 		return $string;
 	}
 
-	#[Pure] public function getContents(): string
+	#[Pure]
+	public function getContents(): string
 	{
 		return $this->string;
 	}
 
-	#[Pure] public function getMetadata(?string $key = null): array
+	#[Pure]
+	public function getMetadata(?string $key = null): array
 	{
 		return [];
 	}

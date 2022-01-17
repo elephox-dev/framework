@@ -15,39 +15,48 @@ interface Cookie extends Stringable, ArrayConvertible, ArrayAccess
 {
 	public function setName(string $name): void;
 
-	#[Pure] public function getName(): string;
+	#[Pure]
+	public function getName(): string;
 
 	public function setValue(?string $value): void;
 
-	#[Pure] public function getValue(): ?string;
+	#[Pure]
+	public function getValue(): ?string;
 
 	public function setExpires(?DateTime $expires): void;
 
-	#[Pure] public function getExpires(): ?DateTime;
+	#[Pure]
+	public function getExpires(): ?DateTime;
 
 	public function setPath(?string $path): void;
 
-	#[Pure] public function getPath(): ?string;
+	#[Pure]
+	public function getPath(): ?string;
 
 	public function setDomain(?string $domain): void;
 
-	#[Pure] public function getDomain(): ?string;
+	#[Pure]
+	public function getDomain(): ?string;
 
 	public function setSecure(bool $secure): void;
 
-	#[Pure] public function isSecure(): bool;
+	#[Pure]
+	public function isSecure(): bool;
 
 	public function setHttpOnly(bool $httpOnly): void;
 
-	#[Pure] public function isHttpOnly(): bool;
+	#[Pure]
+	public function isHttpOnly(): bool;
 
 	public function setSameSite(?CookieSameSite $sameSite): void;
 
-	#[Pure] public function getSameSite(): ?CookieSameSite;
+	#[Pure]
+	public function getSameSite(): ?CookieSameSite;
 
 	public function setMaxAge(?int $maxAge): void;
 
-	#[Pure] public function getMaxAge(): ?int;
+	#[Pure]
+	public function getMaxAge(): ?int;
 
 	#[ArrayShape([
 		'name' => "string",

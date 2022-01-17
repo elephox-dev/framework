@@ -12,7 +12,8 @@ use JetBrains\PhpStorm\Pure;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class ExceptionHandler extends AbstractHandlerAttribute
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private ?string $exceptionClass = null,
 		int $weight = 0,
 	)

@@ -19,7 +19,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Iterator\UniqueByIterator
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Collection\DefaultEqualityComparer
- * @covers \Elephox\Collection\IndexOutOfRangeException
  * @covers \Elephox\Collection\EmptySequenceException
  * @covers \Elephox\Collection\AmbiguousMatchException
  * @covers \Elephox\Collection\Iterator\OrderedIterator
@@ -507,6 +506,14 @@ class KeyedEnumerableTest extends TestCase
 		self::assertEquals(
 			[5, 3, 9, 7, 6],
 			$a->unionBy($b, fn(int $a) => $a % 5)->toList()
+		);
+	}
+
+	public function testWhereKey(): void
+	{
+		self::assertEquals(
+			['b' => 2, 'c' => 3],
+			KeyedEnumerable::from(['a' => 1, 'b' => 2, 'c' => 3])->whereKey(fn($x) => $x > 'a')->toArray()
 		);
 	}
 

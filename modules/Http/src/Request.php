@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Http\Contract\HeaderMap;
-use Elephox\Http\Contract\Url;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
@@ -23,8 +22,27 @@ class Request extends AbstractMessage implements Contract\Request
 		parent::__construct($protocolVersion, $headers, $body);
 	}
 
-	#[Pure] public function with(): Contract\RequestBuilder
+	#[Pure]
+	public function with(): Contract\RequestBuilder
 	{
-		return new RequestBuilder();
+		return new RequestBuilder(
+			$this->protocolVersion,
+			$this->headers,
+			$this->body,
+			$this->method,
+			$this->url,
+		);
+	}
+
+	#[Pure]
+	public function getMethod(): RequestMethod
+	{
+		return $this->method;
+	}
+
+	#[Pure]
+	public function getUrl(): Url
+	{
+		return $this->url;
 	}
 }

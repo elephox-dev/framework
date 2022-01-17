@@ -154,7 +154,8 @@ class ResourceStream implements Stream
 		return feof($this->resource);
 	}
 
-	#[Pure] public function isSeekable(): bool
+	#[Pure]
+	public function isSeekable(): bool
 	{
 		return $this->seekable;
 	}
@@ -179,7 +180,8 @@ class ResourceStream implements Stream
 		$this->seek(0);
 	}
 
-	#[Pure] public function isWriteable(): bool
+	#[Pure]
+	public function isWriteable(): bool
 	{
 		return $this->writeable;
 	}
@@ -205,7 +207,8 @@ class ResourceStream implements Stream
 		return $written;
 	}
 
-	#[Pure] public function isReadable(): bool
+	#[Pure]
+	public function isReadable(): bool
 	{
 		return $this->readable;
 	}

@@ -21,5 +21,5 @@ interface MessageBuilder
 
 	public function headerMap(HeaderMap $headers): MessageBuilder;
 
-	public function build(): Message;
+	public function get(): Message;
 }

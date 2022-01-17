@@ -28,4 +28,16 @@ class Response extends AbstractMessage implements Contract\Response
 	{
 		return new ResponseBuilder();
 	}
+
+	#[Pure]
+	public function getResponseCode(): ResponseCode
+	{
+		return $this->responseCode;
+	}
+
+	#[Pure]
+	public function getMimeType(): ?MimeType
+	{
+		return $this->mimeType;
+	}
 }

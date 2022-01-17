@@ -818,6 +818,16 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @param callable(TIteratorKey, TSource, Iterator<TSource, TIteratorKey>): bool $predicate
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function whereKey(callable $predicate): GenericKeyedEnumerable
+	{
+		return new KeyedEnumerable(new FlipIterator(new CallbackFilterIterator(new FlipIterator($this->getIterator()), $predicate(...))));
+	}
+
+	/**
 	 * @template TOther
 	 * @template TOtherIteratorKey
 	 * @template TResult

@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\GenericMap;
+use ArrayIterator;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -13,7 +14,6 @@ use stdClass;
  * @covers \Elephox\Collection\OffsetNotAllowedException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\ArrayList
- * @covers \Elephox\Collection\DuplicateKeyException
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\Collection\Iterator\FlipIterator
@@ -21,6 +21,29 @@ use stdClass;
  */
 class ArrayMapTest extends TestCase
 {
+	public function testFromSelf(): void
+	{
+		$arr = new ArrayMap();
+		$arr2 = ArrayMap::from($arr);
+
+		self::assertSame($arr, $arr2);
+	}
+
+	public function testFromIterator(): void
+	{
+		$iterator = new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3]);
+		$arr = ArrayMap::from($iterator);
+
+		self::assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $arr->toArray());
+	}
+
+	public function testFromInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		ArrayMap::from('test');
+	}
+
 	public function testPutAndGet(): void
 	{
 		$map = new ArrayMap();
@@ -101,10 +124,36 @@ class ArrayMapTest extends TestCase
 			'c' => 3,
 		]);
 
-		$map->remove('a');
+		$removed = $map->remove('a');
 
+		self::assertTrue($removed);
 		self::assertCount(2, $map);
 		self::assertFalse($map->has('a'));
+	}
+
+	public function testRemoveNonExistent(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		$removed = $map->remove('d');
+
+		self::assertFalse($removed);
+		self::assertCount(3, $map);
+	}
+
+	public function testRemoveIntKey(): void
+	{
+		$map = new ArrayMap(['a', 'b', 'c']);
+
+		$removed = $map->remove(1);
+
+		self::assertTrue($removed);
+		self::assertCount(2, $map);
+		self::assertEquals(['a', 'c'], $map->toArray());
 	}
 
 	public function testDeepClone(): void

@@ -8,7 +8,8 @@ use Throwable;
 
 class BindingNotFoundException extends BindingException
 {
-	#[Pure] public function __construct(string $contract, ?string $paramName = null, int $code = 0, ?Throwable $previous = null)
+	#[Pure]
+	public function __construct(string $contract, ?string $paramName = null, int $code = 0, ?Throwable $previous = null)
 	{
 		$msg = "Binding not found for contract '$contract'";
 		if ($paramName !== null)

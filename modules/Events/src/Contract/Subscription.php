@@ -12,17 +12,21 @@ interface Subscription
 	/**
 	 * @return non-empty-string
 	 */
-	#[Pure] public function getEventName(): string;
+	#[Pure]
+	public function getEventName(): string;
 
 	/**
 	 * @return non-empty-string
 	 */
-	#[Pure] public function getId(): string;
+	#[Pure]
+	public function getId(): string;
 
-	#[Pure] public function getPriority(): int;
+	#[Pure]
+	public function getPriority(): int;
 
 	/**
 	 * @return callable(Event): void
 	 */
-	#[Pure] public function getCallback(): callable;
+	#[Pure]
+	public function getCallback(): callable;
 }

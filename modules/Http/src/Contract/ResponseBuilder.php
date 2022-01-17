@@ -12,5 +12,5 @@ interface ResponseBuilder extends MessageBuilder
 
 	public function contentType(MimeType $mimeType): ResponseBuilder;
 
-	public function build(): Response;
+	public function get(): Response;
 }
