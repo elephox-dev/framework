@@ -22,22 +22,24 @@ class HandlerBinding implements Contract\HandlerBinding
 	/**
 	 * @param Closure $closure
 	 * @param HandlerMeta $handlerMeta
-	 * @param GenericList<Middleware> $middlewares
+	 * @param GenericKeyedEnumerable<int, Middleware> $middlewares
 	 */
 	public function __construct(
 		private Closure     $closure,
 		private HandlerMeta $handlerMeta,
-		GenericList         $middlewares,
+		GenericKeyedEnumerable $middlewares,
 	) {
-		$this->middlewares = ArrayList::from($middlewares)->orderBy(static fn(Middleware $a, Middleware $b): int => $b->getWeight() - $a->getWeight());
+		$this->middlewares = $middlewares->orderBy(static fn(Middleware $m): int => $m->getWeight());
 	}
 
-	#[Pure] public function getHandlerMeta(): HandlerMeta
+	#[Pure]
+	public function getHandlerMeta(): HandlerMeta
 	{
 		return $this->handlerMeta;
 	}
 
-	#[Pure] public function getMiddlewares(): GenericKeyedEnumerable
+	#[Pure]
+	public function getMiddlewares(): GenericKeyedEnumerable
 	{
 		return $this->middlewares;
 	}
@@ -50,9 +52,7 @@ class HandlerBinding implements Contract\HandlerBinding
 			return $ctx->getContainer()->callback($this->closure, ['context' => $ctx, ...$parameters]);
 		};
 
-		$middlewares = $this
-			->getMiddlewares();
-		foreach ($middlewares as $middleware) {
+		foreach ($this->getMiddlewares() as $middleware) {
 			$contextHandler = static fn(Context $ctx): mixed => $middleware->handle($ctx, $contextHandler);
 		}
 

@@ -11,7 +11,7 @@ use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttribute
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
 use Elephox\Core\Middleware\Attribute\Contract\MiddlewareAttribute;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Core\Middleware\Contract\Middleware;
 use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
@@ -57,7 +57,8 @@ class HandlerContainer implements Contract\HandlerContainer
 	 */
 	private ArrayList $bindings;
 
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private ContainerContract $container,
 	)
 	{
@@ -78,7 +79,7 @@ class HandlerContainer implements Contract\HandlerContainer
 
 		/** @var Contract\HandlerBinding */
 		return $bindings
-			->orderBy(static fn(Contract\HandlerBinding $a, Contract\HandlerBinding $b): int => $b->getHandlerMeta()->getWeight() - $a->getHandlerMeta()->getWeight())
+			->orderBy(static fn(Contract\HandlerBinding $b): int => $b->getHandlerMeta()->getWeight())
 			->first();
 	}
 
@@ -144,9 +145,9 @@ class HandlerContainer implements Contract\HandlerContainer
 			 */
 			$handlerAttributeInstance = $handlerAttribute->newInstance();
 
-			/** @var GenericList<Middleware> $middlewares */
+			/** @var GenericKeyedEnumerable<int, Middleware> $middlewares */
 			$middlewares = ArrayList::from($middlewareAttributes)
-				->map(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
+				->select(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
 				->where(static fn(Middleware $middleware): bool => $middleware->getType()->matchesAny() || $middleware->getType() === $handlerAttributeInstance->getType());
 
 			$binding = new HandlerBinding($closure, $handlerAttributeInstance, $middlewares);
@@ -166,9 +167,9 @@ class HandlerContainer implements Contract\HandlerContainer
 				continue;
 			}
 
-			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\');
+			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\')->toList();
 			// remove first element since it is the alias for the directories we are iterating
-			$root = $parts->shift();
+			$root = array_shift($parts);
 
 			foreach ($dirs as $dir) {
 				$directory = new Directory($dir);
@@ -182,8 +183,8 @@ class HandlerContainer implements Contract\HandlerContainer
 
 	/**
 	 * @param string $rootNs
-	 * @param ArrayList<string> $nsParts
-	 * @param ArrayList<string> $nsPartsUsed
+	 * @param list<string> $nsParts
+	 * @param list<string> $nsPartsUsed
 	 * @param DirectoryContract $directory
 	 * @param ComposerClassLoader $classLoader
 	 * @param int $depth
@@ -191,14 +192,14 @@ class HandlerContainer implements Contract\HandlerContainer
 	 *
 	 * @noinspection PhpDocSignatureInspection
 	 */
-	private function loadClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, object $classLoader, int $depth = 0): void
+	private function loadClassesRecursive(string $rootNs, array $nsParts, array $nsPartsUsed, DirectoryContract $directory, object $classLoader, int $depth = 0): void
 	{
 		if ($depth > 10) {
 			throw new RuntimeException("Recursion limit exceeded. Please choose a more specific namespace.");
 		}
 
-		$lastPart = $nsParts->shift();
-		$nsPartsUsed->push($lastPart);
+		$lastPart = array_shift($nsParts);
+		$nsPartsUsed[] = $lastPart;
 		foreach ($directory->getDirectories() as $dir) {
 			if ($dir->getName() !== $lastPart) {
 
@@ -221,7 +222,7 @@ class HandlerContainer implements Contract\HandlerContainer
 				 * @var class-string $fqcn
 				 * @noinspection PhpRedundantVariableDocTypeInspection
 				 */
-				$fqcn = $rootNs . "\\" . implode("\\", $nsPartsUsed->asArray()) . $className;
+				$fqcn = $rootNs . "\\" . implode("\\", $nsPartsUsed) . $className;
 
 				$classLoader->loadClass($fqcn);
 
@@ -229,6 +230,6 @@ class HandlerContainer implements Contract\HandlerContainer
 			}
 		}
 
-		$nsParts->unshift($nsPartsUsed->pop());
+		array_unshift($nsParts, array_pop($nsPartsUsed));
 	}
 }

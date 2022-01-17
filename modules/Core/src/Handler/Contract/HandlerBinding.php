@@ -14,7 +14,7 @@ interface HandlerBinding
 	public function getHandlerMeta(): HandlerMeta;
 
 	/**
-	 * @return GenericKeyedEnumerable<Middleware>
+	 * @return GenericKeyedEnumerable<int, Middleware>
 	 */
 	public function getMiddlewares(): GenericKeyedEnumerable;
 

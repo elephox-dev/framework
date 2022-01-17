@@ -29,16 +29,18 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		$container->register(Contract\CommandLineContext::class, $this);
 
 		if (is_string($commandLine)) {
-			$this->args = ArrayList::from(explode(' ', $commandLine));
+			$args = explode(' ', $commandLine);
 		} else {
-			$this->args = ArrayList::from($commandLine);
+			$args = $commandLine;
 		}
 
-		if ($this->args->isEmpty()) {
+		if (empty($args)) {
 			$this->command = '';
 		} else {
-			$this->command = $this->args->shift();
+			$this->command = array_shift($args);
 		}
+
+		$this->args = new ArrayList($args);
 	}
 
 	public function getCommandLine(): string
@@ -46,7 +48,7 @@ class CommandLineContext extends AbstractContext implements Contract\CommandLine
 		$line = $this->command;
 
 		if (!$this->args->isEmpty()) {
-			return $line . ' ' . $this->args->join(' ');
+			return $line . ' ' . implode(' ', $this->args->toList());
 		}
 
 		return $line;
