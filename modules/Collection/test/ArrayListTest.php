@@ -277,4 +277,19 @@ class ArrayListTest extends TestCase
 		self::assertEquals(-1, $list->lastIndexOf(0));
 		self::assertEquals(-1, $list->lastIndexOf(7));
 	}
+
+	public function testRemoveNotExists(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		self::assertFalse($list->remove(4));
+	}
+
+	public function testRemoveAtOffsetNotExists(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		$this->expectException(OffsetNotFoundException::class);
+		$list->removeAt(4);
+	}
 }

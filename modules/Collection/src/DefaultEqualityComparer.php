@@ -12,12 +12,16 @@ final class DefaultEqualityComparer
 	#[Pure]
 	public static function equals(mixed $a, mixed $b): bool
 	{
-		if ($a instanceof Comparable && is_object($b)) {
-			return $a->compareTo($b) === 0;
-		}
+		if (is_object($a) || is_object($b)) {
+			if ($a instanceof Comparable && is_object($b)) {
+				return $a->compareTo($b) === 0;
+			}
 
-		if ($b instanceof Comparable && is_object($a)) {
-			return $b->compareTo($a) === 0;
+			if ($b instanceof Comparable && is_object($a)) {
+				return $b->compareTo($a) === 0;
+			}
+
+			return false;
 		}
 
 		/** @noinspection TypeUnsafeComparisonInspection */
@@ -45,12 +49,20 @@ final class DefaultEqualityComparer
 	#[Pure]
 	public static function compare(mixed $a, mixed $b): int
 	{
-		if ($a instanceof Comparable && is_object($b)) {
-			return $a->compareTo($b);
-		}
+		if (is_object($a) || is_object($b)) {
+			if ($a instanceof Comparable && is_object($b)) {
+				return $a->compareTo($b);
+			}
 
-		if ($b instanceof Comparable && is_object($a)) {
-			return $b->compareTo($a);
+			if ($b instanceof Comparable && is_object($a)) {
+				return $b->compareTo($a);
+			}
+
+			if (is_object($b) && $a instanceof ($b::class)) {
+				return $a <=> $b;
+			}
+
+			throw new InvalidArgumentException('Cannot compare random objects');
 		}
 
 		return $a <=> $b;

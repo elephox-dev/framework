@@ -19,7 +19,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Iterator\UniqueByIterator
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Collection\DefaultEqualityComparer
- * @covers \Elephox\Collection\IndexOutOfRangeException
  * @covers \Elephox\Collection\EmptySequenceException
  * @covers \Elephox\Collection\AmbiguousMatchException
  * @covers \Elephox\Collection\Iterator\OrderedIterator

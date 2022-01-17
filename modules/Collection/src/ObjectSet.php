@@ -5,9 +5,11 @@ namespace Elephox\Collection;
 
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
+use Elephox\Collection\Iterator\FlipIterator;
 use Elephox\Collection\Iterator\SplObjectStorageIterator;
 use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
+use Iterator;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
@@ -37,16 +39,18 @@ class ObjectSet implements GenericSet
 	/**
 	 * @param null|Closure(T, T): bool $comparer
 	 */
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		?Closure $comparer = null
 	) {
 		$this->storage = new SplObjectStorage();
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}
 
-	#[Pure] public function getIterator(): SplObjectStorageIterator
+	#[Pure]
+	public function getIterator(): Iterator
 	{
-		return new SplObjectStorageIterator($this->storage);
+		return new FlipIterator(new SplObjectStorageIterator($this->storage));
 	}
 
 	public function add(mixed $value): bool
@@ -65,7 +69,7 @@ class ObjectSet implements GenericSet
 	public function remove(mixed $value): bool
 	{
 		if (!is_object($value)) {
-			throw new InvalidArgumentException("Cannot add non-object to " . $this::class);
+			throw new InvalidArgumentException("Cannot remove non-object from " . $this::class);
 		}
 
 		$existed = $this->contains($value);
@@ -77,17 +81,18 @@ class ObjectSet implements GenericSet
 
 	public function removeBy(callable $predicate): bool
 	{
-		$anyRemoved = false;
-
+		$remove = [];
 		foreach ($this->getIterator() as $object) {
 			if ($predicate($object)) {
-				$this->storage->detach($object);
-
-				$anyRemoved = true;
+				$remove[] = $object;
 			}
 		}
 
-		return $anyRemoved;
+		foreach ($remove as $object) {
+			$this->storage->detach($object);
+		}
+
+		return count($remove) > 0;
 	}
 
 	public function contains(mixed $value, ?callable $comparer = null): bool
