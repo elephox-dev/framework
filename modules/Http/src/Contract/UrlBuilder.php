@@ -21,5 +21,5 @@ interface UrlBuilder
 
 	public function userInfo(?string $username, ?string $password = null): UrlBuilder;
 
-	public function build(bool $replaceDefaultPort = true): Url;
+	public function get(bool $replaceDefaultPort = true): Url;
 }

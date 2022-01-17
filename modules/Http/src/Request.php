@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Http\Contract\HeaderMap;
-use Elephox\Http\Contract\Url;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;

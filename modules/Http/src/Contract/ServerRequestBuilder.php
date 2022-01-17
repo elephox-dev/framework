@@ -19,5 +19,5 @@ interface ServerRequestBuilder extends RequestBuilder
 
 	public function uploadedFiles(UploadedFileList $uploadedFiles): ServerRequestBuilder;
 
-	public function build(): ServerRequest;
+	public function get(): ServerRequest;
 }

@@ -32,6 +32,7 @@ class UrlTest extends TestCase
 			[ 'someone@somewhere/something', '//someone@somewhere/something', null, 'someone', null, 'somewhere', null, '/something', '', null ],
 			[ 'file:///home/test/file.txt', 'file:/home/test/file.txt', 'file', null, null, null, null, '/home/test/file.txt', '', null ],
 			[ 'ssh://git@github.com', 'ssh://git@github.com/', 'ssh', 'git', null, 'github.com', null, '', '', null ],
+			[ 'https://example.com/path with spaces', 'https://example.com/path%20with%20spaces', 'https', null, null, 'example.com', null, '/path%20with%20spaces', '', null ],
 			[ 'mysql://root:root@localhost:3306/test', 'mysql://root:root@localhost/test', 'mysql', 'root', 'root', 'localhost', null, '/test', '', null ],
 			[ 'custom://localhost/test', 'custom://localhost/test', 'custom', null, null, 'localhost', null, '/test', '', null ],
 			[ '/get-this?id=123&user_id=23#234', '/get-this?id=123&user_id=23#234', null, null, null, null, null, '/get-this', 'id=123&user_id=23', '234' ],
@@ -69,5 +70,33 @@ class UrlTest extends TestCase
 			'authority' => empty($userInfo) ? $authority : ($userInfo . '@' . $authority),
 			'userInfo' => $userInfo,
 		], $uri->toArray());
+	}
+
+	public function testWith(): void
+	{
+		$uri = Url::fromString('/');
+		self::assertSame('/', (string)$uri);
+
+		$uri = $uri->with()
+			->scheme(UrlScheme::HTTPS)
+			->host('example.com')
+			->path('/test')
+			->get();
+		self::assertSame('https://example.com/test', (string)$uri);
+
+		$uri = $uri->with()
+			->userInfo('user', 'password')
+			->fragment('fragment')
+			->get();
+		self::assertSame('https://user:password@example.com/test#fragment', (string)$uri);
+
+		$query = new QueryMap();
+		$query['test'] = 'true';
+
+		$uri = $uri->with()
+			->queryMap($query)
+			->port(8080)
+			->get();
+		self::assertSame('https://user:password@example.com:8080/test?test=true#fragment', (string)$uri);
 	}
 }

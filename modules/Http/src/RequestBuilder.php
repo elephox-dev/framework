@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\Url;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
@@ -16,7 +15,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		?Contract\HeaderMap $headers = null,
 		?Stream $body = null,
 		protected ?RequestMethod $method = null,
-		protected ?Contract\Url $url = null,
+		protected ?Url $url = null,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
 	}
@@ -35,7 +34,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		return $this;
 	}
 
-	public function build(): Contract\Request
+	public function get(): Contract\Request
 	{
 		return new Request(
 			$this->protocolVersion ?? self::DefaultProtocolVersion,

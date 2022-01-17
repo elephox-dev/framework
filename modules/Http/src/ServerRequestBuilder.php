@@ -79,7 +79,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function build(): Contract\ServerRequest
+	public function get(): Contract\ServerRequest
 	{
 		return new ServerRequest(
 			$this->protocolVersion ?? self::DefaultProtocolVersion,

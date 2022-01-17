@@ -7,7 +7,6 @@ use Elephox\Http\Contract\CookieMap;
 use Elephox\Http\Contract\HeaderMap;
 use Elephox\Http\Contract\ParameterMap;
 use Elephox\Http\Contract\UploadedFileList;
-use Elephox\Http\Contract\Url;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;

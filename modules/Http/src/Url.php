@@ -51,7 +51,7 @@ class Url implements Stringable, ArrayConvertible
 			$builder->fragment(substr($matches['fragment'], 1));
 		}
 
-		return $builder->build();
+		return $builder->get();
 	}
 
 	#[Pure]
