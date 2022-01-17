@@ -6,7 +6,7 @@ namespace Elephox\Http;
 use Elephox\Collection\ArrayMap;
 
 /**
- * @extends ArrayMap<string, list<string>>
+ * @extends ArrayMap<string, string|list<string>>
  */
 class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {

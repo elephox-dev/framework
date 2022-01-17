@@ -186,10 +186,38 @@ class Core implements Contract\Core
 
 		/** @var mixed $result */
 		$result = $this->handleContext($context);
-		if (is_object($result) && method_exists($result, 'send')) {
-			$result->send();
+		if ($result instanceof ResponseContract) {
+			$this->sendResponse($result);
 		}
 
 		exit();
+	}
+
+	private function sendResponse(ResponseContract $response): void
+	{
+		$this->sendHeaders($response);
+		$this->sendBody($response);
+	}
+
+	private function sendHeaders(ResponseContract $response): void
+	{
+		if (headers_sent()) {
+			return;
+		}
+
+		foreach ($response->getHeaderMap() as $headerName => $values) {
+			if (is_array($values)) {
+				foreach ($values as $value) {
+					header("$headerName: $value");
+				}
+			} else {
+				header("$headerName: $values");
+			}
+		}
+	}
+
+	private function sendBody(ResponseContract $response): void
+	{
+		echo $response->getBody()->getContents();
 	}
 }
