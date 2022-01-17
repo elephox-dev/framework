@@ -9,7 +9,7 @@ use Elephox\Support\CustomMimeType;
 use Elephox\Support\MimeType;
 
 /**
- * @extends ArrayMap<Contract\UploadedFile>
+ * @extends ArrayMap<string, Contract\UploadedFile>
  */
 class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 {

@@ -10,6 +10,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TSource
+ * @template TCompareKey
  *
  * @internal
  *
@@ -19,7 +20,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
 class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumerable
 {
 	/**
-	 * @param OrderedIterator<NonNegativeInteger, TSource> $orderedIterator
+	 * @param OrderedIterator<NonNegativeInteger, TSource, TCompareKey> $orderedIterator
 	 */
 	public function __construct(OrderedIterator $orderedIterator)
 	{
