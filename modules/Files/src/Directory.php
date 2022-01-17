@@ -13,7 +13,8 @@ use RuntimeException;
 
 class Directory implements Contract\Directory
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private string $path,
 	) {
 	}
@@ -56,7 +57,8 @@ class Directory implements Contract\Directory
 			});
 	}
 
-	#[Pure] public function isRoot(): bool
+	#[Pure]
+	public function isRoot(): bool
 	{
 		return Path::isRoot($this->path);
 	}
@@ -66,12 +68,14 @@ class Directory implements Contract\Directory
 		return $this->getChildren()->count() === 0;
 	}
 
-	#[Pure] public function getPath(): string
+	#[Pure]
+	public function getPath(): string
 	{
 		return $this->path;
 	}
 
-	#[Pure] public function getName(): string
+	#[Pure]
+	public function getName(): string
 	{
 		return basename($this->path);
 	}
@@ -135,7 +139,8 @@ class Directory implements Contract\Directory
 		throw new FileNotFoundException($path);
 	}
 
-	#[Pure] public function isReadonly(): bool
+	#[Pure]
+	public function isReadonly(): bool
 	{
 		return !is_writable($this->path);
 	}

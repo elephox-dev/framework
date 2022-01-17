@@ -59,8 +59,7 @@ class Core implements Contract\Core
 
 	protected function __construct(
 		private ContainerContract $container
-	)
-	{
+	) {
 	}
 
 	public function getVersion(): string

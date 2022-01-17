@@ -9,36 +9,43 @@ use RuntimeException;
 
 final class EmptyStream implements Stream
 {
-	#[Pure] public function __toString(): string
+	#[Pure]
+	public function __toString(): string
 	{
 		return '';
 	}
 
-	#[Pure] public function detach(): mixed
+	#[Pure]
+	public function detach(): mixed
 	{
 		return null;
 	}
 
-	#[Pure] public function close(): void
+	#[Pure]
+	public function close(): void
 	{
 	}
 
-	#[Pure] public function getSize(): ?int
-	{
-		return 0;
-	}
-
-	#[Pure] public function tell(): int
+	#[Pure]
+	public function getSize(): ?int
 	{
 		return 0;
 	}
 
-	#[Pure] public function eof(): bool
+	#[Pure]
+	public function tell(): int
+	{
+		return 0;
+	}
+
+	#[Pure]
+	public function eof(): bool
 	{
 		return true;
 	}
 
-	#[Pure] public function isSeekable(): bool
+	#[Pure]
+	public function isSeekable(): bool
 	{
 		return false;
 	}
@@ -53,7 +60,8 @@ final class EmptyStream implements Stream
 		throw new RuntimeException('Empty stream is not seekable.');
 	}
 
-	#[Pure] public function isWriteable(): bool
+	#[Pure]
+	public function isWriteable(): bool
 	{
 		return false;
 	}
@@ -63,7 +71,8 @@ final class EmptyStream implements Stream
 		throw new RuntimeException('Empty stream is not writable.');
 	}
 
-	#[Pure] public function isReadable(): bool
+	#[Pure]
+	public function isReadable(): bool
 	{
 		return false;
 	}
@@ -73,12 +82,14 @@ final class EmptyStream implements Stream
 		throw new RuntimeException('Empty stream is not readable.');
 	}
 
-	#[Pure] public function getContents(): string
+	#[Pure]
+	public function getContents(): string
 	{
 		return '';
 	}
 
-	#[Pure] public function getMetadata(?string $key = null): mixed
+	#[Pure]
+	public function getMetadata(?string $key = null): mixed
 	{
 		return null;
 	}

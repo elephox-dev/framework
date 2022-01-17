@@ -9,7 +9,8 @@ use Throwable;
 
 class MissingTypeHintException extends BindingBuilderException
 {
-	#[Pure] public function __construct(ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)
+	#[Pure]
+	public function __construct(ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		$class = $parameter->getDeclaringClass()?->getName() ?? "global";

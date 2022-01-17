@@ -14,11 +14,11 @@ use JetBrains\PhpStorm\Pure;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class CommandHandler extends AbstractHandlerAttribute
 {
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private ?string $commandSignature = null,
 		int $weight = 0,
-	)
-	{
+	) {
 		parent::__construct(ActionType::Command, $weight);
 	}
 
@@ -62,6 +62,6 @@ class CommandHandler extends AbstractHandlerAttribute
 
 		return Regex::match($this->commandSignature, $context->getCommandLine())
 			->whereKey(static fn(string|int $key) => is_string($key))
-			->asArray();
+			->toArray();
 	}
 }

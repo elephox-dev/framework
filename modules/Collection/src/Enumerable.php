@@ -103,7 +103,8 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @return Iterator<mixed, TSource>
 	 */
-	#[Pure] public function getIterator(): Iterator
+	#[Pure]
+	public function getIterator(): Iterator
 	{
 		return $this->iterator;
 	}

@@ -26,22 +26,26 @@ class Subscription implements Contract\Subscription
 		$this->id = spl_object_hash((object)$this);
 	}
 
-	#[Pure] public function getId(): string
+	#[Pure]
+	public function getId(): string
 	{
 		return $this->id;
 	}
 
-	#[Pure] public function getEventName(): string
+	#[Pure]
+	public function getEventName(): string
 	{
 		return $this->eventName;
 	}
 
-	#[Pure] public function getCallback(): callable
+	#[Pure]
+	public function getCallback(): callable
 	{
 		return $this->callback;
 	}
 
-	#[Pure] public function getPriority(): int
+	#[Pure]
+	public function getPriority(): int
 	{
 		return $this->priority;
 	}

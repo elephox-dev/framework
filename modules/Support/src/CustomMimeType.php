@@ -12,13 +12,15 @@ class CustomMimeType implements Contract\MimeType
 	/**
 	 * @param non-empty-string $value
 	 */
-	#[Pure] public function __construct(
+	#[Pure]
+	public function __construct(
 		private string $value
 	)
 	{
 	}
 
-	#[Pure] public function getValue(): string
+	#[Pure]
+	public function getValue(): string
 	{
 		return $this->value;
 	}
