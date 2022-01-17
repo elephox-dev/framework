@@ -55,6 +55,7 @@ class ObjectSet implements GenericSet
 
 	public function add(mixed $value): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_object($value)) {
 			throw new InvalidArgumentException("Cannot add non-object to " . $this::class);
 		}
@@ -68,6 +69,7 @@ class ObjectSet implements GenericSet
 
 	public function remove(mixed $value): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_object($value)) {
 			throw new InvalidArgumentException("Cannot remove non-object from " . $this::class);
 		}
