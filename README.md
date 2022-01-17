@@ -24,7 +24,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Integrate PIE into Collections
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] New documentation solution
@@ -67,6 +66,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~Create a makefile with useful shortcuts~~ (Created composer.json scripts instead)
 - [x] ~~Event Bus~~
 - [x] ~~Split existing PSR implementations into different third-party adapters~~
+- [x] ~~Integrate PIE into Collections
 
 <!-- start annotations -->
 
