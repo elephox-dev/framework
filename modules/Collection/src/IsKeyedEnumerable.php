@@ -28,7 +28,7 @@ use OutOfBoundsException;
 use Stringable;
 
 /**
- * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always 0|positive-int...
+ * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always int...
  *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
@@ -433,7 +433,7 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @param callable(TSource): numeric $selector
+	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
 	 * @return numeric
 	 */
@@ -445,7 +445,7 @@ trait IsKeyedEnumerable
 			throw new EmptySequenceException();
 		}
 
-		$max = $selector($iterator->current());
+		$max = $selector($iterator->current(), $iterator->key());
 		$iterator->next();
 
 		while ($iterator->valid()) {
@@ -458,7 +458,7 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @param callable(TSource): numeric $selector
+	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
 	 * @return numeric
 	 */
@@ -470,7 +470,7 @@ trait IsKeyedEnumerable
 			throw new EmptySequenceException();
 		}
 
-		$min = $selector($iterator->current());
+		$min = $selector($iterator->current(), $iterator->key());
 		$iterator->next();
 
 		while($iterator->valid()) {
@@ -818,6 +818,8 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @psalm-suppress MoreSpecificImplementedParamType Can't influence the signature of CallbackFilterIterator...
+	 *
 	 * @param callable(TIteratorKey, TSource, Iterator<TSource, TIteratorKey>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>

@@ -26,6 +26,8 @@ use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
 
 /**
+ * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always int...
+ *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TSource
