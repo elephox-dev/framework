@@ -66,7 +66,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~Create a makefile with useful shortcuts~~ (Created composer.json scripts instead)
 - [x] ~~Event Bus~~
 - [x] ~~Split existing PSR implementations into different third-party adapters~~
-- [x] ~~Integrate PIE into Collections
+- [x] ~~Integrate PIE into Collections~~
 
 <!-- start annotations -->
 
