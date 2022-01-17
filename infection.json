@@ -9,11 +9,10 @@
         ]
     },
     "logs": {
-        "stryker": {
-            "report": "main"
-        }
+      "badge": {
+        "branch": "develop"
+      }
     },
-    "minCoveredMsi": 85,
     "mutators": {
         "@default": true
     },
