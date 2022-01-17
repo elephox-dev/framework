@@ -96,7 +96,7 @@ if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse o
 }
 
 if (
-	!executeSilent("git tag %s", $version) ||
+	!executeSilent("git tag v%s", $version) ||
 	!executeSilent("git push origin --tags")
 ) {
 	echo "Failed to tag framework!" . PHP_EOL;
@@ -148,7 +148,7 @@ foreach ([
 
 	if (
 		!executeSilent("git checkout %s", $releaseBranch) ||
-		!executeSilent("git tag %s", $version) ||
+		!executeSilent("git tag v%s", $version) ||
 		!executeSilent("git push origin --tags")
 	) {
 		echo "Failed to release $remote" . PHP_EOL;
