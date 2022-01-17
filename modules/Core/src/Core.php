@@ -190,7 +190,16 @@ class Core implements Contract\Core
 			$this->sendResponse($result);
 		}
 
-		exit();
+		$exitCode = 0;
+		if (is_int($result)) {
+			if ($result >= 0 && $result < 255) {
+				$exitCode = $result;
+			} else {
+				throw new LogicException("Result must be an integer between 0 and 255.");
+			}
+		}
+
+		exit($exitCode);
 	}
 
 	private function sendResponse(ResponseContract $response): void
