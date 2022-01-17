@@ -7,6 +7,7 @@ use Elephox\Http\Contract\Cookie;
 use Elephox\Http\Contract\UploadedFile;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
+use Elephox\Stream\ResourceStream;
 use JetBrains\PhpStorm\Pure;
 
 class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequestBuilder
@@ -20,7 +21,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		?Url $url = null,
 		protected ?Contract\ParameterMap $parameterMap = null,
 		protected ?Contract\CookieMap $cookies = null,
-		protected ?Contract\UploadedFileList $uploadedFiles = null
+		protected ?Contract\UploadedFileMap $uploadedFiles = null
 	) {
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
 	}
@@ -61,18 +62,18 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function uploadedFile(UploadedFile $uploadedFile): Contract\ServerRequestBuilder
+	public function uploadedFile(string $name, UploadedFile $uploadedFile): Contract\ServerRequestBuilder
 	{
 		if ($this->uploadedFiles === null) {
-			$this->uploadedFiles = new UploadedFileList();
+			$this->uploadedFiles = new UploadedFileMap();
 		}
 
-		$this->uploadedFiles->add($uploadedFile);
+		$this->uploadedFiles->put($name, $uploadedFile);
 
 		return $this;
 	}
 
-	public function uploadedFiles(Contract\UploadedFileList $uploadedFiles): Contract\ServerRequestBuilder
+	public function uploadedFiles(Contract\UploadedFileMap $uploadedFiles): Contract\ServerRequestBuilder
 	{
 		$this->uploadedFiles = $uploadedFiles;
 
@@ -89,7 +90,32 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			$this->url ?? throw self::missingParameterException("url"),
 			$this->parameterMap ?? new ParameterMap(),
 			$this->cookies ?? new CookieMap(),
-			$this->uploadedFiles ?? new UploadedFileList()
+			$this->uploadedFiles ?? new UploadedFileMap()
 		);
+	}
+
+	public static function fromGlobals(?Stream $body = null, ?string $protocolVersion = null, ?RequestMethod $requestMethod = null, ?Url $requestUrl = null): Contract\ServerRequest
+	{
+		$parameters = ParameterMap::fromGlobals();
+		$headers = HeaderMap::fromGlobals();
+		$cookies = CookieMap::fromGlobals();
+		$files = UploadedFileMap::fromGlobals();
+
+		$body ??= new ResourceStream(fopen('php://input', 'rb'), size: $parameters['CONTENT_LENGTH']);
+		$protocolVersion ??= explode('/', $parameters['SERVER_PROTOCOL'], 2)[1];
+		$requestMethod ??= RequestMethod::from($parameters['REQUEST_METHOD']);
+		$requestUrl ??= Url::fromString($parameters['REQUEST_URI']);
+
+		$builder = new self();
+		$builder->protocolVersion($protocolVersion);
+		$builder->headerMap($headers);
+		$builder->body($body);
+		$builder->requestMethod($requestMethod);
+		$builder->requestUrl($requestUrl);
+		$builder->parameterMap($parameters);
+		$builder->cookieMap($cookies);
+		$builder->uploadedFiles($files);
+
+		return $builder->get();
 	}
 }

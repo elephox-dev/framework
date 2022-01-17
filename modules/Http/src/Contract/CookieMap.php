@@ -10,4 +10,5 @@ use Elephox\Collection\Contract\GenericMap;
  */
 interface CookieMap extends GenericMap
 {
+	public static function fromGlobals(?array $cookie = null): CookieMap;
 }

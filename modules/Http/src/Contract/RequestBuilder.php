@@ -10,7 +10,7 @@ interface RequestBuilder extends MessageBuilder
 {
 	public function requestMethod(RequestMethod $requestMethod): RequestBuilder;
 
-	public function requestUri(Url $url): RequestBuilder;
+	public function requestUrl(Url $url): RequestBuilder;
 
 	public function get(): Request;
 }

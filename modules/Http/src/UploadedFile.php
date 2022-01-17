@@ -12,16 +12,16 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param string $clientName
 	 * @param string $clientPath
 	 * @param Stream $stream
-	 * @param null|MimeType $type
+	 * @param null|MimeType $clientMimeType
 	 * @param null|positive-int|0 $size
 	 * @param UploadError $error
 	 */
 	public function __construct(
-		private string $clientName,
-		private string $clientPath,
-		private Stream $stream,
-		private ?MimeType $type = null,
-		private ?int $size = null,
+		private string      $clientName,
+		private string      $clientPath,
+		private Stream      $stream,
+		private ?MimeType   $clientMimeType = null,
+		private ?int        $size = null,
 		private UploadError $error = UploadError::UPLOAD_ERR_OK,
 	) {
 	}
@@ -48,7 +48,7 @@ class UploadedFile implements Contract\UploadedFile
 
 	public function getClientMimeType(): ?MimeType
 	{
-		return $this->type;
+		return $this->clientMimeType;
 	}
 
 	public function getStream(): Stream

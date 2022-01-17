@@ -8,11 +8,9 @@ use JetBrains\PhpStorm\Immutable;
 #[Immutable]
 enum ParameterSource
 {
-	case Url;
 	case Post;
 	case Get;
-	case Cookie;
 	case Session;
-	case File;
 	case Server;
+	case Env;
 }

@@ -7,6 +7,8 @@ use Elephox\Http\ParameterSource;
 
 interface ServerRequestBuilder extends RequestBuilder
 {
+	public static function fromGlobals(): ServerRequest;
+
 	public function parameter(string $key, int|string|array $value, ParameterSource $source): ServerRequestBuilder;
 
 	public function parameterMap(ParameterMap $parameterMap): ServerRequestBuilder;
@@ -15,9 +17,9 @@ interface ServerRequestBuilder extends RequestBuilder
 
 	public function cookieMap(CookieMap $cookieMap): ServerRequestBuilder;
 
-	public function uploadedFile(UploadedFile $uploadedFile): ServerRequestBuilder;
+	public function uploadedFile(string $name, UploadedFile $uploadedFile): ServerRequestBuilder;
 
-	public function uploadedFiles(UploadedFileList $uploadedFiles): ServerRequestBuilder;
+	public function uploadedFiles(UploadedFileMap $uploadedFiles): ServerRequestBuilder;
 
 	public function get(): ServerRequest;
 }

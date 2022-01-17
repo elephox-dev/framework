@@ -27,7 +27,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		return $this;
 	}
 
-	public function requestUri(Url $url): Contract\RequestBuilder
+	public function requestUrl(Url $url): Contract\RequestBuilder
 	{
 		$this->url = $url;
 

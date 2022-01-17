@@ -19,4 +19,22 @@ abstract class AbstractMessage implements Message
 		public readonly Stream $body,
 	) {
 	}
+
+	#[Pure]
+	public function getProtocolVersion(): string
+	{
+		return $this->protocolVersion;
+	}
+
+	#[Pure]
+	public function getHeaderMap(): HeaderMap
+	{
+		return $this->headers;
+	}
+
+	#[Pure]
+	public function getBody(): Stream
+	{
+		return $this->body;
+	}
 }

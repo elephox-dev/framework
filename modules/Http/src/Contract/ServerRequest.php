@@ -11,4 +11,13 @@ interface ServerRequest extends Request
 {
 	#[Pure]
 	public function with(): ServerRequestBuilder;
+
+	#[Pure]
+	public function getParameters(): ParameterMap;
+
+	#[Pure]
+	public function getCookieMap(): CookieMap;
+
+	#[Pure]
+	public function getUploadedFiles(): UploadedFileMap;
 }
