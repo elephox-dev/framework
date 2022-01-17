@@ -39,10 +39,13 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
+		/**
+		 * @var callable(mixed, mixed): mixed $keySelector
+		 */
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
-			$keySelector,
-			$comparer
+			$keySelector(...),
+			$comparer(...)
 		);
 
 		return new OrderedEnumerable($orderedIterator);
@@ -60,12 +63,15 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 		$comparer = DefaultEqualityComparer::invert($comparer);
-		/** @var callable(mixed, mixed): int $comparer */
 
+		/**
+		 * @var callable(mixed, mixed): mixed $keySelector
+		 * @var callable(mixed, mixed): int $comparer
+		 */
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
-			$keySelector,
-			$comparer
+			$keySelector(...),
+			$comparer(...)
 		);
 
 		return new OrderedEnumerable($orderedIterator);
