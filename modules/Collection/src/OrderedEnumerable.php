@@ -33,7 +33,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TCompareKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
@@ -54,7 +54,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
 	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TCompareKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{

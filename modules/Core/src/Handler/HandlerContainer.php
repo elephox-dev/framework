@@ -174,7 +174,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			foreach ($dirs as $dir) {
 				$directory = new Directory($dir);
 
-				$this->loadClassesRecursive($root, $parts, new ArrayList(), $directory, $classLoader);
+				$this->loadClassesRecursive($root, $parts, [], $directory, $classLoader);
 			}
 		}
 
