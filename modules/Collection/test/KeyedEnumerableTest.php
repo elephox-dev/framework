@@ -509,6 +509,14 @@ class KeyedEnumerableTest extends TestCase
 		);
 	}
 
+	public function testWhereKey(): void
+	{
+		self::assertEquals(
+			['b' => 2, 'c' => 3],
+			KeyedEnumerable::from(['a' => 1, 'b' => 2, 'c' => 3])->whereKey(fn($x) => $x > 'a')->toArray()
+		);
+	}
+
 	public function testZip(): void
 	{
 		self::assertEquals(

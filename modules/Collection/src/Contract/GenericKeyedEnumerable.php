@@ -367,6 +367,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function where(callable $predicate): GenericKeyedEnumerable;
 
 	/**
+	 * @param callable(TIteratorKey, TSource, Iterator<TSource, TIteratorKey>): bool $predicate
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function whereKey(callable $predicate): GenericKeyedEnumerable;
+
+	/**
 	 * @template TOther
 	 * @template TOtherIteratorKey
 	 * @template TResult
