@@ -57,7 +57,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~DI Container~~
 - [x] ~~DI Dynamic object lifespan (request/transient)~~
 - [x] ~~Implement [PSR-11](https://www.php-fig.org/psr/psr-11) in DI~~
-- [x] ~~composer.json dependency sync (see [elephox-dev/composer-module-sync](https://github.com/elephox-dev/composer-module-sync))~~
+- [x] ~~composer.json dependency sync~~ (see [elephox-dev/composer-module-sync](https://github.com/elephox-dev/composer-module-sync))
 - [x] ~~Http Messages~~
 - [x] ~~Optimize common workflow (re-use coverage data)~~
 - [x] ~~(basic) Filesystem~~
