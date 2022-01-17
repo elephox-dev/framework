@@ -13,6 +13,7 @@ class Cookie implements Contract\Cookie
 {
 	public const ExpiresFormat = "D, d-M-Y H:i:s T";
 
+	#[Pure]
 	public function __construct(
 		private string          $name,
 		private ?string         $value = null,
@@ -26,7 +27,8 @@ class Cookie implements Contract\Cookie
 	) {
 	}
 
-	#[Pure] public function getName(): string
+	#[Pure]
+	public function getName(): string
 	{
 		return $this->name;
 	}
@@ -36,7 +38,8 @@ class Cookie implements Contract\Cookie
 		$this->name = $name;
 	}
 
-	#[Pure] public function getValue(): ?string
+	#[Pure]
+	public function getValue(): ?string
 	{
 		return $this->value;
 	}
@@ -46,7 +49,8 @@ class Cookie implements Contract\Cookie
 		$this->value = $value;
 	}
 
-	#[Pure] public function getExpires(): ?DateTime
+	#[Pure]
+	public function getExpires(): ?DateTime
 	{
 		return $this->expires;
 	}
@@ -56,7 +60,8 @@ class Cookie implements Contract\Cookie
 		$this->expires = $expires;
 	}
 
-	#[Pure] public function getPath(): ?string
+	#[Pure]
+	public function getPath(): ?string
 	{
 		return $this->path;
 	}
@@ -66,7 +71,8 @@ class Cookie implements Contract\Cookie
 		$this->path = $path;
 	}
 
-	#[Pure] public function getDomain(): ?string
+	#[Pure]
+	public function getDomain(): ?string
 	{
 		return $this->domain;
 	}
@@ -76,7 +82,8 @@ class Cookie implements Contract\Cookie
 		$this->domain = $domain;
 	}
 
-	#[Pure] public function isSecure(): bool
+	#[Pure]
+	public function isSecure(): bool
 	{
 		return $this->secure;
 	}
@@ -86,7 +93,8 @@ class Cookie implements Contract\Cookie
 		$this->secure = $secure;
 	}
 
-	#[Pure] public function isHttpOnly(): bool
+	#[Pure]
+	public function isHttpOnly(): bool
 	{
 		return $this->httpOnly;
 	}
@@ -96,7 +104,8 @@ class Cookie implements Contract\Cookie
 		$this->httpOnly = $httpOnly;
 	}
 
-	#[Pure] public function getSameSite(): ?CookieSameSite
+	#[Pure]
+	public function getSameSite(): ?CookieSameSite
 	{
 		return $this->sameSite;
 	}
@@ -106,7 +115,8 @@ class Cookie implements Contract\Cookie
 		$this->sameSite = $sameSite;
 	}
 
-	#[Pure] public function getMaxAge(): ?int
+	#[Pure]
+	public function getMaxAge(): ?int
 	{
 		return $this->maxAge;
 	}
@@ -161,8 +171,10 @@ class Cookie implements Contract\Cookie
 		'domain' => "null|string",
 		'secure' => "bool",
 		'httpOnly' => "bool",
-		'sameSite' => "\Elephox\Http\CookieSameSite|null"
+		'sameSite' => "\Elephox\Http\CookieSameSite|null",
+		'maxAge' => "null|int"
 	])]
+	#[Pure]
 	public function toArray(): array
 	{
 		return [
@@ -174,11 +186,13 @@ class Cookie implements Contract\Cookie
 			'secure' => $this->secure,
 			'httpOnly' => $this->httpOnly,
 			'sameSite' => $this->sameSite,
+			'maxAge' => $this->maxAge,
 		];
 	}
 
+	#[Pure]
 	public function offsetExists(
-		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset
 	): bool
 	{
@@ -188,14 +202,15 @@ class Cookie implements Contract\Cookie
 			'path' => $this->path !== null,
 			'domain' => $this->domain !== null,
 			'sameSite' => $this->sameSite !== null,
+			'maxAge' => $this->maxAge !== null,
 			default => false,
 		};
 	}
 
 	public function offsetGet(
-		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset
-	): string|bool|null|DateTime|CookieSameSite
+	): int|string|bool|null|DateTime|CookieSameSite
 	{
 		return match ($offset) {
 			'name' => $this->name,
@@ -206,12 +221,13 @@ class Cookie implements Contract\Cookie
 			'secure' => $this->secure,
 			'httpOnly' => $this->httpOnly,
 			'sameSite' => $this->sameSite ?? throw new InvalidArgumentException("Cookie 'sameSite' is not set"),
+			'maxAge' => $this->maxAge ?? throw new InvalidArgumentException("Cookie 'maxAge' is not set"),
 			default => throw new InvalidArgumentException("Cookie '$offset' is not set")
 		};
 	}
 
 	public function offsetSet(
-		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset,
 		mixed $value
 	): void
@@ -229,7 +245,7 @@ class Cookie implements Contract\Cookie
 	}
 
 	public function offsetUnset(
-		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite'])]
+		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset
 	): void
 	{
