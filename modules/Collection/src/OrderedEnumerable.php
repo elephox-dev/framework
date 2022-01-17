@@ -28,10 +28,10 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	}
 
 	/**
-	 * @template TCompareKey
+	 * @template TNextCompareKey
 	 *
-	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
-	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
+	 * @param callable(TSource, NonNegativeInteger): TNextCompareKey $keySelector
+	 * @param null|callable(TNextCompareKey, TNextCompareKey): int $comparer $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
 	 */
@@ -49,10 +49,10 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	}
 
 	/**
-	 * @template TCompareKey
+	 * @template TNextCompareKey
 	 *
-	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
-	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
+	 * @param callable(TSource, NonNegativeInteger): TNextCompareKey $keySelector
+	 * @param null|callable(TNextCompareKey, TNextCompareKey): int $comparer
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
 	 */
@@ -60,6 +60,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 		$comparer = DefaultEqualityComparer::invert($comparer);
+		/** @var callable(mixed, mixed): int $comparer */
 
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),

@@ -494,7 +494,7 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -509,8 +509,11 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 		$comparer = DefaultEqualityComparer::invert($comparer);
+		/**
+		 * @var Closure(mixed, mixed): int $comparer
+		 */
 
-		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	public function prepend(mixed $key, mixed $value): GenericKeyedEnumerable
