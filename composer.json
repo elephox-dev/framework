@@ -87,7 +87,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.x-dev"
+            "dev-develop": "1.x-dev"
         }
     },
     "scripts": {
