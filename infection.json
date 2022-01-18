@@ -8,11 +8,6 @@
             "/Exception\\.php/"
         ]
     },
-    "logs": {
-      "stryker": {
-        "report": "develop"
-      }
-    },
     "mutators": {
         "@default": true
     },
