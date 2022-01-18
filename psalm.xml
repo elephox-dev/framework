@@ -3,9 +3,19 @@
         xmlns="https://getpsalm.org/schema/config"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+
+        errorLevel="2"
+
+        checkForThrowsInGlobalScope="true"
+        ignoreInternalFunctionFalseReturn="false"
+        ignoreInternalFunctionNullReturn="true"
+        findUnusedVariablesAndParams="false"
+        findUnusedCode="false"
+        findUnusedPsalmSuppress="false"
+        sealAllMethods="false"
 >
     <projectFiles>
-        <directory name="./modules/*/src"/>
+        <directory name="modules/*/src"/>
     </projectFiles>
     <plugins>
         <pluginClass class="Psalm\MockeryPlugin\Plugin"/>

@@ -21,16 +21,16 @@ class Casing
 
 	public static function toCamel(string $string): string
 	{
-		return lcfirst(preg_replace('/([\s\-_]+)/', '', ucwords($string, '-_ ')));
+		return lcfirst(\Safe\preg_replace('/([\s\-_]+)/', '', ucwords($string, '-_ ')));
 	}
 
 	public static function toSnake(string $string): string
 	{
-		return self::toLower(preg_replace('/([A-Z])/', '_$1', self::toCamel($string)));
+		return self::toLower(\Safe\preg_replace('/([A-Z])/', '_$1', self::toCamel($string)));
 	}
 
 	public static function toKebab(string $string): string
 	{
-		return self::toLower(preg_replace('/([A-Z])/', '-$1', self::toCamel($string)));
+		return self::toLower(\Safe\preg_replace('/([A-Z])/', '-$1', self::toCamel($string)));
 	}
 }

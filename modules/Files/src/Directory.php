@@ -42,7 +42,7 @@ class Directory implements Contract\Directory
 		}
 
 		/** @var list<string> $nodes */
-		$nodes = scandir($this->path);
+		$nodes = \Safe\scandir($this->path);
 
 		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
@@ -96,7 +96,7 @@ class Directory implements Contract\Directory
 		}
 
 		try {
-			return new DateTime('@' . filemtime($this->path));
+			return new DateTime('@' . \Safe\filemtime($this->path));
 		} catch (Exception $e) {
 			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}
@@ -159,7 +159,7 @@ class Directory implements Contract\Directory
 		$children = $this->getChildren();
 
 		if ($children->isEmpty()) {
-			rmdir($this->path);
+			\Safe\rmdir($this->path);
 
 			return;
 		}

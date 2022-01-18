@@ -32,7 +32,7 @@ class ConsoleSink implements Sink
 			$metaDataSuffix = '';
 		} else {
 			try {
-				$metaDataSuffix = " " . Console::light_gray(json_encode($metaData, JSON_THROW_ON_ERROR));
+				$metaDataSuffix = " " . Console::light_gray(\Safe\json_encode($metaData, JSON_THROW_ON_ERROR));
 			} catch (JsonException $e) {
 				$metaDataSuffix = " " . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
 			}

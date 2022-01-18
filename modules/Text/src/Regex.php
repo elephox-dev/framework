@@ -18,7 +18,7 @@ class Regex
 	 */
 	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
-		$parts = preg_split($pattern, $subject, $limit);
+		$parts = \Safe\preg_split($pattern, $subject, $limit);
 		if ($parts === false) {
 			throw new InvalidArgumentException('An error occurred while splitting: ' . preg_last_error_msg());
 		}
@@ -35,7 +35,7 @@ class Regex
 	public static function match(string $pattern, string $subject): ArrayMap
 	{
 		$matches = [];
-		if (preg_match($pattern, $subject, $matches) === false) {
+		if (\Safe\preg_match($pattern, $subject, $matches) === false) {
 			throw new InvalidArgumentException('An error occurred while matching: ' . preg_last_error_msg());
 		}
 
@@ -46,6 +46,6 @@ class Regex
 	#[Pure]
 	public static function matches(string $pattern, string $subject): bool
 	{
-		return preg_match($pattern, $subject) === 1;
+		return \Safe\preg_match($pattern, $subject) === 1;
 	}
 }

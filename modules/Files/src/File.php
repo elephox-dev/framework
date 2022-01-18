@@ -44,7 +44,7 @@ class File implements Contract\File
 			throw new FileNotFoundException($this->path);
 		}
 
-		return filesize($this->path);
+		return \Safe\filesize($this->path);
 	}
 
 	#[Pure]
@@ -60,7 +60,7 @@ class File implements Contract\File
 		}
 
 		try {
-			return new DateTime('@' . filemtime($this->path));
+			return new DateTime('@' . \Safe\filemtime($this->path));
 		} catch (Exception $e) {
 			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}
@@ -72,7 +72,7 @@ class File implements Contract\File
 			throw new FileNotFoundException($this->path);
 		}
 
-		return md5_file($this->path);
+		return \Safe\md5_file($this->path);
 	}
 
 	public function getParent(int $levels = 1): Contract\Directory
@@ -116,7 +116,7 @@ class File implements Contract\File
 
 		$destination = $this->getDestination($node, $overwrite);
 
-		$success = copy($this->path, $destination->getPath());
+		$success = \Safe\copy($this->path, $destination->getPath());
 
 		if (!$success) {
 			throw new FileCopyException($this->path, $destination->getPath());
@@ -129,7 +129,7 @@ class File implements Contract\File
 			throw new FileNotFoundException($this->path);
 		}
 
-		if (!unlink($this->path)) {
+		if (!\Safe\unlink($this->path)) {
 			throw new FileDeleteException($this->path);
 		}
 	}
@@ -145,7 +145,7 @@ class File implements Contract\File
 		if (is_uploaded_file($this->path)) {
 			$success = move_uploaded_file($this->path, $destination->getPath());
 		} else {
-			$success = rename($this->path, $destination->getPath());
+			$success = \Safe\rename($this->path, $destination->getPath());
 		}
 
 		if (!$success) {

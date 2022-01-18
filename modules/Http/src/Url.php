@@ -18,14 +18,14 @@ class Url implements Stringable, ArrayConvertible
 	{
 		$builder = new UrlBuilder();
 
-		preg_match(
+		\Safe\preg_match(
 			self::Pattern,
 			$uri,
 			$matches
 		);
 
 		if (str_ends_with($matches['scheme'], '://')) {
-			$scheme = substr($matches['scheme'], 0, -3);
+			$scheme = \Safe\substr($matches['scheme'], 0, -3);
 
 			$builder->scheme(UrlScheme::tryFrom($scheme) ?? new CustomUrlScheme($scheme));
 		}
@@ -44,11 +44,11 @@ class Url implements Stringable, ArrayConvertible
 		$builder->path($path);
 
 		if (array_key_exists('query', $matches) && str_starts_with($matches['query'], '?')) {
-			$builder->queryMap(QueryMap::fromString(substr($matches['query'], 1)));
+			$builder->queryMap(QueryMap::fromString(\Safe\substr($matches['query'], 1)));
 		}
 
 		if (array_key_exists('fragment', $matches) && str_starts_with($matches['fragment'], '#')) {
-			$builder->fragment(substr($matches['fragment'], 1));
+			$builder->fragment(\Safe\substr($matches['fragment'], 1));
 		}
 
 		return $builder->get();

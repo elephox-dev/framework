@@ -101,7 +101,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$cookies = CookieMap::fromGlobals();
 		$files = UploadedFileMap::fromGlobals();
 
-		$body ??= new ResourceStream(fopen('php://input', 'rb'), size: $parameters['CONTENT_LENGTH'] ?? null);
+		$body ??= new ResourceStream(\Safe\fopen('php://input', 'rb'), size: $parameters['CONTENT_LENGTH'] ?? null);
 		$protocolVersion ??= explode('/', $parameters['SERVER_PROTOCOL'], 2)[1];
 		$requestMethod ??= RequestMethod::from($parameters['REQUEST_METHOD']);
 		$requestUrl ??= Url::fromString($parameters['REQUEST_URI']);

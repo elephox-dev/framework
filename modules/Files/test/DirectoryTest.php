@@ -31,7 +31,7 @@ class DirectoryTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->fileHandle = tmpfile();
+		$this->fileHandle = \Safe\tmpfile();
 		if ($this->fileHandle === false) {
 			throw new RuntimeException("Could not create temporary file.");
 		}
@@ -41,19 +41,19 @@ class DirectoryTest extends TestCase
 
 		$emptyDir = $this->dirPath . DIRECTORY_SEPARATOR . "test";
 		if (is_dir($emptyDir)) {
-			rmdir($emptyDir);
+			\Safe\rmdir($emptyDir);
 		}
 
-		mkdir($emptyDir);
-		fwrite($this->fileHandle, self::FileContents);
+		\Safe\mkdir($emptyDir);
+		\Safe\fwrite($this->fileHandle, self::FileContents);
 	}
 
 	public function tearDown(): void
 	{
 		parent::tearDown();
 
-		fclose($this->fileHandle);
-		rmdir($this->dirPath . DIRECTORY_SEPARATOR . "test");
+		\Safe\fclose($this->fileHandle);
+		\Safe\rmdir($this->dirPath . DIRECTORY_SEPARATOR . "test");
 	}
 
 	public function testGetPath(): void
@@ -88,7 +88,7 @@ class DirectoryTest extends TestCase
 	public function testGetModifiedTime(): void
 	{
 		$directory = new Directory($this->dirPath);
-		self::assertEquals(filemtime($this->filePath), $directory->getModifiedTime()->getTimestamp());
+		self::assertEquals(\Safe\filemtime($this->filePath), $directory->getModifiedTime()->getTimestamp());
 	}
 
 	public function testGetModifiedTimeNonExistent(): void

@@ -42,7 +42,7 @@ class ResourceStream implements Stream
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
-		return new ResourceStream(fopen($file->getPath(), $flags), $readable, $writeable, $readable);
+		return new ResourceStream(\Safe\fopen($file->getPath(), $flags), $readable, $writeable, $readable);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class ResourceStream implements Stream
 			return;
 		}
 
-		fclose($this->resource);
+		\Safe\fclose($this->resource);
 
 		$this->detach();
 	}
@@ -199,7 +199,7 @@ class ResourceStream implements Stream
 		$this->size = null;
 
 		/** @var false|positive-int|0 $written */
-		$written = fwrite($this->resource, $string);
+		$written = \Safe\fwrite($this->resource, $string);
 		if ($written === false) {
 			throw new RuntimeException('Unable to write to resource');
 		}
@@ -231,7 +231,7 @@ class ResourceStream implements Stream
 			return '';
 		}
 
-		$buffer = fread($this->resource, $length);
+		$buffer = \Safe\fread($this->resource, $length);
 		if ($buffer === false) {
 			throw new RuntimeException('Unable to read from stream');
 		}
@@ -245,7 +245,7 @@ class ResourceStream implements Stream
 			throw new RuntimeException('Resource is not available');
 		}
 
-		$contents = stream_get_contents($this->resource);
+		$contents = \Safe\stream_get_contents($this->resource);
 		if ($contents === false) {
 			throw new RuntimeException('Unable to read resource contents');
 		}

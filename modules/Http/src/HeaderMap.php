@@ -21,7 +21,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				continue;
 			}
 
-			$name = str_replace('_', '-', substr($name, 5));
+			$name = str_replace('_', '-', \Safe\substr($name, 5));
 			$map->put($name, $value);
 		}
 

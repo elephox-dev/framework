@@ -35,14 +35,14 @@ class UrlTemplate
 	{
 		$source = $this->getSanitizedSource();
 
-		return preg_match("/^$source$/", (string)$url) === 1;
+		return \Safe\preg_match("/^$source$/", (string)$url) === 1;
 	}
 
 	public function getValues(Url $url): array
 	{
 		$source = $this->getSanitizedSource();
 
-		preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+		\Safe\preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
 		return $matches[0];
 	}
@@ -51,6 +51,6 @@ class UrlTemplate
 	{
 		$source = $this->source;
 		$source = str_starts_with($source, '/') ? $source : "/$source";
-		return preg_replace('/\//', '\\/', $source);
+		return \Safe\preg_replace('/\//', '\\/', $source);
 	}
 }

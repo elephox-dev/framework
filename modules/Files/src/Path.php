@@ -12,7 +12,7 @@ class Path
 	{
 		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
 		$path = implode(DIRECTORY_SEPARATOR, $parts);
-		return preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
+		return \Safe\preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
 	}
 
 	#[Pure]
@@ -21,6 +21,6 @@ class Path
 		return $path === '\\' ||
 			$path === '/' ||
 			$path === dirname($path) ||
-			preg_match("/^\w:\\\\$/", $path) === 1;
+			\Safe\preg_match("/^\w:\\\\$/", $path) === 1;
 	}
 }

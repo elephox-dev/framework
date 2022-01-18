@@ -14,6 +14,6 @@ abstract class InvalidOffsetException extends InvalidArgumentException
 	{
 		$message_offset = is_object($offset) ? get_class($offset) : (string)$offset;
 
-		parent::__construct(sprintf($format, $message_offset), $code, $previous);
+		parent::__construct(\Safe\sprintf($format, $message_offset), $code, $previous);
 	}
 }
