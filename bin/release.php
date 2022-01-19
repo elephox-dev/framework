@@ -128,9 +128,7 @@ if (
 
 if (
 	!executeSilent("git tag v%s", $version) ||
-	!executeSilent("git branch -D %s", $versionBranch) ||
-	!executeSilent("git push --all") ||
-	!executeSilent("git push --tags")
+	!executeSilent("git branch -D %s", $versionBranch)
 ) {
 	echo "Failed to tag framework!" . PHP_EOL;
 
@@ -143,6 +141,9 @@ if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '
 
 	exit(1);
 }
+
+executeSilent("git push --all");
+executeSilent("git push --tags");
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
