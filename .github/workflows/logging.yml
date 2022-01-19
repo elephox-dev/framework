@@ -2,7 +2,7 @@ name: Logging Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/logging.yml'
       - 'modules/Logging/**'

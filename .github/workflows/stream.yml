@@ -2,7 +2,7 @@ name: Stream Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/stream.yml'
       - 'modules/Stream/**'

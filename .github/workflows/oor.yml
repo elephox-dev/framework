@@ -2,7 +2,7 @@ name: OOR Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/oor.yml'
       - 'modules/Text/**'
