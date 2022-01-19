@@ -114,7 +114,7 @@ echo "Enter a release tag message: ";
 $message = trim(fgets(STDIN));
 
 if (
-	!executeSilent("git checkout %s", $releaseBranch) ||
+	!executeSilent("git checkout -B %s --track", $releaseBranch) ||
 	!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message)
 ) {
 	echo "Failed to merge $versionBranch branch into $releaseBranch branch." . PHP_EOL;
@@ -179,7 +179,7 @@ foreach ([
 
 	if (
 		!executeSilent("git checkout -b %s", $versionBranch) ||
-		!executeSilent("git checkout %s", $releaseBranch) ||
+		!executeSilent("git checkout -B %s --track", $releaseBranch) ||
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
 		!executeSilent("git tag v%s", $version) ||
 		!executeSilent("git branch -D %s", $versionBranch) ||
