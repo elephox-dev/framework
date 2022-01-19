@@ -1,6 +1,6 @@
 <?php
 
-namespace Elephox\Text;
+namespace Elephox\OOR;
 
 class Casing
 {

@@ -38,9 +38,9 @@
         "elephox/files": "self.version",
         "elephox/http": "self.version",
         "elephox/logging": "self.version",
+        "elephox/oor": "self.version",
         "elephox/stream": "self.version",
-        "elephox/support": "self.version",
-        "elephox/text": "self.version"
+        "elephox/support": "self.version"
     },
     "provide": {
         "psr/container-implementation": "1.0"
@@ -59,9 +59,9 @@
             "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Logging\\": "modules/Logging/src/",
+            "Elephox\\OOR\\": "modules/OOR/src/",
             "Elephox\\Stream\\": "modules/Stream/src/",
-            "Elephox\\Support\\": "modules/Support/src/",
-            "Elephox\\Text\\": "modules/Text/src/"
+            "Elephox\\Support\\": "modules/Support/src/"
         }
     },
     "autoload-dev": {
@@ -73,9 +73,9 @@
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
             "Elephox\\Logging\\": "modules/Logging/test/",
+            "Elephox\\OOR\\": "modules/OOR/test/",
             "Elephox\\Stream\\": "modules/Stream/test/",
-            "Elephox\\Support\\": "modules/Support/test/",
-            "Elephox\\Text\\": "modules/Text/test/"
+            "Elephox\\Support\\": "modules/Support/test/"
         }
     },
     "config": {

@@ -17,7 +17,7 @@ use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
-use Elephox\Text\Regex;
+use Elephox\OOR\Regex;
 use JetBrains\PhpStorm\Pure;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -62,6 +62,7 @@ class HandlerContainer implements Contract\HandlerContainer
 		private ContainerContract $container,
 	)
 	{
+		/** @var ArrayList<Contract\HandlerBinding> */
 		$this->bindings = new ArrayList();
 	}
 
@@ -158,6 +159,8 @@ class HandlerContainer implements Contract\HandlerContainer
 
 	/**
 	 * @throws ReflectionException
+	 * @throws \Safe\Exceptions\StringsException
+	 * @throws \Safe\Exceptions\PcreException
 	 */
 	public function loadFromNamespace(string $namespace): static
 	{
@@ -189,6 +192,7 @@ class HandlerContainer implements Contract\HandlerContainer
 	 * @param ComposerClassLoader $classLoader
 	 * @param int $depth
 	 * @throws ReflectionException
+	 * @throws \Safe\Exceptions\StringsException
 	 *
 	 * @noinspection PhpDocSignatureInspection
 	 */

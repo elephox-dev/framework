@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Text;
+namespace Elephox\OOR;
 
 use InvalidArgumentException;
 use Elephox\Collection\ArrayList;

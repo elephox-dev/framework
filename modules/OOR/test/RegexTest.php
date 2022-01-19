@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Text;
+namespace Elephox\OOR;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\Text\Regex
+ * @covers \Elephox\OOR\Regex
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
  */

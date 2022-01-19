@@ -1,10 +1,10 @@
-name: Text Pipeline
+name: OOR Pipeline
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/text.yml'
+      - '.github/workflows/oor.yml'
       - 'modules/Text/**'
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     name: ⏩ Update Module Repository
     uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
     with:
-      repo: 'elephox-dev/text'
-      dir: 'modules/Text/'
+      repo: 'elephox-dev/oor'
+      dir: 'modules/OOR/'
     secrets:
-      deploy_key: ${{ secrets.SPLITSH_TEXT_KEY }}
+      deploy_key: ${{ secrets.SPLITSH_OOR_KEY }}

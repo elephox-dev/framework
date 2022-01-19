@@ -1,11 +1,11 @@
 <?php
 
-namespace Elephox\Text;
+namespace Elephox\OOR;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\Text\Casing
+ * @covers \Elephox\OOR\Casing
  */
 class CasingTest extends TestCase
 {

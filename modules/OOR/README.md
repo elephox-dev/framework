@@ -1,0 +1,205 @@
+# OOR
+> Object-Oriented Revolution
+
+This library provides wrappers for strings and arrays that allow you to work with them in an object-oriented way.
+
+---
+
+## Array Functions
+
+- [x] array_change_key_case
+- [x] array_chunk
+- [x] array_column
+- [x] array_combine
+- [x] array_count_values
+- [x] array_diff_assoc
+- [x] array_diff_key
+- [x] array_diff_uassoc
+- [x] array_diff_ukey
+- [x] array_diff
+- [x] array_fill_keys
+- [x] array_fill
+- [x] array_filter
+- [x] array_flip
+- [x] array_intersect_assoc
+- [x] array_intersect_key
+- [x] array_intersect_uassoc
+- [x] array_intersect_ukey
+- [x] array_intersect
+- [x] array_is_list
+- [x] array_key_exists
+- [x] array_key_first
+- [x] array_key_last
+- [x] array_keys
+- [x] array_map
+- [x] array_merge_recursive
+- [x] array_merge
+- [ ] array_multisort
+- [x] array_pad
+- [x] array_pop
+- [x] array_product
+- [x] array_push
+- [x] array_rand
+- [x] array_reduce
+- [x] array_replace_recursive
+- [x] array_replace
+- [x] array_reverse
+- [x] array_search
+- [x] array_shift
+- [x] array_slice
+- [x] array_splice
+- [x] array_sum
+- [ ] array_udiff_assoc
+- [ ] array_udiff_uassoc
+- [ ] array_udiff
+- [ ] array_uintersect_assoc
+- [ ] array_uintersect_uassoc
+- [ ] array_uintersect
+- [x] array_unique
+- [x] array_unshift
+- [x] array_values
+- [x] array_walk_recursive
+- [x] array_walk
+- [x] arsort
+- [x] asort
+- [x] compact
+- [x] count
+- [x] current
+- [x] end
+- [ ] extract
+- [x] in_array
+- [x] key_exists
+- [x] key
+- [x] krsort
+- [x] ksort
+- [x] natcasesort
+- [x] natsort
+- [x] next
+- [x] pos
+- [x] prev
+- [x] range
+- [x] reset
+- [x] rsort
+- [x] shuffle
+- [x] sizeof
+- [x] sort
+- [x] uasort
+- [x] uksort
+- [x] usort
+- [x] implode
+
+## String functions
+
+- [ ] addcslashes
+- [ ] addslashes
+- [ ] bin2hex
+- [ ] chop
+- [ ] chr
+- [ ] chunk_split
+- [ ] convert_uudecode
+- [ ] convert_uuencode
+- [ ] count_chars
+- [ ] crc32
+- [ ] crypt
+- [ ] echo
+- [ ] explode
+- [ ] fprintf
+- [ ] get_html_translation_table
+- [ ] hebrev
+- [ ] hex2bin
+- [ ] html_entity_decode
+- [ ] htmlentities
+- [ ] htmlspecialchars_decode
+- [ ] htmlspecialchars
+- [ ] implode
+- [ ] join
+- [ ] lcfirst
+- [ ] levenshtein
+- [ ] localeconv
+- [ ] ltrim
+- [ ] md5_file
+- [ ] md5
+- [ ] metaphone
+- [ ] money_format
+- [ ] nl_langinfo
+- [ ] nl2br
+- [ ] number_format
+- [ ] ord
+- [ ] parse_str
+- [ ] print
+- [ ] printf
+- [ ] quoted_printable_decode
+- [ ] quoted_printable_encode
+- [ ] quotemeta
+- [ ] rtrim
+- [ ] setlocale
+- [ ] sha1_file
+- [ ] sha1
+- [ ] similar_text
+- [ ] soundex
+- [ ] sprintf
+- [ ] sscanf
+- [ ] str_contains
+- [ ] str_ends_with
+- [ ] str_getcsv
+- [ ] str_ireplace
+- [ ] str_pad
+- [ ] str_repeat
+- [ ] str_replace
+- [ ] str_rot13
+- [ ] str_shuffle
+- [ ] str_split
+- [ ] str_starts_with
+- [ ] str_word_count
+- [ ] strcasecmp
+- [ ] strchr
+- [ ] strcmp
+- [ ] strcoll
+- [ ] strcspn
+- [ ] strip_tags
+- [ ] stripcslashes
+- [ ] stripos
+- [ ] stripslashes
+- [ ] stristr
+- [ ] strlen
+- [ ] strnatcasecmp
+- [ ] strnatcmp
+- [ ] strncasecmp
+- [ ] strncmp
+- [ ] strpbrk
+- [ ] strpos
+- [ ] strrchr
+- [ ] strrev
+- [ ] strripos
+- [ ] strrpos
+- [ ] strspn
+- [ ] strstr
+- [ ] strtok
+- [ ] strtolower
+- [ ] strtoupper
+- [ ] strtr
+- [ ] substr_compare
+- [ ] substr_count
+- [ ] substr_replace
+- [ ] substr
+- [ ] trim
+- [ ] ucfirst
+- [ ] ucwords
+- [ ] vfprintf
+- [ ] vprintf
+- [ ] vsprintf
+- [ ] wordwrap
+
+## Regular Expression functions
+
+- [ ] preg_filter
+- [ ] preg_grep
+- [ ] preg_last_error_msg
+- [ ] preg_last_error
+- [ ] preg_match_all
+- [ ] preg_match
+- [ ] preg_quote
+- [ ] preg_replace_callback_array
+- [ ] preg_replace_callback
+- [ ] preg_replace
+- [ ] preg_split

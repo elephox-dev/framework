@@ -8,7 +8,7 @@ use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\CommandLineContext;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\InvalidContextException;
-use Elephox\Text\Regex;
+use Elephox\OOR\Regex;
 use JetBrains\PhpStorm\Pure;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
