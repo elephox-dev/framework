@@ -140,6 +140,11 @@ if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
 	throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
 }
 
+register_shutdown_function(static function () use ($tmpDir) {
+	echo "Cleaning up..." . PHP_EOL;
+	rmdirRecursive($tmpDir);
+});
+
 echo "Working in $tmpDir" . PHP_EOL . PHP_EOL;
 
 $cwd = getcwd();
@@ -194,6 +199,3 @@ foreach ([
 
 	chdir($cwd);
 }
-
-echo "Cleaning up..." . PHP_EOL;
-rmdirRecursive($tmpDir);
