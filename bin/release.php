@@ -64,12 +64,13 @@ function executeGetOutput(string $commandLine, float|int|string ...$args): strin
 }
 
 $releaseBranch = "main";
+$developBranch = "develop";
 $currentBranch = executeGetOutput("git rev-parse --abbrev-ref HEAD");
 $version = $argv[1];
 
 // check if we are on the release branch
-if ($releaseBranch !== $currentBranch) {
-	echo "Release branch ($releaseBranch) does not match the current active branch ($currentBranch)." . PHP_EOL;
+if ($developBranch !== $currentBranch) {
+	echo "Develop branch ($developBranch) does not match the current active branch ($currentBranch)." . PHP_EOL;
 
 	exit(1);
 }
@@ -81,6 +82,8 @@ if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
 	exit(1);
 }
 
+$versionBranch = "release/$version";
+
 // make sure the working directory is clean
 if (!empty(executeGetOutput("git status --porcelain"))) {
 	echo "Your working directory is dirty. Did you forget to commit your changes?" . PHP_EOL;
@@ -89,20 +92,48 @@ if (!empty(executeGetOutput("git status --porcelain"))) {
 }
 
 // make sure the release branch is in sync with origin
-if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse origin/%s", $releaseBranch)) {
+if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse origin/%s", $developBranch)) {
 	echo "Your release branch is not in sync with origin. Did you forget to push your changes?" . PHP_EOL;
+
+	exit(1);
+}
+
+if (!executeSilent("git checkout -b %s", $versionBranch)) {
+	echo "Failed to create $versionBranch branch." . PHP_EOL;
+
+	exit(1);
+}
+
+echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
+echo "Increase version numbers and update changelogs NOW." . PHP_EOL;
+echo PHP_EOL;
+echo "Press enter to continue." . PHP_EOL;
+fgets(STDIN);
+
+echo "Enter a release tag message: ";
+$message = trim(fgets(STDIN));
+
+if (
+	!executeSilent("git checkout %s", $releaseBranch) ||
+	!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message)
+) {
+	echo "Failed to merge $versionBranch branch into $releaseBranch branch." . PHP_EOL;
 
 	exit(1);
 }
 
 if (
 	!executeSilent("git tag v%s", $version) ||
-	!executeSilent("git push origin --tags")
+	!executeSilent("git branch -D", $versionBranch)// ||
+	//!executeSilent("git push --all") ||
+	//!executeSilent("git push --tags")
 ) {
 	echo "Failed to tag framework!" . PHP_EOL;
 
 	exit(1);
 }
+
+executeSilent("git checkout %s", $developBranch);
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
@@ -115,17 +146,17 @@ $cwd = getcwd();
 foreach ([
 	'collection',
 	'core',
-	'database',
 	'di',
+	'events',
 	'files',
 	'http',
 	'logging',
+	'oor',
 	'stream',
-	'support',
-	'text'
+	'support'
 ] as $remote) {
 	echo "============================================================" . PHP_EOL;
-	echo "Releasing $remote" . PHP_EOL;
+	echo "Releasing $remote v$version" . PHP_EOL;
 
 	$currentTmpDir = $tmpDir . DIRECTORY_SEPARATOR . $remote;
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
@@ -147,9 +178,14 @@ foreach ([
 	}
 
 	if (
+		!executeSilent("git checkout -b %s", $versionBranch) ||
 		!executeSilent("git checkout %s", $releaseBranch) ||
+		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
 		!executeSilent("git tag v%s", $version) ||
-		!executeSilent("git push origin --tags")
+		!executeSilent("git branch -D", $versionBranch) ||
+		//!executeSilent("git push --all") ||
+		//!executeSilent("git push --tags") ||
+		!executeSilent("git checkout %s", $developBranch)
 	) {
 		echo "Failed to release $remote" . PHP_EOL;
 
