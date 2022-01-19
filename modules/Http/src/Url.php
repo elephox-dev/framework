@@ -14,6 +14,10 @@ class Url implements Stringable, ArrayConvertible
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
+	/**
+	 * @throws \Safe\Exceptions\PcreException
+	 * @throws \Safe\Exceptions\StringsException
+	 */
 	public static function fromString(string $uri): Url
 	{
 		$builder = new UrlBuilder();
@@ -23,6 +27,9 @@ class Url implements Stringable, ArrayConvertible
 			$uri,
 			$matches
 		);
+		/**
+		 * @var array{scheme: string, username: string, password: string, host: string, port: string, path: string, query: string, fragment: string} $matches
+		 */
 
 		if (str_ends_with($matches['scheme'], '://')) {
 			$scheme = \Safe\substr($matches['scheme'], 0, -3);
