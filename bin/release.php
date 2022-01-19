@@ -124,9 +124,9 @@ if (
 
 if (
 	!executeSilent("git tag v%s", $version) ||
-	!executeSilent("git branch -D %s", $versionBranch)// ||
-	//!executeSilent("git push --all") ||
-	//!executeSilent("git push --tags")
+	!executeSilent("git branch -D %s", $versionBranch) ||
+	!executeSilent("git push --all") ||
+	!executeSilent("git push --tags")
 ) {
 	echo "Failed to tag framework!" . PHP_EOL;
 
@@ -183,8 +183,8 @@ foreach ([
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
 		!executeSilent("git tag v%s", $version) ||
 		!executeSilent("git branch -D %s", $versionBranch) ||
-		//!executeSilent("git push --all") ||
-		//!executeSilent("git push --tags") ||
+		!executeSilent("git push --all") ||
+		!executeSilent("git push --tags") ||
 		!executeSilent("git checkout %s", $developBranch)
 	) {
 		echo "Failed to release $remote" . PHP_EOL;
@@ -196,4 +196,4 @@ foreach ([
 }
 
 echo "Cleaning up..." . PHP_EOL;
-//rmdirRecursive($tmpDir);
+rmdirRecursive($tmpDir);
