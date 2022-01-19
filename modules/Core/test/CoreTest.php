@@ -57,27 +57,26 @@ class CoreTest extends MockeryTestCase
 
 	public function testRegisterAppObjectNoRegistrar(): void
 	{
-		$testApp = new TestApp();
-
+		$appMock = M::mock(App::class);
 		$containerMock = M::mock(ContainerContract::class);
 		$handlerContainerMock = M::mock(HandlerContainerContract::class);
 
 		$containerMock
 			->expects('register')
-			->with(App::class, $testApp)
+			->with(App::class, $appMock)
 			->andReturn()
 		;
 
 		$containerMock
 			->expects('register')
-			->with($testApp::class, $testApp)
+			->with($appMock::class, $appMock)
 			->andReturn()
 		;
 
 		$containerMock
 			->expects('get')
-			->with($testApp::class)
-			->andReturn($testApp)
+			->with($appMock::class)
+			->andReturn($appMock)
 		;
 
 		$containerMock
@@ -94,14 +93,14 @@ class CoreTest extends MockeryTestCase
 
 		$handlerContainerMock
 			->expects('loadFromClass')
-			->with($testApp::class)
-			->andReturn()
+			->with($appMock::class)
+			->andReturnSelf()
 		;
 
 		$core = new TestCore($containerMock);
-		$instance = $core->registerApp($testApp);
+		$instance = $core->registerApp($appMock);
 
-		self::assertSame($testApp, $instance);
+		self::assertSame($appMock, $instance);
 	}
 }
 
@@ -111,8 +110,4 @@ class TestCore extends Core
 	{
 		parent::__construct($container);
 	}
-}
-
-class TestApp implements App
-{
 }
