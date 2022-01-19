@@ -124,7 +124,7 @@ if (
 
 if (
 	!executeSilent("git tag v%s", $version) ||
-	!executeSilent("git branch -D", $versionBranch)// ||
+	!executeSilent("git branch -D %s", $versionBranch)// ||
 	//!executeSilent("git push --all") ||
 	//!executeSilent("git push --tags")
 ) {
@@ -182,7 +182,7 @@ foreach ([
 		!executeSilent("git checkout %s", $releaseBranch) ||
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
 		!executeSilent("git tag v%s", $version) ||
-		!executeSilent("git branch -D", $versionBranch) ||
+		!executeSilent("git branch -D %s", $versionBranch) ||
 		//!executeSilent("git push --all") ||
 		//!executeSilent("git push --tags") ||
 		!executeSilent("git checkout %s", $developBranch)
