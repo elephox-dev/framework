@@ -11,6 +11,9 @@ use JetBrains\PhpStorm\Pure;
 interface Message
 {
 	#[Pure]
+	public static function build(): MessageBuilder;
+
+	#[Pure]
 	public function with(): MessageBuilder;
 
 	#[Pure]

@@ -10,6 +10,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TSource
+ * @template TCompareKey
  *
  * @internal
  *
@@ -19,7 +20,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
 class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumerable
 {
 	/**
-	 * @param OrderedIterator<NonNegativeInteger, TSource> $orderedIterator
+	 * @param OrderedIterator<NonNegativeInteger, TSource, TCompareKey> $orderedIterator
 	 */
 	public function __construct(OrderedIterator $orderedIterator)
 	{
@@ -27,43 +28,50 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 	}
 
 	/**
-	 * @template TCompareKey
+	 * @template TNextCompareKey
 	 *
-	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
-	 * @param null|callable(TCompareKey, TCompareKey): int $comparer $comparer
+	 * @param callable(TSource, NonNegativeInteger): TNextCompareKey $keySelector
+	 * @param null|callable(TNextCompareKey, TNextCompareKey): int $comparer $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TCompareKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
+		/**
+		 * @var callable(mixed, mixed): mixed $keySelector
+		 */
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
-			$keySelector,
-			$comparer
+			$keySelector(...),
+			$comparer(...)
 		);
 
 		return new OrderedEnumerable($orderedIterator);
 	}
 
 	/**
-	 * @template TCompareKey
+	 * @template TNextCompareKey
 	 *
-	 * @param callable(TSource, NonNegativeInteger): TCompareKey $keySelector
-	 * @param null|callable(TCompareKey, TCompareKey): int $comparer
+	 * @param callable(TSource, NonNegativeInteger): TNextCompareKey $keySelector
+	 * @param null|callable(TNextCompareKey, TNextCompareKey): int $comparer
 	 *
-	 * @return GenericOrderedEnumerable<TSource, TCompareKey>
+	 * @return GenericOrderedEnumerable<TSource>
 	 */
 	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 		$comparer = DefaultEqualityComparer::invert($comparer);
 
+		/**
+		 * @var callable(mixed, mixed): mixed $keySelector
+		 * @var callable(mixed, mixed): int $comparer
+		 */
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
-			$keySelector,
-			$comparer
+			$keySelector(...),
+			$comparer(...)
 		);
 
 		return new OrderedEnumerable($orderedIterator);

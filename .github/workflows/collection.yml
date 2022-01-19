@@ -2,7 +2,7 @@ name: Collection Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/collection.yml'
       - 'modules/Collection/**'

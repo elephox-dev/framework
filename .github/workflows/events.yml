@@ -2,7 +2,7 @@ name: Events Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/events.yml'
       - 'modules/Events/**'

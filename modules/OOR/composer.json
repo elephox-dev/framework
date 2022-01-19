@@ -1,6 +1,6 @@
 {
-    "name": "elephox/text",
-    "description": "Elephox Text library.",
+    "name": "elephox/oor",
+    "description": "Elephox Object-Oriented Revolution library.",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -15,12 +15,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Elephox\\Text\\": "src/"
+            "Elephox\\OOR\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Elephox\\Text\\": "test/"
+            "Elephox\\OOR\\": "test/"
         }
     },
     "config": {

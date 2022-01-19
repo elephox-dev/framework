@@ -12,6 +12,9 @@ use JetBrains\PhpStorm\Pure;
 interface Request extends Message
 {
 	#[Pure]
+	public static function build(): RequestBuilder;
+
+	#[Pure]
 	public function with(): RequestBuilder;
 
 	#[Pure]

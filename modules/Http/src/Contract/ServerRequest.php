@@ -10,6 +10,9 @@ use JetBrains\PhpStorm\Pure;
 interface ServerRequest extends Request
 {
 	#[Pure]
+	public static function build(): ServerRequestBuilder;
+
+	#[Pure]
 	public function with(): ServerRequestBuilder;
 
 	#[Pure]

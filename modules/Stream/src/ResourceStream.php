@@ -9,9 +9,16 @@ use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use Safe\Exceptions\StreamException;
 
 class ResourceStream implements Stream
 {
+	/**
+	 * @throws \Elephox\Stream\UnreadableFileException
+	 * @throws \Elephox\Stream\ReadOnlyFileException
+	 * @throws \Elephox\Stream\ReadonlyParentException
+	 * @throws \Safe\Exceptions\FilesystemException
+	 */
 	public static function fromFile(string|FileContract $file, bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): self
 	{
 		if (is_string($file)) {
@@ -42,7 +49,7 @@ class ResourceStream implements Stream
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
-		return new ResourceStream(fopen($file->getPath(), $flags), $readable, $writeable, $readable);
+		return new ResourceStream(\Safe\fopen($file->getPath(), $flags), $readable, $writeable, $readable);
 	}
 
 	/**
@@ -75,7 +82,11 @@ class ResourceStream implements Stream
 			$this->rewind();
 		}
 
-		return $this->getContents();
+		try {
+			return $this->getContents();
+		} catch (StreamException $e) {
+			return "Error reading stream: " . $e->getMessage();
+		}
 	}
 
 	/**
@@ -99,13 +110,16 @@ class ResourceStream implements Stream
 		return $resource;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\FilesystemException
+	 */
 	public function close(): void
 	{
 		if (!is_resource($this->resource)) {
 			return;
 		}
 
-		fclose($this->resource);
+		\Safe\fclose($this->resource);
 
 		$this->detach();
 	}
@@ -186,6 +200,9 @@ class ResourceStream implements Stream
 		return $this->writeable;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\FilesystemException
+	 */
 	public function write(string $string): int
 	{
 		if (!is_resource($this->resource)) {
@@ -198,13 +215,8 @@ class ResourceStream implements Stream
 
 		$this->size = null;
 
-		/** @var false|positive-int|0 $written */
-		$written = fwrite($this->resource, $string);
-		if ($written === false) {
-			throw new RuntimeException('Unable to write to resource');
-		}
-
-		return $written;
+		/** @var 0|positive-int */
+		return \Safe\fwrite($this->resource, $string);
 	}
 
 	#[Pure]
@@ -213,6 +225,9 @@ class ResourceStream implements Stream
 		return $this->readable;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\FilesystemException
+	 */
 	public function read(int $length): string
 	{
 		if ($length < 0) {
@@ -231,26 +246,19 @@ class ResourceStream implements Stream
 			return '';
 		}
 
-		$buffer = fread($this->resource, $length);
-		if ($buffer === false) {
-			throw new RuntimeException('Unable to read from stream');
-		}
-
-		return $buffer;
+		return \Safe\fread($this->resource, $length);
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\StreamException
+	 */
 	public function getContents(): string
 	{
 		if (!is_resource($this->resource)) {
 			throw new RuntimeException('Resource is not available');
 		}
 
-		$contents = stream_get_contents($this->resource);
-		if ($contents === false) {
-			throw new RuntimeException('Unable to read resource contents');
-		}
-
-		return $contents;
+		return \Safe\stream_get_contents($this->resource);
 	}
 
 	public function getMetadata(?string $key = null): mixed

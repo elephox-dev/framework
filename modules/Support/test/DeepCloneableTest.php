@@ -25,7 +25,7 @@ class DeepCloneTest extends TestCase
 
 	public function testCloneResourceStaysSame(): void
 	{
-		$resource = fopen('php://memory', 'rb');
+		$resource = \Safe\fopen('php://memory', 'rb');
 
 		$object = new Cloneable();
 		$object->resource = $resource;
@@ -33,7 +33,7 @@ class DeepCloneTest extends TestCase
 
 		self::assertSame($resource, $object->resource);
 
-		fclose($object->resource);
+		\Safe\fclose($object->resource);
 	}
 
 	public function testEnumMembersStaySame(): void

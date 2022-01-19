@@ -15,7 +15,8 @@
         "ext-mbstring": "*",
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/container": "^2.0",
-        "ricardoboss/php-console-logger": "^1.8"
+        "ricardoboss/php-console-logger": "^1.8",
+        "thecodingmachine/safe": "^1.3"
     },
     "require-dev": {
         "ext-json": "*",
@@ -37,9 +38,9 @@
         "elephox/files": "self.version",
         "elephox/http": "self.version",
         "elephox/logging": "self.version",
+        "elephox/oor": "self.version",
         "elephox/stream": "self.version",
-        "elephox/support": "self.version",
-        "elephox/text": "self.version"
+        "elephox/support": "self.version"
     },
     "provide": {
         "psr/container-implementation": "1.0"
@@ -58,9 +59,9 @@
             "Elephox\\Files\\": "modules/Files/src/",
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Logging\\": "modules/Logging/src/",
+            "Elephox\\OOR\\": "modules/OOR/src/",
             "Elephox\\Stream\\": "modules/Stream/src/",
-            "Elephox\\Support\\": "modules/Support/src/",
-            "Elephox\\Text\\": "modules/Text/src/"
+            "Elephox\\Support\\": "modules/Support/src/"
         }
     },
     "autoload-dev": {
@@ -72,9 +73,9 @@
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
             "Elephox\\Logging\\": "modules/Logging/test/",
+            "Elephox\\OOR\\": "modules/OOR/test/",
             "Elephox\\Stream\\": "modules/Stream/test/",
-            "Elephox\\Support\\": "modules/Support/test/",
-            "Elephox\\Text\\": "modules/Text/test/"
+            "Elephox\\Support\\": "modules/Support/test/"
         }
     },
     "config": {
@@ -115,12 +116,12 @@
         "ci:mutation-test": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "infection --min-covered-msi=85 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
+            "infection --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction"
         ],
         "ci:mutation-test:autoscale": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "infection --min-covered-msi=85 --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction -j$(nproc)"
+            "infection --coverage=build/coverage --skip-initial-tests --logger-github --no-interaction -j$(nproc)"
         ],
         "ci:normalize-composer": [
             "@putenv XDEBUG_MODE=off",

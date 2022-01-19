@@ -10,6 +10,7 @@ use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use Safe\Exceptions\FilesystemException;
 
 class File implements Contract\File
 {
@@ -38,13 +39,17 @@ class File implements Contract\File
 		return pathinfo($this->path, PATHINFO_EXTENSION);
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\FilesystemException
+	 * @throws \Elephox\Files\FileNotFoundException
+	 */
 	public function getSize(): int
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
 		}
 
-		return filesize($this->path);
+		return \Safe\filesize($this->path);
 	}
 
 	#[Pure]
@@ -53,26 +58,29 @@ class File implements Contract\File
 		return $this->mimeType;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\FilesystemException
+	 * @throws \Exception
+	 */
 	public function getModifiedTime(): DateTime
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
 		}
 
-		try {
-			return new DateTime('@' . filemtime($this->path));
-		} catch (Exception $e) {
-			throw new RuntimeException("Could not parse timestamp", previous: $e);
-		}
+		return new DateTime('@' . \Safe\filemtime($this->path));
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\StringsException
+	 */
 	public function getHash(): string|int
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
 		}
 
-		return md5_file($this->path);
+		return \Safe\md5_file($this->path);
 	}
 
 	public function getParent(int $levels = 1): Contract\Directory
@@ -108,6 +116,9 @@ class File implements Contract\File
 		return file_exists($this->path);
 	}
 
+	/**
+	 * @throws \Elephox\Files\FileCopyException
+	 */
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): void
 	{
 		if (!$this->exists()) {
@@ -116,24 +127,32 @@ class File implements Contract\File
 
 		$destination = $this->getDestination($node, $overwrite);
 
-		$success = copy($this->path, $destination->getPath());
-
-		if (!$success) {
-			throw new FileCopyException($this->path, $destination->getPath());
+		try {
+			\Safe\copy($this->path, $destination->getPath());
+		} catch (FilesystemException $e) {
+			throw new FileCopyException($this->path, $destination->getPath(), previous: $e);
 		}
 	}
 
+	/**
+	 * @throws \Elephox\Files\FileDeleteException
+	 */
 	public function delete(): void
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
 		}
 
-		if (!unlink($this->path)) {
-			throw new FileDeleteException($this->path);
+		try {
+			\Safe\unlink($this->path);
+		} catch (FilesystemException $e) {
+			throw new FileDeleteException($this->path, previous: $e);
 		}
 	}
 
+	/**
+	 * @throws \Elephox\Files\FileMoveException
+	 */
 	public function moveTo(FilesystemNode $node, bool $overwrite = true): void
 	{
 		if (!$this->exists()) {
@@ -143,16 +162,21 @@ class File implements Contract\File
 		$destination = $this->getDestination($node, $overwrite);
 
 		if (is_uploaded_file($this->path)) {
-			$success = move_uploaded_file($this->path, $destination->getPath());
+			if (!move_uploaded_file($this->path, $destination->getPath())) {
+				throw new FileMoveException($this->path, $destination->getPath());
+			}
 		} else {
-			$success = rename($this->path, $destination->getPath());
-		}
-
-		if (!$success) {
-			throw new FileMoveException($this->path, $destination->getPath());
+			try {
+				\Safe\rename($this->path, $destination->getPath());
+			} catch (FilesystemException $e) {
+				throw new FileMoveException($this->path, $destination->getPath(), previous: $e);
+			}
 		}
 	}
 
+	/**
+	 * @throws \Elephox\Files\FileAlreadyExistsException
+	 */
 	private function getDestination(FilesystemNode $node, bool $overwrite): Contract\File
 	{
 		if ($node instanceof Contract\Directory) {

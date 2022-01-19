@@ -10,6 +10,9 @@ use JetBrains\PhpStorm\Pure;
 interface Response extends Message
 {
 	#[Pure]
+	public static function build(): ResponseBuilder;
+
+	#[Pure]
 	public function with(): ResponseBuilder;
 
 	#[Pure]

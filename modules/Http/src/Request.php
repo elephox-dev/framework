@@ -12,6 +12,12 @@ use JetBrains\PhpStorm\Pure;
 class Request extends AbstractMessage implements Contract\Request
 {
 	#[Pure]
+	public static function build(): RequestBuilder
+	{
+		return new RequestBuilder();
+	}
+
+	#[Pure]
 	public function __construct(
 		string $protocolVersion,
 		HeaderMap $headers,
@@ -23,7 +29,7 @@ class Request extends AbstractMessage implements Contract\Request
 	}
 
 	#[Pure]
-	public function with(): Contract\RequestBuilder
+	public function with(): RequestBuilder
 	{
 		return new RequestBuilder(
 			$this->protocolVersion,

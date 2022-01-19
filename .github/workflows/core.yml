@@ -2,7 +2,7 @@ name: Core Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/core.yml'
       - 'modules/Core/**'

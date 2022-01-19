@@ -2,7 +2,7 @@ name: Support Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/support.yml'
       - 'modules/Support/**'

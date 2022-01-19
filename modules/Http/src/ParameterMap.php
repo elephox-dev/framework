@@ -99,7 +99,7 @@ class ParameterMap implements Contract\ParameterMap
 	{
 		$post ??= $_POST;
 		$get ??= $_GET;
-		$session ??= $_SESSION;
+		$session ??= $_SESSION ?? [];
 		$server ??= $_SERVER;
 		$env ??= $_ENV;
 

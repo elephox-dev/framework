@@ -34,5 +34,9 @@ interface Directory extends FilesystemNode
 
 	public function isReadonly(): bool;
 
+	/**
+	 * @throws \Elephox\Files\DirectoryNotFoundException
+	 * @throws \Elephox\Files\DirectoryNotEmptyException
+	 */
 	public function delete(bool $recursive = true): void;
 }

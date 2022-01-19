@@ -81,6 +81,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 
 	public function has(mixed $key): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {
 			return false;
 		}
@@ -105,6 +106,13 @@ class ArrayMap implements GenericMap, ArrayAccess
 		return true;
 	}
 
+	/**
+	 * @template T
+	 *
+	 * @param T $key
+	 *
+	 * @return T
+	 */
 	private function validateKey(mixed $key): string|int
 	{
 		if (!is_string($key) && !is_int($key)) {

@@ -9,7 +9,7 @@ use Elephox\Support\CustomMimeType;
 use Elephox\Support\MimeType;
 
 /**
- * @extends ArrayMap<Contract\UploadedFile>
+ * @extends ArrayMap<string, Contract\UploadedFile>
  */
 class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 {
@@ -29,7 +29,7 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			$fullPath = $file['full_path'];
 
 			$mimeType = MimeType::tryFrom($clientType) ?? new CustomMimeType($clientType);
-			$uploadError = UploadError::tryFrom($error);
+			$uploadError = UploadError::from($error);
 
 			$uploadedFile = new UploadedFile($clientFilename, $fullPath, ResourceStream::fromFile($tmpName), $mimeType, $size, $uploadError);
 

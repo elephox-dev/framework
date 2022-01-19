@@ -26,6 +26,8 @@ use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
 
 /**
+ * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always int...
+ *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TSource
@@ -478,7 +480,7 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
-		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -493,8 +495,9 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::compare(...);
 		$comparer = DefaultEqualityComparer::invert($comparer);
+		/** @var callable(mixed, mixed): int $comparer */
 
-		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector, $comparer));
+		return new OrderedEnumerable(new OrderedIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	public function prepend(mixed $value): GenericEnumerable

@@ -29,6 +29,9 @@ class Core implements Contract\Core
 {
 	private static ?Contract\Core $instance = null;
 
+	/**
+	 * @throws \Safe\Exceptions\MiscException
+	 */
 	public static function instance(): Contract\Core
 	{
 		if (self::$instance === null) {
@@ -38,6 +41,9 @@ class Core implements Contract\Core
 		return self::$instance;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\MiscException
+	 */
 	public static function create(): Contract\Core
 	{
 		if (defined("ELEPHOX_VERSION")) {
@@ -50,7 +56,7 @@ class Core implements Contract\Core
 		$container->register(self::$instance::class, self::$instance);
 		$container->alias(Contract\Core::class, self::$instance::class);
 
-		define("ELEPHOX_VERSION", self::$instance->getVersion());
+		\Safe\define("ELEPHOX_VERSION", self::$instance->getVersion());
 
 		return self::$instance;
 	}
@@ -67,6 +73,9 @@ class Core implements Contract\Core
 		return "1.0";
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\SplException
+	 */
 	public function registerApp(App|string $app): App
 	{
 		if (is_string($app)) {
@@ -93,12 +102,15 @@ class Core implements Contract\Core
 		return $appInstance;
 	}
 
+	/**
+	 * @throws \Safe\Exceptions\SplException
+	 */
 	public function checkRegistrar(object $potentialRegistrar): void
 	{
-		$traits = class_uses($potentialRegistrar);
+		$traits = \Safe\class_uses($potentialRegistrar);
 		if (
 			!($potentialRegistrar instanceof RegistrarContract) &&
-			($traits === false || !in_array(RegistrarTrait::class, $traits, true))
+			!in_array(RegistrarTrait::class, $traits, true)
 		) {
 			return;
 		}
@@ -186,10 +198,47 @@ class Core implements Contract\Core
 
 		/** @var mixed $result */
 		$result = $this->handleContext($context);
-		if (is_object($result) && method_exists($result, 'send')) {
-			$result->send();
+		if ($result instanceof ResponseContract) {
+			$this->sendResponse($result);
 		}
 
-		exit();
+		$exitCode = 0;
+		if (is_int($result)) {
+			if ($result >= 0 && $result < 255) {
+				$exitCode = $result;
+			} else {
+				throw new LogicException("Result must be an integer between 0 and 255.");
+			}
+		}
+
+		exit($exitCode);
+	}
+
+	private function sendResponse(ResponseContract $response): void
+	{
+		$this->sendHeaders($response);
+		$this->sendBody($response);
+	}
+
+	private function sendHeaders(ResponseContract $response): void
+	{
+		if (headers_sent()) {
+			return;
+		}
+
+		foreach ($response->getHeaderMap() as $headerName => $values) {
+			if (is_array($values)) {
+				foreach ($values as $value) {
+					header("$headerName: $value");
+				}
+			} else {
+				header("$headerName: $values");
+			}
+		}
+	}
+
+	private function sendBody(ResponseContract $response): void
+	{
+		echo $response->getBody()->getContents();
 	}
 }

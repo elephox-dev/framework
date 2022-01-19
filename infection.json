@@ -8,11 +8,6 @@
             "/Exception\\.php/"
         ]
     },
-    "logs": {
-      "badge": {
-        "branch": "develop"
-      }
-    },
     "mutators": {
         "@default": true
     },

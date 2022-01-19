@@ -15,6 +15,12 @@ use JetBrains\PhpStorm\Pure;
 class ServerRequest extends Request implements Contract\ServerRequest
 {
 	#[Pure]
+	public static function build(): ServerRequestBuilder
+	{
+		return new ServerRequestBuilder();
+	}
+
+	#[Pure]
 	public function __construct(
 		string $protocolVersion,
 		HeaderMap $headers,
@@ -29,9 +35,18 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function with(): Contract\ServerRequestBuilder
+	public function with(): ServerRequestBuilder
 	{
-		return new ServerRequestBuilder();
+		return new ServerRequestBuilder(
+			$this->protocolVersion,
+			$this->headers,
+			$this->body,
+			$this->method,
+			$this->url,
+			$this->parameters,
+			$this->cookies,
+			$this->uploadedFiles
+		);
 	}
 
 	#[Pure]

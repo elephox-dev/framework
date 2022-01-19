@@ -2,7 +2,7 @@ name: Files Pipeline
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - '.github/workflows/files.yml'
       - 'modules/Files/**'
