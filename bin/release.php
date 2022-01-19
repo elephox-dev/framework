@@ -114,7 +114,7 @@ echo "Enter a release tag message: ";
 $message = trim(fgets(STDIN));
 
 if (
-	!executeSilent("git checkout -b %s --track origin/%s", $releaseBranch, $releaseBranch) ||
+	!executeSilent("git checkout -B %s --track origin/%s", $releaseBranch, $releaseBranch) ||
 	!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message)
 ) {
 	echo "Failed to merge $versionBranch branch into $releaseBranch branch." . PHP_EOL;
