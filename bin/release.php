@@ -98,6 +98,10 @@ if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse o
 	exit(1);
 }
 
+register_shutdown_function(static function () use ($currentBranch) {
+	executeSilent("git checkout %s --force", $currentBranch);
+});
+
 if (!executeSilent("git checkout -b %s", $versionBranch)) {
 	echo "Failed to create $versionBranch branch." . PHP_EOL;
 
@@ -134,6 +138,11 @@ if (
 }
 
 executeSilent("git checkout %s", $developBranch);
+if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch)) {
+	echo "Failed to merge $releaseBranch branch into $developBranch branch." . PHP_EOL;
+
+	exit(1);
+}
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
@@ -188,9 +197,10 @@ foreach ([
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
 		!executeSilent("git tag v%s", $version) ||
 		!executeSilent("git branch -D %s", $versionBranch) ||
+		!executeSilent("git checkout %s", $developBranch) ||
+		!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch) ||
 		!executeSilent("git push --all") ||
-		!executeSilent("git push --tags") ||
-		!executeSilent("git checkout %s", $developBranch)
+		!executeSilent("git push --tags")
 	) {
 		echo "Failed to release $remote" . PHP_EOL;
 
