@@ -114,7 +114,7 @@ echo "Enter a release tag message: ";
 $message = trim(fgets(STDIN));
 
 if (
-	!executeSilent("git checkout -b %s --track origin/%s", $releaseBranch, $releaseBranch) ||
+	!executeSilent("git checkout -B %s --track origin/%s", $releaseBranch, $releaseBranch) ||
 	!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message)
 ) {
 	echo "Failed to merge $versionBranch branch into $releaseBranch branch." . PHP_EOL;
@@ -139,6 +139,11 @@ $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
 	throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
 }
+
+register_shutdown_function(static function () use ($tmpDir) {
+	echo "Cleaning up..." . PHP_EOL;
+	rmdirRecursive($tmpDir);
+});
 
 echo "Working in $tmpDir" . PHP_EOL . PHP_EOL;
 
@@ -194,6 +199,3 @@ foreach ([
 
 	chdir($cwd);
 }
-
-echo "Cleaning up..." . PHP_EOL;
-rmdirRecursive($tmpDir);
