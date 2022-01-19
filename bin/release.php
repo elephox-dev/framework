@@ -196,4 +196,4 @@ foreach ([
 }
 
 echo "Cleaning up..." . PHP_EOL;
-rmdirRecursive($tmpDir);
+//rmdirRecursive($tmpDir);
