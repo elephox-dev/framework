@@ -47,6 +47,7 @@
         </include>
         <exclude>
             <file>**/*Exception.php</file>
+            <directory>modules/Core/src</directory>
             <directory>modules/Logging/src</directory>
         </exclude>
     </coverage>
