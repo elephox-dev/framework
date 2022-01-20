@@ -9,6 +9,7 @@ use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use Safe\Exceptions\FilesystemException;
 use Safe\Exceptions\StreamException;
 
 class ResourceStream implements Stream
@@ -225,9 +226,6 @@ class ResourceStream implements Stream
 		return $this->readable;
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\FilesystemException
-	 */
 	public function read(int $length): string
 	{
 		if ($length < 0) {
@@ -246,7 +244,11 @@ class ResourceStream implements Stream
 			return '';
 		}
 
-		return \Safe\fread($this->resource, $length);
+		try {
+			return \Safe\fread($this->resource, $length);
+		} catch (FilesystemException $e) {
+			throw new RuntimeException('Error reading stream', 0, $e);
+		}
 	}
 
 	/**

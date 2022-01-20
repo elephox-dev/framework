@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\OOR;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Safe\Exceptions\PcreException;
 
 /**
  * @covers \Elephox\OOR\Regex
@@ -24,8 +24,8 @@ class RegexTest extends TestCase
 
 	public function testInvalidSplitPattern(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('An error occurred while splitting: Backtrack limit exhausted');
+		$this->expectException(PcreException::class);
+		$this->expectExceptionMessage('PREG_BACKTRACK_LIMIT_ERROR: Backtrack limit reached');
 
 		Regex::split('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
 	}
@@ -48,8 +48,8 @@ class RegexTest extends TestCase
 
 	public function testInvalidMatchPattern(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('An error occurred while matching: Backtrack limit exhausted');
+		$this->expectException(PcreException::class);
+		$this->expectExceptionMessage('PREG_BACKTRACK_LIMIT_ERROR: Backtrack limit reached');
 
 		Regex::match('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
 	}

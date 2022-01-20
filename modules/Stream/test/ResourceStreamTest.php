@@ -5,6 +5,7 @@ namespace Elephox\Stream;
 
 use Elephox\Files\Contract\Directory;
 use Elephox\Files\Contract\File;
+use Elephox\Files\FileException;
 use InvalidArgumentException;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as M;
@@ -256,7 +257,7 @@ class ResourceStreamTest extends MockeryTestCase
 		$stream = new ResourceStream($fh);
 
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage("Unable to read from stream");
+		$this->expectExceptionMessage("Error reading stream");
 
 		$stream->read(1);
 	}
