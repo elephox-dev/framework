@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "398785ed42871de481826a98b780481e",
+    "content-hash": "eb2414cd485f860ce060eb7d6dd9cb33",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -1649,16 +1649,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.26.1",
+            "version": "0.26.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "1e584ea134a1bd3065c1305e14fe3382b30eb2a9"
+                "reference": "c4c73907ac289b6562f7c553d60d05dfc345a577"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/1e584ea134a1bd3065c1305e14fe3382b30eb2a9",
-                "reference": "1e584ea134a1bd3065c1305e14fe3382b30eb2a9",
+                "url": "https://api.github.com/repos/infection/infection/zipball/c4c73907ac289b6562f7c553d60d05dfc345a577",
+                "reference": "c4c73907ac289b6562f7c553d60d05dfc345a577",
                 "shasum": ""
             },
             "require": {
@@ -1759,7 +1759,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.26.1"
+                "source": "https://github.com/infection/infection/tree/0.26.2"
             },
             "funding": [
                 {
@@ -1771,7 +1771,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2022-01-11T20:49:25+00:00"
+            "time": "2022-01-20T04:43:30+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1905,16 +1905,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.4.4",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "e01123a0e847d52d186c5eb4b9bf58b0c6d00346"
+                "reference": "c10a5f6e06fc2470ab1822fa13fa2a7380f8fbac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/e01123a0e847d52d186c5eb4b9bf58b0c6d00346",
-                "reference": "e01123a0e847d52d186c5eb4b9bf58b0c6d00346",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/c10a5f6e06fc2470ab1822fa13fa2a7380f8fbac",
+                "reference": "c10a5f6e06fc2470ab1822fa13fa2a7380f8fbac",
                 "shasum": ""
             },
             "require": {
@@ -1971,9 +1971,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mockery/mockery/issues",
-                "source": "https://github.com/mockery/mockery/tree/1.4.4"
+                "source": "https://github.com/mockery/mockery/tree/1.5.0"
             },
-            "time": "2021-09-13T15:28:59+00:00"
+            "time": "2022-01-20T13:18:17+00:00"
         },
         {
             "name": "myclabs/deep-copy",
