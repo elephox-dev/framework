@@ -87,8 +87,8 @@ class Core implements Contract\Core
 		}
 
 		// register app classes
-		$this->getContainer()->register(App::class, $registerParameter);
 		$this->getContainer()->register($appClassName, $registerParameter);
+		$this->getContainer()->alias(App::class, $appClassName);
 
 		// get app instance
 		$appInstance = $this->getContainer()->get($appClassName);
@@ -169,8 +169,8 @@ class Core implements Contract\Core
 	public function getHandlerContainer(): HandlerContainerContract
 	{
 		if ($this->handlerContainer === null) {
-			if (!$this->container->has(HandlerContainerContract::class)) {
-				$this->container->register(HandlerContainerContract::class, fn(ContainerContract $c) => new HandlerContainer($c));
+			if (!$this->getContainer()->has(HandlerContainerContract::class)) {
+				$this->getContainer()->register(HandlerContainerContract::class, new HandlerContainer($this->getContainer()));
 			}
 
 			$this->handlerContainer = $this->getContainer()->get(HandlerContainerContract::class);
