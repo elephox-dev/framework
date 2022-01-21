@@ -50,7 +50,7 @@ class UrlTemplate
 	private function getSanitizedSource(): string
 	{
 		$source = $this->source;
-		$source = str_starts_with($source, '/') ? $source : "/$source";
-		return preg_replace('/\//', '\\/', $source);
+
+		return str_starts_with($source, '/') ? $source : "\\/$source";
 	}
 }
