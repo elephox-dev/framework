@@ -94,6 +94,3 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [#7322](https://github.com/vimeo/psalm/issues/7322)
 
 <!-- end annotations -->
-
-- [infection/infection](https://github.com/infection/infection)
-  - [#1650](https://github.com/infection/infection/issues/1650)
