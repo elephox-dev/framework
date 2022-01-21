@@ -257,7 +257,7 @@ class ResourceStreamTest extends MockeryTestCase
 		$stream = new ResourceStream($fh);
 
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage("Error reading stream");
+		$this->expectExceptionMessage("Unable to read from stream");
 
 		$stream->read(1);
 	}
