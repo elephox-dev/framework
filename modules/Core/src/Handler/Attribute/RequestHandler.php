@@ -96,5 +96,6 @@ class RequestHandler extends AbstractHandlerAttribute
 
 		yield from $this->template->getValues($context->getRequest()->getUrl());
 		yield 'request' => $context->getRequest();
+		yield 'template' => $this->template;
 	}
 }
