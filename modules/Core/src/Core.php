@@ -29,9 +29,6 @@ class Core implements Contract\Core
 {
 	private static ?Contract\Core $instance = null;
 
-	/**
-	 * @throws \Safe\Exceptions\MiscException
-	 */
 	public static function instance(): Contract\Core
 	{
 		if (self::$instance === null) {
@@ -41,9 +38,6 @@ class Core implements Contract\Core
 		return self::$instance;
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\MiscException
-	 */
 	public static function create(): Contract\Core
 	{
 		if (defined("ELEPHOX_VERSION")) {
@@ -73,9 +67,6 @@ class Core implements Contract\Core
 		return "1.0";
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\SplException
-	 */
 	public function registerApp(App|string $app): App
 	{
 		if (is_string($app)) {
@@ -102,15 +93,15 @@ class Core implements Contract\Core
 		return $appInstance;
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\SplException
-	 */
 	public function checkRegistrar(object $potentialRegistrar): void
 	{
 		$traits = class_uses($potentialRegistrar);
 		if (
-			!($potentialRegistrar instanceof RegistrarContract) &&
-			!in_array(RegistrarTrait::class, $traits, true)
+			$traits === false ||
+			(
+				!($potentialRegistrar instanceof RegistrarContract) &&
+				!in_array(RegistrarTrait::class, $traits, true)
+			)
 		) {
 			return;
 		}

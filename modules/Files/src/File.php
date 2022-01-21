@@ -44,7 +44,12 @@ class File implements Contract\File
 			throw new FileNotFoundException($this->path);
 		}
 
-		return filesize($this->path);
+		$size = filesize($this->path);
+		if ($size === false) {
+			throw new RuntimeException("Unable to get the size of file ($this->path)");
+		}
+
+		return $size;
 	}
 
 	#[Pure]
@@ -59,20 +64,30 @@ class File implements Contract\File
 			throw new FileNotFoundException($this->path);
 		}
 
+		$timestamp = filemtime($this->path);
+		if ($timestamp === false) {
+			throw new RuntimeException("Failed to get modified time of file ($this->path)");
+		}
+
 		try {
-			return new DateTime('@' . filemtime($this->path));
+			return new DateTime('@' . $timestamp);
 		} catch (Exception $e) {
 			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}
 	}
 
-	public function getHash(): string|int
+	public function getHash(): string
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
 		}
 
-		return md5_file($this->path);
+		$hash = md5_file($this->path);
+		if ($hash === false) {
+			throw new RuntimeException("Could not hash file");
+		}
+
+		return $hash;
 	}
 
 	public function getParent(int $levels = 1): Contract\Directory
