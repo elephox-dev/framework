@@ -97,8 +97,11 @@ class Core implements Contract\Core
 	{
 		$traits = class_uses($potentialRegistrar);
 		if (
-			!($potentialRegistrar instanceof RegistrarContract) &&
-			!in_array(RegistrarTrait::class, $traits, true)
+			$traits === false ||
+			(
+				!($potentialRegistrar instanceof RegistrarContract) &&
+				!in_array(RegistrarTrait::class, $traits, true)
+			)
 		) {
 			return;
 		}

@@ -95,8 +95,13 @@ class Directory implements Contract\Directory
 			throw new DirectoryNotFoundException($this->path);
 		}
 
+		$timestamp = filemtime($this->path);
+		if ($timestamp === false) {
+			throw new RuntimeException("Failed to get modified time of directory ($this->path)");
+		}
+
 		try {
-			return new DateTime('@' . filemtime($this->path));
+			return new DateTime('@' . $timestamp);
 		} catch (Exception $e) {
 			throw new RuntimeException("Could not parse timestamp", previous: $e);
 		}

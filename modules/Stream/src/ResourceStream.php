@@ -42,7 +42,12 @@ class ResourceStream implements Stream
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
-		return new ResourceStream(fopen($file->getPath(), $flags), $readable, $writeable, $readable);
+		$resource = fopen($file->getPath(), $flags);
+		if ($resource === false) {
+			throw new RuntimeException('Failed to open file ' . $file->getPath());
+		}
+
+		return new ResourceStream($resource, $readable, $writeable, $readable);
 	}
 
 	/**

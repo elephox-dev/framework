@@ -9,6 +9,7 @@ use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\ResourceStream;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 
 class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequestBuilder
 {
@@ -101,7 +102,16 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$cookies = CookieMap::fromGlobals();
 		$files = UploadedFileMap::fromGlobals();
 
-		$body ??= new ResourceStream(fopen('php://input', 'rb'), size: $parameters['CONTENT_LENGTH'] ?? null);
+
+		if ($body === null) {
+			$readonlyInput = fopen('php://input', 'rb');
+			if ($readonlyInput === false) {
+				throw new RuntimeException('Unable to open php://input');
+			}
+
+			$body = new ResourceStream($readonlyInput, size: $parameters['CONTENT_LENGTH'] ?? null);
+		}
+
 		$protocolVersion ??= explode('/', $parameters['SERVER_PROTOCOL'], 2)[1];
 		$requestMethod ??= RequestMethod::from($parameters['REQUEST_METHOD']);
 		$requestUrl ??= Url::fromString($parameters['REQUEST_URI']);
