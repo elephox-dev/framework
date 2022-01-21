@@ -56,7 +56,7 @@ class Core implements Contract\Core
 		$container->register(self::$instance::class, self::$instance);
 		$container->alias(Contract\Core::class, self::$instance::class);
 
-		\Safe\define("ELEPHOX_VERSION", self::$instance->getVersion());
+		define("ELEPHOX_VERSION", self::$instance->getVersion());
 
 		return self::$instance;
 	}
@@ -87,8 +87,8 @@ class Core implements Contract\Core
 		}
 
 		// register app classes
-		$this->getContainer()->register(App::class, $registerParameter);
 		$this->getContainer()->register($appClassName, $registerParameter);
+		$this->getContainer()->alias(App::class, $appClassName);
 
 		// get app instance
 		$appInstance = $this->getContainer()->get($appClassName);
@@ -107,7 +107,7 @@ class Core implements Contract\Core
 	 */
 	public function checkRegistrar(object $potentialRegistrar): void
 	{
-		$traits = \Safe\class_uses($potentialRegistrar);
+		$traits = class_uses($potentialRegistrar);
 		if (
 			!($potentialRegistrar instanceof RegistrarContract) &&
 			!in_array(RegistrarTrait::class, $traits, true)
@@ -169,8 +169,8 @@ class Core implements Contract\Core
 	public function getHandlerContainer(): HandlerContainerContract
 	{
 		if ($this->handlerContainer === null) {
-			if (!$this->container->has(HandlerContainerContract::class)) {
-				$this->container->register(HandlerContainerContract::class, fn(ContainerContract $c) => new HandlerContainer($c));
+			if (!$this->getContainer()->has(HandlerContainerContract::class)) {
+				$this->getContainer()->register(HandlerContainerContract::class, new HandlerContainer($this->getContainer()));
 			}
 
 			$this->handlerContainer = $this->getContainer()->get(HandlerContainerContract::class);

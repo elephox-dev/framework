@@ -20,8 +20,6 @@ class UrlTemplate
 	/**
 	 * @param iterable<string, string> $parameters
 	 * @return Url
-	 * @throws \Safe\Exceptions\PcreException
-	 * @throws \Safe\Exceptions\StringsException
 	 */
 	public function compile(iterable $parameters): Url
 	{
@@ -33,40 +31,26 @@ class UrlTemplate
 		return Url::fromString($source);
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
 	public function matches(Url $url): bool
 	{
 		$source = $this->getSanitizedSource();
 
-		return \Safe\preg_match("/^$source$/", (string)$url) === 1;
+		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
 	public function getValues(Url $url): array
 	{
 		$source = $this->getSanitizedSource();
 
-		\Safe\preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
-		/**
-		 * @var list<list<string>> $matches
-		 */
+		preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
 		return $matches[0];
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
 	private function getSanitizedSource(): string
 	{
 		$source = $this->source;
 		$source = str_starts_with($source, '/') ? $source : "/$source";
-
-		/** @var string */
-		return \Safe\preg_replace('/\//', '\\/', $source);
+		return preg_replace('/\//', '\\/', $source);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\OOR;
+namespace Elephox\Text;
 
 use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
@@ -15,11 +15,13 @@ class Regex
 	 * @param string $subject
 	 * @param int $limit
 	 * @return ArrayList<string>
-	 * @throws \Safe\Exceptions\PcreException
 	 */
 	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
-		$parts = \Safe\preg_split($pattern, $subject, $limit);
+		$parts = preg_split($pattern, $subject, $limit);
+		if ($parts === false) {
+			throw new InvalidArgumentException('An error occurred while splitting: ' . preg_last_error_msg());
+		}
 
 		/** @var ArrayList<string> */
 		return ArrayList::from($parts);
@@ -29,22 +31,21 @@ class Regex
 	 * @param string $pattern
 	 * @param string $subject
 	 * @return ArrayMap<int|string, string>
-	 * @throws \Safe\Exceptions\PcreException
 	 */
 	public static function match(string $pattern, string $subject): ArrayMap
 	{
-		\Safe\preg_match($pattern, $subject, $matches);
-		$matches ??= [];
+		$matches = [];
+		if (preg_match($pattern, $subject, $matches) === false) {
+			throw new InvalidArgumentException('An error occurred while matching: ' . preg_last_error_msg());
+		}
 
 		/** @var ArrayMap<array-key, string> */
 		return ArrayMap::from($matches);
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
+	#[Pure]
 	public static function matches(string $pattern, string $subject): bool
 	{
-		return \Safe\preg_match($pattern, $subject) === 1;
+		return preg_match($pattern, $subject) === 1;
 	}
 }

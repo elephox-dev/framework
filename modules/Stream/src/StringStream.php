@@ -120,7 +120,7 @@ class StringStream implements Stream
 			throw new RuntimeException('Stream is not readable');
 		}
 
-		$string = \Safe\substr($this->string, $this->pointer, $length);
+		$string = substr($this->string, $this->pointer, $length);
 
 		$this->pointer += strlen($string);
 

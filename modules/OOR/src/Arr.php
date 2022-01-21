@@ -37,7 +37,7 @@ final class Arr implements ArrayAccess, IteratorAggregate
 	}
 
 	#[Pure]
-	public static function range(string|int|float $start, string|int|float $end, int|float $step): self
+	public static function range(string|int|float $start, string|int|float $end, int|float $step = 1): self
 	{
 		return new self(range($start, $end, $step));
 	}
@@ -97,6 +97,11 @@ final class Arr implements ArrayAccess, IteratorAggregate
 		return new ArrayIterator($this->source);
 	}
 
+	public function getSource(): array
+	{
+		return $this->source;
+	}
+
 	#[Pure]
 	public function offsetExists(mixed $offset): bool
 	{
@@ -121,9 +126,12 @@ final class Arr implements ArrayAccess, IteratorAggregate
 	}
 
 	#[Pure]
-	public function changeKeyCase(#[ExpectedValues([CASE_LOWER, CASE_UPPER])] int $case = CASE_LOWER): self
+	public function changeKeyCase(KeyCase $keyCase = KeyCase::Lower): self
 	{
-		return new self(array_change_key_case($this->source, $case));
+		return new self(array_change_key_case($this->source, match ($keyCase) {
+			KeyCase::Lower => CASE_LOWER,
+			KeyCase::Upper => CASE_UPPER,
+		}));
 	}
 
 	#[Pure]

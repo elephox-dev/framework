@@ -3,28 +3,24 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
+use JetBrains\PhpStorm\Pure;
+
 class Path
 {
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
+	#[Pure]
 	public static function join(string... $args): string
 	{
 		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
 		$path = implode(DIRECTORY_SEPARATOR, $parts);
-
-		/** @var string */
-		return \Safe\preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
+		return preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
 	}
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 */
+	#[Pure]
 	public static function isRoot(string $path): bool
 	{
 		return $path === '\\' ||
 			$path === '/' ||
 			$path === dirname($path) ||
-			\Safe\preg_match("/^\w:\\\\$/", $path) === 1;
+			preg_match("/^\w:\\\\$/", $path) === 1;
 	}
 }
