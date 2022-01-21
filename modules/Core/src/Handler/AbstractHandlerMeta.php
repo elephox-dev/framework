@@ -31,7 +31,7 @@ abstract class AbstractHandlerMeta implements HandlerMeta
 		return $this->weight;
 	}
 
-	public function getHandlerParams(Context $context): array
+	public function getHandlerParams(Context $context): iterable
 	{
 		return [];
 	}

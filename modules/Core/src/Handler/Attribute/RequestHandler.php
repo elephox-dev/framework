@@ -88,12 +88,13 @@ class RequestHandler extends AbstractHandlerAttribute
 		return $this->template->matches($context->getRequest()->getUrl());
 	}
 
-	public function getHandlerParams(Context $context): array
+	public function getHandlerParams(Context $context): iterable
 	{
 		if (!$context instanceof RequestContextContract) {
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		return $this->template->getValues($context->getRequest()->getUrl());
+		yield from $this->template->getValues($context->getRequest()->getUrl());
+		yield 'request' => $context->getRequest();
 	}
 }

@@ -50,7 +50,7 @@ class CommandHandler extends AbstractHandlerAttribute
 		return Regex::matches($this->commandSignature, $commandLine);
 	}
 
-	public function getHandlerParams(Context $context): array
+	public function getHandlerParams(Context $context): iterable
 	{
 		if (!$context instanceof CommandLineContext) {
 			throw new InvalidContextException($context, CommandLineContext::class);
@@ -61,7 +61,6 @@ class CommandHandler extends AbstractHandlerAttribute
 		}
 
 		return Regex::match($this->commandSignature, $context->getCommandLine())
-			->whereKey(static fn(string|int $key) => is_string($key))
-			->toArray();
+			->whereKey(static fn(string|int $key) => is_string($key));
 	}
 }
