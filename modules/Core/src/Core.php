@@ -56,7 +56,7 @@ class Core implements Contract\Core
 		$container->register(self::$instance::class, self::$instance);
 		$container->alias(Contract\Core::class, self::$instance::class);
 
-		\Safe\define("ELEPHOX_VERSION", self::$instance->getVersion());
+		define("ELEPHOX_VERSION", self::$instance->getVersion());
 
 		return self::$instance;
 	}
@@ -107,7 +107,7 @@ class Core implements Contract\Core
 	 */
 	public function checkRegistrar(object $potentialRegistrar): void
 	{
-		$traits = \Safe\class_uses($potentialRegistrar);
+		$traits = class_uses($potentialRegistrar);
 		if (
 			!($potentialRegistrar instanceof RegistrarContract) &&
 			!in_array(RegistrarTrait::class, $traits, true)

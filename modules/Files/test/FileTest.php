@@ -27,14 +27,14 @@ class FileTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->fileHandle = \Safe\tmpfile();
+		$this->fileHandle = tmpfile();
 		if ($this->fileHandle === false) {
 			throw new RuntimeException("Could not create temporary file.");
 		}
 
 		$this->filePath = stream_get_meta_data($this->fileHandle)['uri'];
 
-		\Safe\fwrite($this->fileHandle, self::FileContents);
+		fwrite($this->fileHandle, self::FileContents);
 	}
 
 	public function tearDown(): void
@@ -42,7 +42,7 @@ class FileTest extends TestCase
 		parent::tearDown();
 
 		if ($this->fileHandle) {
-			\Safe\fclose($this->fileHandle);
+			fclose($this->fileHandle);
 		}
 	}
 
@@ -55,7 +55,7 @@ class FileTest extends TestCase
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
-		self::assertEquals(\Safe\filemtime($this->filePath), $file->getModifiedTime()->getTimestamp());
+		self::assertEquals(filemtime($this->filePath), $file->getModifiedTime()->getTimestamp());
 	}
 
 	public function testFileNotFoundModifiedTime(): void
@@ -141,7 +141,7 @@ class FileTest extends TestCase
 
 	public function testMoveTo(): void
 	{
-		$oldName = \Safe\tempnam(sys_get_temp_dir(), 'test');
+		$oldName = tempnam(sys_get_temp_dir(), 'test');
 		$newName = new File($oldName . '.new');
 
 		$file = new File($oldName);

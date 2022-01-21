@@ -26,12 +26,12 @@ class ResourceStreamTest extends MockeryTestCase
 
 	public function setUp(): void
 	{
-		$this->tmpName = \Safe\tempnam(sys_get_temp_dir(), 'elephox-text-');
+		$this->tmpName = tempnam(sys_get_temp_dir(), 'elephox-text-');
 	}
 
 	public function testConstructor(): void
 	{
-		$fh = \Safe\fopen($this->tmpName, 'rb');
+		$fh = fopen($this->tmpName, 'rb');
 		$stream = new ResourceStream($fh);
 
 		self::assertTrue($stream->isReadable());
@@ -229,7 +229,7 @@ class ResourceStreamTest extends MockeryTestCase
 
 	public function testGetSizeFromFstat(): void
 	{
-		$fh = \Safe\tmpfile();
+		$fh = tmpfile();
 		$stream = new ResourceStream($fh, writeable: true);
 
 		self::assertEquals(0, $stream->getSize());
@@ -245,7 +245,7 @@ class ResourceStreamTest extends MockeryTestCase
 
 	public function testGetInvalidSizeFromFstat(): void
 	{
-		$fh = \Safe\fopen('php://output', 'rb');
+		$fh = fopen('php://output', 'rb');
 		$stream = new ResourceStream($fh);
 
 		self::assertNull($stream->getSize());
@@ -253,7 +253,7 @@ class ResourceStreamTest extends MockeryTestCase
 
 	public function testReadFromInvalidStream(): void
 	{
-		$fh = \Safe\fopen('php://output', 'rb');
+		$fh = fopen('php://output', 'rb');
 		$stream = new ResourceStream($fh);
 
 		$this->expectException(RuntimeException::class);
@@ -264,7 +264,7 @@ class ResourceStreamTest extends MockeryTestCase
 
 	public function testStreamGetsDetachedOnceClosed(): void
 	{
-		$fh = \Safe\tmpfile();
+		$fh = tmpfile();
 		$stream = new ResourceStream($fh);
 
 		self::assertIsResource($stream->getResource());

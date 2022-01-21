@@ -92,7 +92,7 @@ class OrderedIterator implements Iterator
 			];
 		}
 
-		\Safe\usort($this->cache, function (array $a, array $b): int {
+		usort($this->cache, function (array $a, array $b): int {
 			$result = 0;
 			foreach ($this->comparators as $index => $comparator) {
 				$keySelector = $this->keySelectors[$index];

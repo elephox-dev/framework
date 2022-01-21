@@ -220,7 +220,7 @@ class HandlerContainer implements Contract\HandlerContainer
 					continue;
 				}
 
-				$className = \Safe\substr($filename, 0, -4);
+				$className = substr($filename, 0, -4);
 
 				/**
 				 * @var class-string $fqcn
