@@ -19,7 +19,7 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "elephox/composer-module-sync": "^1.3",
+        "elephox/composer-module-sync": "^1.4",
         "ergebnis/composer-normalize": "^2.18",
         "infection/infection": "^0.26",
         "mockery/mockery": "^1.4",
@@ -87,8 +87,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.x-dev",
-            "dev-develop": "0.4.x-dev"
+            "dev-develop": "0.4.x-dev",
+            "dev-main": "1.x-dev"
         }
     },
     "scripts": {
@@ -98,7 +98,7 @@
         ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:check"
+            "@composer modules:check --namespaces"
         ],
         "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
@@ -106,7 +106,7 @@
         ],
         "ci:check-dependencies": [
             "@putenv XDEBUG_MODE=off",
-            "@composer modules:check"
+            "@composer modules:check --namespaces"
         ],
         "ci:memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
