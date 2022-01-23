@@ -6,18 +6,20 @@ namespace Elephox\Core\Handler\Attribute;
 use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Collection\KeyedEnumerable;
 use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
+use Elephox\Core\Handler\Contract\UrlTemplate as UrlTemplateContract;
+use Elephox\Core\Handler\HandledRequestBuilder;
 use Elephox\Core\Handler\InvalidContextException;
+use Elephox\Core\Handler\MatchedUrlTemplate;
 use Elephox\Core\Handler\UrlTemplate;
 use Elephox\Http\RequestMethod;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
 {
-	private UrlTemplate $template;
+	private UrlTemplateContract $template;
 
 	/**
 	 * @var GenericList<RequestMethod>
@@ -25,18 +27,18 @@ class RequestHandler extends AbstractHandlerAttribute
 	private GenericList $methods;
 
 	/**
-	 * @param string|UrlTemplate $url
+	 * @param string|UrlTemplateContract $url
 	 * @param null|non-empty-string|RequestMethod|array<non-empty-string|RequestMethod>|GenericList<non-empty-string|RequestMethod> $methods
 	 * @param int $weight
 	 */
 	public function __construct(
-		string|UrlTemplate                                  $url,
+		string|UrlTemplateContract                  $url,
 		null|string|RequestMethod|array|GenericList $methods = null,
-		int                                                 $weight = 0,
+		int                                         $weight = 0,
 	) {
 		parent::__construct(ActionType::Request, $weight);
 
-		$this->template = $url instanceof UrlTemplate ? $url : new UrlTemplate($url);
+		$this->template = $url instanceof UrlTemplateContract ? $url : new UrlTemplate($url);
 
 		if ($methods === null) {
 			$methods = [];
@@ -44,7 +46,11 @@ class RequestHandler extends AbstractHandlerAttribute
 			$methods = [$methods];
 		}
 
+		/**
+		 * @var ArrayList<RequestMethod>
+		 */
 		$this->methods = new ArrayList();
+
 		/**
 		 * @var non-empty-string|RequestMethod $method_name
 		 */
@@ -58,19 +64,6 @@ class RequestHandler extends AbstractHandlerAttribute
 
 			$this->methods->add($method);
 		}
-	}
-
-	public function getTemplate(): UrlTemplate
-	{
-		return $this->template;
-	}
-
-	/**
-	 * @return GenericList<RequestMethod>
-	 */
-	public function getMethods(): GenericList
-	{
-		return $this->methods;
 	}
 
 	public function handles(Context $context): bool
@@ -95,11 +88,13 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		$values = $this->template->getValues($context->getRequest()->getUrl());
+		$handledRequest = HandledRequestBuilder::fromRequest($context->getRequest())
+			->matchedTemplate(new MatchedUrlTemplate($context->getRequest()->getUrl(), $this->template))
+			->get();
 
-		yield from KeyedEnumerable::from($values)->whereKey(fn($x) => is_string($x));
-		yield 'request' => $context->getRequest();
+		yield from $handledRequest->getMatchedTemplate()->whereKey(fn($x) => is_string($x));
+		yield 'request' => $handledRequest;
 		yield 'template' => $this->template;
-		yield 'templateValues' => $values;
+		yield 'templateValues' => $handledRequest->getMatchedTemplate()->toArray();
 	}
 }
