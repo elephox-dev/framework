@@ -6,6 +6,7 @@ namespace Elephox\Core\Handler\Attribute;
 use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\KeyedEnumerable;
 use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
@@ -94,8 +95,11 @@ class RequestHandler extends AbstractHandlerAttribute
 			throw new InvalidContextException($context, RequestContextContract::class);
 		}
 
-		yield from $this->template->getValues($context->getRequest()->getUrl());
+		$values = $this->template->getValues($context->getRequest()->getUrl());
+
+		yield from KeyedEnumerable::from($values)->whereKey(fn($x) => is_string($x));
 		yield 'request' => $context->getRequest();
 		yield 'template' => $this->template;
+		yield 'templateValues' => $values;
 	}
 }
