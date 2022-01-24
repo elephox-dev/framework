@@ -9,11 +9,15 @@ use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\ActionType;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Context\Contract\RequestContext as RequestContextContract;
+use Elephox\Core\Handler\Contract\HandledRequest;
 use Elephox\Core\Handler\Contract\UrlTemplate as UrlTemplateContract;
 use Elephox\Core\Handler\HandledRequestBuilder;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\MatchedUrlTemplate;
 use Elephox\Core\Handler\UrlTemplate;
+use Elephox\DI\InstanceLifetime;
+use Elephox\Http\Contract\Request;
+use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\RequestMethod;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -92,8 +96,9 @@ class RequestHandler extends AbstractHandlerAttribute
 			->matchedTemplate(new MatchedUrlTemplate($context->getRequest()->getUrl(), $this->template))
 			->get();
 
+		$context->getContainer()->register($handledRequest::class, $handledRequest, InstanceLifetime::Singleton, 'request', Request::class, ServerRequest::class, HandledRequest::class);
+
 		yield from $handledRequest->getMatchedTemplate()->whereKey(fn($x) => is_string($x));
-		yield 'request' => $handledRequest;
 		yield 'template' => $this->template;
 		yield 'templateValues' => $handledRequest->getMatchedTemplate()->toArray();
 	}
