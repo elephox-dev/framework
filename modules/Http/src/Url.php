@@ -14,10 +14,6 @@ class Url implements Stringable, ArrayConvertible
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
-	/**
-	 * @throws \Safe\Exceptions\PcreException
-	 * @throws \Safe\Exceptions\StringsException
-	 */
 	public static function fromString(string $uri): Url
 	{
 		$builder = new UrlBuilder();

@@ -7,6 +7,8 @@ use Elephox\Http\ParameterSource;
 
 interface ServerRequestBuilder extends RequestBuilder
 {
+	public static function fromRequest(Request $request): ServerRequestBuilder;
+
 	public static function fromGlobals(): ServerRequest;
 
 	public function parameter(string $key, int|string|array $value, ParameterSource $source): ServerRequestBuilder;

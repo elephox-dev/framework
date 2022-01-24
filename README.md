@@ -12,7 +12,8 @@
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://poser.pugx.org/elephox/framework/require/php" alt="PHP Version Require"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/level.svg" alt="Psalm Level"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://shepherd.dev/github/elephox-dev/framework/coverage.svg" alt="Type Coverage"></a>
-  <a href="https://coveralls.io/github/elephox-dev/framework?branch=main"><img src="https://coveralls.io/repos/github/elephox-dev/framework/badge.svg?branch=main" alt="Coverage Status"></a>
+  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://coveralls.io/repos/github/elephox-dev/framework/badge.svg?branch=main" alt="Coverage Status"></a>
+  <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
   <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
@@ -47,6 +48,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
 - [ ] Finish PIE implementation (grouping)
 - [ ] Add READMEs, LICENSEs and PHPUnit configs for all modules
+- [ ] Implement GitHub release in release script
 - [ ] Maybe: Query Builder for Database Adapter
 - [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
 - [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
@@ -94,3 +96,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [#7322](https://github.com/vimeo/psalm/issues/7322)
 
 <!-- end annotations -->
+
+- [PUGX/badge-poser](https://github.com/PUGX/badge-poser)
+  - [#705](https://github.com/PUGX/badge-poser/issues/705)

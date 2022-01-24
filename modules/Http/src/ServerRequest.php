@@ -35,7 +35,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function with(): ServerRequestBuilder
+	public function with(): Contract\ServerRequestBuilder
 	{
 		return new ServerRequestBuilder(
 			$this->protocolVersion,

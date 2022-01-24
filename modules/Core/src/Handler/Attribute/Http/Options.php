@@ -5,7 +5,7 @@ namespace Elephox\Core\Handler\Attribute\Http;
 
 use Attribute;
 use Elephox\Core\Handler\Attribute\RequestHandler;
-use Elephox\Core\Handler\UrlTemplate;
+use Elephox\Core\Handler\Contract\UrlTemplate;
 use Elephox\Http\RequestMethod;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]

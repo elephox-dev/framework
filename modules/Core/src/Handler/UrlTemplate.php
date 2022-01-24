@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
+use Elephox\Collection\ArrayMap;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Http\Url;
+use RuntimeException;
 
-class UrlTemplate
+class UrlTemplate implements Contract\UrlTemplate
 {
 	public function __construct(
 		private string $source
@@ -17,20 +20,6 @@ class UrlTemplate
 		return $this->source;
 	}
 
-	/**
-	 * @param iterable<string, string> $parameters
-	 * @return Url
-	 */
-	public function compile(iterable $parameters): Url
-	{
-		$source = $this->source;
-		foreach ($parameters as $key => $value) {
-			$source = str_replace("\{$key}", $value, $source);
-		}
-
-		return Url::fromString($source);
-	}
-
 	public function matches(Url $url): bool
 	{
 		$source = $this->getSanitizedSource();
@@ -38,19 +27,23 @@ class UrlTemplate
 		return preg_match("/^$source$/", (string)$url) === 1;
 	}
 
-	public function getValues(Url $url): array
+	public function getValues(Url $url): GenericKeyedEnumerable
 	{
 		$source = $this->getSanitizedSource();
 
-		preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+		$result = preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+		if ($result === false) {
+			throw new RuntimeException('Failed to match URL template');
+		}
 
-		return $matches[0];
+		/** @var GenericKeyedEnumerable<string, string> */
+		return ArrayMap::from($matches[0])->whereKey(fn ($key) => is_string($key));
 	}
 
 	private function getSanitizedSource(): string
 	{
 		$source = $this->source;
-		$source = str_starts_with($source, '/') ? $source : "/$source";
-		return preg_replace('/\//', '\\/', $source);
+
+		return str_starts_with($source, '\\/') ? $source : "\\/$source";
 	}
 }

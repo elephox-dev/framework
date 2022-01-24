@@ -12,7 +12,7 @@ use JetBrains\PhpStorm\Pure;
 class Request extends AbstractMessage implements Contract\Request
 {
 	#[Pure]
-	public static function build(): RequestBuilder
+	public static function build(): Contract\RequestBuilder
 	{
 		return new RequestBuilder();
 	}
@@ -29,7 +29,7 @@ class Request extends AbstractMessage implements Contract\Request
 	}
 
 	#[Pure]
-	public function with(): RequestBuilder
+	public function with(): Contract\RequestBuilder
 	{
 		return new RequestBuilder(
 			$this->protocolVersion,

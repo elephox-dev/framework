@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bdf9177f26c27dd06634fcb480d9e8ba",
+    "content-hash": "0e7e23d81dc399ced39195f32ddf8212",
     "packages": [
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -384,23 +384,23 @@
         },
         {
             "name": "composer/pcre",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/pcre.git",
-                "reference": "3d322d715c43a1ac36c7fe215fa59336265500f2"
+                "reference": "67a32d7d6f9f560b726ab25a061b38ff3a80c560"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/pcre/zipball/3d322d715c43a1ac36c7fe215fa59336265500f2",
-                "reference": "3d322d715c43a1ac36c7fe215fa59336265500f2",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/67a32d7d6f9f560b726ab25a061b38ff3a80c560",
+                "reference": "67a32d7d6f9f560b726ab25a061b38ff3a80c560",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1",
+                "phpstan/phpstan": "^1.3",
                 "phpstan/phpstan-strict-rules": "^1.1",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
@@ -435,7 +435,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/pcre/issues",
-                "source": "https://github.com/composer/pcre/tree/1.0.0"
+                "source": "https://github.com/composer/pcre/tree/1.0.1"
             },
             "funding": [
                 {
@@ -451,7 +451,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-12-06T15:17:27+00:00"
+            "time": "2022-01-21T20:24:37+00:00"
         },
         {
             "name": "composer/semver",
@@ -856,16 +856,16 @@
         },
         {
             "name": "elephox/composer-module-sync",
-            "version": "v1.3",
+            "version": "v1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/composer-module-sync.git",
-                "reference": "812f7fd51fc46f3886c9a68879e165436c1b6104"
+                "reference": "be77f7130bdbd6860215e4fe71aaff8625fa2280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/composer-module-sync/zipball/812f7fd51fc46f3886c9a68879e165436c1b6104",
-                "reference": "812f7fd51fc46f3886c9a68879e165436c1b6104",
+                "url": "https://api.github.com/repos/elephox-dev/composer-module-sync/zipball/be77f7130bdbd6860215e4fe71aaff8625fa2280",
+                "reference": "be77f7130bdbd6860215e4fe71aaff8625fa2280",
                 "shasum": ""
             },
             "require": {
@@ -901,9 +901,9 @@
             "description": "A composer plugin to sync requirements between submodules.",
             "support": {
                 "issues": "https://github.com/elephox-dev/composer-module-sync/issues",
-                "source": "https://github.com/elephox-dev/composer-module-sync/tree/v1.3"
+                "source": "https://github.com/elephox-dev/composer-module-sync/tree/v1.4"
             },
-            "time": "2021-12-27T16:03:13+00:00"
+            "time": "2022-01-22T20:35:11+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
@@ -982,16 +982,16 @@
         },
         {
             "name": "ergebnis/json-normalizer",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-normalizer.git",
-                "reference": "2039eb11131a243b9204bf51219baa08935e6b1d"
+                "reference": "b4c8de936ff453d1b2e45599b995db724e405e97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/2039eb11131a243b9204bf51219baa08935e6b1d",
-                "reference": "2039eb11131a243b9204bf51219baa08935e6b1d",
+                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/b4c8de936ff453d1b2e45599b995db724e405e97",
+                "reference": "b4c8de936ff453d1b2e45599b995db724e405e97",
                 "shasum": ""
             },
             "require": {
@@ -1004,12 +1004,12 @@
             "require-dev": {
                 "ergebnis/data-provider": "^1.0.0",
                 "ergebnis/license": "^1.2.0",
-                "ergebnis/php-cs-fixer-config": "^3.4.0",
+                "ergebnis/php-cs-fixer-config": "^4.0.0",
                 "fakerphp/faker": "^1.17.0",
-                "infection/infection": "~0.25.5",
-                "phpunit/phpunit": "^9.5.11",
+                "infection/infection": "~0.26.2",
+                "phpunit/phpunit": "^9.5.12",
                 "psalm/plugin-phpunit": "~0.16.1",
-                "vimeo/psalm": "^4.17.0"
+                "vimeo/psalm": "^4.18"
             },
             "type": "library",
             "autoload": {
@@ -1043,7 +1043,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-04T11:19:55+00:00"
+            "time": "2022-01-21T18:55:05+00:00"
         },
         {
             "name": "ergebnis/json-printer",

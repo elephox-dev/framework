@@ -14,5 +14,5 @@ interface HandlerMeta extends HandlerStackMeta
 	/**
 	 * @throws InvalidContextException
 	 */
-	public function getHandlerParams(Context $context): array;
+	public function getHandlerParams(Context $context): iterable;
 }
