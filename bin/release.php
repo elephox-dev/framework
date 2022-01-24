@@ -114,20 +114,18 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 	exit(1);
 }
 
-echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
-echo "Increase version numbers and update changelogs NOW." . PHP_EOL;
 echo PHP_EOL;
-echo "Press enter to continue." . PHP_EOL;
+echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
+echo sprintf("Set concrete version numbers in all module composer.json files to v%s.", $version) . PHP_EOL;
+echo PHP_EOL;
+echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
-
-echo "Enter a release tag message: ";
-$message = trim(fgets(STDIN));
 
 if (
 	!executeSilent("git checkout -B %s --track origin/%s", $releaseBranch, $releaseBranch) ||
-	!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message)
+	!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $versionBranch, $versionBranch, $releaseBranch)
 ) {
-	echo "Failed to merge $versionBranch branch into $releaseBranch branch." . PHP_EOL;
+	echo "Failed to merge '$versionBranch' branch into '$releaseBranch' branch." . PHP_EOL;
 
 	exit(1);
 }
@@ -201,7 +199,7 @@ foreach ([
 	if (
 		!executeSilent("git checkout -b %s", $versionBranch) ||
 		!executeSilent("git checkout -b %s --track origin/%s", $releaseBranch, $releaseBranch) ||
-		!executeSilent("git merge %s --commit --no-ff --quiet -m \"%s\"", $versionBranch, $message) ||
+		!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $versionBranch, $versionBranch, $releaseBranch) ||
 		!executeSilent("git tag v%s", $version) ||
 		!executeSilent("git branch -D %s", $versionBranch) ||
 		!executeSilent("git checkout %s", $developBranch) ||
