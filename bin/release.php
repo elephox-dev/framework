@@ -98,6 +98,12 @@ if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse o
 	exit(1);
 }
 
+if (!executeEcho("composer module:check --namespaces")) {
+	echo "Make sure all dependencies are in sync.";
+
+	exit(1);
+}
+
 register_shutdown_function(static function () use ($currentBranch) {
 	executeSilent("git checkout %s --force", $currentBranch);
 });
