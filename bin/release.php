@@ -152,6 +152,8 @@ if ($latestWorkflowRun['conclusion'] !== 'success') {
 
 		exit(1);
 	}
+} else {
+	echo "Last CI build was successful. Nice!" . PHP_EOL;
 }
 
 register_shutdown_function(static function () use ($currentBranch) {
