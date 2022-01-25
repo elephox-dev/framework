@@ -1931,7 +1931,7 @@ enum MimeType: string implements Contract\MimeType
 		}
 
 		$mime = mime_content_type($file);
-		if ($mime === false) {
+		if (empty($mime)) {
 			throw new InvalidArgumentException("Unable to determine mime type of file at " . $file);
 		}
 
