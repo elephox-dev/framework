@@ -196,6 +196,16 @@ class ContainerTest extends TestCase
 		$container->get(ContainerTestInterface::class);
 	}
 
+	public function testNoConstructorTypesButDefaults(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestClassMultiParameterConstructorNoTypeButDefault::class);
+
+		$instance = $container->get(ContainerTestClassMultiParameterConstructorNoTypeButDefault::class);
+		self::assertNull($instance->testInterface);
+		self::assertNull($instance->testInterface2);
+	}
+
 	public function testCall(): void
 	{
 		$container = new Container();
@@ -459,6 +469,14 @@ class ContainerTestClassMultiParameterConstructorNoType
 {
 
 	public function __construct(public $testInterface, public $testInterface2)
+	{
+	}
+}
+
+class ContainerTestClassMultiParameterConstructorNoTypeButDefault
+{
+
+	public function __construct(public $testInterface = null, public $testInterface2 = null)
 	{
 	}
 }
