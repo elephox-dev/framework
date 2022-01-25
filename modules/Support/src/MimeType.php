@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Support;
 
+use InvalidArgumentException;
 use LogicException;
 
 enum MimeType: string implements Contract\MimeType
@@ -1930,6 +1931,10 @@ enum MimeType: string implements Contract\MimeType
 		}
 
 		$mime = mime_content_type($file);
+		if ($mime === false) {
+			throw new InvalidArgumentException("Unable to determine mime type of file at " . $file);
+		}
+
 		return MimeType::tryFrom($mime) ?? new CustomMimeType($mime);
 	}
 }
