@@ -217,6 +217,7 @@ class Core implements Contract\Core
 			return;
 		}
 
+		$contentTypeSent = false;
 		foreach ($response->getHeaderMap() as $headerName => $values) {
 			if (is_array($values)) {
 				foreach ($values as $value) {
@@ -225,6 +226,14 @@ class Core implements Contract\Core
 			} else {
 				header("$headerName: $values");
 			}
+
+			if ($headerName === 'Content-Type') {
+				$contentTypeSent = true;
+			}
+		}
+
+		if (!$contentTypeSent && $response->getMimeType() !== null) {
+			header('Content-Type: ' . $response->getMimeType()->getValue());
 		}
 	}
 

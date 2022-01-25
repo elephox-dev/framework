@@ -116,7 +116,7 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 
 echo PHP_EOL;
 echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
-echo sprintf("Set concrete version numbers in all module composer.json files to v%s.", $version) . PHP_EOL;
+echo "In case this is a major release, remember to update all module requirements to this major version (^x.0)." . PHP_EOL;
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
