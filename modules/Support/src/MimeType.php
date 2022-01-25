@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Support;
 
+use LogicException;
+
 enum MimeType: string implements Contract\MimeType
 {
 	case Application1dinterleavedparityfec = "application/1d-interleaved-parityfec";
@@ -1919,5 +1921,15 @@ enum MimeType: string implements Contract\MimeType
 	public function getValue(): string
 	{
 		return $this->value;
+	}
+
+	public static function fromFile(string $file): Contract\MimeType
+	{
+		if (!function_exists('mime_content_type')) {
+			throw new LogicException("You need to install ext-fileinfo to use this function!");
+		}
+
+		$mime = mime_content_type($file);
+		return MimeType::tryFrom($mime) ?? new CustomMimeType($mime);
 	}
 }
