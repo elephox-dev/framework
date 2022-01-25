@@ -99,9 +99,61 @@ if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse o
 }
 
 if (!executeEcho("composer module:check --namespaces")) {
-	echo "Make sure all dependencies are in sync.";
+	echo "Make sure all dependencies are in sync." . PHP_EOL;
 
 	exit(1);
+}
+
+$context = stream_context_create([
+	'http' => [
+		'header' => <<<HTTP_HEADER
+Accept: application/vnd.github.v3+json
+User-Agent: Elephox
+
+HTTP_HEADER
+	],
+]);
+$workflowStatusJson = file_get_contents("https://api.github.com/repos/elephox-dev/framework/actions/runs?branch=$developBranch&check_suite_id=5053506723", false, $context);
+$workflowStatus = json_decode($workflowStatusJson, true, flags: JSON_THROW_ON_ERROR);
+if (!array_key_exists('workflow_runs', $workflowStatus)) {
+	echo "Unexpected result from GitHub API." . PHP_EOL;
+
+	exit(1);
+}
+
+$workflowRuns = $workflowStatus['workflow_runs'];
+usort($workflowRuns, static function (array $a, array $b): int {
+	$updatedA = new DateTime($a['updated_at']);
+	$updatedB = new DateTime($b['updated_at']);
+
+	return $updatedA->getTimestamp() <=> $updatedB->getTimestamp();
+});
+
+$latestWorkflowRun = $workflowRuns[0];
+if ($latestWorkflowRun['status'] !== 'completed') {
+	echo "The latest workflow run is not complete yet." . PHP_EOL;
+	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
+
+	$result = fgets(STDIN);
+	if ($result !== 'y' && $result !== 'Y') {
+		echo "Aborted." . PHP_EOL;
+
+		exit(1);
+	}
+}
+
+if ($latestWorkflowRun['conclusion'] !== 'success') {
+	echo "The latest workflow run was not successful." . PHP_EOL;
+	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
+
+	$result = fgets(STDIN);
+	if ($result !== 'y' && $result !== 'Y') {
+		echo "Aborted." . PHP_EOL;
+
+		exit(1);
+	}
+} else {
+	echo "Last CI build was successful. Nice!" . PHP_EOL;
 }
 
 register_shutdown_function(static function () use ($currentBranch) {

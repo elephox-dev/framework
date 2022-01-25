@@ -45,7 +45,8 @@
         "psr/container-implementation": "1.0"
     },
     "suggest": {
-        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
+        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io",
+        "ext-fileinfo": "To use MimeType::fromFile()"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
