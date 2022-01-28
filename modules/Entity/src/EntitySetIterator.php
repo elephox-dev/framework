@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Entity;
 
 use Iterator;
+use SplObjectStorage;
 
 /**
  * @template T
@@ -12,28 +13,52 @@ use Iterator;
  */
 class EntitySetIterator implements Iterator
 {
-	public function current(): mixed
+	private int $position = 0;
+
+	/**
+	 * @param SplObjectStorage<T, Contract\ChangeHistory> $entitiesWithHistory
+	 */
+	public function __construct(
+		private SplObjectStorage $entitiesWithHistory,
+	)
 	{
-		// TODO: Implement current() method.
+	}
+
+	public function current(): object
+	{
+		return $this->entitiesWithHistory->current();
 	}
 
 	public function next(): void
 	{
-		// TODO: Implement next() method.
+		$this->entitiesWithHistory->next();
+		if (!$this->entitiesWithHistory->valid()) {
+			return;
+		}
+
+		/** @var ChangeAction $lastChange */
+		$lastChange = $this->entitiesWithHistory->getInfo()->last()->getAction();
+		if ($lastChange === ChangeAction::Deleted) {
+			$this->next();
+			return;
+		}
+
+		$this->position++;
 	}
 
-	public function key(): never
+	public function key(): int
 	{
-		// TODO: Implement key() method.
+		return $this->position;
 	}
 
 	public function valid(): bool
 	{
-		// TODO: Implement valid() method.
+		return $this->entitiesWithHistory->valid();
 	}
 
 	public function rewind(): void
 	{
-		// TODO: Implement rewind() method.
+		$this->entitiesWithHistory->rewind();
+		$this->position = 0;
 	}
 }

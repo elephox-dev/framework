@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Entity;
 
+use CallbackFilterIterator;
 use Elephox\Collection\IsEnumerable;
+use Elephox\Collection\Iterator\SplObjectStorageIterator;
 use Elephox\Entity\Contract\EntitySet;
 use Elephox\Support\DeepCloneable;
+use SplObjectStorage;
 
 /**
  * @template T
@@ -14,18 +17,41 @@ use Elephox\Support\DeepCloneable;
  */
 abstract class AbstractEntitySet implements EntitySet
 {
-	use DeepCloneable, IsEnumerable;
+	/**
+	 * @use IsEnumerable<T>
+	 */
+	use IsEnumerable {
+		contains as enumerableContains;
+	}
+	use DeepCloneable;
 
 	abstract public function getEntityClass(): string;
 
-	public function getIterator(): EntitySetIterator
+	/** @var SplObjectStorage<T, Contract\ChangeHistory> */
+	private SplObjectStorage $storage;
+
+	public function getIterator(): CallbackFilterIterator
 	{
-		return new EntitySetIterator();
+		return new CallbackFilterIterator(new SplObjectStorageIterator($this->storage), function (Contract\ChangeHistory $changeHistory) {
+			return $changeHistory->isNew();
+		});
 	}
 
 	public function add(mixed $value): bool
 	{
-		// TODO: Implement add() method.
+		if (!$value instanceof EntityDecorator) {
+			$decorated = new EntityDecorator($value);
+		} else {
+			$decorated = $value;
+		}
+
+		$history = $decorated->_decorator_getChangeHistory();
+
+		if ($history->isEmpty()) {
+			$history->add(new ChangeUnit(ChangeAction::Created, null, null, $value));
+		}
+
+		$this->storage->attach($decorated, $history);
 	}
 
 	public function remove(mixed $value): bool
