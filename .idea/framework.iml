@@ -14,13 +14,14 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/src" isTestSource="false" packagePrefix="Elephox\Files\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/test" isTestSource="true" packagePrefix="Elephox\Files\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/src" isTestSource="false" packagePrefix="Elephox\Logging\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Logging/test" isTestSource="true" packagePrefix="Elephox\Logging\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/src" isTestSource="false" packagePrefix="Elephox\Stream\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Stream/test" isTestSource="true" packagePrefix="Elephox\Stream\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/src" isTestSource="false" packagePrefix="Elephox\Events\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/test" isTestSource="true" packagePrefix="Elephox\Events\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/src" isTestSource="false" packagePrefix="Elephox\OOR\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/test" isTestSource="true" packagePrefix="Elephox\OOR\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Entity/src" isTestSource="false" packagePrefix="Elephox\Entity\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Entity/test" isTestSource="true" packagePrefix="Elephox\Entity\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
@@ -53,10 +54,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/options-resolver" />
@@ -108,6 +107,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/phpbench" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-schema-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/event-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/deprecations" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
