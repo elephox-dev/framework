@@ -80,6 +80,16 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
   - [ ] rewrite more functions to use iterators
 - [ ] [Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
+- [ ] [Entity/src/AbstractEntitySet.php](https://github.com/elephox-dev/framework/tree/main/modules/Entity/src/AbstractEntitySet.php)
+  - [ ] Implement add() method.
+  - [ ] Implement remove() method.
+  - [ ] Implement removeBy() method.
+- [ ] [Entity/src/EntitySetIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Entity/src/EntitySetIterator.php)
+  - [ ] Implement current() method.
+  - [ ] Implement next() method.
+  - [ ] Implement key() method.
+  - [ ] Implement valid() method.
+  - [ ] Implement rewind() method.
 - [ ] [Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
 
