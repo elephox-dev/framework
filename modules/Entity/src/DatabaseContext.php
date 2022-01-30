@@ -64,15 +64,23 @@ abstract class DatabaseContext implements Contract\DatabaseContext
 
 	public function __get(string $entityClass): mixed
 	{
-		if ($this->entitySetContainer->has($entityClass)) {
-			return $this->entitySetContainer->get($entityClass);
-		}
+		/**
+		 * @var non-empty-string $name
+		 */
+		foreach ([
+			$entityClass,
+			ucfirst($entityClass . "EntitySet"),
+		] as $name) {
+			if ($this->entitySetContainer->has($name)) {
+				return $this->entitySetContainer->get($name);
+			}
 
-		$entitySetName = $entityClass . "EntitySet";
-		if ($this->appContainer->has($entitySetName)) {
-			$entitySet = $this->appContainer->get($entitySetName);
-			$this->entitySetContainer->register($entityClass, $entitySet);
-			return $entitySet;
+			if ($this->appContainer->has($name)) {
+				/** @var EntitySet $entitySet */
+				$entitySet = $this->appContainer->get($name);
+				$this->entitySetContainer->register($name, $entitySet);
+				return $entitySet;
+			}
 		}
 
 		throw new EntitySetException("Unknown property: " . $entityClass);

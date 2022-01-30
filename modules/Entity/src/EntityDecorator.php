@@ -56,6 +56,11 @@ class EntityDecorator
 		return isset($this->entityReference->get()->$property);
 	}
 
+	public function _decorator_getEntity(): ?object
+	{
+		return $this->entityReference->get();
+	}
+
 	public function _decorator_getChangeHistory(): Contract\ChangeHistory
 	{
 		return $this->changeHistory;

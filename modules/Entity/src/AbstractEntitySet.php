@@ -33,7 +33,7 @@ abstract class AbstractEntitySet implements EntitySet
 	public function getIterator(): CallbackFilterIterator
 	{
 		return new CallbackFilterIterator(new SplObjectStorageIterator($this->storage), function (Contract\ChangeHistory $changeHistory) {
-			return $changeHistory->isNew();
+			return $changeHistory->last()?->getAction() !== ChangeAction::Deleted;
 		});
 	}
 
@@ -45,6 +45,10 @@ abstract class AbstractEntitySet implements EntitySet
 			$decorated = $value;
 		}
 
+		if ($this->storage->contains($decorated)) {
+			return false;
+		}
+
 		$history = $decorated->_decorator_getChangeHistory();
 
 		if ($history->isEmpty()) {
@@ -52,15 +56,39 @@ abstract class AbstractEntitySet implements EntitySet
 		}
 
 		$this->storage->attach($decorated, $history);
+
+		return true;
 	}
 
 	public function remove(mixed $value): bool
 	{
-		// TODO: Implement remove() method.
+		if (!$value instanceof EntityDecorator) {
+			$decorated = new EntityDecorator($value);
+		} else {
+			$decorated = $value;
+		}
+
+		if (!$this->storage->contains($decorated)) {
+			return false;
+		}
+
+		$history = $decorated->_decorator_getChangeHistory();
+		$history->add(new ChangeUnit(ChangeAction::Deleted, null, $value, null));
+
+		return true;
 	}
 
 	public function removeBy(callable $predicate): bool
 	{
-		// TODO: Implement removeBy() method.
+		$anyRemoved = false;
+
+		foreach ($this->getIterator() as $entityDecorator) {
+			$entity = $entityDecorator->_decorator_getEntity();
+			if ($entity !== null && $predicate($entity)) {
+				$anyRemoved = $anyRemoved || $this->remove($entity);
+			}
+		}
+
+		return $anyRemoved;
 	}
 }
