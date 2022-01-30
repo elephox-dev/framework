@@ -23,9 +23,6 @@
         <testsuite name="DI">
             <directory>modules/DI/test</directory>
         </testsuite>
-        <testsuite name="Entity">
-            <directory>modules/Entity/test</directory>
-        </testsuite>
         <testsuite name="Events">
             <directory>modules/Events/test</directory>
         </testsuite>
