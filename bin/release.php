@@ -223,10 +223,13 @@ executeSilent("git push --tags");
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
-	throw new RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
+	error('Directory "%s" was not created', $tmpDir);
+
+	exit(1);
 }
 
 register_shutdown_function(static function () use ($tmpDir) {
+	echo PHP_EOL;
 	echo "Cleaning up..." . PHP_EOL;
 	rmdirRecursive($tmpDir);
 });
