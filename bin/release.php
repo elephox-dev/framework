@@ -30,11 +30,11 @@ function execute(bool $echo, string $commandLine, float|int|string ...$args): bo
 	[$resultCode, $output, $error] = executeGetOutput($commandLine, ...$args);
 
 	if ($echo) {
-		foreach ($output as $line) {
+		foreach (array_filter($output) as $line) {
 			echo sprintf("\t%s%s", trim($line), PHP_EOL);
 		}
 
-		foreach ($error as $line) {
+		foreach (array_filter($error) as $line) {
 			echo sprintf("!\t%s%s", trim($line), PHP_EOL);
 		}
 	}
