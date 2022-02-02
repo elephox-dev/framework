@@ -31,11 +31,11 @@ function execute(bool $echo, string $commandLine, float|int|string ...$args): bo
 
 	if ($echo) {
 		foreach ($output as $line) {
-			echo "\t$line" . PHP_EOL;
+			echo sprintf("\t%s%s", trim($line), PHP_EOL);
 		}
 
 		foreach ($error as $line) {
-			echo "!\t$line" . PHP_EOL;
+			echo sprintf("!\t%s%s", trim($line), PHP_EOL);
 		}
 	}
 
@@ -71,7 +71,7 @@ function error(string ...$lines): void
 {
 	echo PHP_EOL;
 	foreach ($lines as $line) {
-		echo "! $line" . PHP_EOL;
+		echo sprintf("! %s%s", trim($line), PHP_EOL);
 	}
 	echo PHP_EOL;
 }
