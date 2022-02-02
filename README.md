@@ -92,7 +92,6 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 ### 🚧 Open issues from other repositories
 
 - [vimeo/psalm](https://github.com/vimeo/psalm)
-  - [#7331](https://github.com/vimeo/psalm/issues/7331)
   - [#7322](https://github.com/vimeo/psalm/issues/7322)
 
 <!-- end annotations -->
