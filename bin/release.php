@@ -89,7 +89,7 @@ if ($developBranch !== $currentBranch) {
 }
 
 // check the given version format
-if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
+if (!preg_match('/^(?<major>\d+)\.(?<minor>\d+)(?:\.(?<patch>\d+))?$/', $version, $matches)) {
 	error("Invalid version format. Should be x.x[.x]");
 
 	exit(1);
@@ -111,17 +111,19 @@ if (executeGetLastLine("git rev-parse HEAD") !== executeGetLastLine("git rev-par
 	exit(1);
 }
 
+// TODO: check if version requirements are in sync with the version to release
 if (!executeEcho("composer module:check --namespaces")) {
 	error("Make sure all dependencies are in sync.");
 
 	exit(1);
 }
 
+$r = md5((string)time());
 $context = stream_context_create([
 	'http' => [
 		'header' => <<<HTTP_HEADER
 Accept: application/vnd.github.v3+json
-User-Agent: Elephox
+User-Agent: Elephox/$r
 
 HTTP_HEADER
 	],
@@ -185,7 +187,7 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 
 echo PHP_EOL;
 echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
-echo "In case this is a minor release, remember to update all module requirements to this major version (^0.x)." . PHP_EOL;
+echo sprintf("In case this is a minor release, remember to update all module requirements to this major version (^%s.%s).", $matches['major'], $matches['minor']) . PHP_EOL;
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
