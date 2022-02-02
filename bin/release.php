@@ -27,13 +27,15 @@ function executeSilent(string $commandLine, float|int|string ...$args): bool
 
 function execute(bool $echo, string $commandLine, float|int|string ...$args): bool
 {
-	$commandLine = sprintf($commandLine, ...$args);
-	echo "$ $commandLine" . PHP_EOL;
-	exec($commandLine, $output, $resultCode);
+	[$resultCode, $output, $error] = executeGetOutput($commandLine, ...$args);
 
 	if ($echo) {
 		foreach ($output as $line) {
-			echo "< $line" . PHP_EOL;
+			echo "\t$line" . PHP_EOL;
+		}
+
+		foreach ($error as $line) {
+			echo "!\t$line" . PHP_EOL;
 		}
 	}
 
@@ -41,43 +43,54 @@ function execute(bool $echo, string $commandLine, float|int|string ...$args): bo
 		return true;
 	}
 
-	echo "Failed with exit code $resultCode\n";
+	echo "! Failed with exit code $resultCode\n";
 
 	return false;
 }
 
-function executeGetOutput(string $commandLine, float|int|string ...$args): string
+function executeGetOutput(string $commandLine, float|int|string ...$args): array
 {
 	$commandLine = sprintf($commandLine, ...$args);
 	echo "$ $commandLine" . PHP_EOL;
-	$output = exec($commandLine, result_code: $resultCode);
 
-	if ($resultCode === 0) {
-		echo "< $output" . PHP_EOL;
+	ob_start();
+	exec($commandLine, $output, $resultCode);
+	$error = ob_get_clean();
 
-		return $output;
+	return [$resultCode, $output, explode(PHP_EOL, $error)];
+}
+
+function executeGetLastLine(string $commandLine, float|int|string ...$args): string
+{
+	[,$output,] = executeGetOutput($commandLine, ...$args);
+
+	return (string)end($output);
+}
+
+function error(string ...$lines): void
+{
+	echo PHP_EOL;
+	foreach ($lines as $line) {
+		echo "! $line" . PHP_EOL;
 	}
-
-	echo "Failed with exit code $resultCode" . PHP_EOL;
-
-	throw new RuntimeException();
+	echo PHP_EOL;
 }
 
 $releaseBranch = "main";
 $developBranch = "develop";
-$currentBranch = executeGetOutput("git rev-parse --abbrev-ref HEAD");
+$currentBranch = executeGetLastLine("git rev-parse --abbrev-ref HEAD");
 $version = $argv[1];
 
 // check if we are on the release branch
 if ($developBranch !== $currentBranch) {
-	echo "Develop branch ($developBranch) does not match the current active branch ($currentBranch)." . PHP_EOL;
+	error("Develop branch ($developBranch) does not match the current active branch ($currentBranch).");
 
 	exit(1);
 }
 
 // check the given version format
 if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
-	echo "Invalid version format. Should be x.x[.x]" . PHP_EOL;
+	error("Invalid version format. Should be x.x[.x]");
 
 	exit(1);
 }
@@ -85,21 +98,21 @@ if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)) {
 $versionBranch = "release/$version";
 
 // make sure the working directory is clean
-if (!empty(executeGetOutput("git status --porcelain"))) {
-	echo "Your working directory is dirty. Did you forget to commit your changes?" . PHP_EOL;
+if (!empty(executeGetLastLine("git status --porcelain"))) {
+	error("Your working directory is dirty. Did you forget to commit your changes?");
 
 	exit(1);
 }
 
 // make sure the release branch is in sync with origin
-if (executeGetOutput("git rev-parse HEAD") !== executeGetOutput("git rev-parse origin/%s", $developBranch)) {
-	echo "Your release branch is not in sync with origin. Did you forget to push your changes?" . PHP_EOL;
+if (executeGetLastLine("git rev-parse HEAD") !== executeGetLastLine("git rev-parse origin/%s", $developBranch)) {
+	error("Your release branch is not in sync with origin. Did you forget to push your changes?");
 
 	exit(1);
 }
 
 if (!executeEcho("composer module:check --namespaces")) {
-	echo "Make sure all dependencies are in sync." . PHP_EOL;
+	error("Make sure all dependencies are in sync.");
 
 	exit(1);
 }
@@ -116,7 +129,7 @@ HTTP_HEADER
 $workflowStatusJson = file_get_contents("https://api.github.com/repos/elephox-dev/framework/actions/runs?branch=$developBranch&check_suite_id=5053506723", false, $context);
 $workflowStatus = json_decode($workflowStatusJson, true, flags: JSON_THROW_ON_ERROR);
 if (!array_key_exists('workflow_runs', $workflowStatus)) {
-	echo "Unexpected result from GitHub API." . PHP_EOL;
+	error("Unexpected result from GitHub API.");
 
 	exit(1);
 }
@@ -131,37 +144,41 @@ usort($workflowRuns, static function (array $a, array $b): int {
 
 $latestWorkflowRun = $workflowRuns[0];
 if ($latestWorkflowRun['status'] !== 'completed') {
-	echo "The latest workflow run is not complete yet." . PHP_EOL;
+	error("The latest workflow run is not complete yet.");
 	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
 
 	$result = fgets(STDIN);
 	if ($result !== 'y' && $result !== 'Y') {
-		echo "Aborted." . PHP_EOL;
+		error("Aborted.");
 
 		exit(1);
 	}
+	echo PHP_EOL;
 }
 
 if ($latestWorkflowRun['conclusion'] !== 'success') {
-	echo "The latest workflow run was not successful." . PHP_EOL;
+	error("The latest workflow run was not successful.");
+	echo PHP_EOL;
 	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
 
 	$result = fgets(STDIN);
 	if ($result !== 'y' && $result !== 'Y') {
-		echo "Aborted." . PHP_EOL;
+		error("Aborted.");
 
 		exit(1);
 	}
 } else {
+	echo PHP_EOL;
 	echo "Last CI build was successful. Nice!" . PHP_EOL;
 }
+echo PHP_EOL;
 
 register_shutdown_function(static function () use ($currentBranch) {
 	executeSilent("git checkout %s --force", $currentBranch);
 });
 
 if (!executeSilent("git checkout -b %s", $versionBranch)) {
-	echo "Failed to create $versionBranch branch." . PHP_EOL;
+	error("Failed to create $versionBranch branch.");
 
 	exit(1);
 }
@@ -172,12 +189,13 @@ echo "In case this is a minor release, remember to update all module requirement
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
+echo PHP_EOL;
 
 if (
 	!executeSilent("git checkout -B %s --track origin/%s", $releaseBranch, $releaseBranch) ||
 	!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $versionBranch, $versionBranch, $releaseBranch)
 ) {
-	echo "Failed to merge '$versionBranch' branch into '$releaseBranch' branch." . PHP_EOL;
+	error("Failed to merge '$versionBranch' branch into '$releaseBranch' branch.");
 
 	exit(1);
 }
@@ -186,14 +204,14 @@ if (
 	!executeSilent("git tag v%s", $version) ||
 	!executeSilent("git branch -D %s", $versionBranch)
 ) {
-	echo "Failed to tag framework!" . PHP_EOL;
+	error("Failed to tag framework!");
 
 	exit(1);
 }
 
 executeSilent("git checkout %s", $developBranch);
 if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch)) {
-	echo "Failed to merge $releaseBranch branch into $developBranch branch." . PHP_EOL;
+	error("Failed to merge $releaseBranch branch into $developBranch branch.");
 
 	exit(1);
 }
@@ -211,7 +229,9 @@ register_shutdown_function(static function () use ($tmpDir) {
 	rmdirRecursive($tmpDir);
 });
 
+echo PHP_EOL;
 echo "Working in $tmpDir" . PHP_EOL . PHP_EOL;
+echo PHP_EOL;
 
 $cwd = getcwd();
 foreach ([
@@ -242,7 +262,7 @@ foreach ([
 		chdir($currentTmpDir);
 
 		if (!executeSilent("git clone %s .", $remoteUrl)) {
-			echo "Failed to check out $remote" . PHP_EOL;
+			error("Failed to check out $remote");
 
 			exit(1);
 		}
@@ -259,7 +279,7 @@ foreach ([
 		!executeSilent("git push --all") ||
 		!executeSilent("git push --tags")
 	) {
-		echo "Failed to release $remote" . PHP_EOL;
+		error("Failed to release $remote");
 
 		exit(1);
 	}
