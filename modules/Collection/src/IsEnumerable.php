@@ -190,10 +190,6 @@ trait IsEnumerable
 			return $iterator->count();
 		}
 
-		/**
-		 * This can be removed once vimeo/psalm#7331 is resolved
-		 * @var NonNegativeInteger
-		 */
 		return iterator_count($iterator);
 	}
 

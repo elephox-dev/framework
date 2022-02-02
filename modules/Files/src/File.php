@@ -10,6 +10,7 @@ use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use ValueError;
 
 class File implements Contract\File
 {
@@ -90,13 +91,13 @@ class File implements Contract\File
 		return $hash;
 	}
 
-	public function getParent(int $levels = 1): Contract\Directory
+	public function getParent(int $levels = 1): Directory
 	{
-		if ($levels < 1) {
-			throw new InvalidParentLevelException($levels);
+		try {
+			return new Directory(dirname($this->path, $levels));
+		} catch (ValueError $error) {
+			throw new InvalidParentLevelException($levels, previous: $error);
 		}
-
-		return new Directory(dirname($this->path, $levels));
 	}
 
 	#[Pure]

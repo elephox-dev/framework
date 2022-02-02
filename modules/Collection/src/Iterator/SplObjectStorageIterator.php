@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Iterator;
 
-use BadMethodCallException;
 use Iterator;
 use SplObjectStorage;
 

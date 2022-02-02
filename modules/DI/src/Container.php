@@ -376,6 +376,10 @@ class Container implements Contract\Container
 
 		$type = $parameter->getType();
 		if ($type === null) {
+			if ($parameter->isDefaultValueAvailable()) {
+				return $parameter->getDefaultValue();
+			}
+
 			throw new MissingTypeHintException($parameter);
 		}
 

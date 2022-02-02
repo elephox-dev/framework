@@ -71,7 +71,6 @@
             "Elephox\\Events\\": "modules/Events/test/",
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",
-            "Elephox\\Logging\\": "modules/Logging/test/",
             "Elephox\\OOR\\": "modules/OOR/test/",
             "Elephox\\Stream\\": "modules/Stream/test/",
             "Elephox\\Support\\": "modules/Support/test/"

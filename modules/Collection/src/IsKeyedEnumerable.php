@@ -199,10 +199,6 @@ trait IsKeyedEnumerable
 			$iterator = new CallbackFilterIterator($this->getIterator(), $predicate);
 		}
 
-		/**
-		 * This can be removed once vimeo/psalm#7331 is resolved
-		 * @var NonNegativeInteger
-		 */
 		return iterator_count($iterator);
 	}
 
