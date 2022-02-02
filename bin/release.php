@@ -187,7 +187,7 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 
 echo PHP_EOL;
 echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
-echo sprintf("In case this is a minor release, remember to update all module requirements to this major version (^%s.%s).", $matches['major'], $matches['minor']) . PHP_EOL;
+echo sprintf("In case this is a minor release, remember to update all module requirements to this version: ^%s.%s", $matches['major'], $matches['minor']) . PHP_EOL;
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
