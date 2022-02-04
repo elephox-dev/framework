@@ -9,6 +9,9 @@ use Elephox\Support\Contract\MimeType;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class ResponseBuilder extends AbstractMessageBuilder implements Contract\ResponseBuilder
 {
 	#[Pure]
@@ -22,14 +25,14 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		parent::__construct($protocolVersion, $headers, $body);
 	}
 
-	public function responseCode(ResponseCode $responseCode): Contract\ResponseBuilder
+	public function responseCode(ResponseCode $responseCode): static
 	{
 		$this->responseCode = $responseCode;
 
 		return $this;
 	}
 
-	public function contentType(?MimeType $mimeType): Contract\ResponseBuilder
+	public function contentType(?MimeType $mimeType): static
 	{
 		$this->mimeType = $mimeType;
 

@@ -7,6 +7,9 @@ use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestBuilder
 {
 	#[Pure]
@@ -20,14 +23,14 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		parent::__construct($protocolVersion, $headers, $body);
 	}
 
-	public function requestMethod(RequestMethod $requestMethod): Contract\RequestBuilder
+	public function requestMethod(RequestMethod $requestMethod): static
 	{
 		$this->method = $requestMethod;
 
 		return $this;
 	}
 
-	public function requestUrl(Url $url): Contract\RequestBuilder
+	public function requestUrl(Url $url): static
 	{
 		$this->url = $url;
 

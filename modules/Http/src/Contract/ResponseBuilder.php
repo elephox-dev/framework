@@ -6,11 +6,14 @@ namespace Elephox\Http\Contract;
 use Elephox\Http\ResponseCode;
 use Elephox\Support\Contract\MimeType;
 
+/**
+ * @psalm-consistent-constructor
+ */
 interface ResponseBuilder extends MessageBuilder
 {
-	public function responseCode(ResponseCode $responseCode): ResponseBuilder;
+	public function responseCode(ResponseCode $responseCode): static;
 
-	public function contentType(MimeType $mimeType): ResponseBuilder;
+	public function contentType(MimeType $mimeType): static;
 
 	public function get(): Response;
 }

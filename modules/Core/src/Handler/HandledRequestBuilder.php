@@ -17,12 +17,15 @@ use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class HandledRequestBuilder extends ServerRequestBuilder implements Contract\HandledRequestBuilder
 {
 	#[Pure]
-	public static function fromRequest(Request $request): Contract\HandledRequestBuilder
+	public static function fromRequest(Request $request): static
 	{
-		return new HandledRequestBuilder(
+		return new static(
 			$request->getProtocolVersion(),
 			$request->getHeaderMap(),
 			$request->getBody(),
@@ -50,7 +53,7 @@ class HandledRequestBuilder extends ServerRequestBuilder implements Contract\Han
 		parent::__construct($protocolVersion, $headers, $body, $method, $url, $parameters, $cookieMap, $uploadedFiles);
 	}
 
-	public function matchedTemplate(Contract\MatchedUrlTemplate $matchedUrlTemplate): Contract\HandledRequestBuilder
+	public function matchedTemplate(Contract\MatchedUrlTemplate $matchedUrlTemplate): static
 	{
 		$this->matchedTemplate = $matchedUrlTemplate;
 

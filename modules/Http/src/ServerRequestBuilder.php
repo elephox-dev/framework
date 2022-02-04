@@ -12,6 +12,9 @@ use Elephox\Stream\ResourceStream;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequestBuilder
 {
 	#[Pure]
@@ -28,7 +31,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
 	}
 
-	public function parameter(string $key, array|int|string $value, ParameterSource $source): Contract\ServerRequestBuilder
+	public function parameter(string $key, array|int|string $value, ParameterSource $source): static
 	{
 		if ($this->parameters === null) {
 			$this->parameters = new ParameterMap();
@@ -39,14 +42,14 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function parameterMap(Contract\ParameterMap $parameterMap): Contract\ServerRequestBuilder
+	public function parameterMap(Contract\ParameterMap $parameterMap): static
 	{
 		$this->parameters = $parameterMap;
 
 		return $this;
 	}
 
-	public function cookie(Cookie $cookie): Contract\ServerRequestBuilder
+	public function cookie(Cookie $cookie): static
 	{
 		if ($this->cookieMap === null) {
 			$this->cookieMap = new CookieMap();
@@ -57,14 +60,14 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function cookieMap(Contract\CookieMap $cookieMap): Contract\ServerRequestBuilder
+	public function cookieMap(Contract\CookieMap $cookieMap): static
 	{
 		$this->cookieMap = $cookieMap;
 
 		return $this;
 	}
 
-	public function uploadedFile(string $name, UploadedFile $uploadedFile): Contract\ServerRequestBuilder
+	public function uploadedFile(string $name, UploadedFile $uploadedFile): static
 	{
 		if ($this->uploadedFiles === null) {
 			$this->uploadedFiles = new UploadedFileMap();
@@ -75,7 +78,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function uploadedFiles(Contract\UploadedFileMap $uploadedFiles): Contract\ServerRequestBuilder
+	public function uploadedFiles(Contract\UploadedFileMap $uploadedFiles): static
 	{
 		$this->uploadedFiles = $uploadedFiles;
 
@@ -102,7 +105,6 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$headers = HeaderMap::fromGlobals();
 		$cookies = CookieMap::fromGlobals();
 		$files = UploadedFileMap::fromGlobals();
-
 
 		if ($body === null) {
 			$readonlyInput = fopen('php://input', 'rb');
@@ -131,9 +133,9 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 	}
 
 	#[Pure]
-	public static function fromRequest(Request $request): Contract\ServerRequestBuilder
+	public static function fromRequest(Request $request): static
 	{
-		return new ServerRequestBuilder(
+		return new static(
 			$request->getProtocolVersion(),
 			$request->getHeaderMap(),
 			$request->getBody(),
