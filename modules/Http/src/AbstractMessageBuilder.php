@@ -43,9 +43,9 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	 */
 	public function jsonBody(array $data): static
 	{
-		$this->body = new StringStream(json_encode($data, JSON_THROW_ON_ERROR));
-
-		return $this;
+		$json = json_encode($data, JSON_THROW_ON_ERROR);
+		$jsonStream = new StringStream($json);
+		return $this->body($jsonStream);
 	}
 
 	public function header(string $name, array $value): static

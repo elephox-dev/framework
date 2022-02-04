@@ -5,8 +5,11 @@ namespace Elephox\Http;
 
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
-use Elephox\Support\Contract\MimeType;
+use Elephox\Stream\StringStream;
+use Elephox\Support\Contract\MimeType as MimeTypeContract;
+use Elephox\Support\MimeType;
 use JetBrains\PhpStorm\Pure;
+use JsonException;
 use LogicException;
 
 /**
@@ -20,7 +23,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		?Contract\HeaderMap $headers = null,
 		?Stream $body = null,
 		protected ?ResponseCode $responseCode = null,
-		protected ?MimeType $mimeType = null
+		protected ?MimeTypeContract $mimeType = null
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
 	}
@@ -32,11 +35,21 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this;
 	}
 
-	public function contentType(?MimeType $mimeType): static
+	public function contentType(?MimeTypeContract $mimeType): static
 	{
 		$this->mimeType = $mimeType;
 
 		return $this;
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function jsonBody(array $data): static
+	{
+		$json = json_encode($data, JSON_THROW_ON_ERROR);
+		$jsonStream = new StringStream($json);
+		return $this->body($jsonStream)->contentType(MimeType::Applicationjson);
 	}
 
 	public function get(): Contract\Response
