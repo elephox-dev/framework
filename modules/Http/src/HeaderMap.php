@@ -10,12 +10,20 @@ use Elephox\Collection\ArrayMap;
  */
 class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {
+	/**
+	 * @param array<string, string|list<string>>|null $server
+	 * @return Contract\HeaderMap
+	 */
 	public static function fromGlobals(?array $server = null): Contract\HeaderMap
 	{
 		$server ??= $_SERVER;
 
 		$map = new self;
 
+		/**
+		 * @var string $name
+		 * @var string|list<string> $value
+		 */
 		foreach ($server as $name => $value) {
 			if (!str_starts_with($name, 'HTTP_')) {
 				continue;
