@@ -18,7 +18,7 @@ use LogicException;
 class ParameterMap implements Contract\ParameterMap
 {
 	/**
-	 * @var ObjectMap<ParameterSource, GenericMap<string, mixed>>
+	 * @var ObjectMap<ParameterSource, GenericMap<array-key, mixed>>
 	 */
 	private ObjectMap $parameters;
 
@@ -27,7 +27,7 @@ class ParameterMap implements Contract\ParameterMap
 		$this->parameters = new ObjectMap();
 	}
 
-	public function get(string $key, ?ParameterSource $source = null): mixed
+	public function get(string|int $key, ?ParameterSource $source = null): mixed
 	{
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
@@ -43,7 +43,7 @@ class ParameterMap implements Contract\ParameterMap
 		throw new OffsetNotFoundException("Key '$key' not found in parameter map.");
 	}
 
-	public function has(string $key, ?ParameterSource $source = null): bool
+	public function has(string|int $key, ?ParameterSource $source = null): bool
 	{
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
@@ -59,7 +59,7 @@ class ParameterMap implements Contract\ParameterMap
 		return false;
 	}
 
-	public function put(string $key, ParameterSource $source, mixed $value): void
+	public function put(string|int $key, ParameterSource $source, mixed $value): void
 	{
 		if ($this->parameters->has($source)) {
 			$this->parameters->get($source)->put($key, $value);
@@ -68,7 +68,7 @@ class ParameterMap implements Contract\ParameterMap
 		}
 	}
 
-	public function remove(string $key, ?ParameterSource $source = null): void
+	public function remove(string|int $key, ?ParameterSource $source = null): void
 	{
 		$sources = $source ? [$source] : ParameterSource::cases();
 
@@ -147,18 +147,30 @@ class ParameterMap implements Contract\ParameterMap
 			$map->put($serverKey, ParameterSource::Server, $server[$serverKey]);
 		}
 
+		/**
+		 * @var mixed $value
+		 */
 		foreach ($get as $name => $value) {
 			$map->put($name, ParameterSource::Get, $value);
 		}
 
+		/**
+		 * @var mixed $value
+		 */
 		foreach ($post as $name => $value) {
 			$map->put($name, ParameterSource::Post, $value);
 		}
 
+		/**
+		 * @var mixed $value
+		 */
 		foreach ($session as $name => $value) {
 			$map->put($name, ParameterSource::Session, $value);
 		}
 
+		/**
+		 * @var mixed $value
+		 */
 		foreach ($env as $name => $value) {
 			$map->put($name, ParameterSource::Env, $value);
 		}
@@ -181,6 +193,9 @@ class ParameterMap implements Contract\ParameterMap
 			throw new InvalidArgumentException('Parameter map keys must be strings.');
 		}
 
+		/**
+		 * @psalm-suppress MixedReturnStatement
+		 */
 		return $this->get($offset);
 	}
 

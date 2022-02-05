@@ -99,12 +99,27 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		);
 	}
 
-	public static function fromGlobals(?Stream $body = null, ?string $protocolVersion = null, ?RequestMethod $requestMethod = null, ?Url $requestUrl = null): Contract\ServerRequest
+	public static function fromGlobals(
+		?Contract\ParameterMap $parameters = null,
+		?Contract\HeaderMap $headers = null,
+		?Contract\CookieMap $cookies = null,
+		?Contract\UploadedFileMap $files = null,
+		?string $protocolVersion = AbstractMessageBuilder::DefaultProtocolVersion,
+		?Stream $body = null,
+		?RequestMethod $requestMethod = null,
+		?Url $requestUrl = null
+	): Contract\ServerRequest
 	{
-		$parameters = ParameterMap::fromGlobals();
-		$headers = HeaderMap::fromGlobals();
-		$cookies = CookieMap::fromGlobals();
-		$files = UploadedFileMap::fromGlobals();
+		$parameters ??= ParameterMap::fromGlobals();
+		$headers ??= HeaderMap::fromGlobals();
+		$cookies ??= CookieMap::fromGlobals();
+		$files ??= UploadedFileMap::fromGlobals();
+
+		$builder = new self();
+		$builder->parameterMap($parameters);
+		$builder->headerMap($headers);
+		$builder->cookieMap($cookies);
+		$builder->uploadedFiles($files);
 
 		if ($body === null) {
 			$readonlyInput = fopen('php://input', 'rb');
@@ -112,22 +127,48 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 				throw new RuntimeException('Unable to open php://input');
 			}
 
-			$body = new ResourceStream($readonlyInput, size: $parameters['CONTENT_LENGTH'] ?? null);
+			if ($parameters->has('CONTENT_LENGTH')) {
+				$contentLength = (int)$parameters->get('CONTENT_LENGTH');
+				if ($contentLength > 0) {
+					$builder->body(new ResourceStream($readonlyInput, size: $contentLength));
+				}
+			} else {
+				$builder->body(new ResourceStream($readonlyInput));
+			}
+		} else {
+			$builder->body($body);
 		}
 
-		$protocolVersion ??= explode('/', $parameters['SERVER_PROTOCOL'], 2)[1];
-		$requestMethod ??= RequestMethod::from($parameters['REQUEST_METHOD']);
-		$requestUrl ??= Url::fromString($parameters['REQUEST_URI']);
+		if ($protocolVersion === null) {
+			if ($parameters->has('SERVER_PROTOCOL')) {
+				$protocol = (string)$parameters->get('SERVER_PROTOCOL');
+				$protocolParts = explode('/', $protocol, 2);
+				if (count($protocolParts) === 2) {
+					$builder->protocolVersion($protocolParts[1]);
+				}
+			}
+		} else {
+			$builder->protocolVersion($protocolVersion);
+		}
 
-		$builder = new self();
-		$builder->protocolVersion($protocolVersion);
-		$builder->headerMap($headers);
-		$builder->body($body);
-		$builder->requestMethod($requestMethod);
-		$builder->requestUrl($requestUrl);
-		$builder->parameterMap($parameters);
-		$builder->cookieMap($cookies);
-		$builder->uploadedFiles($files);
+		if ($requestMethod === null) {
+			if ($parameters->has('REQUEST_METHOD')) {
+				$requestMethodType = RequestMethod::tryFrom((string)$parameters->get('REQUEST_METHOD'));
+				if ($requestMethodType !== null) {
+					$builder->requestMethod($requestMethodType);
+				}
+			}
+		} else {
+			$builder->requestMethod($requestMethod);
+		}
+
+		if ($requestUrl === null) {
+			if ($parameters->has('REQUEST_URI')) {
+				$builder->requestUrl(Url::fromString((string)$parameters->get('REQUEST_URI')));
+			}
+		} else {
+			$builder->requestUrl($requestUrl);
+		}
 
 		return $builder->get();
 	}
