@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler\Contract;
 
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\UnhandledContextException;
 
@@ -26,4 +27,9 @@ interface HandlerContainer
 	 * @throws UnhandledContextException
 	 */
 	public function findHandler(Context $context): HandlerBinding;
+
+	/**
+	 * @return GenericList<HandlerBinding>
+	 */
+	public function getHandlers(): GenericList;
 }
