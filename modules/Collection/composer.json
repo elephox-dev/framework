@@ -34,5 +34,11 @@
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.4.x-dev",
+            "dev-main": "1.x-dev"
+        }
     }
 }
