@@ -20,7 +20,9 @@ class DefaultExceptionHandler
 					if (array_key_exists('exception', $metaData)) {
 						fwrite(STDERR, $metaData['exception']->getTraceAsString() . PHP_EOL);
 					} else if (!empty($metaData)) {
-						fwrite(STDERR, json_encode($metaData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+						/** @var string $json */
+						$json = json_encode($metaData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+						fwrite(STDERR, $json . PHP_EOL);
 					}
 				}
 			};

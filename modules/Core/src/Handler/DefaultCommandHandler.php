@@ -18,7 +18,9 @@ class DefaultCommandHandler
 				{
 					fwrite(STDERR, $message . PHP_EOL);
 					if (!empty($metaData)) {
-						fwrite(STDERR, json_encode($metaData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL);
+						/** @var string $json */
+						$json = json_encode($metaData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+						fwrite(STDERR, $json . PHP_EOL);
 					}
 				}
 			};
