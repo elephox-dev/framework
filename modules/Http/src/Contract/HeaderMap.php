@@ -10,5 +10,9 @@ use Elephox\Collection\Contract\GenericMap;
  */
 interface HeaderMap extends GenericMap
 {
+	/**
+	 * @param array<string, string|list<string>>|null $server
+	 * @return HeaderMap
+	 */
 	public static function fromGlobals(?array $server = null): HeaderMap;
 }

@@ -13,12 +13,20 @@ use Elephox\Support\MimeType;
  */
 class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 {
+	/**
+	 * @param null|array<string, array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string}> $files
+	 * @return Contract\UploadedFileMap
+	 */
 	public static function fromGlobals(?array $files = null): Contract\UploadedFileMap
 	{
 		$files ??= $_FILES;
 
 		$map = new self();
 
+		/**
+		 * @var string $id
+		 * @var array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string} $file
+		 */
 		foreach ($files as $id => $file)
 		{
 			$clientFilename = $file['name'];
@@ -28,10 +36,15 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			$tmpName = $file['tmp_name'];
 			$fullPath = $file['full_path'];
 
-			$mimeType = MimeType::tryFrom($clientType) ?? new CustomMimeType($clientType);
-			$uploadError = UploadError::from($error);
+			$mimeType = MimeType::tryFrom($clientType);
+			if ($mimeType === null && $clientType !== '') {
+				$mimeType = new CustomMimeType($clientType);
+			}
 
-			$uploadedFile = new UploadedFile($clientFilename, $fullPath, ResourceStream::fromFile($tmpName), $mimeType, $size, $uploadError);
+			$uploadError = UploadError::from($error);
+			$resource = ResourceStream::fromFile($tmpName);
+
+			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size > 0 ? $size : null, $uploadError);
 
 			$map->put($id, $uploadedFile);
 		}

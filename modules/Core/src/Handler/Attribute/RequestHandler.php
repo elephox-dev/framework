@@ -36,7 +36,7 @@ class RequestHandler extends AbstractHandlerAttribute
 	 * @param int $weight
 	 */
 	public function __construct(
-		string|UrlTemplateContract                  $url,
+		string|UrlTemplateContract                  $url = '',
 		null|string|RequestMethod|array|GenericList $methods = null,
 		int                                         $weight = 0,
 	) {
