@@ -45,8 +45,8 @@
         "psr/container-implementation": "1.0"
     },
     "suggest": {
-        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io",
-        "ext-fileinfo": "To use MimeType::fromFile()"
+        "ext-fileinfo": "To use MimeType::fromFile()",
+        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -76,6 +76,9 @@
             "Elephox\\Support\\": "modules/Support/test/"
         }
     },
+    "bin": [
+        "modules/Core/bin/elephox"
+    ],
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
