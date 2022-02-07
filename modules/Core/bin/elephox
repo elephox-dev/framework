@@ -1,0 +1,102 @@
+#!/bin/env php
+<?php
+declare(strict_types=1);
+
+$possibleAutoloaderFileLocations = array_filter([
+    $_composer_autoload_path ?? null,
+    $_ENV['COMPOSER_AUTOLOAD_FILE'] ?? null,
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../vendor/autoload.php',
+]);
+$foundAutoloaderFile = null;
+
+/** @var string $autoloaderFile */
+foreach ($possibleAutoloaderFileLocations as $autoloaderFile) {
+    /** @psalm-suppress UnresolvableInclude */
+    if (file_exists($autoloaderFile) && include $autoloaderFile) {
+        $foundAutoloaderFile = realpath($autoloaderFile);
+
+        break;
+    }
+}
+
+if (empty($foundAutoloaderFile)) {
+    fwrite(STDERR, 'Unable to find autoloader. Did you execute \'composer install\'?' . PHP_EOL);
+    fwrite(STDERR, 'Looked for it at these places:' . PHP_EOL);
+    fwrite(STDERR, ' - $_composer_autoload_path' . PHP_EOL);
+    fwrite(STDERR, ' - $_ENV[\'COMPOSER_AUTOLOAD_FILE\']' . PHP_EOL);
+
+    /** @var string $location */
+    foreach ($possibleAutoloaderFileLocations as $location) {
+        fwrite(STDERR, ' - ' . $location . PHP_EOL);
+    }
+
+    exit(201);
+}
+
+$appRoot = dirname($foundAutoloaderFile, 2);
+$possibleBootstrapFileLocations = array_filter([
+    $_elephox_bootstrap_path ?? null,
+    $_ENV['ELEPHOX_BOOTSTRAP'] ?? null,
+    $appRoot . '/bootstrap.php',
+    $appRoot . '/src/bootstrap.php',
+    $appRoot . '/app/bootstrap.php',
+]);
+$foundBootstrapFile = null;
+
+/** @var string $bootstrapFile */
+foreach ($possibleBootstrapFileLocations as $bootstrapFile) {
+    if (file_exists($bootstrapFile)) {
+        $foundBootstrapFile = realpath($bootstrapFile);
+
+        break;
+    }
+}
+
+if (empty($foundBootstrapFile)) {
+    fwrite(STDERR, 'Unable to find bootstrap file. Looked for it at these places:' . PHP_EOL);
+    fwrite(STDERR, ' - $_elephox_bootstrap_path' . PHP_EOL);
+    fwrite(STDERR, ' - $_ENV[\'ELEPHOX_BOOTSTRAP\']' . PHP_EOL);
+
+    /** @var string $location */
+    foreach ($possibleBootstrapFileLocations as $location) {
+        fwrite(STDERR, ' - ' . $location . PHP_EOL);
+    }
+
+    exit(202);
+}
+
+////////////////////////////////////////////////////
+
+use Elephox\Core\Context\Contract\CommandLineContext;
+use Elephox\Core\Contract\Core;
+
+/** @psalm-suppress UnresolvableInclude */
+$core = include $foundBootstrapFile;
+if (!$core instanceof Core) {
+    fwrite(STDERR, 'Bootstrap file did not return a Elephox\Core\Contract\Core instance.' . PHP_EOL);
+    exit(203);
+}
+
+$context = $core->getGlobalContext();
+if (!$context instanceof CommandLineContext) {
+    fwrite(STDERR, 'This script can only be run from command line.' . PHP_EOL);
+    exit(204);
+}
+
+try {
+    /** @psalm-suppress MixedAssignment */
+    $exitCode = $core->handleContext($context);
+
+    if (is_int($exitCode) && $exitCode >= 0 && $exitCode <= 255) {
+        /** @var int<0, 255> $exitCode */
+        exit($exitCode);
+    }
+
+    exit(0);
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    fwrite(STDERR, $e->getTraceAsString() . PHP_EOL);
+
+    exit(255);
+}

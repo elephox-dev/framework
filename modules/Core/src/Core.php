@@ -11,6 +11,8 @@ use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Contract\App;
 use Elephox\Core\Contract\Registrar as RegistrarContract;
 use Elephox\Core\Handler\Contract\HandlerContainer as HandlerContainerContract;
+use Elephox\Core\Handler\DefaultCommandHandler;
+use Elephox\Core\Handler\DefaultExceptionHandler;
 use Elephox\Core\Handler\HandlerContainer;
 use Elephox\Core\Registrar as RegistrarTrait;
 use Elephox\DI\Container;
@@ -56,10 +58,22 @@ class Core implements Contract\Core
 	}
 
 	private ?HandlerContainerContract $handlerContainer = null;
+	private bool $registerDefaultCommandHandler = true;
+	private bool $registerDefaultExceptionHandler = true;
 
 	protected function __construct(
 		private ContainerContract $container
 	) {
+	}
+
+	public function setRegisterDefaultCommandHandler(bool $register): void
+	{
+		$this->registerDefaultCommandHandler = $register;
+	}
+
+	public function setRegisterDefaultExceptionHandler(bool $register): void
+	{
+		$this->registerDefaultExceptionHandler = $register;
 	}
 
 	public function getVersion(): string
@@ -134,6 +148,14 @@ class Core implements Contract\Core
 	public function handleContext(ContextContract $context): mixed
 	{
 		try {
+			if ($this->registerDefaultCommandHandler) {
+				$this->getHandlerContainer()->loadFromClass(DefaultCommandHandler::class);
+			}
+
+			if ($this->registerDefaultExceptionHandler) {
+				$this->getHandlerContainer()->loadFromClass(DefaultExceptionHandler::class);
+			}
+
 			return $this->getHandlerContainer()->findHandler($context)->handle($context);
 		} catch (Throwable $e) {
 			$this->handleException($e);

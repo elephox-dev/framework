@@ -19,6 +19,10 @@ interface Core
 	 */
 	public function registerApp(App|string $app): App;
 
+	public function setRegisterDefaultExceptionHandler(bool $register): void;
+
+	public function setRegisterDefaultCommandHandler(bool $register): void;
+
 	public function checkRegistrar(object $potentialRegistrar): void;
 
 	public function handleException(Throwable $throwable): void;

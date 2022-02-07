@@ -5,6 +5,7 @@ namespace Elephox\Core\Handler;
 
 use Closure;
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Contract\Core as CoreContract;
 use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttributeContract;
@@ -159,8 +160,6 @@ class HandlerContainer implements Contract\HandlerContainer
 
 	/**
 	 * @throws ReflectionException
-	 * @throws \Safe\Exceptions\StringsException
-	 * @throws \Safe\Exceptions\PcreException
 	 */
 	public function loadFromNamespace(string $namespace): static
 	{
@@ -235,5 +234,10 @@ class HandlerContainer implements Contract\HandlerContainer
 		}
 
 		array_unshift($nsParts, array_pop($nsPartsUsed));
+	}
+
+	public function getHandlers(): ArrayList
+	{
+		return $this->bindings;
 	}
 }
