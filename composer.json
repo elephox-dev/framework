@@ -175,7 +175,7 @@
         ],
         "update-static-analysis-baseline": [
             "@putenv XDEBUG_MODE=off",
-            "psalm --no-cache --long-progress --update-baseline"
+            "psalm --no-cache --long-progress --set-baseline=baselines/psalm.baseline.xml"
         ]
     }
 }
