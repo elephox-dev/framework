@@ -11,6 +11,8 @@ use Elephox\Core\Middleware\Contract\Middleware;
 
 interface HandlerBinding
 {
+	public function getFunctionName(): string;
+
 	public function getHandlerMeta(): HandlerMeta;
 
 	/**

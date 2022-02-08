@@ -32,6 +32,15 @@ class CommandHandler extends AbstractHandlerAttribute
 		return parent::getWeight();
 	}
 
+	public function getScore(Context $context): float
+	{
+		if ($this->commandSignature === null || !$context instanceof CommandLineContext) {
+			return 0.0;
+		}
+
+		return Regex::specificity($this->commandSignature, $context->getCommandLine());
+	}
+
 	public function handles(Context $context): bool
 	{
 		if (!$context instanceof CommandLineContext) {

@@ -19,6 +19,7 @@ use Elephox\DI\InstanceLifetime;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\RequestMethod;
+use Elephox\OOR\Regex;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class RequestHandler extends AbstractHandlerAttribute
@@ -68,6 +69,15 @@ class RequestHandler extends AbstractHandlerAttribute
 
 			$this->methods->add($method);
 		}
+	}
+
+	public function getScore(Context $context): float
+	{
+		if (!$context instanceof RequestContextContract) {
+			return 0.0;
+		}
+
+		return Regex::specificity($this->template->getSanitizedSource(), (string)$context->getRequest()->getUrl());
 	}
 
 	public function handles(Context $context): bool

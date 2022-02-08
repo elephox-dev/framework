@@ -5,14 +5,13 @@ namespace Elephox\Core\Handler;
 
 use Closure;
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Contract\Core as CoreContract;
 use Elephox\Core\Handler\Attribute\Contract\HandlerAttribute as HandlerAttributeContract;
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
 use Elephox\Core\Middleware\Attribute\Contract\MiddlewareAttribute;
-use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Core\Middleware\Contract\Middleware;
 use Elephox\Core\UnhandledContextException;
 use Elephox\DI\Contract\Container as ContainerContract;
@@ -74,15 +73,17 @@ class HandlerContainer implements Contract\HandlerContainer
 
 	public function findHandler(ContextContract $context): Contract\HandlerBinding
 	{
-		$bindings = $this->bindings->where(static fn(Contract\HandlerBinding $binding): bool => $binding->getHandlerMeta()->handles($context));
-		if ($bindings->isEmpty()) {
+		$binding = $this->bindings
+			->where(static fn(Contract\HandlerBinding $b): bool => $b->getHandlerMeta()->handles($context))
+			->orderByDescending(static fn(Contract\HandlerBinding $b): int => $b->getHandlerMeta()->getWeight())
+			->thenBy(static fn(Contract\HandlerBinding $b): float => $b->getHandlerMeta()->getScore($context))
+			->first();
+		if (empty($binding)) {
 			throw new UnhandledContextException($context);
 		}
 
 		/** @var Contract\HandlerBinding */
-		return $bindings
-			->orderBy(static fn(Contract\HandlerBinding $b): int => $b->getHandlerMeta()->getWeight())
-			->first();
+		return $binding;
 	}
 
 	/**
@@ -104,7 +105,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection Until vimeo/psalm#7322 is fixed */
 			$closure = Closure::fromCallable($classInstance);
 			$middlewareAttributes = $classReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
-			$this->registerAttributes($closure, $classAttributes, $middlewareAttributes);
+			$this->registerAttributes($className . '::__invoke', $closure, $classAttributes, $middlewareAttributes);
 		}
 
 		$methods = $classReflection->getMethods(ReflectionMethod::IS_PUBLIC);
@@ -122,7 +123,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			$methodMiddlewareAttributes = $methodReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 			$classMiddlewareAttributes = $classReflection->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 			$middlewareAttributes = [...$methodMiddlewareAttributes, ...$classMiddlewareAttributes];
-			$this->registerAttributes($closure, $methodAttributes, $middlewareAttributes);
+			$this->registerAttributes($className . "::" . $methodReflection->getName(), $closure, $methodAttributes, $middlewareAttributes);
 		}
 
 		if ($classInstance !== null) {
@@ -134,11 +135,12 @@ class HandlerContainer implements Contract\HandlerContainer
 	}
 
 	/**
+	 * @param non-empty-string $functionName
 	 * @param Closure $closure
 	 * @param array<array-key, ReflectionAttribute<HandlerAttributeContract>> $handlerAttributes
 	 * @param array<array-key, ReflectionAttribute<MiddlewareAttribute>> $middlewareAttributes
 	 */
-	private function registerAttributes(Closure $closure, array $handlerAttributes, array $middlewareAttributes): void
+	private function registerAttributes(string $functionName, Closure $closure, array $handlerAttributes, array $middlewareAttributes): void
 	{
 		foreach ($handlerAttributes as $handlerAttribute) {
 			/**
@@ -152,7 +154,7 @@ class HandlerContainer implements Contract\HandlerContainer
 				->select(static fn(ReflectionAttribute $middlewareAttribute): Middleware => /** @var MiddlewareAttribute */ $middlewareAttribute->newInstance())
 				->where(static fn(Middleware $middleware): bool => $middleware->getType()->matchesAny() || $middleware->getType() === $handlerAttributeInstance->getType());
 
-			$binding = new HandlerBinding($closure, $handlerAttributeInstance, $middlewares);
+			$binding = new HandlerBinding($functionName, $closure, $handlerAttributeInstance, $middlewares);
 
 			$this->register($binding);
 		}

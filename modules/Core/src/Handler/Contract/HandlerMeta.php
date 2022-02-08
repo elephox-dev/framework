@@ -11,6 +11,8 @@ interface HandlerMeta extends HandlerStackMeta
 {
 	public function handles(Context $context): bool;
 
+	public function getScore(Context $context): float;
+
 	/**
 	 * @throws InvalidContextException
 	 */

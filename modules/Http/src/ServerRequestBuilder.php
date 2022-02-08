@@ -71,7 +71,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 	public function sessionParam(string $name, mixed $value): static
 	{
 		if ($this->session === null) {
-			$this->session = SessionMap::start([]);
+			$this->session = SessionMap::start();
 		}
 
 		$this->session->put($name, $value);

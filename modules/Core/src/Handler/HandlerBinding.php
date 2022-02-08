@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Core\Handler;
 
 use Closure;
-use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Core\Context\Contract\Context;
 use Elephox\Core\Handler\Contract\HandlerMeta;
 use Elephox\Core\Middleware\Contract\Middleware;
@@ -20,16 +18,24 @@ class HandlerBinding implements Contract\HandlerBinding
 	private GenericKeyedEnumerable $middlewares;
 
 	/**
+	 * @param non-empty-string $functionName
 	 * @param Closure $closure
 	 * @param HandlerMeta $handlerMeta
 	 * @param GenericKeyedEnumerable<int, Middleware> $middlewares
 	 */
 	public function __construct(
-		private Closure     $closure,
+		private string $functionName,
+		private Closure $closure,
 		private HandlerMeta $handlerMeta,
 		GenericKeyedEnumerable $middlewares,
 	) {
 		$this->middlewares = $middlewares->orderBy(static fn(Middleware $m): int => $m->getWeight());
+	}
+
+	#[Pure]
+	public function getFunctionName(): string
+	{
+		return $this->functionName;
 	}
 
 	#[Pure]

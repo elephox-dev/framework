@@ -42,7 +42,7 @@ class SessionMap implements Contract\SessionMap
 			session_start();
 		}
 
-		return new SessionMap();
+		return new self();
 	}
 
 	public static function destroy(): void

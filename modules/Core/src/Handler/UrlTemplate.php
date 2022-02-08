@@ -6,6 +6,7 @@ namespace Elephox\Core\Handler;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Http\Url;
+use Elephox\OOR\Regex;
 use RuntimeException;
 
 class UrlTemplate implements Contract\UrlTemplate
@@ -24,14 +25,14 @@ class UrlTemplate implements Contract\UrlTemplate
 	{
 		$source = $this->getSanitizedSource();
 
-		return preg_match("/^$source$/", (string)$url) === 1;
+		return Regex::matches($source, (string)$url);
 	}
 
 	public function getValues(Url $url): GenericKeyedEnumerable
 	{
 		$source = $this->getSanitizedSource();
 
-		$result = preg_match_all("/^$source$/", (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+		$result = preg_match_all($source, (string)$url, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 		if ($result === false) {
 			throw new RuntimeException('Failed to match URL template');
 		}
@@ -40,10 +41,12 @@ class UrlTemplate implements Contract\UrlTemplate
 		return ArrayMap::from($matches[0])->whereKey(fn ($key) => is_string($key));
 	}
 
-	private function getSanitizedSource(): string
+	public function getSanitizedSource(): string
 	{
 		$source = $this->source;
 
-		return str_starts_with($source, '\\/') ? $source : "\\/$source";
+		$source = str_starts_with($source, '\\/') ? $source : "\\/$source";
+
+		return "/^$source$/";
 	}
 }

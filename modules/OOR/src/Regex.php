@@ -43,9 +43,31 @@ class Regex
 		return ArrayMap::from($matches);
 	}
 
-	#[Pure]
 	public static function matches(string $pattern, string $subject): bool
 	{
 		return preg_match($pattern, $subject) === 1;
+	}
+
+	public static function specificity(string $pattern, string $subject): float
+	{
+		$maxScore = strlen($subject);
+		if (!self::matches($pattern, $subject)) {
+			return $maxScore;
+		}
+
+		$score = 0;
+		for ($i = 0, $iMax = $maxScore; $i < $iMax; $i++) {
+			$modifiedSubject = substr_replace($subject, '', $i, 1);
+
+			if (self::matches($pattern, $modifiedSubject)) {
+				$score++;
+			}
+		}
+
+		if ($score === 0) {
+			return 0;
+		}
+
+		return 1 - ($score / $maxScore);
 	}
 }
