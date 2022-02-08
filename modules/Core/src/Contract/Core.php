@@ -19,6 +19,8 @@ interface Core
 	 */
 	public function registerApp(App|string $app): App;
 
+	public function registerGlobal(string $varName = "__elephox_autoregister_class"): void;
+
 	public function setRegisterDefaultExceptionHandler(bool $register): void;
 
 	public function setRegisterDefaultCommandHandler(bool $register): void;

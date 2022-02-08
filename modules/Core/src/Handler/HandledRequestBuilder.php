@@ -32,7 +32,8 @@ class HandledRequestBuilder extends ServerRequestBuilder implements Contract\Han
 			$request->getMethod(),
 			$request->getUrl(),
 			$request instanceof ServerRequest ? $request->getParameters() : null,
-			$request instanceof ServerRequest ? $request->getCookieMap() : null,
+			$request instanceof ServerRequest ? $request->getCookies() : null,
+			$request instanceof ServerRequest ? $request->getSession() : null,
 			$request instanceof ServerRequest ? $request->getUploadedFiles() : null,
 			$request instanceof Contract\HandledRequest ? $request->getMatchedTemplate() : null,
 		);
@@ -46,11 +47,12 @@ class HandledRequestBuilder extends ServerRequestBuilder implements Contract\Han
 		?RequestMethod                         $method = null,
 		?Url                                   $url = null,
 		?HttpContract\ParameterMap             $parameters = null,
-		?HttpContract\CookieMap                $cookieMap = null,
+		?HttpContract\CookieMap                $cookies = null,
+		?HttpContract\SessionMap               $session = null,
 		?HttpContract\UploadedFileMap          $uploadedFiles = null,
 		protected ?Contract\MatchedUrlTemplate $matchedTemplate = null
 	) {
-		parent::__construct($protocolVersion, $headers, $body, $method, $url, $parameters, $cookieMap, $uploadedFiles);
+		parent::__construct($protocolVersion, $headers, $body, $method, $url, $parameters, $cookies, $session, $uploadedFiles);
 	}
 
 	public function matchedTemplate(Contract\MatchedUrlTemplate $matchedUrlTemplate): static
@@ -69,7 +71,8 @@ class HandledRequestBuilder extends ServerRequestBuilder implements Contract\Han
 			$this->method ?? RequestMethod::GET,
 			$this->url ?? throw self::missingParameterException("url"),
 			$this->parameters ?? new ParameterMap(),
-			$this->cookieMap ?? new CookieMap(),
+			$this->cookies ?? new CookieMap(),
+			$this->session,
 			$this->uploadedFiles ?? new UploadedFileMap(),
 			$this->matchedTemplate ?? throw self::missingParameterException("template")
 		);

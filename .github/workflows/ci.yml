@@ -81,36 +81,36 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.php-version == '8.1' }}
         run: composer run ci:static-analysis:publish
 
-#  benchmark:
-#    name: 👟 Benchmark
-#    needs: [ composer-setup ]
-#    strategy:
-#      matrix:
-#        php-version: [ '8.1', '8.2' ]
-#        os: [ 'ubuntu-latest', 'windows-latest' ]
-#    runs-on: ${{ matrix.os }}
-#    steps:
-#      - name: ⤵️ Checkout Sources
-#        uses: actions/checkout@v2
-#      - name: 🐘 Setup PHP ${{ matrix.php-version }}
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: ${{ matrix.php-version }}
-#          extensions: ${{ env.php-extensions }}
-#          coverage: none
-#      - name: 📦 Get composer cache directory
-#        id: composer-cache
-#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-#      - name: 💾 Cache dependencies
-#        uses: actions/cache@v2
-#        with:
-#          path: ${{ steps.composer-cache.outputs.dir }}
-#          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-#          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
-#      - name: 📦 Install dependencies
-#        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
-#      - name: 👟 Run PHPBench
-#        run: composer run ci:benchmark
+  benchmark:
+    name: 👟 Benchmark
+    needs: [ composer-setup ]
+    strategy:
+      matrix:
+        php-version: [ '8.1', '8.2' ]
+        os: [ 'ubuntu-latest' ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: ${{ env.php-extensions }}
+          coverage: none
+      - name: 📦 Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
+      - name: 👟 Run PHPBench
+        run: composer run ci:benchmark
 
   unit-tests:
     name: 🧪 Unit Tests

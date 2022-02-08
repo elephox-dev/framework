@@ -10,7 +10,6 @@ enum ParameterSource
 {
 	case Post;
 	case Get;
-	case Session;
 	case Server;
 	case Env;
 }

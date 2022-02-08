@@ -20,7 +20,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/test" isTestSource="true" packagePrefix="Elephox\Events\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/src" isTestSource="false" packagePrefix="Elephox\OOR\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/test" isTestSource="true" packagePrefix="Elephox\OOR\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />

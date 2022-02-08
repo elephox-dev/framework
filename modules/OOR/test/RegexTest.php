@@ -53,4 +53,15 @@ class RegexTest extends TestCase
 
 		Regex::match('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
 	}
+
+	public function testSpecificity(): void
+	{
+		self::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
+		self::assertEquals(0, Regex::specificity('/hello world/', 'hello world'));
+
+		self::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
+		self::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
+		self::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
+		self::assertLessThan(Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
+	}
 }

@@ -96,7 +96,7 @@
     "scripts": {
         "benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5"
+            "phpbench run --report=overview --ref=baseline --retry-threshold=5 --iterations=10"
         ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
@@ -104,7 +104,7 @@
         ],
         "ci:benchmark": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --retry-threshold=5"
+            "phpbench run --report=overview --ref=baseline --retry-threshold=5 --iterations=10"
         ],
         "ci:check-dependencies": [
             "@putenv XDEBUG_MODE=off",
@@ -165,9 +165,17 @@
             "@putenv XDEBUG_MODE=coverage",
             "phpunit --configuration=phpunit.xml.dist"
         ],
+        "update-benchmark-baseline": [
+            "@putenv XDEBUG_MODE=off",
+            "phpbench run --tag=baseline --retry-threshold=5 --iterations=10 --dump-file=baselines/benchmark.baseline.xml"
+        ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
             "@php bin/update-readme-annotations.php"
+        ],
+        "update-static-analysis-baseline": [
+            "@putenv XDEBUG_MODE=off",
+            "psalm --no-cache --long-progress --set-baseline=baselines/psalm.baseline.xml"
         ]
     }
 }

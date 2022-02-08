@@ -9,7 +9,7 @@ use Elephox\Http\ParameterSource;
 
 interface ParameterMap extends ArrayAccess
 {
-	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $session = null, ?array $server = null, ?array $env = null): ParameterMap;
+	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null): ParameterMap;
 
 	public function get(string $key, ?ParameterSource $source = null): mixed;
 

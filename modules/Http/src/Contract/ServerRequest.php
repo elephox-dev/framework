@@ -19,8 +19,11 @@ interface ServerRequest extends Request
 	public function getParameters(): ParameterMap;
 
 	#[Pure]
-	public function getCookieMap(): CookieMap;
+	public function getCookies(): CookieMap;
 
 	#[Pure]
 	public function getUploadedFiles(): UploadedFileMap;
+
+	#[Pure]
+	public function getSession(): ?SessionMap;
 }

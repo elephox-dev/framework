@@ -34,7 +34,9 @@ if (empty($foundAutoloaderFile)) {
     exit(201);
 }
 
-$appRoot = dirname($foundAutoloaderFile, 2);
+$appRoot = (string)($_ENV['ELEPHOX_APP_ROOT'] ?? dirname($foundAutoloaderFile, 2));
+unset($possibleAutoloaderFileLocations, $foundAutoloaderFile);
+
 $possibleBootstrapFileLocations = array_filter([
     $_elephox_bootstrap_path ?? null,
     $_ENV['ELEPHOX_BOOTSTRAP'] ?? null,
@@ -66,6 +68,8 @@ if (empty($foundBootstrapFile)) {
     exit(202);
 }
 
+unset($possibleBootstrapFileLocations);
+
 ////////////////////////////////////////////////////
 
 use Elephox\Core\Context\Contract\CommandLineContext;
@@ -78,7 +82,9 @@ if (!$core instanceof Core) {
     exit(203);
 }
 
-$context = $core->getGlobalContext();
+unset($foundBootstrapFile);
+
+$context = $GLOBALS['__elephox_context'] = $core->getGlobalContext();
 if (!$context instanceof CommandLineContext) {
     fwrite(STDERR, 'This script can only be run from command line.' . PHP_EOL);
     exit(204);

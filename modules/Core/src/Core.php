@@ -107,6 +107,32 @@ class Core implements Contract\Core
 		return $appInstance;
 	}
 
+	public function registerGlobal(string $varName = "__elephox_autoregister_class"): void
+	{
+		if (!isset($GLOBALS[$varName])) {
+			return;
+		}
+
+		if (!is_array($GLOBALS[$varName])) {
+			throw new LogicException("Global variable '$varName' must be an array.");
+		}
+
+		$handlerContainer = $this->getHandlerContainer();
+		foreach ($GLOBALS[$varName] as $className) {
+			if (!is_string($className)) {
+				throw new LogicException("Global variable '$varName' must be an array of strings.");
+			}
+
+			if (!class_exists($className)) {
+				throw new LogicException("Class '$className' does not exist.");
+			}
+
+			$handlerContainer->loadFromClass($className);
+		}
+
+		unset($GLOBALS[$varName]);
+	}
+
 	public function checkRegistrar(object $potentialRegistrar): void
 	{
 		$traits = class_uses($potentialRegistrar);

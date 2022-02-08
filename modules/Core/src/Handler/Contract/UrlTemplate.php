@@ -18,4 +18,6 @@ interface UrlTemplate
 	 * @return GenericKeyedEnumerable<string, string>
 	 */
 	public function getValues(Url $url): GenericKeyedEnumerable;
+
+	public function getSanitizedSource(): string;
 }

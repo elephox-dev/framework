@@ -27,9 +27,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
-- [ ] New documentation solution
 - [ ] Publish PHPUnit HTML coverage report
-- [ ] Publish/compare benchmark report against baseline
+- [ ] Publish benchmark report against baseline
 - [ ] Improve integration of PHPStorm attributes
 - [ ] Caching Services
 - [ ] Database Adapter
@@ -69,6 +68,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [x] ~~Event Bus~~
 - [x] ~~Split existing PSR implementations into different third-party adapters~~
 - [x] ~~Integrate PIE into Collections~~
+- [x] ~~New documentation solution~~ see [elephox.dev](https://elephox.dev)!
 
 <!-- start annotations -->
 

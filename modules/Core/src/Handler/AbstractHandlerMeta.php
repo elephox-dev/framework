@@ -31,6 +31,11 @@ abstract class AbstractHandlerMeta implements HandlerMeta
 		return $this->weight;
 	}
 
+	public function getScore(Context $context): float
+	{
+		return 0.0;
+	}
+
 	public function getHandlerParams(Context $context): iterable
 	{
 		return [];

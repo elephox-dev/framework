@@ -40,7 +40,7 @@ class ArrayAccessBench
 	{
 		static $i;
 
-		$i ??= 1000;
+		$i ??= 999;
 
 		$this->arrayList->offsetUnset($i--);
 	}

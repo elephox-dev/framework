@@ -4,15 +4,17 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 
-        errorLevel="2"
+        errorLevel="1"
 
         checkForThrowsInGlobalScope="true"
         ignoreInternalFunctionFalseReturn="false"
-        ignoreInternalFunctionNullReturn="true"
+        ignoreInternalFunctionNullReturn="false"
         findUnusedVariablesAndParams="false"
         findUnusedCode="false"
-        findUnusedPsalmSuppress="false"
-        sealAllMethods="false"
+        findUnusedPsalmSuppress="true"
+        sealAllMethods="true"
+
+        errorBaseline="baselines/psalm.baseline.xml"
 >
     <projectFiles>
         <directory name="modules/*/src"/>
