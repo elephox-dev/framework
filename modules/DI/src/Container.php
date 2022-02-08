@@ -123,8 +123,6 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType
-	 *
 	 * @template T
 	 *
 	 * @param class-string<T>|string $id

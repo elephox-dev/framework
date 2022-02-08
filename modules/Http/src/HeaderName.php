@@ -180,7 +180,6 @@ enum HeaderName: string
 		}
 
 		$value = strtolower($value);
-		/** @psalm-suppress ImpureMethodCall */
 		foreach (self::cases() as $name) {
 			if (strtolower($name->value) === $value) {
 				return $name;

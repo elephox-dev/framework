@@ -171,9 +171,10 @@ class HandlerContainer implements Contract\HandlerContainer
 				continue;
 			}
 
+			/** @var list<string> $parts */
 			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\')->toList();
 			// remove first element since it is the alias for the directories we are iterating
-			$root = array_shift($parts);
+			$root = (string)array_shift($parts);
 
 			foreach ($dirs as $dir) {
 				$directory = new Directory($dir);
@@ -193,7 +194,6 @@ class HandlerContainer implements Contract\HandlerContainer
 	 * @param ComposerClassLoader $classLoader
 	 * @param int $depth
 	 * @throws ReflectionException
-	 * @throws \Safe\Exceptions\StringsException
 	 *
 	 * @noinspection PhpDocSignatureInspection
 	 */
@@ -203,7 +203,7 @@ class HandlerContainer implements Contract\HandlerContainer
 			throw new RuntimeException("Recursion limit exceeded. Please choose a more specific namespace.");
 		}
 
-		$lastPart = array_shift($nsParts);
+		$lastPart = (string)array_shift($nsParts);
 		$nsPartsUsed[] = $lastPart;
 		foreach ($directory->getDirectories() as $dir) {
 			if ($dir->getName() !== $lastPart) {
