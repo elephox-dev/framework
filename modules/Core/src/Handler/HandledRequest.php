@@ -6,6 +6,7 @@ namespace Elephox\Core\Handler;
 use Elephox\Http\Contract\CookieMap;
 use Elephox\Http\Contract\HeaderMap;
 use Elephox\Http\Contract\ParameterMap;
+use Elephox\Http\Contract\SessionMap;
 use Elephox\Http\Contract\UploadedFileMap;
 use Elephox\Http\ServerRequest;
 use Elephox\Http\RequestMethod;
@@ -26,10 +27,11 @@ class HandledRequest extends ServerRequest implements Contract\HandledRequest
 		Url $url,
 		ParameterMap $parameters,
 		CookieMap $cookies,
+		?SessionMap $session,
 		UploadedFileMap $uploadedFiles,
 		public readonly Contract\MatchedUrlTemplate $template
 	) {
-		parent::__construct($protocolVersion, $headers, $body, $method, $url, $parameters, $cookies, $uploadedFiles);
+		parent::__construct($protocolVersion, $headers, $body, $method, $url, $parameters, $cookies, $session, $uploadedFiles);
 	}
 
 	#[Pure]
@@ -49,6 +51,7 @@ class HandledRequest extends ServerRequest implements Contract\HandledRequest
 			$this->url,
 			$this->parameters,
 			$this->cookies,
+			$this->session,
 			$this->uploadedFiles,
 			$this->template,
 		);

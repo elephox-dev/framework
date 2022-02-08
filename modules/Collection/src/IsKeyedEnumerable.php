@@ -435,6 +435,7 @@ trait IsKeyedEnumerable
 	 */
 	public function max(callable $selector): int|float|string
 	{
+		/** @var Iterator<TIteratorKey, TSource> $iterator */
 		$iterator = $this->getIterator();
 		$iterator->rewind();
 		if (!$iterator->valid()) {
@@ -460,6 +461,7 @@ trait IsKeyedEnumerable
 	 */
 	public function min(callable $selector): int|float|string
 	{
+		/** @var Iterator<TIteratorKey, TSource> $iterator */
 		$iterator = $this->getIterator();
 		$iterator->rewind();
 		if (!$iterator->valid()) {

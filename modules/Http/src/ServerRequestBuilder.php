@@ -25,7 +25,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		?RequestMethod                      $method = null,
 		?Url                                $url = null,
 		protected ?Contract\ParameterMap    $parameters = null,
-		protected ?Contract\CookieMap       $cookieMap = null,
+		protected ?Contract\CookieMap       $cookies = null,
+		protected ?Contract\SessionMap      $session = null,
 		protected ?Contract\UploadedFileMap $uploadedFiles = null
 	) {
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
@@ -42,27 +43,45 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function parameterMap(Contract\ParameterMap $parameterMap): static
+	public function parameters(Contract\ParameterMap $parameters): static
 	{
-		$this->parameters = $parameterMap;
+		$this->parameters = $parameters;
 
 		return $this;
 	}
 
 	public function cookie(Cookie $cookie): static
 	{
-		if ($this->cookieMap === null) {
-			$this->cookieMap = new CookieMap();
+		if ($this->cookies === null) {
+			$this->cookies = new CookieMap();
 		}
 
-		$this->cookieMap->put($cookie->getName(), $cookie);
+		$this->cookies->put($cookie->getName(), $cookie);
 
 		return $this;
 	}
 
-	public function cookieMap(Contract\CookieMap $cookieMap): static
+	public function cookies(Contract\CookieMap $cookies): static
 	{
-		$this->cookieMap = $cookieMap;
+		$this->cookies = $cookies;
+
+		return $this;
+	}
+
+	public function sessionParam(string $name, mixed $value): static
+	{
+		if ($this->session === null) {
+			$this->session = SessionMap::start([]);
+		}
+
+		$this->session->put($name, $value);
+
+		return $this;
+	}
+
+	public function session(?Contract\SessionMap $session): static
+	{
+		$this->session = $session;
 
 		return $this;
 	}
@@ -94,7 +113,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			$this->method ?? RequestMethod::GET,
 			$this->url ?? throw self::missingParameterException("url"),
 			$this->parameters ?? new ParameterMap(),
-			$this->cookieMap ?? new CookieMap(),
+			$this->cookies ?? new CookieMap(),
+			$this->session,
 			$this->uploadedFiles ?? new UploadedFileMap()
 		);
 	}
@@ -103,6 +123,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		?Contract\ParameterMap $parameters = null,
 		?Contract\HeaderMap $headers = null,
 		?Contract\CookieMap $cookies = null,
+		?Contract\SessionMap $session = null,
 		?Contract\UploadedFileMap $files = null,
 		?string $protocolVersion = AbstractMessageBuilder::DefaultProtocolVersion,
 		?Stream $body = null,
@@ -113,12 +134,14 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$parameters ??= ParameterMap::fromGlobals();
 		$headers ??= HeaderMap::fromGlobals();
 		$cookies ??= CookieMap::fromGlobals();
+		$session ??= SessionMap::fromGlobals();
 		$files ??= UploadedFileMap::fromGlobals();
 
 		$builder = new self();
-		$builder->parameterMap($parameters);
+		$builder->parameters($parameters);
 		$builder->headerMap($headers);
-		$builder->cookieMap($cookies);
+		$builder->cookies($cookies);
+		$builder->session($session);
 		$builder->uploadedFiles($files);
 
 		if ($body === null) {

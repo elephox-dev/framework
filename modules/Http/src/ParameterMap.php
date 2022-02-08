@@ -95,11 +95,10 @@ class ParameterMap implements Contract\ParameterMap
 		return new Enumerable($iterator);
 	}
 
-	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $session = null, ?array $server = null, ?array $env = null): Contract\ParameterMap
+	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null): Contract\ParameterMap
 	{
 		$post ??= $_POST;
 		$get ??= $_GET;
-		$session ??= $_SESSION ?? [];
 		$server ??= $_SERVER;
 		$env ??= $_ENV;
 
@@ -159,13 +158,6 @@ class ParameterMap implements Contract\ParameterMap
 		 */
 		foreach ($post as $name => $value) {
 			$map->put($name, ParameterSource::Post, $value);
-		}
-
-		/**
-		 * @var mixed $value
-		 */
-		foreach ($session as $name => $value) {
-			$map->put($name, ParameterSource::Session, $value);
 		}
 
 		/**

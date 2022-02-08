@@ -6,6 +6,7 @@ namespace Elephox\Http;
 use Elephox\Http\Contract\CookieMap;
 use Elephox\Http\Contract\HeaderMap;
 use Elephox\Http\Contract\ParameterMap;
+use Elephox\Http\Contract\SessionMap;
 use Elephox\Http\Contract\UploadedFileMap;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
@@ -29,6 +30,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		Url $url,
 		public readonly ParameterMap $parameters,
 		public readonly CookieMap $cookies,
+		public readonly ?SessionMap $session,
 		public readonly UploadedFileMap $uploadedFiles
 	) {
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
@@ -45,7 +47,8 @@ class ServerRequest extends Request implements Contract\ServerRequest
 			$this->url,
 			$this->parameters,
 			$this->cookies,
-			$this->uploadedFiles
+			$this->session,
+			$this->uploadedFiles,
 		);
 	}
 
@@ -56,7 +59,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function getCookieMap(): CookieMap
+	public function getCookies(): CookieMap
 	{
 		return $this->cookies;
 	}
@@ -65,5 +68,11 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	public function getUploadedFiles(): UploadedFileMap
 	{
 		return $this->uploadedFiles;
+	}
+
+	#[Pure]
+	public function getSession(): ?SessionMap
+	{
+		return $this->session;
 	}
 }
