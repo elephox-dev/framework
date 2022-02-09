@@ -25,30 +25,25 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 ### 🔳 Open
 
-- [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
+- [ ] Caching Services
+- [ ] Add a formatter (PHP CS Fixer)
+- [ ] Add README, LICENSE and PHPUnit configs for all modules
+- [ ] Finish PIE implementation (grouping)
+- [ ] Implement GitHub release in release script
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] Publish PHPUnit HTML coverage report
 - [ ] Publish benchmark report against baseline
-- [ ] Improve integration of PHPStorm attributes
-- [ ] Caching Services
-- [ ] Database Adapter
-- [ ] MySql Adapter Implementation
-- [ ] Entity Mapping for Database Adapter
-- [ ] Templating Adapter
-- [ ] Twig Adapter Implementation
+- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) adapter for Logging Services
 - [ ] Implement [PSR-7](https://www.php-fig.org/psr/psr-7) adapter for HTTP
 - [ ] Implement [PSR-17](https://www.php-fig.org/psr/psr-17) adapter for HTTP
 - [ ] Implement [PSR-15](https://www.php-fig.org/psr/psr-15) adapter for Core
-- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Implement [PSR-6](https://www.php-fig.org/psr/psr-6) adapter for Caching Services
 - [ ] Implement [PSR-16](https://www.php-fig.org/psr/psr-16) adapter for Caching Services
-- [ ] Implement [PSR-3](https://www.php-fig.org/psr/psr-3) adapter for Logging Services
-- [ ] Add a formatter (PHP CS Fixer)
+- [ ] Implement [PSR-14](https://www.php-fig.org/psr/psr-14) adapter for Event Bus
 - [ ] Add [phpspy](https://github.com/adsr/phpspy) and flame graphs 🔥
-- [ ] Finish PIE implementation (grouping)
-- [ ] Add READMEs, LICENSEs and PHPUnit configs for all modules
-- [ ] Implement GitHub release in release script
-- [ ] Maybe: Query Builder for Database Adapter
+- [ ] Maybe: Templating Adapter
+- [ ] Maybe: Twig Adapter Implementation
+- [ ] Create async application servers, like [laravel/octane](https://github.com/laravel/octane)
 - [ ] Maybe: Implement [PSR-13](https://www.php-fig.org/psr/psr-13) adapter for Templating Adapter
 - [ ] Maybe: Implement and provide [PSR-20](https://github.com/php-fig/fig-standards/blob/master/proposed/clock.md) adapter
 
