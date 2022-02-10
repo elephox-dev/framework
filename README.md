@@ -29,6 +29,7 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 - [ ] Add a formatter (PHP CS Fixer)
 - [ ] Add README, LICENSE and PHPUnit configs for all modules
 - [ ] Finish PIE implementation (grouping)
+- [ ] Add bin to Http module to update mime types (and extensions) automatically (wget -qO- http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types | egrep -v ^# | awk '{ for (i=2; i<=NF; i++) {print $i" "$1}}' | sort)
 - [ ] Implement GitHub release in release script
 - [ ] Provide an easier way to create a development environment (Docker, Vagrant, NixOS?)
 - [ ] Publish PHPUnit HTML coverage report

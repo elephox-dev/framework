@@ -10,6 +10,16 @@ use JetBrains\PhpStorm\Pure;
 class CustomMimeType implements Contract\MimeType
 {
 	/**
+	 * @param non-empty-string $mimeType
+	 * @return self
+	 */
+	#[Pure]
+	public static function from(string $mimeType): self
+	{
+		return new self($mimeType);
+	}
+
+	/**
 	 * @param non-empty-string $value
 	 */
 	#[Pure]
