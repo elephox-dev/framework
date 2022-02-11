@@ -3,44 +3,30 @@ declare(strict_types=1);
 
 namespace Elephox\Cache;
 
-use ArrayAccess;
 use DateInterval;
 use DateTime;
 use Elephox\Cache\Contract\InMemoryCacheConfiguration;
-use Elephox\Cache\Contract\InMemoryPool;
 use Elephox\Collection\ArrayMap;
 use Exception;
-use LogicException;
+use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
+use WeakReference;
 
-class InMemoryCache implements InMemoryPool
+class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 {
 	/**
-	 * @returns ArrayAccess<string, CacheItemInterface>|array<string, CacheItemInterface>
+	 * @var array<string, WeakReference<CacheItemInterface>>
 	 */
-	private static function getImplementation(InMemoryCacheConfiguration $configuration): ArrayAccess|array
-	{
-		$implementation = $configuration->getCacheImplementation();
-		return match ($implementation) {
-			'array' => [],
-			default => new $implementation(),
-		};
-	}
+	private array $cache = [];
 
 	/**
-	 * @var ArrayAccess<string, CacheItemInterface>|array<string, CacheItemInterface>
+	 * @var array<string, WeakReference<CacheItemInterface>>
 	 */
-	private ArrayAccess|array $cache;
+	private array $deferred = [];
 
-	/**
-	 * @var ArrayAccess<string, CacheItemInterface>|array<string, CacheItemInterface>
-	 */
-	private ArrayAccess|array $deferred;
-
+	#[Pure]
 	public function __construct(private InMemoryCacheConfiguration $configuration) {
-		$this->cache = self::getImplementation($configuration);
-		$this->deferred = self::getImplementation($configuration);
 	}
 
 	/**
@@ -50,8 +36,8 @@ class InMemoryCache implements InMemoryPool
 	{
 		if ($this->hasItem($key)) {
 			$item = $this->cache[$key];
-			if ($item !== null) {
-				return $item;
+			if ($item->get() !== null) {
+				return $item->get();
 			}
 		}
 
@@ -76,12 +62,14 @@ class InMemoryCache implements InMemoryPool
 
 	public function hasItem(string $key): bool
 	{
-		return isset($this->cache[$key]);
+		return isset($this->cache[$key]) && $this->cache[$key]->get() !== null;
 	}
 
 	public function clear(): bool
 	{
-		$this->cache = self::getImplementation($this->configuration);
+		$this->cache = [];
+
+		gc_collect_cycles();
 
 		return true;
 	}
@@ -109,96 +97,50 @@ class InMemoryCache implements InMemoryPool
 
 	public function save(CacheItemInterface $item): bool
 	{
-		$this->cache[$item->getKey()] = $item;
+		$this->cache[$item->getKey()] = WeakReference::create($item);
 
 		return true;
 	}
 
 	public function saveDeferred(CacheItemInterface $item): bool
 	{
-		$this->deferred[$item->getKey()] = $item;
+		$this->deferred[$item->getKey()] = WeakReference::create($item);
 
 		return true;
 	}
 
 	public function commit(): bool
 	{
-		if (!is_iterable($this->deferred)) {
-			throw new LogicException('Cannot commit deferred items: the cache implementation does not support iteration.');
-		}
-
 		foreach ($this->deferred as $key => $item) {
-			$this->cache[$key] = $item;
+			if ($item->get() !== null) {
+				$this->cache[$key] = $item;
+			}
 		}
 
-		$this->deferred = self::getImplementation($this->configuration);
+		$this->deferred = [];
+
+		gc_collect_cycles();
 
 		return true;
 	}
 
 	/**
-	 * @throws InvalidArgumentException
-	 */
-	public function offsetExists(mixed $offset): bool
-	{
-		if (!is_string($offset)) {
-			throw new InvalidKeyTypeException($offset);
-		}
-
-		return $this->hasItem($offset);
-	}
-
-	/**
-	 * @throws InvalidKeyTypeException
-	 */
-	public function offsetGet(mixed $offset): CacheItemInterface
-	{
-		if (!is_string($offset)) {
-			throw new InvalidKeyTypeException($offset);
-		}
-
-		return $this->getItem($offset);
-	}
-
-	/**
-	 * @throws InvalidValueTypeException
-	 */
-	public function offsetSet(mixed $offset, mixed $value): void
-	{
-		if ($offset !== null) {
-			throw new LogicException('Cannot add cache item with a non-null key to an InMemoryCache');
-		}
-
-		if (!$value instanceof CacheItemInterface) {
-			throw new InvalidValueTypeException($value);
-		}
-
-		$this->save($value);
-	}
-
-	/**
-	 * @throws InvalidKeyTypeException
-	 * @throws InvalidArgumentException
-	 */
-	public function offsetUnset(mixed $offset): void
-	{
-		if (!is_string($offset)) {
-			throw new InvalidKeyTypeException($offset);
-		}
-
-		$this->deleteItem($offset);
-	}
-
-	/**
-	 * @return iterable<string, CacheItemInterface>
+	 * @return ArrayMap<string, CacheItemInterface>
 	 *
 	 * @throws InvalidArgumentException
 	 */
-	public function getItems(array $keys = []): iterable
+	public function getItems(array $keys = []): ArrayMap
 	{
+		/**
+		 * @var ArrayMap<string, CacheItemInterface>
+		 */
 		$map = new ArrayMap();
 
 		foreach ($keys as $key) {
+			if (!is_string($key)) {
+				throw new \InvalidArgumentException("Only string keys are allowed!");
+			}
+
 			$map->put($key, $this->getItem($key));
 		}
 
