@@ -6,6 +6,6 @@ namespace Elephox\Cache;
 use JetBrains\PhpStorm\Immutable;
 
 #[Immutable]
-class InMemoryCacheConfiguration extends DefaultCacheConfiguration implements Contract\InMemoryCacheConfiguration
+class InMemoryCacheConfiguration extends AbstractCacheConfiguration implements Contract\InMemoryCacheConfiguration
 {
 }

@@ -9,7 +9,7 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-class DefaultCacheConfiguration implements CacheConfiguration
+abstract class AbstractCacheConfiguration implements CacheConfiguration
 {
 	public function __construct(
 		private readonly DateInterval|int|null $ttl = null,
