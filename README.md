@@ -83,6 +83,8 @@ Visit [elephox.dev](https://elephox.dev) for the documentation.
 
 - [ ] [Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
+- [ ] [Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support/src/CustomMimeType.php)
+  - [ ] try to get meta information of resource to get filename
 
 
 ### 🚧 Open issues from other repositories
