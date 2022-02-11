@@ -3,13 +3,39 @@ declare(strict_types=1);
 
 namespace Elephox\Cache;
 
+use DateInterval;
+use DateTime;
 use Elephox\Cache\Contract\Cache;
+use Exception;
 use LogicException;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 
 abstract class AbstractCache implements Cache
 {
+	/**
+	 * @throws \Elephox\Cache\InvalidTtlException
+	 */
+	protected function calculateExpiresAt(DateTime $offset): ?DateTime
+	{
+		$ttl = $this->getConfiguration()->getDefaultTTL();
+		if ($ttl === null) {
+			return null;
+		}
+
+		if (is_int($ttl)) {
+			try {
+				$offset->add(new DateInterval('PT' . $ttl . 'S'));
+			} catch (Exception $e) {
+				throw new InvalidTtlException($ttl, previous: $e);
+			}
+		} else {
+			$offset->add($ttl);
+		}
+
+		return $offset;
+	}
+
 	/**
 	 * @throws InvalidArgumentException
 	 */

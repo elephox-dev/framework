@@ -181,4 +181,15 @@ class Directory implements Contract\Directory
 			}
 		}
 	}
+
+	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void
+	{
+		if ($this->exists()) {
+			return;
+		}
+
+		if (!mkdir($this->path, $permissions, $recursive) && !is_dir($this->path)) {
+			throw new DirectoryNotCreatedException($this->path);
+		}
+	}
 }

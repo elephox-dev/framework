@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Cache\ImmutableCacheItem
  * @covers \Elephox\Cache\AbstractCacheConfiguration
  * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Cache\AbstractCache
  * @uses \Elephox\Cache\Contract\CacheItem
  * @uses \Elephox\Cache\Contract\InMemoryCacheConfiguration
  */

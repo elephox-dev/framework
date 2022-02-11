@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5708ce34192873ad5cb6049afff974dd",
+    "content-hash": "3c8259422d85a15002aa3045305c7146",
     "packages": [
         {
             "name": "elephox/mimey",
-            "version": "3.1.1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/mimey.git",
-                "reference": "840dcfda3650f2a9220c8ae2a67a3c249f314074"
+                "reference": "84494e3288009585f4b4faf23c5e3431f4bc3597"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/840dcfda3650f2a9220c8ae2a67a3c249f314074",
-                "reference": "840dcfda3650f2a9220c8ae2a67a3c249f314074",
+                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/84494e3288009585f4b4faf23c5e3431f4bc3597",
+                "reference": "84494e3288009585f4b4faf23c5e3431f4bc3597",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Mimey\\": [
+                    "Elephox\\Mimey\\": [
                         "src/",
                         "dist/"
                     ]
@@ -55,9 +55,9 @@
             ],
             "description": "PHP package for converting file extensions to MIME types and vice versa.",
             "support": {
-                "source": "https://github.com/elephox-dev/mimey/tree/3.1.1"
+                "source": "https://github.com/elephox-dev/mimey/tree/4.0.0"
             },
-            "time": "2022-02-11T00:04:02+00:00"
+            "time": "2022-02-11T16:34:21+00:00"
         },
         {
             "name": "jetbrains/phpstorm-attributes",
@@ -3952,16 +3952,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "5.0.3",
+            "version": "5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49"
+                "reference": "19c519631c5a511b7ed0ad64a6713fdb3fd25fe4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23bd5951f7ff26f12d4e3242864df3e08dec4e49",
-                "reference": "23bd5951f7ff26f12d4e3242864df3e08dec4e49",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/19c519631c5a511b7ed0ad64a6713fdb3fd25fe4",
+                "reference": "19c519631c5a511b7ed0ad64a6713fdb3fd25fe4",
                 "shasum": ""
             },
             "require": {
@@ -4004,7 +4004,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.3"
+                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.4"
             },
             "funding": [
                 {
@@ -4012,7 +4012,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-11T13:31:12+00:00"
+            "time": "2022-02-10T07:01:19+00:00"
         },
         {
             "name": "sebastian/lines-of-code",

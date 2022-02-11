@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateInterval;
+use DateTime;
 use Elephox\Cache\Contract\CacheConfiguration;
+use Exception;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 

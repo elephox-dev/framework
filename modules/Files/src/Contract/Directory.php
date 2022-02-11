@@ -12,7 +12,7 @@ interface Directory extends FilesystemNode
 	 */
 	public function getFiles(): GenericKeyedEnumerable;
 
-	public function getFile(string $filename): ?File;
+	public function getFile(string $filename): File;
 
 	/**
 	 * @return GenericKeyedEnumerable<int, Directory>
@@ -39,4 +39,9 @@ interface Directory extends FilesystemNode
 	 * @throws \Elephox\Files\DirectoryNotEmptyException
 	 */
 	public function delete(bool $recursive = true): void;
+
+	/**
+	 * @throws \Elephox\Files\DirectoryNotCreatedException
+	 */
+	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void;
 }

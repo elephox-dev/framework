@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Support;
 
-use Mimey\MimeType;
+use Elephox\Mimey\MimeType;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -6,8 +6,8 @@ namespace Elephox\Support;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
-use Mimey\MimeType;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
 use RuntimeException;
 
 #[Immutable]

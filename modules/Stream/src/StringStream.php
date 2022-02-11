@@ -8,9 +8,16 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use Stringable;
 
 class StringStream implements Stream
 {
+	#[Pure]
+	public static function from(string|Stringable $string): Stream
+	{
+		return new self($string);
+	}
+
 	private bool $detached = false;
 
 	/** @var positive-int|0 $pointer */

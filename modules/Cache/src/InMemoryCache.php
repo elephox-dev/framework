@@ -41,21 +41,7 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 			}
 		}
 
-		$ttl = $this->configuration->getDefaultTTL();
-		if ($ttl !== null) {
-			$expiresAt = new DateTime();
-			if (is_int($ttl)) {
-				try {
-					$expiresAt->add(new DateInterval('PT' . $ttl . 'S'));
-				} catch (Exception $e) {
-					throw new InvalidTtlException($ttl, previous: $e);
-				}
-			} else {
-				$expiresAt->add($ttl);
-			}
-		} else {
-			$expiresAt = null;
-		}
+		$expiresAt = $this->calculateExpiresAt(new DateTime());
 
 		return new ImmutableCacheItem($key, null, false, $expiresAt);
 	}
@@ -138,7 +124,7 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 
 		foreach ($keys as $key) {
 			if (!is_string($key)) {
-				throw new \InvalidArgumentException("Only string keys are allowed!");
+				throw new InvalidKeyTypeException($key);
 			}
 
 			$map->put($key, $this->getItem($key));
