@@ -6,7 +6,7 @@ namespace Elephox\Http;
 use Elephox\Collection\ArrayMap;
 use Elephox\Stream\ResourceStream;
 use Elephox\Support\CustomMimeType;
-use Elephox\Support\MimeType;
+use Mimey\MimeType;
 
 /**
  * @extends ArrayMap<string, Contract\UploadedFile>

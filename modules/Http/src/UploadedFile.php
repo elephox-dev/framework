@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Stream\Contract\Stream;
-use Elephox\Support\Contract\MimeType;
+use Mimey\MimeTypeInterface;
 
 class UploadedFile implements Contract\UploadedFile
 {
@@ -12,7 +12,7 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param string $clientName
 	 * @param string $clientPath
 	 * @param Stream $stream
-	 * @param null|MimeType $clientMimeType
+	 * @param null|MimeTypeInterface $clientMimeType
 	 * @param null|positive-int|0 $size
 	 * @param UploadError $error
 	 */
@@ -20,7 +20,7 @@ class UploadedFile implements Contract\UploadedFile
 		private string      $clientName,
 		private string      $clientPath,
 		private Stream      $stream,
-		private ?MimeType   $clientMimeType = null,
+		private ?MimeTypeInterface $clientMimeType = null,
 		private ?int        $size = null,
 		private UploadError $error = UploadError::UPLOAD_ERR_OK,
 	) {
@@ -46,7 +46,7 @@ class UploadedFile implements Contract\UploadedFile
 		return $this->size;
 	}
 
-	public function getClientMimeType(): ?MimeType
+	public function getClientMimeType(): ?MimeTypeInterface
 	{
 		return $this->clientMimeType;
 	}

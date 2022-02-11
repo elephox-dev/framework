@@ -16,7 +16,8 @@
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
-        "ricardoboss/php-console-logger": "^1.8"
+        "ricardoboss/php-console-logger": "^1.8",
+        "elephox/mimey": "^3.1"
     },
     "require-dev": {
         "ext-json": "*",

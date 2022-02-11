@@ -6,8 +6,8 @@ namespace Elephox\Http;
 use Elephox\Files\Contract\File;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
-use Elephox\Support\Contract\MimeType as MimeTypeContract;
-use Elephox\Support\MimeType;
+use Elephox\Support\CustomMimeType;
+use Mimey\MimeTypeInterface;
 
 trait GeneratesResponses
 {
@@ -26,7 +26,7 @@ trait GeneratesResponses
 			->jsonBody($data);
 	}
 
-	private function stringResponse(string $data, ?ResponseCode $responseCode = null, ?MimeTypeContract $mimeType = null): Contract\ResponseBuilder
+	private function stringResponse(string $data, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
 	{
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
@@ -34,15 +34,15 @@ trait GeneratesResponses
 			->body(new StringStream($data));
 	}
 
-	private function resourceResponse(mixed $resource, ?ResponseCode $responseCode = null, ?MimeTypeContract $mimeType = null): Contract\ResponseBuilder
+	private function resourceResponse(mixed $resource, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
 	{
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType ?? MimeType::fromFile($resource))
+			->contentType($mimeType ?? CustomMimeType::fromFile($resource))
 			->resourceBody($resource);
 	}
 
-	private function fileResponse(string|File $path, ?ResponseCode $responseCode = null, ?MimeTypeContract $mimeType = null): Contract\ResponseBuilder
+	private function fileResponse(string|File $path, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
 	{
 		$path = $path instanceof File ? $path->getPath() : $path;
 
@@ -52,7 +52,7 @@ trait GeneratesResponses
 
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType ?? MimeType::fromFile($path))
+			->contentType($mimeType ?? CustomMimeType::fromFile($path))
 			->body(ResourceStream::fromFile($path));
 	}
 }

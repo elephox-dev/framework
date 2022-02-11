@@ -107,6 +107,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/phpbench" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-schema-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/mimey" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

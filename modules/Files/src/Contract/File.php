@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Files\Contract;
 
 use Elephox\Support\Contract\HasHash;
-use Elephox\Support\Contract\MimeType;
+use Mimey\MimeTypeInterface;
 
 interface File extends FilesystemNode, HasHash
 {
@@ -12,7 +12,7 @@ interface File extends FilesystemNode, HasHash
 
 	public function getSize(): int;
 
-	public function getMimeType(): ?MimeType;
+	public function getMimeType(): ?MimeTypeInterface;
 
 	/**
 	 * @throws \Elephox\Files\FileMoveException

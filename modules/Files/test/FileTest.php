@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
-use Elephox\Support\MimeType;
+use Mimey\MimeType;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
  * @covers \Elephox\Files\File
  * @covers \Elephox\Files\Directory
- * @covers \Elephox\Support\MimeType
+ * @covers \Mimey\MimeType
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\InvalidParentLevelException
  * @covers \Elephox\Files\FileException
@@ -96,8 +96,8 @@ class FileTest extends TestCase
 		$file = new File($this->filePath);
 		self::assertNull($file->getMimeType());
 
-		$fileWithType = new File($this->filePath, MimeType::Textplain);
-		self::assertEquals(MimeType::Textplain, $fileWithType->getMimeType());
+		$fileWithType = new File($this->filePath, MimeType::TextPlain);
+		self::assertEquals(MimeType::TextPlain, $fileWithType->getMimeType());
 	}
 
 	public function testGetHash(): void

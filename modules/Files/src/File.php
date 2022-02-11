@@ -5,7 +5,7 @@ namespace Elephox\Files;
 
 use DateTime;
 use Elephox\Files\Contract\FilesystemNode;
-use Elephox\Support\Contract\MimeType;
+use Mimey\MimeTypeInterface;
 use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -17,7 +17,7 @@ class File implements Contract\File
 	#[Pure]
 	public function __construct(
 		private string    $path,
-		private ?MimeType $mimeType = null,
+		private ?MimeTypeInterface $mimeType = null,
 	) {
 	}
 
@@ -54,7 +54,7 @@ class File implements Contract\File
 	}
 
 	#[Pure]
-	public function getMimeType(): ?MimeType
+	public function getMimeType(): ?MimeTypeInterface
 	{
 		return $this->mimeType;
 	}

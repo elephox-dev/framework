@@ -5,7 +5,7 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\UploadError;
 use Elephox\Stream\Contract\Stream;
-use Elephox\Support\Contract\MimeType;
+use Mimey\MimeTypeInterface;
 
 interface UploadedFile
 {
@@ -13,7 +13,7 @@ interface UploadedFile
 
 	public function getClientPath(): string;
 
-	public function getClientMimeType(): ?MimeType;
+	public function getClientMimeType(): ?MimeTypeInterface;
 
 	public function getError(): UploadError;
 
