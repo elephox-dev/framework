@@ -22,7 +22,7 @@ class Casing
 	public static function toCamel(string $string): string
 	{
 		/** @var string $result */
-		$result = preg_replace('/([\s\-_]+)/', '', ucwords($string, '-_ '));
+		$result = preg_replace('/([\s\-_]+)/', '', ucwords(self::toLower($string), '-_ '));
 
 		return lcfirst($result);
 	}
@@ -37,9 +37,14 @@ class Casing
 
 	public static function toKebab(string $string): string
 	{
+		return self::toLower(self::toTitleKebab($string));
+	}
+
+	public static function toTitleKebab(string $string): string
+	{
 		/** @var string $result */
 		$result = preg_replace('/([A-Z])/', '-$1', self::toCamel($string));
 
-		return self::toLower($result);
+		return self::toTitle($result);
 	}
 }
