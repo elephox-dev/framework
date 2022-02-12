@@ -324,7 +324,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @template TArrayKey as array-key
 	 *
-	 * @param null|callable(TSource, TIteratorKey): TArrayKey $keySelector
+	 * @param null|callable(TIteratorKey, TSource): TArrayKey $keySelector
 	 *
 	 * @return array<TArrayKey, TSource>
 	 */
