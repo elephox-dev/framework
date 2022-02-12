@@ -5,14 +5,13 @@ namespace Elephox\Http;
 
 use AppendIterator;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericMap;
-use Elephox\Collection\Enumerable;
+use Elephox\Collection\KeyedEnumerable;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
+use Generator;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
-use JetBrains\PhpStorm\Internal\TentativeType;
 use LogicException;
 
 class ParameterMap implements Contract\ParameterMap
@@ -31,13 +30,26 @@ class ParameterMap implements Contract\ParameterMap
 	{
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
+		$candidateFound = false;
+		$candidate = null;
+
 		foreach ($trySources as $parameterSource) {
 			if ($this->parameters->has($parameterSource)) {
 				$parameterList = $this->parameters->get($parameterSource);
 				if ($parameterList->has($key)) {
-					return $parameterList->get($key);
+					if ($candidateFound) {
+						throw new LogicException('Ambiguous parameter key: multiple sources specified the same key. Try specifying a parameter source or use all() to get a list keyed by source.');
+					}
+
+					/** @var mixed */
+					$candidate = $parameterList->get($key);
+					$candidateFound = true;
 				}
 			}
+		}
+
+		if ($candidateFound) {
+			return $candidate;
 		}
 
 		throw new OffsetNotFoundException("Key '$key' not found in parameter map.");
@@ -80,7 +92,22 @@ class ParameterMap implements Contract\ParameterMap
 		}
 	}
 
-	public function all(?ParameterSource $source = null): GenericEnumerable
+	public function all(string $key): GenericKeyedEnumerable
+	{
+		/** @var KeyedEnumerable<ParameterSource, mixed> */
+		return new KeyedEnumerable(function () use ($key): Generator {
+			foreach (ParameterSource::cases() as $source) {
+				if ($this->parameters->has($source)) {
+					$parameterList = $this->parameters->get($source);
+					if ($parameterList->has($key)) {
+						yield $source => $parameterList->get($key);
+					}
+				}
+			}
+		});
+	}
+
+	public function allFrom(?ParameterSource $source = null): GenericKeyedEnumerable
 	{
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
@@ -92,7 +119,7 @@ class ParameterMap implements Contract\ParameterMap
 			}
 		}
 
-		return new Enumerable($iterator);
+		return new KeyedEnumerable($iterator);
 	}
 
 	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null): Contract\ParameterMap

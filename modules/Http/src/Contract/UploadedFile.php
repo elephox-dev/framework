@@ -5,7 +5,7 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\UploadError;
 use Elephox\Stream\Contract\Stream;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeTypeInterface;
 
 interface UploadedFile
 {

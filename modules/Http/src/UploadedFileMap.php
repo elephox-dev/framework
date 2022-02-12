@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
-use Elephox\Stream\ResourceStream;
+use Elephox\Files\File;
 use Elephox\Support\CustomMimeType;
-use Mimey\MimeType;
+use Elephox\Mimey\MimeType;
 
 /**
  * @extends ArrayMap<string, Contract\UploadedFile>
@@ -33,7 +33,6 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			$clientType = $file['type'];
 			$size = $file['size'];
 			$error = $file['error'];
-			$tmpName = $file['tmp_name'];
 			$fullPath = $file['full_path'];
 
 			$mimeType = MimeType::tryFrom($clientType);
@@ -42,7 +41,7 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			}
 
 			$uploadError = UploadError::from($error);
-			$resource = ResourceStream::fromFile($tmpName);
+			$resource = File::openStream($fullPath);
 
 			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size > 0 ? $size : null, $uploadError);
 
