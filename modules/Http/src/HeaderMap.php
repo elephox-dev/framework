@@ -30,7 +30,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				continue;
 			}
 
-			$name = Casing::toTitleKebab(substr($name, 5));
+			$name = Casing::toHttpHeader(substr($name, 5));
 
 			$map->put($name, $value);
 		}
