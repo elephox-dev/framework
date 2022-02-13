@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use ArrayAccess;
-use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Http\ParameterSource;
 
 interface ParameterMap extends ArrayAccess
@@ -20,8 +20,14 @@ interface ParameterMap extends ArrayAccess
 	public function remove(string $key, ?ParameterSource $source = null): void;
 
 	/**
-	 * @param ParameterSource|null $source
-	 * @return GenericEnumerable<mixed>
+	 * @param string $key
+	 * @return GenericKeyedEnumerable<ParameterSource, mixed>
 	 */
-	public function all(?ParameterSource $source = null): GenericEnumerable;
+	public function all(string $key): GenericKeyedEnumerable;
+
+	/**
+	 * @param ParameterSource|null $source
+	 * @return GenericKeyedEnumerable<string, mixed>
+	 */
+	public function allFrom(?ParameterSource $source = null): GenericKeyedEnumerable;
 }

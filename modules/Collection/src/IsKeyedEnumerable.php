@@ -738,12 +738,12 @@ trait IsKeyedEnumerable
 	public function toArray(?callable $keySelector = null): array
 	{
 		/** @psalm-suppress UnusedClosureParam */
-		$keySelector ??= static fn(mixed $value, mixed $key): mixed => $key;
+		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
 
 		$array = [];
 
 		foreach ($this->getIterator() as $elementKey => $element) {
-			$key = $keySelector($element, $elementKey);
+			$key = $keySelector($elementKey, $element);
 
 			if ($key instanceof Stringable) {
 				$key = (string)$key;

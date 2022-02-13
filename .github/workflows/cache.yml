@@ -1,0 +1,18 @@
+name: Cache Pipeline
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '.github/workflows/cache.yml'
+      - 'modules/Cache/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/cache'
+      dir: 'modules/Cache/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_CACHE_KEY }}

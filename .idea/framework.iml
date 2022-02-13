@@ -20,6 +20,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Events/test" isTestSource="true" packagePrefix="Elephox\Events\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/src" isTestSource="false" packagePrefix="Elephox\OOR\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/test" isTestSource="true" packagePrefix="Elephox\OOR\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Cache/src" isTestSource="false" packagePrefix="Elephox\Cache\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Cache/test" isTestSource="true" packagePrefix="Elephox\Cache\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
@@ -105,6 +107,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/phpbench" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-schema-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/elephox/mimey" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

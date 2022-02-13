@@ -740,7 +740,7 @@ trait IsEnumerable
 	/**
 	 * @template TArrayKey as array-key
 	 *
-	 * @param null|callable(TSource): TArrayKey $keySelector
+	 * @param null|callable(NonNegativeInteger, TSource): TArrayKey $keySelector
 	 *
 	 * @return array<TArrayKey, TSource>
 	 */

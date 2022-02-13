@@ -50,7 +50,7 @@ function execute(bool $echo, string $commandLine, float|int|string ...$args): bo
 
 function executeGetOutput(string $commandLine, float|int|string ...$args): array
 {
-	$commandLine = sprintf($commandLine, ...$args);
+	$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', $args));
 	echo "$ $commandLine" . PHP_EOL;
 
 	ob_start();
@@ -96,6 +96,7 @@ if (!preg_match('/^(?<major>\d+)\.(?<minor>\d+)(?:\.(?<patch>\d+))?$/', $version
 }
 
 $versionBranch = "release/$version";
+$fullVersionString = "v$version";
 
 // make sure the working directory is clean
 if (!empty(executeGetLastLine("git status --porcelain"))) {
@@ -111,69 +112,19 @@ if (executeGetLastLine("git rev-parse HEAD") !== executeGetLastLine("git rev-par
 	exit(1);
 }
 
-// TODO: check if version requirements are in sync with the version to release
-if (!executeEcho("composer module:check --namespaces")) {
+// TODO: check if version requirements are in sync with the version being released
+if (!executeEcho("composer modules:check --namespaces")) {
 	error("Make sure all dependencies are in sync.");
 
 	exit(1);
 }
 
-$r = md5((string)time());
-$context = stream_context_create([
-	'http' => [
-		'header' => <<<HTTP_HEADER
-Accept: application/vnd.github.v3+json
-User-Agent: Elephox/$r
-
-HTTP_HEADER
-	],
-]);
-$workflowStatusJson = file_get_contents("https://api.github.com/repos/elephox-dev/framework/actions/runs?branch=$developBranch&check_suite_id=5053506723", false, $context);
-$workflowStatus = json_decode($workflowStatusJson, true, flags: JSON_THROW_ON_ERROR);
-if (!array_key_exists('workflow_runs', $workflowStatus)) {
-	error("Unexpected result from GitHub API.");
-
-	exit(1);
-}
-
-$workflowRuns = $workflowStatus['workflow_runs'];
-usort($workflowRuns, static function (array $a, array $b): int {
-	$updatedA = new DateTime($a['updated_at']);
-	$updatedB = new DateTime($b['updated_at']);
-
-	return $updatedA->getTimestamp() <=> $updatedB->getTimestamp();
-});
-
-$latestWorkflowRun = $workflowRuns[0];
-if ($latestWorkflowRun['status'] !== 'completed') {
-	error("The latest workflow run is not complete yet.");
-	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
-
-	$result = fgets(STDIN);
-	if ($result !== 'y' && $result !== 'Y') {
-		error("Aborted.");
-
-		exit(1);
-	}
-	echo PHP_EOL;
-}
-
-if ($latestWorkflowRun['conclusion'] !== 'success') {
-	error("The latest workflow run was not successful.");
-	echo PHP_EOL;
-	echo "Do you want to continue anyway? [y/N]" . PHP_EOL;
-
-	$result = fgets(STDIN);
-	if ($result !== 'y' && $result !== 'Y') {
-		error("Aborted.");
-
-		exit(1);
-	}
-} else {
-	echo PHP_EOL;
-	echo "Last CI build was successful. Nice!" . PHP_EOL;
-}
 echo PHP_EOL;
+if (!executeEcho("gh run list --branch %s --limit 5", $developBranch)) {
+	error("Could not check for last GitHub workflow run. Please verify it was successful manually.");
+} else {
+	echo "Make sure the last CI run was successful." . PHP_EOL;
+}
 
 register_shutdown_function(static function () use ($currentBranch) {
 	executeSilent("git checkout %s --force", $currentBranch);
@@ -186,8 +137,18 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 }
 
 echo PHP_EOL;
-echo sprintf("You are now on the version branch for v%s (%s).", $version, $versionBranch) . PHP_EOL;
+echo sprintf("You are now on the version branch for %s (%s).", $fullVersionString, $versionBranch) . PHP_EOL;
 echo sprintf("In case this is a minor release, remember to update all module requirements to this version: ^%s.%s", $matches['major'], $matches['minor']) . PHP_EOL;
+echo PHP_EOL;
+echo "The next steps are as follows:" . PHP_EOL;
+echo "  - check out the release branch (origin/$releaseBranch)" . PHP_EOL;
+echo "  - merge the version branch ($versionBranch) into the release branch ($releaseBranch)" . PHP_EOL;
+echo "  - tag the commit with the new version ($fullVersionString)" . PHP_EOL;
+echo "  - delete the version branch" . PHP_EOL;
+echo "  - back-merge the release branch into the development branch ($developBranch)" . PHP_EOL;
+echo "  - push the release branch to origin" . PHP_EOL;
+echo "  - create a GitHub release" . PHP_EOL;
+echo "  - repeat every step for every module" . PHP_EOL;
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
@@ -203,7 +164,7 @@ if (
 }
 
 if (
-	!executeSilent("git tag v%s", $version) ||
+	!executeSilent("git tag %s", $fullVersionString) ||
 	!executeSilent("git branch -D %s", $versionBranch)
 ) {
 	error("Failed to tag framework!");
@@ -213,13 +174,24 @@ if (
 
 executeSilent("git checkout %s", $developBranch);
 if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch)) {
-	error("Failed to merge $releaseBranch branch into $developBranch branch.");
+	error("Failed to merge '$releaseBranch' branch into '$developBranch' branch.");
 
 	exit(1);
 }
 
 executeSilent("git push --all");
 executeSilent("git push --tags");
+
+echo PHP_EOL;
+echo "Please enter release notes for $fullVersionString:" . PHP_EOL;
+echo PHP_EOL;
+$notes = fgets(STDIN);
+$notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
+file_put_contents($notesPath, $notes);
+
+executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
+unlink($notesPath);
+echo "Release was created as DRAFT. Please verify it and publish it." . PHP_EOL;
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
@@ -230,16 +202,21 @@ if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
 
 register_shutdown_function(static function () use ($tmpDir) {
 	echo PHP_EOL;
+	echo "============================================================" . PHP_EOL;
 	echo "Cleaning up..." . PHP_EOL;
 	rmdirRecursive($tmpDir);
 });
 
 echo PHP_EOL;
-echo "Working in $tmpDir" . PHP_EOL . PHP_EOL;
+echo "============================================================" . PHP_EOL;
+echo PHP_EOL;
+echo "Press enter to continue with the release of all modules." . PHP_EOL;
+fgets(STDIN);
 echo PHP_EOL;
 
 $cwd = getcwd();
 foreach ([
+	'cache',
 	'collection',
 	'core',
 	'di',
@@ -251,8 +228,9 @@ foreach ([
 	'stream',
 	'support'
 ] as $remote) {
+	echo PHP_EOL;
 	echo "============================================================" . PHP_EOL;
-	echo "Releasing $remote v$version" . PHP_EOL;
+	echo "Releasing $remote $fullVersionString" . PHP_EOL;
 
 	$currentTmpDir = $tmpDir . DIRECTORY_SEPARATOR . $remote;
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
@@ -273,11 +251,15 @@ foreach ([
 		}
 	}
 
+	echo PHP_EOL;
+	echo "Working in $currentTmpDir" . PHP_EOL;
+	echo PHP_EOL;
+
 	if (
 		!executeSilent("git checkout -b %s", $versionBranch) ||
 		!executeSilent("git checkout -b %s --track origin/%s", $releaseBranch, $releaseBranch) ||
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $versionBranch, $versionBranch, $releaseBranch) ||
-		!executeSilent("git tag v%s", $version) ||
+		!executeSilent("git tag %s", $fullVersionString) ||
 		!executeSilent("git branch -D %s", $versionBranch) ||
 		!executeSilent("git checkout %s", $developBranch) ||
 		!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch) ||

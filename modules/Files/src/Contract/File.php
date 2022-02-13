@@ -3,16 +3,19 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
+use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
-use Elephox\Support\Contract\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
 
 interface File extends FilesystemNode, HasHash
 {
+	public const DEFAULT_STREAM_CHUNK_SIZE = 4096;
+
 	public function getExtension(): string;
 
 	public function getSize(): int;
 
-	public function getMimeType(): ?MimeType;
+	public function getMimeType(): ?MimeTypeInterface;
 
 	/**
 	 * @throws \Elephox\Files\FileMoveException
@@ -36,4 +39,13 @@ interface File extends FilesystemNode, HasHash
 	 * @throws \Elephox\Files\FileDeleteException
 	 */
 	public function delete(): void;
+
+	/**
+	 * @throws \Elephox\Files\FileNotCreatedException
+	 */
+	public function touch(): void;
+
+	public function stream(): Stream;
+
+	public function putContents(Stream $contents, int $chunkSize = self::DEFAULT_STREAM_CHUNK_SIZE): void;
 }

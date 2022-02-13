@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Stream;
+namespace Elephox\Files;
 
-use Elephox\Files\FileException;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
 

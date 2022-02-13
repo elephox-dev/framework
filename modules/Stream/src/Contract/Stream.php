@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Stream\Contract;
 
-use JetBrains\PhpStorm\Pure;
 use Stringable;
 
 interface Stream extends Stringable

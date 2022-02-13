@@ -5,7 +5,9 @@ namespace Elephox\Http;
 
 use Elephox\Http\Contract\MessageBuilder;
 use Elephox\Stream\Contract\Stream;
+use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 
@@ -46,6 +48,15 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
 		$jsonStream = new StringStream($json);
 		return $this->body($jsonStream);
+	}
+
+	public function resourceBody(mixed $resource): static
+	{
+		if (!is_resource($resource)) {
+			throw new InvalidArgumentException('$resource must be a resource');
+		}
+
+		return $this->body(new ResourceStream($resource));
 	}
 
 	public function header(string $name, array $value): static

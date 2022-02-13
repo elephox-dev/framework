@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Http\ResponseCode;
-use Elephox\Support\Contract\MimeType;
 use JetBrains\PhpStorm\Pure;
+use Elephox\Mimey\MimeTypeInterface;
 
 interface Response extends Message
 {
@@ -19,5 +19,5 @@ interface Response extends Message
 	public function getResponseCode(): ResponseCode;
 
 	#[Pure]
-	public function getMimeType(): ?MimeType;
+	public function getMimeType(): ?MimeTypeInterface;
 }

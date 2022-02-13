@@ -13,7 +13,9 @@
     "require": {
         "php": "~8.1.0 || ~8.2.0",
         "ext-mbstring": "*",
+        "elephox/mimey": "^4.0",
         "jetbrains/phpstorm-attributes": "^1.0",
+        "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "ricardoboss/php-console-logger": "^1.8"
     },
@@ -52,6 +54,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
+            "Elephox\\Cache\\": "modules/Cache/src/",
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Core\\": "modules/Core/src/",
             "Elephox\\DI\\": "modules/DI/src/",
@@ -66,6 +69,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Elephox\\Cache\\": "modules/Cache/test/",
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\DI\\": "modules/DI/test/",
             "Elephox\\Events\\": "modules/Events/test/",
@@ -145,6 +149,9 @@
             "phpunit --configuration=phpunit.xml.dist --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
         ],
         "local-ci": [
+            "@composer validate --no-interaction --strict",
+            "@composer install --no-interaction --no-scripts --ignore-platform-req=php+",
+            "@composer modules:normalize",
             "@update-readme",
             "@check-dependencies",
             "@static-analysis",

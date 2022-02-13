@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
-use Elephox\Files\Contract\File as FileContract;
-use Elephox\Files\File;
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -12,44 +10,6 @@ use RuntimeException;
 
 class ResourceStream implements Stream
 {
-	public static function fromFile(string|FileContract $file, bool $readable = true, bool $writeable = false, bool $create = false, bool $append = false, bool $truncate = false): self
-	{
-		if (is_string($file)) {
-			$file = new File($file);
-		}
-
-		if ($readable && !$file->isReadable()) {
-			throw new UnreadableFileException($file->getPath());
-		}
-
-		if (($writeable || $append) && !$file->isWritable()) {
-			throw new ReadOnlyFileException($file->getPath());
-		}
-
-		if ($create && $file->getParent()->isReadonly()) {
-			throw new ReadonlyParentException($file->getPath());
-		}
-
-		$flags = match (true) {
-			 $readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab+',
-			!$readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab',
-			 $readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb+',
-			!$readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb',
-			 $readable &&  $writeable &&  $create && !$append && !$truncate => 'cb+',
-			!$readable &&  $writeable &&  $create && !$append && !$truncate => 'cb',
-			 $readable &&  $writeable && !$create && !$append && !$truncate => 'rb+',
-			 $readable && !$writeable && !$create && !$append && !$truncate => 'rb',
-			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
-		};
-
-		$resource = fopen($file->getPath(), $flags);
-		if ($resource === false) {
-			throw new RuntimeException('Failed to open file ' . $file->getPath());
-		}
-
-		return new ResourceStream($resource, $readable, $writeable, $readable);
-	}
-
 	/**
 	 * @param closed-resource|resource|null $resource
 	 * @param bool $readable

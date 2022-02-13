@@ -8,9 +8,21 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
+use Stringable;
 
 class StringStream implements Stream
 {
+	#[Pure]
+	public static function from(
+		string|Stringable $string,
+		bool $seekable = true,
+		bool $writeable = false,
+		bool $readable = true
+	): Stream
+	{
+		return new self((string)$string, $readable, $seekable, $writeable);
+	}
+
 	private bool $detached = false;
 
 	/** @var positive-int|0 $pointer */
@@ -19,9 +31,9 @@ class StringStream implements Stream
 	#[Pure]
 	public function __construct(
 		private string $string,
-		private bool   $seekable = true,
-		private bool   $writeable = false,
-		private bool   $readable = true
+		private bool $readable = true,
+		private bool $seekable = true,
+		private bool $writeable = false
 	) {
 	}
 

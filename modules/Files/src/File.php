@@ -5,7 +5,9 @@ namespace Elephox\Files;
 
 use DateTime;
 use Elephox\Files\Contract\FilesystemNode;
-use Elephox\Support\Contract\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
+use Elephox\Stream\Contract\Stream;
+use Elephox\Stream\ResourceStream;
 use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -14,10 +16,55 @@ use ValueError;
 
 class File implements Contract\File
 {
+	public static function openStream(
+		string|Contract\File $file,
+		bool $readable = true,
+		bool $writeable = false,
+		bool $create = false,
+		bool $append = false,
+		bool $truncate = false
+	): ResourceStream
+	{
+		if (is_string($file)) {
+			$file = new self($file);
+		}
+
+		if ($readable && !$file->isReadable()) {
+			throw new UnreadableFileException($file->getPath());
+		}
+
+		if (($writeable || $append) && !$file->isWritable()) {
+			throw new ReadOnlyFileException($file->getPath());
+		}
+
+		if ($create && $file->getParent()->isReadonly()) {
+			throw new ReadonlyParentException($file->getPath());
+		}
+
+		$flags = match (true) {
+			 $readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab+',
+			!$readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab',
+			 $readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb+',
+			!$readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb',
+			 $readable &&  $writeable &&  $create && !$append && !$truncate => 'cb+',
+			!$readable &&  $writeable &&  $create && !$append && !$truncate => 'cb',
+			 $readable &&  $writeable && !$create && !$append && !$truncate => 'rb+',
+			 $readable && !$writeable && !$create && !$append && !$truncate => 'rb',
+			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
+		};
+
+		$resource = fopen($file->getPath(), $flags);
+		if ($resource === false) {
+			throw new RuntimeException('Failed to open file ' . $file->getPath());
+		}
+
+		return new ResourceStream($resource, $readable, $writeable, $readable);
+	}
+
 	#[Pure]
 	public function __construct(
 		private string    $path,
-		private ?MimeType $mimeType = null,
+		private ?MimeTypeInterface $mimeType = null,
 	) {
 	}
 
@@ -54,7 +101,7 @@ class File implements Contract\File
 	}
 
 	#[Pure]
-	public function getMimeType(): ?MimeType
+	public function getMimeType(): ?MimeTypeInterface
 	{
 		return $this->mimeType;
 	}
@@ -184,5 +231,32 @@ class File implements Contract\File
 		}
 
 		return $destination;
+	}
+
+	public function touch(): void
+	{
+		if ($this->exists()) {
+			return;
+		}
+
+		try {
+			$this->stream(true)->close();
+		} catch (RuntimeException $e) {
+			throw new FileNotCreatedException($this->path, previous: $e);
+		}
+	}
+
+	public function stream(bool $writeable = false): Stream
+	{
+		return self::openStream($this, true, $writeable, $writeable, $writeable);
+	}
+
+	public function putContents(Stream $contents, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
+	{
+		$stream = self::openStream($this, readable: false, writeable: true, create: true, truncate: true);
+
+		while (!$contents->eof()) {
+			$stream->write($contents->read($chunkSize));
+		}
 	}
 }

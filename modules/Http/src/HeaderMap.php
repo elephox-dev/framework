@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
+use Elephox\OOR\Casing;
 
 /**
  * @extends ArrayMap<string, string|list<string>>
@@ -29,7 +30,8 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				continue;
 			}
 
-			$name = str_replace('_', '-', substr($name, 5));
+			$name = Casing::toHttpHeader(substr($name, 5));
+
 			$map->put($name, $value);
 		}
 
