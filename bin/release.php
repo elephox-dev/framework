@@ -174,23 +174,33 @@ if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '
 //executeSilent("git push --tags");
 
 $notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
-file_put_contents($notesPath, "\n\n# Enter the release notes for $fullVersionString.\n# Lines starting with '#' will be ignored.\n\n");
+$notes = "";
 
-if (PHP_OS === "WINNT") {
-	$editor = "notepad.exe";
-} else {
-	$editor = "nano";
+echo PHP_EOL;
+echo "Please enter release notes for $fullVersionString:" . PHP_EOL;
+echo "Lines starting with '#' will be ignored." . PHP_EOL;
+echo "To submit the message, type '#END#'." . PHP_EOL;
+echo PHP_EOL;
+
+while (!str_ends_with($notes, "#END#")) {
+	$char = fgets(STDIN);
+	if ($char === false) {
+		break;
+	}
+
+	if (ord($char) === 0x7F) { // DEL
+		$notes = substr($notes, 0, -1);
+	} else {
+		$notes .= $char;
+	}
 }
 
-executeSilent("%s %s", $editor, $notesPath);
-
-/** @var string $notes */
-$notes = file_get_contents($notesPath);
 /** @var string $notes */
 $notes = preg_replace('/^#.*$/m', '', $notes);
 file_put_contents($notesPath, $notes);
 
 executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
+unlink($notesPath);
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
