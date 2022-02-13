@@ -176,7 +176,13 @@ if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '
 $notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
 file_put_contents($notesPath, "\n\n# Enter the release notes for $fullVersionString.\n# Lines starting with '#' will be ignored.\n\n");
 
-executeSilent("bash -c nano %s", $notesPath);
+if (PHP_OS === "WINNT") {
+	$editor = "notepad.exe";
+} else {
+	$editor = "nano";
+}
+
+executeSilent("%s %s", $editor, $notesPath);
 
 /** @var string $notes */
 $notes = file_get_contents($notesPath);
