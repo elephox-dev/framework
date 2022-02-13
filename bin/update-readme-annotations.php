@@ -76,8 +76,11 @@ echo count($matches) . " categories found.\n";
 
 $annotations = "<!-- start annotations -->\n\n";
 
-if (!empty($matches)) {
+if (!empty($matches) || !empty($issues)) {
 	$annotations .= "## 📋 Source code annotations\n\n";
+}
+
+if (!empty($matches)) {
 	foreach ($matches as $category => $files) {
 		$annotations .= "### $emojiMap[$category] $category\n\n";
 		echo "Category $category contains " . count($files) . " files.\n";
