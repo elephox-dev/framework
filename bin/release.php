@@ -192,7 +192,7 @@ echo "To submit the message, type '#END#'." . PHP_EOL;
 echo PHP_EOL;
 
 while (!str_ends_with($notes, "#END#")) {
-	$char = fgets(STDIN);
+	$char = fgetc(STDIN);
 	if ($char === false) {
 		break;
 	}
