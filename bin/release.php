@@ -179,37 +179,19 @@ if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '
 	exit(1);
 }
 
-//executeSilent("git push --all");
-//executeSilent("git push --tags");
-
-$notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
-$notes = "";
+executeSilent("git push --all");
+executeSilent("git push --tags");
 
 echo PHP_EOL;
 echo "Please enter release notes for $fullVersionString:" . PHP_EOL;
-echo "Lines starting with '#' will be ignored." . PHP_EOL;
-echo "To submit the message, type '#END#'." . PHP_EOL;
 echo PHP_EOL;
-
-while (!str_ends_with($notes, "#END#")) {
-	$char = fgetc(STDIN);
-	if ($char === false) {
-		break;
-	}
-
-	if (ord($char) === 0x7F) { // DEL
-		$notes = substr($notes, 0, -1);
-	} else {
-		$notes .= $char;
-	}
-}
-
-/** @var string $notes */
-$notes = preg_replace('/^#.*$/m', '', $notes);
+$notes = fgets(STDIN);
+$notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
 file_put_contents($notesPath, $notes);
 
 executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
 unlink($notesPath);
+echo "Release was created as DRAFT. Please verify it and publish it." . PHP_EOL;
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
