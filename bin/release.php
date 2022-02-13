@@ -50,7 +50,7 @@ function execute(bool $echo, string $commandLine, float|int|string ...$args): bo
 
 function executeGetOutput(string $commandLine, float|int|string ...$args): array
 {
-	$commandLine = sprintf($commandLine, ...$args);
+	$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', $args));
 	echo "$ $commandLine" . PHP_EOL;
 
 	ob_start();
@@ -170,9 +170,21 @@ if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '
 	exit(1);
 }
 
-executeSilent("git push --all");
-executeSilent("git push --tags");
-executeEcho("gh release create %s --generate-notes --title %s --target %s --draft", $fullVersionString, $fullVersionString, $releaseBranch);
+//executeSilent("git push --all");
+//executeSilent("git push --tags");
+
+$notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
+file_put_contents($notesPath, "\n\n# Enter the release notes for $fullVersionString.\n# Lines starting with '#' will be ignored.\n\n");
+
+executeSilent("bash -c nano %s", $notesPath);
+
+/** @var string $notes */
+$notes = file_get_contents($notesPath);
+/** @var string $notes */
+$notes = preg_replace('/^#.*$/m', '', $notes);
+file_put_contents($notesPath, $notes);
+
+executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
@@ -191,10 +203,13 @@ register_shutdown_function(static function () use ($tmpDir) {
 echo PHP_EOL;
 echo "============================================================" . PHP_EOL;
 echo PHP_EOL;
-echo "Working in $tmpDir" . PHP_EOL;
+echo "Press enter to continue with the release of all modules." . PHP_EOL;
+fgets(STDIN);
+echo PHP_EOL;
 
 $cwd = getcwd();
 foreach ([
+	'cache',
 	'collection',
 	'core',
 	'di',
@@ -208,7 +223,7 @@ foreach ([
 ] as $remote) {
 	echo PHP_EOL;
 	echo "============================================================" . PHP_EOL;
-	echo "Releasing $remote v$version" . PHP_EOL;
+	echo "Releasing $remote $fullVersionString" . PHP_EOL;
 
 	$currentTmpDir = $tmpDir . DIRECTORY_SEPARATOR . $remote;
 	$remoteUrl = "git@github.com:elephox-dev/$remote.git";
@@ -228,6 +243,10 @@ foreach ([
 			exit(1);
 		}
 	}
+
+	echo PHP_EOL;
+	echo "Working in $currentTmpDir" . PHP_EOL;
+	echo PHP_EOL;
 
 	if (
 		!executeSilent("git checkout -b %s", $versionBranch) ||
