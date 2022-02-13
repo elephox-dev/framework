@@ -179,9 +179,10 @@ executeSilent("git push --all");
 executeSilent("git push --tags");
 
 echo PHP_EOL;
-echo "Please enter release notes for $fullVersionString:" . PHP_EOL;
+echo "Please enter release notes for $fullVersionString. '%n' will be replaced by \\n" . PHP_EOL;
 echo PHP_EOL;
 $notes = fgets(STDIN);
+$notes = str_replace('%n', "\n", $notes);
 $notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
 file_put_contents($notesPath, $notes);
 
