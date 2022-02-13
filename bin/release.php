@@ -120,7 +120,7 @@ if (!executeEcho("composer module:check --namespaces")) {
 }
 
 echo PHP_EOL;
-if (!executeEcho("gh run list --workflow ci.yml --branch %s --limit 3", $developBranch)) {
+if (!executeEcho("gh run list --branch %s --limit 5", $developBranch)) {
 	error("Could not check for last GitHub workflow run. Please verify it was successful manually. (Press enter to continue)");
 } else {
 	echo "Make sure the last CI run was successful. (Press enter to continue)" . PHP_EOL;
