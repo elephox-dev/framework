@@ -54,6 +54,3 @@ Take a look at the Notion page for the goals of this project: [Notion](https://r
   - [#7322](https://github.com/vimeo/psalm/issues/7322)
 
 <!-- end annotations -->
-
-- [PUGX/badge-poser](https://github.com/PUGX/badge-poser)
-  - [#705](https://github.com/PUGX/badge-poser/issues/705)
