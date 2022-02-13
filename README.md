@@ -50,7 +50,4 @@ Take a look at the Notion page for the goals of this project: [Notion](https://r
 
 ### 🚧 Open issues from other repositories
 
-- [vimeo/psalm](https://github.com/vimeo/psalm)
-  - [#7322](https://github.com/vimeo/psalm/issues/7322)
-
 <!-- end annotations -->
