@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Http\ResponseCode;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeTypeInterface;
 
 /**
  * @psalm-consistent-constructor

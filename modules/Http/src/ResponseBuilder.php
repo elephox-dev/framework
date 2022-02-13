@@ -9,8 +9,8 @@ use Elephox\Stream\StringStream;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use LogicException;
-use Mimey\MimeType;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
 
 /**
  * @psalm-consistent-constructor

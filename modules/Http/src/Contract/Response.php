@@ -5,7 +5,7 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\ResponseCode;
 use JetBrains\PhpStorm\Pure;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeTypeInterface;
 
 interface Response extends Message
 {

@@ -7,7 +7,7 @@ use Elephox\Http\Contract\HeaderMap;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
-use Mimey\MimeTypeInterface;
+use Elephox\Mimey\MimeTypeInterface;
 
 #[Immutable]
 class Response extends AbstractMessage implements Contract\Response
