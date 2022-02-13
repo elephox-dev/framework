@@ -121,11 +121,10 @@ if (!executeEcho("composer modules:check --namespaces")) {
 
 echo PHP_EOL;
 if (!executeEcho("gh run list --branch %s --limit 5", $developBranch)) {
-	error("Could not check for last GitHub workflow run. Please verify it was successful manually. (Press enter to continue)");
+	error("Could not check for last GitHub workflow run. Please verify it was successful manually.");
 } else {
-	echo "Make sure the last CI run was successful. (Press enter to continue)" . PHP_EOL;
+	echo "Make sure the last CI run was successful." . PHP_EOL;
 }
-fgets(STDIN);
 
 register_shutdown_function(static function () use ($currentBranch) {
 	executeSilent("git checkout %s --force", $currentBranch);
@@ -140,6 +139,16 @@ if (!executeSilent("git checkout -b %s", $versionBranch)) {
 echo PHP_EOL;
 echo sprintf("You are now on the version branch for %s (%s).", $fullVersionString, $versionBranch) . PHP_EOL;
 echo sprintf("In case this is a minor release, remember to update all module requirements to this version: ^%s.%s", $matches['major'], $matches['minor']) . PHP_EOL;
+echo PHP_EOL;
+echo "The next steps are as follows:" . PHP_EOL;
+echo "  - check out the release branch (origin/$releaseBranch)" . PHP_EOL;
+echo "  - merge the version branch ($versionBranch) into the release branch ($releaseBranch)" . PHP_EOL;
+echo "  - tag the commit with the new version ($fullVersionString)" . PHP_EOL;
+echo "  - delete the version branch" . PHP_EOL;
+echo "  - back-merge the release branch into the development branch ($developBranch)" . PHP_EOL;
+echo "  - push the release branch to origin" . PHP_EOL;
+echo "  - create a GitHub release" . PHP_EOL;
+echo "  - repeat every step for every module" . PHP_EOL;
 echo PHP_EOL;
 echo "Press enter to continue with the release." . PHP_EOL;
 fgets(STDIN);
@@ -165,7 +174,7 @@ if (
 
 executeSilent("git checkout %s", $developBranch);
 if (!executeSilent("git merge %s --commit --no-ff --quiet -m \"Merge '%s' into '%s'\"", $releaseBranch, $releaseBranch, $developBranch)) {
-	error("Failed to merge $releaseBranch branch into $developBranch branch.");
+	error("Failed to merge '$releaseBranch' branch into '$developBranch' branch.");
 
 	exit(1);
 }
