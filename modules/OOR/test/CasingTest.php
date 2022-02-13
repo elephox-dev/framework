@@ -14,6 +14,7 @@ class CasingTest extends TestCase
 		self::assertEquals('foo', Casing::toLower('Foo'));
 		self::assertEquals('foo', Casing::toLower('foo'));
 		self::assertEquals('foobar', Casing::toLower('FooBar'));
+		self::assertEquals('foo bar', Casing::toLower('foO Bar'));
 		self::assertEquals('foo-bar', Casing::toLower('foO-Bar'));
 		self::assertEquals('foo_bar', Casing::toLower('FOO_BAR'));
 	}
@@ -23,6 +24,7 @@ class CasingTest extends TestCase
 		self::assertEquals('FOO', Casing::toUpper('Foo'));
 		self::assertEquals('FOO', Casing::toUpper('foo'));
 		self::assertEquals('FOOBAR', Casing::toUpper('FooBar'));
+		self::assertEquals('FOO BAR', Casing::toUpper('foO Bar'));
 		self::assertEquals('FOO-BAR', Casing::toUpper('foO-Bar'));
 		self::assertEquals('FOO_BAR', Casing::toUpper('foo_bar'));
 	}
@@ -40,6 +42,12 @@ class CasingTest extends TestCase
 		self::assertEquals('Foo_Bar', Casing::toTitle('foo_bar'));
 		self::assertEquals('Foo_Bar', Casing::toTitle('Foo_Bar'));
 		self::assertEquals('Foo_Bar', Casing::toTitle('FOO_BAR'));
+	}
+
+	public function testReplaceDelimiters(): void
+	{
+		self::assertEquals('foo\nbar', Casing::replaceDelimiters('foo bar', '\n'));
+		self::assertEquals('example.com', Casing::replaceDelimiters('example.com', ' '));
 	}
 
 	public function testToCamel(): void
@@ -87,18 +95,48 @@ class CasingTest extends TestCase
 		self::assertEquals('foo-bar', Casing::toKebab('FOO_BAR'));
 	}
 
-	public function testToTitleKebab(): void
+	public function testToHttpHeader(): void
 	{
-		self::assertEquals('Foo', Casing::toTitleKebab('foo'));
-		self::assertEquals('Foo', Casing::toTitleKebab('Foo'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('foo bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('Foo Bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('FOO BAR'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('foo-bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('Foo-Bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('FOO-BAR'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('foo_bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('Foo_Bar'));
-		self::assertEquals('Foo-Bar', Casing::toTitleKebab('FOO_BAR'));
+		self::assertEquals('Foo', Casing::toHttpHeader('foo'));
+		self::assertEquals('Foo', Casing::toHttpHeader('Foo'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('foo bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('Foo Bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('FOO BAR'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('foo-bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('Foo-Bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('FOO-BAR'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('foo_bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('Foo_Bar'));
+		self::assertEquals('Foo-Bar', Casing::toHttpHeader('FOO_BAR'));
+	}
+
+	public function testToCobol(): void
+	{
+		self::assertEquals('FOO', Casing::toCobol('foo'));
+		self::assertEquals('FOO', Casing::toCobol('Foo'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('foo bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('Foo Bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('FOO BAR'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('foo-bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('Foo-Bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('FOO-BAR'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('foo_bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('Foo_Bar'));
+		self::assertEquals('FOO-BAR', Casing::toCobol('FOO_BAR'));
+	}
+
+	public function testToPascal(): void
+	{
+		self::assertEquals('Foo', Casing::toPascal('foo'));
+		self::assertEquals('Foo', Casing::toPascal('Foo'));
+		self::assertEquals('FooBar', Casing::toPascal('foo bar'));
+		self::assertEquals('FooBar', Casing::toPascal('Foo Bar'));
+		self::assertEquals('FooBar', Casing::toPascal('FOO BAR'));
+		self::assertEquals('FooBar', Casing::toPascal('foo-bar'));
+		self::assertEquals('FooBar', Casing::toPascal('Foo-Bar'));
+		self::assertEquals('FooBar', Casing::toPascal('FOO-BAR'));
+		self::assertEquals('FooBar', Casing::toPascal('foo_bar'));
+		self::assertEquals('FooBar', Casing::toPascal('Foo_Bar'));
+		self::assertEquals('FooBar', Casing::toPascal('FOO_BAR'));
 	}
 }
