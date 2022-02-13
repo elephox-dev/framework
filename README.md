@@ -47,7 +47,4 @@ Take a look at the Notion page for the goals of this project: [Notion](https://r
 - [ ] [Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support/src/CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
 
-
-### 🚧 Open issues from other repositories
-
 <!-- end annotations -->
