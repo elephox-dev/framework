@@ -119,9 +119,12 @@ if (!executeEcho("composer module:check --namespaces")) {
 	exit(1);
 }
 
-executeEcho("gh run list --workflow ci.yml --branch (git rev-parse --abbrev-ref HEAD) --limit 3");
 echo PHP_EOL;
-echo "Make sure the last CI run was successful. (Press enter to continue)" . PHP_EOL;
+if (!executeEcho("gh run list --workflow ci.yml --branch %s --limit 3", $developBranch)) {
+	error("Could not check for last GitHub workflow run. Please verify it was successful manually. (Press enter to continue)");
+} else {
+	echo "Make sure the last CI run was successful. (Press enter to continue)" . PHP_EOL;
+}
 fgets(STDIN);
 
 register_shutdown_function(static function () use ($currentBranch) {
