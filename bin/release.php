@@ -113,7 +113,7 @@ if (executeGetLastLine("git rev-parse HEAD") !== executeGetLastLine("git rev-par
 }
 
 // TODO: check if version requirements are in sync with the version being released
-if (!executeEcho("composer module:check --namespaces")) {
+if (!executeEcho("composer modules:check --namespaces")) {
 	error("Make sure all dependencies are in sync.");
 
 	exit(1);
