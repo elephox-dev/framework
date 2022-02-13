@@ -68,31 +68,43 @@ $emojiMap = [
 	'MAYBE' => '🤔',
 	'IDEA' => '💡',
 ];
+
+/** @var string $readmeContents */
 $readmeContents = file_get_contents($readmeFile);
-$annotations = "<!-- start annotations -->\n\n## 📋 Source code annotations\n\n";
+
 echo count($matches) . " categories found.\n";
-foreach ($matches as $category => $files) {
-	$annotations .= "### $emojiMap[$category] $category\n\n";
-	echo "Category $category contains " . count($files) . " files.\n";
-	foreach ($files as $matchedCategory => $entries) {
-		$matchedCategory = str_replace($src, '', $matchedCategory);
-		$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/main/modules/$matchedCategory)\n";
-		foreach ($entries as $entry) {
-			$annotations .= "  - [ ] $entry\n";
+
+$annotations = "<!-- start annotations -->\n\n";
+
+if (!empty($matches)) {
+	$annotations .= "## 📋 Source code annotations\n\n";
+	foreach ($matches as $category => $files) {
+		$annotations .= "### $emojiMap[$category] $category\n\n";
+		echo "Category $category contains " . count($files) . " files.\n";
+		foreach ($files as $matchedCategory => $entries) {
+			$matchedCategory = str_replace($src, '', $matchedCategory);
+			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/main/modules/$matchedCategory)\n";
+			foreach ($entries as $entry) {
+				$annotations .= "  - [ ] $entry\n";
+			}
 		}
+		$annotations .= "\n";
 	}
-	$annotations .= "\n";
 }
 
-$annotations .= "\n### 🚧 Open issues from other repositories\n\n";
-foreach ($issues as $repo => $issueNumbers) {
-	$annotations .= "- [$repo](https://github.com/$repo)\n";
-	foreach ($issueNumbers as $issueNumber) {
-		$annotations .= "  - [#$issueNumber](https://github.com/$repo/issues/$issueNumber)\n";
+if (!empty($issues)) {
+	$annotations .= "\n### 🚧 Open issues from other repositories\n\n";
+	foreach ($issues as $repo => $issueNumbers) {
+		$annotations .= "- [$repo](https://github.com/$repo)\n";
+		foreach ($issueNumbers as $issueNumber) {
+			$annotations .= "  - [#$issueNumber](https://github.com/$repo/issues/$issueNumber)\n";
+		}
+		$annotations .= "\n";
 	}
-	$annotations .= "\n";
 }
+
 $annotations .= "<!-- end annotations -->";
+/** @var string $readmeContents */
 $readmeContents = preg_replace('/<!-- start annotations -->.*<!-- end annotations -->/s', $annotations, $readmeContents);
 
 echo "Writing to $readmeFile...\n";
