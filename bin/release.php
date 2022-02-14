@@ -188,7 +188,7 @@ file_put_contents($notesPath, $notes);
 
 executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
 unlink($notesPath);
-echo "Release was created as DRAFT. Please verify it and publish it." . PHP_EOL;
+echo "The release was published on GitHub. Please verify it and then continue." . PHP_EOL;
 
 $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release";
 if (!is_dir($tmpDir) && !mkdir($tmpDir) && !is_dir($tmpDir)) {
