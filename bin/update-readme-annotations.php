@@ -30,8 +30,7 @@ $src = $root . 'modules' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
 
 echo "Gathering files...\n";
-
-$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src), [$readmeFile, $root . 'bootstrap.php']);
+$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src), [$root . 'bootstrap.php']);
 $todoPattern = /** @lang RegExp */ '/[^\n]*(TODO|FIXME|MAYBE|IDEA):?\s*([^\n]*)/';
 $issuePattern = /** @lang RegExp */ '/\s(?<repo>[A-Za-z0-9\-_]+?\/[A-Za-z0-9\-_]+?)#(?<issue>\d+)/';
 
@@ -43,6 +42,7 @@ foreach ($sourceFiles as $sourceFile) {
 
 	preg_match_all($todoPattern, $contents, $todoMatches);
 	if (!empty($todoMatches[0])) {
+		echo "  Found " . count($todoMatches[0]) . " TODO annotation(s) in $sourceFile\n";
 		foreach ($todoMatches[1] as $i => $matchedCategory) {
 			$matches[$matchedCategory] ??= [];
 			$matches[$matchedCategory][$sourceFile] ??= [];
@@ -55,6 +55,7 @@ foreach ($sourceFiles as $sourceFile) {
 		continue;
 	}
 
+	echo "  Found " . count($issueMatches['repo']) . " referenced issue(s) in $sourceFile\n";
 	foreach ($issueMatches['repo'] as $i => $repo) {
 		$issues[$repo] = $issues[$repo] ?? [];
 		$issues[$repo][] = $issueMatches['issue'][$i];
@@ -69,24 +70,32 @@ $emojiMap = [
 	'IDEA' => '💡',
 ];
 
+$titleMap = [
+	'FIXME' => 'Fixes',
+	'TODO' => 'To Do',
+	'MAYBE' => 'Maybe',
+	'IDEA' => 'Idea',
+];
+
 /** @var string $readmeContents */
 $readmeContents = file_get_contents($readmeFile);
 
-echo count($matches) . " categories found.\n";
+echo count($matches) . " 'to do' categories found.\n";
+echo count($issues) . " issues referenced.\n";
 
 $annotations = "<!-- start annotations -->\n\n";
 
 if (!empty($matches) || !empty($issues)) {
-	$annotations .= "## 📋 Source code annotations\n\n";
+	$annotations .= "# 📋 Source code annotations\n\n";
 }
 
 if (!empty($matches)) {
 	foreach ($matches as $category => $files) {
-		$annotations .= "### $emojiMap[$category] $category\n\n";
+		$annotations .= "## $emojiMap[$category] $titleMap[$category]\n\n";
 		echo "Category $category contains " . count($files) . " files.\n";
 		foreach ($files as $matchedCategory => $entries) {
-			$matchedCategory = str_replace($src, '', $matchedCategory);
-			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/main/modules/$matchedCategory)\n";
+			$matchedCategory = str_replace($root, '', $matchedCategory);
+			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/develop/$matchedCategory)\n";
 			foreach ($entries as $entry) {
 				$annotations .= "  - [ ] $entry\n";
 			}
@@ -96,7 +105,7 @@ if (!empty($matches)) {
 }
 
 if (!empty($issues)) {
-	$annotations .= "\n### 🚧 Open issues from other repositories\n\n";
+	$annotations .= "\n## 🚧 Related issues\n\n";
 	foreach ($issues as $repo => $issueNumbers) {
 		$annotations .= "- [$repo](https://github.com/$repo)\n";
 		foreach ($issueNumbers as $issueNumber) {
