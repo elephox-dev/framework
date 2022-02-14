@@ -9,6 +9,23 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\ServerRequestBuilder
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\ObjectMap
+ * @covers \Elephox\Http\AbstractMessage
+ * @covers \Elephox\Http\AbstractMessageBuilder
+ * @covers \Elephox\Http\CookieMap
+ * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\Http\ParameterMap
+ * @covers \Elephox\Http\Request
+ * @covers \Elephox\Http\RequestBuilder
+ * @covers \Elephox\Http\ServerRequest
+ * @covers \Elephox\Http\Url
+ * @covers \Elephox\Http\UrlBuilder
+ * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Http\UploadedFileMap
+ * @covers \Elephox\Http\RequestMethod
+ * @uses \Elephox\Http\Contract\Request
+ * @uses \Elephox\Http\Contract\ServerRequest
  */
 class ServerRequestBuilderTest extends TestCase
 {
