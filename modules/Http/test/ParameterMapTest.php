@@ -7,6 +7,7 @@ use Elephox\Collection\OffsetNotFoundException;
 use Elephox\Http\Contract\ParameterMap as ParameterMapContract;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * @covers \Elephox\Http\ParameterMap
@@ -126,7 +127,7 @@ class ParameterMapTest extends TestCase
 		$map->put('foo', ParameterSource::Get, 'bar');
 		$map->put('foo', ParameterSource::Post, 'baz');
 
-		$this->expectException(LogicException::class);
+		$this->expectException(RuntimeException::class);
 		$map->get('foo');
 	}
 }
