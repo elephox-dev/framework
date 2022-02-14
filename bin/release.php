@@ -186,7 +186,7 @@ $notes = str_replace('%n', "\n", $notes);
 $notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
 file_put_contents($notesPath, $notes);
 
-executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
+executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
 unlink($notesPath);
 echo "Release was created as DRAFT. Please verify it and publish it." . PHP_EOL;
 
