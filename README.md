@@ -51,22 +51,22 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ TODO
 
-- [ ] [Collection\src\IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\IsKeyedEnumerable.php)
+- [ ] [Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-- [ ] [Collection\src\Iterator\OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\OrderedIterator.php)
+- [ ] [Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [Http\src\ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http\src\ResponseCode.php)
+- [ ] [Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
-- [ ] [S:\repos\elephox-dev\framework\README.md](https://github.com/elephox-dev/framework/tree/main/modules/S:\repos\elephox-dev\framework\README.md)
+- [ ] [/home/runner/work/framework/framework/README.md](https://github.com/elephox-dev/framework/tree/main/modules//home/runner/work/framework/framework/README.md)
   - [ ] - [ ] [Collection\src\IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\IsKeyedEnumerable.php)
 
 ### 🤔 MAYBE
 
-- [ ] [Collection\src\Iterator\ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\ReverseIterator.php)
+- [ ] [Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
-- [ ] [Support\src\CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support\src\CustomMimeType.php)
+- [ ] [Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support/src/CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
-- [ ] [S:\repos\elephox-dev\framework\README.md](https://github.com/elephox-dev/framework/tree/main/modules/S:\repos\elephox-dev\framework\README.md)
+- [ ] [/home/runner/work/framework/framework/README.md](https://github.com/elephox-dev/framework/tree/main/modules//home/runner/work/framework/framework/README.md)
   - [ ] - [ ] [Collection\src\Iterator\ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\ReverseIterator.php)
 
 
