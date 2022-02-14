@@ -7,16 +7,15 @@
 </p>
 
 <p align="center">
-  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/v/elephox/framework?style=flat-square" alt="Latest Stable Version"></a>
-  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/l/elephox/framework?style=flat-square" alt="License"></a>
-  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/php-v/elephox/framework?style=flat-square" alt="PHP Version Require"></a>
+  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/elephox-dev/framework/CI?label=CI&logo=github&style=for-the-badge"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/l/elephox/framework?style=for-the-badge" alt="License"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/php-v/elephox/framework?style=for-the-badge&logo=php" alt="PHP Version Require"></a>
   <br>
-  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img src="https://github.com/elephox-dev/framework/actions/workflows/ci.yml/badge.svg?style=flat-square" alt="CI"></a>
-  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=flat-square" alt="Coverage Status"></a>
-  <!-- Uncomment following line when https://github.com/psalm/shepherd/pull/29 is resolved -->
-  <!--<a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=flat-square" alt="Psalm Level"></a>-->
-  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=flat-square" alt="Type Coverage"></a>
-  <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
+  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=for-the-badge" alt="Coverage Status"></a>
+  <!-- Uncomment following line when psalm/shepherd#29 is resolved -->
+  <!--<a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>-->
+  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=for-the-badge" alt="Type Coverage"></a>
+  <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
 </p>
 
 ## 📚 Documentation
@@ -52,18 +51,28 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ TODO
 
-- [ ] [Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/IsKeyedEnumerable.php)
+- [ ] [Collection\src\IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-- [ ] [Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/OrderedIterator.php)
+- [ ] [Collection\src\Iterator\OrderedIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\OrderedIterator.php)
   - [ ] cache keys
-- [ ] [Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http/src/ResponseCode.php)
+- [ ] [Http\src\ResponseCode.php](https://github.com/elephox-dev/framework/tree/main/modules/Http\src\ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
+- [ ] [S:\repos\elephox-dev\framework\README.md](https://github.com/elephox-dev/framework/tree/main/modules/S:\repos\elephox-dev\framework\README.md)
+  - [ ] - [ ] [Collection\src\IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\IsKeyedEnumerable.php)
 
 ### 🤔 MAYBE
 
-- [ ] [Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection/src/Iterator/ReverseIterator.php)
+- [ ] [Collection\src\Iterator\ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
-- [ ] [Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support/src/CustomMimeType.php)
+- [ ] [Support\src\CustomMimeType.php](https://github.com/elephox-dev/framework/tree/main/modules/Support\src\CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
+- [ ] [S:\repos\elephox-dev\framework\README.md](https://github.com/elephox-dev/framework/tree/main/modules/S:\repos\elephox-dev\framework\README.md)
+  - [ ] - [ ] [Collection\src\Iterator\ReverseIterator.php](https://github.com/elephox-dev/framework/tree/main/modules/Collection\src\Iterator\ReverseIterator.php)
+
+
+### 🚧 Open issues from other repositories
+
+- [psalm/shepherd](https://github.com/psalm/shepherd)
+  - [#29](https://github.com/psalm/shepherd/issues/29)
 
 <!-- end annotations -->
