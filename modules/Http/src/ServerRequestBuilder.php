@@ -150,8 +150,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 				throw new RuntimeException('Unable to open php://input');
 			}
 
-			if ($parameters->has('CONTENT_LENGTH')) {
-				$contentLength = (int)$parameters->get('CONTENT_LENGTH');
+			if ($parameters->has('CONTENT_LENGTH', ParameterSource::Server)) {
+				$contentLength = (int)$parameters->get('CONTENT_LENGTH', ParameterSource::Server);
 				if ($contentLength > 0) {
 					$builder->body(new ResourceStream($readonlyInput, size: $contentLength));
 				}
@@ -163,8 +163,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		}
 
 		if ($protocolVersion === null) {
-			if ($parameters->has('SERVER_PROTOCOL')) {
-				$protocol = (string)$parameters->get('SERVER_PROTOCOL');
+			if ($parameters->has('SERVER_PROTOCOL', ParameterSource::Server)) {
+				$protocol = (string)$parameters->get('SERVER_PROTOCOL', ParameterSource::Server);
 				$protocolParts = explode('/', $protocol, 2);
 				if (count($protocolParts) === 2) {
 					$builder->protocolVersion($protocolParts[1]);
@@ -175,8 +175,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		}
 
 		if ($requestMethod === null) {
-			if ($parameters->has('REQUEST_METHOD')) {
-				$requestMethodType = RequestMethod::tryFrom((string)$parameters->get('REQUEST_METHOD'));
+			if ($parameters->has('REQUEST_METHOD', ParameterSource::Server)) {
+				$requestMethodType = RequestMethod::tryFrom((string)$parameters->get('REQUEST_METHOD', ParameterSource::Server));
 				if ($requestMethodType !== null) {
 					$builder->requestMethod($requestMethodType);
 				}
@@ -186,8 +186,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		}
 
 		if ($requestUrl === null) {
-			if ($parameters->has('REQUEST_URI')) {
-				$builder->requestUrl(Url::fromString((string)$parameters->get('REQUEST_URI')));
+			if ($parameters->has('REQUEST_URI', ParameterSource::Server)) {
+				$builder->requestUrl(Url::fromString((string)$parameters->get('REQUEST_URI', ParameterSource::Server)));
 			}
 		} else {
 			$builder->requestUrl($requestUrl);
