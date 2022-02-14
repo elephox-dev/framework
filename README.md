@@ -30,7 +30,7 @@ Take a look at the Notion page for the goals of this project: [Notion](https://r
 
 Contributions in all forms are welcome. Make sure to read [elephox.dev/contributing](https://elephox.dev/contributing) for the details.
 
-##  Get the Badge
+## 🏷️ Get the Badge
 
 Using Elephox in your project? Add a badge to your README:
 
