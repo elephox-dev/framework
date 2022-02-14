@@ -18,19 +18,19 @@
   <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
 </p>
 
-# 📚 Documentation
+## 📚 Documentation
 
 Visit [elephox.dev](https://elephox.dev) for the documentation.
 
-# 🎯 Goals
+## 🎯 Goals
 
 Take a look at the Notion page for the goals of this project: [Notion](https://ricardoboss.notion.site/Elephox-d1b59b70c55f41b385e72568bbd05bd2)
 
-# ✨ Contributing
+## ✨ Contributing
 
 Contributions in all forms are welcome. Make sure to read [elephox.dev/contributing](https://elephox.dev/contributing) for the details.
 
-#  Get the Badge
+##  Get the Badge
 
 Using Elephox in your project? Add a badge to your README:
 
@@ -47,9 +47,9 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 <!-- start annotations -->
 
-# 📋 Source code annotations
+## 📋 Source code annotations
 
-## ✅ To Do
+### ✅ To Do
 
 - [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
@@ -58,7 +58,7 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 - [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
 
-## 🤔 Maybe
+### 🤔 Maybe
 
 - [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
@@ -67,7 +67,7 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 <!-- end annotations -->
 
-## 🚧 Related PRs
+### 🚧 Related PRs
 
 - [psalm/shepherd](https://github.com/psalm/shepherd)
     - [#29](https://github.com/psalm/shepherd/pull/29)

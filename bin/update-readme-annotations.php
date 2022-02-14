@@ -86,12 +86,12 @@ echo count($issues) . " issues referenced.\n";
 $annotations = "<!-- start annotations -->\n\n";
 
 if (!empty($matches) || !empty($issues)) {
-	$annotations .= "# 📋 Source code annotations\n\n";
+	$annotations .= "## 📋 Source code annotations\n\n";
 }
 
 if (!empty($matches)) {
 	foreach ($matches as $category => $files) {
-		$annotations .= "## $emojiMap[$category] $titleMap[$category]\n\n";
+		$annotations .= "### $emojiMap[$category] $titleMap[$category]\n\n";
 		echo "Category $category contains " . count($files) . " files.\n";
 		foreach ($files as $matchedCategory => $entries) {
 			$matchedCategory = str_replace($root, '', $matchedCategory);
@@ -105,7 +105,7 @@ if (!empty($matches)) {
 }
 
 if (!empty($issues)) {
-	$annotations .= "\n## 🚧 Related issues\n\n";
+	$annotations .= "\n### 🚧 Related issues\n\n";
 	foreach ($issues as $repo => $issueNumbers) {
 		$annotations .= "- [$repo](https://github.com/$repo)\n";
 		foreach ($issueNumbers as $issueNumber) {
