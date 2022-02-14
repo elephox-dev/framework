@@ -13,6 +13,7 @@ use Elephox\Collection\OffsetNotFoundException;
 use Generator;
 use InvalidArgumentException;
 use LogicException;
+use RuntimeException;
 
 class ParameterMap implements Contract\ParameterMap
 {
@@ -32,17 +33,20 @@ class ParameterMap implements Contract\ParameterMap
 
 		$candidateFound = false;
 		$candidate = null;
+		$candidateSource = null;
 
 		foreach ($trySources as $parameterSource) {
 			if ($this->parameters->has($parameterSource)) {
 				$parameterList = $this->parameters->get($parameterSource);
 				if ($parameterList->has($key)) {
 					if ($candidateFound) {
-						throw new LogicException('Ambiguous parameter key: multiple sources specified the same key. Try specifying a parameter source or use all() to get a list keyed by source.');
+						/** @var ParameterSource $candidateSource */
+						throw new RuntimeException("Ambiguous parameter key: '$key'. Found in both '$parameterSource->name' and '$candidateSource->name'.");
 					}
 
 					/** @var mixed */
 					$candidate = $parameterList->get($key);
+					$candidateSource = $parameterSource;
 					$candidateFound = true;
 				}
 			}

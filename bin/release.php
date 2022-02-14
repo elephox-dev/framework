@@ -126,10 +126,6 @@ if (!executeEcho("gh run list --branch %s --limit 5", $developBranch)) {
 	echo "Make sure the last CI run was successful." . PHP_EOL;
 }
 
-register_shutdown_function(static function () use ($currentBranch) {
-	executeSilent("git checkout %s --force", $currentBranch);
-});
-
 if (!executeSilent("git checkout -b %s", $versionBranch)) {
 	error("Failed to create $versionBranch branch.");
 
@@ -183,13 +179,14 @@ executeSilent("git push --all");
 executeSilent("git push --tags");
 
 echo PHP_EOL;
-echo "Please enter release notes for $fullVersionString:" . PHP_EOL;
+echo "Please enter release notes for $fullVersionString. '%n' will be replaced by \\n" . PHP_EOL;
 echo PHP_EOL;
 $notes = fgets(STDIN);
+$notes = str_replace('%n', "\n", $notes);
 $notesPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "release-notes-$version.md";
 file_put_contents($notesPath, $notes);
 
-executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s --draft", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
+executeEcho("gh release create %s --generate-notes --title %s --target %s --notes-file %s", $fullVersionString, $fullVersionString, $releaseBranch, $notesPath);
 unlink($notesPath);
 echo "Release was created as DRAFT. Please verify it and publish it." . PHP_EOL;
 
@@ -254,6 +251,12 @@ foreach ([
 	echo PHP_EOL;
 	echo "Working in $currentTmpDir" . PHP_EOL;
 	echo PHP_EOL;
+
+	if (executeGetLastLine("git rev-parse --abbrev-ref HEAD") !== $developBranch) {
+		error("Default branch for module $remote is not $developBranch. Please fix this on GitHub.");
+
+		exit(1);
+	}
 
 	if (
 		!executeSilent("git checkout -b %s", $versionBranch) ||
