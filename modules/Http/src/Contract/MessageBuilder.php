@@ -20,6 +20,8 @@ interface MessageBuilder
 	 */
 	public function jsonBody(array $data): static;
 
+	public function resourceBody(mixed $resource): static;
+
 	/**
 	 * @param string $name
 	 * @param list<string> $value

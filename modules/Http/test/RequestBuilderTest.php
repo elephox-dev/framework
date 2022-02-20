@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Http\Contract\Request as RequestContract;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -47,5 +48,29 @@ class RequestBuilderTest extends TestCase
 		self::assertEquals('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
 		self::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
 		self::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
+	}
+
+	public function invalidBodyResourceProvider(): iterable
+	{
+		yield [null];
+		yield [false];
+		yield [true];
+		yield [0];
+		yield [1];
+		yield [1.1];
+		yield [''];
+		yield ['foo'];
+		yield [[]];
+		yield [['foo', 'bar']];
+	}
+
+	/**
+	 * @dataProvider invalidBodyResourceProvider
+	 */
+	public function testInvalidResourceBody(mixed $body): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		Request::build()->resourceBody($body);
 	}
 }
