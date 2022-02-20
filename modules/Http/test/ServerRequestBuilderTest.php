@@ -5,6 +5,7 @@ namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
 use Elephox\Http\Contract\SessionMap;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,6 +25,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Http\UploadedFileMap
  * @covers \Elephox\Http\RequestMethod
+ * @covers \Elephox\Http\AbstractBuilder
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest
  */
@@ -43,6 +45,14 @@ class ServerRequestBuilderTest extends TestCase
 		$request = ServerRequestBuilder::fromGlobals($parameterMap, session: new FakeSessionMap());
 
 		self::assertEquals($requestUri, $request->getUrl()->path);
+	}
+
+	public function testMissingParameterIsThrown(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Missing required parameter: url');
+
+		ServerRequestBuilder::fromGlobals(new ParameterMap(), session: new FakeSessionMap());
 	}
 }
 

@@ -3,21 +3,26 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Files\Contract\File;
-use Elephox\Stream\ResourceStream;
+use Elephox\Files\Contract\File as FileContract;
+use Elephox\Files\File;
+use Elephox\Mimey\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\StringStream;
 use Elephox\Support\CustomMimeType;
-use Mimey\MimeTypeInterface;
+use JetBrains\PhpStorm\Pure;
+use JsonException;
+use RuntimeException;
 
 trait GeneratesResponses
 {
+	#[Pure]
 	private function getDefaultBuilder(): ResponseBuilder
 	{
 		return Response::build();
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	private function jsonResponse(array $data, ?ResponseCode $responseCode = null): Contract\ResponseBuilder
 	{
@@ -30,29 +35,35 @@ trait GeneratesResponses
 	{
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType)
+			->contentType($mimeType ?? MimeType::TextPlain)
 			->body(new StringStream($data));
 	}
 
 	private function resourceResponse(mixed $resource, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
 	{
+		try {
+			$mimeType ??= CustomMimeType::fromFile($resource);
+		} catch (RuntimeException) {
+			$mimeType = MimeType::ApplicationOctetStream;
+		}
+
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType ?? CustomMimeType::fromFile($resource))
+			->contentType($mimeType)
 			->resourceBody($resource);
 	}
 
-	private function fileResponse(string|File $path, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
+	private function fileResponse(string|FileContract $file, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
 	{
-		$path = $path instanceof File ? $path->getPath() : $path;
+		$file = $file instanceof FileContract ? $file : new File($file);
 
-		if (!file_exists($path)) {
+		if (!$file->exists()) {
 			return $this->getDefaultBuilder()->responseCode($responseCode ?? ResponseCode::NotFound);
 		}
 
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType ?? CustomMimeType::fromFile($path))
-			->body(ResourceStream::fromFile($path));
+			->contentType($mimeType ?? $file->getMimeType() ?? CustomMimeType::fromFile($file->getPath()))
+			->body($file->stream());
 	}
 }
