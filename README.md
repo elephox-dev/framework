@@ -65,8 +65,3 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] try to get meta information of resource to get filename
 
 <!-- end annotations -->
-
-### 🚧 Related PRs
-
-- [psalm/shepherd](https://github.com/psalm/shepherd)
-    - [#29](https://github.com/psalm/shepherd/pull/29)
