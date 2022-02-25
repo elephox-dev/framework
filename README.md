@@ -12,8 +12,7 @@
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/php-v/elephox/framework?style=for-the-badge&logo=php" alt="PHP Version Require"></a>
   <br>
   <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=for-the-badge" alt="Coverage Status"></a>
-  <!-- Uncomment following line when psalm/shepherd#29 is resolved -->
-  <!--<a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>-->
+  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=for-the-badge" alt="Type Coverage"></a>
   <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
 </p>
