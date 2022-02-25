@@ -355,7 +355,7 @@ class EnumerableTest extends TestCase
 				1, 2, 3, 4, 5
 			],
 			Enumerable::range(1, 5)
-				->selectMany(fn(int $x): GenericEnumerable => Enumerable::range(1, $x))
+				->selectManyKeyed(fn(int $x): GenericEnumerable => Enumerable::range(1, $x))
 				->toList()
 		);
 	}

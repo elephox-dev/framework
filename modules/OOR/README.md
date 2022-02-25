@@ -102,7 +102,7 @@ This library provides wrappers for strings and arrays that allow you to work wit
 - [ ] crc32
 - [ ] crypt
 - [ ] echo
-- [ ] explode
+- [x] explode
 - [ ] fprintf
 - [ ] get_html_translation_table
 - [ ] hebrev
@@ -137,7 +137,7 @@ This library provides wrappers for strings and arrays that allow you to work wit
 - [ ] sha1
 - [ ] similar_text
 - [ ] soundex
-- [ ] sprintf
+- [x] sprintf
 - [ ] sscanf
 - [ ] str_contains
 - [ ] str_ends_with
@@ -149,7 +149,7 @@ This library provides wrappers for strings and arrays that allow you to work wit
 - [ ] str_rot13
 - [ ] str_shuffle
 - [ ] str_split
-- [ ] str_starts_with
+- [x] str_starts_with
 - [ ] str_word_count
 - [ ] strcasecmp
 - [ ] strchr

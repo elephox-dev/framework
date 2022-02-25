@@ -22,6 +22,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/OOR/test" isTestSource="true" packagePrefix="Elephox\OOR\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Cache/src" isTestSource="false" packagePrefix="Elephox\Cache\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Cache/test" isTestSource="true" packagePrefix="Elephox\Cache\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/src" isTestSource="false" packagePrefix="Elephox\Configuration\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/test" isTestSource="true" packagePrefix="Elephox\Configuration\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />

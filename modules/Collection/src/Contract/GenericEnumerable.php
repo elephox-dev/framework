@@ -232,7 +232,18 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable;
+	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable;
+
+	/**
+	 * @template TCollection
+	 * @template TResult
+	 *
+	 * @param callable(TSource): GenericEnumerable<TCollection> $collectionSelector
+	 * @param null|callable(TSource, TCollection): TResult $resultSelector
+	 *
+	 * @return GenericEnumerable<TResult>
+	 */
+	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable;
 
 	/**
 	 * @param GenericEnumerable<TSource> $other

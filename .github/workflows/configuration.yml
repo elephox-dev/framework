@@ -1,0 +1,18 @@
+name: Configuration Pipeline
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - '.github/workflows/configuration.yml'
+      - 'modules/Configuration/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/configuration'
+      dir: 'modules/Configuration/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_CONFIGURATION_KEY }}

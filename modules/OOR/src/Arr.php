@@ -18,7 +18,7 @@ use JetBrains\PhpStorm\Pure;
  * @psalm-suppress MixedTypeCoercion
  * @psalm-suppress MixedArgumentTypeCoercion
  */
-final class Arr implements ArrayAccess, IteratorAggregate
+class Arr implements ArrayAccess, IteratorAggregate
 {
 	#[Pure]
 	public static function wrap(mixed ...$values): self
@@ -74,6 +74,11 @@ final class Arr implements ArrayAccess, IteratorAggregate
 		private array $source,
 	)
 	{
+	}
+
+	public function isEmpty(): bool
+	{
+		return empty($this->source);
 	}
 
 	/**

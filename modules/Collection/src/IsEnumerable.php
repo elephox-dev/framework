@@ -532,7 +532,7 @@ trait IsEnumerable
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable
+	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable
 	{
 		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
@@ -542,6 +542,30 @@ trait IsEnumerable
 			foreach ($this->getIterator() as $element) {
 				foreach ($collectionSelector($element) as $collectionElementKey => $collectionElement) {
 					yield $collectionElementKey => $resultSelector($element, $collectionElement, $collectionElementKey);
+				}
+			}
+		});
+	}
+
+	/**
+	 * @template TCollection
+	 * @template TResult
+	 *
+	 * @param callable(TSource): GenericEnumerable<TCollection> $collectionSelector
+	 * @param null|callable(TSource, TCollection): TResult $resultSelector
+	 *
+	 * @return GenericEnumerable<TResult>
+	 */
+	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable
+	{
+		/** @psalm-suppress UnusedClosureParam */
+		$resultSelector ??= static fn(mixed $element, mixed $collectionElement): mixed => $collectionElement;
+		/** @var callable(TSource, TCollection): TResult $resultSelector */
+
+		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
+			foreach ($this->getIterator() as $element) {
+				foreach ($collectionSelector($element) as $collectionElement) {
+					yield $resultSelector($element, $collectionElement);
 				}
 			}
 		});

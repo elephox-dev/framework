@@ -56,6 +56,7 @@
         "psr-4": {
             "Elephox\\Cache\\": "modules/Cache/src/",
             "Elephox\\Collection\\": "modules/Collection/src/",
+            "Elephox\\Configuration\\": "modules/Configuration/src/",
             "Elephox\\Core\\": "modules/Core/src/",
             "Elephox\\DI\\": "modules/DI/src/",
             "Elephox\\Events\\": "modules/Events/src/",
@@ -71,6 +72,7 @@
         "psr-4": {
             "Elephox\\Cache\\": "modules/Cache/test/",
             "Elephox\\Collection\\": "modules/Collection/test/",
+            "Elephox\\Configuration\\": "modules/Configuration/test/",
             "Elephox\\DI\\": "modules/DI/test/",
             "Elephox\\Events\\": "modules/Events/test/",
             "Elephox\\Files\\": "modules/Files/test/",
