@@ -36,7 +36,7 @@ class CustomMimeType implements MimeTypeInterface
 		}
 
 		$mime = null;
-		if (function_exists('mime_content_type')) {
+		if (is_string($file) && function_exists('mime_content_type')) {
 			$mime = mime_content_type($file);
 		}
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\OOR\Casing;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -102,5 +103,23 @@ class HeaderNameTest extends TestCase
 			self::assertEquals($name, HeaderName::tryFromIgnoreCase($uppercase));
 			self::assertEquals($name, HeaderName::tryFromIgnoreCase($randomCase));
 		}
+
+		self::assertNull(HeaderName::tryFromIgnoreCase('foo'));
+	}
+
+	public function invalidHeaderNameProvider(): iterable
+	{
+		yield [''];
+		yield [' '];
+	}
+
+	/**
+	 * @dataProvider invalidHeaderNameProvider
+	 */
+	public function testTryFromIgnoreCaseThrowsForInvalidInput(string $name): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+
+		HeaderName::tryFromIgnoreCase($name);
 	}
 }

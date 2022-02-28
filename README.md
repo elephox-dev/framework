@@ -9,12 +9,12 @@
 <p align="center">
   <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/elephox-dev/framework/CI?label=CI&logo=github&style=for-the-badge"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/l/elephox/framework?style=for-the-badge" alt="License"></a>
+  <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/v/elephox/framework?label=version&style=for-the-badge"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/php-v/elephox/framework?style=for-the-badge&logo=php" alt="PHP Version Require"></a>
   <br>
-  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=for-the-badge" alt="Coverage Status"></a>
-  <!-- Uncomment following line when psalm/shepherd#29 is resolved -->
-  <!--<a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>-->
-  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=for-the-badge" alt="Type Coverage"></a>
+  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>
+  <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=for-the-badge&label=type%20coverage" alt="Type Coverage"></a>
+  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=for-the-badge&label=test%20coverage" alt="Coverage Status"></a>
   <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
 </p>
 
@@ -66,8 +66,3 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] try to get meta information of resource to get filename
 
 <!-- end annotations -->
-
-### 🚧 Related PRs
-
-- [psalm/shepherd](https://github.com/psalm/shepherd)
-    - [#29](https://github.com/psalm/shepherd/pull/29)
