@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "~8.1.0 || ~8.2.0",
-        "elephox/support": "^0.3",
+        "elephox/support": "^0.3 || ^1.0",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload": {
