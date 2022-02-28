@@ -35,6 +35,10 @@ trait HasArrayData
 
 					$data = $data[$keyPart];
 					if ($keyParts->isEmpty()) {
+						if (!is_array($data)) {
+							return;
+						}
+
 						/** @psalm-suppress MixedAssignment */
 						foreach (array_keys($data) as $key) {
 							yield $key;
@@ -60,7 +64,6 @@ trait HasArrayData
 			$data = &$data[$keyPart];
 		}
 
-		/** @psalm-suppress MixedAssignment */
 		$data = $value;
 	}
 
@@ -95,7 +98,7 @@ trait HasArrayData
 		while (!$keys->isEmpty()) {
 			/** @var string $keyPart */
 			$keyPart = $keys->shift();
-			if (array_key_exists($keyPart, $data)) {
+			if (is_array($data) && array_key_exists($keyPart, $data)) {
 				if ($keys->isEmpty()) {
 					unset($data[$keyPart]);
 

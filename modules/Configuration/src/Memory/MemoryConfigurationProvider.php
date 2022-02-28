@@ -16,7 +16,6 @@ class MemoryConfigurationProvider implements ConfigurationProvider
 		$this->data = [];
 		/** @psalm-suppress MixedAssignment */
 		foreach ($source->data as $key => $value) {
-			/** @psalm-suppress MixedAssignment */
 			$this->data[$key] = $value;
 		}
 	}
