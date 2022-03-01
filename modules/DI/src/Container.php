@@ -12,8 +12,10 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
+use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
+use ReflectionUnionType;
 
 class Container implements Contract\Container
 {
@@ -381,22 +383,34 @@ class Container implements Contract\Container
 			throw new MissingTypeHintException($parameter);
 		}
 
-		/**
-		 * @var class-string $typeName
-		 * @psalm-suppress UndefinedMethod
-		 */
-		$typeName = $type->getName();
+		if ($type instanceof ReflectionUnionType) {
+			$typeNames = array_map(static fn (ReflectionNamedType $t) => $t->getName(), $type->getTypes());
+		} else {
+			/**
+			 * @psalm-suppress UndefinedMethod
+			 */
+			$typeNames = [$type->getName()];
+		}
 
-		if ($possibleArgument === null && $this->has($typeName)) {
-			$possibleArgument = $this->get($typeName);
+		if ($possibleArgument === null) {
+			/**
+			 * @var list<class-string> $typeNames
+			 */
+			foreach ($typeNames as $typeName) {
+				if ($this->has($typeName)) {
+					/** @var mixed $possibleArgument */
+					$possibleArgument = $this->get($typeName);
+					break;
+				}
+			}
 		}
 
 		if ($possibleArgument !== null) {
-			if (!$possibleArgument instanceof $typeName) {
+			if (empty(array_filter($typeNames, static fn (string $class) => $possibleArgument instanceof $class))) {
 				$paramName = "$" . $parameter->getName();
 				$possibleArgumentType = get_debug_type($possibleArgument);
 
-				throw new LogicException("Argument $paramName was resolved to type $possibleArgumentType, which doesn't match the type hint $typeName");
+				throw new LogicException("Argument $paramName was resolved to type $possibleArgumentType, which doesn't match the type hint $type");
 			}
 
 			return $possibleArgument;
@@ -407,11 +421,10 @@ class Container implements Contract\Container
 		}
 
 		if (!$parameter->allowsNull()) {
-			throw new BindingNotFoundException($typeName, $parameter->name);
+			throw new BindingNotFoundException((string)$type, $parameter->name);
 		}
 
 		return null;
-
 	}
 
 	public function alias(string $alias, string $contract): void
