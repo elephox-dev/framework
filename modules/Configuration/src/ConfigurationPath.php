@@ -18,10 +18,6 @@ final class ConfigurationPath
 		return Str::wrap($val);
 	}
 
-	/**
-	 * @param string|Str $path
-	 * @return Arr<int, non-empty-string>
-	 */
 	public static function getSectionKeys(string|Str $path): Arr
 	{
 		return Str::wrap($path)->explode(self::SECTION_SEPARATOR)->filter();

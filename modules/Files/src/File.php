@@ -65,6 +65,13 @@ class File implements Contract\File
 		$resource = fopen($file->getPath(), $flags);
 
 		restore_error_handler();
+		if ($exception !== null) {
+			if (is_resource($resource)) {
+				fclose($resource);
+			}
+
+			throw $exception;
+		}
 
 		if ($resource === false) {
 			$exception = new RuntimeException("Unable to open file stream: " . $file->getPath());
