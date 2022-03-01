@@ -53,16 +53,32 @@ class File implements Contract\File
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
+		$exception = null;
+
 		// handle any warnings emitted by fopen()
-		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename, int $line): never {
-			throw new RuntimeException(sprintf("[%d] %s in %s:%d", $errorCode, $errorMessage, $filename, $line));
+		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = "<unknown>", int $line = 0) use (&$exception): bool {
+			$exception = new RuntimeException(sprintf("[%d] %s in %s:%d", $errorCode, $errorMessage, $filename, $line));
+
+			return true;
 		});
 
-		/** @var resource $resource */
 		$resource = fopen($file->getPath(), $flags);
 
 		restore_error_handler();
 
+		if ($resource === false) {
+			$exception = new RuntimeException("Unable to open file stream: " . $file->getPath());
+		}
+
+		if ($exception !== null) {
+			if (is_resource($resource)) {
+				fclose($resource);
+			}
+
+			throw $exception;
+		}
+
+		/** @var resource $resource */
 		return new ResourceStream($resource, $readable, $writeable, $readable);
 	}
 
