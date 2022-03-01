@@ -206,6 +206,9 @@ class ContainerTest extends TestCase
 		self::assertNull($instance->testInterface2);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testCall(): void
 	{
 		$container = new Container();
@@ -214,6 +217,9 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $container->call(ContainerTestInterface::class, 'method'));
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testCallWithInstance(): void
 	{
 		$container = new Container();
@@ -224,6 +230,9 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $container->call($instance, 'method'));
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testCallback(): void
 	{
 		$container = new Container();
@@ -233,6 +242,9 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $container->callback(fn(ContainerTestClass $class, ContainerTestInterface $interface) => $class->method($interface)));
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testWithOverrideArguments(): void
 	{
 		$container = new Container();
@@ -246,6 +258,9 @@ class ContainerTest extends TestCase
 		self::assertSame($interface, $instance->testInterface);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testVariadicCall(): void
 	{
 		$container = new Container();
@@ -287,6 +302,22 @@ class ContainerTest extends TestCase
 		self::assertSame($instance, $instance2);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
+	public function testInstantiateUnionType(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+
+		$instance = $container->instantiate(ContainerTestClassUnionParameterType::class);
+
+		self::assertInstanceOf(ContainerTestInterface::class, $instance->testInterface);
+	}
+
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testInstantiateInvalidClass(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -295,6 +326,9 @@ class ContainerTest extends TestCase
 		$container->instantiate(ContainerTestInterface::class);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testRestore(): void
 	{
 		$container = new Container();
@@ -306,6 +340,9 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $instance->testInterface);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testRestoreWithOverrideArguments(): void
 	{
 		$container = new Container();
@@ -317,6 +354,9 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestInterface::class, $instance->interface);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testRestoreWithClassProperty(): void
 	{
 		$container = new Container();
@@ -324,6 +364,9 @@ class ContainerTest extends TestCase
 		self::assertNull($instance->interface);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testInvalidRestore(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -332,6 +375,9 @@ class ContainerTest extends TestCase
 		$container->restore(ContainerTestInterface::class);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testNameResolvingIsPreferred(): void
 	{
 		$container = new Container();
@@ -348,6 +394,9 @@ class ContainerTest extends TestCase
 		self::assertSame($otherTestInterfaceInstance, $instance->testInterface2);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testNameResolvingIsPreferredInvalidType(): void
 	{
 		$container = new Container();
@@ -363,6 +412,9 @@ class ContainerTest extends TestCase
 		$container->instantiate(ContainerTestClassMultiParameterConstructorSameType::class);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testNameResolvingIsPreferredNoType(): void
 	{
 		$container = new Container();
@@ -379,6 +431,9 @@ class ContainerTest extends TestCase
 		self::assertSame($testInterfaceInstance2, $instance->testInterface2);
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testGetOrInstantiate(): void
 	{
 		$container = new Container();
@@ -493,6 +548,22 @@ class ContainerTestClassMultiParameterConstructorNullable implements ContainerTe
 {
 
 	public function __construct(public ContainerTestInterface $testInterface, public ?ContainerTestInterface2 $testInterface2)
+	{
+	}
+}
+
+class ContainerTestClassUnionParameterType implements ContainerTestInterface
+{
+
+	public function __construct(public ContainerTestInterface|ContainerTestInterface2 $testInterface)
+	{
+	}
+}
+
+class ContainerTestClassUnionParameterTypeNullable implements ContainerTestInterface
+{
+
+	public function __construct(public ContainerTestInterface|ContainerTestInterface2|null $testInterface = null)
 	{
 	}
 }
