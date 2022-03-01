@@ -563,6 +563,7 @@ trait IsEnumerable
 		/** @var callable(TSource, TCollection): TResult $resultSelector */
 
 		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
+			/** @var TSource $element */
 			foreach ($this->getIterator() as $element) {
 				foreach ($collectionSelector($element) as $collectionElement) {
 					yield $resultSelector($element, $collectionElement);
@@ -775,7 +776,6 @@ trait IsEnumerable
 
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$valueProxy = static fn (mixed $key, mixed $value): mixed => $keySelector($value);
 
 		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));

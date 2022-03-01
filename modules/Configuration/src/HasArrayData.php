@@ -15,11 +15,13 @@ trait HasArrayData
 	/** @var array<string, mixed> */
 	protected array $data;
 
+	/**
+	 * @return GenericEnumerable<string>
+	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{
 		return new Enumerable(function () use ($path): Generator {
 			if (empty($path)) {
-				/** @psalm-suppress MixedAssignment */
 				foreach (array_keys($this->data) as $key) {
 					yield $key;
 				}
@@ -28,18 +30,19 @@ trait HasArrayData
 				$data = $this->data;
 
 				while (!$keyParts->isEmpty()) {
+					/** @var non-empty-string $keyPart */
 					$keyPart = $keyParts->shift();
 					if (!isset($data[$keyPart])) {
 						return;
 					}
 
+					/** @psalm-suppress MixedAssignment */
 					$data = $data[$keyPart];
 					if ($keyParts->isEmpty()) {
 						if (!is_array($data)) {
 							return;
 						}
 
-						/** @psalm-suppress MixedAssignment */
 						foreach (array_keys($data) as $key) {
 							yield $key;
 						}

@@ -10,11 +10,15 @@ use JetBrains\PhpStorm\Pure;
 
 class ConfigurationBuilder implements Contract\ConfigurationBuilder
 {
+	/**
+	 * @var ObjectSet<ConfigurationSource> $sources
+	 */
 	private ObjectSet $sources;
 
 	#[Pure]
 	public function __construct()
 	{
+		/** @var ObjectSet<ConfigurationSource> */
 		$this->sources = new ObjectSet();
 	}
 
@@ -32,10 +36,11 @@ class ConfigurationBuilder implements Contract\ConfigurationBuilder
 
 	public function build(): Contract\ConfigurationRoot
 	{
+		/** @var ObjectSet<Contract\ConfigurationProvider> $providers */
 		$providers = new ObjectSet();
 
-		foreach ($this->sources as $source)
-		{
+		/** @var ConfigurationSource $source */
+		foreach ($this->sources as $source) {
 			$providers->add($source->build($this));
 		}
 
