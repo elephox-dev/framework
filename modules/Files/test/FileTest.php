@@ -330,7 +330,8 @@ class FileTest extends MockeryTestCase
 			->andReturn(true);
 
 		$fileMock
-			->expects('getPath')
+			->allows('getPath')
+			->twice()
 			->withNoArgs()
 			->andReturn('/path/to/file');
 
