@@ -459,6 +459,17 @@ class ContainerTest extends TestCase
 		self::assertInstanceOf(ContainerTestClass2::class, $instance3);
 		self::assertTrue($container->has(ContainerTestClass2::class));
 	}
+
+	public function testSerialization(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestClass::class, ContainerTestClass::class);
+
+		$serialized = serialize($container);
+		$unserialized = unserialize($serialized);
+
+		self::assertInstanceOf(Container::class, $unserialized);
+	}
 }
 
 interface ContainerTestInterface

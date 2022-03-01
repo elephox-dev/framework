@@ -7,7 +7,9 @@ use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ArrayShape;
 use LogicException;
+use Opis\Closure\SerializableClosure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -19,7 +21,7 @@ use ReflectionUnionType;
 
 class Container implements Contract\Container
 {
-	/** @var ArrayMap<string, Binding> */
+	/** @var ArrayMap<string, Contract\Binding> */
 	private ArrayMap $map;
 
 	/** @var ArrayMap<string, non-empty-string> */
@@ -27,7 +29,7 @@ class Container implements Contract\Container
 
 	public function __construct()
 	{
-		/** @var ArrayMap<string, Binding> */
+		/** @var ArrayMap<string, Contract\Binding> */
 		$this->map = new ArrayMap();
 
 		/** @var ArrayMap<string, non-empty-string> */
@@ -152,11 +154,11 @@ class Container implements Contract\Container
 	/**
 	 * @template T as object
 	 *
-	 * @param Binding<T> $binding
+	 * @param Contract\Binding<T> $binding
 	 *
 	 * @return T
 	 */
-	private function buildTransientInstance(Binding $binding): object
+	private function buildTransientInstance(Contract\Binding $binding): object
 	{
 		$builder = $binding->getBuilder();
 
@@ -166,11 +168,11 @@ class Container implements Contract\Container
 	/**
 	 * @template T as object
 	 *
-	 * @param Binding<T> $binding
+	 * @param Contract\Binding<T> $binding
 	 *
 	 * @return T
 	 */
-	private function buildRequestInstance(Binding $binding): object
+	private function buildRequestInstance(Contract\Binding $binding): object
 	{
 		$instance = $binding->getInstance();
 
@@ -430,5 +432,58 @@ class Container implements Contract\Container
 	public function alias(string $alias, string $contract): void
 	{
 		$this->aliases->put($alias, $contract);
+	}
+
+	#[ArrayShape(['aliases' => "array", 'map' => "array"])]
+	public function __serialize(): array
+	{
+		$map = $this->map
+			->where(static fn (mixed $binding) => /** @var Contract\Binding $binding */ !($binding instanceof Contract\Container))
+			->select(static fn (mixed $binding) => /** @var Contract\Binding $binding */ serialize($binding))
+			->toArray();
+		$aliases = $this->aliases->toArray();
+
+		return [
+			'aliases' => $aliases,
+			'map' => $map,
+		];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		if (!array_key_exists('aliases', $data)) {
+			throw new InvalidArgumentException('Missing aliases key in serialized data');
+		}
+
+		if (!array_key_exists('map', $data)) {
+			throw new InvalidArgumentException('Missing map key in serialized data');
+		}
+
+		$aliases = $data['aliases'];
+		if (!is_array($aliases)) {
+			throw new InvalidArgumentException('Aliases must be an array');
+		}
+
+		$map = $data['map'];
+		if (!is_array($map)) {
+			throw new InvalidArgumentException('Map must be an array');
+		}
+
+		/** @var ArrayMap<string, non-empty-string> */
+		$this->aliases = new ArrayMap();
+
+		/** @var ArrayMap<string, Contract\Binding> */
+		$this->map = new ArrayMap();
+
+		/**
+		 * @var non-empty-string $key
+		 * @var non-empty-string $value
+		 */
+		foreach ($map as $key => $value) {
+			/** @var Contract\Binding $binding */
+			$binding = unserialize($value, ['allowed_classes' => [Contract\Binding::class]]);
+
+			$this->map->put($key, $binding);
+		}
 	}
 }
