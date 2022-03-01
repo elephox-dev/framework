@@ -11,10 +11,12 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationProvider
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationSource
- * @covers \Elephox\Configuration\Memory\ConfigurationPath
+ * @covers \Elephox\Configuration\ConfigurationPath
+ * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\OOR\Arr
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
+ * @uses \Elephox\Collection\IsEnumerable
  */
 class MemoryConfigurationProviderTest extends TestCase
 {
