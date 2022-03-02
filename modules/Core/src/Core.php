@@ -9,6 +9,7 @@ use Elephox\Core\Context\Contract\Context as ContextContract;
 use Elephox\Core\Context\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
 use Elephox\Core\Contract\App;
+use Elephox\Core\Contract\Environment;
 use Elephox\Core\Contract\Registrar as RegistrarContract;
 use Elephox\Core\Handler\Contract\HandlerContainer as HandlerContainerContract;
 use Elephox\Core\Handler\DefaultCommandHandler;
@@ -19,6 +20,7 @@ use Elephox\DI\Container;
 use Elephox\DI\Contract\Container as ContainerContract;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
+use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
 use JetBrains\PhpStorm\NoReturn;
 use LogicException;
@@ -81,6 +83,11 @@ class Core implements Contract\Core
 		return "1.0";
 	}
 
+	public function getEnv(): Environment
+	{
+		return $this->container->getOrRegister(Environment::class, GlobalEnvironment::class);
+	}
+
 	public function registerApp(App|string $app): App
 	{
 		if (is_string($app)) {
@@ -114,17 +121,17 @@ class Core implements Contract\Core
 		}
 
 		if (!is_array($GLOBALS[$varName])) {
-			throw new LogicException("Global variable '$varName' must be an array.");
+			throw new LogicException("Global variable '$varName' must be an array. Got: " . get_debug_type($GLOBALS[$varName]));
 		}
 
 		$handlerContainer = $this->getHandlerContainer();
 		foreach ($GLOBALS[$varName] as $className) {
 			if (!is_string($className)) {
-				throw new LogicException("Global variable '$varName' must be an array of strings.");
+				throw new LogicException("Global variable '$varName' must be an array of strings. Got: " . get_debug_type($className));
 			}
 
 			if (!class_exists($className)) {
-				throw new LogicException("Class '$className' does not exist.");
+				throw new LogicException("Class '$className' does not exist. Did you dump the autoload files?");
 			}
 
 			$handlerContainer->loadFromClass($className);
@@ -137,9 +144,9 @@ class Core implements Contract\Core
 	{
 		$traits = class_uses($potentialRegistrar);
 		if (
-			$traits === false ||
+			!$potentialRegistrar instanceof RegistrarContract &&
 			(
-				!($potentialRegistrar instanceof RegistrarContract) &&
+				$traits === false ||
 				!in_array(RegistrarTrait::class, $traits, true)
 			)
 		) {
@@ -150,9 +157,9 @@ class Core implements Contract\Core
 		$potentialRegistrar->registerAll($this->getContainer());
 	}
 
-	public function handleException(Throwable $throwable): void
+	public function handleException(ContextContract $context, Throwable $throwable): void
 	{
-		$exceptionContext = new ExceptionContext($this->getContainer(), $throwable);
+		$exceptionContext = new ExceptionContext($this->getContainer(), $context, $throwable);
 
 		try {
 			$this->getHandlerContainer()->findHandler($exceptionContext)->handle($exceptionContext);
@@ -162,12 +169,16 @@ class Core implements Contract\Core
 				header('Content-Type: text/plain; charset=utf-8');
 			}
 
-			echo "Could not handle exception: " . $throwable->getMessage() . "\n";
-			echo $throwable->getTraceAsString();
-			echo "\n";
-			echo "\n";
-			echo "Additionally, the exception handler threw an exception while trying to handle the first exception: " . $innerThrowable->getMessage() . "\n";
-			echo $innerThrowable->getTraceAsString();
+			if ($this->getEnv()->isDebug()) {
+				echo "Could not handle exception: " . $throwable->getMessage() . "\n";
+				echo $throwable->getTraceAsString();
+				echo "\n";
+				echo "\n";
+				echo "Additionally, the exception handler threw an exception while trying to handle the first exception: " . $innerThrowable->getMessage() . "\n";
+				echo $innerThrowable->getTraceAsString();
+			} else {
+				echo "An error occurred. Please try again later.";
+			}
 		}
 	}
 
@@ -184,7 +195,7 @@ class Core implements Contract\Core
 
 			return $this->getHandlerContainer()->findHandler($context)->handle($context);
 		} catch (Throwable $e) {
-			$this->handleException($e);
+			$this->handleException($context, $e);
 
 			return null;
 		}
@@ -238,7 +249,7 @@ class Core implements Contract\Core
 		/** @var mixed $result */
 		$result = $this->handleContext($context);
 		if ($result instanceof ResponseContract) {
-			$this->sendResponse($result);
+			ResponseSender::sendResponse($result);
 		}
 
 		$exitCode = 0;
@@ -251,42 +262,5 @@ class Core implements Contract\Core
 		}
 
 		exit($exitCode);
-	}
-
-	private function sendResponse(ResponseContract $response): void
-	{
-		$this->sendHeaders($response);
-		$this->sendBody($response);
-	}
-
-	private function sendHeaders(ResponseContract $response): void
-	{
-		if (headers_sent()) {
-			return;
-		}
-
-		$contentTypeSent = false;
-		foreach ($response->getHeaderMap() as $headerName => $values) {
-			if (is_array($values)) {
-				foreach ($values as $value) {
-					header("$headerName: $value");
-				}
-			} else {
-				header("$headerName: $values");
-			}
-
-			if ($headerName === 'Content-Type') {
-				$contentTypeSent = true;
-			}
-		}
-
-		if (!$contentTypeSent && $response->getMimeType() !== null) {
-			header('Content-Type: ' . $response->getMimeType()->getValue());
-		}
-	}
-
-	private function sendBody(ResponseContract $response): void
-	{
-		echo $response->getBody()->getContents();
 	}
 }

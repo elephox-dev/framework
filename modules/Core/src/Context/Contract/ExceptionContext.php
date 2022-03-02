@@ -7,5 +7,7 @@ use Throwable;
 
 interface ExceptionContext extends Context
 {
+	public function getOriginal(): Context;
+
 	public function getException(): Throwable;
 }

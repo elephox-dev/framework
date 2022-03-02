@@ -27,7 +27,7 @@ interface Core
 
 	public function checkRegistrar(object $potentialRegistrar): void;
 
-	public function handleException(Throwable $throwable): void;
+	public function handleException(Context $context, Throwable $throwable): void;
 
 	public function handleContext(Context $context): mixed;
 
