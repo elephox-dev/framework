@@ -7,7 +7,7 @@ use Closure;
 use Elephox\DI\InstanceLifetime;
 use Psr\Container\ContainerInterface;
 
-interface Container extends ContainerInterface
+interface Container extends ContainerInterface, NotContainerSerializable
 {
 	/**
 	 * @param string $id

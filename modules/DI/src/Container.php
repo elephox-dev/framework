@@ -6,6 +6,7 @@ namespace Elephox\DI;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
+use Elephox\DI\Contract\NotContainerSerializable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use LogicException;
@@ -58,8 +59,8 @@ class Container implements Contract\Container
 	public function register(string $contract, callable|string|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void
 	{
 		if ($implementation === null) {
-			if (!class_exists($contract) && !interface_exists($contract)) {
-				throw new InvalidArgumentException("Class or interface '$contract' does not exist");
+			if (!class_exists($contract)) {
+				throw new InvalidArgumentException("Class '$contract' does not exist");
 			}
 
 			$this->register($contract, $contract, $lifetime, ...$aliases);
@@ -491,7 +492,8 @@ class Container implements Contract\Container
 		return [
 			'aliases' => $this->aliases->toArray(),
 			'map' => $this->map
-				->whereKey(static fn(string $contract) => $contract !== self::class)
+				->whereKey(static fn(string $contract) => !$contract instanceof NotContainerSerializable)
+				->where(static fn(Contract\Binding $binding) => $binding->getInstance() === null || !$binding->getInstance() instanceof NotContainerSerializable)
 				->select(static fn(Contract\Binding $binding) => serialize($binding))
 				->toArray(),
 		];

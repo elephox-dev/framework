@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use Elephox\DI\Contract\Container as ContainerContract;
+use Elephox\DI\Contract\NotContainerSerializable;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
@@ -519,6 +520,23 @@ class ContainerTest extends TestCase
 		$this->expectWarningMessage("Instance lifetime 'Transient' may not have the desired effect when using an object as the implementation. Consider using a callable instead.");
 		$container->transient(ContainerTestClass::class, $instance);
 	}
+
+	public function testDoesntSerializeNotContainerSerializable(): void
+	{
+		$container = new Container();
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+		$container->register(ContainerTestInterface2::class, ContainerTestNotSerializable::class);
+
+		$serialized = unserialize(serialize($container));
+
+		self::assertTrue($serialized->has(ContainerTestInterface2::class));
+
+		$container->get(ContainerTestInterface2::class);
+
+		$serializedAfterInstantiation = unserialize(serialize($container));
+
+		self::assertFalse($serializedAfterInstantiation->has(ContainerTestInterface2::class));
+	}
 }
 
 interface ContainerTestInterface
@@ -634,6 +652,24 @@ class ContainerTestModel
 }
 
 class ContainerTestSerializable implements ContainerTestInterface2 {
+	public function __construct(public ContainerTestInterface $testInterface)
+	{
+	}
+
+	public function __serialize(): array
+	{
+		return [
+			'interface' => $this->testInterface
+		];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		$this->testInterface = $data['interface'];
+	}
+}
+
+class ContainerTestNotSerializable implements ContainerTestInterface2, NotContainerSerializable {
 	public function __construct(public ContainerTestInterface $testInterface)
 	{
 	}
