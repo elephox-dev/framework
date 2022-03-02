@@ -9,7 +9,6 @@ use Elephox\Collection\ArrayMap;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use LogicException;
-use Opis\Closure\SerializableClosure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -35,7 +34,12 @@ class Container implements Contract\Container
 		/** @var ArrayMap<string, non-empty-string> */
 		$this->aliases = new ArrayMap();
 
-		$this->register(Contract\Container::class, $this, InstanceLifetime::Singleton, __CLASS__, 'container');
+		$this->registerSelf();
+	}
+
+	private function registerSelf(): void
+	{
+		$this->register(self::class, $this, InstanceLifetime::Singleton, Contract\Container::class, 'container');
 	}
 
 	public function has(string $id): bool
@@ -54,25 +58,32 @@ class Container implements Contract\Container
 	public function register(string $contract, callable|string|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void
 	{
 		if ($implementation === null) {
-			if (!class_exists($contract)) {
-				throw new InvalidArgumentException("Class $contract does not exist");
+			if (!class_exists($contract) && !interface_exists($contract)) {
+				throw new InvalidArgumentException("Class or interface '$contract' does not exist");
 			}
 
-			self::register($contract, $contract, $lifetime, ...$aliases);
+			$this->register($contract, $contract, $lifetime, ...$aliases);
 
 			return;
 		}
+
+		$instance = null;
 
 		/** @var callable(Contract\Container): T $builder */
 		if (is_callable($implementation)) {
 			$builder = $implementation;
 		} else if (is_object($implementation)) {
+			if ($lifetime !== InstanceLifetime::Singleton) {
+				trigger_error("Instance lifetime '$lifetime->name' may not have the desired effect when using an object as the implementation. Consider using a callable instead.", E_USER_WARNING);
+			}
+
 			$builder = static fn(): object => $implementation;
+			$instance = $implementation;
 		} else {
 			$builder = static fn(Contract\Container $container): object => $container->instantiate($implementation);
 		}
 
-		$binding = new Binding($builder, $lifetime);
+		$binding = new Binding($builder, $lifetime, $instance);
 
 		$this->map->put($contract, $binding);
 
@@ -127,7 +138,7 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @template T
+	 * @template T as object
 	 *
 	 * @param class-string<T>|string $id
 	 *
@@ -137,6 +148,7 @@ class Container implements Contract\Container
 	{
 		$id = $this->resolveAlias($id);
 
+		/** @var Contract\Binding<T> $binding */
 		$binding = $this->map->get($id);
 
 		$instance = match ($binding->getLifetime()) {
@@ -187,7 +199,7 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @template T
+	 * @template T as object
 	 *
 	 * @param class-string<T>|string $id
 	 * @param array $overrideArguments
@@ -221,28 +233,31 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @template T
+	 * @template T as object
 	 *
-	 * @param class-string<T> $contract
+	 * @param class-string<T>|non-empty-string $contract
+	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
 	 * @param array $overrideArguments
 	 * @param InstanceLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 *
 	 * @return T
 	 */
-	public function getOrRegister(string $contract, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object
+	public function getOrRegister(string $contract, callable|string|object|null $implementation = null, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object
 	{
 		if (!$this->has($contract)) {
-			$this->register($contract, null, $lifetime, ...$aliases);
+			/** @psalm-suppress ArgumentTypeCoercion */
+			$this->register($contract, $implementation, $lifetime, ...$aliases);
 		}
 
+		/** @var T */
 		return $this->get($contract);
 	}
 
 	/**
-	 * @template T
+	 * @template T as object
 	 *
-	 * @param class-string<T>|string $id
+	 * @param class-string<T>|non-empty-string $id
 	 * @param array $overrideArguments
 	 *
 	 * @return T
@@ -258,7 +273,7 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @template T of object
+	 * @template T as object
 	 *
 	 * @param class-string<T>|T $implementation
 	 * @param array $properties
@@ -324,9 +339,45 @@ class Container implements Contract\Container
 	}
 
 	/**
-	 * @template T
+	 * @template T as object
+	 * @template TReturn
 	 *
-	 * @param Closure: T $callback
+	 * @param class-string<T> $class
+	 * @param callable(T): TReturn $callback
+	 * @return TReturn
+	 */
+	public function tap(string $class, callable $callback): mixed
+	{
+		$object = $this->get($class);
+
+		return $callback($object);
+	}
+
+	/**
+	 * @template T as object
+	 * @template TReturn
+	 *
+	 * @param class-string<T> $class
+	 * @param callable(T): TReturn $callback
+	 * @param TReturn|null $fallback
+	 * @return TReturn|null
+	 */
+	public function tapOptional(string $class, callable $callback, mixed $fallback = null): mixed
+	{
+		if (!$this->has($class)) {
+			/** @psalm-suppress MixedReturnStatement */
+			return $fallback;
+		}
+
+		$object = $this->get($class);
+
+		return $callback($object);
+	}
+
+	/**
+	 * @template T as object
+	 *
+	 * @param Closure(): T $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T
@@ -437,15 +488,12 @@ class Container implements Contract\Container
 	#[ArrayShape(['aliases' => "array", 'map' => "array"])]
 	public function __serialize(): array
 	{
-		$map = $this->map
-			->where(static fn (mixed $binding) => /** @var Contract\Binding $binding */ !($binding instanceof Contract\Container))
-			->select(static fn (mixed $binding) => /** @var Contract\Binding $binding */ serialize($binding))
-			->toArray();
-		$aliases = $this->aliases->toArray();
-
 		return [
-			'aliases' => $aliases,
-			'map' => $map,
+			'aliases' => $this->aliases->toArray(),
+			'map' => $this->map
+				->whereKey(static fn(string $contract) => $contract !== self::class)
+				->select(static fn(Contract\Binding $binding) => serialize($binding))
+				->toArray(),
 		];
 	}
 
@@ -470,10 +518,12 @@ class Container implements Contract\Container
 		}
 
 		/** @var ArrayMap<string, non-empty-string> */
-		$this->aliases = new ArrayMap();
+		$this->aliases = new ArrayMap($aliases);
 
 		/** @var ArrayMap<string, Contract\Binding> */
 		$this->map = new ArrayMap();
+
+		$this->registerSelf();
 
 		/**
 		 * @var non-empty-string $key
@@ -481,7 +531,7 @@ class Container implements Contract\Container
 		 */
 		foreach ($map as $key => $value) {
 			/** @var Contract\Binding $binding */
-			$binding = unserialize($value, ['allowed_classes' => [Contract\Binding::class]]);
+			$binding = unserialize($value, ['allowed_classes' => [Binding::class]]);
 
 			$this->map->put($key, $binding);
 		}

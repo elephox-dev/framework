@@ -7,6 +7,7 @@ use Elephox\DI\Contract\Container as ContainerContract;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use RuntimeException;
 use stdClass;
 
@@ -20,6 +21,9 @@ use stdClass;
  * @covers \Elephox\DI\BindingNotFoundException
  * @covers \Elephox\DI\BindingException
  * @covers \Elephox\DI\MissingTypeHintException
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Collection\KeyedEnumerable
  */
 class ContainerTest extends TestCase
 {
@@ -85,6 +89,7 @@ class ContainerTest extends TestCase
 		$container = new Container();
 
 		$testClassInstance = new ContainerTestClass();
+		$this->expectWarning();
 		$container->register(ContainerTestInterface::class, $testClassInstance, InstanceLifetime::Transient);
 		$container->transient(ContainerTestClassWithConstructor::class);
 
@@ -460,15 +465,59 @@ class ContainerTest extends TestCase
 		self::assertTrue($container->has(ContainerTestClass2::class));
 	}
 
+	/**
+	 * @throws \ReflectionException
+	 */
 	public function testSerialization(): void
 	{
 		$container = new Container();
-		$container->register(ContainerTestClass::class, ContainerTestClass::class);
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class);
+		$instance = $container->instantiate(ContainerTestSerializable::class);
+		$container->register(ContainerTestInterface2::class, $instance);
 
 		$serialized = serialize($container);
 		$unserialized = unserialize($serialized);
 
 		self::assertInstanceOf(Container::class, $unserialized);
+		self::assertTrue($unserialized->has(ContainerTestInterface::class));
+		self::assertTrue($unserialized->has(ContainerTestInterface2::class));
+		self::assertTrue($unserialized->has(ContainerContract::class));
+		self::assertTrue($unserialized->has(Container::class));
+
+		$class = $unserialized->get(ContainerTestInterface::class);
+		self::assertInstanceOf(ContainerTestClass::class, $class);
+
+		$class2 = $unserialized->get(ContainerTestInterface2::class);
+		self::assertInstanceOf(ContainerTestSerializable::class, $class2);
+		self::assertNotSame($instance, $class2);
+
+		$serializedArray = $container->__serialize();
+		$r = new ReflectionClass(Container::class);
+		$unserializedArray = $r->newInstanceWithoutConstructor();
+		$unserializedArray->__unserialize($serializedArray);
+
+		self::assertInstanceOf(Container::class, $unserializedArray);
+		self::assertTrue($unserializedArray->has(ContainerTestInterface::class));
+		self::assertTrue($unserialized->has(ContainerTestInterface2::class));
+		self::assertTrue($unserializedArray->has(ContainerContract::class));
+		self::assertTrue($unserializedArray->has(Container::class));
+
+		$class3 = $unserializedArray->get(ContainerTestInterface::class);
+		self::assertInstanceOf(ContainerTestClass::class, $class3);
+
+		$class4 = $unserialized->get(ContainerTestInterface2::class);
+		self::assertInstanceOf(ContainerTestSerializable::class, $class4);
+		self::assertNotSame($instance, $class4);
+	}
+
+	public function testTransientWithSingleton(): void
+	{
+		$instance = new ContainerTestClass();
+		$container = new Container();
+
+		$this->expectWarning();
+		$this->expectWarningMessage("Instance lifetime 'Transient' may not have the desired effect when using an object as the implementation. Consider using a callable instead.");
+		$container->transient(ContainerTestClass::class, $instance);
 	}
 }
 
@@ -582,4 +631,22 @@ class ContainerTestClassUnionParameterTypeNullable implements ContainerTestInter
 class ContainerTestModel
 {
 	public ?ContainerTestInterface $interface = null;
+}
+
+class ContainerTestSerializable implements ContainerTestInterface2 {
+	public function __construct(public ContainerTestInterface $testInterface)
+	{
+	}
+
+	public function __serialize(): array
+	{
+		return [
+			'interface' => $this->testInterface
+		];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		$this->testInterface = $data['interface'];
+	}
 }

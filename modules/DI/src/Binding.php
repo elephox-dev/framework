@@ -15,17 +15,17 @@ use Laravel\SerializableClosure\SerializableClosure;
  */
 class Binding implements Contract\Binding
 {
-	/**
-	 * @var T|null
-	 */
-	private ?object $instance = null;
 
 	/**
 	 * @param Closure(Contract\Container): T $builder
 	 * @param InstanceLifetime $lifetime
+	 * @param T|null $instance
 	 */
-	public function __construct(private Closure $builder, private readonly InstanceLifetime $lifetime)
-	{
+	public function __construct(
+		private readonly Closure $builder,
+		private readonly InstanceLifetime $lifetime,
+		private ?object $instance = null
+	) {
 	}
 
 	public function getLifetime(): InstanceLifetime
@@ -91,7 +91,10 @@ class Binding implements Contract\Binding
 			throw new InvalidArgumentException('Missing builder in serialized data');
 		}
 
-		/** @var InstanceLifetime */
+		/**
+		 * @noinspection PhpSecondWriteToReadonlyPropertyInspection
+		 * @var InstanceLifetime
+		 */
 		$this->lifetime = unserialize($data['lifetime'], ['allowed_classes' => [InstanceLifetime::class]]);
 
 		if (!is_string($data['builder'])) {
@@ -99,9 +102,10 @@ class Binding implements Contract\Binding
 		}
 
 		/** @var SerializableClosure */
-		$builderWrapper = unserialize($data['builder'], ['allowed_classes' => [SerializableClosure::class]]);
+		$builderWrapper = unserialize($data['builder'], ['allowed_classes' => true]);
+
 		/**
-		 * @noinspection PhpUnhandledExceptionInspection
+		 * @noinspection PhpSecondWriteToReadonlyPropertyInspection
 		 * @var Closure(Contract\Container): T
 		 */
 		$this->builder = $builderWrapper->getClosure();
@@ -111,16 +115,10 @@ class Binding implements Contract\Binding
 				throw new InvalidArgumentException('Invalid instance in serialized data');
 			}
 
-			if (!array_key_exists('instance_class', $data)) {
-				throw new InvalidArgumentException('Missing instance class in serialized data');
-			}
-
-			if (!is_string($data['instance_class'])) {
-				throw new InvalidArgumentException('Invalid instance class in serialized data');
-			}
-
 			/** @var T */
-			$this->instance = unserialize($data['instance'], ['allowed_classes' => [$data['instance_class']]]);
+			$this->instance = unserialize($data['instance'], ['allowed_classes' => true]);
+		} else {
+			$this->instance = null;
 		}
 	}
 }
