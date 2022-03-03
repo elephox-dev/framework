@@ -33,7 +33,7 @@ class File implements Contract\File
 			throw new UnreadableFileException($file->getPath());
 		}
 
-		if (($writeable || $append) && !$file->isWritable()) {
+		if (($writeable || $append) && $file->exists() && !$file->isWritable()) {
 			throw new ReadOnlyFileException($file->getPath());
 		}
 
@@ -53,11 +53,32 @@ class File implements Contract\File
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
+		$exception = null;
+
+		// handle any warnings emitted by fopen()
+		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = "<unknown>", int $line = 0) use (&$exception): bool {
+			$exception = new RuntimeException(sprintf("[%d] %s in %s:%d", $errorCode, $errorMessage, $filename, $line));
+
+			return true;
+		});
+
 		$resource = fopen($file->getPath(), $flags);
+
+		restore_error_handler();
+
 		if ($resource === false) {
-			throw new RuntimeException('Failed to open file ' . $file->getPath());
+			$exception = new RuntimeException("Unable to open file stream: " . $file->getPath());
 		}
 
+		if ($exception !== null) {
+			if (is_resource($resource)) {
+				fclose($resource);
+			}
+
+			throw $exception;
+		}
+
+		/** @var resource $resource */
 		return new ResourceStream($resource, $readable, $writeable, $readable);
 	}
 
@@ -138,7 +159,7 @@ class File implements Contract\File
 		return $hash;
 	}
 
-	public function getParent(int $levels = 1): Directory
+	public function getParent(int $levels = 1): Contract\Directory
 	{
 		try {
 			return new Directory(dirname($this->path, $levels));
@@ -154,9 +175,12 @@ class File implements Contract\File
 		return is_readable($this->path);
 	}
 
-	#[Pure]
 	public function isWritable(): bool
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException($this->path);
+		}
+
 		return is_writable($this->path);
 	}
 
@@ -240,7 +264,7 @@ class File implements Contract\File
 		}
 
 		try {
-			$this->stream(true)->close();
+			self::openStream($this, false, true, true)->close();
 		} catch (RuntimeException $e) {
 			throw new FileNotCreatedException($this->path, previous: $e);
 		}
@@ -253,7 +277,7 @@ class File implements Contract\File
 
 	public function putContents(Stream $contents, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
 	{
-		$stream = self::openStream($this, readable: false, writeable: true, create: true, truncate: true);
+		$stream = self::openStream($this, false, true, true, false, true);
 
 		while (!$contents->eof()) {
 			$stream->write($contents->read($chunkSize));

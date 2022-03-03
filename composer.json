@@ -159,6 +159,10 @@
             "@mutation-test",
             "@benchmark"
         ],
+        "memory-leak-test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
+        ],
         "mutation-test": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",

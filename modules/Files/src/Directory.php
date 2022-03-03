@@ -47,8 +47,9 @@ class Directory implements Contract\Directory
 
 		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
-			->where(fn(string $name) => $name !== '.' && $name !== '..')
-			->select(function (string $name): Contract\FilesystemNode {
+			->where(static fn(mixed $name) => $name !== '.' && $name !== '..')
+			->select(function (mixed $name): Contract\FilesystemNode {
+				/** @var string $name */
 				$path = Path::join($this->path, $name);
 				if (is_dir($path)) {
 					return new Directory($path);
@@ -130,7 +131,7 @@ class Directory implements Contract\Directory
 		return new Directory($path);
 	}
 
-	public function getChild(string $name): FilesystemNode
+	public function getChild(string $name, bool $throwForNotFound = false): FilesystemNode
 	{
 		$path = Path::join($this->path, $name);
 
@@ -142,7 +143,11 @@ class Directory implements Contract\Directory
 			return new File($path);
 		}
 
-		throw new FileNotFoundException($path);
+		if ($throwForNotFound) {
+			throw new FilesystemNodeNotFoundException($path);
+		}
+
+		return new UnknownFilesystemNode($path);
 	}
 
 	#[Pure]
@@ -180,6 +185,8 @@ class Directory implements Contract\Directory
 				$child->delete();
 			}
 		}
+
+		rmdir($this->path);
 	}
 
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void

@@ -6,11 +6,11 @@ namespace Elephox\Files;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
 
-class FileNotFoundException extends FileException
+class FileNotFoundException extends FilesystemNodeNotFoundException
 {
 	#[Pure]
 	public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct("The file at $path was not found", $code, $previous);
+		parent::__construct($path, "File", $code, $previous);
 	}
 }
