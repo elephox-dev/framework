@@ -14,6 +14,7 @@ use RuntimeException;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Files\InvalidParentLevelException
  * @covers \Elephox\Files\DirectoryNotFoundException
+ * @covers \Elephox\Files\DirectoryNotEmptyException
  * @covers \Elephox\Files\FileNotFoundException
  * @covers \Elephox\Files\FileException
  * @covers \Elephox\Collection\Iterator\SelectIterator
@@ -175,5 +176,50 @@ class DirectoryTest extends TestCase
 	{
 		$directory = new Directory("/path/test");
 		self::assertEquals("test", $directory->getName());
+	}
+
+	public function testIsRoot(): void
+	{
+		self::assertFalse((new Directory("/long/path/to/test"))->isRoot());
+		self::assertTrue((new Directory("/"))->isRoot());
+		self::assertFalse((new Directory("C:\\Windows\\System32"))->isRoot());
+		self::assertTrue((new Directory("C:\\"))->isRoot());
+	}
+
+	public function testEnsureExists(): void
+	{
+		$directory = new Directory(Path::join(sys_get_temp_dir(), "testdir"));
+
+		self::assertFalse($directory->exists());
+		$directory->ensureExists();
+		self::assertTrue($directory->exists());
+
+		$directory->delete();
+	}
+
+	public function testDelete(): void
+	{
+		$testDir1 = Path::join(sys_get_temp_dir(), "testdir1");
+		$testDir2 = Path::join(sys_get_temp_dir(), "testdir2");
+		$testDir3 = Path::join(sys_get_temp_dir(), "testdir2", "testdir3");
+		@mkdir($testDir1, recursive: true);
+		@mkdir($testDir3, recursive: true);
+
+		$dir1 = new Directory($testDir1);
+		self::assertTrue($dir1->exists());
+		$dir1->delete(false);
+
+		$dir2 = new Directory($testDir2);
+		$dir3 = new Directory($testDir3);
+		self::assertTrue($dir2->exists());
+		self::assertTrue($dir3->exists());
+		$dir2->delete(true);
+
+		self::assertFalse($dir3->exists());
+		self::assertFalse($dir2->exists());
+
+		@mkdir($testDir3, recursive: true);
+		$this->expectException(DirectoryNotEmptyException::class);
+		$dir2->delete(false);
 	}
 }

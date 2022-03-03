@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
-use Elephox\Files\Contract\Directory;
 use Elephox\Mimey\MimeType;
+use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
 use InvalidArgumentException;
 use Mockery as M;
@@ -21,6 +21,9 @@ use RuntimeException;
  * @covers \Elephox\Files\FileNotFoundException
  * @covers \Elephox\Files\ReadOnlyFileException
  * @covers \Elephox\Files\UnreadableFileException
+ * @covers \Elephox\Files\ReadonlyParentException
+ * @covers \Elephox\Files\FileNotCreatedException
+ * @covers \Elephox\Files\Path
  */
 class FileTest extends MockeryTestCase
 {
@@ -145,17 +148,6 @@ class FileTest extends MockeryTestCase
 		self::assertFalse($file->isExecutable());
 	}
 
-	public function testMoveTo(): void
-	{
-		$oldName = tempnam(sys_get_temp_dir(), 'test');
-		$newName = new File($oldName . '.new');
-
-		$file = new File($oldName);
-		$file->moveTo($newName);
-
-		self::assertFileExists($newName->getPath());
-	}
-
 	public function testOpenStream(): void
 	{
 		$stream = File::openStream($this->filePath);
@@ -250,6 +242,11 @@ class FileTest extends MockeryTestCase
 			->andReturn(true);
 
 		$fileMock
+			->expects('exists')
+			->withNoArgs()
+			->andReturn(true);
+
+		$fileMock
 			->expects('isWritable')
 			->withNoArgs()
 			->andReturn(false);
@@ -274,6 +271,11 @@ class FileTest extends MockeryTestCase
 			->andReturn(true);
 
 		$fileMock
+			->expects('exists')
+			->withNoArgs()
+			->andReturn(true);
+
+		$fileMock
 			->expects('isWritable')
 			->withNoArgs()
 			->andReturn(false);
@@ -286,5 +288,159 @@ class FileTest extends MockeryTestCase
 		$this->expectException(ReadOnlyFileException::class);
 
 		File::openStream($fileMock, append: true);
+	}
+
+	public function testNonReadableParent(): void
+	{
+		$fileMock = M::mock(Contract\File::class);
+		$directoryMock = M::mock(Contract\Directory::class);
+
+		$fileMock
+			->expects('isReadable')
+			->withNoArgs()
+			->andReturn(true);
+
+		$fileMock
+			->expects('getParent')
+			->withNoArgs()
+			->andReturn($directoryMock);
+
+		$directoryMock
+			->expects('isReadonly')
+			->withNoArgs()
+			->andReturn(true);
+
+		$fileMock
+			->expects('getPath')
+			->withNoArgs()
+			->andReturn('/path/to/file');
+
+		$this->expectException(ReadonlyParentException::class);
+
+		File::openStream($fileMock, create: true);
+	}
+
+	public function testFopenFailThrows(): void
+	{
+		$fileMock = M::mock(Contract\File::class);
+
+		$fileMock
+			->expects('isReadable')
+			->withNoArgs()
+			->andReturn(true);
+
+		$fileMock
+			->expects('getPath')
+			->withNoArgs()
+			->andReturn('/path/to/file');
+
+		$this->expectException(RuntimeException::class);
+
+		File::openStream($fileMock);
+	}
+
+	public function testPutContents(): void
+	{
+		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));
+		$streamMock = M::mock(Stream::class);
+
+		$streamMock
+			->expects('eof')
+			->withNoArgs()
+			->andReturn(false);
+
+		$streamMock
+			->expects('read')
+			->with(Contract\File::DEFAULT_STREAM_CHUNK_SIZE)
+			->andReturn('hello world');
+
+		$streamMock
+			->expects('eof')
+			->withNoArgs()
+			->andReturn(true);
+
+		$file->putContents($streamMock);
+		$file->delete();
+	}
+
+	public function testTouch(): void
+	{
+		$file = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true) . '.tmp'));
+		self::assertFalse($file->exists());
+
+		$file->touch();
+		self::assertTrue($file->exists());
+		$file->touch();
+		self::assertTrue($file->exists());
+
+		$file->delete();
+		self::assertFalse($file->exists());
+		$file->touch();
+		self::assertTrue($file->exists());
+
+		$invalidFile = new File('/does/not/exist');
+		self::assertFalse($invalidFile->exists());
+
+		$this->expectException(FileNotCreatedException::class);
+		$invalidFile->touch();
+	}
+
+	public function testMoveTo(): void
+	{
+		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));
+
+		$destinationFilename = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true)));
+		$destinationDirectory = new Directory(Path::join(sys_get_temp_dir(), 'movetest'));
+		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->getName()));
+
+		$destinationDirectory->ensureExists();
+
+		self::assertTrue($file->exists());
+		self::assertFalse($destinationFilename->exists());
+		$file->moveTo($destinationFilename);
+		self::assertFalse($file->exists());
+		self::assertTrue($destinationFilename->exists());
+		self::assertFalse($destinationDirectoryFilename->exists());
+		$destinationFilename->moveTo($destinationDirectory);
+		self::assertTrue($destinationDirectoryFilename->exists());
+
+		$nonExistentFile = new File('/i/dont/exist');
+		$this->expectException(FileNotFoundException::class);
+		$nonExistentFile->moveTo($destinationDirectoryFilename);
+	}
+
+	public function testCopyTo(): void
+	{
+		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));
+
+		$destinationFilename = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true)));
+		$destinationDirectory = new Directory(Path::join(sys_get_temp_dir(), 'movetest'));
+		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->getName()));
+
+		$destinationDirectory->ensureExists();
+
+		self::assertTrue($file->exists());
+		self::assertFalse($destinationFilename->exists());
+		$file->copyTo($destinationFilename);
+		self::assertTrue($file->exists());
+		self::assertTrue($destinationFilename->exists());
+		self::assertFalse($destinationDirectoryFilename->exists());
+		$destinationFilename->copyTo($destinationDirectory);
+		self::assertTrue($destinationDirectoryFilename->exists());
+
+		$nonExistentFile = new File('/i/dont/exist');
+		$this->expectException(FileNotFoundException::class);
+		$nonExistentFile->copyTo($destinationDirectoryFilename);
+	}
+
+	public function testDeleteNonExistent(): void
+	{
+		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));
+		$file->delete();
+
+		self::assertFalse($file->exists());
+
+		$this->expectException(FileNotFoundException::class);
+		$file->delete();
 	}
 }

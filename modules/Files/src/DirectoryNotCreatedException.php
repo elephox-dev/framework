@@ -8,9 +8,6 @@ use Throwable;
 
 class DirectoryNotCreatedException extends FileException
 {
-	/**
-	 * @param string $path
-	 */
 	#[Pure]
 	public function __construct(string $path, int $code = 0, Throwable $previous = null)
 	{
