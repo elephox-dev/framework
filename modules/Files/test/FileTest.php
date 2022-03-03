@@ -23,6 +23,7 @@ use RuntimeException;
  * @covers \Elephox\Files\UnreadableFileException
  * @covers \Elephox\Files\ReadonlyParentException
  * @covers \Elephox\Files\FileNotCreatedException
+ * @covers \Elephox\Files\FilesystemNodeNotFoundException
  * @covers \Elephox\Files\Path
  */
 class FileTest extends MockeryTestCase

@@ -19,6 +19,8 @@ use RuntimeException;
  * @covers \Elephox\Files\FileException
  * @covers \Elephox\Collection\Iterator\SelectIterator
  * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Files\FilesystemNodeNotFoundException
+ * @covers \Elephox\Files\UnknownFilesystemNode
  */
 class DirectoryTest extends TestCase
 {
