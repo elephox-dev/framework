@@ -75,8 +75,12 @@ class DirectoryTest extends TestCase
 		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $dirChild->getPath());
 
 		$emptyDir = new Directory($this->dirPath . DIRECTORY_SEPARATOR . "test");
-		$this->expectException(FileNotFoundException::class);
-		$emptyDir->getChild("test");
+		$nonExistentChild = $emptyDir->getChild("test123");
+		self::assertFalse($nonExistentChild->exists());
+		self::assertInstanceOf(UnknownFilesystemNode::class, $nonExistentChild);
+
+		$this->expectException(FilesystemNodeNotFoundException::class);
+		$directory->getChild("test123", true);
 	}
 
 	public function testIsEmpty(): void

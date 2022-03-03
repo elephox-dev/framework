@@ -130,7 +130,7 @@ class Directory implements Contract\Directory
 		return new Directory($path);
 	}
 
-	public function getChild(string $name): FilesystemNode
+	public function getChild(string $name, bool $throwForNotFound = false): FilesystemNode
 	{
 		$path = Path::join($this->path, $name);
 
@@ -142,7 +142,11 @@ class Directory implements Contract\Directory
 			return new File($path);
 		}
 
-		throw new FileNotFoundException($path);
+		if ($throwForNotFound) {
+			throw new FilesystemNodeNotFoundException($path);
+		}
+
+		return new UnknownFilesystemNode($path);
 	}
 
 	#[Pure]
