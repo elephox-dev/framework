@@ -95,6 +95,9 @@
         "branch-alias": {
             "dev-develop": "0.4.x-dev",
             "dev-main": "1.x-dev"
+        },
+        "module-sync": {
+            "repository-base": "https://github.com/elephox-dev/"
         }
     },
     "scripts": {
