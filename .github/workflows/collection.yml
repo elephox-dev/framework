@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/collection.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Collection/**'
 
 jobs:

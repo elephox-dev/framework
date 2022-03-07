@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/events.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Events/**'
 
 jobs:

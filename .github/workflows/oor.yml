@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/oor.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/OOR/**'
 
 jobs:

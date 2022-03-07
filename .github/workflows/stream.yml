@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/stream.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Stream/**'
 
 jobs:

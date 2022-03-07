@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/support.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Support/**'
 
 jobs:

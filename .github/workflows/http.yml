@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/http.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Http/**'
 
 jobs:

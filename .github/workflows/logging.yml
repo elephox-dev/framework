@@ -5,6 +5,7 @@ on:
       - develop
     paths:
       - '.github/workflows/logging.yml'
+      - '.github/workflows/splitsh.yml'
       - 'modules/Logging/**'
 
 jobs:
