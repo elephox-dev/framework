@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "~8.1.0 || ~8.2.0",
+        "php": "^8.1 <8.3",
         "jetbrains/phpstorm-attributes": "^1.0",
         "ricardoboss/php-console-logger": "^1.8"
     },
@@ -25,12 +25,6 @@
             "elephox/composer-module-sync": true,
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.4.x-dev",
-            "dev-main": "1.x-dev"
         }
     }
 }

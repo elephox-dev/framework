@@ -10,8 +10,8 @@
         }
     ],
     "require": {
-        "php": "~8.1.0 || ~8.2.0",
-        "elephox/collection": "^0.3 || ^1.0"
+        "php": "^8.1 <8.3",
+        "elephox/collection": "^0.3"
     },
     "autoload": {
         "psr-4": {
@@ -29,12 +29,6 @@
             "elephox/composer-module-sync": true,
             "ergebnis/composer-normalize": true,
             "infection/extension-installer": true
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.4.x-dev",
-            "dev-main": "1.x-dev"
         }
     }
 }
