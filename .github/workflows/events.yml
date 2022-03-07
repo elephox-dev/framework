@@ -1,8 +1,6 @@
 name: Events Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/events.yml'
       - '.github/workflows/splitsh.yml'

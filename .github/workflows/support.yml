@@ -1,8 +1,6 @@
 name: Support Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/support.yml'
       - '.github/workflows/splitsh.yml'

@@ -1,8 +1,6 @@
 name: Collection Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/collection.yml'
       - '.github/workflows/splitsh.yml'

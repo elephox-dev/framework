@@ -2,9 +2,9 @@ name: 📋 Update README Annotations
 on:
   push:
     paths:
-      - ".github/workflows/update-readme-annotations.yml"
-      - "modules/**"
-      - "bin/update-readme-annotations.php"
+      - '.github/workflows/update-readme-annotations.yml'
+      - 'modules/**'
+      - 'bin/update-readme-annotations.php'
 
 jobs:
   update-todos:

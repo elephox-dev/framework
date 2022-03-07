@@ -1,8 +1,6 @@
 name: Stream Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/stream.yml'
       - '.github/workflows/splitsh.yml'

@@ -1,8 +1,6 @@
 name: Core Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/core.yml'
       - '.github/workflows/splitsh.yml'

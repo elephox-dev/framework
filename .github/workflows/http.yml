@@ -1,8 +1,6 @@
 name: Http Pipeline
 on:
   push:
-    branches:
-      - develop
     paths:
       - '.github/workflows/http.yml'
       - '.github/workflows/splitsh.yml'
