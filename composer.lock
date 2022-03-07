@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3025c96ebbb6d1ddab90c5af7c95e494",
+    "content-hash": "290c816a0bc7c18238365da6b8c7c50b",
     "packages": [
         {
             "name": "elephox/mimey",
