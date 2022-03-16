@@ -14,7 +14,7 @@ use stdClass;
 
 /**
  * @covers \Elephox\DI\Container
- * @covers \Elephox\DI\InstanceLifetime
+ * @covers \Elephox\DI\ServiceLifetime
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\DI\Binding
@@ -77,7 +77,7 @@ class ContainerTest extends TestCase
 	{
 		$container = new Container();
 
-		$container->register(ContainerTestInterface::class, ContainerTestClass::class, InstanceLifetime::Transient);
+		$container->register(ContainerTestInterface::class, ContainerTestClass::class, ServiceLifetime::Transient);
 
 		$instanceA = $container->get(ContainerTestInterface::class);
 		$instanceB = $container->get(ContainerTestInterface::class);
@@ -91,7 +91,7 @@ class ContainerTest extends TestCase
 
 		$testClassInstance = new ContainerTestClass();
 		$this->expectWarning();
-		$container->register(ContainerTestInterface::class, $testClassInstance, InstanceLifetime::Transient);
+		$container->register(ContainerTestInterface::class, $testClassInstance, ServiceLifetime::Transient);
 		$container->transient(ContainerTestClassWithConstructor::class);
 
 		$instance = $container->get(ContainerTestClassWithConstructor::class);
@@ -185,7 +185,7 @@ class ContainerTest extends TestCase
 	public function testInvalidBindingTransient(): void
 	{
 		$container = new Container();
-		$container->register(ContainerTestInterface::class, static fn() => new stdClass(), InstanceLifetime::Transient);
+		$container->register(ContainerTestInterface::class, static fn() => new stdClass(), ServiceLifetime::Transient);
 
 		$this->expectException(BindingException::class);
 

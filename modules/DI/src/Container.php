@@ -40,7 +40,7 @@ class Container implements Contract\Container
 
 	private function registerSelf(): void
 	{
-		$this->register(self::class, $this, InstanceLifetime::Singleton, Contract\Container::class, 'container');
+		$this->register(self::class, $this, ServiceLifetime::Singleton, Contract\Container::class, 'container');
 	}
 
 	public function has(string $id): bool
@@ -53,10 +53,10 @@ class Container implements Contract\Container
 	 *
 	 * @param class-string<T> $contract
 	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
-	 * @param InstanceLifetime $lifetime
+	 * @param ServiceLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, callable|string|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void
+	public function register(string $contract, callable|string|object|null $implementation = null, ServiceLifetime $lifetime = ServiceLifetime::Singleton, string ...$aliases): void
 	{
 		if ($implementation === null) {
 			if (!class_exists($contract)) {
@@ -74,7 +74,7 @@ class Container implements Contract\Container
 		if (is_callable($implementation)) {
 			$builder = $implementation;
 		} else if (is_object($implementation)) {
-			if ($lifetime !== InstanceLifetime::Singleton) {
+			if ($lifetime !== ServiceLifetime::Singleton) {
 				trigger_error("Instance lifetime '$lifetime->name' may not have the desired effect when using an object as the implementation. Consider using a callable instead.", E_USER_WARNING);
 			}
 
@@ -102,7 +102,7 @@ class Container implements Contract\Container
 	 */
 	public function singleton(string $contract, callable|string|object|null $implementation = null, string ...$aliases): void
 	{
-		$this->register($contract, $implementation, InstanceLifetime::Singleton, ...$aliases);
+		$this->register($contract, $implementation, ServiceLifetime::Singleton, ...$aliases);
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Container implements Contract\Container
 	 */
 	public function transient(string $contract, callable|string|object|null $implementation = null, string ...$aliases): void
 	{
-		$this->register($contract, $implementation, InstanceLifetime::Transient, ...$aliases);
+		$this->register($contract, $implementation, ServiceLifetime::Transient, ...$aliases);
 	}
 
 	/**
@@ -153,8 +153,8 @@ class Container implements Contract\Container
 		$binding = $this->map->get($id);
 
 		$instance = match ($binding->getLifetime()) {
-			InstanceLifetime::Transient => $this->buildTransientInstance($binding),
-			InstanceLifetime::Singleton => $this->buildRequestInstance($binding),
+			ServiceLifetime::Transient => $this->buildTransientInstance($binding),
+			ServiceLifetime::Singleton => $this->buildRequestInstance($binding),
 		};
 
 		if (!($instance instanceof $id)) {
@@ -239,12 +239,12 @@ class Container implements Contract\Container
 	 * @param class-string<T>|non-empty-string $contract
 	 * @param class-string<T>|T|null|callable(Contract\Container): T $implementation
 	 * @param array $overrideArguments
-	 * @param InstanceLifetime $lifetime
+	 * @param ServiceLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 *
 	 * @return T
 	 */
-	public function getOrRegister(string $contract, callable|string|object|null $implementation = null, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object
+	public function getOrRegister(string $contract, callable|string|object|null $implementation = null, array $overrideArguments = [], ServiceLifetime $lifetime = ServiceLifetime::Singleton, string ...$aliases): object
 	{
 		if (!$this->has($contract)) {
 			/** @psalm-suppress ArgumentTypeCoercion */

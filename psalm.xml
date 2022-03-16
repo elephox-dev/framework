@@ -20,6 +20,5 @@
         <directory name="modules/*/src"/>
     </projectFiles>
     <plugins>
-        <pluginClass class="Psalm\MockeryPlugin\Plugin"/>
     </plugins>
 </psalm>

@@ -18,17 +18,17 @@ class Binding implements Contract\Binding
 
 	/**
 	 * @param Closure(Contract\Container): T $builder
-	 * @param InstanceLifetime $lifetime
+	 * @param ServiceLifetime $lifetime
 	 * @param T|null $instance
 	 */
 	public function __construct(
 		private readonly Closure $builder,
-		private readonly InstanceLifetime $lifetime,
+		private readonly ServiceLifetime $lifetime,
 		private ?object $instance = null
 	) {
 	}
 
-	public function getLifetime(): InstanceLifetime
+	public function getLifetime(): ServiceLifetime
 	{
 		return $this->lifetime;
 	}
@@ -57,7 +57,7 @@ class Binding implements Contract\Binding
 		$this->instance = $instance;
 	}
 
-	#[ArrayShape(['lifetime' => InstanceLifetime::class, 'builder' => "string", 'instance' => "string"])]
+	#[ArrayShape(['lifetime' => ServiceLifetime::class, 'builder' => "string", 'instance' => "string"])]
 	public function __serialize(): array
 	{
 		/**
@@ -93,9 +93,9 @@ class Binding implements Contract\Binding
 
 		/**
 		 * @noinspection PhpSecondWriteToReadonlyPropertyInspection
-		 * @var InstanceLifetime
+		 * @var ServiceLifetime
 		 */
-		$this->lifetime = unserialize($data['lifetime'], ['allowed_classes' => [InstanceLifetime::class]]);
+		$this->lifetime = unserialize($data['lifetime'], ['allowed_classes' => [ServiceLifetime::class]]);
 
 		if (!is_string($data['builder'])) {
 			throw new InvalidArgumentException('Invalid builder in serialized data');

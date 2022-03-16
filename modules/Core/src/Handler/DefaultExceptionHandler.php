@@ -5,9 +5,9 @@ namespace Elephox\Core\Handler;
 
 use Elephox\Core\Context\Contract\ExceptionContext;
 use Elephox\Core\Context\RequestContext;
-use Elephox\Core\Contract\Environment;
-use Elephox\Core\GlobalEnvironment;
 use Elephox\Core\Handler\Attribute\ExceptionHandler;
+use Elephox\Host\Contract\Environment;
+use Elephox\Host\GlobalEnvironment;
 use Elephox\Http\GeneratesResponses;
 use Elephox\Http\ResponseCode;
 use Elephox\Http\ResponseSender;

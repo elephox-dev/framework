@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
-namespace Elephox\Core;
+namespace Elephox\Host;
 
+use Elephox\Host\Contract\Environment;
 use InvalidArgumentException;
 
-class GlobalEnvironment implements Contract\Environment
+class GlobalEnvironment implements Environment
 {
 	private const ENV_VAR_NAME = 'APP_ENV';
 

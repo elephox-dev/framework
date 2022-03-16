@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\DI\Contract;
 
 use Closure;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceLifetime;
 use Psr\Container\ContainerInterface;
 
 interface Container extends ContainerInterface, NotContainerSerializable
@@ -22,7 +22,7 @@ interface Container extends ContainerInterface, NotContainerSerializable
 	 * @param class-string<T>|T|null|callable(Container): T $implementation
 	 * @param non-empty-string ...$aliases
 	 */
-	public function register(string $contract, string|callable|object|null $implementation = null, InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): void;
+	public function register(string $contract, string|callable|object|null $implementation = null, ServiceLifetime $lifetime = ServiceLifetime::Singleton, string ...$aliases): void;
 
 	/**
 	 * @template T as object
@@ -75,12 +75,12 @@ interface Container extends ContainerInterface, NotContainerSerializable
 	 * @param class-string<T>|non-empty-string $contract
 	 * @param class-string<T>|T|null|callable(Container): T $implementation
 	 * @param array $overrideArguments
-	 * @param InstanceLifetime $lifetime
+	 * @param ServiceLifetime $lifetime
 	 * @param non-empty-string ...$aliases
 	 *
 	 * @return T
 	 */
-	public function getOrRegister(string $contract, callable|string|object|null $implementation = null, array $overrideArguments = [], InstanceLifetime $lifetime = InstanceLifetime::Singleton, string ...$aliases): object;
+	public function getOrRegister(string $contract, callable|string|object|null $implementation = null, array $overrideArguments = [], ServiceLifetime $lifetime = ServiceLifetime::Singleton, string ...$aliases): object;
 
 	/**
 	 * @template T as object

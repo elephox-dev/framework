@@ -9,6 +9,7 @@ use ArrayAccess;
  * @template T
  *
  * @extends GenericKeyedEnumerable<int, T>
+ * @extends ArrayAccess<int, T>
  */
 interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 {

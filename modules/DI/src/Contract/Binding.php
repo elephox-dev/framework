@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Contract;
 
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceLifetime;
 
 /**
  * @template T
  */
 interface Binding
 {
-	public function getLifetime(): InstanceLifetime;
+	public function getLifetime(): ServiceLifetime;
 
 	/**
 	 * @return callable(Container): T

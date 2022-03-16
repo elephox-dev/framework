@@ -15,7 +15,7 @@ use Elephox\Core\Handler\HandledRequestBuilder;
 use Elephox\Core\Handler\InvalidContextException;
 use Elephox\Core\Handler\MatchedUrlTemplate;
 use Elephox\Core\Handler\UrlTemplate;
-use Elephox\DI\InstanceLifetime;
+use Elephox\DI\ServiceLifetime;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\RequestMethod;
@@ -106,7 +106,7 @@ class RequestHandler extends AbstractHandlerAttribute
 			->matchedTemplate(new MatchedUrlTemplate($context->getRequest()->getUrl(), $this->template))
 			->get();
 
-		$context->getContainer()->register($handledRequest::class, $handledRequest, InstanceLifetime::Singleton, 'request', Request::class, ServerRequest::class, HandledRequest::class);
+		$context->getContainer()->register($handledRequest::class, $handledRequest, ServiceLifetime::Singleton, 'request', Request::class, ServerRequest::class, HandledRequest::class);
 
 		yield from $handledRequest->getMatchedTemplate()->whereKey(fn($x) => is_string($x));
 		yield 'template' => $this->template;

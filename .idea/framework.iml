@@ -24,6 +24,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Cache/test" isTestSource="true" packagePrefix="Elephox\Cache\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/src" isTestSource="false" packagePrefix="Elephox\Configuration\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/test" isTestSource="true" packagePrefix="Elephox\Configuration\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Host/src" isTestSource="false" packagePrefix="Elephox\Host\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
@@ -40,7 +42,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/vimeo/psalm" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/thecodingmachine/safe" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-mockery" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/amphp/amp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/amphp/byte-stream" />
@@ -112,6 +113,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-file-iterator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -28,9 +28,8 @@
         "mockery/mockery": "^1.5",
         "phpbench/phpbench": "^1.2.5",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-mockery": "^0.9.1",
         "roave/no-leaks": "^1.3",
-        "vimeo/psalm": "^4.22"
+        "vimeo/psalm": "dev-master"
     },
     "replace": {
         "elephox/collection": "self.version",
@@ -62,6 +61,7 @@
             "Elephox\\DI\\": "modules/DI/src/",
             "Elephox\\Events\\": "modules/Events/src/",
             "Elephox\\Files\\": "modules/Files/src/",
+            "Elephox\\Host\\": "modules/Host/src/",
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Logging\\": "modules/Logging/src/",
             "Elephox\\OOR\\": "modules/OOR/src/",
