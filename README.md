@@ -55,6 +55,10 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
+- [ ] [modules/Host/src/WebApplication.php](https://github.com/elephox-dev/framework/tree/develop/modules/Host/src/WebApplication.php)
+  - [ ] Implement getConfiguration() method.
+  - [ ] Implement getEnvironment() method.
+  - [ ] Implement getServices() method.
 - [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
 
@@ -64,5 +68,11 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] only reverse key order if key is numeric
 - [ ] [modules/Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/develop/modules/Support/src/CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
+
+
+### 🚧 Related issues
+
+- [vimeo/psalm](https://github.com/vimeo/psalm)
+  - [#7795](https://github.com/vimeo/psalm/issues/7795)
 
 <!-- end annotations -->
