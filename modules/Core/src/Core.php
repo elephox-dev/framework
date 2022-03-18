@@ -170,7 +170,7 @@ class Core implements Contract\Core
 				header('Content-Type: text/plain; charset=utf-8');
 			}
 
-			if ($this->getEnv()->isDebug()) {
+			if ($this->getEnv()->isDevelopment()) {
 				echo "Could not handle exception: " . $throwable->getMessage() . "\n";
 				echo $throwable->getTraceAsString();
 				echo "\n";

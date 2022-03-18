@@ -21,10 +21,10 @@ use SplObjectStorage;
 class ObjectSet implements GenericSet
 {
 	/**
-	 * @uses IsEnumerable<T>
+	 * @use IsEnumerable<T>
 	 */
 	use IsEnumerable {
-		contains as enumerableContains;
+		IsEnumerable::contains as enumerableContains;
 	}
 	use DeepCloneable;
 
@@ -55,7 +55,6 @@ class ObjectSet implements GenericSet
 
 	public function add(mixed $value): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_object($value)) {
 			throw new InvalidArgumentException("Cannot add non-object to " . $this::class);
 		}
@@ -69,7 +68,6 @@ class ObjectSet implements GenericSet
 
 	public function remove(mixed $value): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_object($value)) {
 			throw new InvalidArgumentException("Cannot remove non-object from " . $this::class);
 		}

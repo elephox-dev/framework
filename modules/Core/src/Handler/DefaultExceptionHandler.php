@@ -77,7 +77,7 @@ class DefaultExceptionHandler
 
 	private function handleRequestContext(Throwable $exception): void
 	{
-		if ($this->getEnv()->isDebug()) {
+		if ($this->getEnv()->isDevelopment()) {
 			$boxContent = $this->getDebugBoxContent($exception);
 		} else {
 			$boxContent = $this->getProductionBoxContent();

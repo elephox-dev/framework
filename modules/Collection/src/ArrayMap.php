@@ -14,12 +14,13 @@ use Iterator;
  * @template TKey of array-key
  * @template TValue
  *
- * @implements  GenericMap<TKey, TValue>
+ * @implements GenericMap<TKey, TValue>
+ * @implements ArrayAccess<TKey, TValue>
  */
 class ArrayMap implements GenericMap, ArrayAccess
 {
 	/**
-	 * @uses IsKeyedEnumerable<TKey, TValue>
+	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable, DeepCloneable;
 
@@ -81,7 +82,6 @@ class ArrayMap implements GenericMap, ArrayAccess
 
 	public function has(mixed $key): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {
 			return false;
 		}

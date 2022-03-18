@@ -16,10 +16,9 @@ use Iterator;
 class ArrayList implements GenericList
 {
 	/**
-	 * @uses IsKeyedEnumerable<int, T>
+	 * @use IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable;
-	use DeepCloneable;
+	use IsKeyedEnumerable, DeepCloneable;
 
 	/**
 	 * @template UValue

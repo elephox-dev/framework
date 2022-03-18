@@ -17,7 +17,7 @@ use SplObjectStorage;
 class ObjectMap implements GenericMap
 {
 	/**
-	 * @uses IsKeyedEnumerable<TKey, TValue>
+	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable, DeepCloneable;
 

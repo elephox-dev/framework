@@ -3,27 +3,54 @@ declare(strict_types=1);
 
 namespace Elephox\Host;
 
-use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
-use Elephox\DI\Contract\ServiceProvider;
-use Elephox\Host\Contract\ApplicationBuilder;
-use Elephox\Host\Contract\Host;
-use Elephox\Host\Contract\HostEnvironment;
+use Elephox\Host\Contract\WebHostEnvironment;
+use Elephox\Host\Contract\WebServiceCollection as WebServiceCollectionContract;
+use Elephox\Http\Contract\Request;
+use Elephox\Http\Contract\Response;
 
-class WebApplication implements Host, ApplicationBuilder
+class WebApplication
 {
-	public function getConfiguration(): ConfigurationBuilder&ConfigurationRoot
+	public function __construct(
+		public readonly WebHostEnvironment $environment,
+		public readonly WebServiceCollectionContract $services,
+		public readonly ConfigurationRoot $configuration,
+	)
 	{
-		// TODO: Implement getConfiguration() method.
 	}
 
-	public function getEnvironment(): HostEnvironment
+	public static function createBuilder(): WebApplicationBuilder
 	{
-		// TODO: Implement getEnvironment() method.
+		$configuration = new ConfigurationManager();
+		$environment = new GlobalWebHostEnvironment();
+		$services = new WebServiceCollection();
+
+		return new WebApplicationBuilder(
+			$configuration,
+			$environment,
+			$services,
+		);
 	}
 
-	public function getServices(): ServiceProvider
+	public function run(): void
 	{
-		// TODO: Implement getServices() method.
+		// TODO: Implement run() method.
+
+		/*
+		 * 1. get request from globals
+		 * 2. call handle()
+		 * 4. send response to client
+		 */
+	}
+
+	public function handle(Request $request): Response
+	{
+		// TODO: Implement handle() method.
+
+		/*
+		 * 1. find appropriate handler for request
+		 * 2. build and run callstack
+		 * 3. return response
+		 */
 	}
 }

@@ -30,7 +30,6 @@ class CustomMimeType implements MimeTypeInterface
 	 */
 	public static function fromFile(mixed $file): MimeTypeInterface
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($file) && !is_resource($file)) {
 			throw new InvalidArgumentException("MimeType::fromFile only accepts strings or resource streams!");
 		}

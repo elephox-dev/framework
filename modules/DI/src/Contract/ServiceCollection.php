@@ -3,11 +3,168 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Contract;
 
-use Elephox\Collection\Contract\GenericList;
+use Closure;
+use Elephox\DI\InvalidServiceDescriptorException;
+use Elephox\DI\ServiceInstantiationException;
+use Elephox\DI\ServiceLifetime;
+use Elephox\DI\ServiceNotFoundException;
+use InvalidArgumentException;
 
 /**
- * @extends GenericList<\Elephox\DI\ServiceDescriptor>
+ * @psalm-type service-object = object
  */
-interface ServiceCollection extends GenericList
+interface ServiceCollection
 {
+	/**
+	 * @template TService of service-object
+	 * @template TImplementation of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 * @param class-string<TImplementation> $implementationName
+	 * @param ServiceLifetime $lifetime
+	 * @param null|Closure(mixed): TImplementation $implementationFactory
+	 * @param TImplementation|null $implementation
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the service name or the implementation name is empty
+	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
+	 */
+	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
+
+	/**
+	 * @template TService of service-object
+	 * @template TImplementation of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 * @param class-string<TImplementation> $implementationName
+	 * @param Closure(mixed): TImplementation $implementationFactory
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the service name or the implementation name is empty
+	 */
+	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory): ServiceCollection;
+
+	/**
+	 * @template TService of service-object
+	 * @template TImplementation of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 * @param class-string<TImplementation> $implementationName
+	 * @param null|Closure(mixed): TImplementation $implementationFactory
+	 * @param TImplementation|null $implementation
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the service name or the implementation name is empty
+	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
+	 */
+	public function addSingleton(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 *
+	 * @return TService|null
+	 */
+	public function getService(string $serviceName): ?object;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 *
+	 * @return TService
+	 *
+	 * @throws ServiceNotFoundException if no such service is registered
+	 * @throws ServiceInstantiationException if the service cannot be instantiated
+	 */
+	public function requireService(string $serviceName): object;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param class-string<TService> $serviceName
+	 *
+	 * @return bool
+	 */
+	public function hasService(string $serviceName): bool;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param string $alias
+	 * @param class-string<TService> $serviceName
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the alias or the service name is empty
+	 */
+	public function setAlias(string $alias, string $serviceName): ServiceCollection;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param string $alias
+	 *
+	 * @return TService|null
+	 *
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function getByAlias(string $alias): ?object;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param string $alias
+	 *
+	 * @return TService
+	 *
+	 * @throws ServiceNotFoundException if no service with the given alias exists
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function requireByAlias(string $alias): object;
+
+	/**
+	 * @param string $alias
+	 *
+	 * @return bool
+	 *
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function hasAlias(string $alias): bool;
+
+	/**
+	 * @param string $aliasOrServiceName
+	 *
+	 * @return bool
+	 *
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function has(string $aliasOrServiceName): bool;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param string $aliasOrServiceName
+	 *
+	 * @return TService|null
+	 *
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function get(string $aliasOrServiceName): ?object;
+
+	/**
+	 * @template TService of service-object
+	 *
+	 * @param string $aliasOrServiceName
+	 *
+	 * @return TService
+	 *
+	 * @throws ServiceNotFoundException if no service with the given alias exists
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function require(string $aliasOrServiceName): object;
 }

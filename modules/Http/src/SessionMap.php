@@ -53,10 +53,9 @@ class SessionMap implements Contract\SessionMap
 	}
 
 	/**
-	 * @uses IsKeyedEnumerable<array-key, mixed>
+	 * @use IsKeyedEnumerable<array-key, mixed>
 	 */
-	use IsKeyedEnumerable;
-	use DeepCloneable;
+	use IsKeyedEnumerable, DeepCloneable;
 
 	private function __construct()
 	{

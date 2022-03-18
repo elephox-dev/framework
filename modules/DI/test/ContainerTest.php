@@ -19,7 +19,7 @@ use stdClass;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\DI\Binding
  * @covers \Elephox\DI\InvalidBindingInstanceException
- * @covers \Elephox\DI\BindingNotFoundException
+ * @covers \Elephox\DI\UnresolvedParameterException
  * @covers \Elephox\DI\BindingException
  * @covers \Elephox\DI\MissingTypeHintException
  * @covers \Elephox\Collection\Iterator\FlipIterator

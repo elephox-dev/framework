@@ -8,11 +8,16 @@ use InvalidArgumentException;
 
 class GlobalEnvironment implements Environment
 {
-	private const ENV_VAR_NAME = 'APP_ENV';
+	public const ENV_NAME = 'APP_ENV';
 
-	public function isDebug(string $envName = self::ENV_VAR_NAME): bool
+	public function getEnvironmentName(string $envName = self::ENV_NAME): string
 	{
-		return in_array($this[$envName], ['dev', 'local', 'debug', 'development']);
+		return $this[$envName] ?? 'production';
+	}
+
+	public function isDevelopment(string $envName = self::ENV_NAME): bool
+	{
+		return in_array($this->getEnvironmentName($envName), ['dev', 'local', 'debug', 'development']);
 	}
 
 	public function offsetExists(mixed $offset): bool

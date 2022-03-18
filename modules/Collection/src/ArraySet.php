@@ -16,10 +16,10 @@ use Elephox\Support\DeepCloneable;
 class ArraySet implements GenericSet
 {
 	/**
-	 * @uses IsEnumerable<T>
+	 * @use IsEnumerable<T>
 	 */
 	use IsEnumerable {
-		contains as enumerableContains;
+		IsEnumerable::contains as enumerableContains;
 	}
 	use DeepCloneable;
 

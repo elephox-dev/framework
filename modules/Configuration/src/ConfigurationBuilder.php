@@ -10,6 +10,8 @@ use JetBrains\PhpStorm\Pure;
 
 class ConfigurationBuilder implements Contract\ConfigurationBuilder
 {
+	use BuildsConfigurationRoot;
+
 	/**
 	 * @var ObjectSet<ConfigurationSource> $sources
 	 */
@@ -34,16 +36,8 @@ class ConfigurationBuilder implements Contract\ConfigurationBuilder
 		return $this;
 	}
 
-	public function build(): Contract\ConfigurationRoot
+	protected function getBuilder(): Contract\ConfigurationBuilder
 	{
-		/** @var ObjectSet<Contract\ConfigurationProvider> $providers */
-		$providers = new ObjectSet();
-
-		/** @var ConfigurationSource $source */
-		foreach ($this->sources as $source) {
-			$providers->add($source->build($this));
-		}
-
-		return new ConfigurationRoot($providers);
+		return $this;
 	}
 }

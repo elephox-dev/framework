@@ -128,7 +128,7 @@ class Container implements Contract\Container
 	{
 		while (!$this->map->has($alias)) {
 			if (!$this->aliases->has($alias)) {
-				throw new BindingNotFoundException($alias);
+				throw new UnresolvedParameterException($alias);
 			}
 
 			$alias = $this->aliases->get($alias);
@@ -215,7 +215,7 @@ class Container implements Contract\Container
 			try {
 				// if not, check if $id is an alias (if not, this will throw)
 				$id = $this->resolveAlias($id);
-			} catch (BindingNotFoundException $e) {
+			} catch (UnresolvedParameterException $e) {
 				throw new InvalidArgumentException("Class or alias $id does not exist", previous: $e);
 			}
 		}
@@ -475,7 +475,7 @@ class Container implements Contract\Container
 		}
 
 		if (!$parameter->allowsNull()) {
-			throw new BindingNotFoundException((string)$type, $parameter->name);
+			throw new UnresolvedParameterException((string)$type, $parameter->name);
 		}
 
 		return null;

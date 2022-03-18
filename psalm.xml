@@ -6,11 +6,8 @@
 
         errorLevel="1"
 
-        checkForThrowsInGlobalScope="true"
         ignoreInternalFunctionFalseReturn="false"
         ignoreInternalFunctionNullReturn="false"
-        findUnusedVariablesAndParams="false"
-        findUnusedCode="false"
         findUnusedPsalmSuppress="true"
         sealAllMethods="true"
 
@@ -21,4 +18,7 @@
     </projectFiles>
     <plugins>
     </plugins>
+    <issueHandlers>
+        <DocblockTypeContradiction errorLevel="suppress" />
+    </issueHandlers>
 </psalm>

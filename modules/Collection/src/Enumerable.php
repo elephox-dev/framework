@@ -71,7 +71,7 @@ class Enumerable implements GenericEnumerable
 	}
 
 	/**
-	 * @uses IsEnumerable<TSource>
+	 * @use IsEnumerable<TSource>
 	 */
 	use IsEnumerable, DeepCloneable;
 
