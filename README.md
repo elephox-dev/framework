@@ -55,9 +55,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [modules/Host/src/WebApplication.php](https://github.com/elephox-dev/framework/tree/develop/modules/Host/src/WebApplication.php)
-  - [ ] Implement run() method.
-  - [ ] Implement handle() method.
 - [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
 
