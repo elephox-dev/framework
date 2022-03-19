@@ -15,5 +15,7 @@ interface HandledRequestBuilder extends ServerRequestBuilder
 
 	public function matchedTemplate(MatchedUrlTemplate $matchedUrlTemplate): static;
 
+	public function getMatchedTemplate(): ?MatchedUrlTemplate;
+
 	public function get(): HandledRequest;
 }

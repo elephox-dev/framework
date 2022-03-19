@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\Cookie;
-use Elephox\Http\Contract\Request;
-use Elephox\Http\Contract\UploadedFile;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\ResourceStream;
@@ -50,7 +47,12 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function cookie(Cookie $cookie): static
+	public function getParameters(): ?Contract\ParameterMap
+	{
+		return $this->parameters;
+	}
+
+	public function cookie(Contract\Cookie $cookie): static
 	{
 		if ($this->cookies === null) {
 			$this->cookies = new CookieMap();
@@ -66,6 +68,11 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$this->cookies = $cookies;
 
 		return $this;
+	}
+
+	public function getCookies(): ?Contract\CookieMap
+	{
+		return $this->cookies;
 	}
 
 	public function sessionParam(string $name, mixed $value): static
@@ -86,7 +93,12 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
-	public function uploadedFile(string $name, UploadedFile $uploadedFile): static
+	public function getSession(): ?Contract\SessionMap
+	{
+		return $this->session;
+	}
+
+	public function uploadedFile(string $name, Contract\UploadedFile $uploadedFile): static
 	{
 		if ($this->uploadedFiles === null) {
 			$this->uploadedFiles = new UploadedFileMap();
@@ -102,6 +114,11 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		$this->uploadedFiles = $uploadedFiles;
 
 		return $this;
+	}
+
+	public function getUploadedFiles(): ?Contract\UploadedFileMap
+	{
+		return $this->uploadedFiles;
 	}
 
 	public function get(): Contract\ServerRequest
@@ -197,7 +214,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 	}
 
 	#[Pure]
-	public static function fromRequest(Request $request): static
+	public static function fromRequest(Contract\Request $request): static
 	{
 		return new static(
 			$request->getProtocolVersion(),

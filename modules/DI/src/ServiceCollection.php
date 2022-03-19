@@ -104,9 +104,14 @@ class ServiceCollection implements Contract\ServiceCollection
 	 *
 	 * @throws ServiceNotFoundException if no such service is registered
 	 * @throws ServiceInstantiationException if the service cannot be instantiated
+	 * @throws InvalidArgumentException if the service name is empty
 	 */
 	public function requireService(string $serviceName): object
 	{
+		if (empty($serviceName)) {
+			throw new InvalidArgumentException('Service name must not be empty.');
+		}
+
 		$descriptor = $this->tryFindDescriptor($serviceName);
 		if ($descriptor === null) {
 			throw new ServiceNotFoundException($serviceName);
@@ -197,6 +202,10 @@ class ServiceCollection implements Contract\ServiceCollection
 
 	public function hasService(string $serviceName): bool
 	{
+		if (empty($serviceName)) {
+			throw new InvalidArgumentException('Service name must not be empty.');
+		}
+
 		return $this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
 	}
 
@@ -324,5 +333,39 @@ class ServiceCollection implements Contract\ServiceCollection
 
 		/** @var class-string $aliasOrServiceName */
 		return $this->hasAlias($aliasOrServiceName) || $this->hasService($aliasOrServiceName);
+	}
+
+	public function removeService(string $serviceName): Contract\ServiceCollection
+	{
+		if (empty($serviceName)) {
+			throw new InvalidArgumentException('Service name must not be empty.');
+		}
+
+		$this->services->removeBy(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName);
+
+		return $this;
+	}
+
+	public function removeAlias(string $alias): Contract\ServiceCollection
+	{
+		if (empty($alias)) {
+			throw new InvalidArgumentException('Alias must not be empty.');
+		}
+
+		$this->aliases->remove($alias);
+
+		return $this;
+	}
+
+	public function remove(string $aliasOrServiceName): Contract\ServiceCollection
+	{
+		if (empty($aliasOrServiceName)) {
+			throw new InvalidArgumentException('Alias or service name must not be empty.');
+		}
+
+		$this->removeAlias($aliasOrServiceName);
+		$this->removeService($aliasOrServiceName);
+
+		return $this;
 	}
 }

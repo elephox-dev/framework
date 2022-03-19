@@ -12,15 +12,10 @@ use JsonException;
 class JsonFileConfigurationSource implements JsonDataConfigurationSource
 {
 	public function __construct(
-		private readonly string $path,
-		private readonly bool $optional = false,
+		public readonly string $path,
+		public readonly bool $optional = false,
 	)
 	{
-		if (!$optional && !file_exists($this->path)) {
-			throw new InvalidArgumentException(
-				sprintf('File "%s" does not exist and is not optional', $this->path)
-			);
-		}
 	}
 
 	/**
@@ -30,16 +25,20 @@ class JsonFileConfigurationSource implements JsonDataConfigurationSource
 	 */
 	public function getData(): array
 	{
-		if ($this->optional && !file_exists($this->path)) {
-			return [];
+		if (!file_exists($this->path)) {
+			if ($this->optional) {
+				return [];
+			}
+
+			throw new InvalidArgumentException(
+				sprintf('File "%s" does not exist and is not optional', $this->path)
+			);
 		}
 
 		$json = file_get_contents($this->path);
-		if ($json === false)
+		if (!$json)
 		{
-			throw new JsonException(
-				sprintf('File "%s" could not be read', $this->path)
-			);
+			throw new JsonException("File '$this->path' could not be read");
 		}
 
 		/** @var array<string, string|null> */

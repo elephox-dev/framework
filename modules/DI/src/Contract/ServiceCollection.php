@@ -80,6 +80,7 @@ interface ServiceCollection
 	 *
 	 * @throws ServiceNotFoundException if no such service is registered
 	 * @throws ServiceInstantiationException if the service cannot be instantiated
+	 * @throws InvalidArgumentException if the service name is empty
 	 */
 	public function requireService(string $serviceName): object;
 
@@ -89,6 +90,8 @@ interface ServiceCollection
 	 * @param class-string<TService> $serviceName
 	 *
 	 * @return bool
+	 *
+	 * @throws InvalidArgumentException if the service name is empty
 	 */
 	public function hasService(string $serviceName): bool;
 
@@ -167,4 +170,31 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the alias is empty
 	 */
 	public function require(string $aliasOrServiceName): object;
+
+	/**
+	 * @param string $serviceName
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the service name is empty
+	 */
+	public function removeService(string $serviceName): ServiceCollection;
+
+	/**
+	 * @param string $alias
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the alias is empty
+	 */
+	public function removeAlias(string $alias): ServiceCollection;
+
+	/**
+	 * @param string $aliasOrServiceName
+	 *
+	 * @return ServiceCollection
+	 *
+	 * @throws InvalidArgumentException if the alias or service name is empty
+	 */
+	public function remove(string $aliasOrServiceName): ServiceCollection;
 }

@@ -33,11 +33,21 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
+	public function getProtocolVersion(): ?string
+	{
+		return $this->protocolVersion;
+	}
+
 	public function body(Stream $body): static
 	{
 		$this->body = $body;
 
 		return $this;
+	}
+
+	public function getBody(): ?Stream
+	{
+		return $this->body;
 	}
 
 	/**
@@ -75,5 +85,10 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		$this->headers = $headers;
 
 		return $this;
+	}
+
+	public function getHeaderMap(): ?Contract\HeaderMap
+	{
+		return $this->headers;
 	}
 }

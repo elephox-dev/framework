@@ -32,6 +32,8 @@ class ResponseSender
 			return;
 		}
 
+		http_response_code($response->getResponseCode()->value);
+
 		$contentTypeSent = false;
 		foreach ($response->getHeaderMap() as $headerName => $values) {
 			if (is_array($values)) {

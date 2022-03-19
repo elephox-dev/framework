@@ -30,11 +30,21 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		return $this;
 	}
 
+	public function getRequestMethod(): ?RequestMethod
+	{
+		return $this->method;
+	}
+
 	public function requestUrl(Url $url): static
 	{
 		$this->url = $url;
 
 		return $this;
+	}
+
+	public function getRequestUrl(): ?Url
+	{
+		return $this->url;
 	}
 
 	public function get(): Contract\Request

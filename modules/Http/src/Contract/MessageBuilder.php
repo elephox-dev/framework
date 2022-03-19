@@ -13,7 +13,11 @@ interface MessageBuilder
 {
 	public function protocolVersion(string $version): static;
 
+	public function getProtocolVersion(): ?string;
+
 	public function body(Stream $body): static;
+
+	public function getBody(): ?Stream;
 
 	/**
 	 * @throws JsonException
@@ -31,6 +35,8 @@ interface MessageBuilder
 	public function header(string $name, array $value): static;
 
 	public function headerMap(HeaderMap $headers): static;
+
+	public function getHeaderMap(): ?HeaderMap;
 
 	public function get(): Message;
 }

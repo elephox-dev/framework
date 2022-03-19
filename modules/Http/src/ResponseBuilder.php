@@ -35,11 +35,21 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this;
 	}
 
+	public function getResponseCode(): ?ResponseCode
+	{
+		return $this->responseCode;
+	}
+
 	public function contentType(?MimeTypeInterface $mimeType): static
 	{
 		$this->mimeType = $mimeType;
 
 		return $this;
+	}
+
+	public function getContentType(): ?MimeTypeInterface
+	{
+		return $this->mimeType;
 	}
 
 	/**

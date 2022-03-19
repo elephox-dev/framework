@@ -13,7 +13,11 @@ interface ResponseBuilder extends MessageBuilder
 {
 	public function responseCode(ResponseCode $responseCode): static;
 
+	public function getResponseCode(): ?ResponseCode;
+
 	public function contentType(MimeTypeInterface $mimeType): static;
+
+	public function getContentType(): ?MimeTypeInterface;
 
 	public function get(): Response;
 }

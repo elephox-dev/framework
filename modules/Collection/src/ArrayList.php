@@ -185,4 +185,38 @@ class ArrayList implements GenericList
 
 		return -1;
 	}
+
+	/**
+	 * @return T
+	 */
+	public function pop(): mixed
+	{
+		if ($this->count() === 0) {
+			throw new EmptySequenceException();
+		}
+
+		return array_pop($this->items);
+	}
+
+	/**
+	 * @return T
+	 */
+	public function shift(): mixed
+	{
+		if ($this->count() === 0) {
+			throw new EmptySequenceException();
+		}
+
+		return array_shift($this->items);
+	}
+
+	/**
+	 * @param T $value
+	 *
+	 * @return void
+	 */
+	public function unshift(mixed $value): void
+	{
+		array_unshift($this->items, $value);
+	}
 }

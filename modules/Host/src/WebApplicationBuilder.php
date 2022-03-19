@@ -14,12 +14,16 @@ class WebApplicationBuilder
 		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
 		public readonly WebHostEnvironment $environment,
 		public readonly WebServiceCollection $services,
+		public readonly RequestPipelineBuilder $pipeline,
 	)
 	{
 	}
 
 	public function build(): WebApplication
 	{
+		$builtPipeline = $this->pipeline->build();
+		$this->services->addSingleton(RequestPipeline::class, $builtPipeline::class, implementation: $builtPipeline);
+
 		return new WebApplication(
 			$this->environment,
 			$this->services,

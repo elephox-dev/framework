@@ -13,7 +13,11 @@ interface RequestBuilder extends MessageBuilder
 {
 	public function requestMethod(RequestMethod $requestMethod): static;
 
+	public function getRequestMethod(): ?RequestMethod;
+
 	public function requestUrl(Url $url): static;
+
+	public function getRequestUrl(): ?Url;
 
 	public function get(): Request;
 }
