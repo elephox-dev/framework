@@ -37,6 +37,7 @@
         "elephox/di": "self.version",
         "elephox/events": "self.version",
         "elephox/files": "self.version",
+        "elephox/host": "self.version",
         "elephox/http": "self.version",
         "elephox/logging": "self.version",
         "elephox/oor": "self.version",

@@ -15,9 +15,12 @@
         "elephox/di": "^0.3",
         "elephox/events": "^0.3",
         "elephox/files": "^0.3",
+        "elephox/host": "^0.3",
         "elephox/http": "^0.3",
+        "elephox/mimey": "^4.0",
         "elephox/oor": "^0.3",
         "elephox/stream": "^0.3",
+        "elephox/support": "^0.3",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "suggest": {
