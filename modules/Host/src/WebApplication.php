@@ -5,15 +5,16 @@ namespace Elephox\Host;
 
 use Closure;
 use Elephox\Configuration\Contract\ConfigurationRoot;
+use Elephox\DI\Contract\Resolver;
 use Elephox\Host\Contract\WebHostEnvironment;
 use Elephox\Host\Contract\WebMiddleware;
 use Elephox\Host\Contract\WebServiceCollection as WebServiceCollectionContract;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
+use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
 use Elephox\Http\ParameterSource;
-use Elephox\Http\Request;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Http\ResponseSender;
@@ -79,8 +80,11 @@ class WebApplication
 		 * 3. send response to client
 		 */
 
-		$request = ServerRequestBuilder::fromGlobals();
-		$this->services->addSingleton(RequestContract::class, Request::class, implementation: $request);
+		$resolver = $this->services->requireService(Resolver::class);
+
+		/** @var ServerRequestContract $request */
+		$request = $resolver->call(ServerRequestBuilder::class, 'fromGlobals');
+		$this->services->addSingleton(ServerRequestContract::class, $request::class, implementation: $request);
 
 		$response = $this->handle($request);
 		ResponseSender::sendResponse($response);
@@ -88,6 +92,12 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
+		// remove any previous request instance
+		$this->services->removeService(RequestContract::class);
+
+		// add current request instance
+		$this->services->addSingleton(RequestContract::class, $request::class, implementation: $request);
+
 		return $this->services
 			->requireService(RequestPipeline::class)
 			->process(static fn (): ResponseBuilderContract => Response::build(), $request)

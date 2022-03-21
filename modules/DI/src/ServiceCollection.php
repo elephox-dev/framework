@@ -33,8 +33,9 @@ class ServiceCollection implements Contract\ServiceCollection
 
 	public function __construct(?Resolver $resolver = null)
 	{
-		/** @var ArraySet<ServiceDescriptor> services */
-		$this->services = new ArraySet();
+		$this->services = new ArraySet(
+			comparer: fn(ServiceDescriptor $a, ServiceDescriptor $b): bool => $a->serviceType === $b->serviceType
+		);
 
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
 		$this->aliases = new ArrayMap();
@@ -142,7 +143,7 @@ class ServiceCollection implements Contract\ServiceCollection
 		}
 
 		/** @var ServiceDescriptor<TService, TService>|null $descriptor */
-		$descriptor = $this->services->first(static fn(ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
+		$descriptor = $this->services->firstOrDefault(null, static fn(ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
 		if ($descriptor === null) {
 			return null;
 		}

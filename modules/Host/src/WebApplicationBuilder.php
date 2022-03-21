@@ -5,6 +5,7 @@ namespace Elephox\Host;
 
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
+use Elephox\Configuration\Json\JsonFileConfigurationSource;
 use Elephox\Host\Contract\WebServiceCollection;
 use Elephox\Host\Contract\WebHostEnvironment;
 
@@ -17,6 +18,13 @@ class WebApplicationBuilder
 		public readonly RequestPipelineBuilder $pipeline,
 	)
 	{
+		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.json")->getPath()));
+		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.{$environment->getEnvironmentName()}.json")->getPath(), true));
+		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.local.json")->getPath(), true));
+
+		if ($this->configuration->hasSection("env:debug")) {
+			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
+		}
 	}
 
 	public function build(): WebApplication

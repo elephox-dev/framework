@@ -17,6 +17,10 @@ class GlobalEnvironment implements Environment
 
 	public function isDevelopment(string $envName = self::ENV_NAME): bool
 	{
+		if ($this->offsetExists('APP_DEBUG')) {
+			return (bool) $this['APP_DEBUG'];
+		}
+
 		return in_array($this->getEnvironmentName($envName), ['dev', 'local', 'debug', 'development']);
 	}
 

@@ -28,13 +28,12 @@ interface Resolver
 
 	/**
 	 * @template T as object
-	 * @template TResult
 	 *
 	 * @param class-string<T> $className
 	 * @param non-empty-string $method
 	 * @param argument-list $overrideArguments
 	 *
-	 * @return TResult
+	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */

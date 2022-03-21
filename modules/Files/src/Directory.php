@@ -113,20 +113,12 @@ class Directory implements Contract\Directory
 	{
 		$path = Path::join($this->path, $filename);
 
-		if (!file_exists($path)) {
-			throw new FileNotFoundException($path);
-		}
-
 		return new File($path);
 	}
 
 	public function getDirectory(string $dirname): Directory
 	{
 		$path = Path::join($this->path, $dirname);
-
-		if (!is_dir($path)) {
-			throw new DirectoryNotFoundException($path);
-		}
 
 		return new Directory($path);
 	}
