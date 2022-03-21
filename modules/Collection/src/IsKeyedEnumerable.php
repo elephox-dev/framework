@@ -760,6 +760,31 @@ trait IsKeyedEnumerable
 		return $array;
 	}
 
+	public function toNestedArray(?callable $keySelector = null): array
+	{
+		/** @psalm-suppress UnusedClosureParam */
+		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
+
+		$array = [];
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			$key = $keySelector($elementKey, $element);
+
+			if ($key instanceof Stringable) {
+				$key = (string)$key;
+			}
+
+			if (!is_scalar($key)) {
+				throw new OutOfBoundsException('Invalid array key: ' . get_debug_type($key));
+			}
+
+			/** @var array-key $key */
+			$array[$key][] = $element;
+		}
+
+		return $array;
+	}
+
 	public function keys(): GenericEnumerable
 	{
 		return new Enumerable(new FlipIterator($this->getIterator()));

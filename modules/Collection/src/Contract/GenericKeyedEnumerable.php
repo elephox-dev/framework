@@ -331,6 +331,15 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function toArray(?callable $keySelector = null): array;
 
 	/**
+	 * @template TArrayKey as array-key
+	 *
+	 * @param null|callable(TIteratorKey, TSource): TArrayKey $keySelector
+	 *
+	 * @return array<TArrayKey, list<TSource>>
+	 */
+	public function toNestedArray(?callable $keySelector = null): array;
+
+	/**
 	 * @return GenericEnumerable<TIteratorKey>
 	 */
 	public function keys(): GenericEnumerable;

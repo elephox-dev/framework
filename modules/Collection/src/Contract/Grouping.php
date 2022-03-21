@@ -3,15 +3,16 @@
 namespace Elephox\Collection\Contract;
 
 /**
+ * @template TGroupKey
  * @template TKey
  * @template TSource
  *
- * @extends GenericEnumerable<TSource>
+ * @extends GenericKeyedEnumerable<TKey, TSource>
  */
-interface Grouping extends GenericEnumerable
+interface Grouping extends GenericKeyedEnumerable
 {
 	/**
-	 * @return TKey
+	 * @return TGroupKey
 	 */
-	public function groupKey();
+	public function groupKey(): mixed;
 }

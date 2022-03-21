@@ -14,7 +14,6 @@ use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
-use Elephox\Collection\Iterator\LookupIterator;
 use Elephox\Collection\Iterator\OrderedIterator;
 use Elephox\Collection\Iterator\ReverseIterator;
 use Elephox\Collection\Iterator\SelectIterator;
@@ -313,7 +312,7 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new GroupedEnumerable(new LookupIterator($this->getIterator(), $keySelector(...), $comparer(...)));
+		return new GroupedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -542,24 +541,29 @@ trait IsEnumerable
 
 	/**
 	 * @template TCollection
+	 * @template TIntermediateKey
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource): GenericKeyedEnumerable<TCollectionKey, TCollection> $collectionSelector
-	 * @param null|callable(TSource, TCollection, TCollectionKey): TResult $resultSelector
+	 * @param callable(TSource): GenericKeyedEnumerable<TIntermediateKey, TCollection> $collectionSelector
+	 * @param null|callable(TSource, TCollection, TIntermediateKey): TResult $resultSelector
+	 * @param null|callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable
+	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable
 	{
 		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
-		/** @var callable(TSource, TCollection, TCollectionKey): TResult $resultSelector */
+		/** @var callable(TSource, TCollection, TIntermediateKey): TResult $resultSelector */
 
-		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector) {
+		$keySelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElementKey;
+		/** @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector */
+
+		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector, $keySelector) {
 			foreach ($this->getIterator() as $element) {
 				foreach ($collectionSelector($element) as $collectionElementKey => $collectionElement) {
-					yield $collectionElementKey => $resultSelector($element, $collectionElement, $collectionElementKey);
+					yield $keySelector($element, $collectionElement, $collectionElementKey) => $resultSelector($element, $collectionElement, $collectionElementKey);
 				}
 			}
 		});
@@ -790,6 +794,18 @@ trait IsEnumerable
 	public function toArray(?callable $keySelector = null): array
 	{
 		return self::reindex($this->getIterator())->toArray($keySelector);
+	}
+
+	/**
+	 * @template TArrayKey as array-key
+	 *
+	 * @param null|callable(NonNegativeInteger, TSource): TArrayKey $keySelector
+	 *
+	 * @return array<TArrayKey, list<TSource>>
+	 */
+	public function toNestedArray(?callable $keySelector = null): array
+	{
+		return self::reindex($this->getIterator())->toNestedArray($keySelector);
 	}
 
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable

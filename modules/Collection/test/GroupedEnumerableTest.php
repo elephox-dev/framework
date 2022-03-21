@@ -20,8 +20,6 @@ class GroupedEnumerableTest extends TestCase
 			['name' => 'Jones', 'age' => 40],
 		]);
 
-		$enum->groupBy(fn($item): int => $item['age']);
-
 		self::assertEquals(
 			[
 				20 => [
@@ -36,7 +34,10 @@ class GroupedEnumerableTest extends TestCase
 					['name' => 'Jones', 'age' => 40],
 				],
 			],
-			$enum->toArray()
+			$enum
+				->groupBy(fn($item) => $item['age'])
+				->selectManyKeyed(fn($group) => $group, keySelector: fn($group) => $group->groupKey())
+				->toNestedArray()
 		);
 	}
 }

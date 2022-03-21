@@ -125,7 +125,7 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 * @param callable(TSource): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<Grouping<TGroupKey, TSource>>
+	 * @return GenericEnumerable<Grouping<TGroupKey, mixed, TSource>>
 	 */
 	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable;
 
@@ -234,15 +234,17 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 
 	/**
 	 * @template TCollection
+	 * @template TIntermediateKey
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource): GenericKeyedEnumerable<TCollectionKey, TCollection> $collectionSelector
-	 * @param null|callable(TSource, TCollection, TCollectionKey): TResult $resultSelector
+	 * @param callable(TSource): GenericKeyedEnumerable<TIntermediateKey, TCollection> $collectionSelector
+	 * @param null|callable(TSource, TCollection, TIntermediateKey): TResult $resultSelector
+	 * @param null|callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable;
+	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable;
 
 	/**
 	 * @template TCollection
@@ -335,6 +337,15 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 * @return array<TArrayKey, TSource>
 	 */
 	public function toArray(?callable $keySelector = null): array;
+
+	/**
+	 * @template TArrayKey as array-key
+	 *
+	 * @param null|callable(NonNegativeInteger, TSource): TArrayKey $keySelector
+	 *
+	 * @return array<TArrayKey, list<TSource>>
+	 */
+	public function toNestedArray(?callable $keySelector = null): array;
 
 	/**
 	 * @template TIteratorKey

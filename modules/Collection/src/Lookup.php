@@ -6,7 +6,7 @@ namespace Elephox\Collection;
 use Closure;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\Iterator\FlipIterator;
-use Elephox\Collection\Iterator\LookupIterator;
+use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Support\DeepCloneable;
 use Iterator;
 
@@ -41,7 +41,7 @@ class Lookup implements Contract\Lookup
 
 	public function getIterator(): Iterator
 	{
-		return new LookupIterator($this->iterator);
+		return new GroupingIterator($this->iterator);
 	}
 
 	public function get(mixed $key): mixed
