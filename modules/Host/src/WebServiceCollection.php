@@ -74,7 +74,6 @@ class WebServiceCollection extends ServiceCollection implements Contract\WebServ
 
 		$this->addSingleton(
 			WhoopsRunInterface::class,
-			WhoopsRun::class,
 			implementation: new WhoopsRun(),
 		);
 

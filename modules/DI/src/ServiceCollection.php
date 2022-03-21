@@ -42,8 +42,8 @@ class ServiceCollection implements Contract\ServiceCollection
 
 		$this->resolver = $resolver ?? new AutoResolver($this);
 
-		$this->addSingleton(Contract\ServiceCollection::class, $this::class, implementation: $this);
-		$this->addSingleton(Resolver::class, $this->resolver::class, implementation: $this->resolver);
+		$this->addSingleton(Contract\ServiceCollection::class, implementation: $this);
+		$this->addSingleton(Resolver::class, implementation: $this->resolver);
 	}
 
 	/**
@@ -75,8 +75,16 @@ class ServiceCollection implements Contract\ServiceCollection
 		return $this->describe($serviceName, $implementationName, ServiceLifetime::Transient, $implementationFactory, $implementation);
 	}
 
-	public function addSingleton(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
+	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
 	{
+		if ($implementationName === null && $implementation === null) {
+			throw new InvalidArgumentException('Either implementation name and factory or an implementation must be provided.');
+		}
+
+		if ($implementationName === null) {
+			$implementationName = $implementation::class;
+		}
+
 		return $this->describe($serviceName, $implementationName, ServiceLifetime::Singleton, $implementationFactory, $implementation);
 	}
 

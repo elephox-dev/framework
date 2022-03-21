@@ -1,13 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Host\Middleware;
 
+use Closure;
 use Elephox\Collection\ObjectSet;
 use Elephox\Host\Contract\RouteHandler;
+use Elephox\Host\Contract\Router;
+use Elephox\Host\Contract\WebMiddleware;
 use Elephox\Http\Contract\Request;
+use Elephox\Http\Contract\ResponseBuilder;
 
-class Router implements Contract\Router
+class RequestRouter implements WebMiddleware, Router
 {
 	/** @var ObjectSet<RouteHandler> $handlers */
 	private readonly ObjectSet $handlers;
@@ -22,7 +26,12 @@ class Router implements Contract\Router
 	{
 		$this->handlers
 			->orderByDescending(fn(RouteHandler $handler) => $handler->getMatchScore($request))
-			->toList()
-		;
+			->toList();
+	}
+
+	public function handle(Request $request, Closure $next): ResponseBuilder
+	{
+		$url = (string)$request->getUrl();
+
 	}
 }

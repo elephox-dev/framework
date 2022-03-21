@@ -51,7 +51,7 @@ interface ServiceCollection
 	 * @template TImplementation of service-object
 	 *
 	 * @param class-string<TService> $serviceName
-	 * @param class-string<TImplementation> $implementationName
+	 * @param null|class-string<TImplementation> $implementationName
 	 * @param null|Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
 	 *
@@ -60,7 +60,7 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function addSingleton(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
+	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
 
 	/**
 	 * @template TService of service-object

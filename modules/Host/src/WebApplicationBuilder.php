@@ -30,7 +30,7 @@ class WebApplicationBuilder
 	public function build(): WebApplication
 	{
 		$builtPipeline = $this->pipeline->build();
-		$this->services->addSingleton(RequestPipeline::class, $builtPipeline::class, implementation: $builtPipeline);
+		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline);
 
 		return new WebApplication(
 			$this->environment,
