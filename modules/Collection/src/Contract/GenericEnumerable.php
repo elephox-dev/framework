@@ -120,6 +120,16 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 
 	/**
+	 * @template TGroupKey
+	 *
+	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<Grouping<TGroupKey, TSource>>
+	 */
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable;
+
+	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *

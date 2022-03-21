@@ -72,6 +72,18 @@ class WebApplication
 		);
 	}
 
+	public function addRouting(): void
+	{
+		$pipeline = $this->services->requireService(RequestPipelineBuilder::class);
+		$pipeline->push(new class implements WebMiddleware {
+			public function handle(RequestContract $request, Closure $next): ResponseBuilderContract
+			{
+				$url = (string)$request->getUrl();
+
+			}
+		});
+	}
+
 	public function run(): void
 	{
 		/*

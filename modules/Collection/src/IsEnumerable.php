@@ -11,7 +11,10 @@ use Countable;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
+use Elephox\Collection\Contract\Grouping;
+use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
+use Elephox\Collection\Iterator\LookupIterator;
 use Elephox\Collection\Iterator\OrderedIterator;
 use Elephox\Collection\Iterator\ReverseIterator;
 use Elephox\Collection\Iterator\SelectIterator;
@@ -296,6 +299,21 @@ trait IsEnumerable
 		}
 
 		return $defaultValue;
+	}
+
+	/**
+	 * @template TGroupKey
+	 *
+	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<Grouping<TGroupKey, TSource>>
+	 */
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		return new GroupedEnumerable(new LookupIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
