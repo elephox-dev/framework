@@ -18,8 +18,6 @@ use Elephox\Files\Directory;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
-use Elephox\Http\ResponseCode;
-use Elephox\OOR\Arr;
 use Elephox\OOR\Regex;
 use Elephox\Web\AmbiguousRouteHandlerException;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
@@ -63,22 +61,22 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		return call_user_func([$autoloaderClassName, 'getLoader']);
 	}
 
-	/** @var ObjectSet<RouteHandler> $handlers */
+	/** @var ObjectSet<RouteHandlerContract> $handlers */
 	private readonly ObjectSet $handlers;
 
 	public function __construct(
 		private readonly WebServiceCollection $services,
 	)
 	{
-		/** @var ObjectSet<RouteHandler> */
+		/** @var ObjectSet<RouteHandlerContract> */
 		$this->handlers = new ObjectSet();
 	}
 
 	public function getHandler(Request $request): RouteHandlerContract
 	{
 		$matchingHandlers = $this->handlers
-			->groupBy(fn(RouteHandlerContract $handler) => $handler->getMatchScore($request))
-			->orderByDescending(fn(Grouping $grouping) => $grouping->groupKey())
+			->groupBy(fn(RouteHandlerContract $handler): float => $handler->getMatchScore($request))
+			->orderByDescending(fn(Grouping $grouping): mixed => $grouping->groupKey())
 			->firstOrDefault(null)
 			?->toList()
 		;
@@ -94,14 +92,19 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		throw new AmbiguousRouteHandlerException($request);
 	}
 
+	public function add(RouteHandlerContract $handler): static
+	{
+		$this->handlers->add($handler);
+
+		return $this;
+	}
+
 	public function handle(Request $request): ResponseBuilder
 	{
 		try {
 			return $this->getHandler($request)->handle($request);
 		} catch (RouteNotFoundException|AmbiguousRouteHandlerException $e) {
-			return Response::build()
-				->exception($e)
-				->responseCode(ResponseCode::InternalServerError);
+			return Response::build()->exception($e);
 		}
 	}
 

@@ -115,6 +115,8 @@ class WebApplicationBuilder
 
 	public function setRequestRouterEndpoint(): void
 	{
-		$this->pipeline->endpoint(new RequestRouter($this->services));
+		$router = new RequestRouter($this->services);
+		$this->services->addSingleton(RequestRouter::class, implementation: $router);
+		$this->pipeline->endpoint($router);
 	}
 }

@@ -6,11 +6,13 @@ use Closure;
 use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
-use Elephox\Http\ResponseCode;
 use Elephox\Mimey\MimeType;
 use Elephox\Stream\StringStream;
 use Elephox\Web\Contract\WebMiddleware;
+use Whoops\Handler\JsonResponseHandler;
+use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
+use Whoops\Handler\XmlResponseHandler;
 use Whoops\RunInterface as WhoopsRunInterface;
 
 class WhoopsExceptionHandler implements WebMiddleware
@@ -29,17 +31,25 @@ class WhoopsExceptionHandler implements WebMiddleware
 			$runner = $this->services->requireService(WhoopsRunInterface::class);
 
 			if (empty($runner->getHandlers())) {
-				$runner->pushHandler(new PrettyPageHandler());
+				if ($contentType = $response->getContentType()) {
+					$runner->pushHandler(match ($contentType->getValue()) {
+						MimeType::ApplicationJson->getValue() => new JsonResponseHandler(),
+						MimeType::ApplicationXml->getValue() => new XmlResponseHandler(),
+						MimeType::TextPlain->getValue() => new PlainTextHandler(),
+						default => new PrettyPageHandler(),
+					});
+				} else {
+					$runner->pushHandler(new PrettyPageHandler());
+					$response->contentType(MimeType::TextHtml);
+				}
 			}
+
+			$runner->allowQuit(false);
+			$runner->writeToOutput(false);
 
 			/** @var non-empty-string $content */
 			$content = $runner->handleException($exception);
-
-			$response
-				->body(new StringStream($content))
-				->responseCode(ResponseCode::InternalServerError)
-				->contentType(MimeType::TextHtml)
-			;
+			$response->body(new StringStream($content));
 		}
 
 		return $response;
