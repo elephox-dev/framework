@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Core\Handler;
 
+use Elephox\Core\Handler\Contract\MatchedUrlTemplate;
 use Elephox\Http\Contract as HttpContract;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ServerRequest;
@@ -76,5 +77,10 @@ class HandledRequestBuilder extends ServerRequestBuilder implements Contract\Han
 			$this->uploadedFiles ?? new UploadedFileMap(),
 			$this->matchedTemplate ?? throw self::missingParameterException("template")
 		);
+	}
+
+	public function getMatchedTemplate(): ?MatchedUrlTemplate
+	{
+		return $this->matchedTemplate;
 	}
 }
