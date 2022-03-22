@@ -7,6 +7,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Endpoint\RequestRouter;
+use Elephox\Web\Middleware\WhoopsExceptionHandler;
 
 class RequestPipelineBuilder
 {
@@ -48,10 +49,5 @@ class RequestPipelineBuilder
 	public function build(): RequestPipeline
 	{
 		return new RequestPipeline($this->endpoint, $this->pipeline);
-	}
-
-	public function addRouting(): void
-	{
-		$this->endpoint(new RequestRouter());
 	}
 }

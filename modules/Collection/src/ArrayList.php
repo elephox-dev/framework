@@ -219,4 +219,9 @@ class ArrayList implements GenericList
 	{
 		array_unshift($this->items, $value);
 	}
+
+	public function implode(string $separator = ", "): string
+	{
+		return implode($separator, $this->items);
+	}
 }

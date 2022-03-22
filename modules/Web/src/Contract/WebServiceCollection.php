@@ -7,7 +7,4 @@ use Elephox\DI\Contract\ServiceCollection;
 
 interface WebServiceCollection extends ServiceCollection
 {
-	public function addDoctrine(?callable $configurator = null): WebServiceCollection;
-
-	public function addWhoops(?callable $configurator = null): WebServiceCollection;
 }

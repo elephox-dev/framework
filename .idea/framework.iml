@@ -25,10 +25,10 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/src" isTestSource="false" packagePrefix="Elephox\Configuration\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/test" isTestSource="true" packagePrefix="Elephox\Configuration\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Host/src" isTestSource="false" packagePrefix="Elephox\Host\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Entity/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Host/test" isTestSource="true" packagePrefix="Elephox\Host\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/src" isTestSource="false" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
@@ -117,6 +117,17 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/filp/whoops" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/common" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/event-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/orm" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

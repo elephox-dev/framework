@@ -3,11 +3,22 @@ declare(strict_types=1);
 
 namespace Elephox\Web;
 
+use Doctrine\ORM\Configuration as DoctrineConfiguration;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
+use Elephox\DI\Contract\Resolver;
 use Elephox\Web\Contract\WebHostEnvironment;
 use Elephox\Web\Contract\WebServiceCollection;
+use Elephox\Web\Endpoint\RequestRouter;
+use Elephox\Web\Middleware\WhoopsExceptionHandler;
+
+use Whoops\Run as WhoopsRun;
+use Whoops\RunInterface as WhoopsRunInterface;
+
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 
 class WebApplicationBuilder
 {
@@ -37,5 +48,73 @@ class WebApplicationBuilder
 			$this->services,
 			$this->configuration->build(),
 		);
+	}
+
+	/**
+	 * @psalm-suppress UndefinedDocblockClass
+	 * @psalm-suppress MixedArgument
+	 * @psalm-suppress UndefinedClass
+	 * @psalm-suppress NullArgument
+	 *
+	 * @param null|callable(WhoopsRunInterface): void $configurator
+	 *
+	 * @return void
+	 */
+	public function addWhoops(?callable $configurator = null): void
+	{
+
+		$this->services->addSingleton(
+			WhoopsRunInterface::class,
+			implementation: new WhoopsRun(),
+		);
+
+		if ($configurator) {
+			$configurator($this->services->get(WhoopsRunInterface::class));
+		}
+
+		$this->pipeline->push(new WhoopsExceptionHandler($this->services));
+	}
+
+	/**
+	 * @param null|callable(mixed): \Doctrine\ORM\Configuration $setup
+	 * @return void
+	 */
+	public function addDoctrine(?callable $setup = null): void
+	{
+		$this->services->addSingleton(
+			EntityManagerInterface::class,
+			EntityManager::class,
+			implementationFactory: /** @psalm-suppress UndefinedClass */ function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
+				$setup ??= static function (ConfigurationRoot $conf, WebHostEnvironment $env): DoctrineConfiguration {
+					$setupDriver = $conf['doctrine:metadata:driver'];
+					$setupMethod = match ($setupDriver) {
+						'annotation' => 'createAnnotationMetadataConfiguration',
+						'yaml' => 'createYAMLMetadataConfiguration',
+						'xml' => 'createXMLMetadataConfiguration',
+						null => throw new ConfigurationException('No doctrine metadata driver specified at "doctrine:metadata:driver"'),
+						default => throw new ConfigurationException('Unsupported doctrine metadata driver: ' . $setupDriver),
+					};
+
+					/** @var DoctrineConfiguration */
+					return DoctrineSetup::{$setupMethod}(
+						$conf['doctrine:metadata:paths'],
+						$conf['doctrine:dev'] ?? $env->isDevelopment(),
+					);
+				};
+
+				$setupConfig = $this->services->requireService(Resolver::class)->callback($setup);
+				$connection = $configuration['doctrine:connection'];
+				if ($connection === null) {
+					throw new ConfigurationException('No doctrine connection specified at "doctrine:connection"');
+				}
+
+				return EntityManager::create($connection, $setupConfig);
+			}
+		);
+	}
+
+	public function setRequestRouterEndpoint(): void
+	{
+		$this->pipeline->endpoint(new RequestRouter($this->services));
 	}
 }

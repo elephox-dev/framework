@@ -29,7 +29,9 @@
         "phpbench/phpbench": "^1.2.5",
         "phpunit/phpunit": "^9.5",
         "roave/no-leaks": "^1.3",
-        "vimeo/psalm": "dev-master"
+        "vimeo/psalm": "dev-master",
+        "doctrine/orm": "^2.11",
+        "filp/whoops": "^2.14"
     },
     "replace": {
         "elephox/cache": "self.version",
@@ -52,7 +54,9 @@
     },
     "suggest": {
         "ext-fileinfo": "To use MimeType::fromFile()",
-        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
+        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io",
+        "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
+        "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
