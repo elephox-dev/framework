@@ -1,0 +1,42 @@
+{
+    "name": "elephox/host",
+    "description": "Elephox Host library.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Ricaro Boss",
+            "email": "contact@ricardoboss.de"
+        }
+    ],
+    "require": {
+        "php": "^8.1 <8.3",
+        "ext-mbstring": "*",
+        "elephox/collection": "^0.3",
+        "elephox/configuration": "^0.3",
+        "elephox/core": "^0.3",
+        "elephox/di": "^0.3",
+        "elephox/files": "^0.3",
+        "elephox/http": "^0.3",
+        "elephox/stream": "^0.3",
+        "jetbrains/phpstorm-attributes": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Elephox\\Host\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Elephox\\Host\\": "test/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "elephox/composer-module-sync": true,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        }
+    }
+}

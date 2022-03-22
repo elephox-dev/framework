@@ -1,0 +1,17 @@
+name: Web Pipeline
+on:
+  push:
+    paths:
+      - '.github/workflows/web.yml'
+      - '.github/workflows/splitsh.yml'
+      - 'modules/Web/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/web'
+      dir: 'modules/Web/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_WEB_KEY }}

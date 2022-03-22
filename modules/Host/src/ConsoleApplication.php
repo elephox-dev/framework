@@ -34,6 +34,5 @@ class ConsoleApplication
 
 	public function handle(): void
 	{
-		$context = new CommandLineContext();
 	}
 }

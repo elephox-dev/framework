@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\ServiceCollection;
-use Elephox\Host\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebHostEnvironment;
 use LogicException;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run as WhoopsRun;

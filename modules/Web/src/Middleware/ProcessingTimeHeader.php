@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host\Middleware;
+namespace Elephox\Web\Middleware;
 
 use Closure;
-use Elephox\Host\Contract\WebMiddleware;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
 use Elephox\Http\ParameterSource;
+use Elephox\Web\Contract\WebMiddleware;
 
 class ProcessingTimeHeader implements WebMiddleware
 {

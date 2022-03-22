@@ -1,15 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web;
 
-use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Host\Contract\RequestPipelineEndpoint;
-use Elephox\Host\Contract\WebMiddleware;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
+use Elephox\Web\Contract\RequestPipelineEndpoint;
+use Elephox\Web\Contract\WebMiddleware;
 
 class RequestPipeline
 {

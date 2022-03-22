@@ -1,0 +1,17 @@
+name: Host Pipeline
+on:
+  push:
+    paths:
+      - '.github/workflows/host.yml'
+      - '.github/workflows/splitsh.yml'
+      - 'modules/Host/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/host'
+      dir: 'modules/Host/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_HOST_KEY }}

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web;
 
 use Elephox\Http\Contract\Request;
 use RuntimeException;

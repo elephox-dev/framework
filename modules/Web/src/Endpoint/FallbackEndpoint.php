@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web\Endpoint;
 
-use Elephox\Host\Contract\RequestPipelineEndpoint;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Web\Contract\RequestPipelineEndpoint;
 
 class FallbackEndpoint implements RequestPipelineEndpoint
 {

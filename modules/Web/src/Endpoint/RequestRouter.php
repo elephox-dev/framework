@@ -1,17 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web\Endpoint;
 
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\ObjectSet;
-use Elephox\Host\Contract\RequestPipelineEndpoint;
-use Elephox\Host\Contract\RouteHandler;
-use Elephox\Host\Contract\Router;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Web\AmbiguousRouteHandlerException;
+use Elephox\Web\Contract\RequestPipelineEndpoint;
+use Elephox\Web\Contract\RouteHandler;
+use Elephox\Web\Contract\Router;
+use Elephox\Web\RouteNotFoundException;
 
 class RequestRouter implements RequestPipelineEndpoint, Router
 {

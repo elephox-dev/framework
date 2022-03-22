@@ -1,19 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web;
 
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\Contract\Resolver;
-use Elephox\Host\Contract\WebHostEnvironment;
-use Elephox\Host\Contract\WebServiceCollection as WebServiceCollectionContract;
-use Elephox\Host\Middleware\ProcessingTimeHeader;
+use Elephox\Host\ConfigurationManager;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
 use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
+use Elephox\Web\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
+use Elephox\Web\Endpoint\FallbackEndpoint;
+use Elephox\Web\Middleware\ProcessingTimeHeader;
 
 class WebApplication
 {

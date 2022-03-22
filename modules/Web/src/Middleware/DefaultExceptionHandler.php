@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host\Middleware;
+namespace Elephox\Web\Middleware;
 
 use Closure;
-use Elephox\Host\Contract\WebMiddleware;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Stream\StringStream;
+use Elephox\Web\Contract\WebMiddleware;
 
 class DefaultExceptionHandler implements WebMiddleware
 {

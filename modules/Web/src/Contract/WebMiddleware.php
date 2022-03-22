@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host\Contract;
+namespace Elephox\Web\Contract;
 
 use Closure;
 use Elephox\Http\Contract\Request;

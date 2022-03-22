@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Web;
 
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use Elephox\Host\Contract\WebHostEnvironment;
-use Elephox\Host\Contract\WebServiceCollection;
+use Elephox\Web\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebServiceCollection;
 
 class WebApplicationBuilder
 {
