@@ -149,18 +149,12 @@ class DirectoryTest extends TestCase
 	{
 		$directory = new Directory($this->dirPath);
 		self::assertEquals($this->filePath, $directory->getFile(pathinfo($this->filePath, PATHINFO_BASENAME))->getPath());
-
-		$this->expectException(FileNotFoundException::class);
-		$directory->getFile("non-existent-file");
 	}
 
 	public function testGetDirectory(): void
 	{
 		$directory = new Directory($this->dirPath);
 		self::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . "test", $directory->getDirectory("test")->getPath());
-
-		$this->expectException(DirectoryNotFoundException::class);
-		$directory->getDirectory("non-existent-dir");
 	}
 
 	public function testGetDirectories(): void

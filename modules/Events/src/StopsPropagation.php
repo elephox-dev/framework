@@ -5,7 +5,7 @@ namespace Elephox\Events;
 
 trait StopsPropagation
 {
-	protected bool $stopped = false;
+	private bool $stopped = false;
 
 	public function stopPropagation(): void
 	{

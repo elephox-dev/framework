@@ -66,15 +66,16 @@ class EventBus implements Contract\EventBus
 
 	public function publish(Contract\Event $event): void
 	{
-		$key = $event->getName();
-		if (!$this->eventSubscriptionsMapping->has($key)) {
+		$eventName = $event->getName();
+		if (!$this->eventSubscriptionsMapping->has($eventName)) {
 			return;
 		}
 
-		$subscriptions = $this->eventSubscriptionsMapping->get($key);
-
-		/** @var \Elephox\Collection\Contract\GenericOrderedEnumerable<Contract\Subscription> $subscriptions */
-		$subscriptions = $subscriptions->orderByDescending(fn(Contract\Subscription $s) => $s->getPriority());
+		$subscriptions = $this->eventSubscriptionsMapping
+			->get($eventName)
+			->orderByDescending(
+				static fn(Contract\Subscription $s): int => $s->getPriority()
+			);
 
 		foreach ($subscriptions as $subscription) {
 			$callback = $subscription->getCallback();

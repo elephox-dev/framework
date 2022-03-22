@@ -53,13 +53,6 @@ JSON);
 		self::assertEquals('qux', $value);
 	}
 
-	public function testLoadNonOptionalFileFails(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-
-		new JsonFileConfigurationSource("/does/not/exist", false);
-	}
-
 	/**
 	 * @throws \JsonException
 	 */

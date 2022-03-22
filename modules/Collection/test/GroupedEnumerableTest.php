@@ -7,6 +7,11 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Collection\GroupedEnumerable
  * @covers \Elephox\Collection\Enumerable
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\Grouping
+ * @covers \Elephox\Collection\IsKeyedEnumerable
+ * @covers \Elephox\Collection\Iterator\GroupingIterator
+ * @covers \Elephox\Collection\KeyedEnumerable
  */
 class GroupedEnumerableTest extends TestCase
 {
