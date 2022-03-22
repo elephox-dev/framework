@@ -57,6 +57,9 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] cache keys
 - [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
+- [ ] [modules/Web/src/RouteHandler.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/RouteHandler.php)
+  - [ ] Implement getMatchScore() method.
+  - [ ] Implement handle() method.
 
 ### 🤔 Maybe
 
