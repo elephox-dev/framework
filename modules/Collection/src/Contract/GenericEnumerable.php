@@ -112,10 +112,12 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function first(?callable $predicate = null): mixed;
 
 	/**
-	 * @param TSource $defaultValue
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
 	 * @param null|callable(TSource): bool $predicate
 	 *
-	 * @return TSource
+	 * @return TDefault|TSource
 	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 

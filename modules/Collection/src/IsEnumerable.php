@@ -306,7 +306,7 @@ trait IsEnumerable
 	 * @param callable(TSource): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<Grouping<TGroupKey, TSource>>
+	 * @return GenericEnumerable<Grouping<TGroupKey, mixed, TSource>>
 	 */
 	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
 	{

@@ -120,10 +120,12 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function first(?callable $predicate = null): mixed;
 
 	/**
-	 * @param TSource $defaultValue
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
 	 *
-	 * @return TSource
+	 * @return TDefault|TSource
 	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed;
 
