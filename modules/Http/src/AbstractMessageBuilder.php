@@ -56,8 +56,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	public function jsonBody(array $data): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
-		$jsonStream = new StringStream($json);
-		return $this->body($jsonStream);
+		return $this->body(new StringStream($json));
 	}
 
 	public function resourceBody(mixed $resource): static
@@ -67,6 +66,11 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		}
 
 		return $this->body(new ResourceStream($resource));
+	}
+
+	public function htmlBody(string $content): static
+	{
+		return $this->body(new StringStream($content));
 	}
 
 	public function header(string $name, array $value): static

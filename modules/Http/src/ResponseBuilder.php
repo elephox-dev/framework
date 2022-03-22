@@ -54,9 +54,13 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->mimeType;
 	}
 
-	public function exception(?Throwable $exception): static
+	public function exception(?Throwable $exception, ?ResponseCode $responseCode = ResponseCode::InternalServerError): static
 	{
 		$this->exception = $exception;
+
+		if ($responseCode) {
+			$this->responseCode($responseCode);
+		}
 
 		return $this;
 	}
@@ -69,11 +73,28 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	/**
 	 * @throws JsonException
 	 */
-	public function jsonBody(array $data): static
+	public function jsonBody(array $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
 		$jsonStream = new StringStream($json);
-		return $this->body($jsonStream)->contentType(MimeType::ApplicationJson);
+		$this->body($jsonStream);
+
+		if ($mimeType) {
+			$this->contentType($mimeType);
+		}
+
+		return $this;
+	}
+
+	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static
+	{
+		$this->body(new StringStream($content));
+
+		if ($mimeType) {
+			$this->contentType($mimeType);
+		}
+
+		return $this;
 	}
 
 	public function get(): Contract\Response

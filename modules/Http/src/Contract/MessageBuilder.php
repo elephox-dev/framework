@@ -26,6 +26,8 @@ interface MessageBuilder
 
 	public function resourceBody(mixed $resource): static;
 
+	public function htmlBody(string $content): static;
+
 	/**
 	 * @param string $name
 	 * @param list<string> $value
