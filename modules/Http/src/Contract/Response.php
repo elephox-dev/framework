@@ -6,6 +6,7 @@ namespace Elephox\Http\Contract;
 use Elephox\Http\ResponseCode;
 use JetBrains\PhpStorm\Pure;
 use Elephox\Mimey\MimeTypeInterface;
+use Throwable;
 
 interface Response extends Message
 {
@@ -20,4 +21,7 @@ interface Response extends Message
 
 	#[Pure]
 	public function getMimeType(): ?MimeTypeInterface;
+
+	#[Pure]
+	public function getException(): ?Throwable;
 }

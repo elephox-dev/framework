@@ -11,6 +11,7 @@ use JsonException;
 use LogicException;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
+use Throwable;
 
 /**
  * @psalm-consistent-constructor
@@ -23,7 +24,8 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		?Contract\HeaderMap $headers = null,
 		?Stream $body = null,
 		protected ?ResponseCode $responseCode = null,
-		protected ?MimeTypeInterface $mimeType = null
+		protected ?MimeTypeInterface $mimeType = null,
+		protected ?Throwable $exception = null,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
 	}
@@ -52,6 +54,18 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->mimeType;
 	}
 
+	public function exception(?Throwable $exception): static
+	{
+		$this->exception = $exception;
+
+		return $this;
+	}
+
+	public function getException(): ?Throwable
+	{
+		return $this->exception;
+	}
+
 	/**
 	 * @throws JsonException
 	 */
@@ -69,7 +83,8 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 			$this->headers ?? new HeaderMap(),
 			$this->body ?? new EmptyStream(),
 			$this->responseCode ?? throw new LogicException('Response code is not set.'),
-			$this->mimeType
+			$this->mimeType,
+			$this->exception,
 		);
 	}
 }

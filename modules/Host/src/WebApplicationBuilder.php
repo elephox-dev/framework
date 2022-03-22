@@ -6,8 +6,8 @@ namespace Elephox\Host;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use Elephox\Host\Contract\WebServiceCollection;
 use Elephox\Host\Contract\WebHostEnvironment;
+use Elephox\Host\Contract\WebServiceCollection;
 
 class WebApplicationBuilder
 {

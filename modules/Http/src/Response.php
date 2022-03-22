@@ -8,6 +8,7 @@ use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Elephox\Mimey\MimeTypeInterface;
+use Throwable;
 
 #[Immutable]
 class Response extends AbstractMessage implements Contract\Response
@@ -24,7 +25,8 @@ class Response extends AbstractMessage implements Contract\Response
 		HeaderMap $headers,
 		Stream $body,
 		public readonly ResponseCode $responseCode,
-		public readonly ?MimeTypeInterface $mimeType
+		public readonly ?MimeTypeInterface $mimeType,
+		public readonly ?Throwable $exception,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
 	}
@@ -51,5 +53,11 @@ class Response extends AbstractMessage implements Contract\Response
 	public function getMimeType(): ?MimeTypeInterface
 	{
 		return $this->mimeType;
+	}
+
+	#[Pure]
+	public function getException(): ?Throwable
+	{
+		return $this->exception;
 	}
 }
