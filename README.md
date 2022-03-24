@@ -57,9 +57,8 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] cache keys
 - [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
-- [ ] [modules/Web/src/RouteHandler.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/RouteHandler.php)
-  - [ ] Implement getMatchScore() method.
-  - [ ] Implement handle() method.
+- [ ] [modules/Web/src/Routing/RequestRouter.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/RequestRouter.php)
+  - [ ] make this tidier
 
 ### 🤔 Maybe
 
@@ -72,6 +71,12 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 - [ ] [modules/DI/src/AutoResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/AutoResolver.php)
   - [ ] could possibly skip type checking here
+
+### ⚠️ Fixes
+
+- [ ] [modules/Web/src/Routing/RouteHandler.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/RouteHandler.php)
+  - [ ] replace with real implementation once $this->matches() is implemented
+  - [ ] this is a temporary solution (need to check request method, specificity of regex, etc.)
 
 
 ### 🚧 Related issues
