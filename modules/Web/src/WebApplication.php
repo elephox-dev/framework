@@ -8,10 +8,14 @@ use Elephox\DI\Contract\Resolver;
 use Elephox\Host\ConfigurationManager;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
+use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Contract\ServerRequest;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
+use Elephox\Http\Response;
+use Elephox\Http\ResponseCode;
 use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
+use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebHostEnvironment;
 use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
 use Elephox\Web\Endpoint\FallbackEndpoint;
@@ -32,7 +36,12 @@ class WebApplication
 		$configuration = new ConfigurationManager();
 		$environment = new GlobalWebHostEnvironment();
 		$services = new WebServiceCollection();
-		$pipeline = new RequestPipelineBuilder(new FallbackEndpoint());
+		$pipeline = new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
+			public function handle(RequestContract $request): ResponseBuilder
+			{
+				return Response::build()->responseCode(ResponseCode::NotFound);
+			}
+		});
 
 		$pipeline->push(new ProcessingTimeHeader());
 

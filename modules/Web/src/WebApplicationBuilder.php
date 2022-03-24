@@ -4,21 +4,19 @@ declare(strict_types=1);
 namespace Elephox\Web;
 
 use Doctrine\ORM\Configuration as DoctrineConfiguration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
 use Elephox\DI\Contract\Resolver;
 use Elephox\Web\Contract\WebHostEnvironment;
 use Elephox\Web\Contract\WebServiceCollection;
-use Elephox\Web\Endpoint\RequestRouter;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
-
+use Elephox\Web\Routing\RequestRouter;
 use Whoops\Run as WhoopsRun;
 use Whoops\RunInterface as WhoopsRunInterface;
-
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 
 class WebApplicationBuilder
 {

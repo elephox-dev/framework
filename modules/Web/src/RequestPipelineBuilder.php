@@ -6,8 +6,6 @@ namespace Elephox\Web;
 use Elephox\Collection\ArrayList;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
-use Elephox\Web\Endpoint\RequestRouter;
-use Elephox\Web\Middleware\WhoopsExceptionHandler;
 
 class RequestPipelineBuilder
 {

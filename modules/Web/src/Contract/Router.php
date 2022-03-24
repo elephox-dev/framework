@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace Elephox\Web\Contract;
 
 use Elephox\Http\Contract\Request;
+use Elephox\Web\Routing\Contract\RouteHandler;
 use ReflectionException;
 
 interface Router
 {
-	public function getHandler(Request $request): RouteHandler;
+	public function getRouteHandler(Request $request): RouteHandler;
 
 	/**
 	 * @param class-string $className
