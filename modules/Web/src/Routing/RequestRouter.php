@@ -123,10 +123,16 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		$middlewareAttributes = ArrayList::from($classReflection->getAttributes(WebMiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF))->select(fn(ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance());
 
 		if ($classReflection->hasMethod('__invoke')) {
-			$classInstance = $this->services->requireService(Resolver::class)->instantiate($className);
+			if ($this->services->hasService($className)) {
+				$classInstance = $this->services->requireService($className);
+			} else {
+				$classInstance = $this->services->resolver()->instantiate($className);
+				$this->services->addSingleton($className, implementation: $classInstance);
+			}
+
 			foreach ($controllerAttributes as $controllerAttribute) {
 				// TODO: make this tidier
-				$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */$this->services->requireService(Resolver::class)->callback(Closure::fromCallable($classInstance), ['request' => $request]);
+				$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback(Closure::fromCallable($classInstance), ['request' => $request]);
 				$routeHandler = new RouteHandler($controllerAttribute, $className . "__invoke", $middlewareAttributes, $handler);
 				$this->add($routeHandler);
 			}
@@ -137,7 +143,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 //				throw new InvalidClassCallableHandlerException($className);
 //			}
 //
-//			$classInstance = $this->services->requireService(Resolver::class)->instantiate($className);
+//			$classInstance = $this->services->resolver()->instantiate($className);
 //
 //			/** @noinspection PhpClosureCanBeConvertedToFirstClassCallableInspection */
 //			$closure = Closure::fromCallable($classInstance);
@@ -152,7 +158,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 //				continue;
 //			}
 //
-//			$classInstance ??= $this->services->requireService(Resolver::class)->instantiate($className);
+//			$classInstance ??= $this->services->resolver()->instantiate($className);
 //
 //			/** @var Closure $closure */
 //			$closure = $methodReflection->getClosure($classInstance);

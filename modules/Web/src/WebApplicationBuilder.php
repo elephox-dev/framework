@@ -100,7 +100,7 @@ class WebApplicationBuilder
 					);
 				};
 
-				$setupConfig = $this->services->requireService(Resolver::class)->callback($setup);
+				$setupConfig = $this->services->resolver()->callback($setup);
 				$connection = $configuration['doctrine:connection'];
 				if ($connection === null) {
 					throw new ConfigurationException('No doctrine connection specified at "doctrine:connection"');

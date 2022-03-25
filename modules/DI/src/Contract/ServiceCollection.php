@@ -15,6 +15,8 @@ use InvalidArgumentException;
  */
 interface ServiceCollection
 {
+	public function resolver(): Resolver;
+
 	/**
 	 * @template TService of service-object
 	 * @template TImplementation of service-object

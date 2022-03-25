@@ -46,6 +46,11 @@ class ServiceCollection implements Contract\ServiceCollection
 		$this->addSingleton(Resolver::class, implementation: $this->resolver);
 	}
 
+	public function resolver(): Resolver
+	{
+		return $this->requireService(Resolver::class);
+	}
+
 	/**
 	 * @template TService of service-object
 	 * @template TImplementation of service-object
