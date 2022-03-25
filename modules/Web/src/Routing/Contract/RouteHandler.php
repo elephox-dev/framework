@@ -19,7 +19,7 @@ interface RouteHandler extends Stringable
 	public function handle(Request $request): ResponseBuilder;
 
 	/**
-	 * @return GenericList<WebMiddleware>
+	 * @return iterable<int, WebMiddleware>
 	 */
-	public function getMiddlewares(): GenericList;
+	public function getMiddlewares(): iterable;
 }

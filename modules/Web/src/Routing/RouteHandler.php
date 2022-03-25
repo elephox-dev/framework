@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Closure;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Web\Contract\WebMiddleware;
@@ -15,13 +14,13 @@ class RouteHandler implements Contract\RouteHandler
 	/**
 	 * @param RouteAttribute $attribute
 	 * @param non-empty-string $attributeLocation
-	 * @param GenericList<WebMiddleware> $middlewares
+	 * @param iterable<int, WebMiddleware> $middlewares
 	 * @param Closure(Request): ResponseBuilder $handler
 	 */
 	public function __construct(
 		private readonly RouteAttribute $attribute,
 		private readonly string $attributeLocation,
-		private readonly GenericList $middlewares,
+		private readonly iterable $middlewares,
 		private readonly Closure $handler,
 	)
 	{
@@ -49,7 +48,7 @@ class RouteHandler implements Contract\RouteHandler
 		return ($this->handler)($request);
 	}
 
-	public function getMiddlewares(): GenericList
+	public function getMiddlewares(): iterable
 	{
 		return $this->middlewares;
 	}

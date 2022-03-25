@@ -6,6 +6,7 @@ namespace Elephox\Web\Routing;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\ObjectSet;
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
@@ -33,6 +34,8 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
+use ReflectionType;
 use RuntimeException;
 
 class RequestRouter implements RequestPipelineEndpoint, Router
@@ -116,23 +119,20 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	public function loadFromClass(string $className): static
 	{
 		$classReflection = new ReflectionClass($className);
-		/** @var ArrayList<Controller> $controllerAttributes */
-		$controllerAttributes = ArrayList::from($classReflection->getAttributes(Controller::class, ReflectionAttribute::IS_INSTANCEOF))->select(fn(ReflectionAttribute $attribute): Controller => /** @var Controller */ $attribute->newInstance());
-
-		/** @var ArrayList<WebMiddleware> $middlewareAttributes */
-		$middlewareAttributes = ArrayList::from($classReflection->getAttributes(WebMiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF))->select(fn(ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance());
+		$middlewareAttributes = $this->getMiddlewares($classReflection)->toList();
+		$classInstance = $this->services->get($className) ?? $this->services->resolver()->instantiate($className);
 
 		if ($classReflection->hasMethod('__invoke')) {
-			if ($this->services->hasService($className)) {
-				$classInstance = $this->services->requireService($className);
-			} else {
-				$classInstance = $this->services->resolver()->instantiate($className);
-				$this->services->addSingleton($className, implementation: $classInstance);
+			$methodReflection = $classReflection->getMethod('__invoke');
+			$returnType = $methodReflection->getReturnType();
+			if (!$returnType instanceof ReflectionNamedType || $returnType->getName() !== ResponseBuilder::class) {
+				throw new InvalidInvokableController($className);
 			}
 
-			foreach ($controllerAttributes as $controllerAttribute) {
+			foreach ($this->getControllers($classReflection) as $controllerAttribute) {
 				// TODO: make this tidier
-				$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback(Closure::fromCallable($classInstance), ['request' => $request]);
+				$callback = Closure::fromCallable($classInstance);
+				$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
 				$routeHandler = new RouteHandler($controllerAttribute, $className . "__invoke", $middlewareAttributes, $handler);
 				$this->add($routeHandler);
 			}
@@ -274,5 +274,27 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		}
 
 		$nsParts->unshift($nsPartsUsed->pop());
+	}
+
+	/**
+	 * @param ReflectionClass $class
+	 * @return GenericList<Controller>
+	 */
+	private function getControllers(ReflectionClass $class): GenericList
+	{
+		/** @var GenericList<Controller> */
+		return ArrayList::from($class->getAttributes(Controller::class, ReflectionAttribute::IS_INSTANCEOF))
+			->select(fn(ReflectionAttribute $attribute): Controller => /** @var Controller */ $attribute->newInstance());
+	}
+
+	/**
+	 * @param ReflectionClass $class
+	 * @return GenericList<WebMiddlewareAttribute>
+	 */
+	private function getMiddlewares(ReflectionClass $class): GenericList
+	{
+		/** @var GenericList<WebMiddlewareAttribute> */
+		return ArrayList::from($class->getAttributes(WebMiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
+			->select(fn(ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance());
 	}
 }
