@@ -7,18 +7,18 @@ use Closure;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Web\Contract\WebMiddleware;
-use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
+use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 
 class RouteHandler implements Contract\RouteHandler
 {
 	/**
-	 * @param RouteAttribute $attribute
+	 * @param ControllerAttribute $attribute
 	 * @param non-empty-string $attributeLocation
 	 * @param iterable<int, WebMiddleware> $middlewares
 	 * @param Closure(Request): ResponseBuilder $handler
 	 */
 	public function __construct(
-		private readonly RouteAttribute $attribute,
+		private readonly ControllerAttribute $attribute,
 		private readonly string $attributeLocation,
 		private readonly iterable $middlewares,
 		private readonly Closure $handler,
@@ -28,7 +28,9 @@ class RouteHandler implements Contract\RouteHandler
 
 	public function __toString(): string
 	{
-		return array_slice(explode('\\', $this->attribute::class), -1, 1)[0] . '@' . $this->attributeLocation;
+		$attributeName = array_slice(explode('\\', $this->attribute::class), -1, 1)[0];
+
+		return "[$attributeName] $this->attributeLocation";
 	}
 
 	public function getMatchScore(Request $request): float

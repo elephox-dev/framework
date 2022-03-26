@@ -7,8 +7,10 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
+use Elephox\Http\Response;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
+use Throwable;
 
 class RequestPipeline
 {
@@ -34,11 +36,23 @@ class RequestPipeline
 	 */
 	public function process(Request $request): ResponseBuilderContract
 	{
-		$previous = fn (Request $r): ResponseBuilderContract => $this->endpoint->handle($r);
+		$previous = function (Request $r): ResponseBuilderContract {
+			try {
+				return $this->endpoint->handle($r);
+			} catch (Throwable $e) {
+				return Response::build()->exception($e);
+			}
+		};
 
 		/** @var WebMiddleware $middleware */
 		foreach ($this->getMiddlewares()->reverse() as $middleware) {
-			$previous = static fn (Request $r): ResponseBuilderContract => $middleware->handle($r, $previous);
+			$previous = static function (Request $r) use ($middleware, $previous): ResponseBuilderContract {
+				try {
+					return $middleware->handle($r, $previous);
+				} catch (Throwable $e) {
+					return Response::build()->exception($e);
+				}
+			};
 		}
 
 		return $previous($request);

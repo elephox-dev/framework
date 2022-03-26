@@ -7,12 +7,16 @@ use Attribute;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\RequestMethod;
+use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class Controller implements RouteAttribute
+class Controller implements ControllerAttribute
 {
+	public const DEFAULT_PATH = '/';
+	public const DEFAULT_WEIGHT = 0;
+
 	/** @var ArrayList<RequestMethod> $methods */
 	private ArrayList $methods;
 
@@ -22,8 +26,8 @@ class Controller implements RouteAttribute
 	 * @param non-empty-string|RequestMethod|iterable<non-empty-string|RequestMethod> $methods
 	 */
 	public function __construct(
-		private readonly string $path,
-		private readonly int $weight = 0,
+		private readonly string $path = self::DEFAULT_PATH,
+		private readonly int $weight = self::DEFAULT_WEIGHT,
 		string|RequestMethod|iterable $methods = [],
 	)
 	{
@@ -55,7 +59,7 @@ class Controller implements RouteAttribute
 		return $this->path;
 	}
 
-	public function getMethods(): GenericList
+	public function getRequestMethods(): GenericList
 	{
 		return $this->methods;
 	}

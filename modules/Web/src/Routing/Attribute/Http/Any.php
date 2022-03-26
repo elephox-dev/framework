@@ -5,13 +5,14 @@ namespace Elephox\Web\Routing\Attribute\Http;
 
 use Attribute;
 use Elephox\Core\Handler\Contract\UrlTemplate;
+use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Attribute\Controller;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class Any extends Controller
+class Any extends Controller implements RouteAttribute
 {
-	public function __construct(string $path, int $weight = 0)
+	public function __construct(string $url = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)
 	{
-		parent::__construct($path, $weight);
+		parent::__construct($url, $weight);
 	}
 }
