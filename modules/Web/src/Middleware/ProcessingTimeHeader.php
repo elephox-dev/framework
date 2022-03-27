@@ -16,8 +16,8 @@ class ProcessingTimeHeader implements WebMiddleware
 	{
 		$responseBuilder = $next($request);
 		if ($request instanceof ServerRequestContract) {
-			$requestStart = (float)$request->getParameters()->get('REQUEST_TIME_FLOAT', ParameterSource::Server);
-			$now = microtime(true);
+			$requestStart = (float)$request->getParameters()->get('REQUEST_TIME_FLOAT', ParameterSource::Server) * 1000;
+			$now = microtime(true) * 1000;
 			$diff = round($now - $requestStart, 5);
 			$responseBuilder->header('X-Processing-Time', [(string)$diff]);
 		}
