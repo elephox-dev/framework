@@ -108,8 +108,9 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	public function getRouteHandler(Request $request): RouteHandlerContract
 	{
 		$matchingHandlers = $this->handlers
+			->where(fn(RouteHandlerContract $handler): bool => $handler->matches($request))
 			->groupBy(fn(RouteHandlerContract $handler): float => $handler->getMatchScore($request))
-			->orderByDescending(fn(Grouping $grouping): mixed => $grouping->groupKey())
+			->orderBy(fn(Grouping $grouping): mixed => $grouping->groupKey())
 			->firstOrDefault(null)
 			?->toList()
 		;
@@ -137,7 +138,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		try {
 			return $this->getRouteHandler($request)->handle($request);
 		} catch (RouteNotFoundException|AmbiguousRouteHandlerException $e) {
-			return Response::build()->exception($e);
+			return Response::build()->exception($e, ResponseCode::NotFound);
 		}
 	}
 
@@ -244,11 +245,11 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 					throw new InvalidRequestController($className);
 				}
 
-				foreach (self::getControllers($classReflection) as $controllerAttribute) {
+				foreach ($classControllers as $controllerAttribute) {
 					// TODO: make this tidier
 					$callback = Closure::fromCallable($classInstance);
 					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
-					$routeHandler = new RouteHandler($controllerAttribute, $className . "__invoke", $classMiddleware, $handler);
+					$routeHandler = new RouteHandler($controllerAttribute, null, $className . "__invoke", $classMiddleware, $handler);
 					$this->add($routeHandler);
 				}
 			}
@@ -267,8 +268,10 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 				foreach (self::getRoutes($methodReflection) as $routeAttribute) {
 					$callback = $methodReflection->getClosure($classInstance) ?? throw new InvalidRequestHandler($className, $methodReflection->getName());
 					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
-					$routeHandler = new RouteHandler($routeAttribute, $className . "::" . $methodReflection->getName(), $methodMiddleware, $handler);
-					$this->add($routeHandler);
+					foreach ($classControllers as $controllerAttribute) {
+						$routeHandler = new RouteHandler($controllerAttribute, $routeAttribute, $className . "::" . $methodReflection->getName(), $methodMiddleware, $handler);
+						$this->add($routeHandler);
+					}
 				}
 			}
 
