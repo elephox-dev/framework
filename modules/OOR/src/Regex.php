@@ -70,4 +70,9 @@ class Regex
 
 		return 1 - ($score / $maxScore);
 	}
+
+	public static function escape(string $pattern): string
+	{
+		return preg_quote($pattern, '/');
+	}
 }
