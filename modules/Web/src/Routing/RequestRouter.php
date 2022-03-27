@@ -7,37 +7,31 @@ use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\ObjectSet;
 use Elephox\Core\Handler\Contract\ComposerAutoloaderInit;
 use Elephox\Core\Handler\Contract\ComposerClassLoader;
-use Elephox\Core\Handler\InvalidClassCallableHandlerException;
-use Elephox\DI\Contract\Resolver;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
-use Elephox\OOR\Arr;
+use Elephox\Http\ResponseCode;
 use Elephox\OOR\Regex;
 use Elephox\Web\AmbiguousRouteHandlerException;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\Router;
-use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Contract\WebMiddlewareAttribute;
 use Elephox\Web\Contract\WebServiceCollection;
 use Elephox\Web\RouteNotFoundException;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute as ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
-use Elephox\Web\Routing\Attribute\Controller;
 use Elephox\Web\Routing\Contract\RouteHandler as RouteHandlerContract;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
-use ReflectionType;
 use RuntimeException;
 
 class RequestRouter implements RequestPipelineEndpoint, Router
@@ -69,33 +63,33 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	/**
 	 * @param ReflectionClass $class
-	 * @return GenericKeyedEnumerable<ControllerAttribute>
+	 * @return GenericKeyedEnumerable<int, ControllerAttribute>
 	 */
 	private static function getControllers(ReflectionClass $class): GenericKeyedEnumerable
 	{
-		/** @var GenericKeyedEnumerable<ControllerAttribute> */
+		/** @var GenericKeyedEnumerable<int, ControllerAttribute> */
 		return ArrayList::from($class->getAttributes(ControllerAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
 			->select(fn(ReflectionAttribute $attribute): ControllerAttribute => /** @var ControllerAttribute */ $attribute->newInstance());
 	}
 
 	/**
 	 * @param ReflectionMethod $method
-	 * @return GenericKeyedEnumerable<RouteAttribute>
+	 * @return GenericKeyedEnumerable<int, RouteAttribute>
 	 */
 	private static function getRoutes(ReflectionMethod $method): GenericKeyedEnumerable
 	{
-		/** @var GenericKeyedEnumerable<RouteAttribute> */
+		/** @var GenericKeyedEnumerable<int, RouteAttribute> */
 		return ArrayList::from($method->getAttributes(RouteAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
 			->select(fn(ReflectionAttribute $attribute): RouteAttribute => /** @var RouteAttribute */ $attribute->newInstance());
 	}
 
 	/**
 	 * @param ReflectionClass|ReflectionMethod $reflection
-	 * @return GenericKeyedEnumerable<WebMiddlewareAttribute>
+	 * @return GenericKeyedEnumerable<int, WebMiddlewareAttribute>
 	 */
 	private static function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): GenericKeyedEnumerable
 	{
-		/** @var GenericKeyedEnumerable<WebMiddlewareAttribute> */
+		/** @var GenericKeyedEnumerable<int, WebMiddlewareAttribute> */
 		return ArrayList::from($reflection->getAttributes(WebMiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
 			->select(fn(ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance());
 	}
@@ -241,6 +235,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 			$classReflection = new ReflectionClass($className);
 			$classMiddleware = self::getMiddlewares($classReflection)->toList();
 			$classInstance = $this->services->get($className) ?? $this->services->resolver()->instantiate($className);
+			$classControllers = self::getControllers($classReflection)->toList();
 
 			if ($classReflection->hasMethod('__invoke')) {
 				$methodReflection = $classReflection->getMethod('__invoke');
