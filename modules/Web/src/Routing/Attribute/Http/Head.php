@@ -12,8 +12,8 @@ use Elephox\Web\Routing\Attribute\Controller;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Head extends Controller implements RouteAttribute
 {
-	public function __construct(string $url = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)
+	public function __construct(?string $path = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)
 	{
-		parent::__construct($url, $weight, RequestMethod::HEAD);
+		parent::__construct($path, $weight, RequestMethod::HEAD);
 	}
 }

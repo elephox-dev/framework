@@ -249,7 +249,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 					// TODO: make this tidier
 					$callback = Closure::fromCallable($classInstance);
 					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
-					$routeHandler = new RouteHandler($controllerAttribute, null, $className . "__invoke", $classMiddleware, $handler);
+					$routeHandler = new RouteHandler($controllerAttribute, null, $className, "__invoke", $classMiddleware, $handler);
 					$this->add($routeHandler);
 				}
 			}
@@ -269,7 +269,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 					$callback = $methodReflection->getClosure($classInstance) ?? throw new InvalidRequestHandler($className, $methodReflection->getName());
 					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
 					foreach ($classControllers as $controllerAttribute) {
-						$routeHandler = new RouteHandler($controllerAttribute, $routeAttribute, $className . "::" . $methodReflection->getName(), $methodMiddleware, $handler);
+						$routeHandler = new RouteHandler($controllerAttribute, $routeAttribute, $className, $methodReflection->getName(), $methodMiddleware, $handler);
 						$this->add($routeHandler);
 					}
 				}

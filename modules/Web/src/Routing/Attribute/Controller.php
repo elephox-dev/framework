@@ -14,19 +14,19 @@ use InvalidArgumentException;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Controller implements ControllerAttribute
 {
-	public const DEFAULT_PATH = '/';
+	public const DEFAULT_PATH = null;
 	public const DEFAULT_WEIGHT = 0;
 
 	/** @var ArrayList<RequestMethod> $methods */
 	private ArrayList $methods;
 
 	/**
-	 * @param string $path
+	 * @param null|string $path
 	 * @param int $weight
 	 * @param non-empty-string|RequestMethod|iterable<non-empty-string|RequestMethod> $methods
 	 */
 	public function __construct(
-		private readonly string $path = self::DEFAULT_PATH,
+		private readonly ?string $path = self::DEFAULT_PATH,
 		private readonly int $weight = self::DEFAULT_WEIGHT,
 		string|RequestMethod|iterable $methods = [],
 	)
@@ -54,7 +54,7 @@ class Controller implements ControllerAttribute
 		return $this->weight;
 	}
 
-	public function getPath(): string
+	public function getPath(): ?string
 	{
 		return $this->path;
 	}

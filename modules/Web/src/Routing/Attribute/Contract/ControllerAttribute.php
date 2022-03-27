@@ -8,7 +8,7 @@ use Elephox\Http\RequestMethod;
 
 interface ControllerAttribute
 {
-	public function getPath(): string;
+	public function getPath(): ?string;
 
 	public function getWeight(): int;
 
