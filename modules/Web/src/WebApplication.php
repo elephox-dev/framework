@@ -85,27 +85,19 @@ class WebApplication
 			->get();
 	}
 
-	/**
-	 * @return array{environment: WebHostEnvironment, services: WebServiceCollectionContract, configuration: ConfigurationRoot}
-	 */
 	public function __serialize(): array
 	{
 		return [
-			'environment' => $this->environment,
-			'services' => $this->services,
-			'configuration' => $this->configuration,
+			'environment' => serialize($this->environment),
+			'services' => serialize($this->services),
+			'configuration' => serialize($this->configuration),
 		];
 	}
 
-	/**
-	 * @param array{environment: WebHostEnvironment, services: WebServiceCollectionContract, configuration: ConfigurationRoot} $data
-	 *
-	 * @noinspection PhpSecondWriteToReadonlyPropertyInspection
-	 */
 	public function __unserialize(array $data): void
 	{
-		$this->environment = $data['environment'];
-		$this->services = $data['services'];
-		$this->configuration = $data['configuration'];
+		$this->environment = unserialize($data['environment']);
+		$this->services = unserialize($data['services']);
+		$this->configuration = unserialize($data['configuration']);
 	}
 }

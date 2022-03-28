@@ -102,14 +102,14 @@ class ArraySet implements GenericSet
 	public function __serialize(): array
 	{
 		return [
-			'items' => $this->items,
-			'comparer' => $this->comparer instanceof Native ? $this->comparer : new SerializableClosure($this->comparer),
+			'items' => serialize($this->items),
+			'comparer' => serialize(new SerializableClosure($this->comparer)),
 		];
 	}
 
 	public function __unserialize(array $data): void
 	{
-		$this->items = $data['items'];
-		$this->comparer = $data['comparer']->getClosure();
+		$this->items = unserialize($data['items']);
+		$this->comparer = unserialize($data['comparer'])->getClosure();
 	}
 }

@@ -60,7 +60,7 @@ class ConfigurationManager implements ConfigurationBuilder, ConfigurationRoot
 
 	public function __serialize(): array
 	{
-		return $this->build()->__serialize();
+		throw new RuntimeException('ConfigurationManager cannot be serialized');
 	}
 
 	public function __unserialize(array $data): void

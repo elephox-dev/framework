@@ -42,6 +42,11 @@ class ServiceCollection implements Contract\ServiceCollection
 
 		$this->resolver = $resolver ?? new AutoResolver($this);
 
+		$this->registerSelf();
+	}
+
+	private function registerSelf(): void
+	{
 		$this->addSingleton(Contract\ServiceCollection::class, implementation: $this);
 		$this->addSingleton(Resolver::class, implementation: $this->resolver);
 	}
@@ -385,17 +390,23 @@ class ServiceCollection implements Contract\ServiceCollection
 
 	public function __serialize(): array
 	{
+		$servicesWithoutSelf = $this->services
+			->where(fn(ServiceDescriptor $d) => $d->implementationType !== static::class && $d->implementationType !== $this->resolver::class)
+			->toList();
+
 		return [
-			'services' => $this->services,
-			'aliases' => $this->aliases,
-			'resolver' => $this->resolver,
+			'services' => serialize($servicesWithoutSelf),
+			'aliases' => serialize($this->aliases),
+			'resolver' => serialize($this->resolver),
 		];
 	}
 
 	public function __unserialize(array $data): void
 	{
-		$this->services = $data['services'];
-		$this->aliases = $data['aliases'];
-		$this->resolver = $data['resolver'];
+		$this->services = unserialize($data['services']);
+		$this->aliases = unserialize($data['aliases']);
+		$this->resolver = unserialize($data['resolver']);
+
+		$this->registerSelf();
 	}
 }
