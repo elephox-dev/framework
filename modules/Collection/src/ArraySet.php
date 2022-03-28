@@ -7,6 +7,8 @@ use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
 use Elephox\Support\DeepCloneable;
+use Laravel\SerializableClosure\SerializableClosure;
+use Laravel\SerializableClosure\Serializers\Native;
 
 /**
  * @template T
@@ -26,7 +28,7 @@ class ArraySet implements GenericSet
 	/**
 	 * @var Closure(T, T): bool
 	 */
-	private Closure $comparer;
+	private $comparer;
 
 	/**
 	 * @param array<mixed, T> $items
@@ -95,5 +97,19 @@ class ArraySet implements GenericSet
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->enumerableContains($value, $comparer ?? $this->comparer);
+	}
+
+	public function __serialize(): array
+	{
+		return [
+			'items' => $this->items,
+			'comparer' => $this->comparer instanceof Native ? $this->comparer : new SerializableClosure($this->comparer),
+		];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		$this->items = $data['items'];
+		$this->comparer = $data['comparer']->getClosure();
 	}
 }

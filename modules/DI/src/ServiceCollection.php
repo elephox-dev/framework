@@ -23,7 +23,7 @@ class ServiceCollection implements Contract\ServiceCollection
 	/** @var ArrayMap<non-empty-string, class-string> $aliases */
 	private readonly ArrayMap $aliases;
 
-	protected readonly Resolver $resolver;
+	protected Resolver $resolver;
 
 	/** @var array<class-string, ServiceDescriptor> */
 	private array $descriptorCache = [];
@@ -72,7 +72,7 @@ class ServiceCollection implements Contract\ServiceCollection
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
 
-		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation));
+		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime->value, $implementationFactory, $implementation));
 	}
 
 	public function addTransient(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
@@ -181,8 +181,8 @@ class ServiceCollection implements Contract\ServiceCollection
 
 		/** @var Closure(mixed): TService $factory */
 		$factory = match ($descriptor->lifetime) {
-			ServiceLifetime::Transient => $this->getTransientFactory($descriptor),
-			ServiceLifetime::Singleton => $this->getSingletonFactory($descriptor),
+			ServiceLifetime::Transient->value => $this->getTransientFactory($descriptor),
+			ServiceLifetime::Singleton->value => $this->getSingletonFactory($descriptor),
 		};
 
 		$this->factoryCache[$descriptor->serviceType] = $factory;
@@ -381,5 +381,21 @@ class ServiceCollection implements Contract\ServiceCollection
 		$this->removeService($aliasOrServiceName);
 
 		return $this;
+	}
+
+	public function __serialize(): array
+	{
+		return [
+			'services' => $this->services,
+			'aliases' => $this->aliases,
+			'resolver' => $this->resolver,
+		];
+	}
+
+	public function __unserialize(array $data): void
+	{
+		$this->services = $data['services'];
+		$this->aliases = $data['aliases'];
+		$this->resolver = $data['resolver'];
 	}
 }

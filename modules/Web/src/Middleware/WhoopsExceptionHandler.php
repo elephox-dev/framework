@@ -17,8 +17,11 @@ use Whoops\RunInterface as WhoopsRunInterface;
 
 class WhoopsExceptionHandler implements WebMiddleware
 {
+	/**
+	 * @param Closure(): WhoopsRunInterface $whoosRunInterfaceFactory
+	 */
 	public function __construct(
-		private readonly ServiceCollection $services
+		private $whoosRunInterfaceFactory,
 	)
 	{
 	}
@@ -28,7 +31,7 @@ class WhoopsExceptionHandler implements WebMiddleware
 		$response = $next($request);
 
 		if ($exception = $response->getException()) {
-			$runner = $this->services->requireService(WhoopsRunInterface::class);
+			$runner = ($this->whoosRunInterfaceFactory)();
 
 			if (empty($runner->getHandlers())) {
 				if ($contentType = $response->getContentType()) {

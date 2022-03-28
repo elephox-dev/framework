@@ -67,10 +67,10 @@ class WebApplicationBuilder
 		);
 
 		if ($configurator) {
-			$configurator($this->services->get(WhoopsRunInterface::class));
+			$configurator($this->services->requireService(WhoopsRunInterface::class));
 		}
 
-		$this->pipeline->push(new WhoopsExceptionHandler($this->services));
+		$this->pipeline->push(new WhoopsExceptionHandler(fn () => $this->services->requireService(WhoopsRunInterface::class)));
 	}
 
 	/**

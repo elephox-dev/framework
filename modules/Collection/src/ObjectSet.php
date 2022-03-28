@@ -34,7 +34,7 @@ class ObjectSet implements GenericSet
 	/**
 	 * @var Closure(T, T): bool
 	 */
-	private Closure $comparer;
+	private $comparer;
 
 	/**
 	 * @param null|Closure(T, T): bool $comparer

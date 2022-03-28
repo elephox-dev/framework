@@ -18,8 +18,8 @@ use Elephox\Http\ServerRequestBuilder;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebHostEnvironment;
 use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
-use Elephox\Web\Endpoint\FallbackEndpoint;
 use Elephox\Web\Middleware\ProcessingTimeHeader;
+use JetBrains\PhpStorm\ArrayShape;
 
 class WebApplication
 {
@@ -83,5 +83,29 @@ class WebApplication
 			->requireService(RequestPipeline::class)
 			->process($request)
 			->get();
+	}
+
+	/**
+	 * @return array{environment: WebHostEnvironment, services: WebServiceCollectionContract, configuration: ConfigurationRoot}
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'environment' => $this->environment,
+			'services' => $this->services,
+			'configuration' => $this->configuration,
+		];
+	}
+
+	/**
+	 * @param array{environment: WebHostEnvironment, services: WebServiceCollectionContract, configuration: ConfigurationRoot} $data
+	 *
+	 * @noinspection PhpSecondWriteToReadonlyPropertyInspection
+	 */
+	public function __unserialize(array $data): void
+	{
+		$this->environment = $data['environment'];
+		$this->services = $data['services'];
+		$this->configuration = $data['configuration'];
 	}
 }

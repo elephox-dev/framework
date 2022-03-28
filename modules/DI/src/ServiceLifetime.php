@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-enum ServiceLifetime
+enum ServiceLifetime: string
 {
-	case Transient;
-	case Singleton;
+	case Transient = 'transient';
+	case Singleton = 'singleton';
 }
