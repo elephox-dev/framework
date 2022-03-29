@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use JetBrains\PhpStorm\Pure;
+use LogicException;
 use ReflectionParameter;
 use Throwable;
 
-class MissingTypeHintException extends BindingBuilderException
+class MissingTypeHintException extends ServiceException
 {
 	#[Pure]
 	public function __construct(ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)

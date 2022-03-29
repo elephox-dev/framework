@@ -8,7 +8,7 @@ use Elephox\OOR\Str;
 use InvalidArgumentException;
 use RuntimeException;
 
-trait ReadsConfigurationProviders
+trait ConfiguresConfigurationProviders
 {
 	/**
 	 * @return GenericEnumerable<Contract\ConfigurationProvider>

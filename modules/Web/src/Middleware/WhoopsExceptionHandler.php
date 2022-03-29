@@ -3,7 +3,6 @@
 namespace Elephox\Web\Middleware;
 
 use Closure;
-use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Mimey\MimeType;

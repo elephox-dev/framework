@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-use RuntimeException;
 use Throwable;
 
 class ServiceAliasNotFoundException extends ServiceException

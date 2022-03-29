@@ -10,7 +10,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Http/test" isTestSource="true" packagePrefix="Elephox\Http\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Support/src" isTestSource="false" packagePrefix="Elephox\Support\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Support/test" isTestSource="true" packagePrefix="Elephox\Support\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Core/src" isTestSource="false" packagePrefix="Elephox\Core\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/src" isTestSource="false" packagePrefix="Elephox\Files\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Files/test" isTestSource="true" packagePrefix="Elephox\Files\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Logging/src" isTestSource="false" packagePrefix="Elephox\Logging\" />

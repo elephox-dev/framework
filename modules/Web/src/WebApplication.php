@@ -6,6 +6,7 @@ namespace Elephox\Web;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\Contract\Resolver;
 use Elephox\Host\ConfigurationManager;
+use Elephox\Host\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ResponseBuilder;
@@ -19,7 +20,6 @@ use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebHostEnvironment;
 use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
 use Elephox\Web\Middleware\ProcessingTimeHeader;
-use JetBrains\PhpStorm\ArrayShape;
 
 class WebApplication
 {
@@ -31,12 +31,17 @@ class WebApplication
 	{
 	}
 
-	public static function createBuilder(): WebApplicationBuilder
+	public static function createBuilder(
+		?ConfigurationManagerContract $configuration = null,
+		?WebHostEnvironment $environment = null,
+		?WebServiceCollectionContract $services = null,
+		?RequestPipelineBuilder $pipeline = null,
+	): WebApplicationBuilder
 	{
-		$configuration = new ConfigurationManager();
-		$environment = new GlobalWebHostEnvironment();
-		$services = new WebServiceCollection();
-		$pipeline = new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
+		$configuration ??= new ConfigurationManager();
+		$environment ??= new GlobalWebHostEnvironment();
+		$services ??= new WebServiceCollection();
+		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder
 			{
 				return Response::build()->responseCode(ResponseCode::NotFound);
@@ -55,17 +60,10 @@ class WebApplication
 
 	public function run(): void
 	{
-		/*
-		 * 1. get request from globals
-		 * 2. call handle()
-		 * 3. send response to client
-		 */
-
 		/** @var ServerRequestContract $request */
 		$request = $this->services
 			->requireService(Resolver::class)
 			->call(ServerRequestBuilder::class, 'fromGlobals');
-		$this->services->addSingleton(ServerRequestContract::class, implementation: $request);
 
 		$response = $this->handle($request);
 		ResponseSender::sendResponse($response);

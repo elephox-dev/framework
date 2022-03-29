@@ -13,7 +13,7 @@ use RuntimeException;
 
 class ConfigurationRoot implements Contract\ConfigurationRoot
 {
-	use ReadsConfigurationProviders;
+	use ConfiguresConfigurationProviders;
 
 	/**
 	 * @param ObjectSet<Contract\ConfigurationProvider> $providers

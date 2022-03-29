@@ -6,23 +6,24 @@ namespace Elephox\Host;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\ObjectSet;
 use Elephox\Configuration\BuildsConfigurationRoot;
-use Elephox\Configuration\Contract;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Contract\ConfigurationSource;
-use Elephox\Configuration\ReadsConfigurationProviders;
+use Elephox\Configuration\Memory\MemoryConfigurationSource;
+use Elephox\Configuration\ConfiguresConfigurationProviders;
 use RuntimeException;
 
-class ConfigurationManager implements ConfigurationBuilder, ConfigurationRoot
+class ConfigurationManager implements Contract\ConfigurationManager
 {
-	use BuildsConfigurationRoot, ReadsConfigurationProviders;
+	use BuildsConfigurationRoot, ConfiguresConfigurationProviders;
 
 	protected ObjectSet $configurationSources;
 
 	public function __construct()
 	{
 		$this->configurationSources = new ObjectSet();
+		$this->configurationSources->add(new MemoryConfigurationSource([]));
 	}
 
 	/**
@@ -38,7 +39,7 @@ class ConfigurationManager implements ConfigurationBuilder, ConfigurationRoot
 	 */
 	public function getProviders(): GenericEnumerable
 	{
-		return $this->configurationSources->select(fn(ConfigurationSource $source) => $source->build($this));
+		return $this->configurationSources->select(fn(ConfigurationSource $source): ConfigurationProvider => $source->build($this));
 	}
 
 	public function add(ConfigurationSource $source): static
@@ -48,12 +49,12 @@ class ConfigurationManager implements ConfigurationBuilder, ConfigurationRoot
 		return $this;
 	}
 
-	protected function getBuilder(): Contract\ConfigurationBuilder
+	protected function getBuilder(): ConfigurationBuilder
 	{
 		return $this;
 	}
 
-	protected function getRoot(): Contract\ConfigurationRoot
+	protected function getRoot(): ConfigurationRoot
 	{
 		return $this;
 	}

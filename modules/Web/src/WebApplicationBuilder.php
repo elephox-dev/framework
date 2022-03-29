@@ -27,10 +27,36 @@ class WebApplicationBuilder
 		public readonly RequestPipelineBuilder $pipeline,
 	)
 	{
-		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.json")->getPath()));
-		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.{$environment->getEnvironmentName()}.json")->getPath(), true));
-		$configuration->add(new JsonFileConfigurationSource($environment->getRootDirectory()->getFile("config.local.json")->getPath(), true));
+		$this->registerDefaultConfig();
+		$this->setDebugFromConfig();
+	}
 
+	public function registerDefaultConfig(): void
+	{
+		$this->configuration->add(new JsonFileConfigurationSource(
+			$this->environment
+				->getRootDirectory()
+				->getFile("config.json")
+				->getPath()
+		));
+		$this->configuration->add(new JsonFileConfigurationSource(
+				$this->environment
+					->getRootDirectory()
+					->getFile("config.{$this->environment->getEnvironmentName()}.json")
+					->getPath(),
+				true
+		));
+		$this->configuration->add(new JsonFileConfigurationSource(
+				$this->environment
+					->getRootDirectory()
+					->getFile("config.local.json")
+					->getPath(),
+				true
+		));
+	}
+
+	public function setDebugFromConfig(): void
+	{
 		if ($this->configuration->hasSection("env:debug")) {
 			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
 		}

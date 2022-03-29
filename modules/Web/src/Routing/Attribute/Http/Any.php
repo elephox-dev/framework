@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing\Attribute\Http;
 
 use Attribute;
-use Elephox\Core\Handler\Contract\UrlTemplate;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Attribute\Controller;
 

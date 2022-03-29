@@ -2,8 +2,8 @@
 
 namespace Elephox\DI;
 
-use RuntimeException;
+use LogicException;
 
-abstract class ServiceException extends RuntimeException
+abstract class ServiceException extends LogicException
 {
 }

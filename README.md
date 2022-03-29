@@ -71,7 +71,7 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### 💡 Idea
 
-- [ ] [modules/DI/src/AutoResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/AutoResolver.php)
+- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
   - [ ] could possibly skip type checking here
 
 

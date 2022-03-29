@@ -98,18 +98,4 @@ class ArraySet implements GenericSet
 	{
 		return $this->enumerableContains($value, $comparer ?? $this->comparer);
 	}
-
-	public function __serialize(): array
-	{
-		return [
-			'items' => serialize($this->items),
-			'comparer' => serialize(new SerializableClosure($this->comparer)),
-		];
-	}
-
-	public function __unserialize(array $data): void
-	{
-		$this->items = unserialize($data['items']);
-		$this->comparer = unserialize($data['comparer'])->getClosure();
-	}
 }

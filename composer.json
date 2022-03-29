@@ -21,22 +21,21 @@
     },
     "require-dev": {
         "ext-json": "*",
+        "doctrine/orm": "^2.11",
         "elephox/composer-module-sync": "^1.5",
         "ergebnis/composer-normalize": "^2.23",
+        "filp/whoops": "^2.14",
         "infection/infection": "^0.26",
         "mockery/mockery": "^1.5",
         "phpbench/phpbench": "^1.2.5",
         "phpunit/phpunit": "^9.5",
         "roave/no-leaks": "^1.3",
-        "vimeo/psalm": "dev-master",
-        "doctrine/orm": "^2.11",
-        "filp/whoops": "^2.14"
+        "vimeo/psalm": "dev-master"
     },
     "replace": {
         "elephox/cache": "self.version",
         "elephox/collection": "self.version",
         "elephox/configuration": "self.version",
-        "elephox/core": "self.version",
         "elephox/di": "self.version",
         "elephox/events": "self.version",
         "elephox/files": "self.version",
@@ -53,9 +52,9 @@
     },
     "suggest": {
         "ext-fileinfo": "To use MimeType::fromFile()",
-        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io",
+        "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())",
         "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
-        "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())"
+        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -64,7 +63,6 @@
             "Elephox\\Cache\\": "modules/Cache/src/",
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Configuration\\": "modules/Configuration/src/",
-            "Elephox\\Core\\": "modules/Core/src/",
             "Elephox\\DI\\": "modules/DI/src/",
             "Elephox\\Events\\": "modules/Events/src/",
             "Elephox\\Files\\": "modules/Files/src/",

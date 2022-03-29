@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing;
 
-use Elephox\Core\Handler\Contract\HandlerMeta;
 use JetBrains\PhpStorm\Pure;
 use LogicException;
 use Throwable;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Host;
 
 use Elephox\Configuration\Contract\ConfigurationRoot;
-use Elephox\Core\Context\CommandLineContext;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Host\Contract\HostEnvironment;
