@@ -108,17 +108,9 @@
         }
     },
     "scripts": {
-        "benchmark": [
-            "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --ref=baseline --retry-threshold=5 --iterations=10"
-        ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
             "@composer modules:check --namespaces"
-        ],
-        "ci:benchmark": [
-            "@putenv XDEBUG_MODE=off",
-            "phpbench run --report=overview --ref=baseline --retry-threshold=5 --iterations=10"
         ],
         "ci:check-dependencies": [
             "@putenv XDEBUG_MODE=off",
@@ -166,8 +158,7 @@
             "@check-dependencies",
             "@static-analysis",
             "@unit-test",
-            "@mutation-test",
-            "@benchmark"
+            "@mutation-test"
         ],
         "memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
@@ -185,10 +176,6 @@
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",
             "phpunit --configuration=phpunit.xml.dist"
-        ],
-        "update-benchmark-baseline": [
-            "@putenv XDEBUG_MODE=off",
-            "phpbench run --tag=baseline --retry-threshold=5 --iterations=10 --dump-file=baselines/benchmark.baseline.xml"
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",

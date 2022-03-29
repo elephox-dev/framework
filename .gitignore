@@ -1,7 +1,5 @@
-/vendor/
-.phpunit.cache
+vendor/
 build/
-phpunit.xml
-
-!tmp/benchmark/storage/7e6/2/8/13489305b84863cb3fb9569ae79c8476e1240d6b.xml
 tmp/
+.phpunit.cache
+phpunit.xml
