@@ -29,12 +29,12 @@ class ObjectSet implements GenericSet
 	use DeepCloneable;
 
 	/** @var SplObjectStorage<T, mixed> */
-	private SplObjectStorage $storage;
+	private readonly SplObjectStorage $storage;
 
 	/**
 	 * @var Closure(T, T): bool
 	 */
-	private $comparer;
+	private readonly Closure $comparer;
 
 	/**
 	 * @param null|Closure(T, T): bool $comparer
@@ -50,6 +50,7 @@ class ObjectSet implements GenericSet
 	#[Pure]
 	public function getIterator(): Iterator
 	{
+		/** @var FlipIterator<mixed, object> */
 		return new FlipIterator(new SplObjectStorageIterator($this->storage));
 	}
 

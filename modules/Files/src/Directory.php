@@ -49,7 +49,6 @@ class Directory implements Contract\Directory
 		return ArrayList::from($nodes)
 			->where(static fn(mixed $name) => $name !== '.' && $name !== '..')
 			->select(function (mixed $name): Contract\FilesystemNode {
-				/** @var string $name */
 				$path = Path::join($this->path, $name);
 				if (is_dir($path)) {
 					return new Directory($path);

@@ -9,6 +9,9 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
+/**
+ * @implements ArrayConvertible<non-empty-string, null|string>
+ */
 #[Immutable]
 class Url implements Stringable, ArrayConvertible
 {

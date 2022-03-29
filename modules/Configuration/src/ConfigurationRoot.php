@@ -33,27 +33,4 @@ class ConfigurationRoot implements Contract\ConfigurationRoot
 	{
 		return $this;
 	}
-
-	#[ArrayShape(['providers' => "array"])]
-	public function __serialize(): array
-	{
-		return [
-			'providers' => $this->getProviders()->toArray()
-		];
-	}
-
-	public function __unserialize(array $data): void
-	{
-		if (!array_key_exists('providers', $data)) {
-			throw new InvalidArgumentException('Missing "providers" key in data');
-		}
-
-		/** @var ObjectSet<Contract\ConfigurationProvider> */
-		$this->providers = new ObjectSet();
-
-		/** @var Contract\ConfigurationProvider $provider */
-		foreach ($data['providers'] as $provider) {
-			$this->getProviders()->add($provider);
-		}
-	}
 }

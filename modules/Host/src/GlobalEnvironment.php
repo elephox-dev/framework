@@ -12,7 +12,12 @@ class GlobalEnvironment implements Environment
 
 	public function getEnvironmentName(string $envName = self::ENV_NAME): string
 	{
-		return $this[$envName] ?? 'production';
+		$env = $this[$envName];
+		if (is_string($env)) {
+			return $env;
+		}
+
+		return 'production';
 	}
 
 	public function isDevelopment(string $envName = self::ENV_NAME): bool
@@ -33,14 +38,26 @@ class GlobalEnvironment implements Environment
 		return isset($_ENV[$offset]) || getenv($offset) !== false;
 	}
 
+	/**
+	 * @psalm-suppress MixedInferredReturnType
+	 */
 	public function offsetGet(mixed $offset): mixed
 	{
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		/** @psalm-suppress MixedReturnStatement */
-		return $_ENV[$offset] ?? getenv($offset);
+		if (isset($_ENV[$offset])) {
+			/** @psalm-suppress MixedReturnStatement */
+			return $_ENV[$offset];
+		}
+
+		$value = getenv($offset);
+		if ($value === false) {
+			return null;
+		}
+
+		return $value;
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
@@ -49,9 +66,7 @@ class GlobalEnvironment implements Environment
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		/** @psalm-suppress MixedOperand */
 		putenv($offset . '=' . $value);
-		/** @psalm-suppress MixedAssignment */
 		$_ENV[$offset] = $value;
 	}
 

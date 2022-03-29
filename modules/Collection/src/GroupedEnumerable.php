@@ -10,13 +10,13 @@ use Elephox\Collection\Iterator\GroupingIterator;
  * @template TKey
  * @template TElement
  *
- * @extends Enumerable<Grouping<TKey, TElement>>
+ * @extends Enumerable<Grouping<mixed, TKey, TElement>>
  * @implements Contract\GenericGroupedEnumerable<TKey, TElement>
  */
 class GroupedEnumerable extends Enumerable implements Contract\GenericGroupedEnumerable
 {
 	/**
-	 * @param GroupingIterator<TKey, TElement> $iterator
+	 * @param GroupingIterator<mixed, TKey, TElement> $iterator
 	 */
 	public function __construct(GroupingIterator $iterator)
 	{

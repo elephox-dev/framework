@@ -86,7 +86,7 @@ trait ServiceResolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure(mixed): T $callback
+	 * @param Closure|Closure(mixed): T $callback
 	 * @param argument-list $overrideArguments
 	 *
 	 * @return T

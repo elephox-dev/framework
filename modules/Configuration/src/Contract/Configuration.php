@@ -7,6 +7,9 @@ use ArrayAccess;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\OOR\Str;
 
+/**
+ * @extends ArrayAccess<string, string|int|float|bool|null>
+ */
 interface Configuration extends ArrayAccess
 {
 	/**

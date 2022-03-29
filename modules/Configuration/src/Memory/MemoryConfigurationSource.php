@@ -18,7 +18,8 @@ class MemoryConfigurationSource implements ConfigurationSource
 	) {
 	}
 
-	public function build(ConfigurationBuilder $builder): ConfigurationProvider
+	#[Pure]
+	public function build(): ConfigurationProvider
 	{
 		return new MemoryConfigurationProvider($this);
 	}

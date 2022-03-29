@@ -82,7 +82,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	private Iterator $iterator;
 
 	/**
-	 * @param Closure(): Iterator<TIteratorKey, TSource>|Iterator<TIteratorKey, TSource> $iterator
+	 * @param Iterator<TIteratorKey, TSource>|Closure(): Iterator<TIteratorKey, TSource> $iterator
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(

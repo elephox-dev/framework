@@ -7,6 +7,9 @@ use ArrayAccess;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
+/**
+ * @extends ArrayAccess<string, CacheItemInterface>
+ */
 interface Cache extends ArrayAccess, CacheItemPoolInterface
 {
 	public function getConfiguration(): CacheConfiguration;

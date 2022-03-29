@@ -22,6 +22,7 @@ trait ConfiguresConfigurationProviders
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{
+		/** @psalm-suppress NoValue str_starts_with returns a value, wtf psalm? */
 		return $this->getProviders()
 			->selectMany(function (mixed $provider) use ($path): GenericEnumerable {
 				/** @var Contract\ConfigurationProvider $provider */
@@ -31,17 +32,20 @@ trait ConfiguresConfigurationProviders
 					});
 			})
 			->distinct()
-			->where(fn(string $key): bool => $path === null || Str::wrap($key)->startsWith($path));
+			->where(fn(string $key): bool => $path === null || str_starts_with($key, (string)$path));
 	}
 
+	/**
+	 * @return GenericEnumerable<Contract\ConfigurationSection>
+	 */
 	public function getChildren(string|Str|null $path = null): GenericEnumerable
 	{
-		return $this->getChildKeys($path)->select(fn(string $key) => $this->getSection($key));
+		return $this->getChildKeys($path)->select(fn(string $key): Contract\ConfigurationSection => $this->getSection($key));
 	}
 
 	public function hasSection(string|Str $key): bool
 	{
-		/** @var Contract\ConfigurationProvider $provider */
+		$value = null;
 		foreach ($this->getProviders()->reverse() as $provider) {
 			if ($provider->tryGet($key, $value)) {
 				return true;
@@ -71,7 +75,7 @@ trait ConfiguresConfigurationProviders
 			throw new InvalidArgumentException("Offset must be a string");
 		}
 
-		/** @var Contract\ConfigurationProvider $provider */
+		$value = null;
 		foreach ($this->getProviders()->reverse() as $provider) {
 			if ($provider->tryGet($offset, $value)) {
 				return $value;
@@ -96,7 +100,6 @@ trait ConfiguresConfigurationProviders
 			throw new RuntimeException("No providers available");
 		}
 
-		/** @var Contract\ConfigurationProvider $provider */
 		foreach ($providers as $provider) {
 			$provider->set($offset, $value);
 		}
@@ -108,7 +111,6 @@ trait ConfiguresConfigurationProviders
 			throw new InvalidArgumentException("Offset must be a string");
 		}
 
-		/** @var Contract\ConfigurationProvider $provider */
 		foreach ($this->getProviders() as $provider) {
 			$provider->remove($offset);
 		}

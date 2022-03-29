@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration\Contract;
 
+use JetBrains\PhpStorm\Pure;
+
 interface ConfigurationSource
 {
-	public function build(ConfigurationBuilder $builder): ConfigurationProvider;
+	#[Pure]
+	public function build(): ConfigurationProvider;
 }

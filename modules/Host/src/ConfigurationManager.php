@@ -6,13 +6,12 @@ namespace Elephox\Host;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\ObjectSet;
 use Elephox\Configuration\BuildsConfigurationRoot;
+use Elephox\Configuration\ConfiguresConfigurationProviders;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Contract\ConfigurationSource;
 use Elephox\Configuration\Memory\MemoryConfigurationSource;
-use Elephox\Configuration\ConfiguresConfigurationProviders;
-use RuntimeException;
 
 class ConfigurationManager implements Contract\ConfigurationManager
 {
@@ -39,7 +38,7 @@ class ConfigurationManager implements Contract\ConfigurationManager
 	 */
 	public function getProviders(): GenericEnumerable
 	{
-		return $this->configurationSources->select(fn(ConfigurationSource $source): ConfigurationProvider => $source->build($this));
+		return $this->configurationSources->select(static fn(object $source): ConfigurationProvider => /** @var ConfigurationSource $source */ $source->build());
 	}
 
 	public function add(ConfigurationSource $source): static
@@ -57,15 +56,5 @@ class ConfigurationManager implements Contract\ConfigurationManager
 	protected function getRoot(): ConfigurationRoot
 	{
 		return $this;
-	}
-
-	public function __serialize(): array
-	{
-		throw new RuntimeException('ConfigurationManager cannot be serialized');
-	}
-
-	public function __unserialize(array $data): void
-	{
-		throw new RuntimeException('ConfigurationManager cannot be unserialized');
 	}
 }

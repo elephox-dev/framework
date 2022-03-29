@@ -16,7 +16,7 @@ use RuntimeException;
  * @template TGroupKey
  * @template TValue
  *
- * @implements Iterator<TKey, GroupingContract<TGroupKey, TValue>>
+ * @implements Iterator<TGroupKey, GroupingContract<TGroupKey, TKey, TValue>>
  */
 class GroupingIterator implements Iterator
 {
@@ -28,14 +28,14 @@ class GroupingIterator implements Iterator
 	private array $groupKeys = [];
 
 	/**
-	 * @var list<list<TValue>>
+	 * @var array<int, list<TValue>>
 	 */
 	private array $values = [];
 
 	/**
 	 * @param Iterator<mixed, TValue> $iterator
 	 * @param Closure(TValue): TGroupKey $groupingFunction
-	 * @param Closure(TGroupKey, TGroupKey): bool $comparer
+	 * @param null|Closure(TGroupKey, TGroupKey): bool $comparer
 	 */
 	public function __construct(
 		private readonly Iterator $iterator,
@@ -101,7 +101,7 @@ class GroupingIterator implements Iterator
 			if ($idx === null) {
 				$this->groupKeys[] = $groupingKey;
 				end($this->groupKeys);
-				$idx = key($this->groupKeys);
+				$idx = key($this->groupKeys) ?? throw new RuntimeException("Unexpected null key");
 			}
 
 			$this->values[$idx][] = $value;

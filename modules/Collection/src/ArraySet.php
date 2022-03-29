@@ -7,8 +7,6 @@ use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
 use Elephox\Support\DeepCloneable;
-use Laravel\SerializableClosure\SerializableClosure;
-use Laravel\SerializableClosure\Serializers\Native;
 
 /**
  * @template T
@@ -26,13 +24,13 @@ class ArraySet implements GenericSet
 	use DeepCloneable;
 
 	/**
-	 * @var Closure(T, T): bool
+	 * @var Closure(null|T, null|T): bool
 	 */
-	private $comparer;
+	private readonly Closure $comparer;
 
 	/**
 	 * @param array<mixed, T> $items
-	 * @param null|Closure(T, T): bool $comparer
+	 * @param null|Closure(null|T, null|T): bool $comparer
 	 */
 	public function __construct(
 		private array $items = [],
@@ -64,6 +62,7 @@ class ArraySet implements GenericSet
 
 		while ($iterator->valid()) {
 			if (($this->comparer)($value, $iterator->current())) {
+				/** @psalm-suppress PossiblyNullArrayOffset */
 				unset($this->items[$iterator->key()]);
 
 				return true;
@@ -82,7 +81,9 @@ class ArraySet implements GenericSet
 
 		$anyRemoved = false;
 		while ($iterator->valid()) {
+			/** @psalm-suppress PossiblyNullArgument */
 			if ($predicate($iterator->current())) {
+				/** @psalm-suppress PossiblyNullArrayOffset */
 				unset($this->items[$iterator->key()]);
 
 				$anyRemoved = true;

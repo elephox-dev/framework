@@ -17,6 +17,7 @@ use JetBrains\PhpStorm\Pure;
  * @psalm-suppress MixedArrayOffset
  * @psalm-suppress MixedTypeCoercion
  * @psalm-suppress MixedArgumentTypeCoercion
+ * @psalm-suppress MissingTemplateParam
  */
 class Arr implements ArrayAccess, IteratorAggregate
 {

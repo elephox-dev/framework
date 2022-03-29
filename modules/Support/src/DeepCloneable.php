@@ -56,12 +56,19 @@ trait DeepCloneable
 	}
 
 	/**
+	 * @param array $array
 	 * @param array<string, object> $cloneStorage
 	 *
+	 * @return array
+	 *
 	 * @throws ReflectionException
+	 *
+	 * @psalm-suppress UnusedParam
 	 */
 	private static function cloneArray(array $array, array &$cloneStorage): array
 	{
+		$clonedArray = [];
+
 		/**
 		 * @var mixed $value
 		 */
@@ -72,10 +79,10 @@ trait DeepCloneable
 			$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 			/** @psalm-suppress MixedAssignment */
-			$array[$clonedKey] = $clonedValue;
+			$clonedArray[$clonedKey] = $clonedValue;
 		}
 
-		return $array;
+		return $clonedArray;
 	}
 
 	/**
@@ -84,7 +91,7 @@ trait DeepCloneable
 	 * @throws ReflectionException
 	 * @throws Exception
 	 */
-	private static function cloneObject(object $object, array &$cloneStorage): object
+	private static function cloneObject(object $object, array &$cloneStorage): ?object
 	{
 		$hash = spl_object_hash($object);
 		if (isset($cloneStorage[$hash])) {
@@ -116,7 +123,10 @@ trait DeepCloneable
 				/** @var mixed $clonedValue */
 				$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
-				/** @var WeakMap $clone */
+				/**
+				 * @psalm-suppress UnnecessaryVarAnnotation
+				 * @var WeakMap $clone
+				 */
 				$clone->offsetSet($key, $clonedValue);
 				$iterator->next();
 			}

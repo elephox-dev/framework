@@ -75,11 +75,6 @@ class WebApplicationBuilder
 	}
 
 	/**
-	 * @psalm-suppress UndefinedDocblockClass
-	 * @psalm-suppress MixedArgument
-	 * @psalm-suppress UndefinedClass
-	 * @psalm-suppress NullArgument
-	 *
 	 * @param null|callable(WhoopsRunInterface): void $configurator
 	 *
 	 * @return void
@@ -108,7 +103,7 @@ class WebApplicationBuilder
 		$this->services->addSingleton(
 			EntityManagerInterface::class,
 			EntityManager::class,
-			implementationFactory: /** @psalm-suppress UndefinedClass */ function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
+			implementationFactory: function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
 				$setup ??= static function (ConfigurationRoot $conf, WebHostEnvironment $env): DoctrineConfiguration {
 					$setupDriver = $conf['doctrine:metadata:driver'];
 					$setupMethod = match ($setupDriver) {

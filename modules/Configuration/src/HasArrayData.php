@@ -36,7 +36,10 @@ trait HasArrayData
 						return;
 					}
 
-					/** @psalm-suppress MixedAssignment */
+					/**
+					 * @psalm-suppress MixedAssignment
+					 * @psalm-suppress MixedArrayAccess
+					 */
 					$data = $data[$keyPart];
 					if ($keyParts->isEmpty()) {
 						if (!is_array($data)) {
@@ -62,7 +65,6 @@ trait HasArrayData
 
 			/**
 			 * @psalm-suppress MixedArrayAccess
-			 * @psalm-suppress MixedAssignment
 			 */
 			$data = &$data[$keyPart];
 		}
@@ -108,7 +110,6 @@ trait HasArrayData
 					return;
 				}
 
-				/** @psalm-suppress MixedAssignment */
 				$data = &$data[$keyPart];
 			} else {
 				return;

@@ -8,6 +8,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\Grouping;
+use Elephox\Collection\Enumerable;
 use Elephox\Collection\ObjectSet;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
@@ -15,6 +16,7 @@ use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\OOR\Arr;
 use Elephox\OOR\Regex;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\Router;
@@ -106,7 +108,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	public function getRouteHandler(Request $request): RouteHandlerContract
 	{
-		$matchingHandlers = $this->handlers
+		$matchedHandlers = $this->handlers
 			->where(fn(RouteHandlerContract $handler): bool => $handler->matches($request))
 			->groupBy(fn(RouteHandlerContract $handler): float => $handler->getMatchScore($request))
 			->orderBy(fn(Grouping $grouping): mixed => $grouping->groupKey())
@@ -114,15 +116,15 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 			?->toList()
 		;
 
-		if ($matchingHandlers === null) {
+		if ($matchedHandlers === null) {
 			throw new RouteNotFoundException($request);
 		}
 
-		if (count($matchingHandlers) === 1) {
-			return $matchingHandlers[0];
+		if (count($matchedHandlers) === 1) {
+			return $matchedHandlers[0];
 		}
 
-		throw new AmbiguousRouteHandlerException($request, $matchingHandlers);
+		throw new AmbiguousRouteHandlerException($request, $matchedHandlers);
 	}
 
 	public function add(RouteHandlerContract $handler): static

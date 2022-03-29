@@ -144,6 +144,7 @@ class ArrayList implements GenericList
 			throw new OffsetNotFoundException($index);
 		}
 
+		/** @var T */
 		return $this->items[$index];
 	}
 
@@ -153,6 +154,7 @@ class ArrayList implements GenericList
 			throw new OffsetNotFoundException($index);
 		}
 
+		/** @var T */
 		$removed = $this->items[$index];
 
 		array_splice($this->items, $index, 1);
@@ -164,8 +166,10 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
+		/** @var T $item */
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
+				/** @var int */
 				return $index;
 			}
 		}
@@ -177,8 +181,10 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
+		/** @var T $item */
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
+				/** @var int $index */
 				return $index;
 			}
 		}
@@ -195,6 +201,7 @@ class ArrayList implements GenericList
 			throw new EmptySequenceException();
 		}
 
+		/** @var T */
 		return array_pop($this->items);
 	}
 
@@ -207,6 +214,7 @@ class ArrayList implements GenericList
 			throw new EmptySequenceException();
 		}
 
+		/** @var T */
 		return array_shift($this->items);
 	}
 
@@ -222,6 +230,6 @@ class ArrayList implements GenericList
 
 	public function implode(string $separator = ", "): string
 	{
-		return implode($separator, $this->items);
+		return implode($separator, array_map(static fn(mixed $v) => (string)$v, $this->items));
 	}
 }

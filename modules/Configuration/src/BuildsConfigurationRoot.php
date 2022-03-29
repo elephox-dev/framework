@@ -21,7 +21,7 @@ trait BuildsConfigurationRoot
 		$providers = new ObjectSet();
 
 		foreach ($this->getSources() as $source) {
-			$providers->add($source->build($this->getBuilder()));
+			$providers->add($source->build());
 		}
 
 		return new ConfigurationRoot($providers);

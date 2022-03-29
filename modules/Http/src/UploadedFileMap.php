@@ -43,7 +43,12 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			$uploadError = UploadError::from($error);
 			$resource = File::openStream($fullPath);
 
-			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size > 0 ? $size : null, $uploadError);
+			if ($size < 0) {
+				$size = null;
+			}
+			/** @var int<0, max>|null $size */
+
+			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size, $uploadError);
 
 			$map->put($id, $uploadedFile);
 		}

@@ -728,6 +728,7 @@ trait IsKeyedEnumerable
 	{
 		$list = [];
 
+		/** @var TSource $element */
 		foreach ($this->getIterator() as $element) {
 			$list[] = $element;
 		}
@@ -767,6 +768,10 @@ trait IsKeyedEnumerable
 
 		$array = [];
 
+		/**
+		 * @var TIteratorKey $elementKey
+		 * @var TSource $element
+		 */
 		foreach ($this->getIterator() as $elementKey => $element) {
 			$key = $keySelector($elementKey, $element);
 
@@ -778,7 +783,9 @@ trait IsKeyedEnumerable
 				throw new OutOfBoundsException('Invalid array key: ' . get_debug_type($key));
 			}
 
-			/** @var array-key $key */
+			/**
+			 * @var array-key $key
+			 */
 			$array[$key][] = $element;
 		}
 
@@ -795,6 +802,12 @@ trait IsKeyedEnumerable
 		return new Enumerable($this->getIterator());
 	}
 
+	/**
+	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
 	public function union(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
@@ -832,7 +845,7 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks TIteratorKey is always 0|positive-int...
+	 * @psalm-suppress InvalidArgument Psalm somehow infers that CallbackFilterIterator has iterator key int
 	 *
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
@@ -844,8 +857,6 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType Can't influence the signature of CallbackFilterIterator...
-	 *
 	 * @param callable(TIteratorKey, TSource, Iterator<TSource, TIteratorKey>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>

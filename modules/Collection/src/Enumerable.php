@@ -81,7 +81,7 @@ class Enumerable implements GenericEnumerable
 	private Iterator $iterator;
 
 	/**
-	 * @param Closure(): Iterator<mixed, TSource>|Iterator<mixed, TSource> $iterator
+	 * @param Iterator<mixed, TSource>|Closure(): Iterator<mixed, TSource> $iterator
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(

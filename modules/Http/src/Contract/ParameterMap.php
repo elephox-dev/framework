@@ -7,6 +7,9 @@ use ArrayAccess;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Http\ParameterSource;
 
+/**
+ * @extends ArrayAccess<non-empty-string, mixed>
+ */
 interface ParameterMap extends ArrayAccess
 {
 	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null): ParameterMap;

@@ -7,6 +7,7 @@ use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Json\Contract\JsonDataConfigurationSource;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Pure;
 use JsonException;
 
 class JsonFileConfigurationSource implements JsonDataConfigurationSource
@@ -48,7 +49,8 @@ class JsonFileConfigurationSource implements JsonDataConfigurationSource
 	/**
 	 * @throws JsonException
 	 */
-	public function build(ConfigurationBuilder $builder): ConfigurationProvider
+	#[Pure]
+	public function build(): ConfigurationProvider
 	{
 		return new JsonConfigurationProvider($this);
 	}
