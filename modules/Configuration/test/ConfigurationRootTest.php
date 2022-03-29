@@ -33,25 +33,6 @@ use stdClass;
  */
 class ConfigurationRootTest extends TestCase
 {
-	public function testSerializeUnserialize(): void
-	{
-		$configBuilder = new ConfigurationBuilder();
-		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test']));
-		$root = $configBuilder->build();
-
-		$serialized = serialize($root);
-		/** @var \Elephox\Configuration\Contract\ConfigurationRoot $unserialized */
-		$unserialized = unserialize($serialized);
-
-		self::assertEquals(<<<EOF
-O:39:"Elephox\Configuration\ConfigurationRoot":1:{s:9:"providers";a:1:{i:0;O:56:"Elephox\Configuration\Memory\MemoryConfigurationProvider":1:{s:4:"data";a:1:{s:7:"this is";s:6:"a test";}}}}
-EOF, $serialized);
-
-		self::assertTrue($root->getProviders()->first()->tryGet('this is', $originalValue));
-		self::assertTrue($unserialized->getProviders()->first()->tryGet('this is', $unserializedValue));
-		self::assertEquals($originalValue, $unserializedValue);
-	}
-
 	public function testGetChildren(): void
 	{
 		$configBuilder = new ConfigurationBuilder();
@@ -191,15 +172,5 @@ EOF, $serialized);
 
 		$this->expectException(InvalidArgumentException::class);
 		$root->offsetGet(123);
-	}
-
-	public function testInvalidUnserialize(): void
-	{
-		$serialized = <<<EOF
-O:39:"Elephox\Configuration\ConfigurationRoot":0:{}
-EOF;
-
-		$this->expectException(InvalidArgumentException::class);
-		unserialize($serialized);
 	}
 }
