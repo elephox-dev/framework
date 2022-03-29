@@ -30,7 +30,7 @@ $src = $root . 'modules' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
 
 echo "Gathering files...\n";
-$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src), [$root . 'bootstrap.php']);
+$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src));
 $todoPattern = /** @lang RegExp */ '/[^\n]*(TODO|FIXME|MAYBE|IDEA):?\s*([^\n]*)/';
 $issuePattern = /** @lang RegExp */ '/\s(?<repo>[A-Za-z0-9\-_]+?\/[A-Za-z0-9\-_]+?)#(?<issue>\d+)/';
 
