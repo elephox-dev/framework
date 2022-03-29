@@ -20,13 +20,9 @@ use ReflectionUnionType;
 /**
  * @psalm-type argument-list = array<non-empty-string, mixed>
  */
-class AutoResolver implements Resolver
+trait ServiceResolver
 {
-	public function __construct(
-		private readonly ServiceCollectionContract $services,
-	)
-	{
-	}
+	abstract protected function getServices(): ServiceCollectionContract;
 
 	/**
 	 * @template T
@@ -136,7 +132,7 @@ class AutoResolver implements Resolver
 	private function resolveArgument(ReflectionParameter $parameter): mixed
 	{
 		/** @var mixed $possibleArgument */
-		$possibleArgument = $this->services->get($parameter->getName());
+		$possibleArgument = $this->getServices()->get($parameter->getName());
 		$type = $parameter->getType();
 		if ($type === null) {
 			if ($possibleArgument !== null) {
@@ -165,7 +161,7 @@ class AutoResolver implements Resolver
 			 */
 			foreach ($typeNames as $typeName) {
 				/** @var mixed $possibleArgument */
-				$possibleArgument = $this->services->get($typeName);
+				$possibleArgument = $this->getServices()->get($typeName);
 				if ($possibleArgument !== null) {
 					break;
 				}

@@ -100,12 +100,18 @@ class WebApplicationBuilder
 					);
 				};
 
+				/**
+				 * @psalm-suppress ArgumentTypeCoercion
+				 */
 				$setupConfig = $this->services->resolver()->callback($setup);
 				$connection = $configuration['doctrine:connection'];
 				if ($connection === null) {
 					throw new ConfigurationException('No doctrine connection specified at "doctrine:connection"');
 				}
 
+				/**
+				 * @psalm-suppress InvalidArgument
+				 */
 				return EntityManager::create($connection, $setupConfig);
 			}
 		);

@@ -15,7 +15,6 @@
         "ext-mbstring": "*",
         "elephox/mimey": "^4.0",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "laravel/serializable-closure": "^1.1",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "ricardoboss/php-console-logger": "^1.8"

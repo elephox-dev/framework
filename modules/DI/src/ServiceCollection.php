@@ -8,22 +8,21 @@ use Closure;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\ArraySet;
 use Elephox\DI\Contract\Resolver;
+use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use InvalidArgumentException;
 
 /**
  * @psalm-type service-object = object
  */
-class ServiceCollection implements Contract\ServiceCollection
+class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 {
-	/**
-	 * @var ArraySet<ServiceDescriptor> $services
-	 */
+	use ServiceResolver;
+
+	/** @var ArraySet<ServiceDescriptor> $services */
 	private readonly ArraySet $services;
 
 	/** @var ArrayMap<non-empty-string, class-string> $aliases */
 	private readonly ArrayMap $aliases;
-
-	protected Resolver $resolver;
 
 	/** @var array<class-string, ServiceDescriptor> */
 	private array $descriptorCache = [];
@@ -31,7 +30,7 @@ class ServiceCollection implements Contract\ServiceCollection
 	/** @var array<class-string, Closure> */
 	private array $factoryCache = [];
 
-	public function __construct(?Resolver $resolver = null)
+	public function __construct()
 	{
 		$this->services = new ArraySet(
 			comparer: fn(ServiceDescriptor $a, ServiceDescriptor $b): bool => $a->serviceType === $b->serviceType
@@ -40,15 +39,18 @@ class ServiceCollection implements Contract\ServiceCollection
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
 		$this->aliases = new ArrayMap();
 
-		$this->resolver = $resolver ?? new AutoResolver($this);
-
 		$this->registerSelf();
 	}
 
 	private function registerSelf(): void
 	{
 		$this->addSingleton(Contract\ServiceCollection::class, implementation: $this);
-		$this->addSingleton(Resolver::class, implementation: $this->resolver);
+		$this->addSingleton(Resolver::class, implementation: $this);
+	}
+
+	protected function getServices(): ServiceCollectionContract
+	{
+		return $this;
 	}
 
 	public function resolver(): Resolver
@@ -77,7 +79,7 @@ class ServiceCollection implements Contract\ServiceCollection
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
 
-		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime->value, $implementationFactory, $implementation));
+		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation));
 	}
 
 	public function addTransient(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
@@ -140,7 +142,7 @@ class ServiceCollection implements Contract\ServiceCollection
 		$factory = $this->getImplementationFactory($descriptor);
 
 		try {
-			return $this->resolver->callback($factory);
+			return $this->callback($factory);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($serviceName, previous: $e);
 		}
@@ -186,8 +188,8 @@ class ServiceCollection implements Contract\ServiceCollection
 
 		/** @var Closure(mixed): TService $factory */
 		$factory = match ($descriptor->lifetime) {
-			ServiceLifetime::Transient->value => $this->getTransientFactory($descriptor),
-			ServiceLifetime::Singleton->value => $this->getSingletonFactory($descriptor),
+			ServiceLifetime::Transient => $this->getTransientFactory($descriptor),
+			ServiceLifetime::Singleton => $this->getSingletonFactory($descriptor),
 		};
 
 		$this->factoryCache[$descriptor->serviceType] = $factory;
@@ -212,7 +214,7 @@ class ServiceCollection implements Contract\ServiceCollection
 					throw new InvalidServiceDescriptorException("Singleton service '$descriptor->implementationType' has no factory and no instance.");
 				}
 
-				$descriptor->instance = $this->resolver->callback($descriptor->implementationFactory);
+				$descriptor->instance = $this->callback($descriptor->implementationFactory);
 			}
 
 			return $descriptor->instance;
@@ -386,27 +388,5 @@ class ServiceCollection implements Contract\ServiceCollection
 		$this->removeService($aliasOrServiceName);
 
 		return $this;
-	}
-
-	public function __serialize(): array
-	{
-		$servicesWithoutSelf = $this->services
-			->where(fn(ServiceDescriptor $d) => $d->implementationType !== static::class && $d->implementationType !== $this->resolver::class)
-			->toList();
-
-		return [
-			'services' => serialize($servicesWithoutSelf),
-			'aliases' => serialize($this->aliases),
-			'resolver' => serialize($this->resolver),
-		];
-	}
-
-	public function __unserialize(array $data): void
-	{
-		$this->services = unserialize($data['services']);
-		$this->aliases = unserialize($data['aliases']);
-		$this->resolver = unserialize($data['resolver']);
-
-		$this->registerSelf();
 	}
 }

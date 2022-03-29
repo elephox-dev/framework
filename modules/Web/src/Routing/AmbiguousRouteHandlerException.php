@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Web;
+namespace Elephox\Web\Routing;
 
 use Elephox\Http\Contract\Request;
 use RuntimeException;
@@ -12,7 +12,7 @@ class AmbiguousRouteHandlerException extends RuntimeException
 {
 	/**
 	 * @param Request $request
-	 * @param list<string|Stringable> $routes
+	 * @param Stringable $routes
 	 */
 	public function __construct(public readonly Request $request, public readonly array $routes, int $code = 0, ?Throwable $previous = null)
 	{

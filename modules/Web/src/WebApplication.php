@@ -84,20 +84,4 @@ class WebApplication
 			->process($request)
 			->get();
 	}
-
-	public function __serialize(): array
-	{
-		return [
-			'environment' => serialize($this->environment),
-			'services' => serialize($this->services),
-			'configuration' => serialize($this->configuration),
-		];
-	}
-
-	public function __unserialize(array $data): void
-	{
-		$this->environment = unserialize($data['environment']);
-		$this->services = unserialize($data['services']);
-		$this->configuration = unserialize($data['configuration']);
-	}
 }
