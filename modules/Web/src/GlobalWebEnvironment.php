@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Web;
 
+use Elephox\Configuration\GlobalEnvironment;
 use Elephox\Files\Directory;
-use Elephox\Host\GlobalHostEnvironment;
-use Elephox\Web\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebEnvironment;
 
-class GlobalWebHostEnvironment extends GlobalHostEnvironment implements WebHostEnvironment
+class GlobalWebEnvironment extends GlobalEnvironment implements WebEnvironment
 {
 	public function getWebRootDirectory(): Directory
 	{

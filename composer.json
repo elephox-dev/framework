@@ -33,6 +33,7 @@
         "vimeo/psalm": "dev-master"
     },
     "replace": {
+        "elephox/autoloading": "self.version",
         "elephox/cache": "self.version",
         "elephox/collection": "self.version",
         "elephox/configuration": "self.version",
@@ -60,6 +61,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
+            "Elephox\\Autoloading\\": "modules/Autoloading/src/",
             "Elephox\\Cache\\": "modules/Cache/src/",
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Configuration\\": "modules/Configuration/src/",
@@ -77,6 +79,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Elephox\\Autoloading\\": "modules/Autoloading/test/",
             "Elephox\\Cache\\": "modules/Cache/test/",
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\Configuration\\": "modules/Configuration/test/",

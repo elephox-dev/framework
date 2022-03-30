@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
+use Elephox\Files\Directory;
 use InvalidArgumentException;
+use RuntimeException;
 
 class GlobalEnvironment implements Contract\Environment
 {
@@ -17,6 +19,20 @@ class GlobalEnvironment implements Contract\Environment
 		}
 
 		return 'production';
+	}
+
+	public function getRootDirectory(): Directory
+	{
+		if (defined('APP_ROOT')) {
+			return new Directory((string)APP_ROOT);
+		}
+
+		$cwd = getcwd();
+		if (!$cwd) {
+			throw new RuntimeException('Cannot get current working directory');
+		}
+
+		return new Directory($cwd);
 	}
 
 	public function isDevelopment(string $envName = self::ENV_NAME): bool

@@ -25,6 +25,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/src" isTestSource="false" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/DI/test" isTestSource="true" packagePrefix="Elephox\DI\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Autoloading/src" isTestSource="false" packagePrefix="Elephox\Autoloading\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Autoloading/test" isTestSource="true" packagePrefix="Elephox\Autoloading\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Console/src" isTestSource="false" packagePrefix="Elephox\Console\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Console/test" isTestSource="true" packagePrefix="Elephox\Console\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />

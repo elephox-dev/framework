@@ -10,8 +10,7 @@ use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use Elephox\DI\Contract\Resolver;
-use Elephox\Web\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Contract\WebServiceCollection;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
@@ -22,7 +21,7 @@ class WebApplicationBuilder
 {
 	public function __construct(
 		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
-		public readonly WebHostEnvironment $environment,
+		public readonly WebEnvironment $environment,
 		public readonly WebServiceCollection $services,
 		public readonly RequestPipelineBuilder $pipeline,
 	)
@@ -104,7 +103,7 @@ class WebApplicationBuilder
 			EntityManagerInterface::class,
 			EntityManager::class,
 			implementationFactory: function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
-				$setup ??= static function (ConfigurationRoot $conf, WebHostEnvironment $env): DoctrineConfiguration {
+				$setup ??= static function (ConfigurationRoot $conf, WebEnvironment $env): DoctrineConfiguration {
 					$setupDriver = $conf['doctrine:metadata:driver'];
 					$setupMethod = match ($setupDriver) {
 						'annotation' => 'createAnnotationMetadataConfiguration',

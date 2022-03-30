@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Web\Routing\Contract;
+namespace Elephox\Autoloading\Composer\Contract;
 
 interface ComposerClassLoader
 {

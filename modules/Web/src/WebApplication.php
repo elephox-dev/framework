@@ -17,14 +17,14 @@ use Elephox\Http\ResponseCode;
 use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
-use Elephox\Web\Contract\WebHostEnvironment;
+use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
 use Elephox\Web\Middleware\ProcessingTimeHeader;
 
 class WebApplication
 {
 	public function __construct(
-		public readonly WebHostEnvironment $environment,
+		public readonly WebEnvironment $environment,
 		public readonly WebServiceCollectionContract $services,
 		public readonly ConfigurationRoot $configuration,
 	)
@@ -33,13 +33,13 @@ class WebApplication
 
 	public static function createBuilder(
 		?ConfigurationManagerContract $configuration = null,
-		?WebHostEnvironment $environment = null,
+		?WebEnvironment $environment = null,
 		?WebServiceCollectionContract $services = null,
 		?RequestPipelineBuilder $pipeline = null,
 	): WebApplicationBuilder
 	{
 		$configuration ??= new ConfigurationManager();
-		$environment ??= new GlobalWebHostEnvironment();
+		$environment ??= new GlobalWebEnvironment();
 		$services ??= new WebServiceCollection();
 		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder

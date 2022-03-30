@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Contract;
 
+use Elephox\Configuration\Contract\Environment;
 use Elephox\Files\Contract\Directory;
-use Elephox\Host\Contract\HostEnvironment;
 
-interface WebHostEnvironment extends HostEnvironment
+interface WebEnvironment extends Environment
 {
 	public function getWebRootDirectory(): Directory;
 }

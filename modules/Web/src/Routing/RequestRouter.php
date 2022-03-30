@@ -4,20 +4,17 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Closure;
+use Elephox\Autoloading\Composer\NamespaceLoader;
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\Grouping;
-use Elephox\Collection\Enumerable;
 use Elephox\Collection\ObjectSet;
-use Elephox\Files\Contract\Directory as DirectoryContract;
-use Elephox\Files\Directory;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
-use Elephox\OOR\Arr;
-use Elephox\OOR\Regex;
+use Elephox\Support\Composer\Contract\ComposerAutoloaderInit;
+use Elephox\Support\Composer\Contract\ComposerClassLoader;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\Router;
 use Elephox\Web\Contract\WebMiddlewareAttribute;
@@ -25,42 +22,15 @@ use Elephox\Web\Contract\WebServiceCollection;
 use Elephox\Web\RouteNotFoundException;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
-use Elephox\Web\Routing\Contract\ComposerAutoloaderInit;
-use Elephox\Web\Routing\Contract\ComposerClassLoader;
 use Elephox\Web\Routing\Contract\RouteHandler as RouteHandlerContract;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
-use RuntimeException;
 
 class RequestRouter implements RequestPipelineEndpoint, Router
 {
-	/**
-	 * @return ComposerClassLoader
-	 */
-	private static function getClassLoader(): object
-	{
-		/** @var null|class-string<ComposerAutoloaderInit> $autoloaderClassName */
-		$autoloaderClassName = null;
-		foreach (get_declared_classes() as $class) {
-			if (!str_starts_with($class, 'ComposerAutoloaderInit')) {
-				continue;
-			}
-
-			$autoloaderClassName = $class;
-
-			break;
-		}
-
-		if ($autoloaderClassName === null) {
-			throw new RuntimeException('Could not find ComposerAutoloaderInit class. Did you install the dependencies using composer?');
-		}
-
-		/** @var ComposerClassLoader */
-		return call_user_func([$autoloaderClassName, 'getLoader']);
-	}
 
 	/**
 	 * @param ReflectionClass $class
@@ -148,83 +118,11 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	 */
 	public function loadFromNamespace(string $namespace): static
 	{
-		$classLoader = self::getClassLoader();
-		$prefixDirMap = ArrayMap::from($classLoader->getPrefixesPsr4())
-			->select(fn(array $dirs): GenericKeyedEnumerable => ArrayList::from($dirs)
-				->select(fn(string $dir): DirectoryContract => new Directory($dir))
-			);
-		foreach ($prefixDirMap as $nsPrefix => $dirs) {
-			if (!str_starts_with($namespace, $nsPrefix) && !str_starts_with($nsPrefix, $namespace)) {
-				continue;
-			}
-
-			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\');
-			// remove first element since it is the alias for the directories we are iterating
-			$root = $parts->shift();
-
-			/** @var ArrayList<string> $partsUsed */
-			$partsUsed = new ArrayList();
-
-			foreach ($dirs as $dir) {
-				$this->loadClassesRecursive($root, $parts, $partsUsed, $dir, $classLoader);
-				assert($partsUsed->isEmpty());
-			}
-		}
+		NamespaceLoader::iterateNamespace($namespace, function (string $className): void {
+			$this->loadFromClass($className);
+		});
 
 		return $this;
-	}
-
-	/**
-	 * @param string $rootNs
-	 * @param ArrayList<string> $nsParts
-	 * @param ArrayList<string> $nsPartsUsed
-	 * @param DirectoryContract $directory
-	 * @param ComposerClassLoader $classLoader
-	 * @param int $depth
-	 *
-	 * @throws InvalidRequestController
-	 *
-	 * @noinspection PhpDocSignatureInspection
-	 */
-	private function loadClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, object $classLoader, int $depth = 0): void
-	{
-		if ($depth > 10) {
-			throw new RuntimeException("Recursion limit exceeded. Please choose a more specific namespace.");
-		}
-
-		$lastPart = $nsParts->shift();
-		$nsPartsUsed->add($lastPart);
-		foreach ($directory->getDirectories() as $dir) {
-			if ($dir->getName() !== $lastPart) {
-
-				continue;
-			}
-
-			self::loadClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $classLoader, $depth + 1);
-		}
-
-		if ($lastPart === '') {
-			foreach ($directory->getFiles() as $file) {
-				$filename = $file->getName();
-				if (!str_ends_with($filename, '.php')) {
-					continue;
-				}
-
-				$className = substr($filename, 0, -4);
-
-				/**
-				 * @var class-string $fqcn
-				 * @noinspection PhpRedundantVariableDocTypeInspection
-				 */
-				$fqcn = $rootNs . "\\" . implode("\\", $nsPartsUsed->toList()) . $className;
-
-				$classLoader->loadClass($fqcn);
-
-				$this->loadFromClass($fqcn);
-			}
-		}
-
-		$nsParts->unshift($nsPartsUsed->pop());
 	}
 
 	/**

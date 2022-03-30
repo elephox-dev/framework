@@ -296,6 +296,14 @@ trait IsKeyedEnumerable
 		throw new EmptySequenceException();
 	}
 
+	/**
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return TDefault|TSource
+	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
 		foreach ($this->getIterator() as $elementKey => $element) {

@@ -5,15 +5,15 @@ namespace Elephox\Console;
 
 use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationRoot;
+use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
-use Elephox\Host\Contract\HostEnvironment;
 
 class ConsoleApplication
 {
 	public function __construct(
 		public readonly ServiceCollectionContract $services,
-		public readonly HostEnvironment $environment,
+		public readonly ConsoleEnvironment $environment,
 		public readonly ConfigurationRoot $configuration,
 	)
 	{
@@ -22,7 +22,7 @@ class ConsoleApplication
 	public static function createBuilder(): ConsoleApplicationBuilder
 	{
 		$configuration = new ConfigurationManager();
-		$environment = new GlobalHostEnvironment();
+		$environment = new GlobalConsoleEnvironment();
 		$services = new ServiceCollection();
 
 		return new ConsoleApplicationBuilder(
