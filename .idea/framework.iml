@@ -5,7 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Collection/src" isTestSource="false" packagePrefix="Elephox\Collection\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Collection/test" isTestSource="true" packagePrefix="Elephox\Collection\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/DI/src" isTestSource="false" packagePrefix="Elephox\DI\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/DI/test" isTestSource="true" packagePrefix="Elephox\DI\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Http/src" isTestSource="false" packagePrefix="Elephox\Http\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Http/test" isTestSource="true" packagePrefix="Elephox\Http\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Support/src" isTestSource="false" packagePrefix="Elephox\Support\" />
@@ -27,7 +26,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Host/test" isTestSource="true" packagePrefix="Elephox\Host\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/src" isTestSource="false" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
