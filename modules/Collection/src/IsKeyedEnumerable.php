@@ -28,8 +28,6 @@ use OutOfBoundsException;
 use Stringable;
 
 /**
- * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always int...
- *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TIteratorKey
@@ -187,8 +185,6 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @psalm-suppress MoreSpecificImplementedParamType Psalm thinks the template params are set from OrderedEnumerable...
-	 *
 	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return NonNegativeInteger
@@ -559,11 +555,13 @@ trait IsKeyedEnumerable
 	 */
 	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn (mixed $element, mixed $collectionElement, mixed $elementKey, mixed $collectionElementKey): mixed => $collectionElement;
 		/** @var callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector */
 
 		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector) {
+			/**
+			 * @var TIteratorKey $elementKey
+			 */
 			foreach ($this->getIterator() as $elementKey => $element) {
 				foreach ($collectionSelector($element, $elementKey) as $collectionElementKey => $collectionElement) {
 					yield $collectionElementKey => $resultSelector($element, $collectionElement, $elementKey, $collectionElementKey);
@@ -667,6 +665,7 @@ trait IsKeyedEnumerable
 	 */
 	public function skipWhile(callable $predicate): GenericKeyedEnumerable
 	{
+		/** @var Iterator<TIteratorKey, TSource> $iterator */
 		$iterator = $this->getIterator();
 
 		$whileIterator = new WhileIterator($iterator, $predicate(...));
@@ -745,7 +744,6 @@ trait IsKeyedEnumerable
 
 	public function toArray(?callable $keySelector = null): array
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
 
 		$array = [];
@@ -770,7 +768,6 @@ trait IsKeyedEnumerable
 
 	public function toNestedArray(?callable $keySelector = null): array
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
 
 		$array = [];
@@ -852,8 +849,6 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @psalm-suppress InvalidArgument Psalm somehow infers that CallbackFilterIterator has iterator key int
-	 *
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
@@ -888,7 +883,6 @@ trait IsKeyedEnumerable
 	public function zip(GenericKeyedEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable
 	{
 		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
-		/** @psalm-suppress UnusedClosureParam */
 		$keySelector ??= static fn (mixed $a, mixed $b): mixed => $a;
 
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ALL);

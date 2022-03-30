@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.20.0@f82a70e7edfc6cf2705e9374c8a0b6a974a779ed">
-  <file src="modules/Collection/src/ArrayList.php">
-    <MixedArgument occurrences="2">
-      <code>$value</code>
-      <code>$value</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$item</code>
-      <code>$item</code>
-      <code>$removed</code>
-    </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
-      <code>mixed</code>
-      <code>mixed</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="2">
-      <code>$removed</code>
-      <code>$this-&gt;items[$index]</code>
-    </MixedReturnStatement>
-    <MixedReturnTypeCoercion occurrences="4">
-      <code>$index</code>
-      <code>$index</code>
-      <code>int</code>
-      <code>int</code>
-    </MixedReturnTypeCoercion>
-  </file>
+<files psalm-version="dev-master@5baf85edb457007e92072ffef37307f91758ee28">
   <file src="modules/Collection/src/ArrayMap.php">
-    <MixedArgument occurrences="5">
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$offset</code>
-      <code>$value</code>
-    </MixedArgument>
     <MixedInferredReturnType occurrences="1">
       <code>mixed</code>
     </MixedInferredReturnType>
@@ -40,101 +8,109 @@
       <code>$this-&gt;items[$validKey]</code>
     </MixedReturnStatement>
   </file>
-  <file src="modules/Collection/src/ArraySet.php">
-    <MixedArgument occurrences="2">
-      <code>$iterator-&gt;current()</code>
-      <code>$iterator-&gt;current()</code>
-    </MixedArgument>
-    <PossiblyNullArrayOffset occurrences="2">
-      <code>$this-&gt;items</code>
-      <code>$this-&gt;items</code>
-    </PossiblyNullArrayOffset>
-  </file>
   <file src="modules/Collection/src/Enumerable.php">
     <UnusedPsalmSuppress occurrences="1">
       <code>RedundantConditionGivenDocblockType</code>
     </UnusedPsalmSuppress>
   </file>
   <file src="modules/Collection/src/IsEnumerable.php">
-    <MixedArgument occurrences="12">
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$iterator-&gt;current()</code>
-      <code>$iterator-&gt;current()</code>
-      <code>$iterator-&gt;current()</code>
-      <code>$iterator-&gt;current()</code>
-      <code>$outerElement</code>
-      <code>$outerElement</code>
-    </MixedArgument>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$comparer</code>
+    </ImplementedParamTypeMismatch>
+    <InvalidReturnType occurrences="1">
+      <code>GenericEnumerable&lt;Grouping&lt;TGroupKey, mixed, TSource&gt;&gt;</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="14">
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+    </LessSpecificImplementedReturnType>
     <MixedArgumentTypeCoercion occurrences="2">
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="22">
-      <code>$chunk[]</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$last</code>
-      <code>$last</code>
-      <code>$list[]</code>
-      <code>$outerElement</code>
-      <code>$returnElement</code>
-      <code>$returnElement</code>
-    </MixedAssignment>
     <PossiblyNullArgument occurrences="4">
       <code>$iterator-&gt;current()</code>
       <code>$iterator-&gt;current()</code>
       <code>$iterator-&gt;current()</code>
       <code>$iterator-&gt;current()</code>
     </PossiblyNullArgument>
-    <UnusedPsalmSuppress occurrences="2">
-      <code>UnusedClosureParam</code>
-      <code>UnusedClosureParam</code>
-    </UnusedPsalmSuppress>
+    <UnusedClosureParam occurrences="6">
+      <code>$collectionElement</code>
+      <code>$collectionElementKey</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$key</code>
+    </UnusedClosureParam>
   </file>
   <file src="modules/Collection/src/IsKeyedEnumerable.php">
-    <MixedArgument occurrences="16">
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
+    <ImplementedParamTypeMismatch occurrences="3">
+      <code>$comparer</code>
+      <code>$other</code>
+      <code>$other</code>
+    </ImplementedParamTypeMismatch>
+    <InvalidArgument occurrences="10">
       <code>$elementKey</code>
       <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$outerElement</code>
-      <code>$outerElement</code>
+      <code>$other</code>
+      <code>$other</code>
       <code>$outerElementKey</code>
       <code>$outerElementKey</code>
+      <code>new CallbackFilterIterator($this-&gt;getIterator(), $predicate(...))</code>
+      <code>new CallbackFilterIterator($this-&gt;getIterator(), $predicate)</code>
+      <code>new SelectIterator($this-&gt;getIterator(), $selector(...))</code>
+      <code>new WhileIterator($this-&gt;getIterator(), $predicate(...))</code>
+    </InvalidArgument>
+    <LessSpecificImplementedReturnType occurrences="18">
+      <code>GenericEnumerable</code>
+      <code>GenericEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>GenericKeyedEnumerable</code>
+      <code>array</code>
+      <code>array</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+      <code>mixed</code>
+    </LessSpecificImplementedReturnType>
+    <MixedArgument occurrences="8">
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
+      <code>$outerElement</code>
+      <code>$outerElement</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="2">
+    <MixedArgumentTypeCoercion occurrences="4">
+      <code>$other</code>
+      <code>$other</code>
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="40">
+    <MixedAssignment occurrences="21">
       <code>$array[$key]</code>
-      <code>$chunk[]</code>
       <code>$element</code>
       <code>$element</code>
       <code>$element</code>
@@ -150,30 +126,20 @@
       <code>$element</code>
       <code>$element</code>
       <code>$element</code>
-      <code>$element</code>
-      <code>$element</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
-      <code>$elementKey</code>
       <code>$last</code>
       <code>$last</code>
-      <code>$list[]</code>
       <code>$outerElement</code>
-      <code>$outerElementKey</code>
       <code>$returnElement</code>
       <code>$returnElement</code>
     </MixedAssignment>
+    <MixedReturnTypeCoercion occurrences="6">
+      <code>GenericEnumerable&lt;non-empty-list&lt;TSource&gt;&gt;</code>
+      <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
+      <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
+      <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
+      <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
+      <code>list&lt;TSource&gt;</code>
+    </MixedReturnTypeCoercion>
     <PossiblyNullArgument occurrences="8">
       <code>$iterator-&gt;current()</code>
       <code>$iterator-&gt;current()</code>
@@ -184,11 +150,14 @@
       <code>$iterator-&gt;key()</code>
       <code>$iterator-&gt;key()</code>
     </PossiblyNullArgument>
-    <UnusedPsalmSuppress occurrences="3">
-      <code>UnusedClosureParam</code>
-      <code>UnusedClosureParam</code>
-      <code>UnusedClosureParam</code>
-    </UnusedPsalmSuppress>
+    <UnusedClosureParam occurrences="6">
+      <code>$b</code>
+      <code>$collectionElementKey</code>
+      <code>$element</code>
+      <code>$elementKey</code>
+      <code>$value</code>
+      <code>$value</code>
+    </UnusedClosureParam>
   </file>
   <file src="modules/Collection/src/Iterator/KeySelectIterator.php">
     <PossiblyNullArgument occurrences="2">
@@ -234,67 +203,10 @@
       <code>ImpureMethodCall</code>
     </UnusedPsalmSuppress>
   </file>
-  <file src="modules/Collection/src/ObjectSet.php">
-    <MixedArgument occurrences="2">
-      <code>$object</code>
-      <code>$object</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$object</code>
-      <code>$object</code>
-      <code>$remove[]</code>
-    </MixedAssignment>
-  </file>
   <file src="modules/Collection/src/OrderedEnumerable.php">
     <MixedArgumentTypeCoercion occurrences="2">
       <code>$orderedIterator</code>
       <code>$orderedIterator</code>
-    </MixedArgumentTypeCoercion>
-  </file>
-  <file src="modules/Core/src/Context/CommandLineContext.php">
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$this-&gt;args-&gt;toList()</code>
-    </MixedArgumentTypeCoercion>
-    <MixedPropertyTypeCoercion occurrences="1">
-      <code>new ArrayList($args)</code>
-    </MixedPropertyTypeCoercion>
-  </file>
-  <file src="modules/Core/src/Handler/Attribute/CommandHandler.php">
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>whereKey</code>
-    </MixedArgumentTypeCoercion>
-  </file>
-  <file src="modules/Core/src/Handler/DefaultExceptionHandler.php">
-    <MixedMethodCall occurrences="1">
-      <code>getTraceAsString</code>
-    </MixedMethodCall>
-    <MixedOperand occurrences="1">
-      <code>$metaData['exception']-&gt;getTraceAsString()</code>
-    </MixedOperand>
-  </file>
-  <file src="modules/Core/src/Handler/HandlerContainer.php">
-    <MixedArgumentTypeCoercion occurrences="4">
-      <code>orderByDescending</code>
-      <code>select</code>
-      <code>thenBy</code>
-      <code>where</code>
-    </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="1">
-      <code>$binding</code>
-    </MixedAssignment>
-    <UnusedPsalmSuppress occurrences="1">
-      <code>UnnecessaryVarAnnotation</code>
-    </UnusedPsalmSuppress>
-  </file>
-  <file src="modules/Events/src/EventBus.php">
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>orderByDescending</code>
-    </MixedArgumentTypeCoercion>
-  </file>
-  <file src="modules/Files/src/Directory.php">
-    <MixedArgumentTypeCoercion occurrences="2">
-      <code>select</code>
-      <code>where</code>
     </MixedArgumentTypeCoercion>
   </file>
 </files>

@@ -28,8 +28,6 @@ use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
 
 /**
- * @psalm-suppress LessSpecificImplementedReturnType Psalm thinks TIteratorKey is always int...
- *
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
  * @template TSource
@@ -553,14 +551,9 @@ trait IsEnumerable
 	 */
 	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
-
-		/*
-		 * @psalm-suppress UnusedClosureParam
-		 * @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector
-		 */
 		$keySelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElementKey;
+		/** @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector */
 
 		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector, $keySelector) {
 			foreach ($this->getIterator() as $element) {
@@ -582,7 +575,6 @@ trait IsEnumerable
 	 */
 	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable
 	{
-		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn(mixed $element, mixed $collectionElement): mixed => $collectionElement;
 		/** @var callable(TSource, TCollection): TResult $resultSelector */
 
