@@ -1,6 +1,6 @@
 {
-    "name": "elephox/host",
-    "description": "Elephox Host library.",
+    "name": "elephox/console",
+    "description": "Elephox console library.",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Elephox\\Host\\": "src/"
+            "Elephox\\Console\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Elephox\\Host\\": "test/"
+            "Elephox\\Console\\": "test/"
         }
     },
     "config": {

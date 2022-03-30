@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Web;
 
+use Elephox\Configuration\ConfigurationManager;
+use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\Contract\Resolver;
-use Elephox\Host\ConfigurationManager;
-use Elephox\Host\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ResponseBuilder;

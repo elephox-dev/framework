@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Console;
 
+use Elephox\Configuration\GlobalEnvironment;
 use Elephox\Files\Directory;
-use Elephox\Host\Contract\HostEnvironment;
 use RuntimeException;
 
-class GlobalHostEnvironment extends GlobalEnvironment implements HostEnvironment
+class GlobalHostEnvironment extends GlobalEnvironment implements Contract\HostEnvironment
 {
 	public function getRootDirectory(): Directory
 	{

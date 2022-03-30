@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Console;
 
+use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;

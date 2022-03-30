@@ -22,10 +22,11 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Cache/test" isTestSource="true" packagePrefix="Elephox\Cache\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/src" isTestSource="false" packagePrefix="Elephox\Configuration\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Configuration/test" isTestSource="true" packagePrefix="Elephox\Configuration\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Host/src" isTestSource="false" packagePrefix="Elephox\Host\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Host/test" isTestSource="true" packagePrefix="Elephox\Host\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/src" isTestSource="false" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/DI/test" isTestSource="true" packagePrefix="Elephox\DI\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Console/src" isTestSource="false" packagePrefix="Elephox\Console\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Console/test" isTestSource="true" packagePrefix="Elephox\Console\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />

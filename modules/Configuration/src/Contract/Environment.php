@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host\Contract;
+namespace Elephox\Configuration\Contract;
 
 use ArrayAccess;
 

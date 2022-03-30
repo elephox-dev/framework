@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host\Contract;
+namespace Elephox\Console\Contract;
 
+use Elephox\Configuration\Contract\Environment;
 use Elephox\Files\Contract\Directory;
 
 interface HostEnvironment extends Environment

@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Host;
+namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\ObjectSet;
-use Elephox\Configuration\BuildsConfigurationRoot;
-use Elephox\Configuration\ConfiguresConfigurationProviders;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationRoot;
