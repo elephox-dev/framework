@@ -44,7 +44,7 @@ class WebApplication
 		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder
 			{
-				return Response::build()->responseCode(ResponseCode::NotFound);
+				return Response::build()->responseCode(ResponseCode::BadRequest);
 			}
 		});
 
