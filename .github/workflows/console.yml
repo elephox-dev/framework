@@ -1,17 +1,17 @@
-name: Host Pipeline
+name: Console Pipeline
 on:
   push:
     paths:
-      - '.github/workflows/host.yml'
+      - '.github/workflows/console.yml'
       - '.github/workflows/splitsh.yml'
-      - 'modules/Host/**'
+      - 'modules/Console/**'
 
 jobs:
   splitsh:
     name: ⏩ Update Module Repository
     uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
     with:
-      repo: 'elephox-dev/host'
-      dir: 'modules/Host/'
+      repo: 'elephox-dev/console'
+      dir: 'modules/Console/'
     secrets:
-      deploy_key: ${{ secrets.SPLITSH_HOST_KEY }}
+      deploy_key: ${{ secrets.SPLITSH_CONSOLE_KEY }}

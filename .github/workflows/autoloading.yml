@@ -1,0 +1,17 @@
+name: Autoloading Pipeline
+on:
+  push:
+    paths:
+      - '.github/workflows/autoloading.yml'
+      - '.github/workflows/splitsh.yml'
+      - 'modules/Autoloading/**'
+
+jobs:
+  splitsh:
+    name: ⏩ Update Module Repository
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    with:
+      repo: 'elephox-dev/autoloading'
+      dir: 'modules/Autoloading/'
+    secrets:
+      deploy_key: ${{ secrets.SPLITSH_AUTOLOADING_KEY }}
