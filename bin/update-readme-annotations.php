@@ -89,13 +89,16 @@ if (!empty($matches) || !empty($issues)) {
 	$annotations .= "## 📋 Source code annotations\n\n";
 }
 
+exec('git rev-parse --abbrev-ref HEAD', $output);
+$currentBranch = trim((string)end($output));
+
 if (!empty($matches)) {
 	foreach ($matches as $category => $files) {
 		$annotations .= "### $emojiMap[$category] $titleMap[$category]\n\n";
 		echo "Category $category contains " . count($files) . " files.\n";
 		foreach ($files as $matchedCategory => $entries) {
 			$matchedCategory = str_replace($root, '', $matchedCategory);
-			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/develop/$matchedCategory)\n";
+			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/$currentBranch/$matchedCategory)\n";
 			foreach ($entries as $entry) {
 				$annotations .= "  - [ ] $entry\n";
 			}
