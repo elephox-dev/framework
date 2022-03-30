@@ -555,10 +555,12 @@ trait IsEnumerable
 	{
 		/** @psalm-suppress UnusedClosureParam */
 		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
-		/** @var callable(TSource, TCollection, TIntermediateKey): TResult $resultSelector */
 
+		/*
+		 * @psalm-suppress UnusedClosureParam
+		 * @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector
+		 */
 		$keySelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElementKey;
-		/** @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector */
 
 		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector, $keySelector) {
 			foreach ($this->getIterator() as $element) {
@@ -815,6 +817,12 @@ trait IsEnumerable
 		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
 	}
 
+	/**
+	 * @param GenericEnumerable<TSource> $other
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);

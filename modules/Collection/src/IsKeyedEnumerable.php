@@ -56,6 +56,9 @@ trait IsKeyedEnumerable
 	{
 		$result = $seed;
 
+		/**
+		 * @var TIteratorKey $elementKey
+		 */
 		foreach ($this->getIterator() as $elementKey => $element) {
 			$result = $accumulator($result, $element, $elementKey);
 		}
@@ -104,6 +107,9 @@ trait IsKeyedEnumerable
 		$sum = null;
 		$count = 0;
 
+		/**
+		 * @var TIteratorKey $elementKey
+		 */
 		foreach ($this->getIterator() as $elementKey => $element) {
 			$value = $selector($element, $elementKey);
 
@@ -139,6 +145,7 @@ trait IsKeyedEnumerable
 		/** @var GenericEnumerable<non-empty-list<TSource>> */
 		return new Enumerable(function () use ($size) {
 			$chunk = [];
+			/** @var TSource $element */
 			foreach ($this->getIterator() as $element) {
 				if (count($chunk) === $size) {
 					yield $chunk;

@@ -20,5 +20,6 @@
     </plugins>
     <issueHandlers>
         <DocblockTypeContradiction errorLevel="suppress" />
+        <RedundantConditionGivenDocblockType errorLevel="suppress" />
     </issueHandlers>
 </psalm>

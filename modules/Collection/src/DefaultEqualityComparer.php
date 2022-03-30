@@ -84,7 +84,6 @@ final class DefaultEqualityComparer
 				return !$result;
 			}
 
-			/** @psalm-suppress RedundantConditionGivenDocblockType */
 			if (is_numeric($result)) {
 				return -$result;
 			}
