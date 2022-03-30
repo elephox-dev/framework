@@ -91,9 +91,6 @@
             "Elephox\\Web\\": "modules/Web/test/"
         }
     },
-    "bin": [
-        "modules/Core/bin/elephox"
-    ],
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
