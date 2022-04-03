@@ -11,9 +11,9 @@ use Elephox\DI\Contract\Resolver;
 class CommandCollection
 {
 	/** @var ObjectMap<CommandTemplate, CommandHandler> $templateMap */
-	private ObjectMap $templateMap;
+	private readonly ObjectMap $templateMap;
 
-	public function __construct(private Resolver $resolver)
+	public function __construct(private readonly Resolver $resolver)
 	{
 		$this->templateMap = new ObjectMap();
 	}
@@ -43,8 +43,17 @@ class CommandCollection
 
 		/** @var CommandHandler $instance */
 		$instance = $this->resolver->instantiate($className);
-		$template = $instance->build(new CommandTemplateBuilder());
+		$template = $instance->configure(new CommandTemplateBuilder())->build();
 
 		$this->add($template, $instance);
+	}
+
+	public function findCompiled(RawCommandInvocation $invocation): CompiledCommandHandler
+	{
+		return $this->templateMap
+				->whereKey(fn(CommandTemplate $template): bool => $template->name === $invocation->name)
+				->select(fn(CommandHandler $handler, CommandTemplate $template): CompiledCommandHandler => new CompiledCommandHandler($invocation, $template, $handler))
+				->firstOrDefault(null)
+			?? throw new CommandNotFoundException($invocation->name);
 	}
 }
