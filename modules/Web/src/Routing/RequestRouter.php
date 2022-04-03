@@ -9,16 +9,14 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\ObjectSet;
+use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
-use Elephox\Support\Composer\Contract\ComposerAutoloaderInit;
-use Elephox\Support\Composer\Contract\ComposerClassLoader;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\Router;
 use Elephox\Web\Contract\WebMiddlewareAttribute;
-use Elephox\Web\Contract\WebServiceCollection;
 use Elephox\Web\RouteNotFoundException;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
@@ -69,7 +67,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	private readonly ObjectSet $handlers;
 
 	public function __construct(
-		private readonly WebServiceCollection $services,
+		private readonly ServiceCollection $services,
 	)
 	{
 		/** @var ObjectSet<RouteHandlerContract> */

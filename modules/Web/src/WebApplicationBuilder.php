@@ -10,8 +10,8 @@ use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
+use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Web\Contract\WebEnvironment;
-use Elephox\Web\Contract\WebServiceCollection;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
 use Whoops\Run as WhoopsRun;
@@ -22,7 +22,7 @@ class WebApplicationBuilder
 	public function __construct(
 		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
 		public readonly WebEnvironment $environment,
-		public readonly WebServiceCollection $services,
+		public readonly ServiceCollection $services,
 		public readonly RequestPipelineBuilder $pipeline,
 	)
 	{
@@ -142,5 +142,17 @@ class WebApplicationBuilder
 		$router = new RequestRouter($this->services);
 		$this->services->addSingleton(RequestRouter::class, implementation: $router);
 		$this->pipeline->endpoint($router);
+	}
+
+	/**
+	 * @template T of object
+	 *
+	 * @param class-string<T>|string $name
+	 * @return T
+	 */
+	public function service(string $name): object
+	{
+		/** @var T */
+		return $this->services->require($name);
 	}
 }

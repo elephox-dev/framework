@@ -7,6 +7,8 @@ use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\DI\Contract\Resolver;
+use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\DI\ServiceCollection;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ResponseBuilder;
@@ -18,14 +20,13 @@ use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
-use Elephox\Web\Contract\WebServiceCollection as WebServiceCollectionContract;
 use Elephox\Web\Middleware\ProcessingTimeHeader;
 
 class WebApplication
 {
 	public function __construct(
 		public readonly WebEnvironment $environment,
-		public readonly WebServiceCollectionContract $services,
+		public readonly ServiceCollectionContract $services,
 		public readonly ConfigurationRoot $configuration,
 	)
 	{
@@ -34,13 +35,13 @@ class WebApplication
 	public static function createBuilder(
 		?ConfigurationManagerContract $configuration = null,
 		?WebEnvironment $environment = null,
-		?WebServiceCollectionContract $services = null,
+		?ServiceCollectionContract $services = null,
 		?RequestPipelineBuilder $pipeline = null,
 	): WebApplicationBuilder
 	{
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalWebEnvironment();
-		$services ??= new WebServiceCollection();
+		$services ??= new ServiceCollection();
 		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder
 			{

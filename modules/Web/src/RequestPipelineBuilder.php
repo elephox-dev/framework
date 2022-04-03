@@ -9,14 +9,14 @@ use Elephox\Web\Contract\WebMiddleware;
 
 class RequestPipelineBuilder
 {
-	/** @var ArrayList<\Elephox\Web\Contract\WebMiddleware> $pipeline  */
+	/** @var ArrayList<WebMiddleware> $pipeline  */
 	private ArrayList $pipeline;
 
 	public function __construct(
 		private RequestPipelineEndpoint $endpoint,
 	)
 	{
-		/** @var ArrayList<\Elephox\Web\Contract\WebMiddleware> */
+		/** @var ArrayList<WebMiddleware> */
 		$this->pipeline = new ArrayList();
 	}
 
@@ -32,9 +32,15 @@ class RequestPipelineBuilder
 		return $this;
 	}
 
-	public function pop(): WebMiddleware
+	/**
+	 * @param class-string<WebMiddleware>|null $className
+	 * @return WebMiddleware
+	 */
+	public function pop(?string $className = null): WebMiddleware
 	{
-		return $this->pipeline->pop();
+		$predicate = $className === null ? null : static fn (WebMiddleware $middleware): bool => $middleware instanceof $className;
+
+		return $this->pipeline->pop($predicate);
 	}
 
 	public function endpoint(RequestPipelineEndpoint $endpoint): RequestPipelineBuilder
