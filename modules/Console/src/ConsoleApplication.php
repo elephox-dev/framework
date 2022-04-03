@@ -36,19 +36,21 @@ class ConsoleApplication
 		);
 	}
 
-	public function run(): void
+	public function run(): never
 	{
 		$invocation = RawCommandInvocation::fromCommandLine();
 
-		$this->handle($invocation);
+		$code = $this->handle($invocation);
+
+		exit($code);
 	}
 
-	public function handle(RawCommandInvocation $invocation): void
+	public function handle(RawCommandInvocation $invocation): int
 	{
 		$compiled = $this->services
 			->requireService(CommandCollection::class)
 			->findCompiled($invocation);
 
-		$compiled->handler->handle($invocation->build($compiled->template));
+		return $compiled->handler->handle($invocation->build($compiled->template)) ?? 0;
 	}
 }
