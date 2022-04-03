@@ -51,27 +51,27 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ To Do
 
-- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Collection/src/IsKeyedEnumerable.php)
+- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Collection/src/Iterator/OrderedIterator.php)
+- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Http/src/ResponseCode.php)
+- [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
   - [ ] go over the reason phrases and check them against standards
-- [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Web/src/Routing/InvalidRequestController.php)
+- [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
-- [ ] [modules/Web/src/Routing/RequestRouter.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Web/src/Routing/RequestRouter.php)
+- [ ] [modules/Web/src/Routing/RequestRouter.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/RequestRouter.php)
   - [ ] make this tidier
 
 ### 🤔 Maybe
 
-- [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Collection/src/Iterator/ReverseIterator.php)
+- [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
-- [ ] [modules/Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/Support/src/CustomMimeType.php)
+- [ ] [modules/Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/develop/modules/Support/src/CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
 
 ### 💡 Idea
 
-- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/goal/core-app-rewrite/modules/DI/src/ServiceResolver.php)
+- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
   - [ ] could possibly skip type checking here
 
 
