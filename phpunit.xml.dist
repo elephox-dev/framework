@@ -17,30 +17,6 @@
         <testsuite name="default">
             <directory>modules/*/test</directory>
         </testsuite>
-        <testsuite name="Collection">
-            <directory>modules/Collection/test</directory>
-        </testsuite>
-        <testsuite name="DI">
-            <directory>modules/DI/test</directory>
-        </testsuite>
-        <testsuite name="Events">
-            <directory>modules/Events/test</directory>
-        </testsuite>
-        <testsuite name="Files">
-            <directory>modules/Files/test</directory>
-        </testsuite>
-        <testsuite name="Http">
-            <directory>modules/Http/test</directory>
-        </testsuite>
-        <testsuite name="OOR">
-            <directory>modules/OOR/test</directory>
-        </testsuite>
-        <testsuite name="Stream">
-            <directory>modules/Stream/test</directory>
-        </testsuite>
-        <testsuite name="Support">
-            <directory>modules/Support/test</directory>
-        </testsuite>
     </testsuites>
 
     <coverage cacheDirectory="tmp/coverage/cache"
@@ -50,7 +26,6 @@
         </include>
         <exclude>
             <file>**/*Exception.php</file>
-            <directory>modules/Core/src</directory>
             <directory>modules/Logging/src</directory>
         </exclude>
     </coverage>
