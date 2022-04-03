@@ -296,6 +296,17 @@ trait IsKeyedEnumerable
 		throw new EmptySequenceException();
 	}
 
+	public function firstKey(?callable $predicate = null): mixed
+	{
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				return $elementKey;
+			}
+		}
+
+		throw new EmptySequenceException();
+	}
+
 	/**
 	 * @template TDefault
 	 *
@@ -313,6 +324,25 @@ trait IsKeyedEnumerable
 		}
 
 		return $defaultValue;
+	}
+
+	/**
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultKey
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return TDefault|TIteratorKey
+	 */
+	public function firstKeyOrDefault(mixed $defaultKey, ?callable $predicate = null): mixed
+	{
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				return $elementKey;
+			}
+		}
+
+		return $defaultKey;
 	}
 
 	public function flip(): GenericKeyedEnumerable

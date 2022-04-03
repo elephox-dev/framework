@@ -193,16 +193,29 @@ class ArrayList implements GenericList
 	}
 
 	/**
+	 * @param null|callable(T): bool $predicate
+	 *
 	 * @return T
 	 */
-	public function pop(): mixed
+	public function pop(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {
 			throw new EmptySequenceException();
 		}
 
-		/** @var T */
-		return array_pop($this->items);
+		if ($predicate === null) {
+			/** @var T */
+			return array_pop($this->items);
+		}
+
+		$value = $this->firstOrDefault(null, $predicate);
+		if ($value === null) {
+			throw new EmptySequenceException();
+		}
+
+		$this->remove($value);
+
+		return $value;
 	}
 
 	/**
