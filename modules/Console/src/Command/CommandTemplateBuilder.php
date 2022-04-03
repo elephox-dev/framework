@@ -14,6 +14,7 @@ class CommandTemplateBuilder
 	 */
 	public function __construct(
 		private ?string $name = null,
+		private ?string $description = null,
 		private ?ArrayList $arguments = null,
 	)
 	{
@@ -26,7 +27,14 @@ class CommandTemplateBuilder
 		return $this;
 	}
 
-	public function argument(string $name, ?string $description = null, null|string|int|float|bool $default = null, bool $required = false): self
+	public function description(?string $description): self
+	{
+		$this->description = $description;
+
+		return $this;
+	}
+
+	public function argument(string $name, ?string $description = null, null|string|int|float|bool $default = null, bool $required = true): self
 	{
 		/** @var ArrayList<ArgumentTemplate> */
 		$this->arguments ??= new ArrayList();
@@ -42,7 +50,8 @@ class CommandTemplateBuilder
 
 		return new CommandTemplate(
 			$this->name ?? throw new InvalidArgumentException('Command name is required'),
-			$this->arguments
+			$this->description ?? '',
+			$this->arguments,
 		);
 	}
 }

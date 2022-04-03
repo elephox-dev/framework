@@ -7,8 +7,13 @@ use Elephox\Autoloading\Composer\NamespaceLoader;
 use Elephox\Collection\ObjectMap;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\DI\Contract\Resolver;
+use Iterator;
+use IteratorAggregate;
 
-class CommandCollection
+/**
+ * @implements IteratorAggregate<CommandTemplate, CommandHandler>
+ */
+class CommandCollection implements IteratorAggregate
 {
 	/** @var ObjectMap<CommandTemplate, CommandHandler> $templateMap */
 	private readonly ObjectMap $templateMap;
@@ -55,5 +60,19 @@ class CommandCollection
 				->select(fn(CommandHandler $handler, CommandTemplate $template): CompiledCommandHandler => new CompiledCommandHandler($invocation, $template, $handler))
 				->firstOrDefault(null)
 			?? throw new CommandNotFoundException($invocation->name);
+	}
+
+	public function getTemplateByName(string $name): CommandTemplate
+	{
+		return $this->templateMap
+			->flip()
+			->where(fn(CommandTemplate $template): bool => $template->name === $name)
+			->firstOrDefault(null)
+		?? throw new CommandNotFoundException($name);
+	}
+
+	public function getIterator(): Iterator
+	{
+		return $this->templateMap->getIterator();
 	}
 }

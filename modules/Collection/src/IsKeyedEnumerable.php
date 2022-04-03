@@ -345,13 +345,16 @@ trait IsKeyedEnumerable
 		return $defaultKey;
 	}
 
+	/**
+	 * @return GenericKeyedEnumerable<TSource, TIteratorKey>
+	 */
 	public function flip(): GenericKeyedEnumerable
 	{
 		return new KeyedEnumerable(new FlipIterator($this->getIterator()));
 	}
 
 	/**
-	 * @param GenericKeyedEnumerable<TSource, TIteratorKey> $other
+	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>

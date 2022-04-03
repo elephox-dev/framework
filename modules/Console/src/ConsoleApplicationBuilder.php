@@ -30,7 +30,7 @@ class ConsoleApplicationBuilder
 		$this->setDebugFromConfig();
 	}
 
-	public function registerDefaultConfig(): void
+	protected function registerDefaultConfig(): self
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
@@ -38,6 +38,7 @@ class ConsoleApplicationBuilder
 				->getFile("config.json")
 				->getPath()
 		));
+
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
@@ -45,6 +46,7 @@ class ConsoleApplicationBuilder
 				->getPath(),
 			true
 		));
+
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
@@ -52,13 +54,17 @@ class ConsoleApplicationBuilder
 				->getPath(),
 			true
 		));
+
+		return $this;
 	}
 
-	public function setDebugFromConfig(): void
+	protected function setDebugFromConfig(): self
 	{
 		if ($this->configuration->hasSection("env:debug")) {
 			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
 		}
+
+		return $this;
 	}
 
 	public function build(): ConsoleApplication
@@ -84,21 +90,25 @@ class ConsoleApplicationBuilder
 		return $this->services->require($name);
 	}
 
-	public function addLogging(): void
+	public function addLogging(): self
 	{
 		$this->services->addSingleton(Logger::class, GenericSinkLogger::class, function (Sink $sink): GenericSinkLogger {
 			return new GenericSinkLogger($sink);
 		});
 
 		$this->services->addSingleton(Sink::class, implementation: new ConsoleSink());
+
+		return $this;
 	}
 
-	public function addWhoops(): void
+	public function addWhoops(): self
 	{
 		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class, implementationFactory: function () {
 			$whoops = new WhoopsRun();
 			$whoops->pushHandler(new PlainTextHandler());
 			return $whoops;
 		});
+
+		return $this;
 	}
 }

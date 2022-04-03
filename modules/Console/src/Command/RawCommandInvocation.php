@@ -9,24 +9,22 @@ use InvalidArgumentException;
 class RawCommandInvocation
 {
 	/**
-	 * @param list<string>|null $commandLine
+	 * @param array<int, string> $commandLine
 	 * @return RawCommandInvocation
 	 */
-	public static function fromCommandLine(?array $commandLine = null): RawCommandInvocation
+	public static function fromCommandLine(array $commandLine): RawCommandInvocation
 	{
-		global $argv;
-		$commandLine ??= $argv;
 		$raw = implode(" ", $commandLine);
 		$argList = ArrayList::from($commandLine);
 
 		if ($argList->isEmpty()) {
-			throw new InvalidArgumentException("Command line is empty");
+			throw new EmptyCommandLineException();
 		}
 
 		$binary = $argList->shift();
 
 		if ($argList->isEmpty()) {
-			throw new InvalidArgumentException("No command provided");
+			throw new NoCommandInCommandLineException();
 		}
 
 		$commandName = $argList->shift();

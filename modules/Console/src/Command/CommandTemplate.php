@@ -14,17 +14,9 @@ class CommandTemplate
 	 */
 	public function __construct(
 		public readonly string $name,
+		public readonly string $description,
 		public readonly ArrayList $argumentTemplates,
 	)
 	{
-	}
-
-	public function getArgumentTemplate(string $name): ?ArgumentTemplate
-	{
-		return $this->argumentTemplates
-				->firstOrDefault(
-					null,
-					static fn (ArgumentTemplate $a): bool => $a->name === $name
-				);
 	}
 }

@@ -22,11 +22,16 @@ class CommandInvocation
 
 	public function getArgument(string $name): Argument
 	{
+		return $this->getOptionalArgument($name) ?? throw new InvalidArgumentException("Argument with name \"$name\" not found.");
+	}
+
+	public function getOptionalArgument(string $name): ?Argument
+	{
 		return $this->arguments
 				->firstOrDefault(
 					null,
 					static fn(Argument $arg): bool => $arg->name === $name
-				) ?? throw new InvalidArgumentException("Argument with name \"$name\" not found.");
+				);
 	}
 
 	public function __get(string $name): mixed

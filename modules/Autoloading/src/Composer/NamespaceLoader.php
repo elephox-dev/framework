@@ -59,6 +59,9 @@ class NamespaceLoader
 			$parts = Regex::split('/\\\\/', rtrim($namespace, '\\') . '\\');
 			// remove first element since it is the alias for the directories we are iterating
 			$root = $parts->shift();
+			while ($root !== rtrim($nsPrefix, '\\')) {
+				$root .= '\\' . $parts->shift();
+			}
 
 			foreach ($dirs as $dir) {
 				/** @var ArrayList<string> $partsUsed */
@@ -90,7 +93,6 @@ class NamespaceLoader
 		$nsPartsUsed->add($lastPart);
 		foreach ($directory->getDirectories() as $dir) {
 			if ($dir->getName() !== $lastPart) {
-
 				continue;
 			}
 

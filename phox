@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Elephox\Development\DevConsoleApplicationBuilder;
+use Elephox\Logging\Contract\Logger;
+
+require_once 'vendor/autoload.php';
+const APP_ROOT = __DIR__;
+
+$builder = DevConsoleApplicationBuilder::create()->addLogging();
+$builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
+
+$app = $builder->build();
+try {
+	$app->run();
+} catch (Throwable $e) {
+	$app->services->requireService(Logger::class)->error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+}
