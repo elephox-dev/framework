@@ -653,6 +653,12 @@ trait IsKeyedEnumerable
 		return $returnElement;
 	}
 
+	/**
+	 * @param TSource $default
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return TSource
+	 */
 	public function singleOrDefault(mixed $default, ?callable $predicate = null): mixed
 	{
 		$matched = false;

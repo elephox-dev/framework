@@ -5,6 +5,9 @@ namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayMap;
 
+/**
+ * @extends ArrayMap<string, string|bool>
+ */
 class CommandInvocationArgumentsMap extends ArrayMap
 {
 }

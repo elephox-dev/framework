@@ -61,7 +61,10 @@
       <code>$other</code>
       <code>$other</code>
     </ImplementedParamTypeMismatch>
-    <InvalidArgument occurrences="10">
+    <InvalidArgument occurrences="13">
+      <code>$elementKey</code>
+      <code>$elementKey</code>
+      <code>$elementKey</code>
       <code>$elementKey</code>
       <code>$elementKey</code>
       <code>$other</code>
@@ -93,7 +96,10 @@
       <code>mixed</code>
       <code>mixed</code>
     </LessSpecificImplementedReturnType>
-    <MixedArgument occurrences="8">
+    <MixedArgument occurrences="11">
+      <code>$element</code>
+      <code>$element</code>
+      <code>$element</code>
       <code>$element</code>
       <code>$element</code>
       <code>$element</code>
@@ -109,8 +115,10 @@
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
       <code>new OrderedIterator($this-&gt;getIterator(), $keySelector(...), $comparer(...))</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="21">
+    <MixedAssignment occurrences="23">
       <code>$array[$key]</code>
+      <code>$element</code>
+      <code>$element</code>
       <code>$element</code>
       <code>$element</code>
       <code>$element</code>
@@ -132,12 +140,14 @@
       <code>$returnElement</code>
       <code>$returnElement</code>
     </MixedAssignment>
-    <MixedReturnTypeCoercion occurrences="6">
+    <MixedReturnTypeCoercion occurrences="8">
       <code>GenericEnumerable&lt;non-empty-list&lt;TSource&gt;&gt;</code>
       <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
       <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
       <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
       <code>GenericKeyedEnumerable&lt;TIteratorKey, TSource&gt;</code>
+      <code>TDefault|TSource</code>
+      <code>TSource</code>
       <code>list&lt;TSource&gt;</code>
     </MixedReturnTypeCoercion>
     <PossiblyNullArgument occurrences="8">

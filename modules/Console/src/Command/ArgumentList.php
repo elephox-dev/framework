@@ -15,9 +15,6 @@ class ArgumentList extends ArrayList
 		$arguments = new self();
 		$usedKeys = [];
 
-		/**
-		 * @var ArgumentTemplate $argumentTemplate
-		 */
 		foreach ($template->argumentTemplates as $argumentTemplate) {
 			if ($argumentsMap->has($argumentTemplate->name)) {
 				if (in_array($argumentTemplate->name, $usedKeys, true)) {

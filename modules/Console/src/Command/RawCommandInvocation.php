@@ -9,7 +9,7 @@ use InvalidArgumentException;
 class RawCommandInvocation
 {
 	/**
-	 * @param array|null $commandLine
+	 * @param list<string>|null $commandLine
 	 * @return RawCommandInvocation
 	 */
 	public static function fromCommandLine(?array $commandLine = null): RawCommandInvocation
@@ -17,7 +17,7 @@ class RawCommandInvocation
 		global $argv;
 		$commandLine ??= $argv;
 		$raw = implode(" ", $commandLine);
-		$argList = new ArrayList($commandLine);
+		$argList = ArrayList::from($commandLine);
 
 		if ($argList->isEmpty()) {
 			throw new InvalidArgumentException("Command line is empty");
@@ -34,6 +34,8 @@ class RawCommandInvocation
 		$compoundArgumentsKey = null;
 		$compoundArgumentsValue = null;
 		$compoundQuotes = null;
+
+		/** @psalm-suppress InvalidArgument */
 		return new self(
 			$commandName,
 			$argList->aggregate(function (CommandInvocationArgumentsMap $map, string $arg, int $index) use (&$compoundArgumentsKey, &$compoundArgumentsValue, &$compoundQuotes) {
@@ -51,11 +53,11 @@ class RawCommandInvocation
 					$value = $arg;
 				}
 
-				if ($compoundArgumentsKey === null && (str_starts_with($value, "\"") || str_starts_with($value, "'"))) {
+				if ($compoundArgumentsKey === null && is_string($value) && (str_starts_with($value, "\"") || str_starts_with($value, "'"))) {
 					$compoundArgumentsKey = $key;
 					$compoundArgumentsValue = substr($value, 1);
 					$compoundQuotes = $value[0];
-				} else if ($compoundQuotes !== null && str_ends_with($value, $compoundQuotes)) {
+				} else if (is_string($compoundQuotes) && is_string($value) && is_string($compoundArgumentsValue) && is_string($compoundArgumentsKey) && str_ends_with($value, $compoundQuotes)) {
 					$compoundArgumentsValue .= " " . substr($value, 0, -1);
 
 					$map->put($compoundArgumentsKey, $compoundArgumentsValue);
@@ -63,7 +65,7 @@ class RawCommandInvocation
 					$compoundArgumentsKey = null;
 					$compoundArgumentsValue = null;
 					$compoundQuotes = null;
-				} else if ($compoundArgumentsKey !== null) {
+				} else if (is_string($compoundArgumentsValue)) {
 					$compoundArgumentsValue .= " " . $value;
 				} else {
 					$map->put($key, $value);
