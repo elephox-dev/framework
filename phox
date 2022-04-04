@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Elephox\Development\DevConsoleApplicationBuilder;
-use Elephox\Logging\Contract\Logger;
+use Whoops\RunInterface;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
@@ -15,5 +15,5 @@ $app = $builder->build();
 try {
 	$app->run();
 } catch (Throwable $e) {
-	$app->services->requireService(Logger::class)->error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+	$app->services->requireService(RunInterface::class)->handleException($e);
 }

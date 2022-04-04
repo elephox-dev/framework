@@ -19,6 +19,9 @@ class GenericSinkLogger extends AbstractLogger
 	{
 		if ($message instanceof Throwable) {
 			$message = $message->getMessage();
+			if (!array_key_exists('exception', $metaData)) {
+				$metaData['exception'] = $message;
+			}
 		} else if ($message instanceof Stringable) {
 			$message = $message->__toString();
 		}

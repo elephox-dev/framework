@@ -12,8 +12,9 @@ use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
 use Elephox\Logging\Contract\Sink;
+use Elephox\Logging\FormattingConsoleSink;
 use Elephox\Logging\GenericSinkLogger;
-use Whoops\Handler\PlainTextHandler;
+use NunoMaduro\Collision\Handler as CollisionHandler;
 use Whoops\RunInterface as WhoopsRunInterface;
 use Whoops\Run as WhoopsRun;
 
@@ -96,16 +97,22 @@ class ConsoleApplicationBuilder
 			return new GenericSinkLogger($sink);
 		});
 
-		$this->services->addSingleton(Sink::class, implementation: new ConsoleSink());
+		$this->services->addSingleton(Sink::class, FormattingConsoleSink::class, function (): Sink {
+			return new FormattingConsoleSink(new ConsoleSink());
+		});
 
 		return $this;
 	}
 
-	public function addWhoops(): self
+	public function addCollision(): self
 	{
-		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class, implementationFactory: function () {
+		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class, implementationFactory: function (): WhoopsRun {
 			$whoops = new WhoopsRun();
-			$whoops->pushHandler(new PlainTextHandler());
+			/**
+			 * @psalm-suppress InternalClass
+			 * @psalm-suppress InternalMethod
+			 */
+			$whoops->pushHandler(new CollisionHandler());
 			return $whoops;
 		});
 

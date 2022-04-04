@@ -26,7 +26,6 @@
         </include>
         <exclude>
             <file>**/*Exception.php</file>
-            <directory>modules/Logging/src</directory>
         </exclude>
     </coverage>
 </phpunit>

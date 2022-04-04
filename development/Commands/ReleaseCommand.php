@@ -11,9 +11,10 @@ use ricardoboss\Console;
 
 class ReleaseCommand implements CommandHandler
 {
-	public const VERSION_REGEX = '/^(?<major>\d+)(?:\.(?<minor>\d+)(?:\.(?<patch>\d+))?)?(?:-(?<flag>\w+))?$/';
+	public const VERSION_REGEX = '/^(?<major>\d+)(?:\.(?<minor>\d+)(?:\.(?<patch>\d+))?)?(?<flag>-\w+)?$/';
 	public const BASE_BRANCH = 'develop';
 	public const RELEASE_BRANCH_PREFIX = 'release/';
+	public const RELEASE_TYPES = ['major', 'minor', 'patch', 'preview'];
 
 	public function __construct(
 		private readonly Logger $logger,
@@ -35,40 +36,34 @@ class ReleaseCommand implements CommandHandler
 	public function handle(CommandInvocation $command): int|null
 	{
 		$type = $command->getArgument('type')->value;
-		if (!is_string($type)) {
-			$this->logger->error('The release type must be a string.');
-
-			return 1;
-		}
-
-		if (!in_array($type, ['patch', 'minor', 'major'])) {
-			$this->logger->error('Invalid release type: ' . Console::grayBack($type));
+		if (!in_array($type, self::RELEASE_TYPES, true)) {
+			$this->logger->error(sprintf("Invalid release type: <cyan>%s</cyan>", is_string($type) ? $type : get_debug_type($type)));
 
 			return 1;
 		}
 
 		$version = $command->getArgument('version')->value;
 		if (!is_string($version)) {
-			$this->logger->error('The version must be a string.');
+			$this->logger->error("The version must be a string.");
 
 			return 1;
 		}
 
 		if (!preg_match(self::VERSION_REGEX, $version, $versionParts)) {
-			$this->logger->error('Invalid version: ' . Console::grayBack($version));
-			$this->logger->error('The version must be in the format: <major>[.<minor>[.<patch>]]');
+			$this->logger->error("Invalid version: <yellow>$version</yellow>");
+			$this->logger->error("The version must be in the format: <major>[.<minor>[.<patch>]]");
 
 			return 1;
 		}
 
 		if ($type === 'patch' && !array_key_exists('patch', $versionParts)) {
-			$this->logger->error("The patch release type can only be used on patch releases. " . Console::grayBack($version) . " is not a patch release.");
+			$this->logger->error("The patch release type can only be used on patch releases. <yellow>$version</yellow> is not a patch release.");
 
 			return 1;
 		}
 
 		if ($type === 'minor' && !array_key_exists('minor', $versionParts)) {
-			$this->logger->error("The minor release type can only be used on minor releases. " . Console::grayBack($version) . " is not a minor release.");
+			$this->logger->error("The minor release type can only be used on minor releases. <yellow>$version</yellow> is not a minor release.");
 
 			return 1;
 		}
@@ -76,72 +71,70 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['major'] = (int) $versionParts['major'];
 		$versionParts['minor'] = (int) ($versionParts['minor'] ?? 0);
 		$versionParts['patch'] = (int) ($versionParts['patch'] ?? 0);
-		$versionParts['flag'] = $versionParts['flag'] ? ('-' . $versionParts['flag']) : '';
+		$versionParts['flag'] = $versionParts['flag'] ?? '';
 
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
-		$majorReleaseBaseBranch = self::BASE_BRANCH;
-		$minorReleaseBaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'];
-		$patchReleaseBaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];
-		$previewReleaseBaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . '-' . $versionParts['flag'];
+		$baseBranch = match ($type) {
+			'major', 'minor' => self::BASE_BRANCH,
+			'patch', 'preview' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+		};
 
-		$this->logger->debug('Full version: ' . Console::yellow($versionName));
+		$this->logger->debug("Full version: <yellow>$versionName</yellow>");
+		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 
-		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
-		if (($type === 'minor' || $type === 'major') && $currentBranch !== self::BASE_BRANCH) {
-			$this->logger->error('You must be on the ' . Console::greenBack(self::BASE_BRANCH) . ' branch to release a major/minor version.');
-
-			return 1;
-		}
-
-		if ($type === 'patch' && $currentBranch !== self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor']) {
-			$this->logger->error('You must be on the ' . Console::greenBack(self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor']) . ' branch to release a patch version.');
+		$currentBranch = $this->executeGetLastLine("git rev-parse --abbrev-ref HEAD");
+		if ($currentBranch !== $baseBranch) {
+			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this <yellow>$type</yellow> version.");
+			$this->logger->error("You are currently on the <red>$currentBranch</red> branch.");
 
 			return 1;
 		}
 
-		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
-			$this->logger->error('Your working directory is dirty. Please commit or stash your changes.');
+		if (!empty($this->executeGetLastLine("git status --porcelain"))) {
+			$this->logger->error("Your working directory is dirty. Please commit or stash your changes.");
 
 			return 1;
 		}
 
-		if ($this->executeGetLastLine('git rev-parse HEAD') !== $this->executeGetLastLine('git rev-parse origin/')) {
-			$this->logger->error('Your local branch is not up to date with the remote branch. Please pull or push first.');
+		if ($this->executeGetLastLine("git rev-parse HEAD") !== $this->executeGetLastLine("git rev-parse origin/$baseBranch")) {
+			$this->logger->error("Your local branch is not up to date with the remote branch. Please pull or push first.");
 
 			return 1;
 		}
 
-		if ($this->executeRequireSuccess(
-			'The framework modules are not in sync:',
-			'composer modules:check --namespaces'
+		if (!$this->executeRequireSuccess(
+			"The framework modules are not in sync:",
+			"composer modules:check --namespaces"
 		)) {
 			return 1;
 		}
 
-		$releaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];
+		$versionReleaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];
 
 		if (!$this->executeRequireSuccess(
-			'Failed to create the release branch: ' . Console::yellow($releaseBranch),
-			"git checkout -b %s", $releaseBranch)
+			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
+			"git checkout -b %s", $versionReleaseBranch)
 		) {
 			return 1;
 		}
 
-		$this->logger->warning('You are now on the release branch for ' . Console::green($version) . ' (' . Console::yellow($releaseBranch) . ').');
-		$this->logger->warning('You can make last-minute adjustments now and commit them.');
-		$this->logger->warning('When you are done, press enter and the release will continue.');
+		$this->logger->warning("You are now on the release branch for <yellow>$version</yellow> (<green>$versionReleaseBranch</green>).");
+		$this->logger->warning("You can make last-minute adjustments now and commit them.");
+		$this->logger->warning("When you are done, press enter and the release will continue.");
 		fgets(STDIN);
 
-		$this->logger->info('Releasing ' . Console::greenBack($type) . ' version ' . Console::yellow($versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch']));
+		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
-			!$this->executeIsSuccess('git checkout -B %s --track origin/%s', $releaseBranch, $releaseBranch) ||
+			!$this->executeIsSuccess('git checkout -B %s --track origin/%s', $versionReleaseBranch, $versionReleaseBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s %s', $currentBranch)
 		) {
-			$this->logger->error('Failed to merge the current branch into the release branch.');
+			$this->logger->error("Failed to merge the current branch into the release branch.");
 
 			return 1;
 		}
+
+		// TODO: Implement handle()
 
 		return 0;
 	}

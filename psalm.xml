@@ -17,9 +17,10 @@
         <directory name="modules/*/src"/>
     </projectFiles>
     <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
     <issueHandlers>
-        <DocblockTypeContradiction errorLevel="suppress" />
-        <RedundantConditionGivenDocblockType errorLevel="suppress" />
+        <DocblockTypeContradiction errorLevel="suppress"/>
+        <RedundantConditionGivenDocblockType errorLevel="suppress"/>
     </issueHandlers>
 </psalm>

@@ -28,6 +28,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Console/src" isTestSource="false" packagePrefix="Elephox\Console\" />
       <sourceFolder url="file://$MODULE_DIR$/development" isTestSource="true" packagePrefix="Elephox\Development\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/DI/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/Logging/test" isTestSource="true" packagePrefix="Elephox\Logging\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
@@ -81,17 +82,13 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/infection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/abstract-testframework-adapter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infection/extension-installer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/dom" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/phpbench" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest/hamcrest-php" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpbench/container" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-printer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-schema-validator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/composer-normalize" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ergebnis/json-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
@@ -100,12 +97,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/options-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/phpunit" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-invoker" />
@@ -126,6 +121,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/orm" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/facade/ignition-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nunomaduro/collision" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -19,6 +19,11 @@
             "Elephox\\Logging\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Elephox\\Logging\\": "test/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
