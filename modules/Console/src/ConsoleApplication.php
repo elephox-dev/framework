@@ -10,6 +10,7 @@ use Elephox\Console\Command\CommandNotFoundException;
 use Elephox\Console\Command\HelpCommand;
 use Elephox\Console\Command\NoCommandInCommandLineException;
 use Elephox\Console\Command\RawCommandInvocation;
+use Elephox\Console\Command\RequiredArgumentMissingException;
 use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
@@ -54,6 +55,11 @@ class ConsoleApplication
 			$this->services->requireService(Logger::class)->error($e->getMessage());
 
 			$this->handle(RawCommandInvocation::fromCommandLine([$argv[0], 'help']));
+			$code = 1;
+		} catch (RequiredArgumentMissingException $e) {
+			$this->services->requireService(Logger::class)->error($e->getMessage());
+
+			$this->handle(RawCommandInvocation::fromCommandLine([$argv[0], 'help', $argv[1]]));
 			$code = 1;
 		}
 
