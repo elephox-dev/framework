@@ -104,7 +104,7 @@ class ConsoleApplicationBuilder
 		return $this;
 	}
 
-	public function addCollision(): self
+	public function addWhoops(): self
 	{
 		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class, implementationFactory: function (): WhoopsRun {
 			$whoops = new WhoopsRun();
