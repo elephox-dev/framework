@@ -127,7 +127,7 @@ class ReleaseCommand implements CommandHandler
 
 		if (
 			!$this->executeIsSuccess('git checkout -B %s', $baseBranch) ||
-			!$this->executeIsSuccess('git merge --no-ff --no-edit %s %s', $currentBranch)
+			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
 			$this->logger->error("Failed to merge the current branch into the release branch.");
 
