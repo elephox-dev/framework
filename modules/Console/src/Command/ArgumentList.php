@@ -27,8 +27,9 @@ class ArgumentList extends ArrayList
 				continue;
 			}
 
-			if (!$argumentsMap->isEmpty()) {
-				$argKey = $argumentsMap->firstKeyOrDefault(null, fn ($k) => !in_array($k, $usedKeys, true));
+			$availableKeys = $argumentsMap->whereKey(fn($k) => !in_array($k, $usedKeys, true))->flip()->toList();
+			if (!empty($availableKeys)) {
+				$argKey = array_shift($availableKeys);
 				if ($argKey !== null) {
 					$arguments->add(Argument::fromTemplate($argumentTemplate, $argumentsMap->get($argKey)));
 					$usedKeys[] = $argKey;
