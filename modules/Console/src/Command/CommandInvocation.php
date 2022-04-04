@@ -14,8 +14,8 @@ use LogicException;
 class CommandInvocation
 {
 	public function __construct(
-		public RawCommandInvocation $raw,
-		public ArgumentList $arguments,
+		public readonly RawCommandInvocation $raw,
+		public readonly ArgumentList $arguments,
 	)
 	{
 	}
@@ -34,8 +34,9 @@ class CommandInvocation
 				);
 	}
 
-	public function __get(string $name): mixed
+	public function __get(string $name): null|string|int|float|bool
 	{
+		/** @var null|string|int|float|bool */
 		return $this->raw->$name ?? $this->getArgument($name)->value;
 	}
 
