@@ -205,7 +205,8 @@ class ReleaseCommand implements CommandHandler
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
-		$tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release" . DIRECTORY_SEPARATOR . $name;
+		/** @psalm-suppress UndefinedConstant */
+		$tmpDir = APP_ROOT . "/tmp/release/$name";
 		if (!$this->mkdir($tmpDir)) {
 			return 1;
 		}
