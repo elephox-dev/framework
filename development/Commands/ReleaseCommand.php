@@ -203,7 +203,7 @@ class ReleaseCommand implements CommandHandler
 
 	private function releaseModule(string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch): int
 	{
-		$this->logger->info("<underline>Releasing module <blue>$name</blue></underline>");
+		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
 		$tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release" . DIRECTORY_SEPARATOR . $name;
 		if (!$this->mkdir($tmpDir)) {
