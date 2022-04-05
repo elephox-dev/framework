@@ -80,9 +80,10 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['flag'] = $versionParts['flag'] ?? '';
 
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
+		$targetBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'];
 		$baseBranch = match ($type) {
 			'major', 'minor' => self::BASE_BRANCH,
-			'patch' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'patch' => $targetBranch,
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
 
@@ -138,7 +139,7 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
-			!$this->executeIsSuccess('git checkout -B %s', $baseBranch) ||
+			!$this->executeIsSuccess('git checkout -B %s --track %s', $targetBranch, 'origin/' . $targetBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
 			$this->logger->error("Failed to merge the current branch into the release branch.");
