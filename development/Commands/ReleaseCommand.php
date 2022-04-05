@@ -175,6 +175,20 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		if (!$dryRun && !$this->executeRequireSuccess(
+				"Failed to push tags to the remote repository",
+				'git push --tags',
+			)) {
+			return 1;
+		}
+
+		if (!$dryRun && !$this->executeRequireSuccess(
+				"Failed to push to the remote repository",
+				'git push --all',
+			)) {
+			return 1;
+		}
+
 		$modulesDir = APP_ROOT . "/modules";
 		$this->logger->info("Releasing modules...");
 
@@ -195,7 +209,7 @@ class ReleaseCommand implements CommandHandler
 		}) as $moduleDir) {
 			$moduleName = strtolower(basename($moduleDir));
 
-			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName);
+			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName, $dryRun);
 			if ($result !== 0) {
 				return $result;
 			}
@@ -206,7 +220,7 @@ class ReleaseCommand implements CommandHandler
 		return 0;
 	}
 
-	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionName): int
+	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionName, bool $dryRun): int
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
@@ -253,6 +267,20 @@ class ReleaseCommand implements CommandHandler
 		if (!$this->executeRequireSuccess(
 			"Failed to tag current release (<yellow>$versionName</yellow>)",
 			'git tag -a %s -m %s', $versionName, "Release $versionName",
+		)) {
+			return 1;
+		}
+
+		if (!$dryRun && !$this->executeRequireSuccess(
+			"Failed to push tags to the remote repository",
+			'git push --tags'
+		)) {
+			return 1;
+		}
+
+		if (!$dryRun && !$this->executeRequireSuccess(
+			"Failed to push to the remote repository",
+			'git push --all'
 		)) {
 			return 1;
 		}
