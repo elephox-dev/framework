@@ -15,6 +15,7 @@ class ReleaseCommand implements CommandHandler
 	public const BASE_BRANCH = 'develop';
 	public const RELEASE_BRANCH_PREFIX = 'release/';
 	public const RELEASE_TYPES = ['major', 'minor', 'patch', 'preview'];
+	public const CLONE_ORIGIN_PREFIX = "https://github.com/elephox-dev/";
 
 	public function __construct(
 		private readonly Logger $logger,
@@ -91,7 +92,7 @@ class ReleaseCommand implements CommandHandler
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
 
-		$dryRun = $command->getArgument('dry-run')->value;
+		$dryRun = (bool)$command->getArgument('dry-run')->value;
 		if ($dryRun) {
 			$this->logger->warning("Performing a dry run. No changes will be made.");
 		}
@@ -141,7 +142,7 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->warning("When you are done, press enter and the release will continue.");
 		fgets(STDIN);
 
-		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
+		$this->logger->info("Releasing framework <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
 			!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
@@ -175,7 +176,71 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		// TODO: Implement handle()
+		/** @psalm-suppress UndefinedConstant */
+		$modulesDir = APP_ROOT . '/modules';
+		$this->logger->info("Releasing modules...");
+
+		$dirs = scandir($modulesDir);
+		if ($dirs === false) {
+			$this->logger->error("Failed to scan the modules directory.");
+
+			return 1;
+		}
+
+		foreach (array_filter($dirs, static function ($dir) use ($modulesDir) {
+			return is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.';
+		}) as $moduleDir) {
+			$moduleName = strtolower(basename($moduleDir));
+
+			$result = $this->releaseModule($moduleName, $baseBranch, $targetBranch, $versionReleaseBranch);
+			if ($result !== 0) {
+				return $result;
+			}
+		}
+
+		return 0;
+	}
+
+	private function releaseModule(string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch): int
+	{
+		$this->logger->info("<underline>Releasing module <blue>$name</blue></underline>");
+
+		$tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-release" . DIRECTORY_SEPARATOR . $name;
+		if (!$this->mkdir($tmpDir)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to clone the module repository",
+			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $tmpDir
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to checkout base branch (<green>$baseBranch</green>)",
+			"git checkout -B %s", $baseBranch
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
+			"git switch -c %s", $versionReleaseBranch
+		)) {
+			return 1;
+		}
+
+		if (
+			!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
+			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
+		) {
+			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
+
+			return 1;
+		}
+
+		$this->rmdirRecursive($tmpDir);
 
 		return 0;
 	}
@@ -183,10 +248,21 @@ class ReleaseCommand implements CommandHandler
 	private function rmdirRecursive(string $dir): void
 	{
 		if (PHP_OS === "WINNT") {
-			exec(sprintf("rd /s /q %s", escapeshellarg($dir)));
+			$this->execute("rd /s /q %s", $dir);
 		} else {
-			exec(sprintf("rm -rf %s", escapeshellarg($dir)));
+			$this->execute("rm -rf %s", $dir);
 		}
+	}
+
+	private function mkdir(string $dir): bool
+	{
+		if (!is_dir($dir) && !mkdir($dir, recursive: true) && !is_dir($dir)) {
+			$this->logger->error(sprintf('Directory "%s" was not created', $dir));
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
