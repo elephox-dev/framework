@@ -139,7 +139,7 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
-			!$this->executeIsSuccess('git switch -c %s --track %s', $targetBranch, 'origin/' . $targetBranch) ||
+			!$this->executeIsSuccess('git switch -c %s', $targetBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
 			$this->logger->error("Failed to merge the current branch into the release branch.");
@@ -169,7 +169,7 @@ class ReleaseCommand implements CommandHandler
 	private function execute(string $commandLine, float|int|string ...$args): array
 	{
 		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', array_map(static fn ($v) => (string)$v, $args)));
-		$this->logger->info(Console::green("$ ") . Console::light_gray($commandLine));
+		$this->logger->debug(Console::green("$ ") . Console::light_gray($commandLine));
 
 		ob_start();
 
