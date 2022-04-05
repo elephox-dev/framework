@@ -29,7 +29,7 @@ class ReleaseCommand implements CommandHandler
 			->description('Release a new version of the framework and its modules.')
 			->argument('type', 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')')
 			->argument('version', 'The version to release')
-			->argument('dry-run', 'Whether to perform a dry run (no changes will be made)', false, false)
+			->argument('dry-run', 'Whether to perform a dry run (no changes will be pushed)', false, false)
 		;
 	}
 
