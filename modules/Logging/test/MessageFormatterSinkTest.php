@@ -8,10 +8,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as M;
 
 /**
- * @covers \Elephox\Logging\FormattingConsoleSink
+ * @covers \Elephox\Logging\MessageFormatterSink
  * @covers \Elephox\Logging\LogLevel
  */
-class FormattingConsoleSinkTest extends MockeryTestCase
+class MessageFormatterSinkTest extends MockeryTestCase
 {
 	public function testSimpleWrite(): void
 	{
@@ -23,8 +23,8 @@ class FormattingConsoleSinkTest extends MockeryTestCase
 			->andReturns()
 		;
 
-		$formattingConsoleSink = new FormattingConsoleSink($sink);
-		$formattingConsoleSink->write("Hello World", LogLevel::INFO, []);
+		$messageFormatterSink = new MessageFormatterSink($sink);
+		$messageFormatterSink->write("Hello World", LogLevel::INFO, []);
 	}
 
 	public function testSimpleFormatWrite(): void
@@ -37,7 +37,7 @@ class FormattingConsoleSinkTest extends MockeryTestCase
 			->andReturns()
 		;
 
-		$formattingConsoleSink = new FormattingConsoleSink($sink);
-		$formattingConsoleSink->write("Hello <green>World</green>", LogLevel::INFO, []);
+		$messageFormatterSink = new MessageFormatterSink($sink);
+		$messageFormatterSink->write("Hello <green>World</green>", LogLevel::INFO, []);
 	}
 }

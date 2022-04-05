@@ -11,12 +11,11 @@ use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
-use Elephox\Logging\Contract\Sink;
-use Elephox\Logging\FormattingConsoleSink;
-use Elephox\Logging\GenericSinkLogger;
+use Elephox\Logging\MessageFormatterSink;
+use Elephox\Logging\MultiSinkLogger;
 use NunoMaduro\Collision\Handler as CollisionHandler;
-use Whoops\RunInterface as WhoopsRunInterface;
 use Whoops\Run as WhoopsRun;
+use Whoops\RunInterface as WhoopsRunInterface;
 
 class ConsoleApplicationBuilder
 {
@@ -93,12 +92,10 @@ class ConsoleApplicationBuilder
 
 	public function addLogging(): self
 	{
-		$this->services->addSingleton(Logger::class, GenericSinkLogger::class, function (Sink $sink): GenericSinkLogger {
-			return new GenericSinkLogger($sink);
-		});
-
-		$this->services->addSingleton(Sink::class, FormattingConsoleSink::class, function (): Sink {
-			return new FormattingConsoleSink(new ConsoleSink());
+		$this->services->addSingleton(Logger::class, MultiSinkLogger::class, function (): MultiSinkLogger {
+			$logger = new MultiSinkLogger();
+			$logger->addSink(new MessageFormatterSink(new ConsoleSink()));
+			return $logger;
 		});
 
 		return $this;

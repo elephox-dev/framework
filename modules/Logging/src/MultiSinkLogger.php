@@ -3,16 +3,25 @@ declare(strict_types=1);
 
 namespace Elephox\Logging;
 
+use Elephox\Collection\ArrayList;
 use Elephox\Logging\Contract\LogLevel;
 use Stringable;
 use Throwable;
 
-class GenericSinkLogger extends AbstractLogger
+class MultiSinkLogger extends AbstractLogger
 {
-	public function __construct(
-		private Contract\Sink $sink,
-	)
+	/** @var ArrayList<Contract\Sink> */
+	private readonly ArrayList $sinks;
+
+	public function __construct()
 	{
+		/** @var ArrayList<Contract\Sink> sinks */
+		$this->sinks = new ArrayList();
+	}
+
+	public function addSink(Contract\Sink $sink): void
+	{
+		$this->sinks->add($sink);
 	}
 
 	public function log(Throwable|Stringable|string $message, LogLevel $level, array $metaData = []): void
@@ -26,6 +35,8 @@ class GenericSinkLogger extends AbstractLogger
 			$message = $message->__toString();
 		}
 
-		$this->sink->write($message, $level, $metaData);
+		foreach ($this->sinks as $sink) {
+			$sink->write($message, $level, $metaData);
+		}
 	}
 }

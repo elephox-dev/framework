@@ -7,9 +7,9 @@ use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\LogLevel as LogLevelEnum;
 
-class FormattingConsoleSink implements Sink
+class MessageFormatterSink implements Sink
 {
-	public function __construct(private readonly Sink $child)
+	public function __construct(private readonly Sink $innerSink)
 	{
 	}
 
@@ -42,6 +42,6 @@ class FormattingConsoleSink implements Sink
 			);
 		}
 
-		$this->child->write($message, $level, $metaData);
+		$this->innerSink->write($message, $level, $metaData);
 	}
 }
