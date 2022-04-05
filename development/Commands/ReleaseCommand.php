@@ -22,9 +22,9 @@ class ReleaseCommand implements CommandHandler
 	{
 	}
 
-	public function configure(CommandTemplateBuilder $builder): CommandTemplateBuilder
+	public function configure(CommandTemplateBuilder $builder): void
 	{
-		return $builder
+		$builder
 			->name('release')
 			->description('Release a new version of the framework and its modules.')
 			->argument('type', 'The type of release (patch, minor, major)')

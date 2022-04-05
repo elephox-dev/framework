@@ -8,7 +8,7 @@ use Elephox\Console\Command\CommandTemplateBuilder;
 
 interface CommandHandler
 {
-	public function configure(CommandTemplateBuilder $builder): CommandTemplateBuilder;
+	public function configure(CommandTemplateBuilder $builder): void;
 
 	public function handle(CommandInvocation $command): int|null;
 }

@@ -35,6 +35,16 @@ class CommandCollection implements IteratorAggregate
 		});
 	}
 
+	protected function preProcessCommandTemplate(CommandTemplateBuilder $builder): void
+	{
+		// Do nothing by default
+	}
+
+	protected function postProcessCommandTemplate(CommandTemplateBuilder $builder): void
+	{
+		// Do nothing by default
+	}
+
 	/**
 	 * @param class-string $className
 	 * @return void
@@ -48,7 +58,12 @@ class CommandCollection implements IteratorAggregate
 
 		/** @var CommandHandler $instance */
 		$instance = $this->resolver->instantiate($className);
-		$template = $instance->configure(new CommandTemplateBuilder())->build();
+
+		$templateBuilder = new CommandTemplateBuilder();
+		$this->preProcessCommandTemplate($templateBuilder);
+		$instance->configure($templateBuilder);
+		$this->postProcessCommandTemplate($templateBuilder);
+		$template = $templateBuilder->build();
 
 		$this->add($template, $instance);
 	}
