@@ -27,17 +27,46 @@ class MessageFormatterSink implements Sink
 			'white' => 97,
 			'default' => 39,
 		] as $color => $code) {
+			$opener = "\033[{$code}m";
 			$closer = match ($level->getLevel()) {
-				LogLevelEnum::DEBUG->getLevel() => "\033[0;90m",
-				LogLevelEnum::WARNING->getLevel() => "\033[0;33m",
-				LogLevelEnum::ERROR->getLevel(),
-				LogLevelEnum::EMERGENCY->getLevel() => "\033[0;31m",
-				LogLevelEnum::CRITICAL->getLevel() => "\033[0;35m",
-				default => "\033[0m",
+				LogLevelEnum::DEBUG->getLevel() => "\033[90m",
+				LogLevelEnum::WARNING->getLevel() => "\033[33m",
+				LogLevelEnum::ERROR->getLevel() => "\033[31m",
+				LogLevelEnum::CRITICAL->getLevel() => "\033[35m",
+				default => "\033[39m",
 			};
 			$message = (string)preg_replace(
 				"/<$color>(.*?)<\/$color>/",
-				"\033[0;{$code}m$1$closer",
+				"$opener$1$closer",
+				$message
+			);
+		}
+
+		foreach ([
+			'blackBack' => 40,
+			'redBack' => 41,
+			'greenBack' => 42,
+			'yellowBack' => 43,
+			'blueBack' => 44,
+			'magentaBack' => 45,
+			'cyanBack' => 46,
+			'grayBack' => 100,
+			'whiteBack' => 107,
+			'defaultBack' => 49,
+		] as $color => $code) {
+			$opener = "\033[{$code}m";
+			$closer = match ($level->getLevel()) {
+				LogLevelEnum::DEBUG->getLevel() => "\033[90;49m",
+				LogLevelEnum::WARNING->getLevel() => "\033[33;49m",
+				LogLevelEnum::ERROR->getLevel() => "\033[31;49m",
+				LogLevelEnum::CRITICAL->getLevel() => "\033[35;49m",
+				LogLevelEnum::ALERT->getLevel() => "\033[97;43m",
+				LogLevelEnum::EMERGENCY->getLevel() => "\033[97;41m",
+				default => "\033[49m",
+			};
+			$message = (string)preg_replace(
+				"/<$color>(.*?)<\/$color>/",
+				"$opener$1$closer",
 				$message
 			);
 		}
