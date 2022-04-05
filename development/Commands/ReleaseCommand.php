@@ -80,7 +80,11 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['flag'] = $versionParts['flag'] ?? '';
 
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
-		$targetBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'];
+		$targetBranch = match ($type) {
+			'major', 'minor', 'patch' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+		};
+
 		$baseBranch = match ($type) {
 			'major', 'minor' => self::BASE_BRANCH,
 			'patch' => $targetBranch,
@@ -126,13 +130,14 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
-			"git checkout -b %s", $versionReleaseBranch)
-		) {
+			"git switch -c %s", $versionReleaseBranch
+		)) {
 			return 1;
 		}
 
 		$this->logger->warning("You are now on the release branch for <yellow>$version</yellow> (<green>$versionReleaseBranch</green>).");
 		$this->logger->warning("You can make last-minute adjustments now and commit them.");
+		$this->logger->warning("This branch will be merged into the <green>$baseBranch</green> branch and deleted afterwards.");
 		$this->logger->warning("When you are done, press enter and the release will continue.");
 		fgets(STDIN);
 
@@ -142,7 +147,23 @@ class ReleaseCommand implements CommandHandler
 			!$this->executeIsSuccess('git switch -c %s', $targetBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
-			$this->logger->error("Failed to merge the current branch into the release branch.");
+			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
+
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to tag current release (<yellow>$versionName</yellow>)",
+			'git tag -a %s -m %s', $versionName, "Release $versionName",
+		)) {
+			return 1;
+		}
+
+		if (
+			!$this->executeIsSuccess('git switch -c %s', $baseBranch) ||
+			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $targetBranch)
+		) {
+			$this->logger->error("Failed to back-merge the release commit into the base branch (<green>$baseBranch</green>).");
 
 			return 1;
 		}
