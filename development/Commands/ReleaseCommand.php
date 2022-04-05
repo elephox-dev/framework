@@ -139,7 +139,7 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
-			!$this->executeIsSuccess('git checkout -B %s --track %s', $targetBranch, 'origin/' . $targetBranch) ||
+			!$this->executeIsSuccess('git switch -c %s --track %s', $targetBranch, 'origin/' . $targetBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
 			$this->logger->error("Failed to merge the current branch into the release branch.");
