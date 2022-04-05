@@ -71,6 +71,22 @@ class MessageFormatterSink implements Sink
 			);
 		}
 
+		foreach ([
+			'bold' => [1, 22],
+			'underline' => [4, 24],
+			'blink' => [5, 25],
+			'inverse' => [7, 27],
+			'hidden' => [8, 28],
+		] as $option => $codes) {
+			$opener = "\033[$codes[0]m";
+			$closer = "\033[$codes[1]m";
+			$message = (string)preg_replace(
+				"/<$option>(.*?)<\/$option>/",
+				"$opener$1$closer",
+				$message
+			);
+		}
+
 		$this->innerSink->write($message, $level, $metaData);
 	}
 }
