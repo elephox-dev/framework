@@ -175,6 +175,17 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		if ($targetBranch !== self::BASE_BRANCH) {
+			if (
+				!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
+				!$this->executeIsSuccess('git merge --no-ff --no-edit %s', self::BASE_BRANCH)
+			) {
+				$this->logger->error("Failed to back-merge the release commit into the <green>" . self::BASE_BRANCH . "</green> branch.");
+
+				return 1;
+			}
+		}
+
 		if (!$dryRun && !$this->executeRequireSuccess(
 				"Failed to push tags to the remote repository",
 				'git push --tags',
