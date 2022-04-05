@@ -153,6 +153,13 @@ class ReleaseCommand implements CommandHandler
 		}
 
 		if (!$this->executeRequireSuccess(
+			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
+			'git branch -d %s', $versionReleaseBranch
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
 			"Failed to tag current release (<yellow>$versionName</yellow>)",
 			'git tag -a %s -m %s', $versionName, "Release $versionName",
 		)) {
