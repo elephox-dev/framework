@@ -144,7 +144,7 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->info("Releasing <cyan>$type</cyan> version <yellow>$version</yellow>");
 
 		if (
-			!$this->executeIsSuccess('git switch -c %s', $targetBranch) ||
+			!$this->executeIsSuccess('git checkout -b %s', $targetBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
 		) {
 			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
@@ -160,7 +160,7 @@ class ReleaseCommand implements CommandHandler
 		}
 
 		if (
-			!$this->executeIsSuccess('git switch -c %s', $baseBranch) ||
+			!$this->executeIsSuccess('git checkout -b %s', $baseBranch) ||
 			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $targetBranch)
 		) {
 			$this->logger->error("Failed to back-merge the release commit into the base branch (<green>$baseBranch</green>).");
