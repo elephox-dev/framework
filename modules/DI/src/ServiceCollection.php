@@ -33,7 +33,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	public function __construct()
 	{
 		$this->services = new ArraySet(
-			comparer: fn(?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType
+			comparer: fn(?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType && $a?->implementationType === $b?->implementationType
 		);
 
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
