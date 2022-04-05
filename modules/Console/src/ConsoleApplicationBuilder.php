@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Console;
 
+use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
 use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\Contract\ConsoleEnvironment;
-use Elephox\DI\Contract\ServiceCollection;
+use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\DI\ServiceCollection;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
 use Elephox\Logging\MessageFormatterSink;
@@ -17,12 +19,30 @@ use NunoMaduro\Collision\Handler as CollisionHandler;
 use Whoops\Run as WhoopsRun;
 use Whoops\RunInterface as WhoopsRunInterface;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class ConsoleApplicationBuilder
 {
+	public static function create(): static
+	{
+		$configuration = new ConfigurationManager();
+		$environment = new GlobalConsoleEnvironment();
+		$services = new ServiceCollection();
+		$commands = new CommandCollection($services->resolver());
+
+		return new static(
+			$configuration,
+			$environment,
+			$services,
+			$commands,
+		);
+	}
+
 	public function __construct(
 		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
 		public readonly ConsoleEnvironment $environment,
-		public readonly ServiceCollection $services,
+		public readonly ServiceCollectionContract $services,
 		public readonly CommandCollection $commands,
 	)
 	{

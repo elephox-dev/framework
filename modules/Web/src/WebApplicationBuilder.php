@@ -7,18 +7,57 @@ use Doctrine\ORM\Configuration as DoctrineConfiguration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
+use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationBuilder;
+use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
 use Elephox\DI\Contract\ServiceCollection;
+use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\Http\Contract\Request as RequestContract;
+use Elephox\Http\Contract\ResponseBuilder;
+use Elephox\Http\Response;
+use Elephox\Http\ResponseCode;
+use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
+use Elephox\Web\Middleware\ProcessingTimeHeader;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
 use Whoops\Run as WhoopsRun;
 use Whoops\RunInterface as WhoopsRunInterface;
 
+/**
+ * @psalm-consistent-constructor
+ */
 class WebApplicationBuilder
 {
+	public static function create(
+		?ConfigurationManagerContract $configuration = null,
+		?WebEnvironment $environment = null,
+		?ServiceCollectionContract $services = null,
+		?RequestPipelineBuilder $pipeline = null,
+	): static
+	{
+		$configuration ??= new ConfigurationManager();
+		$environment ??= new GlobalWebEnvironment();
+		$services ??= new \Elephox\DI\ServiceCollection();
+		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
+			public function handle(RequestContract $request): ResponseBuilder
+			{
+				return Response::build()->responseCode(ResponseCode::BadRequest);
+			}
+		});
+
+		$pipeline->push(new ProcessingTimeHeader());
+
+		return new static(
+			$configuration,
+			$environment,
+			$services,
+			$pipeline,
+		);
+	}
+
 	public function __construct(
 		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
 		public readonly WebEnvironment $environment,

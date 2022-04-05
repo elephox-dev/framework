@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Console;
 
-use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\Command\CommandNotFoundException;
@@ -13,7 +12,6 @@ use Elephox\Console\Command\RawCommandInvocation;
 use Elephox\Console\Command\RequiredArgumentMissingException;
 use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
-use Elephox\DI\ServiceCollection;
 use Elephox\Logging\Contract\Logger;
 
 class ConsoleApplication
@@ -26,22 +24,7 @@ class ConsoleApplication
 	{
 	}
 
-	public static function createBuilder(): ConsoleApplicationBuilder
-	{
-		$configuration = new ConfigurationManager();
-		$environment = new GlobalConsoleEnvironment();
-		$services = new ServiceCollection();
-		$commands = new CommandCollection($services->resolver());
-
-		return new ConsoleApplicationBuilder(
-			$configuration,
-			$environment,
-			$services,
-			$commands,
-		);
-	}
-
-	public function run(): never
+	public function run(): void
 	{
 		global $argv;
 

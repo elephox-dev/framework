@@ -12,21 +12,6 @@ use Elephox\DI\ServiceCollection;
 
 class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 {
-	public static function create(): self
-	{
-		$configuration = new ConfigurationManager();
-		$environment = new GlobalConsoleEnvironment();
-		$services = new ServiceCollection();
-		$commands = new CommandCollection($services->resolver());
-
-		return new self(
-			$configuration,
-			$environment,
-			$services,
-			$commands,
-		);
-	}
-
 	protected function registerDefaultConfig(): self
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
