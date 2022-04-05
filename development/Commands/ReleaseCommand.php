@@ -211,6 +211,14 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		$pwd = getcwd();
+		if ($pwd === false) {
+			$this->logger->error("Failed to get the current working directory.");
+
+			return 1;
+		}
+		chdir($tmpDir);
+
 		if (!$this->executeRequireSuccess(
 			"Failed to clone the module repository",
 			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $tmpDir
@@ -255,6 +263,7 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		chdir($pwd);
 		$this->rmdirRecursive($tmpDir);
 
 		return 0;
