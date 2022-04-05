@@ -192,7 +192,7 @@ class ReleaseCommand implements CommandHandler
 		}) as $moduleDir) {
 			$moduleName = strtolower(basename($moduleDir));
 
-			$result = $this->releaseModule($moduleName, $baseBranch, $targetBranch, $versionReleaseBranch);
+			$result = $this->releaseModule($moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName);
 			if ($result !== 0) {
 				return $result;
 			}
@@ -201,7 +201,7 @@ class ReleaseCommand implements CommandHandler
 		return 0;
 	}
 
-	private function releaseModule(string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch): int
+	private function releaseModule(string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionName): int
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
@@ -237,6 +237,20 @@ class ReleaseCommand implements CommandHandler
 		) {
 			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
 
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
+			'git branch -d %s', $versionReleaseBranch
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			"Failed to tag current release (<yellow>$versionName</yellow>)",
+			'git tag -a %s -m %s', $versionName, "Release $versionName",
+		)) {
 			return 1;
 		}
 
