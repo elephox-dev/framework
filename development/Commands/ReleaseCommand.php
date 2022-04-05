@@ -27,7 +27,7 @@ class ReleaseCommand implements CommandHandler
 		$builder
 			->name('release')
 			->description('Release a new version of the framework and its modules.')
-			->argument('type', 'The type of release (patch, minor, major)')
+			->argument('type', 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')')
 			->argument('version', 'The version to release')
 			->argument('dry-run', 'Whether to perform a dry run (no changes will be made)', false, false)
 		;
@@ -56,14 +56,20 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		if ($type === 'preview' && !array_key_exists('flag', $versionParts)) {
+			$this->logger->error("The <green>preview</green> release type can only be used on preview releases. <yellow>$version</yellow> is missing a flag (e.g. 1.0<yellowBack>-alpha1</yellowBack>).");
+
+			return 1;
+		}
+
 		if ($type === 'patch' && !array_key_exists('patch', $versionParts)) {
-			$this->logger->error("The patch release type can only be used on patch releases. <yellow>$version</yellow> is not a patch release.");
+			$this->logger->error("The <green>patch</green> release type can only be used on patch releases. <yellow>$version</yellow> is missing a patch number (e.g. 1.0<yellowBack>.2</yellowBack>).");
 
 			return 1;
 		}
 
 		if ($type === 'minor' && !array_key_exists('minor', $versionParts)) {
-			$this->logger->error("The minor release type can only be used on minor releases. <yellow>$version</yellow> is not a minor release.");
+			$this->logger->error("The <green>minor</green> release type can only be used on minor releases. <yellow>$version</yellow> is missing a minor number (e.g. 1.<yellowBack>2</yellowBack>).");
 
 			return 1;
 		}
@@ -76,8 +82,14 @@ class ReleaseCommand implements CommandHandler
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
 		$baseBranch = match ($type) {
 			'major', 'minor' => self::BASE_BRANCH,
-			'patch', 'preview' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'patch' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
+
+		$dryRun = $command->getArgument('dry-run')->value;
+		if ($dryRun) {
+			$this->logger->warning("Performing a dry run. No changes will be made.");
+		}
 
 		$this->logger->debug("Full version: <yellow>$versionName</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
