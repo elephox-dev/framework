@@ -7,7 +7,6 @@ use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\Logging\Contract\Logger;
-use ricardoboss\Console;
 
 class ReleaseCommand implements CommandHandler
 {
@@ -176,8 +175,7 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		/** @psalm-suppress UndefinedConstant */
-		$modulesDir = APP_ROOT . '/modules';
+		$modulesDir = APP_ROOT . "/modules";
 		$this->logger->info("Releasing modules...");
 
 		$dirs = scandir($modulesDir);
@@ -187,44 +185,40 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		$tmpDir = APP_ROOT . "/tmp/release/";
+		if (!$this->mkdir($tmpDir)) {
+			return 1;
+		}
+
 		foreach (array_filter($dirs, static function ($dir) use ($modulesDir) {
 			return is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.';
 		}) as $moduleDir) {
 			$moduleName = strtolower(basename($moduleDir));
 
-			$result = $this->releaseModule($moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName);
+			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName);
 			if ($result !== 0) {
 				return $result;
 			}
 		}
 
+		$this->rmdirRecursive($tmpDir);
+
 		return 0;
 	}
 
-	private function releaseModule(string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionName): int
+	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionName): int
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
-		/** @psalm-suppress UndefinedConstant */
-		$tmpDir = APP_ROOT . "/tmp/release/$name";
-		if (!$this->mkdir($tmpDir)) {
-			return 1;
-		}
-
-		$pwd = getcwd();
-		if ($pwd === false) {
-			$this->logger->error("Failed to get the current working directory.");
-
-			return 1;
-		}
-		chdir($tmpDir);
-
+		$moduleFolder = $tmpFolder . '/' . $name;
 		if (!$this->executeRequireSuccess(
 			"Failed to clone the module repository",
-			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $tmpDir
+			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $moduleFolder
 		)) {
 			return 1;
 		}
+
+		chdir($moduleFolder);
 
 		if (!$this->executeRequireSuccess(
 			"Failed to checkout base branch (<green>$baseBranch</green>)",
@@ -263,24 +257,31 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		chdir($pwd);
-		$this->rmdirRecursive($tmpDir);
+		chdir(APP_ROOT);
+		$this->rmdirRecursive($moduleFolder);
 
 		return 0;
 	}
 
-	private function rmdirRecursive(string $dir): void
+	private function rmdirRecursive(string $dir): bool
 	{
 		if (PHP_OS === "WINNT") {
 			$this->execute("rd /s /q %s", $dir);
 		} else {
 			$this->execute("rm -rf %s", $dir);
 		}
+
+		return !is_dir($dir);
 	}
 
 	private function mkdir(string $dir): bool
 	{
-		if (!is_dir($dir) && !mkdir($dir, recursive: true) && !is_dir($dir)) {
+		if (is_dir($dir)) {
+			return true;
+		}
+
+		$this->logger->debug("<green>$</green> <gray>mkdir -p $dir</gray>");
+		if (!mkdir($dir, recursive: true) || !is_dir($dir)) {
 			$this->logger->error(sprintf('Directory "%s" was not created', $dir));
 
 			return false;
@@ -297,7 +298,7 @@ class ReleaseCommand implements CommandHandler
 	private function execute(string $commandLine, float|int|string ...$args): array
 	{
 		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', array_map(static fn ($v) => (string)$v, $args)));
-		$this->logger->debug(Console::green("$ ") . Console::light_gray($commandLine));
+		$this->logger->debug("<green>$</green> <gray>$commandLine</gray>");
 
 		ob_start();
 
