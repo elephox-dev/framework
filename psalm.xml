@@ -17,6 +17,9 @@
         <directory name="development"/>
         <directory name="modules/*/src"/>
     </projectFiles>
+    <stubs>
+        <file name="stubs/app_root.php"/>
+    </stubs>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
