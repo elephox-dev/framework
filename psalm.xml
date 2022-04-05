@@ -16,6 +16,10 @@
     <projectFiles>
         <directory name="development"/>
         <directory name="modules/*/src"/>
+        <ignoreFiles>
+            <file name="modules/Collection/src/IsKeyedEnumerable.php"/>
+            <file name="modules/Collection/src/IsEnumerable.php"/>
+        </ignoreFiles>
     </projectFiles>
     <stubs>
         <file name="stubs/app_root.php"/>

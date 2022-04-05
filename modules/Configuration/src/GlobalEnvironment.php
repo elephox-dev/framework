@@ -24,7 +24,7 @@ class GlobalEnvironment implements Contract\Environment
 	public function getRootDirectory(): Directory
 	{
 		if (defined('APP_ROOT')) {
-			return new Directory((string)APP_ROOT);
+			return new Directory(APP_ROOT);
 		}
 
 		$cwd = getcwd();
