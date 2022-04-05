@@ -210,7 +210,7 @@ class ReleaseCommand implements CommandHandler
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
-		$moduleFolder = $tmpFolder . '/' . $name;
+		$moduleFolder = $tmpFolder . $name;
 		if (!$this->executeRequireSuccess(
 			"Failed to clone the module repository",
 			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $moduleFolder
