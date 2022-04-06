@@ -27,6 +27,8 @@ interface ResponseBuilder extends MessageBuilder
 
 	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static;
 
+	public function fileBody(string $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static;
+
 	public function getException(): ?Throwable;
 
 	public function get(): Response;

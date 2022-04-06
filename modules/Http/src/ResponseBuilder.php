@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Files\File;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\StringStream;
@@ -89,6 +90,17 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static
 	{
 		$this->body(new StringStream($content));
+
+		if ($mimeType) {
+			$this->contentType($mimeType);
+		}
+
+		return $this;
+	}
+
+	public function fileBody(string $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static
+	{
+		$this->body(File::openStream($path));
 
 		if ($mimeType) {
 			$this->contentType($mimeType);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Files\File;
 use Elephox\Http\Contract\MessageBuilder;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
@@ -71,6 +72,11 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	public function htmlBody(string $content): static
 	{
 		return $this->body(new StringStream($content));
+	}
+
+	public function fileBody(string $path): static
+	{
+		return $this->body(File::openStream($path));
 	}
 
 	public function header(string $name, array $value): static

@@ -28,6 +28,8 @@ interface MessageBuilder
 
 	public function htmlBody(string $content): static;
 
+	public function fileBody(string $path): static;
+
 	/**
 	 * @param string $name
 	 * @param list<string> $value
