@@ -12,15 +12,15 @@
     "require": {
         "php": "^8.1 <8.3",
         "ext-mbstring": "*",
-        "elephox/autoloading": "^0.3",
-        "elephox/collection": "^0.3",
-        "elephox/configuration": "^0.3",
-        "elephox/di": "^0.3",
-        "elephox/files": "^0.3",
-        "elephox/http": "^0.3",
+        "elephox/autoloading": "^self.version",
+        "elephox/collection": "^self.version",
+        "elephox/configuration": "^self.version",
+        "elephox/di": "^self.version",
+        "elephox/files": "^self.version",
+        "elephox/http": "^self.version",
         "elephox/mimey": "^4.0",
-        "elephox/oor": "^0.3",
-        "elephox/stream": "^0.3",
+        "elephox/oor": "^self.version",
+        "elephox/stream": "^self.version",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload": {
