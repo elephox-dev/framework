@@ -9,7 +9,7 @@ on:
 jobs:
   splitsh:
     name: ⏩ Update Module Repository
-    uses: elephox-dev/framework/.github/workflows/splitsh.yml@main
+    uses: elephox-dev/framework/.github/workflows/splitsh.yml@develop
     with:
       repo: 'elephox-dev/cache'
       dir: 'modules/Cache/'
