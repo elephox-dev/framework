@@ -12,11 +12,11 @@
     "require": {
         "php": "^8.1 <8.3",
         "ext-mbstring": "*",
-        "elephox/autoloading": "^dev-develop",
-        "elephox/collection": "^dev-develop",
-        "elephox/configuration": "^dev-develop",
-        "elephox/di": "^dev-develop",
-        "elephox/logging": "^dev-develop",
+        "elephox/autoloading": "dev-develop",
+        "elephox/collection": "dev-develop",
+        "elephox/configuration": "dev-develop",
+        "elephox/di": "dev-develop",
+        "elephox/logging": "dev-develop",
         "elephox/support": "^dev-develop",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
