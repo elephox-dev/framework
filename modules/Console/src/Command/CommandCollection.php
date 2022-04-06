@@ -28,11 +28,13 @@ class CommandCollection implements IteratorAggregate
 		$this->templateMap->put($template, $handler);
 	}
 
-	public function loadFromNamespace(string $namespace): void
+	public function loadFromNamespace(string $namespace): static
 	{
 		NamespaceLoader::iterateNamespace($namespace, function(string $className): void {
 			$this->loadFromClass($className);
 		});
+
+		return $this;
 	}
 
 	protected function preProcessCommandTemplate(CommandTemplateBuilder $builder): void
