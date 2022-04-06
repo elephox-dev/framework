@@ -51,7 +51,7 @@ class RouteHandler implements Contract\RouteHandler
 				$routePath = trim($routePath, '/');
 			}
 
-			if (strlen($controllerPath) > 0 && strlen($routePath) > 0) {
+			if ($controllerPath !== '' && $routePath !== '') {
 				$routePath = "/$routePath";
 			}
 
