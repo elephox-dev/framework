@@ -17,6 +17,13 @@ interface RouteHandler extends Stringable
 
 	public function handle(Request $request): ResponseBuilder;
 
+	/**
+	 * @return class-string
+	 */
+	public function getAttributeClass(): string;
+
+	public function getAttributeMethod(): string;
+
 	public function getSourceAttribute(): ControllerAttribute;
 
 	/**

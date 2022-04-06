@@ -18,7 +18,7 @@ class RouteHandler implements Contract\RouteHandler
 	/**
 	 * @param ControllerAttribute $controllerAttribute
 	 * @param null|RouteAttribute $routeAttribute
-	 * @param non-empty-string $attributeClass
+	 * @param class-string $attributeClass
 	 * @param iterable<int, WebMiddleware> $middlewares
 	 * @param Closure(Request): ResponseBuilder $handler
 	 */
@@ -98,5 +98,15 @@ class RouteHandler implements Contract\RouteHandler
 	public function getMiddlewares(): iterable
 	{
 		return $this->middlewares;
+	}
+
+	public function getAttributeClass(): string
+	{
+		return $this->attributeClass;
+	}
+
+	public function getAttributeMethod(): string
+	{
+		return $this->attributeMethod;
 	}
 }
