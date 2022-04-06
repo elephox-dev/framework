@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b52b8efda7db928ecc5c81b6ab51213f",
+    "content-hash": "19b959378ac0d9aa30cb6e4c499e612d",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -6354,12 +6354,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "d1763610283995deee425c9e759d8aa1d627ea8f"
+                "reference": "c8cc3f460720fb051bf7e4c8ed2a47de2fd9124f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d1763610283995deee425c9e759d8aa1d627ea8f",
-                "reference": "d1763610283995deee425c9e759d8aa1d627ea8f",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/c8cc3f460720fb051bf7e4c8ed2a47de2fd9124f",
+                "reference": "c8cc3f460720fb051bf7e4c8ed2a47de2fd9124f",
                 "shasum": ""
             },
             "require": {
@@ -6449,7 +6449,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2022-04-05T19:40:11+00:00"
+            "time": "2022-04-06T16:10:11+00:00"
         },
         {
             "name": "webmozart/assert",
