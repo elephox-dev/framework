@@ -12,7 +12,7 @@ use Elephox\DI\ServiceCollection;
 
 class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 {
-	protected function registerDefaultConfig(): self
+	protected function registerDefaultConfig(): void
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
@@ -29,7 +29,5 @@ class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 				->getPath(),
 			true
 		));
-
-		return $this;
 	}
 }
