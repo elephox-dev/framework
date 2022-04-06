@@ -27,10 +27,15 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 
 $root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 $src = $root . 'modules' . DIRECTORY_SEPARATOR;
+$developmentSrc = $root . 'development' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
 
 echo "Gathering files...\n";
-$sourceFiles = array_merge(gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'), gatherSourceFiles($src));
+$sourceFiles = array_merge(
+	gatherSourceFiles($root . '.github' . DIRECTORY_SEPARATOR . 'workflows'),
+	gatherSourceFiles($src),
+	gatherSourceFiles($developmentSrc)
+);
 $todoPattern = /** @lang RegExp */ '/[^\n]*(TODO|FIXME|MAYBE|IDEA):?\s*([^\n]*)/';
 $issuePattern = /** @lang RegExp */ '/\s(?<repo>[A-Za-z0-9\-_]+?\/[A-Za-z0-9\-_]+?)#(?<issue>\d+)/';
 

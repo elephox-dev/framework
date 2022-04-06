@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/update-readme-annotations.yml'
+      - 'development/**'
       - 'modules/**'
       - 'bin/update-readme-annotations.php'
 
