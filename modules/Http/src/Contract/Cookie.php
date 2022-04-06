@@ -6,16 +6,14 @@ namespace Elephox\Http\Contract;
 use ArrayAccess;
 use DateTime;
 use Elephox\Http\CookieSameSite;
-use Elephox\Support\Contract\ArrayConvertible;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
 /**
- * @extends ArrayConvertible<string, int|string|bool|null|DateTime|CookieSameSite>
  * @extends ArrayAccess<string, int|string|bool|null|DateTime|CookieSameSite>
  */
-interface Cookie extends Stringable, ArrayConvertible, ArrayAccess
+interface Cookie extends Stringable, ArrayAccess
 {
 	public function setName(string $name): void;
 

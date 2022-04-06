@@ -15,29 +15,34 @@ use RuntimeException;
 
 class NamespaceLoader
 {
+	/** @var null|ComposerClassLoader */
+	private static ?object $classLoader = null;
+
 	/**
 	 * @return ComposerClassLoader
 	 */
 	private static function getClassLoader(): object
 	{
-		/** @var null|class-string<ComposerAutoloaderInit> $autoloaderClassName */
-		$autoloaderClassName = null;
-		foreach (get_declared_classes() as $class) {
-			if (!str_starts_with($class, 'ComposerAutoloaderInit')) {
-				continue;
+		if (self::$classLoader === null) {
+			/** @var null|class-string<ComposerAutoloaderInit> $autoloaderClassName */
+			$autoloaderClassName = null;
+			foreach (get_declared_classes() as $class) {
+				if (str_starts_with($class, 'ComposerAutoloaderInit')) {
+					$autoloaderClassName = $class;
+
+					break;
+				}
 			}
 
-			$autoloaderClassName = $class;
+			if ($autoloaderClassName === null) {
+				throw new RuntimeException('Could not find ComposerAutoloaderInit class. Did you install the dependencies using composer?');
+			}
 
-			break;
+			/** @var ComposerClassLoader */
+			self::$classLoader = call_user_func([$autoloaderClassName, 'getLoader']);
 		}
 
-		if ($autoloaderClassName === null) {
-			throw new RuntimeException('Could not find ComposerAutoloaderInit class. Did you install the dependencies using composer?');
-		}
-
-		/** @var ComposerClassLoader */
-		return call_user_func([$autoloaderClassName, 'getLoader']);
+		return self::$classLoader;
 	}
 
 	/**

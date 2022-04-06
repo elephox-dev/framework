@@ -18,8 +18,10 @@ use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
+use Elephox\Web\Middleware\DefaultExceptionHandler;
 use Elephox\Web\Middleware\ProcessingTimeHeader;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
@@ -65,8 +67,14 @@ class WebApplicationBuilder
 		public readonly RequestPipelineBuilder $pipeline,
 	)
 	{
+		$this->registerDefaultExceptionHandler();
 		$this->registerDefaultConfig();
 		$this->setDebugFromConfig();
+	}
+
+	protected function registerDefaultExceptionHandler(): void
+	{
+		$this->services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 	}
 
 	public function registerDefaultConfig(): void
@@ -119,17 +127,18 @@ class WebApplicationBuilder
 	 */
 	public function addWhoops(?callable $configurator = null): void
 	{
+		$this->services->removeService(ExceptionHandler::class);
 
-		$this->services->addSingleton(
-			WhoopsRunInterface::class,
-			implementation: new WhoopsRun(),
-		);
+		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class,);
 
 		if ($configurator) {
 			$configurator($this->services->requireService(WhoopsRunInterface::class));
 		}
 
-		$this->pipeline->push(new WhoopsExceptionHandler(fn () => $this->services->requireService(WhoopsRunInterface::class)));
+		$whoopsExceptionHandler = new WhoopsExceptionHandler(fn() => $this->services->requireService(WhoopsRunInterface::class));
+
+		$this->pipeline->push($whoopsExceptionHandler);
+		$this->services->addSingleton(ExceptionHandler::class, implementation: $whoopsExceptionHandler);
 	}
 
 	/**

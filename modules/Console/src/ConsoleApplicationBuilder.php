@@ -15,7 +15,7 @@ use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
 use Elephox\Logging\MessageFormatterSink;
 use Elephox\Logging\MultiSinkLogger;
-use NunoMaduro\Collision\Handler as CollisionHandler;
+use Elephox\Support\Contract\ExceptionHandler;
 use Whoops\Run as WhoopsRun;
 use Whoops\RunInterface as WhoopsRunInterface;
 
@@ -46,11 +46,17 @@ class ConsoleApplicationBuilder
 		public readonly CommandCollection $commands,
 	)
 	{
+		$this->registerDefaultExceptionHandler();
 		$this->registerDefaultConfig();
 		$this->setDebugFromConfig();
 	}
 
-	protected function registerDefaultConfig(): self
+	protected function registerDefaultExceptionHandler(): void
+	{
+		$this->services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+	}
+
+	protected function registerDefaultConfig(): void
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
@@ -74,17 +80,13 @@ class ConsoleApplicationBuilder
 				->getPath(),
 			true
 		));
-
-		return $this;
 	}
 
-	protected function setDebugFromConfig(): self
+	protected function setDebugFromConfig(): void
 	{
 		if ($this->configuration->hasSection("env:debug")) {
 			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
 		}
-
-		return $this;
 	}
 
 	public function build(): ConsoleApplication
@@ -123,15 +125,9 @@ class ConsoleApplicationBuilder
 
 	public function addWhoops(): self
 	{
-		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class, implementationFactory: function (): WhoopsRun {
-			$whoops = new WhoopsRun();
-			/**
-			 * @psalm-suppress InternalClass
-			 * @psalm-suppress InternalMethod
-			 */
-			$whoops->pushHandler(new CollisionHandler());
-			return $whoops;
-		});
+		$this->services->removeService(ExceptionHandler::class);
+		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class);
+		$this->services->addSingleton(ExceptionHandler::class, WhoopsExceptionHandler::class);
 
 		return $this;
 	}

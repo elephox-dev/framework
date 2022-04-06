@@ -59,7 +59,7 @@ interface ServiceCollection
 	 *
 	 * @return ServiceCollection
 	 *
-	 * @throws InvalidArgumentException if the service name or the implementation name is empty
+	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
 	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;

@@ -3,17 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Support\Contract\ArrayConvertible;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
-/**
- * @implements ArrayConvertible<non-empty-string, null|string>
- */
 #[Immutable]
-class Url implements Stringable, ArrayConvertible
+class Url implements Stringable
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 

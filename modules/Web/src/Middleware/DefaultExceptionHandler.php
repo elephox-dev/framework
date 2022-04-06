@@ -6,19 +6,47 @@ namespace Elephox\Web\Middleware;
 use Closure;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
+use Elephox\Http\Response;
+use Elephox\Http\ResponseSender;
 use Elephox\Stream\StringStream;
+use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\WebMiddleware;
+use Throwable;
 
-class DefaultExceptionHandler implements WebMiddleware
+class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 {
 	public function handle(Request $request, Closure $next): ResponseBuilder
 	{
 		$response = $next($request);
 
-		if ($exception = $response->getException()) {
-			$response->body(new StringStream(<<<HTML
+		if ($response->getException()) {
+			$this->setResponseBody($response);
+		}
+
+		return $response;
+	}
+
+	public function handleException(Throwable $exception): void
+	{
+		$response = Response::build()->exception($exception);
+		$this->setResponseBody($response);
+		ResponseSender::sendResponse($response);
+	}
+
+	protected function setResponseBody(ResponseBuilder $response): ResponseBuilder
+	{
+		$exception = $response->getException();
+		if ($exception === null) {
+			if ($response->getBody() === null) {
+				return $response->body(new StringStream('No exception to handle found'));
+			}
+
+			return $response;
+		}
+
+		return $response->body(new StringStream(<<<HTML
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<title>Error</title>
 	<style rel="stylesheet">
@@ -50,8 +78,5 @@ class DefaultExceptionHandler implements WebMiddleware
 </body>
 </html>
 HTML));
-		}
-
-		return $response;
 	}
 }

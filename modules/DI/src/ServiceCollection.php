@@ -79,6 +79,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
 
+		if (empty($implementation) && empty($implementationFactory)) {
+			$implementationFactory = fn(): object => $this->resolver()->instantiate($implementationName);
+		}
+
 		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation));
 	}
 
