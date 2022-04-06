@@ -38,13 +38,13 @@ class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 		$exception = $response->getException();
 		if ($exception === null) {
 			if ($response->getBody() === null) {
-				return $response->body(new StringStream('No exception to handle found'));
+				return $response->htmlBody('No exception to handle found');
 			}
 
 			return $response;
 		}
 
-		return $response->body(new StringStream(<<<HTML
+		return $response->htmlBody(<<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,6 +77,6 @@ class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 	<pre>{$exception->getTraceAsString()}</pre>
 </body>
 </html>
-HTML));
+HTML);
 	}
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Web;
 
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\EmptySequenceException;
+use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
 
@@ -46,6 +48,20 @@ class RequestPipelineBuilder
 	public function endpoint(RequestPipelineEndpoint $endpoint): RequestPipelineBuilder
 	{
 		$this->endpoint = $endpoint;
+
+		return $this;
+	}
+
+	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): RequestPipelineBuilder
+	{
+		try {
+			/** @var int $key */
+			$key = $this->pipeline->firstKey(fn(WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
+
+			$this->pipeline->put($key, $exceptionHandler);
+		} catch (EmptySequenceException) {
+			$this->pipeline->add($exceptionHandler);
+		}
 
 		return $this;
 	}
