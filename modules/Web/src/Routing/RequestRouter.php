@@ -15,12 +15,12 @@ use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
-use Elephox\Web\Contract\Router;
 use Elephox\Web\Contract\WebMiddlewareAttribute;
 use Elephox\Web\RouteNotFoundException;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Contract\RouteHandler as RouteHandlerContract;
+use Elephox\Web\Routing\Contract\Router;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
@@ -29,7 +29,6 @@ use ReflectionNamedType;
 
 class RequestRouter implements RequestPipelineEndpoint, Router
 {
-
 	/**
 	 * @param ReflectionClass $class
 	 * @return GenericKeyedEnumerable<int, ControllerAttribute>
@@ -72,6 +71,11 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	{
 		/** @var ObjectSet<RouteHandlerContract> */
 		$this->handlers = new ObjectSet();
+	}
+
+	public function getRouteHandlers(): iterable
+	{
+		return $this->handlers;
 	}
 
 	public function getRouteHandler(Request $request): RouteHandlerContract

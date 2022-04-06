@@ -90,6 +90,11 @@ class RouteHandler implements Contract\RouteHandler
 		return ($this->handler)($request);
 	}
 
+	public function getSourceAttribute(): ControllerAttribute
+	{
+		return $this->controllerAttribute;
+	}
+
 	public function getMiddlewares(): iterable
 	{
 		return $this->middlewares;
