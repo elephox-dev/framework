@@ -9,6 +9,7 @@ on:
 
 jobs:
   splitsh:
+    if: ${{ github.ref_type == 'branch' }}
     name: ⏩ Update Module Repository
     uses: elephox-dev/framework/.github/workflows/splitsh.yml@develop
     with:
