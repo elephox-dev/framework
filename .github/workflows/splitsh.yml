@@ -27,4 +27,4 @@ jobs:
           split: ${{ inputs.repo }}
           split_deploy_key: ${{ secrets.deploy_key }}
           split_prefix: ${{ inputs.dir }}
-          split_branch: ${GITHUB_REF##*/}
+          split_branch: ${{ GITHUB_REF }}
