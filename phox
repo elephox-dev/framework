@@ -3,17 +3,21 @@
 declare(strict_types=1);
 
 use Elephox\Development\DevConsoleApplicationBuilder;
-use Whoops\RunInterface as WhoopsRunInterface;
+use Elephox\Support\Contract\ExceptionHandler;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
 
-$builder = DevConsoleApplicationBuilder::create()->addLogging()->addWhoops();
+$builder = DevConsoleApplicationBuilder::create()
+	->addLogging()
+	->addWhoops()
+;
+
 $builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
 
 $app = $builder->build();
 try {
 	$app->run();
 } catch (Throwable $e) {
-	$app->services->requireService(WhoopsRunInterface::class)->handleException($e);
+	$app->services->requireService(ExceptionHandler::class)->handleException($e);
 }
