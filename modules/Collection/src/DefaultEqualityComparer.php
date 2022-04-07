@@ -25,7 +25,7 @@ final class DefaultEqualityComparer
 		}
 
 		/** @noinspection TypeUnsafeComparisonInspection */
-		return $a === $b;
+		return $a == $b;
 	}
 
 	#[Pure]
@@ -85,6 +85,7 @@ final class DefaultEqualityComparer
 				return !$result;
 			}
 
+			/** @psalm-suppress RedundantConditionGivenDocblockType */
 			if (is_numeric($result)) {
 				return -$result;
 			}

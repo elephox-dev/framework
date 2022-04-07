@@ -142,7 +142,6 @@ return $config
 		'standardize_increment' => true,
 		'standardize_not_equals' => true,
 		'static_lambda' => true,
-		'strict_comparison' => true,
 		'strict_param' => true,
 		'string_length_to_empty' => true,
 		'switch_case_semicolon_to_colon' => true,
