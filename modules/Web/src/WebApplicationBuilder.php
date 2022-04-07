@@ -67,7 +67,9 @@ class WebApplicationBuilder
 	) {
 		$this->registerDefaultExceptionHandler();
 		$this->registerDefaultConfig();
-		$this->setDebugFromConfig();
+		$this->setEnvNameFromConfig();
+		$this->registerOptionalConfig();
+		$this->setDebugModeFromConfig();
 	}
 
 	protected function registerDefaultExceptionHandler(): void
@@ -83,6 +85,10 @@ class WebApplicationBuilder
 				->getFile('config.json')
 				->getPath(),
 		));
+	}
+
+	public function registerOptionalConfig(): void
+	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
@@ -90,6 +96,7 @@ class WebApplicationBuilder
 				->getPath(),
 			true,
 		));
+
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
@@ -99,10 +106,17 @@ class WebApplicationBuilder
 		));
 	}
 
-	public function setDebugFromConfig(): void
+	public function setEnvNameFromConfig(): void
+	{
+		if ($this->configuration->hasSection('env:name')) {
+			$this->environment->offsetSet('APP_ENV', (string) $this->configuration['env:name']);
+		}
+	}
+
+	public function setDebugModeFromConfig(): void
 	{
 		if ($this->configuration->hasSection('env:debug')) {
-			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
+			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
 		}
 	}
 

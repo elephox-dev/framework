@@ -10,20 +10,7 @@ class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 {
 	protected function registerDefaultConfig(): void
 	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getRootDirectory()
-				->getFile("config.{$this->environment->getEnvironmentName()}.json")
-				->getPath(),
-			true,
-		));
-
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getRootDirectory()
-				->getFile('config.local.json')
-				->getPath(),
-			true,
-		));
+		// Dev app is always in development mode
+		$this->configuration->offsetSet('env:name', 'development');
 	}
 }
