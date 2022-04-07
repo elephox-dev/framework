@@ -83,7 +83,7 @@ jobs:
         run: composer run ci:static-analysis:publish
 
   fix-cs:
-    name: 💅 Fix CS
+    name: 💅 Check Code Style
     needs: [ composer-setup ]
     runs-on: 'ubuntu-latest'
     steps:
