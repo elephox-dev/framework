@@ -10,10 +10,12 @@ use Mockery as M;
 /**
  * @covers \Elephox\Stream\LazyStream
  * @covers \Elephox\Stream\StringStream
+ *
+ * @internal
  */
 class LazyStreamTest extends MockeryTestCase
 {
-	public function testGetStream()
+	public function testGetStream(): void
 	{
 		$streamMock = M::mock(Stream::class);
 
@@ -23,16 +25,16 @@ class LazyStreamTest extends MockeryTestCase
 			->andReturn(true)
 		;
 
-		$stream = new LazyStream(fn() => $streamMock);
+		$stream = new LazyStream(static fn () => $streamMock);
 
-		self::assertSame($streamMock, $stream->getStream());
-		self::assertTrue($stream->isReadable());
+		static::assertSame($streamMock, $stream->getStream());
+		static::assertTrue($stream->isReadable());
 	}
 
 	public function methodNameProvider(): array
 	{
 		return [
-			['__toString', [], "test"],
+			['__toString', [], 'test'],
 			['detach', [], null],
 			['close', [], null],
 			['getSize', [], 0],
@@ -43,9 +45,9 @@ class LazyStreamTest extends MockeryTestCase
 			['seek', [1, SEEK_CUR], null],
 			['seek', [1, SEEK_END], null],
 			['rewind', [], null],
-			['write', ["test"], 4],
-			['read', [1], ""],
-			['getContents', [], "test"],
+			['write', ['test'], 4],
+			['read', [1], ''],
+			['getContents', [], 'test'],
 			['getMetadata', [null], null],
 			['getMetadata', [null], ['test' => true]],
 			['getMetadata', ['test'], true],
@@ -65,10 +67,10 @@ class LazyStreamTest extends MockeryTestCase
 			->andReturn($result)
 		;
 
-		$stream = new LazyStream(fn() => $streamMock);
+		$stream = new LazyStream(static fn () => $streamMock);
 
 		$actual = $stream->{$method}(...$args);
 
-		self::assertEquals($result, $actual);
+		static::assertEquals($result, $actual);
 	}
 }

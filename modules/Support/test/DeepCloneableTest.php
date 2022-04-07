@@ -10,6 +10,8 @@ use WeakMap;
 
 /**
  * @covers \Elephox\Support\DeepCloneable
+ *
+ * @internal
  */
 class DeepCloneTest extends TestCase
 {
@@ -31,7 +33,7 @@ class DeepCloneTest extends TestCase
 		$object->resource = $resource;
 		$object->deepClone();
 
-		self::assertSame($resource, $object->resource);
+		static::assertSame($resource, $object->resource);
 
 		fclose($object->resource);
 	}
@@ -43,7 +45,7 @@ class DeepCloneTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		self::assertSame(TestEnum::A, $clone->enumValue);
+		static::assertSame(TestEnum::A, $clone->enumValue);
 	}
 
 	public function testStaticPropertyDoesntChange(): void
@@ -56,8 +58,8 @@ class DeepCloneTest extends TestCase
 
 		$object->deepClone();
 
-		self::assertSame($o1, Cloneable::$staticProperty);
-		self::assertSame($o2, Cloneable::$anotherStaticProperty);
+		static::assertSame($o1, Cloneable::$staticProperty);
+		static::assertSame($o2, Cloneable::$anotherStaticProperty);
 	}
 
 	public function testWeakMapKeysAreKept(): void
@@ -70,8 +72,8 @@ class DeepCloneTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		self::assertTrue($clone->weakMap->offsetExists($o1));
-		self::assertNotSame($o2, $clone->weakMap->offsetGet($o1));
+		static::assertTrue($clone->weakMap->offsetExists($o1));
+		static::assertNotSame($o2, $clone->weakMap->offsetGet($o1));
 	}
 }
 
@@ -104,7 +106,8 @@ class HasWeakMap
 	public WeakMap $weakMap;
 }
 
-enum TestEnum {
+enum TestEnum
+{
 	case A;
 	case B;
 }

@@ -12,8 +12,7 @@ class HelpCommand implements Contract\CommandHandler
 	public function __construct(
 		private readonly CommandCollection $commands,
 		private readonly Logger $logger,
-	)
-	{
+	) {
 	}
 
 	public function configure(CommandTemplateBuilder $builder): void
@@ -47,7 +46,7 @@ class HelpCommand implements Contract\CommandHandler
 			$this->logger->info(Console::underscore(sprintf("Help for command '%s':", Console::yellow($commandTemplate->name))));
 			$this->logger->info(sprintf("\t%s\t\t\t%s", Console::green('Name'), $commandTemplate->name));
 			$this->logger->info(sprintf("\t%s\t\t%s", Console::green('Description'), empty($commandTemplate->description) ? Console::gray('No description') : $commandTemplate->description));
-			$this->logger->info(sprintf("\t%s\t\t%s", Console::green('Arguments'), empty($commandTemplate->argumentTemplates) ? Console::gray('No arguments') : implode(' ', $commandTemplate->argumentTemplates->select(fn (ArgumentTemplate $t) => ($t->required ? '<' : '[') . $t->name . ($t->required ? '>' : ']'))->toList())));
+			$this->logger->info(sprintf("\t%s\t\t%s", Console::green('Arguments'), empty($commandTemplate->argumentTemplates) ? Console::gray('No arguments') : implode(' ', $commandTemplate->argumentTemplates->select(static fn (ArgumentTemplate $t) => ($t->required ? '<' : '[') . $t->name . ($t->required ? '>' : ']'))->toList())));
 
 			return 0;
 		} catch (CommandNotFoundException) {

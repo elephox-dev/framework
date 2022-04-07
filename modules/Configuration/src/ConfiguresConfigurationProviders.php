@@ -24,15 +24,15 @@ trait ConfiguresConfigurationProviders
 	{
 		/** @psalm-suppress NoValue str_starts_with returns a value, wtf psalm? */
 		return $this->getProviders()
-			->selectMany(function (mixed $provider) use ($path): GenericEnumerable {
+			->selectMany(static function (mixed $provider) use ($path): GenericEnumerable {
 				/** @var Contract\ConfigurationProvider $provider */
 				return $provider->getChildKeys($path)
-					->select(function (string $key) use ($path): string {
-						return $path === null ? $key : ConfigurationPath::appendKey($path, $key)->getSource();
-					});
+					->select(static fn (string $key): string => $path === null ? $key : ConfigurationPath::appendKey($path, $key)->getSource())
+				;
 			})
 			->distinct()
-			->where(fn(string $key): bool => $path === null || str_starts_with($key, (string)$path));
+			->where(static fn (string $key): bool => $path === null || str_starts_with($key, (string) $path))
+		;
 	}
 
 	/**
@@ -40,7 +40,7 @@ trait ConfiguresConfigurationProviders
 	 */
 	public function getChildren(string|Str|null $path = null): GenericEnumerable
 	{
-		return $this->getChildKeys($path)->select(fn(string $key): Contract\ConfigurationSection => $this->getSection($key));
+		return $this->getChildKeys($path)->select(fn (string $key): Contract\ConfigurationSection => $this->getSection($key));
 	}
 
 	public function hasSection(string|Str $key): bool
@@ -72,7 +72,7 @@ trait ConfiguresConfigurationProviders
 	public function offsetGet(mixed $offset): string|int|float|bool|null
 	{
 		if (!is_string($offset)) {
-			throw new InvalidArgumentException("Offset must be a string");
+			throw new InvalidArgumentException('Offset must be a string');
 		}
 
 		$value = null;
@@ -88,16 +88,16 @@ trait ConfiguresConfigurationProviders
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		if (!is_string($offset)) {
-			throw new InvalidArgumentException("Offset must be a string");
+			throw new InvalidArgumentException('Offset must be a string');
 		}
 
-		if (!is_scalar($value) && !is_null($value)) {
-			throw new InvalidArgumentException("Value must be a scalar or null");
+		if (!is_scalar($value) && $value !== null) {
+			throw new InvalidArgumentException('Value must be a scalar or null');
 		}
 
 		$providers = $this->getProviders()->toList();
 		if (empty($providers)) {
-			throw new RuntimeException("No providers available");
+			throw new RuntimeException('No providers available');
 		}
 
 		foreach ($providers as $provider) {
@@ -108,7 +108,7 @@ trait ConfiguresConfigurationProviders
 	public function offsetUnset(mixed $offset): void
 	{
 		if (!is_string($offset)) {
-			throw new InvalidArgumentException("Offset must be a string");
+			throw new InvalidArgumentException('Offset must be a string');
 		}
 
 		foreach ($this->getProviders() as $provider) {

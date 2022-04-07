@@ -22,8 +22,7 @@ class ImmutableCacheItem implements CacheItem
 		private mixed $value,
 		private readonly bool $isHit,
 		private ?DateTimeInterface $expiresAt,
-	)
-	{
+	) {
 	}
 
 	#[Pure]

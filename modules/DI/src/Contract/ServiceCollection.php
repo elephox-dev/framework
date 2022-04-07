@@ -23,11 +23,8 @@ interface ServiceCollection
 	 *
 	 * @param class-string<TService> $serviceName
 	 * @param class-string<TImplementation> $implementationName
-	 * @param ServiceLifetime $lifetime
 	 * @param null|Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
-	 *
-	 * @return ServiceCollection
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
@@ -42,8 +39,6 @@ interface ServiceCollection
 	 * @param class-string<TImplementation> $implementationName
 	 * @param Closure(mixed): TImplementation $implementationFactory
 	 *
-	 * @return ServiceCollection
-	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 */
 	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory): ServiceCollection;
@@ -56,8 +51,6 @@ interface ServiceCollection
 	 * @param null|class-string<TImplementation> $implementationName
 	 * @param null|Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
-	 *
-	 * @return ServiceCollection
 	 *
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
@@ -91,8 +84,6 @@ interface ServiceCollection
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
-	 * @return bool
-	 *
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
 	public function hasService(string $serviceName): bool;
@@ -100,10 +91,7 @@ interface ServiceCollection
 	/**
 	 * @template TService of service-object
 	 *
-	 * @param string $alias
 	 * @param class-string<TService> $serviceName
-	 *
-	 * @return ServiceCollection
 	 *
 	 * @throws InvalidArgumentException if the alias or the service name is empty
 	 */
@@ -111,8 +99,6 @@ interface ServiceCollection
 
 	/**
 	 * @template TService of service-object
-	 *
-	 * @param string $alias
 	 *
 	 * @return TService|null
 	 *
@@ -123,8 +109,6 @@ interface ServiceCollection
 	/**
 	 * @template TService of service-object
 	 *
-	 * @param string $alias
-	 *
 	 * @return TService
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
@@ -133,27 +117,17 @@ interface ServiceCollection
 	public function requireByAlias(string $alias): object;
 
 	/**
-	 * @param string $alias
-	 *
-	 * @return bool
-	 *
 	 * @throws InvalidArgumentException if the alias is empty
 	 */
 	public function hasAlias(string $alias): bool;
 
 	/**
-	 * @param string $aliasOrServiceName
-	 *
-	 * @return bool
-	 *
 	 * @throws InvalidArgumentException if the alias is empty
 	 */
 	public function has(string $aliasOrServiceName): bool;
 
 	/**
 	 * @template TService of service-object
-	 *
-	 * @param string $aliasOrServiceName
 	 *
 	 * @return TService|null
 	 *
@@ -164,8 +138,6 @@ interface ServiceCollection
 	/**
 	 * @template TService of service-object
 	 *
-	 * @param string $aliasOrServiceName
-	 *
 	 * @return TService
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
@@ -174,28 +146,16 @@ interface ServiceCollection
 	public function require(string $aliasOrServiceName): object;
 
 	/**
-	 * @param string $serviceName
-	 *
-	 * @return ServiceCollection
-	 *
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
 	public function removeService(string $serviceName): ServiceCollection;
 
 	/**
-	 * @param string $alias
-	 *
-	 * @return ServiceCollection
-	 *
 	 * @throws InvalidArgumentException if the alias is empty
 	 */
 	public function removeAlias(string $alias): ServiceCollection;
 
 	/**
-	 * @param string $aliasOrServiceName
-	 *
-	 * @return ServiceCollection
-	 *
 	 * @throws InvalidArgumentException if the alias or service name is empty
 	 */
 	public function remove(string $aliasOrServiceName): ServiceCollection;

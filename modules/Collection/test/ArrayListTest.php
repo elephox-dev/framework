@@ -14,53 +14,55 @@ use stdClass;
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\DefaultEqualityComparer
+ *
+ * @internal
  */
 class ArrayListTest extends TestCase
 {
 	public function testOffsetExists(): void
 	{
-		$arr = new ArrayList(["test"]);
+		$arr = new ArrayList(['test']);
 
-		self::assertTrue($arr->offsetExists(0));
-		self::assertArrayHasKey(0, $arr);
-		self::assertFalse($arr->offsetExists(1));
+		static::assertTrue($arr->offsetExists(0));
+		static::assertArrayHasKey(0, $arr);
+		static::assertFalse($arr->offsetExists(1));
 	}
 
 	public function testCount(): void
 	{
-		$arr = new ArrayList(["test", "test2", "test3"]);
+		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		self::assertCount(3, $arr);
+		static::assertCount(3, $arr);
 	}
 
 	public function testOffsetUnset(): void
 	{
-		$arr = new ArrayList(["test", "test2", "test3"]);
+		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		self::assertCount(3, $arr);
+		static::assertCount(3, $arr);
 
 		$arr->offsetUnset(1);
 
-		self::assertCount(2, $arr);
+		static::assertCount(2, $arr);
 	}
 
 	public function testOffsetSet(): void
 	{
 		$arr = new ArrayList();
 
-		self::assertArrayNotHasKey(0, $arr);
-		self::assertArrayNotHasKey(1, $arr);
-		self::assertArrayNotHasKey(2, $arr);
+		static::assertArrayNotHasKey(0, $arr);
+		static::assertArrayNotHasKey(1, $arr);
+		static::assertArrayNotHasKey(2, $arr);
 
-		$arr->offsetSet(null, "test");
-		$arr->put(0, "test2");
-		$arr[null] = "test3";
+		$arr->offsetSet(null, 'test');
+		$arr->put(0, 'test2');
+		$arr[null] = 'test3';
 
-		self::assertArrayHasKey(0, $arr);
-		self::assertArrayHasKey(1, $arr);
-		self::assertArrayNotHasKey(2, $arr);
-		self::assertEquals("test2", $arr[0]);
-		self::assertEquals("test3", $arr[1]);
+		static::assertArrayHasKey(0, $arr);
+		static::assertArrayHasKey(1, $arr);
+		static::assertArrayNotHasKey(2, $arr);
+		static::assertEquals('test2', $arr[0]);
+		static::assertEquals('test3', $arr[1]);
 	}
 
 	public function testOffsetSetInvalidType(): void
@@ -69,7 +71,7 @@ class ArrayListTest extends TestCase
 
 		$this->expectException(OffsetNotAllowedException::class);
 
-		$arr->offsetSet("not a number", "test");
+		$arr->offsetSet('not a number', 'test');
 	}
 
 	public function testOffsetSetOutsideOfArray(): void
@@ -78,25 +80,25 @@ class ArrayListTest extends TestCase
 
 		$this->expectException(InvalidArgumentException::class);
 
-		$arr->offsetSet(10, "test");
+		$arr->offsetSet(10, 'test');
 	}
 
 	public function testOffsetGet(): void
 	{
-		$arr = new ArrayList(["test", "test2", "test3"]);
+		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		self::assertEquals("test", $arr->offsetGet(0));
-		self::assertEquals("test2", $arr[1]);
+		static::assertEquals('test', $arr->offsetGet(0));
+		static::assertEquals('test2', $arr[1]);
 
 		$this->expectException(OffsetNotAllowedException::class);
 		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
 
-		$arr->offsetGet("not a number");
+		$arr->offsetGet('not a number');
 	}
 
 	public function testElementAt(): void
 	{
-		$arr = new ArrayList(["test", "test2"]);
+		$arr = new ArrayList(['test', 'test2']);
 
 		$this->expectException(OffsetNotFoundException::class);
 		$this->expectExceptionMessage("Offset '123' does not exist.");
@@ -108,27 +110,27 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList();
 
-		self::assertCount(0, $arr);
+		static::assertCount(0, $arr);
 
-		$arr->add("test");
-		$arr[] = "test2";
+		$arr->add('test');
+		$arr[] = 'test2';
 
-		self::assertCount(2, $arr);
-		self::assertEquals("test", $arr->elementAt(0));
-		self::assertEquals("test2", $arr->elementAt(1));
+		static::assertCount(2, $arr);
+		static::assertEquals('test', $arr->elementAt(0));
+		static::assertEquals('test2', $arr->elementAt(1));
 	}
 
 	public function testAddAll(): void
 	{
 		$arr = new ArrayList();
 
-		self::assertCount(0, $arr);
+		static::assertCount(0, $arr);
 
-		$arr->addAll(["test", "test2"]);
+		$arr->addAll(['test', 'test2']);
 
-		self::assertCount(2, $arr);
-		self::assertEquals("test", $arr->elementAt(0));
-		self::assertEquals("test2", $arr->elementAt(1));
+		static::assertCount(2, $arr);
+		static::assertEquals('test', $arr->elementAt(0));
+		static::assertEquals('test2', $arr->elementAt(1));
 	}
 
 	public function testIsEmpty(): void
@@ -136,23 +138,23 @@ class ArrayListTest extends TestCase
 		$filled = new ArrayList(['653', '123', '154']);
 		$empty = new ArrayList();
 
-		self::assertFalse($filled->isEmpty());
-		self::assertTrue($empty->isEmpty());
+		static::assertFalse($filled->isEmpty());
+		static::assertTrue($empty->isEmpty());
 	}
 
 	public function testToList(): void
 	{
 		$arr = new ArrayList(['123', '456']);
 
-		self::assertEquals(['123', '456'], $arr->toList());
+		static::assertEquals(['123', '456'], $arr->toList());
 	}
 
 	public function testFromArray(): void
 	{
 		$arr = ArrayList::from(['123', '456']);
 
-		self::assertEquals('123', $arr->elementAt(0));
-		self::assertEquals('456', $arr->elementAt(1));
+		static::assertEquals('123', $arr->elementAt(0));
+		static::assertEquals('456', $arr->elementAt(1));
 	}
 
 	public function testFromSelf(): void
@@ -160,22 +162,22 @@ class ArrayListTest extends TestCase
 		$arr = ArrayList::from(['123', '456']);
 		$arr2 = ArrayList::from($arr);
 
-		self::assertSame($arr, $arr2);
+		static::assertSame($arr, $arr2);
 	}
 
 	public function testFromIterator(): void
 	{
 		$arr = ArrayList::from(new ArrayIterator(['123', '456']));
 
-		self::assertEquals('123', $arr->elementAt(0));
-		self::assertEquals('456', $arr->elementAt(1));
+		static::assertEquals('123', $arr->elementAt(0));
+		static::assertEquals('456', $arr->elementAt(1));
 	}
 
 	public function testFromValue(): void
 	{
 		$arr = ArrayList::from('123');
 
-		self::assertEquals('123', $arr->elementAt(0));
+		static::assertEquals('123', $arr->elementAt(0));
 	}
 
 	public function testIterator(): void
@@ -185,7 +187,7 @@ class ArrayListTest extends TestCase
 		]);
 
 		foreach ($map as $value) {
-			self::assertEquals('1', $value);
+			static::assertEquals('1', $value);
 		}
 	}
 
@@ -196,43 +198,43 @@ class ArrayListTest extends TestCase
 		$list = new ArrayList([$anObject, 2, $anObject]);
 		$clone = $list->deepClone();
 
-		self::assertInstanceOf(ArrayList::class, $clone);
-		self::assertNotSame($list, $clone);
-		self::assertNotSame($list[0], $clone[0]);
-		self::assertNotSame($list[2], $clone[2]);
-		self::assertSame($clone[0], $clone[2]);
+		static::assertInstanceOf(ArrayList::class, $clone);
+		static::assertNotSame($list, $clone);
+		static::assertNotSame($list[0], $clone[0]);
+		static::assertNotSame($list[2], $clone[2]);
+		static::assertSame($clone[0], $clone[2]);
 	}
 
 	public function testRemoveAt(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		self::assertCount(5, $list);
+		static::assertCount(5, $list);
 
 		$removed = $list->removeAt(2);
 
-		self::assertEquals(3, $removed);
-		self::assertEquals(4, $list->count());
-		self::assertEquals(1, $list->elementAt(0));
-		self::assertEquals(2, $list->elementAt(1));
-		self::assertEquals(4, $list->elementAt(2));
-		self::assertEquals(5, $list->elementAt(3));
+		static::assertEquals(3, $removed);
+		static::assertEquals(4, $list->count());
+		static::assertEquals(1, $list->elementAt(0));
+		static::assertEquals(2, $list->elementAt(1));
+		static::assertEquals(4, $list->elementAt(2));
+		static::assertEquals(5, $list->elementAt(3));
 	}
 
 	public function testRemove(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		self::assertCount(5, $list);
+		static::assertCount(5, $list);
 
 		$removed = $list->remove(3);
 
-		self::assertTrue($removed);
-		self::assertEquals(4, $list->count());
-		self::assertEquals(1, $list->elementAt(0));
-		self::assertEquals(2, $list->elementAt(1));
-		self::assertEquals(4, $list->elementAt(2));
-		self::assertEquals(5, $list->elementAt(3));
+		static::assertTrue($removed);
+		static::assertEquals(4, $list->count());
+		static::assertEquals(1, $list->elementAt(0));
+		static::assertEquals(2, $list->elementAt(1));
+		static::assertEquals(4, $list->elementAt(2));
+		static::assertEquals(5, $list->elementAt(3));
 	}
 
 	public function testOffsetExistThrows(): void
@@ -241,7 +243,7 @@ class ArrayListTest extends TestCase
 		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
 
 		$arr = new ArrayList();
-		$arr->offsetExists("not a number");
+		$arr->offsetExists('not a number');
 	}
 
 	public function testOffsetUnsetThrows(): void
@@ -250,39 +252,39 @@ class ArrayListTest extends TestCase
 		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
 
 		$arr = new ArrayList();
-		$arr->offsetUnset("not a number");
+		$arr->offsetUnset('not a number');
 	}
 
 	public function testIndexOf(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		self::assertEquals(0, $list->indexOf(1));
-		self::assertEquals(1, $list->indexOf(2));
-		self::assertEquals(2, $list->indexOf(3));
-		self::assertEquals(3, $list->indexOf(4));
-		self::assertEquals(4, $list->indexOf(5));
-		self::assertEquals(-1, $list->indexOf(6));
+		static::assertEquals(0, $list->indexOf(1));
+		static::assertEquals(1, $list->indexOf(2));
+		static::assertEquals(2, $list->indexOf(3));
+		static::assertEquals(3, $list->indexOf(4));
+		static::assertEquals(4, $list->indexOf(5));
+		static::assertEquals(-1, $list->indexOf(6));
 	}
 
 	public function testLastIndexOf(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		self::assertEquals(4, $list->lastIndexOf(5));
-		self::assertEquals(3, $list->lastIndexOf(4));
-		self::assertEquals(2, $list->lastIndexOf(3));
-		self::assertEquals(1, $list->lastIndexOf(2));
-		self::assertEquals(0, $list->lastIndexOf(1));
-		self::assertEquals(-1, $list->lastIndexOf(0));
-		self::assertEquals(-1, $list->lastIndexOf(7));
+		static::assertEquals(4, $list->lastIndexOf(5));
+		static::assertEquals(3, $list->lastIndexOf(4));
+		static::assertEquals(2, $list->lastIndexOf(3));
+		static::assertEquals(1, $list->lastIndexOf(2));
+		static::assertEquals(0, $list->lastIndexOf(1));
+		static::assertEquals(-1, $list->lastIndexOf(0));
+		static::assertEquals(-1, $list->lastIndexOf(7));
 	}
 
 	public function testRemoveNotExists(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		self::assertFalse($list->remove(4));
+		static::assertFalse($list->remove(4));
 	}
 
 	public function testRemoveAtOffsetNotExists(): void

@@ -17,15 +17,16 @@ class StringStream implements Stream
 		string|Stringable $string,
 		bool $seekable = true,
 		bool $writeable = false,
-		bool $readable = true
-	): Stream
-	{
-		return new self((string)$string, $readable, $seekable, $writeable);
+		bool $readable = true,
+	): Stream {
+		return new self((string) $string, $readable, $seekable, $writeable);
 	}
 
 	private bool $detached = false;
 
-	/** @var positive-int|0 $pointer */
+	/**
+	 * @var positive-int|0 $pointer
+	 */
 	private int $pointer = 0;
 
 	#[Pure]
@@ -33,7 +34,7 @@ class StringStream implements Stream
 		private string $string,
 		private bool $readable = true,
 		private bool $seekable = true,
-		private bool $writeable = false
+		private bool $writeable = false,
 	) {
 	}
 
@@ -43,7 +44,7 @@ class StringStream implements Stream
 		return $this->string;
 	}
 
-	public function detach()
+	public function detach(): void
 	{
 		$this->detached = true;
 	}

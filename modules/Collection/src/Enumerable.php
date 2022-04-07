@@ -53,7 +53,6 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @param int $start Inclusive
 	 * @param int $end Inclusive
-	 * @param int $step
 	 *
 	 * @return GenericEnumerable<int>
 	 */
@@ -73,7 +72,8 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @use IsEnumerable<TSource>
 	 */
-	use IsEnumerable, DeepCloneable;
+	use IsEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @var Iterator<mixed, TSource>
@@ -85,9 +85,8 @@ class Enumerable implements GenericEnumerable
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(
-		Iterator|Closure $iterator
-	)
-	{
+		Iterator|Closure $iterator,
+	) {
 		if ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;
 		} else {

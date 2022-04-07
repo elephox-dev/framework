@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration\Json;
 
-use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Json\Contract\JsonDataConfigurationSource;
 use InvalidArgumentException;
@@ -15,8 +14,7 @@ class JsonFileConfigurationSource implements JsonDataConfigurationSource
 	public function __construct(
 		public readonly string $path,
 		public readonly bool $optional = false,
-	)
-	{
+	) {
 	}
 
 	/**
@@ -32,13 +30,12 @@ class JsonFileConfigurationSource implements JsonDataConfigurationSource
 			}
 
 			throw new InvalidArgumentException(
-				sprintf('File "%s" does not exist and is not optional', $this->path)
+				sprintf('File "%s" does not exist and is not optional', $this->path),
 			);
 		}
 
 		$json = file_get_contents($this->path);
-		if (!$json)
-		{
+		if (!$json) {
 			throw new JsonException("File '$this->path' could not be read");
 		}
 

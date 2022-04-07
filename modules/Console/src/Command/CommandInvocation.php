@@ -7,17 +7,16 @@ use InvalidArgumentException;
 use LogicException;
 
 /**
- * @property-read string $name
- * @property-read string $invokedBinary
- * @property-read string $commandLine
+ * @property string $name
+ * @property string $invokedBinary
+ * @property string $commandLine
  */
 class CommandInvocation
 {
 	public function __construct(
 		public readonly RawCommandInvocation $raw,
 		public readonly ArgumentList $arguments,
-	)
-	{
+	) {
 	}
 
 	public function getArgument(string $name): Argument
@@ -28,10 +27,11 @@ class CommandInvocation
 	public function getOptionalArgument(string $name): ?Argument
 	{
 		return $this->arguments
-				->firstOrDefault(
-					null,
-					static fn(Argument $arg): bool => $arg->name === $name
-				);
+			->firstOrDefault(
+				null,
+				static fn (Argument $arg): bool => $arg->name === $name,
+			)
+		;
 	}
 
 	public function __get(string $name): null|string|int|float|bool
@@ -42,7 +42,7 @@ class CommandInvocation
 
 	public function __isset(string $name): bool
 	{
-		return isset($this->raw->$name) || $this->arguments->any(static fn(Argument $arg): bool => $arg->name === $name);
+		return isset($this->raw->$name) || $this->arguments->any(static fn (Argument $arg): bool => $arg->name === $name);
 	}
 
 	public function __set(string $name, mixed $value): void

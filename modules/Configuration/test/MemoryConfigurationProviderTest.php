@@ -16,29 +16,32 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Arr
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
+ *
  * @uses \Elephox\Collection\IsEnumerable
+ *
+ * @internal
  */
 class MemoryConfigurationProviderTest extends TestCase
 {
 	public function testTryGet(): void
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar']));
-		self::assertTrue($provider->tryGet('foo', $val));
-		self::assertEquals('bar', $val);
+		static::assertTrue($provider->tryGet('foo', $val));
+		static::assertEquals('bar', $val);
 
-		self::assertFalse($provider->tryGet('bar', $val));
-		self::assertFalse($provider->tryGet('', $val));
-		self::assertFalse($provider->tryGet('::', $val));
+		static::assertFalse($provider->tryGet('bar', $val));
+		static::assertFalse($provider->tryGet('', $val));
+		static::assertFalse($provider->tryGet('::', $val));
 	}
 
 	public function testRemove(): void
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar', 'nested' => ['foo' => 'bar']]));
-		self::assertTrue($provider->tryGet('foo', $val));
+		static::assertTrue($provider->tryGet('foo', $val));
 
 		$provider->remove('foo');
 
-		self::assertFalse($provider->tryGet('foo', $val));
+		static::assertFalse($provider->tryGet('foo', $val));
 
 		$provider->remove('nested:test');
 		$provider->remove('');
@@ -60,6 +63,6 @@ EOF;
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar', 'nested' => ['foo' => 'bar']]));
 
-		self::assertTrue($provider->getChildKeys('baz')->isEmpty());
+		static::assertTrue($provider->getChildKeys('baz')->isEmpty());
 	}
 }

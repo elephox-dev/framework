@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Collection;
 
@@ -13,14 +14,16 @@ use stdClass;
  * @covers \Elephox\Collection\KeyedEnumerable
  * @covers \Elephox\Collection\Iterator\SplObjectStorageIterator
  * @covers \Elephox\Collection\Iterator\FlipIterator
+ *
+ * @internal
  */
 class ObjectSetTest extends TestCase
 {
 	public function testAdd(): void
 	{
 		$set = new ObjectSet();
-		self::assertTrue($set->add(new stdClass()));
-		self::assertCount(1, $set);
+		static::assertTrue($set->add(new stdClass()));
+		static::assertCount(1, $set);
 	}
 
 	public function testAddInvalid(): void
@@ -38,7 +41,7 @@ class ObjectSetTest extends TestCase
 		$set->add($ref);
 
 		self::assertfalse($set->remove(new stdClass()));
-		self::assertTrue($set->remove($ref));
+		static::assertTrue($set->remove($ref));
 	}
 
 	public function testInvalidRemove(): void
@@ -69,8 +72,8 @@ class ObjectSetTest extends TestCase
 		$set->add($ref3);
 		$set->add($ref4);
 
-		self::assertFalse($set->removeBy(fn($x) => false));
-		self::assertTrue($set->removeBy(fn($x) => $x->test));
-		self::assertCount(2, $set);
+		static::assertFalse($set->removeBy(static fn ($x) => false));
+		static::assertTrue($set->removeBy(static fn ($x) => $x->test));
+		static::assertCount(2, $set);
 	}
 }

@@ -54,7 +54,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 			$this->headers ?? new HeaderMap(),
 			$this->body ?? new EmptyStream(),
 			$this->method ?? RequestMethod::GET,
-			$this->url ?? throw self::missingParameterException("url")
+			$this->url ?? throw self::missingParameterException('url'),
 		);
 	}
 }

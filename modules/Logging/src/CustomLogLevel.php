@@ -11,9 +11,8 @@ class CustomLogLevel implements Contract\LogLevel
 	 */
 	public function __construct(
 		private string $name,
-		private int $level
-	)
-	{
+		private int $level,
+	) {
 	}
 
 	public function getLevel(): int

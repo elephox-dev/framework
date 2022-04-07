@@ -10,10 +10,14 @@ use JetBrains\PhpStorm\Pure;
 
 class EventBus implements Contract\EventBus
 {
-	/** @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> $eventSubscriptionsMapping */
+	/**
+	 * @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> $eventSubscriptionsMapping
+	 */
 	private readonly ArrayMap $eventSubscriptionsMapping;
 
-	/** @var ArrayMap<non-empty-string, Contract\Subscription> $subscriptionSubscriberMapping */
+	/**
+	 * @var ArrayMap<non-empty-string, Contract\Subscription> $subscriptionSubscriberMapping
+	 */
 	private readonly ArrayMap $subscriptionSubscriberMapping;
 
 	#[Pure]
@@ -54,7 +58,7 @@ class EventBus implements Contract\EventBus
 		$eventName = $this->subscriptionSubscriberMapping->get($id)->getEventName();
 
 		$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
-		$subscriptions->removeBy(fn(Contract\Subscription $subscription) => $subscription->getId() === $id);
+		$subscriptions->removeBy(static fn (Contract\Subscription $subscription) => $subscription->getId() === $id);
 		if ($subscriptions->isEmpty()) {
 			$this->eventSubscriptionsMapping->remove($eventName);
 		} else {
@@ -74,8 +78,9 @@ class EventBus implements Contract\EventBus
 		$subscriptions = $this->eventSubscriptionsMapping
 			->get($eventName)
 			->orderByDescending(
-				static fn(Contract\Subscription $s): int => $s->getPriority()
-			);
+				static fn (Contract\Subscription $s): int => $s->getPriority(),
+			)
+		;
 
 		foreach ($subscriptions as $subscription) {
 			$callback = $subscription->getCallback();

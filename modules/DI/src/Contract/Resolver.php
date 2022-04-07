@@ -33,8 +33,6 @@ interface Resolver
 	 * @param non-empty-string $method
 	 * @param argument-list $overrideArguments
 	 *
-	 * @return mixed
-	 *
 	 * @throws BadMethodCallException
 	 */
 	public function call(string $className, string $method, array $overrideArguments = []): mixed;

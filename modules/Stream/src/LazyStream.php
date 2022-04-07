@@ -14,7 +14,7 @@ class LazyStream implements Stream
 	 * @param Closure(): Stream $closure
 	 */
 	public function __construct(
-		protected Closure $closure
+		protected Closure $closure,
 	) {
 	}
 

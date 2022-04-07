@@ -9,7 +9,9 @@ use Throwable;
 
 class MultiSinkLogger extends AbstractLogger
 {
-	/** @var list<Contract\Sink> */
+	/**
+	 * @var list<Contract\Sink>
+	 */
 	private array $sinks;
 
 	public function __construct()
@@ -29,7 +31,7 @@ class MultiSinkLogger extends AbstractLogger
 			if (!array_key_exists('exception', $metaData)) {
 				$metaData['exception'] = $message;
 			}
-		} else if ($message instanceof Stringable) {
+		} elseif ($message instanceof Stringable) {
 			$message = $message->__toString();
 		}
 

@@ -40,12 +40,11 @@ class ConsoleApplicationBuilder
 	}
 
 	public function __construct(
-		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
+		public readonly ConfigurationBuilder & ConfigurationRoot $configuration,
 		public readonly ConsoleEnvironment $environment,
 		public readonly ServiceCollectionContract $services,
 		public readonly CommandCollection $commands,
-	)
-	{
+	) {
 		$this->registerDefaultExceptionHandler();
 		$this->registerDefaultConfig();
 		$this->setDebugFromConfig();
@@ -61,8 +60,8 @@ class ConsoleApplicationBuilder
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
-				->getFile("config.json")
-				->getPath()
+				->getFile('config.json')
+				->getPath(),
 		));
 
 		$this->configuration->add(new JsonFileConfigurationSource(
@@ -70,22 +69,22 @@ class ConsoleApplicationBuilder
 				->getRootDirectory()
 				->getFile("config.{$this->environment->getEnvironmentName()}.json")
 				->getPath(),
-			true
+			true,
 		));
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
-				->getFile("config.local.json")
+				->getFile('config.local.json')
 				->getPath(),
-			true
+			true,
 		));
 	}
 
 	protected function setDebugFromConfig(): void
 	{
-		if ($this->configuration->hasSection("env:debug")) {
-			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
+		if ($this->configuration->hasSection('env:debug')) {
+			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
 		}
 	}
 
@@ -104,6 +103,7 @@ class ConsoleApplicationBuilder
 	 * @template T of object
 	 *
 	 * @param class-string<T>|string $name
+	 *
 	 * @return T
 	 */
 	public function service(string $name): object
@@ -114,9 +114,10 @@ class ConsoleApplicationBuilder
 
 	public function addLogging(): self
 	{
-		$this->services->addSingleton(Logger::class, MultiSinkLogger::class, function (): MultiSinkLogger {
+		$this->services->addSingleton(Logger::class, MultiSinkLogger::class, static function (): MultiSinkLogger {
 			$logger = new MultiSinkLogger();
 			$logger->addSink(new MessageFormatterSink(new ConsoleSink()));
+
 			return $logger;
 		});
 

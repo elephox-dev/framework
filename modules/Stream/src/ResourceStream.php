@@ -18,13 +18,12 @@ class ResourceStream implements Stream
 	 * @param null|positive-int|0 $size
 	 */
 	public function __construct(
-		protected      $resource,
+		protected $resource,
 		protected bool $readable = true,
 		protected bool $writeable = false,
 		protected bool $seekable = true,
-		protected ?int $size = null
-	)
-	{
+		protected ?int $size = null,
+	) {
 		if (!is_resource($this->resource)) {
 			throw new InvalidArgumentException('ResourceStream expects a resource');
 		}
@@ -33,7 +32,7 @@ class ResourceStream implements Stream
 	public function __toString(): string
 	{
 		if (!is_resource($this->resource)) {
-			return "";
+			return '';
 		}
 
 		if ($this->isSeekable()) {
@@ -192,7 +191,7 @@ class ResourceStream implements Stream
 			throw new RuntimeException('Cannot read from non-readable stream');
 		}
 
-		if (0 === $length) {
+		if ($length === 0) {
 			return '';
 		}
 

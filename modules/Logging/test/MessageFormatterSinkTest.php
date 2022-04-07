@@ -10,6 +10,8 @@ use Mockery as M;
 /**
  * @covers \Elephox\Logging\MessageFormatterSink
  * @covers \Elephox\Logging\LogLevel
+ *
+ * @internal
  */
 class MessageFormatterSinkTest extends MockeryTestCase
 {
@@ -19,12 +21,12 @@ class MessageFormatterSinkTest extends MockeryTestCase
 
 		$sink
 			->expects('write')
-			->with("Hello World", LogLevel::INFO, [])
+			->with('Hello World', LogLevel::INFO, [])
 			->andReturns()
 		;
 
 		$messageFormatterSink = new MessageFormatterSink($sink);
-		$messageFormatterSink->write("Hello World", LogLevel::INFO, []);
+		$messageFormatterSink->write('Hello World', LogLevel::INFO, []);
 	}
 
 	public function testSimpleFormatWrite(): void
@@ -44,8 +46,8 @@ class MessageFormatterSinkTest extends MockeryTestCase
 		;
 
 		$messageFormatterSink = new MessageFormatterSink($sink);
-		$messageFormatterSink->write("Hello <green>World</green>", LogLevel::INFO, []);
-		$messageFormatterSink->write("This <green>is</green> a <red>warning</red>", LogLevel::WARNING, []);
+		$messageFormatterSink->write('Hello <green>World</green>', LogLevel::INFO, []);
+		$messageFormatterSink->write('This <green>is</green> a <red>warning</red>', LogLevel::WARNING, []);
 	}
 
 	// TODO: write tests for background and options

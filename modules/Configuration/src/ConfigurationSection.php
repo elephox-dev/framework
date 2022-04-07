@@ -22,22 +22,22 @@ class ConfigurationSection implements Contract\ConfigurationSection
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{
-		return $this->root->getChildKeys($path !== null ? ConfigurationPath::appendKey($this->path, (string)$path) : $this->path);
+		return $this->root->getChildKeys($path !== null ? ConfigurationPath::appendKey($this->path, (string) $path) : $this->path);
 	}
 
 	public function getChildren(string|Str|null $path = null): GenericEnumerable
 	{
-		return $this->root->getChildren($path !== null ? ConfigurationPath::appendKey($this->path, (string)$path) : $this->path);
+		return $this->root->getChildren($path !== null ? ConfigurationPath::appendKey($this->path, (string) $path) : $this->path);
 	}
 
 	public function hasSection(string|Str $key): bool
 	{
-		return $this->getChildKeys()->contains((string)$key);
+		return $this->getChildKeys()->contains((string) $key);
 	}
 
 	public function getSection(string|Str $key): Contract\ConfigurationSection
 	{
-		return new self($this->root, ConfigurationPath::appendKey($this->path, (string)$key));
+		return new self($this->root, ConfigurationPath::appendKey($this->path, (string) $key));
 	}
 
 	public function getKey(): string
@@ -46,7 +46,7 @@ class ConfigurationSection implements Contract\ConfigurationSection
 			$this->key = ConfigurationPath::getSectionKey($this->path);
 		}
 
-		return (string)$this->key;
+		return (string) $this->key;
 	}
 
 	public function getValue(): string|int|float|bool|null
@@ -66,7 +66,7 @@ class ConfigurationSection implements Contract\ConfigurationSection
 
 	public function getPath(): string
 	{
-		return (string)$this->path;
+		return (string) $this->path;
 	}
 
 	public function offsetGet(mixed $offset): string|int|float|bool|null
@@ -75,7 +75,7 @@ class ConfigurationSection implements Contract\ConfigurationSection
 			throw new InvalidArgumentException('Offset must be a string');
 		}
 
-		return $this->root->offsetGet((string)ConfigurationPath::appendKey($this->path, $offset));
+		return $this->root->offsetGet((string) ConfigurationPath::appendKey($this->path, $offset));
 	}
 
 	public function offsetExists(mixed $offset): bool
@@ -84,7 +84,7 @@ class ConfigurationSection implements Contract\ConfigurationSection
 			throw new InvalidArgumentException('Offset must be a string');
 		}
 
-		return $this->root->offsetExists((string)ConfigurationPath::appendKey($this->path, $offset));
+		return $this->root->offsetExists((string) ConfigurationPath::appendKey($this->path, $offset));
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
@@ -93,7 +93,7 @@ class ConfigurationSection implements Contract\ConfigurationSection
 			throw new InvalidArgumentException('Offset must be a string');
 		}
 
-		$this->root->offsetSet((string)ConfigurationPath::appendKey($this->path, $offset), $value);
+		$this->root->offsetSet((string) ConfigurationPath::appendKey($this->path, $offset), $value);
 	}
 
 	public function offsetUnset(mixed $offset): void
@@ -102,6 +102,6 @@ class ConfigurationSection implements Contract\ConfigurationSection
 			throw new InvalidArgumentException('Offset must be a string');
 		}
 
-		$this->root->offsetUnset((string)ConfigurationPath::appendKey($this->path, $offset));
+		$this->root->offsetUnset((string) ConfigurationPath::appendKey($this->path, $offset));
 	}
 }

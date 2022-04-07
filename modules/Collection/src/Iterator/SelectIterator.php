@@ -21,7 +21,7 @@ class SelectIterator implements Iterator
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $elementSelector
+		private Closure $elementSelector,
 	) {
 	}
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\DI;
 
@@ -6,7 +7,6 @@ use BadFunctionCallException;
 use BadMethodCallException;
 use Closure;
 use Elephox\Collection\ArrayList;
-use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use LogicException;
 use ReflectionClass;
@@ -43,6 +43,7 @@ trait ServiceResolver
 
 		$reflectionClass = new ReflectionClass($className);
 		$constructor = $reflectionClass->getConstructor();
+
 		try {
 			if ($constructor === null) {
 				return $reflectionClass->newInstance();
@@ -71,6 +72,7 @@ trait ServiceResolver
 	public function call(string $className, string $method, array $overrideArguments = []): mixed
 	{
 		$instance = $this->instantiate($className);
+
 		try {
 			$reflectionClass = new ReflectionClass($instance);
 			$reflectionMethod = $reflectionClass->getMethod($method);
@@ -102,7 +104,7 @@ trait ServiceResolver
 			/** @var T */
 			return $reflectionFunction->invokeArgs($arguments->toList());
 		} catch (ReflectionException $e) {
-			throw new BadFunctionCallException("Failed to invoke callback", previous: $e);
+			throw new BadFunctionCallException('Failed to invoke callback', previous: $e);
 		}
 	}
 
@@ -115,6 +117,7 @@ trait ServiceResolver
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
 				$values->addAll(array_slice($overrides, $usedOverrides));
+
 				break;
 			}
 
@@ -131,7 +134,6 @@ trait ServiceResolver
 
 	private function resolveArgument(ReflectionParameter $parameter): mixed
 	{
-		/** @var mixed $possibleArgument */
 		$possibleArgument = $this->getServices()->get($parameter->getName());
 		$type = $parameter->getType();
 		if ($type === null) {
@@ -147,7 +149,7 @@ trait ServiceResolver
 		}
 
 		if ($type instanceof ReflectionUnionType) {
-			$typeNames = array_map(static fn(ReflectionNamedType $t) => $t->getName(), $type->getTypes());
+			$typeNames = array_map(static fn (ReflectionNamedType $t) => $t->getName(), $type->getTypes());
 		} else {
 			/**
 			 * @psalm-suppress UndefinedMethod
@@ -160,7 +162,6 @@ trait ServiceResolver
 			 * @var list<class-string> $typeNames
 			 */
 			foreach ($typeNames as $typeName) {
-				/** @var mixed $possibleArgument */
 				$possibleArgument = $this->getServices()->get($typeName);
 				if ($possibleArgument !== null) {
 					break;
@@ -170,8 +171,8 @@ trait ServiceResolver
 
 		if ($possibleArgument !== null) {
 			// IDEA: could possibly skip type checking here
-			if (empty(array_filter($typeNames, static fn(string $class) => $possibleArgument instanceof $class))) {
-				$paramName = "$" . $parameter->getName();
+			if (empty(array_filter($typeNames, static fn (string $class) => $possibleArgument instanceof $class))) {
+				$paramName = '$' . $parameter->getName();
 				$possibleArgumentType = get_debug_type($possibleArgument);
 
 				throw new LogicException("Argument '$paramName' was resolved to type '$possibleArgumentType', which doesn't match the type hint '$type'");
@@ -188,6 +189,6 @@ trait ServiceResolver
 			return null;
 		}
 
-		throw new UnresolvedParameterException((string)$type, $parameter->name);
+		throw new UnresolvedParameterException((string) $type, $parameter->name);
 	}
 }

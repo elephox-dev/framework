@@ -8,7 +8,7 @@ use Elephox\OOR\Str;
 
 final class ConfigurationPath
 {
-	public const SECTION_SEPARATOR = ":";
+	public const SECTION_SEPARATOR = ':';
 
 	public static function getSectionKey(string|Str $path): Str
 	{
@@ -34,8 +34,7 @@ final class ConfigurationPath
 	{
 		/** @var string $key */
 		$key = $keys->pop();
-		if ($keys->isEmpty())
-		{
+		if ($keys->isEmpty()) {
 			return Arr::wrap($data[$key])->keys();
 		}
 

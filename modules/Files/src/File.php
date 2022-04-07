@@ -22,9 +22,8 @@ class File implements Contract\File
 		bool $writeable = false,
 		bool $create = false,
 		bool $append = false,
-		bool $truncate = false
-	): ResourceStream
-	{
+		bool $truncate = false,
+	): ResourceStream {
 		if (is_string($file)) {
 			$file = new self($file);
 		}
@@ -42,13 +41,13 @@ class File implements Contract\File
 		}
 
 		$flags = match (true) {
-			 $readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab+',
-			!$readable &&  $writeable &&  $create &&  $append && !$truncate => 'ab',
-			 $readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb+',
-			!$readable &&  $writeable &&  $create && !$append &&  $truncate => 'wb',
-			 $readable &&  $writeable &&  $create && !$append && !$truncate => 'cb+',
-			!$readable &&  $writeable &&  $create && !$append && !$truncate => 'cb',
-			 $readable &&  $writeable && !$create && !$append && !$truncate => 'rb+',
+			$readable && $writeable && $create && $append && !$truncate => 'ab+',
+			!$readable && $writeable && $create && $append && !$truncate => 'ab',
+			 $readable && $writeable && $create && !$append && $truncate => 'wb+',
+			!$readable && $writeable && $create && !$append && $truncate => 'wb',
+			 $readable && $writeable && $create && !$append && !$truncate => 'cb+',
+			!$readable && $writeable && $create && !$append && !$truncate => 'cb',
+			 $readable && $writeable && !$create && !$append && !$truncate => 'rb+',
 			 $readable && !$writeable && !$create && !$append && !$truncate => 'rb',
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
@@ -56,8 +55,8 @@ class File implements Contract\File
 		$exception = null;
 
 		// handle any warnings emitted by fopen()
-		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = "<unknown>", int $line = 0) use (&$exception): bool {
-			$exception = new RuntimeException(sprintf("[%d] %s in %s:%d", $errorCode, $errorMessage, $filename, $line));
+		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = '<unknown>', int $line = 0) use (&$exception): bool {
+			$exception = new RuntimeException(sprintf('[%d] %s in %s:%d', $errorCode, $errorMessage, $filename, $line));
 
 			return true;
 		});
@@ -74,7 +73,7 @@ class File implements Contract\File
 		}
 
 		if ($resource === false) {
-			$exception = new RuntimeException("Unable to open file stream: " . $file->getPath());
+			$exception = new RuntimeException('Unable to open file stream: ' . $file->getPath());
 		}
 
 		if ($exception !== null) {
@@ -91,7 +90,7 @@ class File implements Contract\File
 
 	#[Pure]
 	public function __construct(
-		private string    $path,
+		private string $path,
 		private ?MimeTypeInterface $mimeType = null,
 	) {
 	}
@@ -148,7 +147,7 @@ class File implements Contract\File
 		try {
 			return new DateTime('@' . $timestamp);
 		} catch (Exception $e) {
-			throw new RuntimeException("Could not parse timestamp", previous: $e);
+			throw new RuntimeException('Could not parse timestamp', previous: $e);
 		}
 	}
 
@@ -160,7 +159,7 @@ class File implements Contract\File
 
 		$hash = md5_file($this->path);
 		if ($hash === false) {
-			throw new RuntimeException("Could not hash file");
+			throw new RuntimeException('Could not hash file');
 		}
 
 		return $hash;
@@ -251,10 +250,10 @@ class File implements Contract\File
 	{
 		if ($node instanceof Contract\Directory) {
 			$destination = new self(Path::join($node->getPath(), $this->getName()));
-		} else if ($node instanceof Contract\File) {
+		} elseif ($node instanceof Contract\File) {
 			$destination = $node;
 		} else {
-			throw new InvalidArgumentException("Given filesystem node is not a file or directory");
+			throw new InvalidArgumentException('Given filesystem node is not a file or directory');
 		}
 
 		if (!$overwrite && $destination->exists()) {

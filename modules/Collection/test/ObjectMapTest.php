@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use Elephox\Collection\Contract\GenericMap;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -14,6 +13,8 @@ use stdClass;
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Collection\Enumerable
+ *
+ * @internal
  */
 class ObjectMapTest extends TestCase
 {
@@ -26,10 +27,10 @@ class ObjectMapTest extends TestCase
 			],
 			[
 				123,
-			]
+			],
 		);
 
-		self::assertEquals(123, $map->get($inst));
+		static::assertEquals(123, $map->get($inst));
 	}
 
 	public function testConstructorUnevenArrays(): void
@@ -42,11 +43,11 @@ class ObjectMapTest extends TestCase
 		new ObjectMap(
 			[
 				$inst,
-				$inst2
+				$inst2,
 			],
 			[
 				123,
-			]
+			],
 		);
 	}
 
@@ -64,7 +65,7 @@ class ObjectMapTest extends TestCase
 		$inst = new stdClass();
 		$map = new ObjectMap([$inst], [123]);
 
-		self::assertTrue($map->has($inst));
+		static::assertTrue($map->has($inst));
 	}
 
 	public function testIterator(): void
@@ -73,8 +74,8 @@ class ObjectMapTest extends TestCase
 		$map = new ObjectMap([$inst], [123]);
 
 		foreach ($map as $key => $value) {
-			self::assertEquals($inst, $key);
-			self::assertEquals(123, $value);
+			static::assertEquals($inst, $key);
+			static::assertEquals(123, $value);
 		}
 	}
 
@@ -85,12 +86,12 @@ class ObjectMapTest extends TestCase
 
 		$added = $map->put($inst, 456);
 
-		self::assertFalse($added);
-		self::assertEquals(456, $map->get($inst));
+		static::assertFalse($added);
+		static::assertEquals(456, $map->get($inst));
 
 		$anotherAdded = $map->put(new stdClass(), 789);
 
-		self::assertTrue($anotherAdded);
+		static::assertTrue($anotherAdded);
 	}
 
 	public function testRemove(): void
@@ -100,12 +101,12 @@ class ObjectMapTest extends TestCase
 
 		$removed = $map->remove($inst);
 
-		self::assertTrue($removed);
-		self::assertFalse($map->has($inst));
+		static::assertTrue($removed);
+		static::assertFalse($map->has($inst));
 
 		$removedAgain = $map->remove($inst);
 
-		self::assertFalse($removedAgain);
+		static::assertFalse($removedAgain);
 	}
 
 	public function testDeepClone(): void
@@ -118,9 +119,9 @@ class ObjectMapTest extends TestCase
 		$map = new ObjectMap([$anObject], [$anotherObject]);
 		$clone = $map->deepClone();
 
-		self::assertInstanceOf(ObjectMap::class, $clone);
-		self::assertNotSame($map, $clone);
-		self::assertNotSame($anObject, $clone->keys()->first());
-		self::assertNotSame($anotherObject, $clone->values()->first());
+		static::assertInstanceOf(ObjectMap::class, $clone);
+		static::assertNotSame($map, $clone);
+		static::assertNotSame($anObject, $clone->keys()->first());
+		static::assertNotSame($anotherObject, $clone->values()->first());
 	}
 }

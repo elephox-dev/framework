@@ -19,7 +19,8 @@ class Grouping implements GroupingContract
 	/**
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @param TGroupKey $groupKey
@@ -27,9 +28,8 @@ class Grouping implements GroupingContract
 	 */
 	public function __construct(
 		private readonly mixed $groupKey,
-		private readonly Iterator $iterator
-	)
-	{
+		private readonly Iterator $iterator,
+	) {
 	}
 
 	/**

@@ -23,7 +23,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	public function __construct(
 		protected ?string $protocolVersion = null,
 		protected ?Contract\HeaderMap $headers = null,
-		protected ?Stream $body = null
+		protected ?Stream $body = null,
 	) {
 	}
 
@@ -57,6 +57,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	public function jsonBody(array $data): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
+
 		return $this->body(new StringStream($json));
 	}
 

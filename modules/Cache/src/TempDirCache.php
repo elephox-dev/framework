@@ -52,8 +52,8 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 	{
 		return array_filter(
 			$this->items,
-			static fn(string $key): bool => in_array($key, $keys, true),
-			ARRAY_FILTER_USE_KEY
+			static fn (string $key): bool => in_array($key, $keys, true),
+			ARRAY_FILTER_USE_KEY,
 		);
 	}
 
@@ -146,13 +146,13 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 			array_merge(
 				array_map(
 					static fn (CacheItemInterface $item): string => get_debug_type($item->get()),
-					$this->items
+					$this->items,
 				),
-				[ CacheItemInterface::class ],
-			)
+				[CacheItemInterface::class],
+			),
 		);
 		$classesStream = StringStream::from(serialize($classes));
-		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . ".classes");
+		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . '.classes');
 		$classesFile->putContents($classesStream);
 
 		$this->changes = 0;
@@ -164,7 +164,7 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 			return;
 		}
 
-		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . ".classes");
+		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . '.classes');
 		if (!$classesFile->exists()) {
 			return;
 		}

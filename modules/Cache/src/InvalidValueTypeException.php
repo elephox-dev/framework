@@ -11,7 +11,8 @@ use Throwable;
 class InvalidValueTypeException extends Exception implements InvalidArgumentException
 {
 	#[Pure]
-	public function __construct(mixed $value, int $code = 0, ?Throwable $previous = null) {
+	public function __construct(mixed $value, int $code = 0, ?Throwable $previous = null)
+	{
 		$type = get_debug_type($value);
 
 		parent::__construct(sprintf('The value of type "%s" is not a CacheItemInterface.', $type), $code, $previous);

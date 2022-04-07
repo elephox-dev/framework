@@ -45,7 +45,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
 			$keySelector(...),
-			$comparer(...)
+			$comparer(...),
 		);
 
 		return new OrderedEnumerable($orderedIterator);
@@ -71,7 +71,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 		$orderedIterator = new OrderedIterator(
 			$this->getIterator(),
 			$keySelector(...),
-			$comparer(...)
+			$comparer(...),
 		);
 
 		return new OrderedEnumerable($orderedIterator);

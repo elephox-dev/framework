@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Collection;
 
@@ -12,6 +13,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\IsKeyedEnumerable
  * @covers \Elephox\Collection\Iterator\GroupingIterator
  * @covers \Elephox\Collection\KeyedEnumerable
+ *
+ * @internal
  */
 class GroupedEnumerableTest extends TestCase
 {
@@ -25,7 +28,7 @@ class GroupedEnumerableTest extends TestCase
 			['name' => 'Jones', 'age' => 40],
 		]);
 
-		self::assertEquals(
+		static::assertEquals(
 			[
 				20 => [
 					['name' => 'John', 'age' => 20],
@@ -40,9 +43,9 @@ class GroupedEnumerableTest extends TestCase
 				],
 			],
 			$enum
-				->groupBy(fn($item) => $item['age'])
-				->selectManyKeyed(fn($group) => $group, keySelector: fn($group) => $group->groupKey())
-				->toNestedArray()
+				->groupBy(static fn ($item) => $item['age'])
+				->selectManyKeyed(static fn ($group) => $group, keySelector: static fn ($group) => $group->groupKey())
+				->toNestedArray(),
 		);
 	}
 }

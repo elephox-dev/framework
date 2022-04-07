@@ -39,7 +39,7 @@ class Response extends AbstractMessage implements Contract\Response
 			$this->headers,
 			$this->body,
 			$this->responseCode,
-			$this->mimeType
+			$this->mimeType,
 		);
 	}
 

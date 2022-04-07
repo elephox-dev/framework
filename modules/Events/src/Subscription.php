@@ -10,12 +10,15 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 class Subscription implements Contract\Subscription
 {
-	/** @var non-empty-string $id */
+	/**
+	 * @var non-empty-string $id
+	 */
 	private readonly string $id;
 
 	/**
 	 * @param non-empty-string $eventName
 	 * @param Closure(Contract\Event): void $callback
+	 * @param privatereadonlyint $priority
 	 */
 	public function __construct(
 		private readonly string $eventName,
@@ -23,7 +26,7 @@ class Subscription implements Contract\Subscription
 		private readonly int $priority = 0,
 	) {
 		/** @var non-empty-string */
-		$this->id = spl_object_hash((object)$this);
+		$this->id = spl_object_hash((object) $this);
 	}
 
 	#[Pure]

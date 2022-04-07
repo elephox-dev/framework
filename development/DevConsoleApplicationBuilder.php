@@ -15,15 +15,15 @@ class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 				->getRootDirectory()
 				->getFile("config.{$this->environment->getEnvironmentName()}.json")
 				->getPath(),
-			true
+			true,
 		));
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
-				->getFile("config.local.json")
+				->getFile('config.local.json')
 				->getPath(),
-			true
+			true,
 		));
 	}
 }

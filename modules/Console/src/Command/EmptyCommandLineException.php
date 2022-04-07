@@ -10,6 +10,6 @@ class EmptyCommandLineException extends InvalidArgumentException
 {
 	public function __construct(int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct("Command line is empty", $code, $previous);
+		parent::__construct('Command line is empty', $code, $previous);
 	}
 }

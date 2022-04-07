@@ -7,10 +7,10 @@ use JetBrains\PhpStorm\Pure;
 use LogicException;
 
 /**
- * @property-read string $name
- * @property-read null|string $description
- * @property-read null|string|int|float|bool $default
- * @property-read bool $required
+ * @property string $name
+ * @property null|string $description
+ * @property null|string|int|float|bool $default
+ * @property bool $required
  */
 class Argument
 {
@@ -26,8 +26,7 @@ class Argument
 	public function __construct(
 		public readonly ArgumentTemplate $template,
 		public readonly null|string|int|float|bool $value,
-	)
-	{
+	) {
 	}
 
 	public function __get(string $name): mixed

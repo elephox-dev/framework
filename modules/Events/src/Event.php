@@ -5,5 +5,6 @@ namespace Elephox\Events;
 
 abstract class Event implements Contract\Event
 {
-	use ClassNameAsEventName, StopsPropagation;
+	use ClassNameAsEventName;
+	use StopsPropagation;
 }

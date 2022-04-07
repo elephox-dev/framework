@@ -27,9 +27,8 @@ class ServiceDescriptor
 		public readonly string $implementationType,
 		public ServiceLifetime $lifetime,
 		public ?Closure $implementationFactory,
-		public ?object $instance
-	)
-	{
+		public ?object $instance,
+	) {
 		if ($this->implementationFactory === null && $this->instance === null) {
 			throw new InvalidServiceDescriptorException('Either implementationFactory or instance must be set.');
 		}

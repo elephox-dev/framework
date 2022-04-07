@@ -20,8 +20,7 @@ class ConsoleApplication
 		public readonly ServiceCollectionContract $services,
 		public readonly ConsoleEnvironment $environment,
 		public readonly ConfigurationRoot $configuration,
-	)
-	{
+	) {
 	}
 
 	public function run(): void
@@ -53,7 +52,8 @@ class ConsoleApplication
 	{
 		$compiled = $this->services
 			->requireService(CommandCollection::class)
-			->findCompiled($invocation);
+			->findCompiled($invocation)
+		;
 
 		return $compiled->handler->handle($invocation->build($compiled->template)) ?? 0;
 	}

@@ -31,7 +31,6 @@ interface Stream extends Stringable
 	/**
 	 * @param positive-int|0 $offset
 	 * @param positive-int|0 $whence
-	 * @return void
 	 */
 	public function seek($offset, $whence = SEEK_SET): void;
 

@@ -82,6 +82,32 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.php-version == '8.1' }}
         run: composer run ci:static-analysis:publish
 
+  fix-cs:
+    name: 💅 Fix CS
+    needs: [ composer-setup ]
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: ⤵️ Checkout Sources
+        uses: actions/checkout@v2
+      - name: 🐘 Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: ${{ env.php-extensions }}
+      - name: 📦 Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: 💾 Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-8.1-composer-
+      - name: 📦 Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
+      - name: 💅 Run PHP CS Fixer (diff)
+        run: composer run fix-cs:dry-run
+
   unit-tests:
     name: 🧪 Unit Tests
     needs: [ composer-setup ]

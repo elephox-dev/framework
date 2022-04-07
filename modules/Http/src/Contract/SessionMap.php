@@ -10,9 +10,5 @@ use Elephox\Collection\Contract\GenericMap;
  */
 interface SessionMap extends GenericMap
 {
-	/**
-	 * @param null|array $session
-	 * @return null|SessionMap
-	 */
 	public static function fromGlobals(?array $session = null, bool $recreate = false): ?SessionMap;
 }

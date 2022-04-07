@@ -8,7 +8,7 @@ use JetBrains\PhpStorm\Immutable;
 #[Immutable]
 enum CookieSameSite: string
 {
-	case Strict = "Strict";
-	case Lax = "Lax";
-	case None = "None";
+	case Strict = 'Strict';
+	case Lax = 'Lax';
+	case None = 'None';
 }

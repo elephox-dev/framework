@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Console;
 
@@ -10,13 +11,12 @@ class DefaultExceptionHandler implements ExceptionHandler
 {
 	public function __construct(
 		private readonly Logger $logger,
-	)
-	{
+	) {
 	}
 
 	public function handleException(Throwable $exception): void
 	{
-		$this->logger->critical("Uncaught exception!");
+		$this->logger->critical('Uncaught exception!');
 		$this->logger->critical($exception->getMessage());
 		$this->logger->critical($exception->getTraceAsString());
 	}

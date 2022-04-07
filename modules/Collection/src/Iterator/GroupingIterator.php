@@ -6,7 +6,7 @@ namespace Elephox\Collection\Iterator;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\DefaultEqualityComparer;
-use \Elephox\Collection\Contract\Grouping as GroupingContract;
+use Elephox\Collection\Contract\Grouping as GroupingContract;
 use Elephox\Collection\Grouping;
 use Iterator;
 use RuntimeException;
@@ -41,8 +41,7 @@ class GroupingIterator implements Iterator
 		private readonly Iterator $iterator,
 		private readonly Closure $groupingFunction,
 		?Closure $comparer = null,
-	)
-	{
+	) {
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}
 
@@ -78,10 +77,10 @@ class GroupingIterator implements Iterator
 		/**
 		 * @param list<mixed> $xs
 		 * @param callable(mixed): bool $f
+		 *
 		 * @return int|null
 		 */
-		$findIdx = static function(array $xs, callable $f): ?int
-		{
+		$findIdx = static function (array $xs, callable $f): ?int {
 			/**
 			 * @var int $k
 			 * @var mixed $x
@@ -97,11 +96,11 @@ class GroupingIterator implements Iterator
 
 		foreach ($this->iterator as $value) {
 			$groupingKey = ($this->groupingFunction)($value);
-			$idx = $findIdx($this->groupKeys, fn (mixed $k): bool => (bool)($this->comparer)($k, $groupingKey));
+			$idx = $findIdx($this->groupKeys, fn (mixed $k): bool => (bool) ($this->comparer)($k, $groupingKey));
 			if ($idx === null) {
 				$this->groupKeys[] = $groupingKey;
 				end($this->groupKeys);
-				$idx = key($this->groupKeys) ?? throw new RuntimeException("Unexpected null key");
+				$idx = key($this->groupKeys) ?? throw new RuntimeException('Unexpected null key');
 			}
 
 			$this->values[$idx][] = $value;

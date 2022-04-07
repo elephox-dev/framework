@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
 use Elephox\Configuration\Json\JsonConfigurationProvider;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use JsonException;
 
 /**
  * @covers \Elephox\Configuration\Json\JsonFileConfigurationSource
@@ -14,6 +15,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
  * @covers \Elephox\Configuration\ConfigurationPath
+ *
+ * @internal
  */
 class JsonConfigurationProviderTest extends TestCase
 {
@@ -42,24 +45,24 @@ JSON);
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	public function testGetDataFromFile(): void
 	{
 		$source = new JsonFileConfigurationSource($this->tmpFile);
 		$provider = new JsonConfigurationProvider($source);
 
-		self::assertTrue($provider->tryGet('baz:guz', $value));
-		self::assertEquals('qux', $value);
+		static::assertTrue($provider->tryGet('baz:guz', $value));
+		static::assertEquals('qux', $value);
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	public function testLoadOptionalFile(): void
 	{
-		$source = new JsonFileConfigurationSource("/does/not/exist", true);
+		$source = new JsonFileConfigurationSource('/does/not/exist', true);
 
-		self::assertEquals([], $source->getData());
+		static::assertEquals([], $source->getData());
 	}
 }

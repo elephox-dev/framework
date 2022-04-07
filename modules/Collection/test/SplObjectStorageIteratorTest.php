@@ -11,6 +11,8 @@ use stdClass;
 
 /**
  * @covers \Elephox\Collection\Iterator\SplObjectStorageIterator
+ *
+ * @internal
  */
 class SplObjectStorageIteratorTest extends TestCase
 {
@@ -22,11 +24,11 @@ class SplObjectStorageIteratorTest extends TestCase
 
 		$iterator = new SplObjectStorageIterator($storage);
 
-		self::assertInstanceOf(Iterator::class, $iterator);
+		static::assertInstanceOf(Iterator::class, $iterator);
 
 		foreach ($iterator as $obj => $value) {
-			self::assertInstanceOf(stdClass::class, $obj);
-			self::assertIsString($value);
+			static::assertInstanceOf(stdClass::class, $obj);
+			static::assertIsString($value);
 		}
 	}
 }

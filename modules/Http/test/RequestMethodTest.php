@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\RequestMethod
+ *
+ * @internal
  */
 class RequestMethodTest extends TestCase
 {
@@ -14,9 +16,9 @@ class RequestMethodTest extends TestCase
 	{
 		foreach (RequestMethod::cases() as $method) {
 			if ($method === RequestMethod::GET || $method === RequestMethod::HEAD || $method === RequestMethod::OPTIONS) {
-				self::assertFalse($method->canHaveBody());
+				static::assertFalse($method->canHaveBody());
 			} else {
-				self::assertTrue($method->canHaveBody());
+				static::assertTrue($method->canHaveBody());
 			}
 		}
 	}

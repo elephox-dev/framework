@@ -16,7 +16,7 @@ class RangeIterator implements SeekableIterator, Countable
 	public function __construct(
 		private int $start,
 		private int $end,
-		private int $step = 1
+		private int $step = 1,
 	) {
 	}
 
@@ -52,6 +52,6 @@ class RangeIterator implements SeekableIterator, Countable
 
 	public function count(): int
 	{
-		return (int)ceil(($this->end - $this->start + $this->step) / $this->step);
+		return (int) ceil(($this->end - $this->start + $this->step) / $this->step);
 	}
 }

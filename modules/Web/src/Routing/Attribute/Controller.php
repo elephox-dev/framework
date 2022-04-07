@@ -8,7 +8,6 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\Http\RequestMethod;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
-use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -17,7 +16,9 @@ class Controller implements ControllerAttribute
 	public const DEFAULT_PATH = null;
 	public const DEFAULT_WEIGHT = 0;
 
-	/** @var ArrayList<RequestMethod> $methods */
+	/**
+	 * @var ArrayList<RequestMethod> $methods
+	 */
 	private ArrayList $methods;
 
 	/**
@@ -29,8 +30,7 @@ class Controller implements ControllerAttribute
 		private readonly ?string $path = self::DEFAULT_PATH,
 		private readonly int $weight = self::DEFAULT_WEIGHT,
 		string|RequestMethod|iterable $methods = [],
-	)
-	{
+	) {
 		/** @var ArrayList<RequestMethod> */
 		$this->methods = new ArrayList();
 
@@ -41,8 +41,8 @@ class Controller implements ControllerAttribute
 		foreach ($methods as $method) {
 			if (is_string($method)) {
 				$method = RequestMethod::tryFrom($method) ?? throw new InvalidArgumentException("Invalid request method: $method");
-			} else if (!$method instanceof RequestMethod) {
-				throw new InvalidArgumentException("Invalid request method type: " . get_debug_type($method));
+			} elseif (!$method instanceof RequestMethod) {
+				throw new InvalidArgumentException('Invalid request method type: ' . get_debug_type($method));
 			}
 
 			$this->methods->add($method);

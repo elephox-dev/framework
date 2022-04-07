@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use AppendIterator;
-use ArrayIterator;
 use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
@@ -69,7 +68,7 @@ trait IsEnumerable
 		return true;
 	}
 
-	public function any(callable $predicate = null): bool
+	public function any(?callable $predicate = null): bool
 	{
 		foreach ($this->getIterator() as $element) {
 			if ($predicate === null || $predicate($element)) {
@@ -180,12 +179,12 @@ trait IsEnumerable
 	 *
 	 * @return NonNegativeInteger
 	 */
-	public function count(callable $predicate = null): int
+	public function count(?callable $predicate = null): int
 	{
 		$iterator = $this->getIterator();
 		if ($predicate !== null) {
 			$iterator = new CallbackFilterIterator($iterator, $predicate);
-		} else if ($iterator instanceof Countable) {
+		} elseif ($iterator instanceof Countable) {
 			/** @var NonNegativeInteger */
 			return $iterator->count();
 		}
@@ -201,7 +200,7 @@ trait IsEnumerable
 	public function distinct(?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		$identity = static fn(mixed $element): mixed => $element;
+		$identity = static fn (mixed $element): mixed => $element;
 
 		/**
 		 * @var Closure(TSource, TSource): bool $comparer
@@ -239,7 +238,7 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->exceptBy($other, fn(mixed $element): mixed => $element, $comparer);
+		return $this->exceptBy($other, static fn (mixed $element): mixed => $element, $comparer);
 	}
 
 	/**
@@ -323,7 +322,7 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->intersectBy($other, fn($element): mixed => $element, $comparer);
+		return $this->intersectBy($other, static fn ($element): mixed => $element, $comparer);
 	}
 
 	/**
@@ -551,8 +550,8 @@ trait IsEnumerable
 	 */
 	public function selectManyKeyed(callable $collectionSelector, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable
 	{
-		$resultSelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
-		$keySelector ??= static fn(mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElementKey;
+		$resultSelector ??= static fn (mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElement;
+		$keySelector ??= static fn (mixed $element, mixed $collectionElement, mixed $collectionElementKey): mixed => $collectionElementKey;
 		/** @var callable(TSource, TCollection, TIntermediateKey): TCollectionKey $keySelector */
 
 		return new KeyedEnumerable(function () use ($collectionSelector, $resultSelector, $keySelector) {
@@ -575,7 +574,7 @@ trait IsEnumerable
 	 */
 	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericEnumerable
 	{
-		$resultSelector ??= static fn(mixed $element, mixed $collectionElement): mixed => $collectionElement;
+		$resultSelector ??= static fn (mixed $element, mixed $collectionElement): mixed => $collectionElement;
 		/** @var callable(TSource, TCollection): TResult $resultSelector */
 
 		return new Enumerable(function () use ($collectionSelector, $resultSelector) {
@@ -704,7 +703,7 @@ trait IsEnumerable
 	public function sum(callable $selector): int|float|string
 	{
 		/** @var numeric */
-		return $this->aggregate(function (mixed $accumulator, mixed $element) use ($selector) {
+		return $this->aggregate(static function (mixed $accumulator, mixed $element) use ($selector) {
 			/**
 			 * @var numeric $accumulator
 			 * @var TSource $element
@@ -764,13 +763,14 @@ trait IsEnumerable
 	 * @template UKey
 	 *
 	 * @param Iterator<UKey, USource> $iterator
+	 *
 	 * @return GenericKeyedEnumerable<NonNegativeInteger, USource>
 	 */
 	private static function reindex(Iterator $iterator): GenericKeyedEnumerable
 	{
 		$key = 0;
 
-		return new KeyedEnumerable(new KeySelectIterator($iterator, function () use (&$key): int {
+		return new KeyedEnumerable(new KeySelectIterator($iterator, static function () use (&$key): int {
 			/**
 			 * @var NonNegativeInteger $key
 			 */
@@ -818,7 +818,7 @@ trait IsEnumerable
 	public function union(GenericEnumerable $other, ?callable $comparer = null): GenericEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		$identity = static fn(mixed $o): mixed => $o;
+		$identity = static fn (mixed $o): mixed => $o;
 
 		/**
 		 * @var callable(TSource, TSource): bool $comparer
@@ -878,7 +878,7 @@ trait IsEnumerable
 	 */
 	public function zip(GenericEnumerable $other, ?callable $resultSelector = null): GenericEnumerable
 	{
-		$resultSelector ??= static fn(mixed $a, mixed $b): array => [$a, $b];
+		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
 
 		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
@@ -890,14 +890,14 @@ trait IsEnumerable
 
 		/** @var GenericEnumerable<TResult> */
 		return new Enumerable(
-		/** @var SelectIterator<mixed, TResult> */
+			/** @var SelectIterator<mixed, TResult> */
 			new SelectIterator(
 				$mit,
 				static function (mixed $values) use ($resultSelector): mixed {
 					/** @var array{TSource, TOther} $values */
 					return $resultSelector($values[0], $values[1]);
-				}
-			)
+				},
+			),
 		);
 	}
 }

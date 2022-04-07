@@ -14,7 +14,7 @@ use Iterator;
 class FlipIterator implements Iterator
 {
 	public function __construct(
-		private Iterator $iterator
+		private Iterator $iterator,
 	) {
 	}
 

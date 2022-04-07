@@ -7,23 +7,25 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Files\Path
+ *
+ * @internal
  */
 class PathTest extends TestCase
 {
 	public function testJoin(): void
 	{
 		$path1 = Path::join('/foo', 'bar', 'baz');
-		self::assertEquals('/foo' . DIRECTORY_SEPARATOR . 'bar' . DIRECTORY_SEPARATOR . 'baz', $path1);
+		static::assertEquals('/foo' . DIRECTORY_SEPARATOR . 'bar' . DIRECTORY_SEPARATOR . 'baz', $path1);
 
 		$path2 = Path::join('foo');
-		self::assertEquals('foo', $path2);
+		static::assertEquals('foo', $path2);
 	}
 
 	public function testIsRoot(): void
 	{
-		self::assertFalse(Path::isRoot("/long/path/to/test"));
-		self::assertTrue(Path::isRoot("/"));
-		self::assertFalse(Path::isRoot("C:\\Windows\\System32"));
-		self::assertTrue(Path::isRoot("C:\\"));
+		static::assertFalse(Path::isRoot('/long/path/to/test'));
+		static::assertTrue(Path::isRoot('/'));
+		static::assertFalse(Path::isRoot('C:\\Windows\\System32'));
+		static::assertTrue(Path::isRoot('C:\\'));
 	}
 }

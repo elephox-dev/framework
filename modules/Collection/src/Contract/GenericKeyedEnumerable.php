@@ -35,17 +35,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 
 	/**
 	 * @param callable(TSource, TIteratorKey): bool $predicate
-	 *
-	 * @return bool
 	 */
 	public function all(callable $predicate): bool;
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
-	 *
-	 * @return bool
 	 */
-	public function any(callable $predicate = null): bool;
+	public function any(?callable $predicate = null): bool;
 
 	/**
 	 * @param TIteratorKey $key
@@ -74,7 +70,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return NonNegativeInteger
 	 */
-	public function count(callable $predicate = null): int;
+	public function count(?callable $predicate = null): int;
 
 	/**
 	 * @param null|callable(TSource, TSource): bool $comparer
@@ -188,6 +184,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
 	 * @return TSource
 	 */
 	public function last(?callable $predicate = null): mixed;
@@ -271,8 +268,6 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param null|callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer
-	 *
-	 * @return bool
 	 */
 	public function sequenceEqual(GenericKeyedEnumerable $other, ?callable $comparer = null): bool;
 

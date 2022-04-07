@@ -31,10 +31,7 @@ interface MessageBuilder
 	public function fileBody(string $path): static;
 
 	/**
-	 * @param string $name
 	 * @param list<string> $value
-	 *
-	 * @return static
 	 */
 	public function header(string $name, array $value): static;
 

@@ -17,7 +17,6 @@ enum UrlScheme: string implements Contract\UrlScheme
 	case MAILTO = 'mailto';
 	case SSH = 'ssh';
 	case MYSQL = 'mysql';
-
 	#[Pure]
 	public function getDefaultPort(): ?int
 	{

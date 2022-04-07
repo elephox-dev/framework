@@ -13,11 +13,10 @@ class CookieMap extends ArrayMap implements Contract\CookieMap
 {
 	/**
 	 * @param array<string, string|null>|null $cookie
-	 * @return Contract\CookieMap
 	 */
 	public static function fromGlobals(?array $cookie = null): Contract\CookieMap
 	{
-		$cookie = $cookie ?? $_COOKIE;
+		$cookie ??= $_COOKIE;
 
 		$map = new self();
 

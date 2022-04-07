@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use AppendIterator;
-use ArrayIterator;
 use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
@@ -75,7 +74,7 @@ trait IsKeyedEnumerable
 		return true;
 	}
 
-	public function any(callable $predicate = null): bool
+	public function any(?callable $predicate = null): bool
 	{
 		foreach ($this->getIterator() as $elementKey => $element) {
 			if ($predicate === null || $predicate($element, $elementKey)) {
@@ -189,7 +188,7 @@ trait IsKeyedEnumerable
 	 *
 	 * @return NonNegativeInteger
 	 */
-	public function count(callable $predicate = null): int
+	public function count(?callable $predicate = null): int
 	{
 		if ($predicate === null) {
 			$iterator = $this->getIterator();
@@ -213,7 +212,7 @@ trait IsKeyedEnumerable
 	public function distinct(?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		$identity = static fn(mixed $element): mixed => $element;
+		$identity = static fn (mixed $element): mixed => $element;
 
 		/**
 		 * @var Closure(TSource, TSource): bool $comparer
@@ -251,7 +250,7 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->exceptBy($other, fn (mixed $element): mixed => $element, $comparer);
+		return $this->exceptBy($other, static fn (mixed $element): mixed => $element, $comparer);
 	}
 
 	/**
@@ -363,7 +362,7 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return $this->intersectBy($other, fn ($element): mixed => $element, $comparer);
+		return $this->intersectBy($other, static fn ($element): mixed => $element, $comparer);
 	}
 
 	/**
@@ -515,7 +514,7 @@ trait IsKeyedEnumerable
 		$min = $selector($iterator->current(), $iterator->key());
 		$iterator->next();
 
-		while($iterator->valid()) {
+		while ($iterator->valid()) {
 			$min = min($min, $selector($iterator->current(), $iterator->key()));
 
 			$iterator->next();
@@ -615,7 +614,6 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 		/** @var callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer */
-
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ANY);
 		$mit->attachIterator($this->getIterator());
 		$mit->attachIterator($other->getIterator());
@@ -732,7 +730,7 @@ trait IsKeyedEnumerable
 	public function sum(callable $selector): int|float|string
 	{
 		/** @var numeric */
-		return $this->aggregate(function (mixed $accumulator, mixed $element, mixed $elementKey) use ($selector) {
+		return $this->aggregate(static function (mixed $accumulator, mixed $element, mixed $elementKey) use ($selector) {
 			/**
 			 * @var numeric $accumulator
 			 * @var TSource $element
@@ -791,7 +789,7 @@ trait IsKeyedEnumerable
 
 	public function toArray(?callable $keySelector = null): array
 	{
-		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
+		$keySelector ??= static fn (mixed $key, mixed $value): mixed => $key;
 
 		$array = [];
 
@@ -799,7 +797,7 @@ trait IsKeyedEnumerable
 			$key = $keySelector($elementKey, $element);
 
 			if ($key instanceof Stringable) {
-				$key = (string)$key;
+				$key = (string) $key;
 			}
 
 			if (!is_scalar($key)) {
@@ -815,7 +813,7 @@ trait IsKeyedEnumerable
 
 	public function toNestedArray(?callable $keySelector = null): array
 	{
-		$keySelector ??= static fn(mixed $key, mixed $value): mixed => $key;
+		$keySelector ??= static fn (mixed $key, mixed $value): mixed => $key;
 
 		$array = [];
 
@@ -827,7 +825,7 @@ trait IsKeyedEnumerable
 			$key = $keySelector($elementKey, $element);
 
 			if ($key instanceof Stringable) {
-				$key = (string)$key;
+				$key = (string) $key;
 			}
 
 			if (!is_scalar($key)) {
@@ -862,7 +860,7 @@ trait IsKeyedEnumerable
 	public function union(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
-		$identity = static fn(mixed $o): mixed => $o;
+		$identity = static fn (mixed $o): mixed => $o;
 
 		/**
 		 * @var callable(TSource, TSource): bool $comparer
@@ -952,8 +950,8 @@ trait IsKeyedEnumerable
 				static function (mixed $values) use ($resultSelector): mixed {
 					/** @var array{TSource, TOther} $values */
 					return $resultSelector($values[0], $values[1]);
-				}
-			)
+				},
+			),
 		);
 	}
 }

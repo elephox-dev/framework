@@ -13,6 +13,7 @@ class AmbiguousRouteHandlerException extends RuntimeException
 	/**
 	 * @param Request $request
 	 * @param list<Stringable> $routes
+	 * @param ?Throwable $previous
 	 */
 	public function __construct(public readonly Request $request, public readonly array $routes, int $code = 0, ?Throwable $previous = null)
 	{

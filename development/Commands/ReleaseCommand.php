@@ -14,12 +14,11 @@ class ReleaseCommand implements CommandHandler
 	public const BASE_BRANCH = 'develop';
 	public const RELEASE_BRANCH_PREFIX = 'release/';
 	public const RELEASE_TYPES = ['major', 'minor', 'patch', 'preview'];
-	public const CLONE_ORIGIN_PREFIX = "https://github.com/elephox-dev/";
+	public const CLONE_ORIGIN_PREFIX = 'https://github.com/elephox-dev/';
 
 	public function __construct(
 		private readonly Logger $logger,
-	)
-	{
+	) {
 	}
 
 	public function configure(CommandTemplateBuilder $builder): void
@@ -37,21 +36,21 @@ class ReleaseCommand implements CommandHandler
 	{
 		$type = $command->getArgument('type')->value;
 		if (!in_array($type, self::RELEASE_TYPES, true)) {
-			$this->logger->error(sprintf("Invalid release type: <cyan>%s</cyan>", is_string($type) ? $type : get_debug_type($type)));
+			$this->logger->error(sprintf('Invalid release type: <cyan>%s</cyan>', is_string($type) ? $type : get_debug_type($type)));
 
 			return 1;
 		}
 
 		$version = $command->getArgument('version')->value;
 		if (!is_string($version)) {
-			$this->logger->error("The version must be a string.");
+			$this->logger->error('The version must be a string.');
 
 			return 1;
 		}
 
 		if (!preg_match(self::VERSION_REGEX, $version, $versionParts)) {
 			$this->logger->error("Invalid version: <yellow>$version</yellow>");
-			$this->logger->error("The version must be in the format: <major>[.<minor>[.<patch>]]");
+			$this->logger->error('The version must be in the format: <major>[.<minor>[.<patch>]]');
 
 			return 1;
 		}
@@ -77,7 +76,7 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['major'] = (int) $versionParts['major'];
 		$versionParts['minor'] = (int) ($versionParts['minor'] ?? 0);
 		$versionParts['patch'] = (int) ($versionParts['patch'] ?? 0);
-		$versionParts['flag'] = $versionParts['flag'] ?? '';
+		$versionParts['flag'] ??= '';
 
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
 		$targetBranch = match ($type) {
@@ -91,15 +90,15 @@ class ReleaseCommand implements CommandHandler
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
 
-		$dryRun = (bool)$command->getArgument('dry-run')->value;
+		$dryRun = (bool) $command->getArgument('dry-run')->value;
 		if ($dryRun) {
-			$this->logger->warning("Performing a dry run. No changes will be made.");
+			$this->logger->warning('Performing a dry run. No changes will be made.');
 		}
 
 		$this->logger->debug("Full version: <yellow>$versionName</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 
-		$currentBranch = $this->executeGetLastLine("git rev-parse --abbrev-ref HEAD");
+		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
 		if ($currentBranch !== $baseBranch) {
 			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this <yellow>$type</yellow> version.");
 			$this->logger->error("You are currently on the <red>$currentBranch</red> branch.");
@@ -107,21 +106,21 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		if (!empty($this->executeGetLastLine("git status --porcelain"))) {
-			$this->logger->error("Your working directory is dirty. Please commit or stash your changes.");
+		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
+			$this->logger->error('Your working directory is dirty. Please commit or stash your changes.');
 
 			return 1;
 		}
 
-		if ($this->executeGetLastLine("git rev-parse HEAD") !== $this->executeGetLastLine("git rev-parse origin/$baseBranch")) {
-			$this->logger->error("Your local branch is not up to date with the remote branch. Please pull or push first.");
+		if ($this->executeGetLastLine('git rev-parse HEAD') !== $this->executeGetLastLine("git rev-parse origin/$baseBranch")) {
+			$this->logger->error('Your local branch is not up to date with the remote branch. Please pull or push first.');
 
 			return 1;
 		}
 
 		if (!$this->executeRequireSuccess(
-			"The framework modules are not in sync:",
-			"composer modules:check --namespaces"
+			'The framework modules are not in sync:',
+			'composer modules:check --namespaces',
 		)) {
 			return 1;
 		}
@@ -130,15 +129,16 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
-			"git switch -c %s", $versionReleaseBranch
+			'git switch -c %s',
+			$versionReleaseBranch,
 		)) {
 			return 1;
 		}
 
 		$this->logger->warning("You are now on the release branch for <yellow>$version</yellow> (<green>$versionReleaseBranch</green>).");
-		$this->logger->warning("You can make last-minute adjustments now and commit them.");
+		$this->logger->warning('You can make last-minute adjustments now and commit them.');
 		$this->logger->warning("This branch will be merged into the <green>$baseBranch</green> branch and deleted afterwards.");
-		$this->logger->warning("When you are done, press enter and the release will continue.");
+		$this->logger->warning('When you are done, press enter and the release will continue.');
 		fgets(STDIN);
 
 		$this->logger->info("Releasing framework <cyan>$type</cyan> version <yellow>$version</yellow>");
@@ -154,14 +154,17 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
-			'git branch -d %s', $versionReleaseBranch
+			'git branch -d %s',
+			$versionReleaseBranch,
 		)) {
 			return 1;
 		}
 
 		if (!$this->executeRequireSuccess(
 			"Failed to tag current release (<yellow>$versionName</yellow>)",
-			'git tag -a %s -m %s', $versionName, "Release $versionName",
+			'git tag -a %s -m %s',
+			$versionName,
+			"Release $versionName",
 		)) {
 			return 1;
 		}
@@ -180,44 +183,42 @@ class ReleaseCommand implements CommandHandler
 				!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
 				!$this->executeIsSuccess('git merge --no-ff --no-edit %s', self::BASE_BRANCH)
 			) {
-				$this->logger->error("Failed to back-merge the release commit into the <green>" . self::BASE_BRANCH . "</green> branch.");
+				$this->logger->error('Failed to back-merge the release commit into the <green>' . self::BASE_BRANCH . '</green> branch.');
 
 				return 1;
 			}
 		}
 
 		if (!$dryRun && !$this->executeRequireSuccess(
-				"Failed to push tags to the remote repository",
-				'git push --tags',
-			)) {
+			'Failed to push tags to the remote repository',
+			'git push --tags',
+		)) {
 			return 1;
 		}
 
 		if (!$dryRun && !$this->executeRequireSuccess(
-				"Failed to push to the remote repository",
-				'git push --all',
-			)) {
+			'Failed to push to the remote repository',
+			'git push --all',
+		)) {
 			return 1;
 		}
 
-		$modulesDir = APP_ROOT . "/modules";
-		$this->logger->info("Releasing modules...");
+		$modulesDir = APP_ROOT . '/modules';
+		$this->logger->info('Releasing modules...');
 
 		$dirs = scandir($modulesDir);
 		if ($dirs === false) {
-			$this->logger->error("Failed to scan the modules directory.");
+			$this->logger->error('Failed to scan the modules directory.');
 
 			return 1;
 		}
 
-		$tmpDir = APP_ROOT . "/tmp/release/";
+		$tmpDir = APP_ROOT . '/tmp/release/';
 		if (!$this->mkdir($tmpDir)) {
 			return 1;
 		}
 
-		foreach (array_filter($dirs, static function ($dir) use ($modulesDir) {
-			return is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.';
-		}) as $moduleDir) {
+		foreach (array_filter($dirs, static fn ($dir) => is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.') as $moduleDir) {
 			$moduleName = strtolower(basename($moduleDir));
 
 			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionName, $dryRun);
@@ -237,8 +238,10 @@ class ReleaseCommand implements CommandHandler
 
 		$moduleFolder = $tmpFolder . $name;
 		if (!$this->executeRequireSuccess(
-			"Failed to clone the module repository",
-			"git clone --depth=1 %s %s", self::CLONE_ORIGIN_PREFIX . $name, $moduleFolder
+			'Failed to clone the module repository',
+			'git clone --depth=1 %s %s',
+			self::CLONE_ORIGIN_PREFIX . $name,
+			$moduleFolder,
 		)) {
 			return 1;
 		}
@@ -247,14 +250,16 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			"Failed to checkout base branch (<green>$baseBranch</green>)",
-			"git checkout -B %s", $baseBranch
+			'git checkout -B %s',
+			$baseBranch,
 		)) {
 			return 1;
 		}
 
 		if (!$this->executeRequireSuccess(
 			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
-			"git switch -c %s", $versionReleaseBranch
+			'git switch -c %s',
+			$versionReleaseBranch,
 		)) {
 			return 1;
 		}
@@ -270,28 +275,31 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
-			'git branch -d %s', $versionReleaseBranch
+			'git branch -d %s',
+			$versionReleaseBranch,
 		)) {
 			return 1;
 		}
 
 		if (!$this->executeRequireSuccess(
 			"Failed to tag current release (<yellow>$versionName</yellow>)",
-			'git tag -a %s -m %s', $versionName, "Release $versionName",
+			'git tag -a %s -m %s',
+			$versionName,
+			"Release $versionName",
 		)) {
 			return 1;
 		}
 
 		if (!$dryRun && !$this->executeRequireSuccess(
-			"Failed to push tags to the remote repository",
-			'git push --tags'
+			'Failed to push tags to the remote repository',
+			'git push --tags',
 		)) {
 			return 1;
 		}
 
 		if (!$dryRun && !$this->executeRequireSuccess(
-			"Failed to push to the remote repository",
-			'git push --all'
+			'Failed to push to the remote repository',
+			'git push --all',
 		)) {
 			return 1;
 		}
@@ -304,10 +312,10 @@ class ReleaseCommand implements CommandHandler
 
 	private function rmdirRecursive(string $dir): bool
 	{
-		if (PHP_OS === "WINNT") {
-			$this->execute("rd /s /q %s", $dir);
+		if (PHP_OS === 'WINNT') {
+			$this->execute('rd /s /q %s', $dir);
 		} else {
-			$this->execute("rm -rf %s", $dir);
+			$this->execute('rm -rf %s', $dir);
 		}
 
 		return !is_dir($dir);
@@ -330,20 +338,19 @@ class ReleaseCommand implements CommandHandler
 	}
 
 	/**
-	 * @param string $commandLine
-	 * @param float|int|string ...$args
 	 * @return array{int, list<string>, list<string>}
+	 *
+	 * @param float|int|string[] $args
 	 */
 	private function execute(string $commandLine, float|int|string ...$args): array
 	{
-		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', array_map(static fn ($v) => (string)$v, $args)));
+		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', array_map(static fn ($v) => (string) $v, $args)));
 		$this->logger->debug("<green>$</green> <gray>$commandLine</gray>");
 
 		ob_start();
 
 		exec($commandLine, $output, $resultCode);
 		/** @var list<string> $output */
-
 		$error = ob_get_clean();
 		if ($error === false) {
 			$errors = [];
@@ -361,7 +368,7 @@ class ReleaseCommand implements CommandHandler
 		 */
 		[, $output,] = $this->execute($commandLine, ...$args);
 
-		return (string)end($output);
+		return (string) end($output);
 	}
 
 	private function executeRequireSuccess(string $failedMessage, string $commandLine, float|int|string ...$args): bool

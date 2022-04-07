@@ -4,17 +4,15 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayList;
-use InvalidArgumentException;
 
 class RawCommandInvocation
 {
 	/**
 	 * @param array<int, string> $commandLineArgs
-	 * @return RawCommandInvocation
 	 */
 	public static function fromCommandLine(array $commandLineArgs): RawCommandInvocation
 	{
-		$raw = implode(" ", $commandLineArgs);
+		$raw = implode(' ', $commandLineArgs);
 		$argList = ArrayList::from($commandLineArgs);
 
 		if ($argList->isEmpty()) {
@@ -42,8 +40,7 @@ class RawCommandInvocation
 		public readonly CommandInvocationArgumentsMap $arguments,
 		public readonly string $invokedBinary,
 		public readonly string $commandLine,
-	)
-	{
+	) {
 	}
 
 	public function build(CommandTemplate $template): CommandInvocation

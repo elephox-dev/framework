@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use IteratorAggregate;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
+use Exception;
 
 /**
  * @psalm-suppress MixedArrayOffset
@@ -73,8 +74,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 	#[Pure]
 	public function __construct(
 		private array $source,
-	)
-	{
+	) {
 	}
 
 	public function isEmpty(): bool
@@ -83,7 +83,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function asEnumerable(): Enumerable
 	{
@@ -91,7 +91,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function asKeyedEnumerable(): KeyedEnumerable
 	{
@@ -160,6 +160,9 @@ class Arr implements ArrayAccess, IteratorAggregate
 
 	/**
 	 * @psalm-suppress TooManyArguments
+	 *
+	 * @param ?callable $key_compare_func
+	 * @param self|array[] $rest
 	 */
 	public function diff(self|array $array, Diff $type = Diff::Normal, ?callable $key_compare_func = null, self|array ...$rest): self
 	{
@@ -167,7 +170,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 		$restArrays = self::mapAllToArray(...$rest);
 
 		$result = match ($type) {
-			Diff::Normal => $key_compare_func !== null ? throw new InvalidArgumentException("Cannot use a key compare function for normal array diff.") : array_diff($this->source, $firstArray, ...$restArrays),
+			Diff::Normal => $key_compare_func !== null ? throw new InvalidArgumentException('Cannot use a key compare function for normal array diff.') : array_diff($this->source, $firstArray, ...$restArrays),
 			Diff::Assoc => $key_compare_func !== null ? array_diff_uassoc($this->source, $firstArray, $key_compare_func, ...$restArrays) : array_diff_assoc($this->source, $firstArray, ...$restArrays),
 			Diff::Key => $key_compare_func !== null ? array_diff_ukey($this->source, $firstArray, $key_compare_func, ...$restArrays) : array_diff_key($this->source, $firstArray, ...$restArrays),
 		};
@@ -210,6 +213,9 @@ class Arr implements ArrayAccess, IteratorAggregate
 
 	/**
 	 * @psalm-suppress TooManyArguments
+	 *
+	 * @param ?callable $callback
+	 * @param array|self[] $rest
 	 */
 	public function intersect(Intersect $mode, array|self $array, ?callable $callback = null, array|self ...$rest): self
 	{
@@ -300,7 +306,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 	public function rand(int $num = 1): int|string|self
 	{
 		if (empty($this->source)) {
-			throw new InvalidArgumentException("Cannot get a random value from an empty array.");
+			throw new InvalidArgumentException('Cannot get a random value from an empty array.');
 		}
 
 		$result = array_rand($this->source, $num);
@@ -352,10 +358,10 @@ class Arr implements ArrayAccess, IteratorAggregate
 	public function splice(int $offset, ?int $length = null, mixed $replacement = []): self
 	{
 		if ($length === null) {
-			return new self(array_splice($this->source, $offset, replacement: (array)$replacement));
+			return new self(array_splice($this->source, $offset, replacement: (array) $replacement));
 		}
 
-		return new self(array_splice($this->source, $offset, $length, (array)$replacement));
+		return new self(array_splice($this->source, $offset, $length, (array) $replacement));
 	}
 
 	#[Pure]

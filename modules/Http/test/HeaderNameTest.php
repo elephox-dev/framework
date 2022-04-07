@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Http\HeaderName
  * @covers \Elephox\OOR\Casing
+ *
+ * @internal
  */
 class HeaderNameTest extends TestCase
 {
@@ -17,9 +19,9 @@ class HeaderNameTest extends TestCase
 	{
 		foreach (HeaderName::cases() as $name) {
 			if ($name === HeaderName::SetCookie) {
-				self::assertTrue($name->canBeDuplicate());
+				static::assertTrue($name->canBeDuplicate());
 			} else {
-				self::assertFalse($name->canBeDuplicate());
+				static::assertFalse($name->canBeDuplicate());
 			}
 		}
 	}
@@ -51,11 +53,11 @@ class HeaderNameTest extends TestCase
 					HeaderName::Cookie,
 					HeaderName::UserAgent,
 				],
-				true
+				true,
 			)) {
-				self::assertTrue($name->isOnlyRequest());
+				static::assertTrue($name->isOnlyRequest());
 			} else {
-				self::assertFalse($name->isOnlyRequest());
+				static::assertFalse($name->isOnlyRequest());
 			}
 		}
 	}
@@ -82,11 +84,11 @@ class HeaderNameTest extends TestCase
 					HeaderName::SetCookie,
 					HeaderName::Server,
 				],
-				true
+				true,
 			)) {
-				self::assertTrue($name->isOnlyResponse());
+				static::assertTrue($name->isOnlyResponse());
 			} else {
-				self::assertFalse($name->isOnlyResponse());
+				static::assertFalse($name->isOnlyResponse());
 			}
 		}
 	}
@@ -96,15 +98,15 @@ class HeaderNameTest extends TestCase
 		foreach (HeaderName::cases() as $name) {
 			$lowercase = strtolower($name->value);
 			$uppercase = strtoupper($name->value);
-			$randomCase = Casing::random($name->value, (int)($_ENV['ELEPHOX_TEST_SEED'] ?? time()));
+			$randomCase = Casing::random($name->value, (int) ($_ENV['ELEPHOX_TEST_SEED'] ?? time()));
 
-			self::assertEquals($name, HeaderName::tryFromIgnoreCase($name->value));
-			self::assertEquals($name, HeaderName::tryFromIgnoreCase($lowercase));
-			self::assertEquals($name, HeaderName::tryFromIgnoreCase($uppercase));
-			self::assertEquals($name, HeaderName::tryFromIgnoreCase($randomCase));
+			static::assertEquals($name, HeaderName::tryFromIgnoreCase($name->value));
+			static::assertEquals($name, HeaderName::tryFromIgnoreCase($lowercase));
+			static::assertEquals($name, HeaderName::tryFromIgnoreCase($uppercase));
+			static::assertEquals($name, HeaderName::tryFromIgnoreCase($randomCase));
 		}
 
-		self::assertNull(HeaderName::tryFromIgnoreCase('foo'));
+		static::assertNull(HeaderName::tryFromIgnoreCase('foo'));
 	}
 
 	public function invalidHeaderNameProvider(): iterable

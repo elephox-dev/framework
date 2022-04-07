@@ -13,13 +13,13 @@ interface Lookup extends GenericEnumerable
 {
 	/**
 	 * @param TKey $key
+	 *
 	 * @return GenericEnumerable<TElement>
 	 */
 	public function get(mixed $key): mixed;
 
 	/**
 	 * @param TKey $key
-	 * @return bool
 	 */
 	public function containsKey(mixed $key): bool;
 }

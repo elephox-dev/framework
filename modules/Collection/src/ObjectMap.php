@@ -19,7 +19,8 @@ class ObjectMap implements GenericMap
 	/**
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	private SplObjectStorage $map;
 
@@ -55,6 +56,7 @@ class ObjectMap implements GenericMap
 
 	/**
 	 * @param object $key
+	 *
 	 * @return TValue
 	 */
 	public function get(mixed $key): mixed
@@ -66,6 +68,7 @@ class ObjectMap implements GenericMap
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var TValue
 		 */
 		return $this->map->offsetGet($key);
@@ -73,8 +76,6 @@ class ObjectMap implements GenericMap
 
 	/**
 	 * @param object $key
-	 *
-	 * @return bool
 	 */
 	public function has(mixed $key): bool
 	{

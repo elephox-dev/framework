@@ -6,14 +6,10 @@ namespace Elephox\OOR;
 use InvalidArgumentException;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use JetBrains\PhpStorm\Pure;
 
 class Regex
 {
 	/**
-	 * @param string $pattern
-	 * @param string $subject
-	 * @param int $limit
 	 * @return ArrayList<string>
 	 */
 	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
@@ -28,8 +24,6 @@ class Regex
 	}
 
 	/**
-	 * @param string $pattern
-	 * @param string $subject
 	 * @return ArrayMap<int|string, string>
 	 */
 	public static function match(string $pattern, string $subject): ArrayMap

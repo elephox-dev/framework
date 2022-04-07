@@ -14,7 +14,10 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Http\UploadError
  * @covers \Elephox\Support\CustomMimeType
+ *
  * @uses \Elephox\Collection\IsKeyedEnumerable
+ *
+ * @internal
  */
 class UploadedFileMapTest extends TestCase
 {
@@ -42,10 +45,10 @@ class UploadedFileMapTest extends TestCase
 			],
 		]);
 
-		self::assertInstanceOf(UploadedFileMapContract::class, $map);
-		self::assertCount(2, $map);
-		self::assertInstanceOf(UploadedFile::class, $map->get('test'));
-		self::assertInstanceOf(UploadedFile::class, $map->get('custom-mime'));
+		static::assertInstanceOf(UploadedFileMapContract::class, $map);
+		static::assertCount(2, $map);
+		static::assertInstanceOf(UploadedFile::class, $map->get('test'));
+		static::assertInstanceOf(UploadedFile::class, $map->get('custom-mime'));
 
 		unlink($tmp);
 	}

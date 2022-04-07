@@ -18,7 +18,10 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\RequestMethod
  * @covers \Elephox\Http\UrlScheme
  * @covers \Elephox\Stream\StringStream
+ *
  * @uses \Elephox\Http\Contract\Request
+ *
+ * @internal
  */
 class RequestBuilderTest extends TestCase
 {
@@ -27,27 +30,27 @@ class RequestBuilderTest extends TestCase
 		$builder = Request::build();
 		$builder->requestMethod(RequestMethod::GET);
 		$builder->requestUrl(Url::fromString('https://example.com/'));
-		$builder->protocolVersion("2.0");
+		$builder->protocolVersion('2.0');
 		$builder->jsonBody(['foo' => 'bar']);
 		$builder->header('X-Foo', ['bar']);
 		$builder->header('X-Bar', ['baz']);
 
 		$request = $builder->get();
-		self::assertInstanceOf(RequestContract::class, $request);
-		self::assertEquals(RequestMethod::GET, $request->getMethod());
-		self::assertEquals('https://example.com/', (string)$request->getUrl());
-		self::assertEquals('2.0', $request->getProtocolVersion());
-		self::assertEquals('{"foo":"bar"}', $request->getBody()->getContents());
-		self::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		self::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		static::assertInstanceOf(RequestContract::class, $request);
+		static::assertEquals(RequestMethod::GET, $request->getMethod());
+		static::assertEquals('https://example.com/', (string) $request->getUrl());
+		static::assertEquals('2.0', $request->getProtocolVersion());
+		static::assertEquals('{"foo":"bar"}', $request->getBody()->getContents());
+		static::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		static::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
 
 		$newRequest = $request->with()->jsonBody(['foo2' => 'bar2'])->get();
-		self::assertEquals(RequestMethod::GET, $request->getMethod());
-		self::assertEquals('https://example.com/', (string)$request->getUrl());
-		self::assertEquals('2.0', $request->getProtocolVersion());
-		self::assertEquals('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
-		self::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		self::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		static::assertEquals(RequestMethod::GET, $request->getMethod());
+		static::assertEquals('https://example.com/', (string) $request->getUrl());
+		static::assertEquals('2.0', $request->getProtocolVersion());
+		static::assertEquals('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
+		static::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		static::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
 	}
 
 	public function invalidBodyResourceProvider(): iterable

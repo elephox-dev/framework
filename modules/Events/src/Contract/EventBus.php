@@ -10,8 +10,6 @@ interface EventBus
 	/**
 	 * @param non-empty-string $eventName
 	 * @param callable(Event): void $callback
-	 *
-	 * @return Subscription
 	 */
 	public function subscribe(string $eventName, callable $callback): Subscription;
 

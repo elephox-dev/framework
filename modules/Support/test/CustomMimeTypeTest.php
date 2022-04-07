@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Support\CustomMimeType
+ *
+ * @internal
  */
 class CustomMimeTypeTest extends TestCase
 {
@@ -16,7 +18,7 @@ class CustomMimeTypeTest extends TestCase
 		$mimeType = new CustomMimeType('image/png');
 		$builtIn = MimeType::ImagePng;
 
-		self::assertInstanceOf(CustomMimeType::class, $mimeType);
-		self::assertEquals($builtIn->getValue(), $mimeType->getValue());
+		static::assertInstanceOf(CustomMimeType::class, $mimeType);
+		static::assertEquals($builtIn->getValue(), $mimeType->getValue());
 	}
 }

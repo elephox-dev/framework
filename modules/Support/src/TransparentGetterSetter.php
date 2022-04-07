@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Support;
 
@@ -39,6 +40,7 @@ trait TransparentGetterSetter
 	public function __isset(string $name)
 	{
 		$method = $this->buildGetterName($name);
+
 		return method_exists($this, $method);
 	}
 }

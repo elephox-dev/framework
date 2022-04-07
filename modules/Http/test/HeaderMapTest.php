@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\OOR\Casing
  * @covers \Elephox\Http\HeaderName
+ *
+ * @internal
  */
 class HeaderMapTest extends TestCase
 {
@@ -21,15 +23,15 @@ class HeaderMapTest extends TestCase
 			'TEST_HEADER' => 'test',
 		]);
 
-		self::assertTrue($map->has(HeaderName::Accept->value));
-		self::assertEquals('text/html', $map->get(HeaderName::Accept->value));
+		static::assertTrue($map->has(HeaderName::Accept->value));
+		static::assertEquals('text/html', $map->get(HeaderName::Accept->value));
 
-		self::assertTrue($map->has(HeaderName::AcceptLanguage->value));
-		self::assertEquals('en-US,en;q=0.9', $map->get(HeaderName::AcceptLanguage->value));
+		static::assertTrue($map->has(HeaderName::AcceptLanguage->value));
+		static::assertEquals('en-US,en;q=0.9', $map->get(HeaderName::AcceptLanguage->value));
 
-		self::assertFalse($map->has('TEST_HEADER'));
-		self::assertFalse($map->has('TestHeader'));
-		self::assertFalse($map->has('Test-Header'));
-		self::assertFalse($map->has('Header'));
+		static::assertFalse($map->has('TEST_HEADER'));
+		static::assertFalse($map->has('TestHeader'));
+		static::assertFalse($map->has('Test-Header'));
+		static::assertFalse($map->has('Header'));
 	}
 }

@@ -23,14 +23,14 @@ interface ParameterMap extends ArrayAccess
 	public function remove(string $key, ?ParameterSource $source = null): void;
 
 	/**
-	 * @param string $key
 	 * @return GenericKeyedEnumerable<ParameterSource, mixed>
 	 */
 	public function all(string $key): GenericKeyedEnumerable;
 
 	/**
-	 * @param ParameterSource|null $source
 	 * @return GenericKeyedEnumerable<string, mixed>
+	 *
+	 * @param ?ParameterSource $source
 	 */
 	public function allFrom(?ParameterSource $source = null): GenericKeyedEnumerable;
 }

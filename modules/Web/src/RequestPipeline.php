@@ -16,12 +16,12 @@ class RequestPipeline
 {
 	/**
 	 * @param ArrayList<WebMiddleware> $middlewares
+	 * @param privatereadonlyRequestPipelineEndpoint $endpoint
 	 */
 	public function __construct(
 		private readonly RequestPipelineEndpoint $endpoint,
 		private readonly ArrayList $middlewares,
-	)
-	{
+	) {
 	}
 
 	public function getMiddlewares(): GenericList
@@ -29,11 +29,6 @@ class RequestPipeline
 		return $this->middlewares;
 	}
 
-	/**
-	 * @param Request $request
-	 *
-	 * @return ResponseBuilderContract
-	 */
 	public function process(Request $request): ResponseBuilderContract
 	{
 		$previous = function (Request $r): ResponseBuilderContract {

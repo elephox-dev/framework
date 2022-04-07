@@ -11,7 +11,6 @@ class CompiledCommandHandler
 		public readonly RawCommandInvocation $invocation,
 		public readonly CommandTemplate $template,
 		public readonly CommandHandler $handler,
-	)
-	{
+	) {
 	}
 }

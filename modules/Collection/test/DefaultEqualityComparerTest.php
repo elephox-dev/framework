@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Collection;
 
@@ -11,6 +12,8 @@ use stdClass;
 
 /**
  * @covers \Elephox\Collection\DefaultEqualityComparer
+ *
+ * @internal
  */
 class DefaultEqualityComparerTest extends TestCase
 {
@@ -55,7 +58,7 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testEquals(mixed $a, mixed $b, bool $result): void
 	{
-		self::assertSame($result, DefaultEqualityComparer::equals($a, $b));
+		static::assertSame($result, DefaultEqualityComparer::equals($a, $b));
 	}
 
 	public function sameDataProvider(): iterable
@@ -84,8 +87,8 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testSame(mixed $a, mixed $b, bool $result): void
 	{
-		self::assertSame($result, DefaultEqualityComparer::same($a, $b));
-		self::assertSame(!$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::same(...))($a, $b));
+		static::assertSame($result, DefaultEqualityComparer::same($a, $b));
+		static::assertSame(!$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::same(...))($a, $b));
 	}
 
 	public function compareDataProvider(): iterable
@@ -114,8 +117,8 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testCompareAndInvert(mixed $a, mixed $b, int $result): void
 	{
-		self::assertSame($result, DefaultEqualityComparer::compare($a, $b));
-		self::assertSame(-$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::compare(...))($a, $b));
+		static::assertSame($result, DefaultEqualityComparer::compare($a, $b));
+		static::assertSame(-$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::compare(...))($a, $b));
 	}
 
 	public function invalidCompareDataProvider(): iterable
@@ -137,7 +140,7 @@ class DefaultEqualityComparerTest extends TestCase
 
 	public function testInvalidInvertCallable(): void
 	{
-		$cb = fn() => "text";
+		$cb = static fn () => 'text';
 
 		$inverted = DefaultEqualityComparer::invert($cb);
 
@@ -154,8 +157,7 @@ class TestComparable implements Comparable
 	#[ExpectedValues([-1, 0, 1])]
 	public function compareTo(object $other): int
 	{
-		if (!($other instanceof self))
-		{
+		if (!($other instanceof self)) {
 			return 1;
 		}
 

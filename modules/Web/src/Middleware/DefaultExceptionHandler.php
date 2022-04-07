@@ -8,7 +8,6 @@ use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseSender;
-use Elephox\Stream\StringStream;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\WebMiddleware;
 use Throwable;

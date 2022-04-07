@@ -13,7 +13,8 @@ use Elephox\Configuration\Memory\MemoryConfigurationSource;
 
 class ConfigurationManager implements Contract\ConfigurationManager
 {
-	use BuildsConfigurationRoot, ConfiguresConfigurationProviders;
+	use BuildsConfigurationRoot;
+	use ConfiguresConfigurationProviders;
 
 	protected ObjectSet $configurationSources;
 
@@ -36,7 +37,7 @@ class ConfigurationManager implements Contract\ConfigurationManager
 	 */
 	public function getProviders(): GenericEnumerable
 	{
-		return $this->configurationSources->select(static fn(object $source): ConfigurationProvider => /** @var ConfigurationSource $source */ $source->build());
+		return $this->configurationSources->select(static fn (object $source): ConfigurationProvider => /** @var ConfigurationSource $source */ $source->build());
 	}
 
 	public function add(ConfigurationSource $source): static

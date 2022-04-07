@@ -26,15 +26,18 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\UploadedFileMap
  * @covers \Elephox\Http\RequestMethod
  * @covers \Elephox\Http\AbstractBuilder
+ *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest
+ *
+ * @internal
  */
 class ServerRequestBuilderTest extends TestCase
 {
 	public function parameterMapProvider(): iterable
 	{
-		yield [ ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test'], []), '/test' ];
-		yield [ ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/foo'], ['REQUEST_URI' => '/bar']), '/foo' ];
+		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test'], []), '/test'];
+		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/foo'], ['REQUEST_URI' => '/bar']), '/foo'];
 	}
 
 	/**
@@ -44,7 +47,7 @@ class ServerRequestBuilderTest extends TestCase
 	{
 		$request = ServerRequestBuilder::fromGlobals($parameterMap, session: new FakeSessionMap());
 
-		self::assertEquals($requestUri, $request->getUrl()->path);
+		static::assertEquals($requestUri, $request->getUrl()->path);
 	}
 
 	public function testMissingParameterIsThrown(): void

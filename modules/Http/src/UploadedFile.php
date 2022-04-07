@@ -17,11 +17,11 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param UploadError $error
 	 */
 	public function __construct(
-		private string      $clientName,
-		private string      $clientPath,
-		private Stream      $stream,
+		private string $clientName,
+		private string $clientPath,
+		private Stream $stream,
 		private ?MimeTypeInterface $clientMimeType = null,
-		private ?int        $size = null,
+		private ?int $size = null,
 		private UploadError $error = UploadError::Ok,
 	) {
 	}

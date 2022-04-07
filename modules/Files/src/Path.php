@@ -8,12 +8,13 @@ use JetBrains\PhpStorm\Pure;
 class Path
 {
 	#[Pure]
-	public static function join(string $arg, string... $args): string
+	public static function join(string $arg, string ...$args): string
 	{
 		array_unshift($args, $arg);
 		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
 		$path = implode(DIRECTORY_SEPARATOR, $parts);
-		return (string)preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
+
+		return (string) preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
 	}
 
 	#[Pure]

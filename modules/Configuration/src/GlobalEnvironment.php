@@ -41,7 +41,7 @@ class GlobalEnvironment implements Contract\Environment
 			return (bool) $this['APP_DEBUG'];
 		}
 
-		return in_array($this->getEnvironmentName($envName), ['dev', 'local', 'debug', 'development']);
+		return in_array($this->getEnvironmentName($envName), ['dev', 'local', 'debug', 'development'], true);
 	}
 
 	public function offsetExists(mixed $offset): bool

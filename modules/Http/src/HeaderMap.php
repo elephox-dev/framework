@@ -13,13 +13,12 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 {
 	/**
 	 * @param array<string, string|list<string>>|null $server
-	 * @return Contract\HeaderMap
 	 */
 	public static function fromGlobals(?array $server = null): Contract\HeaderMap
 	{
 		$server ??= $_SERVER;
 
-		$map = new self;
+		$map = new self();
 
 		/**
 		 * @var string $name

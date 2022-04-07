@@ -11,6 +11,6 @@ class FileNotFoundException extends FilesystemNodeNotFoundException
 	#[Pure]
 	public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct($path, "File", $code, $previous);
+		parent::__construct($path, 'File', $code, $previous);
 	}
 }

@@ -17,7 +17,10 @@ use RuntimeException;
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\KeyedEnumerable
+ *
  * @uses \Elephox\Collection\IsKeyedEnumerable
+ *
+ * @internal
  */
 class ParameterMapTest extends TestCase
 {
@@ -51,31 +54,31 @@ class ParameterMapTest extends TestCase
 
 		$map = ParameterMap::fromGlobals($post, $get, $server, $env);
 
-		self::assertInstanceOf(ParameterMapContract::class, $map);
+		static::assertInstanceOf(ParameterMapContract::class, $map);
 
-		self::assertArrayHasKey('foo', $map);
-		self::assertEquals('bar', $map['foo']);
+		static::assertArrayHasKey('foo', $map);
+		static::assertEquals('bar', $map['foo']);
 
-		self::assertArrayHasKey('faa', $map);
-		self::assertEquals('bor', $map['faa']);
+		static::assertArrayHasKey('faa', $map);
+		static::assertEquals('bor', $map['faa']);
 
-		self::assertFalse($map->has('invalid'));
+		static::assertFalse($map->has('invalid'));
 
 		$allGet = $map->allFrom(ParameterSource::Get)->toArray();
-		self::assertEquals($get, $allGet);
+		static::assertEquals($get, $allGet);
 
-		$ambiguous = $map->all('ambiguous')->toArray(fn (ParameterSource $source) => $source->name);
-		self::assertEquals(
+		$ambiguous = $map->all('ambiguous')->toArray(static fn (ParameterSource $source) => $source->name);
+		static::assertEquals(
 			[
 				ParameterSource::Post->name => 'test post',
-				ParameterSource::Get->name => 'test get'
+				ParameterSource::Get->name => 'test get',
 			],
-			$ambiguous
+			$ambiguous,
 		);
 
-		self::assertTrue($map->has('biz'));
+		static::assertTrue($map->has('biz'));
 		unset($map['biz']);
-		self::assertFalse($map->has('biz'));
+		static::assertFalse($map->has('biz'));
 	}
 
 	public function testOffsetSetException(): void
@@ -114,7 +117,7 @@ class ParameterMapTest extends TestCase
 	{
 		$map = new ParameterMap();
 
-		self::assertFalse($map->has('foo'));
+		static::assertFalse($map->has('foo'));
 
 		$this->expectException(OffsetNotFoundException::class);
 		$map->offsetGet('foo');

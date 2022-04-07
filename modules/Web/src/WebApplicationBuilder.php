@@ -38,8 +38,7 @@ class WebApplicationBuilder
 		?WebEnvironment $environment = null,
 		?ServiceCollectionContract $services = null,
 		?RequestPipelineBuilder $pipeline = null,
-	): static
-	{
+	): static {
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalWebEnvironment();
 		$services ??= new \Elephox\DI\ServiceCollection();
@@ -61,12 +60,11 @@ class WebApplicationBuilder
 	}
 
 	public function __construct(
-		public readonly ConfigurationBuilder&ConfigurationRoot $configuration,
+		public readonly ConfigurationBuilder & ConfigurationRoot $configuration,
 		public readonly WebEnvironment $environment,
 		public readonly ServiceCollection $services,
 		public readonly RequestPipelineBuilder $pipeline,
-	)
-	{
+	) {
 		$this->registerDefaultExceptionHandler();
 		$this->registerDefaultConfig();
 		$this->setDebugFromConfig();
@@ -82,29 +80,29 @@ class WebApplicationBuilder
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
-				->getFile("config.json")
-				->getPath()
+				->getFile('config.json')
+				->getPath(),
 		));
 		$this->configuration->add(new JsonFileConfigurationSource(
-				$this->environment
-					->getRootDirectory()
-					->getFile("config.{$this->environment->getEnvironmentName()}.json")
-					->getPath(),
-				true
+			$this->environment
+				->getRootDirectory()
+				->getFile("config.{$this->environment->getEnvironmentName()}.json")
+				->getPath(),
+			true,
 		));
 		$this->configuration->add(new JsonFileConfigurationSource(
-				$this->environment
-					->getRootDirectory()
-					->getFile("config.local.json")
-					->getPath(),
-				true
+			$this->environment
+				->getRootDirectory()
+				->getFile('config.local.json')
+				->getPath(),
+			true,
 		));
 	}
 
 	public function setDebugFromConfig(): void
 	{
-		if ($this->configuration->hasSection("env:debug")) {
-			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
+		if ($this->configuration->hasSection('env:debug')) {
+			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
 		}
 	}
 
@@ -122,20 +120,18 @@ class WebApplicationBuilder
 
 	/**
 	 * @param null|callable(WhoopsRunInterface): void $configurator
-	 *
-	 * @return void
 	 */
 	public function addWhoops(?callable $configurator = null): void
 	{
 		$this->services->removeService(ExceptionHandler::class);
 
-		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class,);
+		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class);
 
 		if ($configurator) {
 			$configurator($this->services->requireService(WhoopsRunInterface::class));
 		}
 
-		$whoopsExceptionHandler = new WhoopsExceptionHandler(fn() => $this->services->requireService(WhoopsRunInterface::class));
+		$whoopsExceptionHandler = new WhoopsExceptionHandler(fn () => $this->services->requireService(WhoopsRunInterface::class));
 
 		$this->pipeline->push($whoopsExceptionHandler);
 		$this->services->addSingleton(ExceptionHandler::class, implementation: $whoopsExceptionHandler);
@@ -143,7 +139,6 @@ class WebApplicationBuilder
 
 	/**
 	 * @param null|callable(mixed): \Doctrine\ORM\Configuration $setup
-	 * @return void
 	 */
 	public function addDoctrine(?callable $setup = null): void
 	{
@@ -181,7 +176,7 @@ class WebApplicationBuilder
 				 * @psalm-suppress InvalidArgument
 				 */
 				return EntityManager::create($connection, $setupConfig);
-			}
+			},
 		);
 	}
 
@@ -196,6 +191,7 @@ class WebApplicationBuilder
 	 * @template T of object
 	 *
 	 * @param class-string<T>|string $name
+	 *
 	 * @return T
 	 */
 	public function service(string $name): object

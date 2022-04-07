@@ -23,12 +23,15 @@ trait GeneratesResponses
 
 	/**
 	 * @throws JsonException
+	 *
+	 * @param ?ResponseCode $responseCode
 	 */
 	private function jsonResponse(array $data, ?ResponseCode $responseCode = null): Contract\ResponseBuilder
 	{
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->jsonBody($data);
+			->jsonBody($data)
+		;
 	}
 
 	private function stringResponse(string $data, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
@@ -36,7 +39,8 @@ trait GeneratesResponses
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
 			->contentType($mimeType ?? MimeType::TextPlain)
-			->body(new StringStream($data));
+			->body(new StringStream($data))
+		;
 	}
 
 	private function resourceResponse(mixed $resource, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
@@ -50,7 +54,8 @@ trait GeneratesResponses
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
 			->contentType($mimeType)
-			->resourceBody($resource);
+			->resourceBody($resource)
+		;
 	}
 
 	private function fileResponse(string|FileContract $file, ?ResponseCode $responseCode = null, ?MimeTypeInterface $mimeType = null): Contract\ResponseBuilder
@@ -64,6 +69,7 @@ trait GeneratesResponses
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
 			->contentType($mimeType ?? $file->getMimeType() ?? CustomMimeType::fromFile($file->getPath()))
-			->body($file->stream());
+			->body($file->stream())
+		;
 	}
 }

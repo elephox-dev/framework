@@ -10,16 +10,18 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Regex
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
+ *
+ * @internal
  */
 class RegexTest extends TestCase
 {
 	public function testSplit(): void
 	{
 		$simple = Regex::split('/\s+/', 'hello world');
-		self::assertEquals(['hello', 'world'], $simple->toList());
+		static::assertEquals(['hello', 'world'], $simple->toList());
 
 		$multiline = Regex::split('/\n/', "This is\na multiline\ntest");
-		self::assertEquals(['This is', 'a multiline', 'test'], $multiline->toList());
+		static::assertEquals(['This is', 'a multiline', 'test'], $multiline->toList());
 	}
 
 	public function testInvalidSplitPattern(): void
@@ -33,7 +35,7 @@ class RegexTest extends TestCase
 	public function testMatch(): void
 	{
 		$simple = Regex::match('/(?<hello>hello)*/', 'hello world');
-		self::assertEquals([
+		static::assertEquals([
 			0 => 'hello',
 			1 => 'hello',
 			'hello' => 'hello',
@@ -42,8 +44,8 @@ class RegexTest extends TestCase
 
 	public function testMatches(): void
 	{
-		self::assertTrue(Regex::matches('/(?<hello>hello)*/', 'hello world'));
-		self::assertFalse(Regex::matches('/(foo)(bar)(baz)/', 'world'));
+		static::assertTrue(Regex::matches('/(?<hello>hello)*/', 'hello world'));
+		static::assertFalse(Regex::matches('/(foo)(bar)(baz)/', 'world'));
 	}
 
 	public function testInvalidMatchPattern(): void
@@ -56,12 +58,12 @@ class RegexTest extends TestCase
 
 	public function testSpecificity(): void
 	{
-		self::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
-		self::assertEquals(0, Regex::specificity('/hello world/', 'hello world'));
+		static::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
+		static::assertEquals(0, Regex::specificity('/hello world/', 'hello world'));
 
-		self::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
-		self::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
-		self::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
-		self::assertLessThan(Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
+		static::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
+		static::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
+		static::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
+		static::assertLessThan(Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
 	}
 }

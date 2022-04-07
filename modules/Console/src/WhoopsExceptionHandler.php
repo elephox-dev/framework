@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Console;
 
@@ -12,8 +13,7 @@ class WhoopsExceptionHandler implements ExceptionHandler
 {
 	public function __construct(
 		private WhoopsRunInterface $whoopsRun,
-	)
-	{
+	) {
 	}
 
 	public function handleException(Throwable $exception): void

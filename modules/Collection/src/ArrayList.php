@@ -18,7 +18,8 @@ class ArrayList implements GenericList
 	/**
 	 * @use IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @template UValue
@@ -45,7 +46,7 @@ class ArrayList implements GenericList
 	}
 
 	public function __construct(
-		private array $items = []
+		private array $items = [],
 	) {
 	}
 
@@ -233,16 +234,14 @@ class ArrayList implements GenericList
 
 	/**
 	 * @param T $value
-	 *
-	 * @return void
 	 */
 	public function unshift(mixed $value): void
 	{
 		array_unshift($this->items, $value);
 	}
 
-	public function implode(string $separator = ", "): string
+	public function implode(string $separator = ', '): string
 	{
-		return implode($separator, array_map(static fn(mixed $v) => (string)$v, $this->items));
+		return implode($separator, array_map(static fn (mixed $v) => (string) $v, $this->items));
 	}
 }

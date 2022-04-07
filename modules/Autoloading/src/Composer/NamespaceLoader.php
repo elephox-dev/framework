@@ -15,7 +15,9 @@ use RuntimeException;
 
 class NamespaceLoader
 {
-	/** @var null|ComposerClassLoader */
+	/**
+	 * @var null|ComposerClassLoader
+	 */
 	private static ?object $classLoader = null;
 
 	/**
@@ -46,16 +48,17 @@ class NamespaceLoader
 	}
 
 	/**
-	 * @param string $namespace
 	 * @param callable(class-string): void $callback
 	 */
 	public static function iterateNamespace(string $namespace, callable $callback): void
 	{
 		$classLoader = self::getClassLoader();
 		$prefixDirMap = ArrayMap::from($classLoader->getPrefixesPsr4())
-			->select(fn(array $dirs): GenericKeyedEnumerable => ArrayList::from($dirs)
-				->select(fn(string $dir): DirectoryContract => new Directory($dir))
-			);
+			->select(
+				static fn (array $dirs): GenericKeyedEnumerable => ArrayList::from($dirs)
+					->select(static fn (string $dir): DirectoryContract => new Directory($dir)),
+			)
+		;
 		foreach ($prefixDirMap as $nsPrefix => $dirs) {
 			if (!str_starts_with($namespace, $nsPrefix) && !str_starts_with($nsPrefix, $namespace)) {
 				continue;
@@ -78,20 +81,17 @@ class NamespaceLoader
 	}
 
 	/**
-	 * @param string $rootNs
 	 * @param ArrayList<string> $nsParts
 	 * @param ArrayList<string> $nsPartsUsed
-	 * @param DirectoryContract $directory
 	 * @param ComposerClassLoader $classLoader
 	 * @param callable(class-string): void $callback
-	 * @param int $depth
 	 *
 	 * @noinspection PhpDocSignatureInspection
 	 */
 	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, object $classLoader, callable $callback, int $depth = 0): void
 	{
 		if ($depth > 10) {
-			throw new RuntimeException("Recursion limit exceeded. Please choose a more specific namespace.");
+			throw new RuntimeException('Recursion limit exceeded. Please choose a more specific namespace.');
 		}
 
 		$lastPart = $nsParts->shift();
@@ -116,7 +116,7 @@ class NamespaceLoader
 				/**
 				 * @var class-string $fqcn
 				 */
-				$fqcn = $rootNs . "\\" . implode("\\", $nsPartsUsed->toList()) . $className;
+				$fqcn = $rootNs . '\\' . implode('\\', $nsPartsUsed->toList()) . $className;
 
 				$classLoader->loadClass($fqcn);
 

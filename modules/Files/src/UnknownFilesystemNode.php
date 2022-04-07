@@ -39,7 +39,7 @@ class UnknownFilesystemNode implements FilesystemNode
 		try {
 			return new DateTime('@' . $timestamp);
 		} catch (Exception $e) {
-			throw new RuntimeException("Could not parse timestamp", previous: $e);
+			throw new RuntimeException('Could not parse timestamp', previous: $e);
 		}
 	}
 

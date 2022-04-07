@@ -10,9 +10,7 @@ use Elephox\Http\Contract\ResponseBuilder;
 interface WebMiddleware
 {
 	/**
-	 * @param Request $request
 	 * @param Closure(Request): ResponseBuilder $next
-	 * @return ResponseBuilder
 	 */
 	public function handle(Request $request, Closure $next): ResponseBuilder;
 }

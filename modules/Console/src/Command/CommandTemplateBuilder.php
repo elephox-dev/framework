@@ -11,13 +11,13 @@ class CommandTemplateBuilder
 	/**
 	 * @param null|string $name
 	 * @param null|ArrayList<ArgumentTemplate> $arguments
+	 * @param null|private?string $description
 	 */
 	public function __construct(
 		private ?string $name = null,
 		private ?string $description = null,
 		private ?ArrayList $arguments = null,
-	)
-	{
+	) {
 	}
 
 	public function name(?string $name): self

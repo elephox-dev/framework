@@ -21,6 +21,7 @@ class RouteHandler implements Contract\RouteHandler
 	 * @param class-string $attributeClass
 	 * @param iterable<int, WebMiddleware> $middlewares
 	 * @param Closure(Request): ResponseBuilder $handler
+	 * @param privatereadonlystring $attributeMethod
 	 */
 	public function __construct(
 		private readonly ControllerAttribute $controllerAttribute,
@@ -29,8 +30,7 @@ class RouteHandler implements Contract\RouteHandler
 		private readonly string $attributeMethod,
 		private readonly iterable $middlewares,
 		private readonly Closure $handler,
-	)
-	{
+	) {
 		$controllerPath = $this->controllerAttribute->getPath() ?? array_slice(explode('\\', $this->attributeClass), -1, 1)[0];
 		$routePath = $this->routeAttribute?->getPath() ?? $this->attributeMethod;
 
@@ -60,7 +60,7 @@ class RouteHandler implements Contract\RouteHandler
 			$routePath = substr($routePath, 6);
 		}
 
-		$this->pathRegex = sprintf("/^%s%s$/i", $controllerPath, $routePath);
+		$this->pathRegex = sprintf('/^%s%s$/i', $controllerPath, $routePath);
 	}
 
 	public function __toString(): string

@@ -35,10 +35,10 @@ class MessageFormatterSink implements Sink
 				LogLevelEnum::CRITICAL->getLevel() => "\033[35m",
 				default => "\033[39m",
 			};
-			$message = (string)preg_replace(
+			$message = (string) preg_replace(
 				"/<$color>(.*?)<\/$color>/",
 				"$opener$1$closer",
-				$message
+				$message,
 			);
 		}
 
@@ -64,10 +64,10 @@ class MessageFormatterSink implements Sink
 				LogLevelEnum::EMERGENCY->getLevel() => "\033[97;41m",
 				default => "\033[49m",
 			};
-			$message = (string)preg_replace(
+			$message = (string) preg_replace(
 				"/<$color>(.*?)<\/$color>/",
 				"$opener$1$closer",
-				$message
+				$message,
 			);
 		}
 
@@ -80,10 +80,10 @@ class MessageFormatterSink implements Sink
 		] as $option => $codes) {
 			$opener = "\033[$codes[0]m";
 			$closer = "\033[$codes[1]m";
-			$message = (string)preg_replace(
+			$message = (string) preg_replace(
 				"/<$option>(.*?)<\/$option>/",
 				"$opener$1$closer",
-				$message
+				$message,
 			);
 		}
 

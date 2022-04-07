@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration\Memory;
 
-use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationSource;
 use JetBrains\PhpStorm\Pure;

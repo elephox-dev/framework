@@ -44,7 +44,6 @@ class ParameterMap implements Contract\ParameterMap
 						throw new RuntimeException("Ambiguous parameter key: '$key'. Found in both '$parameterSource->name' and '$candidateSource->name'.");
 					}
 
-					/** @var mixed */
 					$candidate = $parameterList->get($key);
 					$candidateSource = $parameterSource;
 					$candidateFound = true;

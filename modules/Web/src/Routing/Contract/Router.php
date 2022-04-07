@@ -17,6 +17,7 @@ interface Router
 
 	/**
 	 * @param class-string $className
+	 *
 	 * @throws ReflectionException
 	 */
 	public function loadFromClass(string $className): static;

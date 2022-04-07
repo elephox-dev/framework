@@ -34,7 +34,7 @@ class ArraySet implements GenericSet
 	 */
 	public function __construct(
 		private array $items = [],
-		?Closure $comparer = null
+		?Closure $comparer = null,
 	) {
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}

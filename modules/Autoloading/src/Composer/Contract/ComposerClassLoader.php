@@ -12,6 +12,7 @@ interface ComposerClassLoader
 
 	/**
 	 * @param class-string $class
+	 *
 	 * @return null|true
 	 */
 	public function loadClass(string $class): ?bool;

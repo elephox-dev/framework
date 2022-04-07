@@ -12,7 +12,6 @@ interface CookieMap extends GenericMap
 {
 	/**
 	 * @param array<string, string|null>|null $cookie
-	 * @return CookieMap
 	 */
 	public static function fromGlobals(?array $cookie = null): CookieMap;
 }

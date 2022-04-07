@@ -10,7 +10,6 @@ class ArgumentTemplate
 		public readonly ?string $description,
 		public readonly null|string|int|float|bool $default = null,
 		public readonly bool $required = false,
-	)
-	{
+	) {
 	}
 }

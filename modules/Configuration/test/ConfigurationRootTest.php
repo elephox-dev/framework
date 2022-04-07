@@ -29,7 +29,10 @@ use stdClass;
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
  * @covers \Elephox\Configuration\ConfigurationPath
+ *
  * @uses \Elephox\Collection\IsKeyedEnumerable
+ *
+ * @internal
  */
 class ConfigurationRootTest extends TestCase
 {
@@ -39,29 +42,29 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		self::assertEquals(['this is', 'nested'], $root->getChildKeys()->toArray());
+		static::assertEquals(['this is', 'nested'], $root->getChildKeys()->toArray());
 		$children = $root->getChildren();
 
 		$firstChild = $children->first();
-		self::assertEquals('this is', $firstChild->getKey());
+		static::assertEquals('this is', $firstChild->getKey());
 
 		$nested = $children->skip(1)->first();
-		self::assertEquals('nested', $nested->getKey());
-		self::assertEquals(['nested:a', 'nested:c'], $nested->getChildKeys()->toArray());
+		static::assertEquals('nested', $nested->getKey());
+		static::assertEquals(['nested:a', 'nested:c'], $nested->getChildKeys()->toArray());
 
 		$nestedChildren = $nested->getChildren();
 		$firstNestedChild = $nestedChildren->first();
-		self::assertEquals('a', $firstNestedChild->getKey());
-		self::assertEquals('nested:a', $firstNestedChild->getPath());
-		self::assertEquals('b', $firstNestedChild->getValue());
+		static::assertEquals('a', $firstNestedChild->getKey());
+		static::assertEquals('nested:a', $firstNestedChild->getPath());
+		static::assertEquals('b', $firstNestedChild->getValue());
 
 		$secondNestedChild = $nestedChildren->skip(1)->first();
-		self::assertEquals('c', $secondNestedChild->getKey());
-		self::assertEquals('nested:c', $secondNestedChild->getPath());
-		self::assertEquals(['nested:c:foo'], $secondNestedChild->getChildKeys()->toArray());
+		static::assertEquals('c', $secondNestedChild->getKey());
+		static::assertEquals('nested:c', $secondNestedChild->getPath());
+		static::assertEquals(['nested:c:foo'], $secondNestedChild->getChildKeys()->toArray());
 
-		self::assertEquals('bar', $secondNestedChild['foo']);
-		self::assertEquals('bar', $root->offsetGet('nested:c:foo'));
+		static::assertEquals('bar', $secondNestedChild['foo']);
+		static::assertEquals('bar', $root->offsetGet('nested:c:foo'));
 	}
 
 	public function testArrayAccess(): void
@@ -70,24 +73,24 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		self::assertEquals('bar', $root['nested:c:foo']);
+		static::assertEquals('bar', $root['nested:c:foo']);
 		$root['nested:c:foo'] = 'baz';
-		self::assertEquals('baz', $root['nested:c:foo']);
+		static::assertEquals('baz', $root['nested:c:foo']);
 
-		self::assertTrue($root->offsetExists('nested:c:foo'));
+		static::assertTrue($root->offsetExists('nested:c:foo'));
 		unset($root['nested:c:foo']);
-		self::assertFalse($root->offsetExists('nested:c:foo'));
-		self::assertNull($root['nested:c:foo']);
+		static::assertFalse($root->offsetExists('nested:c:foo'));
+		static::assertNull($root['nested:c:foo']);
 
 		$section = $root->getSection('nested');
 		$section['c:foo'] = 'baz';
-		self::assertTrue($section->offsetExists('c:foo'));
-		self::assertEquals('baz', $section['c:foo']);
+		static::assertTrue($section->offsetExists('c:foo'));
+		static::assertEquals('baz', $section['c:foo']);
 		$section['c:foo'] = 'bar';
-		self::assertEquals('bar', $section['c:foo']);
+		static::assertEquals('bar', $section['c:foo']);
 		unset($section['c:foo']);
-		self::assertFalse($section->offsetExists('c:foo'));
-		self::assertNull($section['c:foo']);
+		static::assertFalse($section->offsetExists('c:foo'));
+		static::assertNull($section['c:foo']);
 	}
 
 	public function testValue(): void
@@ -96,11 +99,11 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		self::assertEquals('bar', $root->getSection('nested:c:foo')->getValue());
+		static::assertEquals('bar', $root->getSection('nested:c:foo')->getValue());
 		$root->getSection('nested:c:foo')->setValue('baz');
-		self::assertEquals('baz', $root->getSection('nested:c:foo')->getValue());
+		static::assertEquals('baz', $root->getSection('nested:c:foo')->getValue());
 		$root->getSection('nested:c:foo')->deleteValue();
-		self::assertFalse($root->getSection('nested:c')->hasSection('foo'));
+		static::assertFalse($root->getSection('nested:c')->hasSection('foo'));
 	}
 
 	public function testHasSection(): void
@@ -109,10 +112,10 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		self::assertTrue($root->hasSection('nested:c'));
-		self::assertTrue($root->hasSection('nested:c:foo'));
-		self::assertFalse($root->hasSection('nested:c:foo:baz'));
-		self::assertFalse($root->hasSection('nested:d'));
+		static::assertTrue($root->hasSection('nested:c'));
+		static::assertTrue($root->hasSection('nested:c:foo'));
+		static::assertFalse($root->hasSection('nested:c:foo:baz'));
+		static::assertFalse($root->hasSection('nested:d'));
 	}
 
 	public function testInvalidOffsetUnset(): void

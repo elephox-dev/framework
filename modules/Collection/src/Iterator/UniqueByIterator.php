@@ -22,13 +22,13 @@ class UniqueByIterator implements Iterator
 
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
-	 * @param Closure(TValue): TCompareKey $keySelector,
 	 * @param Closure(TCompareKey, TCompareKey): bool $comparer
+	 * @param privateClosure $keySelector
 	 */
 	public function __construct(
 		private Iterator $iterator,
 		private Closure $keySelector,
-		private Closure $comparer
+		private Closure $comparer,
 	) {
 	}
 
@@ -67,7 +67,6 @@ class UniqueByIterator implements Iterator
 
 	/**
 	 * @param TValue $value
-	 * @return bool
 	 */
 	public function wasIterated(mixed $value): bool
 	{

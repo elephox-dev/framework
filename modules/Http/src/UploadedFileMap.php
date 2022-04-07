@@ -15,7 +15,6 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 {
 	/**
 	 * @param null|array<string, array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string}> $files
-	 * @return Contract\UploadedFileMap
 	 */
 	public static function fromGlobals(?array $files = null): Contract\UploadedFileMap
 	{
@@ -27,8 +26,7 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 		 * @var string $id
 		 * @var array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string} $file
 		 */
-		foreach ($files as $id => $file)
-		{
+		foreach ($files as $id => $file) {
 			$clientFilename = $file['name'];
 			$clientType = $file['type'];
 			$size = $file['size'];
@@ -47,7 +45,6 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 				$size = null;
 			}
 			/** @var int<0, max>|null $size */
-
 			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size, $uploadError);
 
 			$map->put($id, $uploadedFile);

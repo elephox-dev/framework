@@ -12,17 +12,19 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Mimey\MimeType
  * @covers \Elephox\Http\UploadError
+ *
+ * @internal
  */
 class UploadedFileTest extends TestCase
 {
 	public function testConstructor(): void
 	{
-		$file = new UploadedFile("client name", "client path", new StringStream("contents"), MimeType::TextPlain, 123, UploadError::Ok);
-		self::assertEquals("client name", $file->getClientFilename());
-		self::assertEquals("client path", $file->getClientPath());
-		self::assertEquals("contents", $file->getStream()->getContents());
-		self::assertEquals(123, $file->getSize());
-		self::assertEquals(MimeType::TextPlain, $file->getClientMimeType());
-		self::assertEquals(UploadError::Ok, $file->getError());
+		$file = new UploadedFile('client name', 'client path', new StringStream('contents'), MimeType::TextPlain, 123, UploadError::Ok);
+		static::assertEquals('client name', $file->getClientFilename());
+		static::assertEquals('client path', $file->getClientPath());
+		static::assertEquals('contents', $file->getStream()->getContents());
+		static::assertEquals(123, $file->getSize());
+		static::assertEquals(MimeType::TextPlain, $file->getClientMimeType());
+		static::assertEquals(UploadError::Ok, $file->getError());
 	}
 }

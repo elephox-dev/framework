@@ -25,7 +25,7 @@ final class DefaultEqualityComparer
 		}
 
 		/** @noinspection TypeUnsafeComparisonInspection */
-		return $a == $b;
+		return $a === $b;
 	}
 
 	#[Pure]
@@ -72,6 +72,7 @@ final class DefaultEqualityComparer
 	 * @template TCallable as callable(...mixed): (bool|int)
 	 *
 	 * @param TCallable $comparer
+	 *
 	 * @return callable(...mixed): (bool|int)
 	 */
 	#[Pure]

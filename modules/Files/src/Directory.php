@@ -23,17 +23,13 @@ class Directory implements Contract\Directory
 	public function getFiles(): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, Contract\File> */
-		return $this->getChildren()->where(function (Contract\FilesystemNode $node) {
-			return $node instanceof Contract\File;
-		});
+		return $this->getChildren()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\File);
 	}
 
 	public function getDirectories(): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, Contract\Directory> */
-		return $this->getChildren()->where(function (Contract\FilesystemNode $node) {
-			return $node instanceof Contract\Directory;
-		});
+		return $this->getChildren()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\Directory);
 	}
 
 	public function getChildren(): GenericKeyedEnumerable
@@ -47,7 +43,7 @@ class Directory implements Contract\Directory
 
 		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
-			->where(static fn(mixed $name) => $name !== '.' && $name !== '..')
+			->where(static fn (mixed $name) => $name !== '.' && $name !== '..')
 			->select(function (mixed $name): Contract\FilesystemNode {
 				$path = Path::join($this->path, $name);
 				if (is_dir($path)) {
@@ -55,7 +51,8 @@ class Directory implements Contract\Directory
 				}
 
 				return new File($path);
-			});
+			})
+		;
 	}
 
 	#[Pure]
@@ -104,7 +101,7 @@ class Directory implements Contract\Directory
 		try {
 			return new DateTime('@' . $timestamp);
 		} catch (Exception $e) {
-			throw new RuntimeException("Could not parse timestamp", previous: $e);
+			throw new RuntimeException('Could not parse timestamp', previous: $e);
 		}
 	}
 
@@ -172,7 +169,7 @@ class Directory implements Contract\Directory
 		foreach ($children as $child) {
 			if ($child instanceof Contract\Directory) {
 				$child->delete(true);
-			} else if ($child instanceof Contract\File) {
+			} elseif ($child instanceof Contract\File) {
 				$child->delete();
 			}
 		}

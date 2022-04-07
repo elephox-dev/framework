@@ -7,13 +7,13 @@ class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 {
 	public function __construct(
 		private ?Contract\UrlScheme $scheme = null,
-		private ?string             $host = null,
-		private ?int                $port = null,
-		private ?string             $path = null,
-		private ?Contract\QueryMap  $queryMap = null,
-		private ?string             $fragment = null,
-		private ?string             $username = null,
-		private ?string             $password = null,
+		private ?string $host = null,
+		private ?int $port = null,
+		private ?string $path = null,
+		private ?Contract\QueryMap $queryMap = null,
+		private ?string $fragment = null,
+		private ?string $username = null,
+		private ?string $password = null,
 	) {
 	}
 
@@ -81,7 +81,7 @@ class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 			$this->queryMap,
 			$this->fragment,
 			$this->username,
-			$this->password
+			$this->password,
 		);
 	}
 }

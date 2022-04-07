@@ -11,22 +11,18 @@ use Elephox\Web\Contract\WebMiddleware;
 
 class RequestPipelineBuilder
 {
-	/** @var ArrayList<WebMiddleware> $pipeline  */
+	/**
+	 * @var ArrayList<WebMiddleware> $pipeline
+	 */
 	private ArrayList $pipeline;
 
 	public function __construct(
 		private RequestPipelineEndpoint $endpoint,
-	)
-	{
+	) {
 		/** @var ArrayList<WebMiddleware> */
 		$this->pipeline = new ArrayList();
 	}
 
-	/**
-	 * @param WebMiddleware $middleware
-	 *
-	 * @return RequestPipelineBuilder
-	 */
 	public function push(WebMiddleware $middleware): RequestPipelineBuilder
 	{
 		$this->pipeline->add($middleware);
@@ -36,7 +32,6 @@ class RequestPipelineBuilder
 
 	/**
 	 * @param class-string<WebMiddleware>|null $className
-	 * @return WebMiddleware
 	 */
 	public function pop(?string $className = null): WebMiddleware
 	{
@@ -52,11 +47,11 @@ class RequestPipelineBuilder
 		return $this;
 	}
 
-	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): RequestPipelineBuilder
+	public function exceptionHandler(WebMiddleware & ExceptionHandler $exceptionHandler): RequestPipelineBuilder
 	{
 		try {
 			/** @var int $key */
-			$key = $this->pipeline->firstKey(fn(WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
+			$key = $this->pipeline->firstKey(static fn (WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
 
 			$this->pipeline->put($key, $exceptionHandler);
 		} catch (EmptySequenceException) {

@@ -21,7 +21,7 @@ class KeySelectIterator implements Iterator
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $keySelector
+		private Closure $keySelector,
 	) {
 	}
 

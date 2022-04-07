@@ -27,16 +27,16 @@ class ConsoleSink implements Sink
 			LogLevel::CRITICAL->getLevel() => 'critical',
 			LogLevel::ALERT->getLevel() => 'alert',
 			LogLevel::EMERGENCY->getLevel() => 'emergency',
-			default => "notice",
+			default => 'notice',
 		};
 
 		if (empty($metaData)) {
 			$metaDataSuffix = '';
 		} else {
 			try {
-				$metaDataSuffix = " " . Console::light_gray($this->truncate(json_encode($metaData, JSON_THROW_ON_ERROR)));
+				$metaDataSuffix = ' ' . Console::light_gray($this->truncate(json_encode($metaData, JSON_THROW_ON_ERROR)));
 			} catch (JsonException $e) {
-				$metaDataSuffix = " " . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
+				$metaDataSuffix = ' ' . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
 			}
 		}
 
@@ -45,6 +45,6 @@ class ConsoleSink implements Sink
 
 	private function truncate(string $string): string
 	{
-		return (strlen($string) > self::METADATA_MAX_LENGTH) ? substr($string, 0, self::METADATA_MAX_LENGTH - 3) . "..." : $string;
+		return (strlen($string) > self::METADATA_MAX_LENGTH) ? substr($string, 0, self::METADATA_MAX_LENGTH - 3) . '...' : $string;
 	}
 }

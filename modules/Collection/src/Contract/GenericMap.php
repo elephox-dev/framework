@@ -16,8 +16,6 @@ interface GenericMap extends GenericKeyedEnumerable
 	/**
 	 * @param TKey $key
 	 * @param TValue $value
-	 *
-	 * @return bool
 	 */
 	public function put(mixed $key, mixed $value): bool;
 
@@ -32,15 +30,11 @@ interface GenericMap extends GenericKeyedEnumerable
 
 	/**
 	 * @param TKey $key
-	 *
-	 * @return bool
 	 */
 	public function has(mixed $key): bool;
 
 	/**
 	 * @param TKey $key
-	 *
-	 * @return bool
 	 */
 	public function remove(mixed $key): bool;
 }

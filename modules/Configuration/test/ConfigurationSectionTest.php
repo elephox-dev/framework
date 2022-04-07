@@ -22,7 +22,10 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Configuration\ConfigurationPath
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationProvider
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationSource
+ *
  * @uses \Elephox\Configuration\HasArrayData
+ *
+ * @internal
  */
 class ConfigurationSectionTest extends TestCase
 {
@@ -34,8 +37,8 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 		$section = $config->getSection('c');
-		self::assertInstanceOf(ConfigurationSection::class, $section);
-		self::assertEquals('bar', $section->getSection('foo')->getValue());
+		static::assertInstanceOf(ConfigurationSection::class, $section);
+		static::assertEquals('bar', $section->getSection('foo')->getValue());
 	}
 
 	public function testInvalidOffsetUnset(): void

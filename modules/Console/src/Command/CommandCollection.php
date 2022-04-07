@@ -15,7 +15,9 @@ use IteratorAggregate;
  */
 class CommandCollection implements IteratorAggregate
 {
-	/** @var ObjectMap<CommandTemplate, CommandHandler> $templateMap */
+	/**
+	 * @var ObjectMap<CommandTemplate, CommandHandler> $templateMap
+	 */
 	private readonly ObjectMap $templateMap;
 
 	public function __construct(private readonly Resolver $resolver)
@@ -30,7 +32,7 @@ class CommandCollection implements IteratorAggregate
 
 	public function loadFromNamespace(string $namespace): static
 	{
-		NamespaceLoader::iterateNamespace($namespace, function(string $className): void {
+		NamespaceLoader::iterateNamespace($namespace, function (string $className): void {
 			$this->loadFromClass($className);
 		});
 
@@ -49,7 +51,6 @@ class CommandCollection implements IteratorAggregate
 
 	/**
 	 * @param class-string $className
-	 * @return void
 	 */
 	public function loadFromClass(string $className): void
 	{
@@ -73,9 +74,9 @@ class CommandCollection implements IteratorAggregate
 	public function findCompiled(RawCommandInvocation $invocation): CompiledCommandHandler
 	{
 		return $this->templateMap
-				->whereKey(fn(CommandTemplate $template): bool => $template->name === $invocation->name)
-				->select(fn(CommandHandler $handler, CommandTemplate $template): CompiledCommandHandler => new CompiledCommandHandler($invocation, $template, $handler))
-				->firstOrDefault(null)
+			->whereKey(static fn (CommandTemplate $template): bool => $template->name === $invocation->name)
+			->select(static fn (CommandHandler $handler, CommandTemplate $template): CompiledCommandHandler => new CompiledCommandHandler($invocation, $template, $handler))
+			->firstOrDefault(null)
 			?? throw new CommandNotFoundException($invocation->name);
 	}
 
@@ -83,7 +84,7 @@ class CommandCollection implements IteratorAggregate
 	{
 		return $this->templateMap
 			->flip()
-			->where(fn(CommandTemplate $template): bool => $template->name === $name)
+			->where(static fn (CommandTemplate $template): bool => $template->name === $name)
 			->firstOrDefault(null)
 		?? throw new CommandNotFoundException($name);
 	}

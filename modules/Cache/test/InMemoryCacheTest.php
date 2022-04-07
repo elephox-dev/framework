@@ -13,8 +13,11 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Cache\AbstractCacheConfiguration
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Cache\AbstractCache
+ *
  * @uses \Elephox\Cache\Contract\CacheItem
  * @uses \Elephox\Cache\Contract\InMemoryCacheConfiguration
+ *
+ * @internal
  */
 class InMemoryCacheTest extends TestCase
 {
@@ -35,10 +38,10 @@ class InMemoryCacheTest extends TestCase
 		$item = $this->cache->getItem('test');
 		$this->cache->saveDeferred($item);
 
-		self::assertFalse($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->commit());
-		self::assertTrue($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->offsetExists('test'));
+		static::assertFalse($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->commit());
+		static::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->offsetExists('test'));
 	}
 
 	/**
@@ -49,9 +52,9 @@ class InMemoryCacheTest extends TestCase
 		$item = $this->cache->getItem('test');
 		$this->cache->save($item);
 
-		self::assertTrue($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->deleteItem('test'));
-		self::assertFalse($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->deleteItem('test'));
+		static::assertFalse($this->cache->hasItem('test'));
 
 		$this->cache->save($item);
 		unset($this->cache['test']);
@@ -64,13 +67,13 @@ class InMemoryCacheTest extends TestCase
 	{
 		$item = $this->cache['test'];
 
-		self::assertFalse($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->save($item));
-		self::assertTrue($this->cache->hasItem('test'));
+		static::assertFalse($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->save($item));
+		static::assertTrue($this->cache->hasItem('test'));
 
 		$this->cache->deleteItem('test');
 		$this->cache[] = $item;
-		self::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->hasItem('test'));
 	}
 
 	/**
@@ -85,14 +88,14 @@ class InMemoryCacheTest extends TestCase
 		$item3 = $this->cache->getItem('test3');
 		$this->cache->save($item3);
 
-		self::assertTrue($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->hasItem('test2'));
-		self::assertTrue($this->cache->hasItem('test3'));
-		self::assertTrue($this->cache->deleteItems(['test', 'test2']));
-		self::assertFalse($this->cache->hasItem('test'));
-		self::assertFalse($this->cache->hasItem('test2'));
-		self::assertTrue($this->cache->hasItem('test3'));
-		self::assertFalse($this->cache->deleteItem('test'));
+		static::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->hasItem('test2'));
+		static::assertTrue($this->cache->hasItem('test3'));
+		static::assertTrue($this->cache->deleteItems(['test', 'test2']));
+		static::assertFalse($this->cache->hasItem('test'));
+		static::assertFalse($this->cache->hasItem('test2'));
+		static::assertTrue($this->cache->hasItem('test3'));
+		static::assertFalse($this->cache->deleteItem('test'));
 	}
 
 	/**
@@ -100,16 +103,16 @@ class InMemoryCacheTest extends TestCase
 	 */
 	public function testGetItem(): void
 	{
-		self::assertFalse($this->cache->hasItem('test'));
+		static::assertFalse($this->cache->hasItem('test'));
 		$item = $this->cache->getItem('test');
-		self::assertFalse($this->cache->hasItem('test'));
+		static::assertFalse($this->cache->hasItem('test'));
 		$item2 = $this->cache->getItem('test');
-		self::assertFalse($this->cache->hasItem('test'));
-		self::assertNotSame($item, $item2);
-		self::assertTrue($this->cache->save($item));
-		self::assertTrue($this->cache->hasItem('test'));
+		static::assertFalse($this->cache->hasItem('test'));
+		static::assertNotSame($item, $item2);
+		static::assertTrue($this->cache->save($item));
+		static::assertTrue($this->cache->hasItem('test'));
 		$item3 = $this->cache->getItem('test');
-		self::assertSame($item, $item3);
+		static::assertSame($item, $item3);
 	}
 
 	/**
@@ -119,9 +122,9 @@ class InMemoryCacheTest extends TestCase
 	{
 		$item = $this->cache->getItem('test');
 		$this->cache->save($item);
-		self::assertTrue($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->clear());
-		self::assertFalse($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->clear());
+		static::assertFalse($this->cache->hasItem('test'));
 	}
 
 	/**
@@ -136,21 +139,20 @@ class InMemoryCacheTest extends TestCase
 		$item3 = $this->cache->getItem('test3');
 		$this->cache->save($item3);
 
-		self::assertTrue($this->cache->hasItem('test'));
-		self::assertTrue($this->cache->hasItem('test2'));
-		self::assertTrue($this->cache->hasItem('test3'));
+		static::assertTrue($this->cache->hasItem('test'));
+		static::assertTrue($this->cache->hasItem('test2'));
+		static::assertTrue($this->cache->hasItem('test3'));
 		$items = $this->cache->getItems(['test', 'test2', 'test3']);
-		self::assertCount(3, $items);
-		foreach ($items as $key => $item)
-		{
-			self::assertInstanceOf(ImmutableCacheItem::class, $item);
-			self::assertSame($item, ['test' => $item, 'test2' => $item2, 'test3' => $item3][$key]);
+		static::assertCount(3, $items);
+		foreach ($items as $key => $item) {
+			static::assertInstanceOf(ImmutableCacheItem::class, $item);
+			static::assertSame($item, ['test' => $item, 'test2' => $item2, 'test3' => $item3][$key]);
 		}
 	}
 
 	public function testGetConfiguration(): void
 	{
 		$configuration = $this->cache->getConfiguration();
-		self::assertInstanceOf(CacheConfiguration::class, $configuration);
+		static::assertInstanceOf(CacheConfiguration::class, $configuration);
 	}
 }

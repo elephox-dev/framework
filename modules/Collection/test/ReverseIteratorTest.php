@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Collection\Iterator\ReverseIterator
+ *
+ * @internal
  */
 class ReverseIteratorTest extends TestCase
 {
@@ -17,8 +19,8 @@ class ReverseIteratorTest extends TestCase
 		$arrayIterator = new ArrayIterator([1, 2, 3]);
 		$iterator = new ReverseIterator($arrayIterator);
 
-		self::assertEquals([3, 2, 1], iterator_to_array($iterator));
-		self::assertSame($arrayIterator, $iterator->getInnerIterator());
-		self::assertCount(3, $iterator);
+		static::assertEquals([3, 2, 1], iterator_to_array($iterator));
+		static::assertSame($arrayIterator, $iterator->getInnerIterator());
+		static::assertCount(3, $iterator);
 	}
 }

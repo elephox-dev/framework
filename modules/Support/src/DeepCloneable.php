@@ -7,7 +7,6 @@ use Exception;
 use Iterator;
 use ReflectionException;
 use ReflectionObject;
-use ReflectionProperty;
 use RuntimeException;
 use SplObjectStorage;
 use Throwable;
@@ -56,10 +55,7 @@ trait DeepCloneable
 	}
 
 	/**
-	 * @param array $array
 	 * @param array<string, object> $cloneStorage
-	 *
-	 * @return array
 	 *
 	 * @throws ReflectionException
 	 *
@@ -75,7 +71,7 @@ trait DeepCloneable
 		foreach ($array as $key => $value) {
 			/** @var array-key $clonedKey */
 			$clonedKey = self::cloneRecursive($key, $cloneStorage);
-			/** @var mixed $clonedValue */
+
 			$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 			/** @psalm-suppress MixedAssignment */
@@ -114,17 +110,17 @@ trait DeepCloneable
 			while ($iterator->valid()) {
 				/** @var object $key */
 				$key = $iterator->key();
-				/** @var mixed $value */
+
 				$value = $iterator->current();
 
 				// don't clone the key since it is a weak reference to an object and a cloned object
 				// would have no references to it, causing it to be garbage collected.
 
-				/** @var mixed $clonedValue */
 				$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 				/**
 				 * @psalm-suppress UnnecessaryVarAnnotation
+				 *
 				 * @var WeakMap $clone
 				 */
 				$clone->offsetSet($key, $clonedValue);
@@ -138,12 +134,12 @@ trait DeepCloneable
 			$object->rewind();
 			while ($object->valid()) {
 				$key = $object->current();
-				/** @var mixed $value */
+
 				$value = $object->offsetGet($key);
 
 				/** @var object $clonedKey */
 				$clonedKey = self::cloneRecursive($key, $cloneStorage);
-				/** @var mixed $clonedValue */
+
 				$clonedValue = self::cloneRecursive($value, $cloneStorage);
 
 				/** @var SplObjectStorage $clone */
@@ -160,9 +156,8 @@ trait DeepCloneable
 				continue;
 			}
 
-			/** @var mixed $propertyValue */
 			$propertyValue = $property->getValue($object);
-			/** @var mixed $clonedPropertyValue */
+
 			$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
 			$property->setValue($clone, $clonedPropertyValue);
 		}

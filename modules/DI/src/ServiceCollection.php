@@ -18,22 +18,30 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 {
 	use ServiceResolver;
 
-	/** @var ArraySet<ServiceDescriptor> $services */
+	/**
+	 * @var ArraySet<ServiceDescriptor> $services
+	 */
 	private readonly ArraySet $services;
 
-	/** @var ArrayMap<non-empty-string, class-string> $aliases */
+	/**
+	 * @var ArrayMap<non-empty-string, class-string> $aliases
+	 */
 	private readonly ArrayMap $aliases;
 
-	/** @var array<class-string, ServiceDescriptor> */
+	/**
+	 * @var array<class-string, ServiceDescriptor>
+	 */
 	private array $descriptorCache = [];
 
-	/** @var array<class-string, Closure> */
+	/**
+	 * @var array<class-string, Closure>
+	 */
 	private array $factoryCache = [];
 
 	public function __construct()
 	{
 		$this->services = new ArraySet(
-			comparer: fn(?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType && $a?->implementationType === $b?->implementationType
+			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType && $a?->implementationType === $b?->implementationType,
 		);
 
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
@@ -63,8 +71,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @template TImplementation of service-object
 	 *
 	 * @param ServiceDescriptor<TService, TImplementation> $descriptor
-	 *
-	 * @return Contract\ServiceCollection
 	 */
 	protected function add(ServiceDescriptor $descriptor): Contract\ServiceCollection
 	{
@@ -80,7 +86,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		}
 
 		if (empty($implementation) && empty($implementationFactory)) {
-			$implementationFactory = fn(): object => $this->resolver()->instantiate($implementationName);
+			$implementationFactory = fn (): object => $this->resolver()->instantiate($implementationName);
 		}
 
 		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation));
@@ -167,7 +173,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		}
 
 		/** @var ServiceDescriptor<TService, TService>|null $descriptor */
-		$descriptor = $this->services->firstOrDefault(null, static fn(ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
+		$descriptor = $this->services->firstOrDefault(null, static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
 		if ($descriptor === null) {
 			return null;
 		}
@@ -212,7 +218,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	private function getSingletonFactory(ServiceDescriptor $descriptor): callable
 	{
-		return function() use ($descriptor): object {
+		return function () use ($descriptor): object {
 			if ($descriptor->instance === null) {
 				if ($descriptor->implementationFactory === null) {
 					throw new InvalidServiceDescriptorException("Singleton service '$descriptor->implementationType' has no factory and no instance.");
@@ -237,8 +243,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	/**
 	 * @template TService of service-object
 	 *
-	 * @param string $alias
-	 *
 	 * @return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
@@ -261,8 +265,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	/**
 	 * @template TService of service-object
 	 *
-	 * @param string $alias
-	 *
 	 * @return TService
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
@@ -280,6 +282,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 		/** @var class-string<TService> $serviceName */
 		$serviceName = $this->aliases->get($alias);
+
 		return $this->requireService($serviceName);
 	}
 
@@ -294,8 +297,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	/**
 	 * @template TService of service-object
-	 *
-	 * @param string $aliasOrServiceName
 	 *
 	 * @return TService|null
 	 *
@@ -317,8 +318,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	/**
 	 * @template TService of service-object
-	 *
-	 * @param string $aliasOrServiceName
 	 *
 	 * @return TService
 	 *
@@ -342,7 +341,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	public function setAlias(string $alias, string $serviceName): Contract\ServiceCollection
 	{
 		if (empty($alias) || empty($serviceName)) {
-			throw new InvalidArgumentException("Alias and service name must not be empty.");
+			throw new InvalidArgumentException('Alias and service name must not be empty.');
 		}
 
 		$this->aliases->put($alias, $serviceName);

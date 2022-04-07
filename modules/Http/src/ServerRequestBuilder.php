@@ -16,15 +16,15 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 {
 	#[Pure]
 	public function __construct(
-		?string                             $protocolVersion = null,
-		?Contract\HeaderMap                 $headers = null,
-		?Stream                             $body = null,
-		?RequestMethod                      $method = null,
-		?Url                                $url = null,
-		protected ?Contract\ParameterMap    $parameters = null,
-		protected ?Contract\CookieMap       $cookies = null,
-		protected ?Contract\SessionMap      $session = null,
-		protected ?Contract\UploadedFileMap $uploadedFiles = null
+		?string $protocolVersion = null,
+		?Contract\HeaderMap $headers = null,
+		?Stream $body = null,
+		?RequestMethod $method = null,
+		?Url $url = null,
+		protected ?Contract\ParameterMap $parameters = null,
+		protected ?Contract\CookieMap $cookies = null,
+		protected ?Contract\SessionMap $session = null,
+		protected ?Contract\UploadedFileMap $uploadedFiles = null,
 	) {
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
 	}
@@ -128,11 +128,11 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			$this->headers ?? new HeaderMap(),
 			$this->body ?? new EmptyStream(),
 			$this->method ?? RequestMethod::GET,
-			$this->url ?? throw self::missingParameterException("url"),
+			$this->url ?? throw self::missingParameterException('url'),
 			$this->parameters ?? new ParameterMap(),
 			$this->cookies ?? new CookieMap(),
 			$this->session,
-			$this->uploadedFiles ?? new UploadedFileMap()
+			$this->uploadedFiles ?? new UploadedFileMap(),
 		);
 	}
 
@@ -145,9 +145,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		?string $protocolVersion = AbstractMessageBuilder::DefaultProtocolVersion,
 		?Stream $body = null,
 		?RequestMethod $requestMethod = null,
-		?Url $requestUrl = null
-	): Contract\ServerRequest
-	{
+		?Url $requestUrl = null,
+	): Contract\ServerRequest {
 		$parameters ??= ParameterMap::fromGlobals();
 		$headers ??= HeaderMap::fromGlobals();
 		$cookies ??= CookieMap::fromGlobals();
@@ -168,7 +167,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			}
 
 			if ($parameters->has('CONTENT_LENGTH', ParameterSource::Server)) {
-				$contentLength = (int)$parameters->get('CONTENT_LENGTH', ParameterSource::Server);
+				$contentLength = (int) $parameters->get('CONTENT_LENGTH', ParameterSource::Server);
 				if ($contentLength > 0) {
 					$builder->body(new ResourceStream($readonlyInput, size: $contentLength));
 				}
@@ -181,7 +180,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 
 		if ($protocolVersion === null) {
 			if ($parameters->has('SERVER_PROTOCOL', ParameterSource::Server)) {
-				$protocol = (string)$parameters->get('SERVER_PROTOCOL', ParameterSource::Server);
+				$protocol = (string) $parameters->get('SERVER_PROTOCOL', ParameterSource::Server);
 				$protocolParts = explode('/', $protocol, 2);
 				if (count($protocolParts) === 2) {
 					$builder->protocolVersion($protocolParts[1]);
@@ -193,7 +192,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 
 		if ($requestMethod === null) {
 			if ($parameters->has('REQUEST_METHOD', ParameterSource::Server)) {
-				$requestMethodType = RequestMethod::tryFrom((string)$parameters->get('REQUEST_METHOD', ParameterSource::Server));
+				$requestMethodType = RequestMethod::tryFrom((string) $parameters->get('REQUEST_METHOD', ParameterSource::Server));
 				if ($requestMethodType !== null) {
 					$builder->requestMethod($requestMethodType);
 				}
@@ -204,7 +203,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 
 		if ($requestUrl === null) {
 			if ($parameters->has('REQUEST_URI', ParameterSource::Server)) {
-				$builder->requestUrl(Url::fromString((string)$parameters->get('REQUEST_URI', ParameterSource::Server)));
+				$builder->requestUrl(Url::fromString((string) $parameters->get('REQUEST_URI', ParameterSource::Server)));
 			}
 		} else {
 			$builder->requestUrl($requestUrl);

@@ -30,45 +30,46 @@ use ReflectionNamedType;
 class RequestRouter implements RequestPipelineEndpoint, Router
 {
 	/**
-	 * @param ReflectionClass $class
 	 * @return GenericKeyedEnumerable<int, ControllerAttribute>
 	 */
 	private static function getControllers(ReflectionClass $class): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, ControllerAttribute> */
 		return ArrayList::from($class->getAttributes(ControllerAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
-			->select(fn(ReflectionAttribute $attribute): ControllerAttribute => /** @var ControllerAttribute */ $attribute->newInstance());
+			->select(static fn (ReflectionAttribute $attribute): ControllerAttribute => /** @var ControllerAttribute */ $attribute->newInstance())
+		;
 	}
 
 	/**
-	 * @param ReflectionMethod $method
 	 * @return GenericKeyedEnumerable<int, RouteAttribute>
 	 */
 	private static function getRoutes(ReflectionMethod $method): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, RouteAttribute> */
 		return ArrayList::from($method->getAttributes(RouteAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
-			->select(fn(ReflectionAttribute $attribute): RouteAttribute => /** @var RouteAttribute */ $attribute->newInstance());
+			->select(static fn (ReflectionAttribute $attribute): RouteAttribute => /** @var RouteAttribute */ $attribute->newInstance())
+		;
 	}
 
 	/**
-	 * @param ReflectionClass|ReflectionMethod $reflection
 	 * @return GenericKeyedEnumerable<int, WebMiddlewareAttribute>
 	 */
 	private static function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, WebMiddlewareAttribute> */
 		return ArrayList::from($reflection->getAttributes(WebMiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF))
-			->select(fn(ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance());
+			->select(static fn (ReflectionAttribute $attribute): WebMiddlewareAttribute => /** @var WebMiddlewareAttribute */ $attribute->newInstance())
+		;
 	}
 
-	/** @var ObjectSet<RouteHandlerContract> $handlers */
+	/**
+	 * @var ObjectSet<RouteHandlerContract> $handlers
+	 */
 	private readonly ObjectSet $handlers;
 
 	public function __construct(
 		private readonly ServiceCollection $services,
-	)
-	{
+	) {
 		/** @var ObjectSet<RouteHandlerContract> */
 		$this->handlers = new ObjectSet();
 	}
@@ -81,9 +82,9 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	public function getRouteHandler(Request $request): RouteHandlerContract
 	{
 		$matchedHandlers = $this->handlers
-			->where(fn(RouteHandlerContract $handler): bool => $handler->matches($request))
-			->groupBy(fn(RouteHandlerContract $handler): float => $handler->getMatchScore($request))
-			->orderBy(fn(Grouping $grouping): mixed => $grouping->groupKey())
+			->where(static fn (RouteHandlerContract $handler): bool => $handler->matches($request))
+			->groupBy(static fn (RouteHandlerContract $handler): float => $handler->getMatchScore($request))
+			->orderBy(static fn (Grouping $grouping): mixed => $grouping->groupKey())
 			->firstOrDefault(null)
 			?->toList()
 		;
@@ -129,6 +130,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	/**
 	 * @param class-string $className
+	 *
 	 * @throws InvalidRequestController
 	 */
 	public function loadFromClass(string $className): static
@@ -149,8 +151,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 				foreach ($classControllers as $controllerAttribute) {
 					// TODO: make this tidier
 					$callback = Closure::fromCallable($classInstance);
-					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
-					$routeHandler = new RouteHandler($controllerAttribute, null, $className, "__invoke", $classMiddleware, $handler);
+					$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
+					$routeHandler = new RouteHandler($controllerAttribute, null, $className, '__invoke', $classMiddleware, $handler);
 					$this->add($routeHandler);
 				}
 			}
@@ -168,7 +170,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 				$methodMiddleware = [...$classMiddleware, ...self::getMiddlewares($methodReflection)->toList()];
 				foreach (self::getRoutes($methodReflection) as $routeAttribute) {
 					$callback = $methodReflection->getClosure($classInstance) ?? throw new InvalidRequestHandler($className, $methodReflection->getName());
-					$handler = fn(Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
+					$handler = fn (Request $request): ResponseBuilder => /** @var ResponseBuilder */ $this->services->resolver()->callback($callback, ['request' => $request]);
 					foreach ($classControllers as $controllerAttribute) {
 						$routeHandler = new RouteHandler($controllerAttribute, $routeAttribute, $className, $methodReflection->getName(), $methodMiddleware, $handler);
 						$this->add($routeHandler);

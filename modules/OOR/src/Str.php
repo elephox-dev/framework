@@ -21,13 +21,13 @@ class Str implements Stringable
 	public static function implode(string|self|null $separator, string|self $string, string|self ...$concat): self
 	{
 		if ($separator instanceof self) {
-			$separator = (string)$separator;
+			$separator = (string) $separator;
 		}
 
 		$values = Arr::wrap($concat);
 		$values->unshift($string);
 
-		return new self($values->map(static fn(string|self $str) => self::mapStrToString($str))->implode($separator));
+		return new self($values->map(static fn (string|self $str) => self::mapStrToString($str))->implode($separator));
 	}
 
 	private static function mapStrToString(string|self $string): string
@@ -48,9 +48,9 @@ class Str implements Stringable
 		foreach ($values as $key => $value) {
 			if ($key instanceof self && $value instanceof self) {
 				yield $key->source => $value->source;
-			} else if ($key instanceof self) {
+			} elseif ($key instanceof self) {
 				yield $key->source => $value;
-			} else if ($value instanceof self) {
+			} elseif ($value instanceof self) {
 				yield $key => $value->source;
 			} else {
 				yield $key => $value;
@@ -61,8 +61,7 @@ class Str implements Stringable
 	#[Pure]
 	public function __construct(
 		private readonly string $source,
-	)
-	{
+	) {
 	}
 
 	#[Pure]
@@ -97,6 +96,6 @@ class Str implements Stringable
 
 	public function startsWith(string|self $value): bool
 	{
-		return str_starts_with($this->source, (string)$value);
+		return str_starts_with($this->source, (string) $value);
 	}
 }

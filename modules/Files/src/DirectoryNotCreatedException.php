@@ -9,7 +9,7 @@ use Throwable;
 class DirectoryNotCreatedException extends FileException
 {
 	#[Pure]
-	public function __construct(string $path, int $code = 0, Throwable $previous = null)
+	public function __construct(string $path, int $code = 0, ?Throwable $previous = null)
 	{
 		parent::__construct(sprintf('Directory "%s" could not be created.', $path), $code, $previous);
 	}

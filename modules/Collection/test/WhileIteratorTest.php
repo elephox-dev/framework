@@ -9,15 +9,17 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Collection\Iterator\WhileIterator
+ *
+ * @internal
  */
 class WhileIteratorTest extends TestCase
 {
 	public function testIterator(): void
 	{
 		$arrayIterator = new ArrayIterator([1, 2, 3]);
-		$iterator = new WhileIterator($arrayIterator, fn($value) => $value < 3);
+		$iterator = new WhileIterator($arrayIterator, static fn ($value) => $value < 3);
 
-		self::assertEquals([1, 2], iterator_to_array($iterator));
-		self::assertSame($arrayIterator, $iterator->getInnerIterator());
+		static::assertEquals([1, 2], iterator_to_array($iterator));
+		static::assertSame($arrayIterator, $iterator->getInnerIterator());
 	}
 }

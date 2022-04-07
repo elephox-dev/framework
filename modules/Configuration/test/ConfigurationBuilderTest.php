@@ -22,25 +22,27 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationProvider
  * @covers \Elephox\Configuration\ConfigurationRoot
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationSource
+ *
+ * @internal
  */
 class ConfigurationBuilderTest extends TestCase
 {
 	public function testBuild(): void
 	{
 		$source1 = new MemoryConfigurationSource([
-			'foo' => "bar",
+			'foo' => 'bar',
 			'baz' => [
-				'qux' => "quux",
+				'qux' => 'quux',
 				'corge' => [
-					'grault' => "garply",
+					'grault' => 'garply',
 				],
 			],
 		]);
 		$source2 = new MemoryConfigurationSource([
 			'baz' => [
-				'qux' => "corge",
+				'qux' => 'corge',
 				'carg' => [
-					'grault' => "waldo",
+					'grault' => 'waldo',
 				],
 			],
 		]);
@@ -50,18 +52,18 @@ class ConfigurationBuilderTest extends TestCase
 		$builder->add($source2);
 
 		$sources = $builder->getSources();
-		self::assertNotEmpty($sources);
-		self::assertCount(2, $sources);
+		static::assertNotEmpty($sources);
+		static::assertCount(2, $sources);
 
 		$root = $builder->build();
-		self::assertNotEmpty($root);
-		self::assertCount(2, $root->getProviders());
+		static::assertNotEmpty($root);
+		static::assertCount(2, $root->getProviders());
 
 		$provider = $root->getProviders()->first();
-		self::assertInstanceOf(MemoryConfigurationProvider::class, $provider);
+		static::assertInstanceOf(MemoryConfigurationProvider::class, $provider);
 
-		self::assertEquals('bar', $root->offsetGet('foo'));
-		self::assertEquals('garply', $root->offsetGet('baz:corge:grault'));
-		self::assertNull($root->offsetGet('baz:not:there'));
+		static::assertEquals('bar', $root->offsetGet('foo'));
+		static::assertEquals('garply', $root->offsetGet('baz:corge:grault'));
+		static::assertNull($root->offsetGet('baz:not:there'));
 	}
 }

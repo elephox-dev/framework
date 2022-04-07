@@ -1,15 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Web\Middleware;
 
 use Closure;
-use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Mimey\MimeType;
 use Elephox\Stream\StringStream;
-use Elephox\Support\Contract\ExceptionHandler;
-use Elephox\Web\Contract\WebMiddleware;
-use Throwable;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
@@ -23,8 +20,7 @@ class WhoopsExceptionHandler extends DefaultExceptionHandler
 	 */
 	public function __construct(
 		private Closure $whoopsRunInterfaceFactory,
-	)
-	{
+	) {
 	}
 
 	protected function setResponseBody(ResponseBuilder $response): ResponseBuilder
@@ -58,6 +54,7 @@ class WhoopsExceptionHandler extends DefaultExceptionHandler
 
 		/** @var non-empty-string $content */
 		$content = $runner->handleException($exception);
+
 		return $response->body(new StringStream($content));
 	}
 }

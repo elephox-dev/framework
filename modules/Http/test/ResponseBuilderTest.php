@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Http\AbstractMessageBuilder
  * @covers \Elephox\Http\AbstractMessage
+ *
+ * @internal
  */
 class ResponseBuilderTest extends TestCase
 {
@@ -25,10 +27,10 @@ class ResponseBuilderTest extends TestCase
 		$builder->responseCode(ResponseCode::OK);
 		$builder->contentType(MimeType::TextPlain);
 		$builder->header('X-Foo', ['bar']);
-		$builder->body(new StringStream("Hello World"));
+		$builder->body(new StringStream('Hello World'));
 
 		$response = $builder->get();
 
-		self::assertEquals(ResponseCode::OK, $response->getResponseCode());
+		static::assertEquals(ResponseCode::OK, $response->getResponseCode());
 	}
 }

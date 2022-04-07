@@ -31,7 +31,7 @@ class CustomMimeType implements MimeTypeInterface
 	public static function fromFile(mixed $file): MimeTypeInterface
 	{
 		if (!is_string($file) && !is_resource($file)) {
-			throw new InvalidArgumentException("MimeType::fromFile only accepts strings or resource streams!");
+			throw new InvalidArgumentException('MimeType::fromFile only accepts strings or resource streams!');
 		}
 
 		$mime = null;
@@ -46,7 +46,7 @@ class CustomMimeType implements MimeTypeInterface
 
 			// MAYBE: try to get meta information of resource to get filename
 
-			throw new RuntimeException("Unable to determine mime type of file resource");
+			throw new RuntimeException('Unable to determine mime type of file resource');
 		}
 
 		return MimeType::tryFrom($mime) ?? new self($mime);
@@ -70,9 +70,8 @@ class CustomMimeType implements MimeTypeInterface
 	#[Pure]
 	public function __construct(
 		private string $value,
-		private string $extension = ''
-	)
-	{
+		private string $extension = '',
+	) {
 	}
 
 	#[Pure]

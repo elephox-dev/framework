@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Iterator\OrderedIterator
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\KeyedEnumerable
+ *
  * @uses \Elephox\Collection\IsKeyedEnumerable
+ *
+ * @internal
  */
 class OrderedEnumerableTest extends TestCase
 {
@@ -35,11 +38,12 @@ class OrderedEnumerableTest extends TestCase
 				'name' => 'John',
 			],
 		])
-			->orderBy(fn($x) => $x['age'])
-			->thenBy(fn($x) => strlen($x['name']))
-			->toList();
+			->orderBy(static fn ($x) => $x['age'])
+			->thenBy(static fn ($x) => strlen($x['name']))
+			->toList()
+		;
 
-		self::assertEquals(
+		static::assertEquals(
 			[
 				[
 					'age' => 10,
@@ -58,7 +62,7 @@ class OrderedEnumerableTest extends TestCase
 					'name' => 'Jane',
 				],
 			],
-			$ordered
+			$ordered,
 		);
 	}
 
@@ -82,11 +86,12 @@ class OrderedEnumerableTest extends TestCase
 				'name' => 'John',
 			],
 		])
-		->orderByDescending(fn ($x) => $x['age'])
-		->thenByDescending(fn ($x) => strlen($x['name']))
-		->toList();
+			->orderByDescending(static fn ($x) => $x['age'])
+			->thenByDescending(static fn ($x) => strlen($x['name']))
+			->toList()
+		;
 
-		self::assertEquals(
+		static::assertEquals(
 			[
 				[
 					'age' => 30,
@@ -105,7 +110,7 @@ class OrderedEnumerableTest extends TestCase
 					'name' => 'John',
 				],
 			],
-			$ordered
+			$ordered,
 		);
 	}
 }

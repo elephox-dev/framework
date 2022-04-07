@@ -17,8 +17,11 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\Collection\Iterator\OrderedIterator
  * @covers \Elephox\Collection\OrderedEnumerable
+ *
  * @uses   \Elephox\Collection\IsEnumerable
  * @uses   \Elephox\Events\ClassNameAsEventName
+ *
+ * @internal
  */
 class EventBusTest extends TestCase
 {
@@ -27,7 +30,7 @@ class EventBusTest extends TestCase
 		$bus = new EventBus();
 
 		$triggered = false;
-		$subscription = $bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$subscription = $bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered = true;
 
 			self::assertEquals(5, $event->data);
@@ -35,7 +38,7 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		self::assertTrue($triggered);
+		static::assertTrue($triggered);
 
 		$bus->unsubscribe($subscription->getId());
 
@@ -43,7 +46,7 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		self::assertFalse($triggered);
+		static::assertFalse($triggered);
 	}
 
 	public function testPubSubNamed(): void
@@ -53,17 +56,17 @@ class EventBusTest extends TestCase
 		$triggeredA2 = false;
 		$triggeredB = false;
 
-		$bus->subscribe('testA', function (TestNamedEvent $event) use (&$triggeredA1) {
+		$bus->subscribe('testA', static function (TestNamedEvent $event) use (&$triggeredA1): void {
 			$triggeredA1 = true;
 
 			self::assertEquals(5, $event->data);
 		});
 
-		$subscription = $bus->subscribe('testA', function () use (&$triggeredA2) {
+		$subscription = $bus->subscribe('testA', static function () use (&$triggeredA2): void {
 			$triggeredA2 = true;
 		});
 
-		$bus->subscribe('testB', function (TestNamedEvent $event) use (&$triggeredB) {
+		$bus->subscribe('testB', static function (TestNamedEvent $event) use (&$triggeredB): void {
 			$triggeredB = true;
 
 			self::assertEquals(6, $event->data);
@@ -71,13 +74,13 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestNamedEvent('testA', 5));
 
-		self::assertTrue($triggeredA1);
-		self::assertTrue($triggeredA2);
-		self::assertFalse($triggeredB);
+		static::assertTrue($triggeredA1);
+		static::assertTrue($triggeredA2);
+		static::assertFalse($triggeredB);
 
 		$bus->publish(new TestNamedEvent('testB', 6));
 
-		self::assertTrue($triggeredB);
+		static::assertTrue($triggeredB);
 
 		$bus->unsubscribe($subscription->getId());
 		$bus->unsubscribe($subscription->getId());
@@ -87,19 +90,19 @@ class EventBusTest extends TestCase
 	{
 		$testEvent = new TestEvent(5);
 
-		self::assertEquals(TestEvent::class, $testEvent->getName());
+		static::assertEquals(TestEvent::class, $testEvent->getName());
 	}
 
 	public function testGetSubscribers(): void
 	{
 		$bus = new EventBus();
 
-		self::assertEmpty($bus->getSubscriptions());
+		static::assertEmpty($bus->getSubscriptions());
 
-		$subscription = $bus->subscribe("test", function () {});
+		$subscription = $bus->subscribe('test', static function (): void {});
 
-		self::assertCount(1, $bus->getSubscriptions());
-		self::assertSame($subscription, $bus->getSubscriptions()->first());
+		static::assertCount(1, $bus->getSubscriptions());
+		static::assertSame($subscription, $bus->getSubscriptions()->first());
 	}
 
 	public function testStopPropagation(): void
@@ -107,24 +110,24 @@ class EventBusTest extends TestCase
 		$bus = new EventBus();
 		$triggered = [false, false, false];
 
-		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered[0] = true;
 		});
 
-		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered[1] = true;
 			$event->stopPropagation();
 		});
 
-		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered[2] = true;
 		});
 
 		$bus->publish(new TestEvent(5));
 
-		self::assertTrue($triggered[0]);
-		self::assertTrue($triggered[1]);
-		self::assertFalse($triggered[2]);
+		static::assertTrue($triggered[0]);
+		static::assertTrue($triggered[1]);
+		static::assertFalse($triggered[2]);
 	}
 
 	public function testPriority(): void
@@ -132,24 +135,24 @@ class EventBusTest extends TestCase
 		$bus = new EventBus();
 		$triggered = [false, false, false];
 
-		$bus->subscribe(TestEvent::class, function () use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function () use (&$triggered): void {
 			$triggered[0] = true;
 		});
 
-		$bus->subscribe(TestEvent::class, function (TestEvent $event) use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered[1] = true;
 			$event->stopPropagation();
 		}, 1);
 
-		$bus->subscribe(TestEvent::class, function () use (&$triggered) {
+		$bus->subscribe(TestEvent::class, static function () use (&$triggered): void {
 			$triggered[2] = true;
 		}, 2);
 
 		$bus->publish(new TestEvent(5));
 
-		self::assertFalse($triggered[0]);
-		self::assertTrue($triggered[1]);
-		self::assertTrue($triggered[2]);
+		static::assertFalse($triggered[0]);
+		static::assertTrue($triggered[1]);
+		static::assertTrue($triggered[2]);
 	}
 }
 

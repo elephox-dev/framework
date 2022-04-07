@@ -54,7 +54,6 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	/**
 	 * @param int $start Inclusive
 	 * @param int $end Inclusive
-	 * @param int $step
 	 *
 	 * @return GenericKeyedEnumerable<int, int>
 	 */
@@ -74,7 +73,8 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	/**
 	 * @use IsKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @var Iterator<TIteratorKey, TSource>
@@ -86,7 +86,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	 * @psalm-suppress RedundantConditionGivenDocblockType
 	 */
 	public function __construct(
-		Iterator|Closure $iterator
+		Iterator|Closure $iterator,
 	) {
 		if ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;

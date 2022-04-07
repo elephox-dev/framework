@@ -20,12 +20,11 @@ class Url implements Stringable
 		preg_match(
 			self::Pattern,
 			$uri,
-			$matches
+			$matches,
 		);
 		/**
 		 * @var array{scheme: string, username: string, password: string, host: string, port: string, path: string, query: string, fragment: string} $matches
 		 */
-
 		if (str_ends_with($matches['scheme'], '://')) {
 			$scheme = substr($matches['scheme'], 0, -3);
 
@@ -37,7 +36,7 @@ class Url implements Stringable
 		$builder->userInfo($username, $password);
 
 		$builder->host(empty($matches['host']) ? null : $matches['host']);
-		$builder->port(ctype_digit($matches['port']) ? (int)$matches['port'] : null);
+		$builder->port(ctype_digit($matches['port']) ? (int) $matches['port'] : null);
 
 		$path = $matches['path'];
 		if (str_contains($path, ' ')) {
@@ -60,8 +59,8 @@ class Url implements Stringable
 	public function __construct(
 		public readonly ?Contract\UrlScheme $scheme,
 		public readonly ?string $host,
-		public readonly ?int    $port,
-		public readonly string  $path,
+		public readonly ?int $port,
+		public readonly string $path,
 		public readonly ?Contract\QueryMap $queryMap,
 		public readonly ?string $fragment,
 		public readonly ?string $username,
@@ -74,7 +73,7 @@ class Url implements Stringable
 	{
 		$authority = $this->host;
 		if (empty($authority)) {
-			return "";
+			return '';
 		}
 
 		$port = $this->port;
@@ -94,7 +93,7 @@ class Url implements Stringable
 	public function getUserInfo(): string
 	{
 		if ($this->username === null) {
-			return "";
+			return '';
 		}
 
 		$userInfo = $this->username;
@@ -140,16 +139,16 @@ class Url implements Stringable
 	}
 
 	#[ArrayShape([
-		'scheme' => Contract\UrlScheme::class . "|null",
-		'username' => "null|string",
-		'password' => "null|string",
-		'host' => "null|string",
-		'port' => "int|null",
-		'authority' => "null|string",
-		'userInfo' => "null|string",
-		'path' => "string",
-		'query' => Contract\QueryMap::class . "|null",
-		'fragment' => "string"
+		'scheme' => Contract\UrlScheme::class . '|null',
+		'username' => 'null|string',
+		'password' => 'null|string',
+		'host' => 'null|string',
+		'port' => 'int|null',
+		'authority' => 'null|string',
+		'userInfo' => 'null|string',
+		'path' => 'string',
+		'query' => Contract\QueryMap::class . '|null',
+		'fragment' => 'string',
 	])]
 	#[Pure]
 	public function toArray(): array

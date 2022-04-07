@@ -28,7 +28,9 @@ class ObjectSet implements GenericSet
 	}
 	use DeepCloneable;
 
-	/** @var SplObjectStorage<T, mixed> */
+	/**
+	 * @var SplObjectStorage<T, mixed>
+	 */
 	private readonly SplObjectStorage $storage;
 
 	/**
@@ -41,7 +43,7 @@ class ObjectSet implements GenericSet
 	 */
 	#[Pure]
 	public function __construct(
-		?Closure $comparer = null
+		?Closure $comparer = null,
 	) {
 		$this->storage = new SplObjectStorage();
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
@@ -57,7 +59,7 @@ class ObjectSet implements GenericSet
 	public function add(mixed $value): bool
 	{
 		if (!is_object($value)) {
-			throw new InvalidArgumentException("Cannot add non-object to " . $this::class);
+			throw new InvalidArgumentException('Cannot add non-object to ' . $this::class);
 		}
 
 		$existed = $this->contains($value);
@@ -70,7 +72,7 @@ class ObjectSet implements GenericSet
 	public function remove(mixed $value): bool
 	{
 		if (!is_object($value)) {
-			throw new InvalidArgumentException("Cannot remove non-object from " . $this::class);
+			throw new InvalidArgumentException('Cannot remove non-object from ' . $this::class);
 		}
 
 		$existed = $this->contains($value);

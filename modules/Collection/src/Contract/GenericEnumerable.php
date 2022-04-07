@@ -28,17 +28,13 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 
 	/**
 	 * @param callable(TSource): bool $predicate
-	 *
-	 * @return bool
 	 */
 	public function all(callable $predicate): bool;
 
 	/**
 	 * @param null|callable(TSource): bool $predicate
-	 *
-	 * @return bool
 	 */
-	public function any(callable $predicate = null): bool;
+	public function any(?callable $predicate = null): bool;
 
 	/**
 	 * @param TSource $value
@@ -66,7 +62,7 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 *
 	 * @return NonNegativeInteger
 	 */
-	public function count(callable $predicate = null): int;
+	public function count(?callable $predicate = null): int;
 
 	/**
 	 * @param null|callable(TSource, TSource): bool $comparer
@@ -167,6 +163,7 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 
 	/**
 	 * @param null|callable(TSource): bool $predicate
+	 *
 	 * @return TSource
 	 */
 	public function last(?callable $predicate = null): mixed;
@@ -262,8 +259,6 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
-	 *
-	 * @return bool
 	 */
 	public function sequenceEqual(GenericEnumerable $other, ?callable $comparer = null): bool;
 

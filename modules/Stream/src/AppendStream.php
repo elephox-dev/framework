@@ -5,15 +5,13 @@ namespace Elephox\Stream;
 
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
-use JetBrains\PhpStorm\Pure;
 use RuntimeException;
-use function Safe\swoole_async_write;
 
 class AppendStream implements Stream
 {
 	public function __construct(
 		private Stream $stream,
-		private Stream $appendedStream
+		private Stream $appendedStream,
 	) {
 	}
 
@@ -93,39 +91,39 @@ class AppendStream implements Stream
 				if ($offset > $streamSize) {
 					$offset -= $streamSize;
 					/** @var positive-int|0 $offset */
-
 					$this->appendedStream->seek($offset, SEEK_SET);
-				} else if ($offset >= 0) {
+				} elseif ($offset >= 0) {
 					$this->stream->seek($offset, SEEK_SET);
 				} else {
 					throw new InvalidArgumentException('Cannot seek to negative offset');
 				}
+
 				break;
 			case SEEK_CUR:
 				$newOffset = $offset + $tell;
 				if ($newOffset > $streamSize) {
 					$newOffset -= $streamSize;
 					/** @var positive-int|0 $newOffset */
-
 					$this->appendedStream->seek($newOffset, SEEK_SET);
-				} else if ($newOffset >= 0) {
+				} elseif ($newOffset >= 0) {
 					$this->stream->seek($newOffset, SEEK_SET);
 				} else {
 					throw new InvalidArgumentException('Cannot seek to negative offset');
 				}
+
 				break;
 			case SEEK_END:
 				$newOffset = $totalSize - $offset;
 				if ($newOffset > $streamSize) {
 					$newOffset -= $streamSize;
 					/** @var positive-int|0 $newOffset */
-
 					$this->appendedStream->seek($newOffset, SEEK_SET);
-				} else if ($newOffset >= 0) {
+				} elseif ($newOffset >= 0) {
 					$this->stream->seek($newOffset, SEEK_SET);
 				} else {
 					throw new InvalidArgumentException('Cannot seek to negative offset');
 				}
+
 				break;
 			default:
 				throw new InvalidArgumentException('Invalid whence');

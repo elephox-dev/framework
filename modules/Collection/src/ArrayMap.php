@@ -22,13 +22,15 @@ class ArrayMap implements GenericMap, ArrayAccess
 	/**
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
-	use IsKeyedEnumerable, DeepCloneable;
+	use IsKeyedEnumerable;
+	use DeepCloneable;
 
 	/**
 	 * @template UKey of array-key
 	 * @template UValue
 	 *
 	 * @param ArrayMap<UKey, UValue>|iterable<UKey, UValue> $value
+	 *
 	 * @return self<UKey, UValue>
 	 */
 	public static function from(mixed $value): self
@@ -49,7 +51,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	}
 
 	public function __construct(
-		private array $items = []
+		private array $items = [],
 	) {
 	}
 

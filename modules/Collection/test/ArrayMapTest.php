@@ -17,7 +17,10 @@ use stdClass;
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\Collection\Iterator\FlipIterator
+ *
  * @uses \Elephox\Collection\IsEnumerable
+ *
+ * @internal
  */
 class ArrayMapTest extends TestCase
 {
@@ -26,7 +29,7 @@ class ArrayMapTest extends TestCase
 		$arr = new ArrayMap();
 		$arr2 = ArrayMap::from($arr);
 
-		self::assertSame($arr, $arr2);
+		static::assertSame($arr, $arr2);
 	}
 
 	public function testFromIterator(): void
@@ -34,7 +37,7 @@ class ArrayMapTest extends TestCase
 		$iterator = new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3]);
 		$arr = ArrayMap::from($iterator);
 
-		self::assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $arr->toArray());
+		static::assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $arr->toArray());
 	}
 
 	public function testFromInvalid(): void
@@ -51,8 +54,8 @@ class ArrayMapTest extends TestCase
 		$map->put('testKey', 'testValue');
 		$map->put('anotherKey', 'anotherValue');
 
-		self::assertEquals('testValue', $map->get('testKey'));
-		self::assertEquals('anotherValue', $map->get('anotherKey'));
+		static::assertEquals('testValue', $map->get('testKey'));
+		static::assertEquals('anotherValue', $map->get('anotherKey'));
 	}
 
 	public function testInitialize(): void
@@ -60,8 +63,8 @@ class ArrayMapTest extends TestCase
 		$map = new ArrayMap(['test' => 'val', 123 => '134']);
 		$map2 = ArrayMap::from(['test' => 'val', 123 => '134']);
 
-		self::assertEquals('val', $map->get('test'));
-		self::assertEquals('134', $map2->get(123));
+		static::assertEquals('val', $map->get('test'));
+		static::assertEquals('134', $map2->get(123));
 	}
 
 	public function testInvalidKey(): void
@@ -70,7 +73,7 @@ class ArrayMapTest extends TestCase
 
 		$this->expectException(OffsetNotAllowedException::class);
 
-		$map->put(false, "test");
+		$map->put(false, 'test');
 	}
 
 	public function testGetNotSet(): void
@@ -90,8 +93,8 @@ class ArrayMapTest extends TestCase
 			'c' => '3',
 		]);
 
-		self::assertEquals(['1', '2', '3'], $map->values()->toList());
-		self::assertEquals(['a', 'b', 'c'], $map->keys()->toList());
+		static::assertEquals(['1', '2', '3'], $map->values()->toList());
+		static::assertEquals(['a', 'b', 'c'], $map->keys()->toList());
 	}
 
 	public function testContains(): void
@@ -102,7 +105,7 @@ class ArrayMapTest extends TestCase
 			'c' => '3',
 		]);
 
-		self::assertTrue($map->contains('1'));
+		static::assertTrue($map->contains('1'));
 	}
 
 	public function testIterator(): void
@@ -112,7 +115,7 @@ class ArrayMapTest extends TestCase
 		]);
 
 		foreach ($map as $value) {
-			self::assertEquals('1', $value);
+			static::assertEquals('1', $value);
 		}
 	}
 
@@ -126,9 +129,9 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove('a');
 
-		self::assertTrue($removed);
-		self::assertCount(2, $map);
-		self::assertFalse($map->has('a'));
+		static::assertTrue($removed);
+		static::assertCount(2, $map);
+		static::assertFalse($map->has('a'));
 	}
 
 	public function testRemoveNonExistent(): void
@@ -141,8 +144,8 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove('d');
 
-		self::assertFalse($removed);
-		self::assertCount(3, $map);
+		static::assertFalse($removed);
+		static::assertCount(3, $map);
 	}
 
 	public function testRemoveIntKey(): void
@@ -151,9 +154,9 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove(1);
 
-		self::assertTrue($removed);
-		self::assertCount(2, $map);
-		self::assertEquals(['a', 'c'], $map->toArray());
+		static::assertTrue($removed);
+		static::assertCount(2, $map);
+		static::assertEquals(['a', 'c'], $map->toArray());
 	}
 
 	public function testDeepClone(): void
@@ -163,12 +166,12 @@ class ArrayMapTest extends TestCase
 		$map = new ArrayMap(['obj' => $anObject, 'test' => 2, 'obj2' => $anObject]);
 		$clone = $map->deepClone();
 
-		self::assertInstanceOf(ArrayMap::class, $clone);
-		self::assertNotSame($map, $clone);
-		self::assertNotSame($map['obj'], $clone['obj']);
-		self::assertNotSame($map['obj2'], $clone['obj2']);
-		self::assertSame($clone['obj'], $clone['obj2']);
-		self::assertTrue($clone['obj']->test);
+		static::assertInstanceOf(ArrayMap::class, $clone);
+		static::assertNotSame($map, $clone);
+		static::assertNotSame($map['obj'], $clone['obj']);
+		static::assertNotSame($map['obj2'], $clone['obj2']);
+		static::assertSame($clone['obj'], $clone['obj2']);
+		static::assertTrue($clone['obj']->test);
 	}
 
 	public function testOffsetExists(): void
@@ -179,11 +182,11 @@ class ArrayMapTest extends TestCase
 			'c' => 3,
 		]);
 
-		self::assertTrue($map->offsetExists('a'));
-		self::assertTrue($map->offsetExists('b'));
-		self::assertTrue($map->offsetExists('c'));
-		self::assertFalse($map->offsetExists('d'));
-		self::assertFalse($map->offsetExists(null));
+		static::assertTrue($map->offsetExists('a'));
+		static::assertTrue($map->offsetExists('b'));
+		static::assertTrue($map->offsetExists('c'));
+		static::assertFalse($map->offsetExists('d'));
+		static::assertFalse($map->offsetExists(null));
 	}
 
 	public function testOffsetSet(): void
@@ -197,10 +200,10 @@ class ArrayMapTest extends TestCase
 		$map->offsetSet('a', 4);
 		$map->offsetSet('d', 5);
 
-		self::assertEquals(4, $map->get('a'));
-		self::assertEquals(2, $map->get('b'));
-		self::assertEquals(3, $map->get('c'));
-		self::assertEquals(5, $map->get('d'));
+		static::assertEquals(4, $map->get('a'));
+		static::assertEquals(2, $map->get('b'));
+		static::assertEquals(3, $map->get('c'));
+		static::assertEquals(5, $map->get('d'));
 	}
 
 	public function testOffsetUnset(): void
@@ -213,7 +216,7 @@ class ArrayMapTest extends TestCase
 
 		$map->offsetUnset('a');
 
-		self::assertFalse($map->offsetExists('a'));
-		self::assertTrue($map->offsetExists('b'));
+		static::assertFalse($map->offsetExists('a'));
+		static::assertTrue($map->offsetExists('b'));
 	}
 }

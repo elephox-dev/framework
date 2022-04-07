@@ -12,6 +12,6 @@ class AmbiguousMatchException extends RuntimeException
 	#[Pure]
 	public function __construct(int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct("Sequence contains more than one matching element", $code, $previous);
+		parent::__construct('Sequence contains more than one matching element', $code, $previous);
 	}
 }

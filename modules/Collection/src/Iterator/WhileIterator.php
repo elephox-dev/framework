@@ -21,7 +21,7 @@ class WhileIterator implements OuterIterator
 	 */
 	public function __construct(
 		private Iterator $iterator,
-		private Closure $predicate
+		private Closure $predicate,
 	) {
 	}
 

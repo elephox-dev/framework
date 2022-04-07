@@ -33,8 +33,7 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration implements Co
 		?string $cacheId = null,
 		?string $tempDir = null,
 		private int $writeBackThreshold = 200,
-	)
-	{
+	) {
 		parent::__construct($ttl);
 
 		if ($cacheId !== null) {
@@ -51,9 +50,10 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration implements Co
 		} else {
 			/**
 			 * @psalm-suppress ImpureFunctionCall
+			 *
 			 * @var non-empty-string
 			 */
-			$this->tempDir = Path::join(sys_get_temp_dir(), "elephox-cache");
+			$this->tempDir = Path::join(sys_get_temp_dir(), 'elephox-cache');
 		}
 	}
 

@@ -31,7 +31,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		public readonly ParameterMap $parameters,
 		public readonly CookieMap $cookies,
 		public readonly ?SessionMap $session,
-		public readonly UploadedFileMap $uploadedFiles
+		public readonly UploadedFileMap $uploadedFiles,
 	) {
 		parent::__construct($protocolVersion, $headers, $body, $method, $url);
 	}

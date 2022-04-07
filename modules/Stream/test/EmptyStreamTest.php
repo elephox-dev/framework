@@ -8,6 +8,8 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\EmptyStream
+ *
+ * @internal
  */
 class EmptyStreamTest extends TestCase
 {
@@ -15,14 +17,14 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		self::assertSame('', (string) $stream);
+		static::assertSame('', (string) $stream);
 	}
 
 	public function testDetach(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertNull($stream->detach());
+		static::assertNull($stream->detach());
 	}
 
 	public function testClose(): void
@@ -31,35 +33,35 @@ class EmptyStreamTest extends TestCase
 
 		$stream->close();
 
-		self::assertTrue(true);
+		static::assertTrue(true);
 	}
 
 	public function testGetSize(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertSame(0, $stream->getSize());
+		static::assertSame(0, $stream->getSize());
 	}
 
 	public function testTell(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertSame(0, $stream->tell());
+		static::assertSame(0, $stream->tell());
 	}
 
 	public function testEof(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertTrue($stream->eof());
+		static::assertTrue($stream->eof());
 	}
 
 	public function testIsSeekable(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertFalse($stream->isSeekable());
+		static::assertFalse($stream->isSeekable());
 	}
 
 	public function testSeek(): void
@@ -82,7 +84,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		self::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWriteable());
 	}
 
 	public function testWrite(): void
@@ -97,7 +99,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		self::assertFalse($stream->isReadable());
+		static::assertFalse($stream->isReadable());
 	}
 
 	public function testRead(): void
@@ -112,13 +114,13 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		self::assertSame('', $stream->getContents());
+		static::assertSame('', $stream->getContents());
 	}
 
 	public function testGetMetadata(): void
 	{
 		$stream = new EmptyStream();
 
-		self::assertNull($stream->getMetadata());
+		static::assertNull($stream->getMetadata());
 	}
 }

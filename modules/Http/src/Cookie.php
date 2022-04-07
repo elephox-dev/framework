@@ -11,19 +11,19 @@ use JetBrains\PhpStorm\Pure;
 
 class Cookie implements Contract\Cookie
 {
-	public const ExpiresFormat = "D, d-M-Y H:i:s T";
+	public const ExpiresFormat = 'D, d-M-Y H:i:s T';
 
 	#[Pure]
 	public function __construct(
-		private string          $name,
-		private ?string         $value = null,
-		private ?DateTime       $expires = null,
-		private ?string         $path = null,
-		private ?string         $domain = null,
-		private bool            $secure = false,
-		private bool            $httpOnly = false,
+		private string $name,
+		private ?string $value = null,
+		private ?DateTime $expires = null,
+		private ?string $path = null,
+		private ?string $domain = null,
+		private bool $secure = false,
+		private bool $httpOnly = false,
 		private ?CookieSameSite $sameSite = null,
-		public ?int             $maxAge = null
+		public ?int $maxAge = null,
 	) {
 	}
 
@@ -164,15 +164,15 @@ class Cookie implements Contract\Cookie
 	}
 
 	#[ArrayShape([
-		'name' => "string",
-		'value' => "null|string",
+		'name' => 'string',
+		'value' => 'null|string',
 		'expires' => "\DateTime|null",
-		'path' => "null|string",
-		'domain' => "null|string",
-		'secure' => "bool",
-		'httpOnly' => "bool",
+		'path' => 'null|string',
+		'domain' => 'null|string',
+		'secure' => 'bool',
+		'httpOnly' => 'bool',
 		'sameSite' => "\Elephox\Http\CookieSameSite|null",
-		'maxAge' => "null|int"
+		'maxAge' => 'null|int',
 	])]
 	#[Pure]
 	public function toArray(): array
@@ -193,9 +193,8 @@ class Cookie implements Contract\Cookie
 	#[Pure]
 	public function offsetExists(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
-		mixed $offset
-	): bool
-	{
+		mixed $offset,
+	): bool {
 		return match ($offset) {
 			'name', 'value', 'secure', 'httpOnly' => true,
 			'expires' => $this->expires !== null,
@@ -209,9 +208,8 @@ class Cookie implements Contract\Cookie
 
 	public function offsetGet(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
-		mixed $offset
-	): int|string|bool|null|DateTime|CookieSameSite
-	{
+		mixed $offset,
+	): int|string|bool|null|DateTime|CookieSameSite {
 		return match ($offset) {
 			'name' => $this->name,
 			'value' => $this->value,
@@ -229,9 +227,8 @@ class Cookie implements Contract\Cookie
 	public function offsetSet(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset,
-		mixed $value
-	): void
-	{
+		mixed $value,
+	): void {
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException("Cookie '$offset' is not a valid property name");
 		}
@@ -246,15 +243,14 @@ class Cookie implements Contract\Cookie
 
 	public function offsetUnset(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
-		mixed $offset
-	): void
-	{
+		mixed $offset,
+	): void {
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException("Cookie '$offset' is not a valid property name");
 		}
 
 		$method = 'set' . ucfirst($offset);
-		if ($offset === 'name' ||!method_exists($this, $method)) {
+		if ($offset === 'name' || !method_exists($this, $method)) {
 			throw new InvalidArgumentException("Cookie '$offset' cannot be unset");
 		}
 

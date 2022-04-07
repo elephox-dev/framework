@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Collection;
 
@@ -9,6 +10,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Iterator\KeySelectIterator
  * @covers \Elephox\Collection\KeyedEnumerable
+ *
+ * @internal
  */
 class ArraySetTest extends TestCase
 {
@@ -16,7 +19,7 @@ class ArraySetTest extends TestCase
 	{
 		$set = new ArraySet(['a', 'b', 'c']);
 
-		self::assertEquals(['a', 'b', 'c'], $set->toArray());
+		static::assertEquals(['a', 'b', 'c'], $set->toArray());
 	}
 
 	public function testAdd(): void
@@ -24,10 +27,10 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 		$set->add('d');
 
-		self::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
+		static::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
 
 		$set->add('b');
-		self::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
+		static::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
 	}
 
 	public function testRemove(): void
@@ -35,23 +38,21 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 
 		$removed = $set->remove('b');
-		self::assertTrue($removed);
-		self::assertEquals(['a', 'c'], $set->toArray());
+		static::assertTrue($removed);
+		static::assertEquals(['a', 'c'], $set->toArray());
 
 		$removed2 = $set->remove('b');
-		self::assertFalse($removed2);
-		self::assertEquals(['a', 'c'], $set->toArray());
+		static::assertFalse($removed2);
+		static::assertEquals(['a', 'c'], $set->toArray());
 	}
 
 	public function testRemoveBy(): void
 	{
 		$set = new ArraySet(['a', 'b', 'c']);
 
-		$removed = $set->removeBy(function($item) {
-			return $item >= 'b';
-		});
+		$removed = $set->removeBy(static fn ($item) => $item >= 'b');
 
-		self::assertTrue($removed);
-		self::assertEquals(['a'], $set->toArray());
+		static::assertTrue($removed);
+		static::assertEquals(['a'], $set->toArray());
 	}
 }

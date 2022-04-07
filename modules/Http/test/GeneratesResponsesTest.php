@@ -5,6 +5,7 @@ namespace Elephox\Http;
 
 use Elephox\Mimey\MimeType;
 use PHPUnit\Framework\TestCase;
+use JsonException;
 
 /**
  * @covers \Elephox\Collection\ArrayMap
@@ -18,6 +19,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Support\CustomMimeType
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\File
+ *
+ * @internal
  */
 class GeneratesResponsesTest extends TestCase
 {
@@ -29,24 +32,24 @@ class GeneratesResponsesTest extends TestCase
 		$builder->responseCode(ResponseCode::OK);
 
 		$response = $builder->get();
-		self::assertEquals(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
+		static::assertEquals(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	public function testJsonResponse(): void
 	{
 		$response = $this->jsonResponse(['foo' => 'bar'])->get();
-		self::assertEquals(MimeType::ApplicationJson, $response->getMimeType());
-		self::assertEquals('{"foo":"bar"}', $response->getBody()->getContents());
+		static::assertEquals(MimeType::ApplicationJson, $response->getMimeType());
+		static::assertEquals('{"foo":"bar"}', $response->getBody()->getContents());
 	}
 
 	public function testStringResponse(): void
 	{
 		$response = $this->stringResponse('Hello World')->get();
-		self::assertEquals(MimeType::TextPlain, $response->getMimeType());
-		self::assertEquals('Hello World', $response->getBody()->getContents());
+		static::assertEquals(MimeType::TextPlain, $response->getMimeType());
+		static::assertEquals('Hello World', $response->getBody()->getContents());
 	}
 
 	public function testResourceResponse(): void
@@ -55,7 +58,7 @@ class GeneratesResponsesTest extends TestCase
 		fwrite($resource, 'Hello World');
 
 		$response = $this->resourceResponse($resource)->get();
-		self::assertEquals(MimeType::ApplicationOctetStream, $response->getMimeType());
+		static::assertEquals(MimeType::ApplicationOctetStream, $response->getMimeType());
 
 		fclose($resource);
 	}
@@ -63,20 +66,20 @@ class GeneratesResponsesTest extends TestCase
 	public function testFileResponse(): void
 	{
 		$response = $this->fileResponse(__FILE__)->get();
-		self::assertEquals(MimeType::TextXPhp, $response->getMimeType());
-		self::assertEquals(file_get_contents(__FILE__), $response->getBody()->getContents());
+		static::assertEquals(MimeType::TextXPhp, $response->getMimeType());
+		static::assertEquals(file_get_contents(__FILE__), $response->getBody()->getContents());
 	}
 
 	public function testFileNotFoundResponse(): void
 	{
-		$response = $this->fileResponse("/tmp/file-that-does-not-exist")->get();
+		$response = $this->fileResponse('/tmp/file-that-does-not-exist')->get();
 
-		self::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
+		static::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
 	}
 }
 
-//class MeGeneratesResponses
-//{
+// class MeGeneratesResponses
+// {
 //	use GeneratesResponses
 //	{
 //		getDefaultBuilder as public;
@@ -85,4 +88,4 @@ class GeneratesResponsesTest extends TestCase
 //		resourceResponse as public;
 //		stringResponse as public;
 //	}
-//}
+// }

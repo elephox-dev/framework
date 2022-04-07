@@ -12,7 +12,9 @@ use JetBrains\PhpStorm\ArrayShape;
 
 trait HasArrayData
 {
-	/** @var array<string, mixed> */
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $data;
 
 	/**
@@ -86,6 +88,7 @@ trait HasArrayData
 				if ($keys->isEmpty()) {
 					/** @psalm-suppress MixedAssignment */
 					$value = $data;
+
 					return true;
 				}
 			} else {
@@ -117,7 +120,7 @@ trait HasArrayData
 		}
 	}
 
-	#[ArrayShape(['data' => "array"])]
+	#[ArrayShape(['data' => 'array'])]
 	public function __serialize(): array
 	{
 		return [

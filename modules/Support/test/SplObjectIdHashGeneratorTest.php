@@ -10,32 +10,34 @@ use stdClass;
 
 /**
  * @covers \Elephox\Support\SplObjectIdHashGenerator
+ *
+ * @internal
  */
 class SplObjectIdHashGeneratorTest extends MockeryTestCase
 {
-    public function testGenerateHash(): void
-    {
-        $hasHashMock = Mockery::mock(HasHash::class);
+	public function testGenerateHash(): void
+	{
+		$hasHashMock = Mockery::mock(HasHash::class);
 
-        $generator = new SplObjectIdHashGenerator();
+		$generator = new SplObjectIdHashGenerator();
 
-        $a = new stdClass();
-        $b = new stdClass();
+		$a = new stdClass();
+		$b = new stdClass();
 
-        $hashA = $generator->generateHash($a);
-        $hashB = $generator->generateHash($b);
+		$hashA = $generator->generateHash($a);
+		$hashB = $generator->generateHash($b);
 
-        self::assertNotEquals($hashA, $hashB);
+		static::assertNotEquals($hashA, $hashB);
 
-        $hasHashMock
-            ->expects('getHash')
-            ->withNoArgs()
-            ->once()
-            ->andReturn("testhash")
-        ;
+		$hasHashMock
+			->expects('getHash')
+			->withNoArgs()
+			->once()
+			->andReturn('testhash')
+		;
 
-        $testHash = $generator->generateHash($hasHashMock);
+		$testHash = $generator->generateHash($hasHashMock);
 
-        self::assertEquals("testhash", $testHash);
-    }
+		static::assertEquals('testhash', $testHash);
+	}
 }

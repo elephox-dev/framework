@@ -9,23 +9,26 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\StringStream
+ *
+ * @internal
  */
 class StringStreamTest extends TestCase
 {
-	public function testConstructor() {
+	public function testConstructor(): void
+	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals('foo', $stream->getContents());
-		self::assertTrue($stream->isReadable());
-		self::assertTrue($stream->isSeekable());
-		self::assertFalse($stream->isWriteable());
+		static::assertEquals('foo', $stream->getContents());
+		static::assertTrue($stream->isReadable());
+		static::assertTrue($stream->isSeekable());
+		static::assertFalse($stream->isWriteable());
 	}
 
 	public function testToString(): void
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals('foo', (string) $stream);
+		static::assertEquals('foo', (string) $stream);
 	}
 
 	public function testDetach(): void
@@ -54,29 +57,29 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals(3, $stream->getSize());
+		static::assertEquals(3, $stream->getSize());
 	}
 
 	public function testTell(): void
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals(0, $stream->tell());
+		static::assertEquals(0, $stream->tell());
 
 		$stream->read(1);
 
-		self::assertEquals(1, $stream->tell());
+		static::assertEquals(1, $stream->tell());
 	}
 
 	public function testEof(): void
 	{
 		$stream = new StringStream('foo');
 
-		self::assertFalse($stream->eof());
+		static::assertFalse($stream->eof());
 
 		$stream->read(3);
 
-		self::assertTrue($stream->eof());
+		static::assertTrue($stream->eof());
 	}
 
 	public function testSeek(): void
@@ -85,11 +88,11 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1);
 
-		self::assertEquals(1, $stream->tell());
+		static::assertEquals(1, $stream->tell());
 
 		$stream->seek(0);
 
-		self::assertEquals(0, $stream->tell());
+		static::assertEquals(0, $stream->tell());
 	}
 
 	public function testSeekCurOffset(): void
@@ -98,11 +101,11 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1);
 
-		self::assertEquals(1, $stream->tell());
+		static::assertEquals(1, $stream->tell());
 
 		$stream->seek(1, SEEK_CUR);
 
-		self::assertEquals(2, $stream->tell());
+		static::assertEquals(2, $stream->tell());
 	}
 
 	public function testSeekEndOffset(): void
@@ -111,7 +114,7 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1, SEEK_END);
 
-		self::assertEquals(4, $stream->tell());
+		static::assertEquals(4, $stream->tell());
 	}
 
 	public function testSeekNotSeekable(): void
@@ -141,7 +144,7 @@ class StringStreamTest extends TestCase
 
 		$stream->rewind();
 
-		self::assertEquals(0, $stream->tell());
+		static::assertEquals(0, $stream->tell());
 	}
 
 	public function testWrite(): void
@@ -150,7 +153,7 @@ class StringStreamTest extends TestCase
 
 		$stream->write('bar');
 
-		self::assertEquals('foobar', $stream->getContents());
+		static::assertEquals('foobar', $stream->getContents());
 	}
 
 	public function testWriteNotWritable(): void
@@ -166,10 +169,10 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals('foo', $stream->read(3));
-		self::assertEquals(3, $stream->tell());
-		self::assertEquals('', $stream->read(3));
-		self::assertEquals(3, $stream->tell());
+		static::assertEquals('foo', $stream->read(3));
+		static::assertEquals(3, $stream->tell());
+		static::assertEquals('', $stream->read(3));
+		static::assertEquals(3, $stream->tell());
 	}
 
 	public function testReadNotReadable(): void
@@ -185,13 +188,13 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals('foo', $stream->getContents());
+		static::assertEquals('foo', $stream->getContents());
 	}
 
 	public function testGetMetadata(): void
 	{
 		$stream = new StringStream('foo');
 
-		self::assertEquals([], $stream->getMetadata());
+		static::assertEquals([], $stream->getMetadata());
 	}
 }

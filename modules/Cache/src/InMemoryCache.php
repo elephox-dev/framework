@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Cache;
 
-use DateInterval;
 use DateTime;
 use Elephox\Cache\Contract\InMemoryCacheConfiguration;
 use Elephox\Collection\ArrayMap;
-use Exception;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
@@ -26,7 +24,8 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 	private array $deferred = [];
 
 	#[Pure]
-	public function __construct(private InMemoryCacheConfiguration $configuration) {
+	public function __construct(private InMemoryCacheConfiguration $configuration)
+	{
 	}
 
 	/**

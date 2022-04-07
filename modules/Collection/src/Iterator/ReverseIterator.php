@@ -22,7 +22,7 @@ class ReverseIterator implements OuterIterator, Countable
 	 * @param Iterator<TKey, TValue> $iterator
 	 */
 	public function __construct(
-		private Iterator $iterator
+		private Iterator $iterator,
 	) {
 	}
 

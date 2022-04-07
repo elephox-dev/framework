@@ -61,14 +61,14 @@ interface Cookie extends Stringable, ArrayAccess
 	public function getMaxAge(): ?int;
 
 	#[ArrayShape([
-		'name' => "string",
-		'value' => "null|string",
-		'expires' => DateTime::class . "|null",
-		'path' => "null|string",
-		'domain' => "null|string",
-		'secure' => "bool",
-		'httpOnly' => "bool",
-		'sameSite' => CookieSameSite::class . "|null"
+		'name' => 'string',
+		'value' => 'null|string',
+		'expires' => DateTime::class . '|null',
+		'path' => 'null|string',
+		'domain' => 'null|string',
+		'secure' => 'bool',
+		'httpOnly' => 'bool',
+		'sameSite' => CookieSameSite::class . '|null',
 	])]
 	public function toArray(): array;
 }
