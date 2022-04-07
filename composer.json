@@ -23,7 +23,6 @@
         "ext-json": "*",
         "doctrine/orm": "^2.11",
         "elephox/composer-module-sync": "^1.5",
-        "ergebnis/composer-normalize": "^2.23",
         "filp/whoops": "^2.14",
         "infection/infection": "^0.26",
         "mockery/mockery": "^1.5",
@@ -91,8 +90,7 @@
             "Elephox\\OOR\\": "modules/OOR/test/",
             "Elephox\\Stream\\": "modules/Stream/test/",
             "Elephox\\Support\\": "modules/Support/test/",
-            "Elephox\\Web\\": "modules/Web/test/",
-            "Elephox\\Development\\": "development/"
+            "Elephox\\Web\\": "modules/Web/test/"
         }
     },
     "config": {

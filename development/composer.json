@@ -1,0 +1,29 @@
+{
+    "name": "elephox/development",
+    "description": "This folder contains composer packages and an Elephox app for aiding in the development of Elephox.",
+    "license": "MIT",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Ricardo Boss",
+            "email": "contact@ricardoboss.de"
+        }
+    ],
+    "require-dev": {
+        "ergebnis/composer-normalize": "dev-main",
+        "friendsofphp/php-cs-fixer": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Elephox\\Development\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "elephox/composer-module-sync": true,
+            "ergebnis/composer-normalize": true
+        },
+        "bin-dir": "../bin"
+    }
+}

@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Development;
 
-use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\ConsoleApplicationBuilder;
-use Elephox\Console\GlobalConsoleEnvironment;
-use Elephox\DI\ServiceCollection;
 
 class DevConsoleApplicationBuilder extends ConsoleApplicationBuilder
 {
