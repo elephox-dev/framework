@@ -81,23 +81,27 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	public function getRouteHandler(Request $request): RouteHandlerContract
 	{
-		$matchedHandlers = $this->handlers
+		$matchedHandlersGroup = $this->handlers
 			->where(static fn (RouteHandlerContract $handler): bool => $handler->matches($request))
 			->groupBy(static fn (RouteHandlerContract $handler): float => $handler->getMatchScore($request))
 			->orderBy(static fn (Grouping $grouping): mixed => $grouping->groupKey())
 			->firstOrDefault(null)
-			?->toList()
 		;
 
-		if ($matchedHandlers === null) {
+		if ($matchedHandlersGroup === null) {
 			throw new RouteNotFoundException($request);
 		}
 
-		if (count($matchedHandlers) === 1) {
-			return $matchedHandlers[0];
+		$orderedHandlers = $matchedHandlersGroup
+			->orderByDescending(static fn (RouteHandlerContract $handler): int => $handler->getSourceAttribute()->getWeight())
+			->toList()
+		;
+
+		if (count($orderedHandlers) > 1 && $orderedHandlers[0]->getSourceAttribute()->getWeight() === $orderedHandlers[1]->getSourceAttribute()->getWeight()) {
+			throw new AmbiguousRouteHandlerException($request, $orderedHandlers);
 		}
 
-		throw new AmbiguousRouteHandlerException($request, $matchedHandlers);
+		return $orderedHandlers[0];
 	}
 
 	public function add(RouteHandlerContract $handler): static

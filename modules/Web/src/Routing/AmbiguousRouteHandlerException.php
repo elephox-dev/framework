@@ -17,6 +17,6 @@ class AmbiguousRouteHandlerException extends RuntimeException
 	 */
 	public function __construct(public readonly Request $request, public readonly array $routes, int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct("Multiple handlers matched route '{$this->request->getUrl()}': " . implode(', ', $routes), $code, $previous);
+		parent::__construct("Multiple handlers matched route '{$this->request->getUrl()}' and they all have the same weight: " . implode(', ', $routes), $code, $previous);
 	}
 }
