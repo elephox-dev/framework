@@ -19,9 +19,9 @@ class RouteHandler implements Contract\RouteHandler
 	 * @param ControllerAttribute $controllerAttribute
 	 * @param null|RouteAttribute $routeAttribute
 	 * @param class-string $attributeClass
+	 * @param string $attributeMethod
 	 * @param iterable<int, WebMiddleware> $middlewares
 	 * @param Closure(Request): ResponseBuilder $handler
-	 * @param privatereadonlystring $attributeMethod
 	 */
 	public function __construct(
 		private readonly ControllerAttribute $controllerAttribute,
@@ -108,5 +108,10 @@ class RouteHandler implements Contract\RouteHandler
 	public function getAttributeMethod(): string
 	{
 		return $this->attributeMethod;
+	}
+
+	public function getPathRegex(): string
+	{
+		return $this->pathRegex;
 	}
 }

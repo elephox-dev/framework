@@ -24,6 +24,8 @@ interface RouteHandler extends Stringable
 
 	public function getAttributeMethod(): string;
 
+	public function getPathRegex(): string;
+
 	public function getSourceAttribute(): ControllerAttribute;
 
 	/**
