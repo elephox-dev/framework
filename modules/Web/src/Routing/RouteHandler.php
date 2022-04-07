@@ -92,7 +92,7 @@ class RouteHandler implements Contract\RouteHandler
 
 	public function getSourceAttribute(): ControllerAttribute
 	{
-		return $this->controllerAttribute;
+		return $this->routeAttribute ?? $this->controllerAttribute;
 	}
 
 	public function getMiddlewares(): iterable
