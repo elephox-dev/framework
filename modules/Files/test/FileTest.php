@@ -25,6 +25,7 @@ use RuntimeException;
  * @covers \Elephox\Files\FileNotCreatedException
  * @covers \Elephox\Files\FilesystemNodeNotFoundException
  * @covers \Elephox\Files\Path
+ * @covers \Elephox\Files\AbstractFilesystemNode
  *
  * @internal
  */

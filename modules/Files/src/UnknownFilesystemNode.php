@@ -4,27 +4,12 @@ declare(strict_types=1);
 namespace Elephox\Files;
 
 use DateTime;
-use Elephox\Files\Contract\FilesystemNode;
 use Exception;
 use RuntimeException;
 use ValueError;
 
-class UnknownFilesystemNode implements FilesystemNode
+class UnknownFilesystemNode extends AbstractFilesystemNode
 {
-	public function __construct(private readonly string $path)
-	{
-	}
-
-	public function getPath(): string
-	{
-		return $this->path;
-	}
-
-	public function getName(): string
-	{
-		return basename($this->path);
-	}
-
 	public function getModifiedTime(): DateTime
 	{
 		if (!$this->exists()) {

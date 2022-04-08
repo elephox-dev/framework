@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
+use Elephox\Files\FileAlreadyExistsException;
+use Elephox\Files\FileCopyException;
+use Elephox\Files\FileDeleteException;
+use Elephox\Files\FileMoveException;
+use Elephox\Files\FileNotCreatedException;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
 use Elephox\Mimey\MimeTypeInterface;
@@ -18,14 +23,14 @@ interface File extends FilesystemNode, HasHash
 	public function getMimeType(): ?MimeTypeInterface;
 
 	/**
-	 * @throws \Elephox\Files\FileMoveException
-	 * @throws \Elephox\Files\FileAlreadyExistsException
+	 * @throws FileMoveException
+	 * @throws FileAlreadyExistsException
 	 */
 	public function moveTo(FilesystemNode $node, bool $overwrite = true): void;
 
 	/**
-	 * @throws \Elephox\Files\FileCopyException
-	 * @throws \Elephox\Files\FileAlreadyExistsException
+	 * @throws FileCopyException
+	 * @throws FileAlreadyExistsException
 	 */
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): void;
 
@@ -36,12 +41,12 @@ interface File extends FilesystemNode, HasHash
 	public function isExecutable(): bool;
 
 	/**
-	 * @throws \Elephox\Files\FileDeleteException
+	 * @throws FileDeleteException
 	 */
 	public function delete(): void;
 
 	/**
-	 * @throws \Elephox\Files\FileNotCreatedException
+	 * @throws FileNotCreatedException
 	 */
 	public function touch(): void;
 

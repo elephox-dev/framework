@@ -12,9 +12,8 @@ use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
-use ValueError;
 
-class File implements Contract\File
+class File extends AbstractFilesystemNode implements Contract\File
 {
 	public static function openStream(
 		string|Contract\File $file,
@@ -90,21 +89,10 @@ class File implements Contract\File
 
 	#[Pure]
 	public function __construct(
-		private string $path,
-		private ?MimeTypeInterface $mimeType = null,
+		string $path,
+		protected readonly ?MimeTypeInterface $mimeType = null,
 	) {
-	}
-
-	#[Pure]
-	public function getPath(): string
-	{
-		return $this->path;
-	}
-
-	#[Pure]
-	public function getName(): string
-	{
-		return basename($this->path);
+		parent::__construct($path);
 	}
 
 	#[Pure]
@@ -163,15 +151,6 @@ class File implements Contract\File
 		}
 
 		return $hash;
-	}
-
-	public function getParent(int $levels = 1): Contract\Directory
-	{
-		try {
-			return new Directory(dirname($this->path, $levels));
-		} catch (ValueError $error) {
-			throw new InvalidParentLevelException($levels, previous: $error);
-		}
 	}
 
 	#[Pure]

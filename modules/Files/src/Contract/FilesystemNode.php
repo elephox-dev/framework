@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace Elephox\Files\Contract;
 
-use DateTime;
+use DateTimeInterface;
+use Stringable;
 
-interface FilesystemNode
+interface FilesystemNode extends Stringable
 {
 	public function getPath(): string;
 
 	public function getName(): string;
 
-	public function getModifiedTime(): DateTime;
+	public function getModifiedTime(): DateTimeInterface;
 
 	/**
 	 * @param positive-int $levels

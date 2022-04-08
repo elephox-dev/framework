@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Files\Contract;
 
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Files\DirectoryNotCreatedException;
+use Elephox\Files\DirectoryNotEmptyException;
+use Elephox\Files\DirectoryNotFoundException;
+use Elephox\Files\FilesystemNodeNotFoundException;
 
 interface Directory extends FilesystemNode
 {
@@ -19,14 +23,17 @@ interface Directory extends FilesystemNode
 	 */
 	public function getDirectories(): GenericKeyedEnumerable;
 
-	public function getDirectory(string $dirname): ?Directory;
+	public function getDirectory(string $dirname): Directory;
 
 	/**
 	 * @return GenericKeyedEnumerable<int, FilesystemNode>
 	 */
 	public function getChildren(): GenericKeyedEnumerable;
 
-	public function getChild(string $name): ?FilesystemNode;
+	/**
+	 * @throws FilesystemNodeNotFoundException
+	 */
+	public function getChild(string $name): FilesystemNode;
 
 	public function isRoot(): bool;
 
@@ -35,13 +42,13 @@ interface Directory extends FilesystemNode
 	public function isReadonly(): bool;
 
 	/**
-	 * @throws \Elephox\Files\DirectoryNotFoundException
-	 * @throws \Elephox\Files\DirectoryNotEmptyException
+	 * @throws DirectoryNotFoundException
+	 * @throws DirectoryNotEmptyException
 	 */
 	public function delete(bool $recursive = true): void;
 
 	/**
-	 * @throws \Elephox\Files\DirectoryNotCreatedException
+	 * @throws DirectoryNotCreatedException
 	 */
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void;
 }

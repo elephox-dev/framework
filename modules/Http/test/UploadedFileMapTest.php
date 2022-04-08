@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Http\UploadError
  * @covers \Elephox\Support\CustomMimeType
+ * @covers \Elephox\Files\AbstractFilesystemNode
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

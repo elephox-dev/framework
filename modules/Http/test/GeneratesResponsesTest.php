@@ -19,6 +19,7 @@ use JsonException;
  * @covers \Elephox\Support\CustomMimeType
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\File
+ * @covers \Elephox\Files\AbstractFilesystemNode
  *
  * @internal
  */

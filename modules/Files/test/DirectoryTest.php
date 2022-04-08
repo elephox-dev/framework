@@ -21,6 +21,7 @@ use RuntimeException;
  * @covers \Elephox\Collection\KeyedEnumerable
  * @covers \Elephox\Files\FilesystemNodeNotFoundException
  * @covers \Elephox\Files\UnknownFilesystemNode
+ * @covers \Elephox\Files\AbstractFilesystemNode
  *
  * @internal
  */
