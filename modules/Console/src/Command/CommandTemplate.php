@@ -10,7 +10,7 @@ class CommandTemplate
 	/**
 	 * @param string $name
 	 * @param ArrayList<ArgumentTemplate> $argumentTemplates
-	 * @param publicreadonlystring $description
+	 * @param string $description
 	 */
 	public function __construct(
 		public readonly string $name,

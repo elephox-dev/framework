@@ -11,7 +11,7 @@ class CommandTemplateBuilder
 	/**
 	 * @param null|string $name
 	 * @param null|ArrayList<ArgumentTemplate> $arguments
-	 * @param null|private?string $description
+	 * @param null|string $description
 	 */
 	public function __construct(
 		private ?string $name = null,
@@ -41,6 +41,16 @@ class CommandTemplateBuilder
 		$this->arguments->add(new ArgumentTemplate($name, $description, $default, $required));
 
 		return $this;
+	}
+
+	public function optional(string $name, null|string|int|float|bool $default, ?string $description = null): self
+	{
+		return $this->argument($name, $description, $default, false);
+	}
+
+	public function required(string $name, ?string $description = null): self
+	{
+		return $this->argument($name, $description);
 	}
 
 	public function build(): CommandTemplate
