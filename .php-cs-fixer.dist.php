@@ -7,7 +7,7 @@
 $config = new PhpCsFixer\Config();
 return $config
 	->setFinder(PhpCsFixer\Finder::create()
-		->exclude('vendor')
+		->ignoreVCSIgnored(true)
 		->in(__DIR__)
 	)
 	->setRiskyAllowed(true)

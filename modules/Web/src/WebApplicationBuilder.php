@@ -116,7 +116,7 @@ class WebApplicationBuilder
 	public function setDebugModeFromConfig(): void
 	{
 		if ($this->configuration->hasSection('env:debug')) {
-			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
+			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
 		}
 	}
 

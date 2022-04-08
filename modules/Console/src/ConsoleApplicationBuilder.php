@@ -89,14 +89,14 @@ class ConsoleApplicationBuilder
 	public function setEnvNameFromConfig(): void
 	{
 		if ($this->configuration->hasSection('env:name')) {
-			$this->environment->offsetSet('APP_ENV', (string)$this->configuration['env:name']);
+			$this->environment->offsetSet('APP_ENV', (string) $this->configuration['env:name']);
 		}
 	}
 
 	public function setDebugModeFromConfig(): void
 	{
 		if ($this->configuration->hasSection('env:debug')) {
-			$this->environment->offsetSet('APP_DEBUG', (bool)$this->configuration['env:debug']);
+			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
 		}
 	}
 
