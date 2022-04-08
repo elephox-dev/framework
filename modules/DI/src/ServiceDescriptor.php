@@ -36,5 +36,21 @@ class ServiceDescriptor
 		if ($this->lifetime === ServiceLifetime::Transient && $this->implementationFactory === null) {
 			throw new InvalidServiceDescriptorException('Transient service must have implementationFactory set.');
 		}
+
+		if ($this->instance !== null && !$this->instance instanceof $this->implementationType) {
+			throw new InvalidServiceDescriptorException(sprintf(
+				'Instance must be of given implementation type (%s). Given instance is of type %s.',
+				$this->implementationType,
+				get_debug_type($this->instance),
+			));
+		}
+
+		if ($this->instance !== null && !$this->instance instanceof $this->serviceType) {
+			throw new InvalidServiceDescriptorException(sprintf(
+				'Instance must be of given service type (%s). Given instance is of type %s.',
+				$this->serviceType,
+				get_debug_type($this->instance),
+			));
+		}
 	}
 }
