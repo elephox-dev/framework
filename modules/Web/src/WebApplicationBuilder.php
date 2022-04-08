@@ -8,12 +8,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\ConfigurationManager;
-use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
+use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
-use Elephox\DI\Contract\ServiceCollection;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\DI\ServiceCollection;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
@@ -41,7 +41,7 @@ class WebApplicationBuilder
 	): static {
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalWebEnvironment();
-		$services ??= new \Elephox\DI\ServiceCollection();
+		$services ??= new ServiceCollection();
 		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder
 			{
@@ -50,6 +50,9 @@ class WebApplicationBuilder
 		});
 
 		$pipeline->push(new ProcessingTimeHeader());
+
+		$services->addSingleton(Environment::class, implementation: $environment);
+		$services->addSingleton(WebEnvironment::class, implementation: $environment);
 
 		return new static(
 			$configuration,
@@ -60,9 +63,9 @@ class WebApplicationBuilder
 	}
 
 	public function __construct(
-		public readonly ConfigurationBuilder & ConfigurationRoot $configuration,
+		public readonly ConfigurationManagerContract $configuration,
 		public readonly WebEnvironment $environment,
-		public readonly ServiceCollection $services,
+		public readonly ServiceCollectionContract $services,
 		public readonly RequestPipelineBuilder $pipeline,
 	) {
 		$this->registerDefaultExceptionHandler();
