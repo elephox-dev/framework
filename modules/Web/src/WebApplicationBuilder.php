@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\ConfigurationManager;
+use Elephox\Configuration\Contract\Configuration;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Contract\Environment;
@@ -34,9 +35,9 @@ use Whoops\RunInterface as WhoopsRunInterface;
 class WebApplicationBuilder
 {
 	public static function create(
+		?ServiceCollectionContract $services = null,
 		?ConfigurationManagerContract $configuration = null,
 		?WebEnvironment $environment = null,
-		?ServiceCollectionContract $services = null,
 		?RequestPipelineBuilder $pipeline = null,
 	): static {
 		$configuration ??= new ConfigurationManager();
@@ -49,10 +50,10 @@ class WebApplicationBuilder
 			}
 		});
 
-		$pipeline->push(new ProcessingTimeHeader());
-
 		$services->addSingleton(Environment::class, implementation: $environment);
 		$services->addSingleton(WebEnvironment::class, implementation: $environment);
+
+		$services->addSingleton(Configuration::class, implementation: $configuration);
 
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 
@@ -81,6 +82,8 @@ class WebApplicationBuilder
 
 		// Load config.{$ENVIRONMENT}.json, config.{$ENVIRONMENT}.local.json
 		$this->loadEnvironmentConfigFile();
+
+		$this->addDefaultMiddleware();
 	}
 
 	protected function loadDotEnvFile(): void
@@ -130,15 +133,25 @@ class WebApplicationBuilder
 		));
 	}
 
+	protected function addDefaultMiddleware(): void
+	{
+		$this->pipeline->push(new ProcessingTimeHeader());
+	}
+
 	public function build(): WebApplication
 	{
+		$configuration = $this->configuration->build();
+		$this->services->removeService(Configuration::class);
+		$this->services->addSingleton(Configuration::class, implementation: $configuration);
+
 		$builtPipeline = $this->pipeline->build();
 		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline);
 
 		return new WebApplication(
-			$this->environment,
 			$this->services,
-			$this->configuration->build(),
+			$configuration,
+			$this->environment,
+			$builtPipeline,
 		);
 	}
 
@@ -147,8 +160,6 @@ class WebApplicationBuilder
 	 */
 	public function addWhoops(?callable $configurator = null): void
 	{
-		$this->services->removeService(ExceptionHandler::class);
-
 		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class);
 
 		if ($configurator) {
@@ -158,6 +169,8 @@ class WebApplicationBuilder
 		$whoopsExceptionHandler = new WhoopsExceptionHandler(fn () => $this->services->requireService(WhoopsRunInterface::class));
 
 		$this->pipeline->push($whoopsExceptionHandler);
+
+		$this->services->removeService(ExceptionHandler::class);
 		$this->services->addSingleton(ExceptionHandler::class, implementation: $whoopsExceptionHandler);
 	}
 
@@ -204,11 +217,13 @@ class WebApplicationBuilder
 		);
 	}
 
-	public function setRequestRouterEndpoint(): void
+	public function setRequestRouterEndpoint(): RequestRouter
 	{
 		$router = new RequestRouter($this->services);
 		$this->services->addSingleton(RequestRouter::class, implementation: $router);
 		$this->pipeline->endpoint($router);
+
+		return $router;
 	}
 
 	/**

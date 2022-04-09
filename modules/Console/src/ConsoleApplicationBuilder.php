@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Console;
 
 use Elephox\Configuration\ConfigurationManager;
+use Elephox\Configuration\Contract\Configuration;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
@@ -25,9 +26,9 @@ use Whoops\RunInterface as WhoopsRunInterface;
 class ConsoleApplicationBuilder
 {
 	public static function create(
+		?ServiceCollectionContract $services = null,
 		?ConfigurationManager $configuration = null,
 		?ConsoleEnvironment $environment = null,
-		?ServiceCollectionContract $services = null,
 		?CommandCollection $commands = null,
 	): static {
 		$configuration ??= new ConfigurationManager();
@@ -37,6 +38,9 @@ class ConsoleApplicationBuilder
 
 		$services->addSingleton(Environment::class, implementation: $environment);
 		$services->addSingleton(ConsoleEnvironment::class, implementation: $environment);
+
+		$services->addSingleton(Configuration::class, implementation: $configuration);
+
 		$services->addSingleton(CommandCollection::class, implementation: $commands);
 
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
@@ -118,12 +122,15 @@ class ConsoleApplicationBuilder
 
 	public function build(): ConsoleApplication
 	{
-		$this->services->addSingleton(CommandCollection::class, implementation: $this->commands);
+		$configuration = $this->configuration->build();
+		$this->services->removeService(Configuration::class);
+		$this->services->addSingleton(Configuration::class, implementation: $configuration);
 
 		return new ConsoleApplication(
 			$this->services,
+			$configuration,
 			$this->environment,
-			$this->configuration->build(),
+			$this->commands,
 		);
 	}
 

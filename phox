@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Elephox\Console\ConsoleApplicationBuilder;
-use Elephox\Support\Contract\ExceptionHandler;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
@@ -19,5 +18,5 @@ $app = $builder->build();
 try {
 	$app->run();
 } catch (Throwable $e) {
-	$app->services->requireService(ExceptionHandler::class)->handleException($e);
+	$app->exceptionHandler()->handleException($e);
 }
