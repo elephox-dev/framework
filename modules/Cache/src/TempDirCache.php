@@ -20,7 +20,7 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 
 	private int $changes = 0;
 
-	public function __construct(private TempDirCacheConfiguration $configuration)
+	public function __construct(private readonly TempDirCacheConfiguration $configuration)
 	{
 		$this->load();
 	}
