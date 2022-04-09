@@ -7,7 +7,6 @@ use DateTime;
 use Elephox\Cache\Contract\TempDirCacheConfiguration;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
-use Elephox\Stream\StringStream;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 

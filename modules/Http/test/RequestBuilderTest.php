@@ -6,6 +6,7 @@ namespace Elephox\Http;
 use Elephox\Http\Contract\Request as RequestContract;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use JsonException;
 
 /**
  * @covers \Elephox\Http\RequestBuilder
@@ -26,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 class RequestBuilderTest extends TestCase
 {
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	public function testBuild(): void
 	{
