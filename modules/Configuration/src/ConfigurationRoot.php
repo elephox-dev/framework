@@ -9,7 +9,10 @@ use JetBrains\PhpStorm\Pure;
 
 class ConfigurationRoot implements Contract\ConfigurationRoot
 {
-	use ConfiguresConfigurationProviders;
+	use ConfiguresConfigurationProviders {
+		offsetGet as protected innerOffsetGet;
+	}
+	use SubstitutesEnvironmentVariables;
 
 	/**
 	 * @param ObjectSet<Contract\ConfigurationProvider> $providers
@@ -28,5 +31,16 @@ class ConfigurationRoot implements Contract\ConfigurationRoot
 	protected function getRoot(): Contract\ConfigurationRoot
 	{
 		return $this;
+	}
+
+	public function offsetGet(mixed $offset): string|int|float|bool|null
+	{
+		$value = $this->innerOffsetGet($offset);
+
+		if (is_string($value)) {
+			return $this->substituteEnvironmentVariables($value);
+		}
+
+		return $value;
 	}
 }
