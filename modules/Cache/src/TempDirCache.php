@@ -140,7 +140,7 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 		$this->getCacheDir()->ensureExists();
 
 		$file = $this->getCacheDir()->getFile($this->getCacheId());
-		$file->putContents(StringStream::from(serialize($this->items)));
+		$file->putContents(serialize($this->items));
 
 		$classes = array_unique(
 			array_merge(
@@ -151,9 +151,8 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 				[CacheItemInterface::class],
 			),
 		);
-		$classesStream = StringStream::from(serialize($classes));
 		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . '.classes');
-		$classesFile->putContents($classesStream);
+		$classesFile->putContents(serialize($classes));
 
 		$this->changes = 0;
 	}

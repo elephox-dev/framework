@@ -386,7 +386,7 @@ class FileTest extends MockeryTestCase
 			->andReturn(true)
 		;
 
-		$file->putContents($streamMock);
+		$file->writeStream($streamMock);
 		$file->delete();
 	}
 

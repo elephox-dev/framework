@@ -8,6 +8,7 @@ use Elephox\Files\Contract\FilesystemNode;
 use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
+use Elephox\Stream\StringStream;
 use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
@@ -260,12 +261,17 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return self::openStream($this, true, $writeable, $writeable, $writeable);
 	}
 
-	public function putContents(Stream $contents, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
+	public function writeStream(Stream $contents, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
 	{
 		$stream = self::openStream($this, false, true, true, false, true);
 
 		while (!$contents->eof()) {
 			$stream->write($contents->read($chunkSize));
 		}
+	}
+
+	public function putContents(string $contents): void
+	{
+		$this->writeStream(new StringStream($contents));
 	}
 }
