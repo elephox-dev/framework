@@ -148,6 +148,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new ServiceNotFoundException($serviceName);
 		}
 
+		if ($descriptor->lifetime === ServiceLifetime::Singleton && $descriptor->instance !== null) {
+			return $descriptor->instance;
+		}
+
 		/** @var Closure(mixed): TService $factory */
 		$factory = $this->getImplementationFactory($descriptor);
 
