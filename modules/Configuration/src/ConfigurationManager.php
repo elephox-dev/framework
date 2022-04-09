@@ -14,7 +14,10 @@ use Elephox\Configuration\Memory\MemoryConfigurationSource;
 class ConfigurationManager implements Contract\ConfigurationManager
 {
 	use BuildsConfigurationRoot;
-	use ConfiguresConfigurationProviders;
+	use ConfiguresConfigurationProviders {
+		offsetGet as protected innerOffsetGet;
+	}
+	use SubstitutesEnvironmentVariables;
 
 	protected ObjectSet $configurationSources;
 
@@ -55,5 +58,16 @@ class ConfigurationManager implements Contract\ConfigurationManager
 	protected function getRoot(): ConfigurationRoot
 	{
 		return $this;
+	}
+
+	public function offsetGet(mixed $offset): string|int|float|bool|null
+	{
+		$value = $this->innerOffsetGet($offset);
+
+		if (is_string($value)) {
+			return $this->substituteEnvironmentVariables($value);
+		}
+
+		return $value;
 	}
 }
