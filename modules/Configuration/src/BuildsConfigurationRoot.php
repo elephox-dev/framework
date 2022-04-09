@@ -13,8 +13,6 @@ trait BuildsConfigurationRoot
 	 */
 	abstract protected function getSources(): iterable;
 
-	abstract protected function getBuilder(): Contract\ConfigurationBuilder;
-
 	public function build(): Contract\ConfigurationRoot
 	{
 		/** @var ObjectSet<Contract\ConfigurationProvider> $providers */

@@ -5,7 +5,6 @@ namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\ObjectSet;
-use Elephox\Configuration\Contract\ConfigurationBuilder;
 use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Contract\ConfigurationSource;
@@ -47,11 +46,6 @@ class ConfigurationManager implements Contract\ConfigurationManager
 	{
 		$this->configurationSources->add($source);
 
-		return $this;
-	}
-
-	protected function getBuilder(): ConfigurationBuilder
-	{
 		return $this;
 	}
 

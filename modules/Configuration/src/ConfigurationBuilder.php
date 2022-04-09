@@ -35,9 +35,4 @@ class ConfigurationBuilder implements Contract\ConfigurationBuilder
 
 		return $this;
 	}
-
-	protected function getBuilder(): Contract\ConfigurationBuilder
-	{
-		return $this;
-	}
 }
