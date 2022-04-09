@@ -31,9 +31,9 @@ interface MessageBuilder
 	public function fileBody(string $path): static;
 
 	/**
-	 * @param list<string> $value
+	 * @param string|list<string> $value
 	 */
-	public function header(string $name, array $value): static;
+	public function header(string $name, string|array $value): static;
 
 	public function headerMap(HeaderMap $headers): static;
 

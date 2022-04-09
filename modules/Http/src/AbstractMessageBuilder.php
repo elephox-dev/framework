@@ -80,13 +80,13 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body(File::openStream($path));
 	}
 
-	public function header(string $name, array $value): static
+	public function header(string $name, string|array $value): static
 	{
 		if ($this->headers === null) {
 			$this->headers = new HeaderMap();
 		}
 
-		$this->headers->put($name, $value);
+		$this->headers->put($name, is_array($value) ? $value : [$value]);
 
 		return $this;
 	}

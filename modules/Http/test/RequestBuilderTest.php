@@ -25,6 +25,9 @@ use PHPUnit\Framework\TestCase;
  */
 class RequestBuilderTest extends TestCase
 {
+	/**
+	 * @throws \JsonException
+	 */
 	public function testBuild(): void
 	{
 		$builder = Request::build();
@@ -32,8 +35,8 @@ class RequestBuilderTest extends TestCase
 		$builder->requestUrl(Url::fromString('https://example.com/'));
 		$builder->protocolVersion('2.0');
 		$builder->jsonBody(['foo' => 'bar']);
-		$builder->header('X-Foo', ['bar']);
-		$builder->header('X-Bar', ['baz']);
+		$builder->header('X-Foo', 'bar');
+		$builder->header('X-Bar', 'baz');
 
 		$request = $builder->get();
 		static::assertInstanceOf(RequestContract::class, $request);
