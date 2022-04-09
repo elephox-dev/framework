@@ -2,13 +2,13 @@
 <?php
 declare(strict_types=1);
 
-use Elephox\Development\DevConsoleApplicationBuilder;
+use Elephox\Console\ConsoleApplicationBuilder;
 use Elephox\Support\Contract\ExceptionHandler;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
 
-$builder = DevConsoleApplicationBuilder::create()
+$builder = ConsoleApplicationBuilder::create()
 	->addLogging()
 	->addWhoops()
 ;

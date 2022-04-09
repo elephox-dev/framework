@@ -54,6 +54,8 @@ class WebApplicationBuilder
 		$services->addSingleton(Environment::class, implementation: $environment);
 		$services->addSingleton(WebEnvironment::class, implementation: $environment);
 
+		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+
 		return new static(
 			$configuration,
 			$environment,
@@ -68,19 +70,30 @@ class WebApplicationBuilder
 		public readonly ServiceCollectionContract $services,
 		public readonly RequestPipelineBuilder $pipeline,
 	) {
-		$this->registerDefaultExceptionHandler();
-		$this->registerDefaultConfig();
-		$this->setEnvNameFromConfig();
-		$this->registerOptionalConfig();
-		$this->setDebugModeFromConfig();
+		// Load .env, .env.local
+		$this->loadDotEnvFile();
+
+		// Load config.json, config.local.json
+		$this->loadConfigFile();
+
+		// Load .env.{$ENVIRONMENT}, .env.{$ENVIRONMENT}.local
+		$this->loadEnvironmentDotEnvFile();
+
+		// Load config.{$ENVIRONMENT}.json, config.{$ENVIRONMENT}.local.json
+		$this->loadEnvironmentConfigFile();
 	}
 
-	protected function registerDefaultExceptionHandler(): void
+	protected function loadDotEnvFile(): void
 	{
-		$this->services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+		$this->environment->loadFromEnvFile();
 	}
 
-	public function registerDefaultConfig(): void
+	protected function loadEnvironmentDotEnvFile(): void
+	{
+		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName());
+	}
+
+	protected function loadConfigFile(): void
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
@@ -88,9 +101,17 @@ class WebApplicationBuilder
 				->getFile('config.json')
 				->getPath(),
 		));
+
+		$this->configuration->add(new JsonFileConfigurationSource(
+			$this->environment
+				->getRootDirectory()
+				->getFile('config.local.json')
+				->getPath(),
+			true,
+		));
 	}
 
-	public function registerOptionalConfig(): void
+	protected function loadEnvironmentConfigFile(): void
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
@@ -103,24 +124,10 @@ class WebApplicationBuilder
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
-				->getFile('config.local.json')
+				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
 				->getPath(),
 			true,
 		));
-	}
-
-	public function setEnvNameFromConfig(): void
-	{
-		if ($this->configuration->hasSection('env:name')) {
-			$this->environment->offsetSet('APP_ENV', (string) $this->configuration['env:name']);
-		}
-	}
-
-	public function setDebugModeFromConfig(): void
-	{
-		if ($this->configuration->hasSection('env:debug')) {
-			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
-		}
 	}
 
 	public function build(): WebApplication

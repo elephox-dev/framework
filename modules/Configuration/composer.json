@@ -14,7 +14,8 @@
         "elephox/collection": "dev-develop",
         "elephox/files": "dev-develop",
         "elephox/oor": "dev-develop",
-        "jetbrains/phpstorm-attributes": "^1.0"
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "vlucas/phpdotenv": "^5.4"
     },
     "autoload": {
         "psr-4": {

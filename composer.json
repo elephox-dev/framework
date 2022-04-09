@@ -17,7 +17,8 @@
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
-        "ricardoboss/php-console-logger": "^1.9"
+        "ricardoboss/php-console-logger": "^1.9",
+        "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
         "ext-json": "*",
@@ -57,8 +58,7 @@
         "ext-fileinfo": "To use MimeType::fromFile()",
         "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())",
         "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
-        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage",
-        "php-coveralls/php-coveralls": "To submit coverage reports to Coveralls.io"
+        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -82,9 +82,12 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Elephox\\Autoloading\\": "modules/Autoloading/test/",
             "Elephox\\Cache\\": "modules/Cache/test/",
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\Configuration\\": "modules/Configuration/test/",
+            "Elephox\\Console\\": "modules/Console/test/",
+            "Elephox\\DI\\": "modules/DI/test/",
             "Elephox\\Events\\": "modules/Events/test/",
             "Elephox\\Files\\": "modules/Files/test/",
             "Elephox\\Http\\": "modules/Http/test/",

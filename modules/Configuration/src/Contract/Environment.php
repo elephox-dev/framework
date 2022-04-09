@@ -11,6 +11,8 @@ use Elephox\Files\Contract\Directory;
  */
 interface Environment extends ArrayAccess
 {
+	public function loadFromEnvFile(?string $envName = null): void;
+
 	public function getEnvironmentName(): string;
 
 	public function getRootDirectory(): Directory;

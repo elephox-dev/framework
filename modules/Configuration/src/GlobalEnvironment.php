@@ -3,17 +3,30 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
+use Dotenv\Dotenv;
 use Elephox\Files\Directory;
 use InvalidArgumentException;
 use RuntimeException;
 
 class GlobalEnvironment implements Contract\Environment
 {
-	public const ENV_NAME = 'APP_ENV';
-
-	public function getEnvironmentName(string $envName = self::ENV_NAME): string
+	public function loadFromEnvFile(?string $envName = null): void
 	{
-		$env = $this[$envName];
+		$envFile = '.env';
+		if ($envName !== null) {
+			$envFile .= '.' . $envName;
+		}
+
+		$dotenv = Dotenv::createImmutable($this->getRootDirectory()->getPath(), $envFile);
+		$dotenv->safeLoad();
+
+		$dotenvLocal = Dotenv::createImmutable($this->getRootDirectory()->getPath(), $envFile . '.local');
+		$dotenvLocal->safeLoad();
+	}
+
+	public function getEnvironmentName(): string
+	{
+		$env = $this['APP_ENV'];
 		if (is_string($env)) {
 			return $env;
 		}
@@ -27,6 +40,10 @@ class GlobalEnvironment implements Contract\Environment
 			return new Directory(APP_ROOT);
 		}
 
+		if ($this->offsetExists('APP_ROOT')) {
+			return new Directory((string) $this['APP_ROOT']);
+		}
+
 		$cwd = getcwd();
 		if (!$cwd) {
 			throw new RuntimeException('Cannot get current working directory');
@@ -35,22 +52,23 @@ class GlobalEnvironment implements Contract\Environment
 		return new Directory($cwd);
 	}
 
-	public function isDevelopment(string $envName = self::ENV_NAME): bool
+	public function isDevelopment(): bool
 	{
 		if ($this->offsetExists('APP_DEBUG')) {
 			return (bool) $this['APP_DEBUG'];
 		}
 
-		return in_array($this->getEnvironmentName($envName), ['dev', 'local', 'debug', 'development'], true);
+		return in_array($this->getEnvironmentName(), ['dev', 'local', 'debug', 'development'], true);
 	}
 
 	public function offsetExists(mixed $offset): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		return isset($_ENV[$offset]) || getenv($offset) !== false;
+		return isset($_ENV[$offset]);
 	}
 
 	/**
@@ -58,40 +76,32 @@ class GlobalEnvironment implements Contract\Environment
 	 */
 	public function offsetGet(mixed $offset): mixed
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		if (isset($_ENV[$offset])) {
-			/** @psalm-suppress MixedReturnStatement */
-			return $_ENV[$offset];
-		}
-
-		$value = getenv($offset);
-		if ($value === false) {
-			return null;
-		}
-
-		return $value;
+		/** @psalm-suppress MixedReturnStatement */
+		return $_ENV[$offset] ?? null;
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		putenv($offset . '=' . $value);
 		$_ENV[$offset] = $value;
 	}
 
 	public function offsetUnset(mixed $offset): void
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		putenv($offset);
 		unset($_ENV[$offset]);
 	}
 }

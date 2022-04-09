@@ -39,6 +39,8 @@ class ConsoleApplicationBuilder
 		$services->addSingleton(ConsoleEnvironment::class, implementation: $environment);
 		$services->addSingleton(CommandCollection::class, implementation: $commands);
 
+		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+
 		return new static(
 			$configuration,
 			$environment,
@@ -53,34 +55,35 @@ class ConsoleApplicationBuilder
 		public readonly ServiceCollectionContract $services,
 		public readonly CommandCollection $commands,
 	) {
-		$this->registerDefaultExceptionHandler();
-		$this->registerDefaultConfig();
-		$this->setEnvNameFromConfig();
-		$this->registerOptionalConfig();
-		$this->setDebugModeFromConfig();
+		// Load .env, .env.local
+		$this->loadDotEnvFile();
+
+		// Load config.json, config.local.json
+		$this->loadConfigFile();
+
+		// Load .env.{$ENVIRONMENT}, .env.{$ENVIRONMENT}.local
+		$this->loadEnvironmentDotEnvFile();
+
+		// Load config.{$ENVIRONMENT}.json, config.{$ENVIRONMENT}.local.json
+		$this->loadEnvironmentConfigFile();
 	}
 
-	protected function registerDefaultExceptionHandler(): void
+	protected function loadDotEnvFile(): void
 	{
-		$this->services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+		$this->environment->loadFromEnvFile();
 	}
 
-	protected function registerDefaultConfig(): void
+	protected function loadEnvironmentDotEnvFile(): void
+	{
+		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName());
+	}
+
+	protected function loadConfigFile(): void
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
 				->getRootDirectory()
 				->getFile('config.json')
-				->getPath(),
-		));
-	}
-
-	protected function registerOptionalConfig(): void
-	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getRootDirectory()
-				->getFile("config.{$this->environment->getEnvironmentName()}.json")
 				->getPath(),
 			true,
 		));
@@ -94,18 +97,23 @@ class ConsoleApplicationBuilder
 		));
 	}
 
-	public function setEnvNameFromConfig(): void
+	protected function loadEnvironmentConfigFile(): void
 	{
-		if ($this->configuration->hasSection('env:name')) {
-			$this->environment->offsetSet('APP_ENV', (string) $this->configuration['env:name']);
-		}
-	}
+		$this->configuration->add(new JsonFileConfigurationSource(
+			$this->environment
+				->getRootDirectory()
+				->getFile("config.{$this->environment->getEnvironmentName()}.json")
+				->getPath(),
+			true,
+		));
 
-	public function setDebugModeFromConfig(): void
-	{
-		if ($this->configuration->hasSection('env:debug')) {
-			$this->environment->offsetSet('APP_DEBUG', (bool) $this->configuration['env:debug']);
-		}
+		$this->configuration->add(new JsonFileConfigurationSource(
+			$this->environment
+				->getRootDirectory()
+				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
+				->getPath(),
+			true,
+		));
 	}
 
 	public function build(): ConsoleApplication

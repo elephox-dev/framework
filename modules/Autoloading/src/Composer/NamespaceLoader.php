@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Autoloading\Composer;
 
+use Composer\Autoload\ClassLoader;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
@@ -10,38 +11,31 @@ use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
 use Elephox\OOR\Regex;
 use Elephox\Autoloading\Composer\Contract\ComposerAutoloaderInit;
-use Elephox\Autoloading\Composer\Contract\ComposerClassLoader;
 use RuntimeException;
 
 class NamespaceLoader
 {
-	/**
-	 * @var null|ComposerClassLoader
-	 */
-	private static ?object $classLoader = null;
+	private static ?ClassLoader $classLoader = null;
 
-	/**
-	 * @return ComposerClassLoader
-	 */
-	private static function getClassLoader(): object
+	private static function getClassLoader(): ClassLoader
 	{
 		if (self::$classLoader === null) {
-			/** @var null|class-string<ComposerAutoloaderInit> $autoloaderClassName */
-			$autoloaderClassName = null;
+			/** @var null|class-string<ComposerAutoloaderInit> $autoloaderInitClassName */
+			$autoloaderInitClassName = null;
 			foreach (get_declared_classes() as $class) {
 				if (str_starts_with($class, 'ComposerAutoloaderInit')) {
-					$autoloaderClassName = $class;
+					$autoloaderInitClassName = $class;
 
 					break;
 				}
 			}
 
-			if ($autoloaderClassName === null) {
+			if ($autoloaderInitClassName === null) {
 				throw new RuntimeException('Could not find ComposerAutoloaderInit class. Did you install the dependencies using composer?');
 			}
 
-			/** @var ComposerClassLoader */
-			self::$classLoader = call_user_func([$autoloaderClassName, 'getLoader']);
+			/** @var ClassLoader */
+			self::$classLoader = call_user_func([$autoloaderInitClassName, 'getLoader']);
 		}
 
 		return self::$classLoader;
@@ -52,8 +46,7 @@ class NamespaceLoader
 	 */
 	public static function iterateNamespace(string $namespace, callable $callback): void
 	{
-		$classLoader = self::getClassLoader();
-		$prefixDirMap = ArrayMap::from($classLoader->getPrefixesPsr4())
+		$prefixDirMap = ArrayMap::from(self::getClassLoader()->getPrefixesPsr4())
 			->select(
 				static fn (array $dirs): GenericKeyedEnumerable => ArrayList::from($dirs)
 					->select(static fn (string $dir): DirectoryContract => new Directory($dir)),
@@ -74,7 +67,7 @@ class NamespaceLoader
 			foreach ($dirs as $dir) {
 				/** @var ArrayList<string> $partsUsed */
 				$partsUsed = new ArrayList();
-				self::iterateClassesRecursive($root, $parts, $partsUsed, $dir, $classLoader, $callback);
+				self::iterateClassesRecursive($root, $parts, $partsUsed, $dir, $callback);
 				assert($partsUsed->isEmpty());
 			}
 		}
@@ -83,12 +76,11 @@ class NamespaceLoader
 	/**
 	 * @param ArrayList<string> $nsParts
 	 * @param ArrayList<string> $nsPartsUsed
-	 * @param ComposerClassLoader $classLoader
 	 * @param callable(class-string): void $callback
 	 *
 	 * @noinspection PhpDocSignatureInspection
 	 */
-	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, object $classLoader, callable $callback, int $depth = 0): void
+	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, callable $callback, int $depth = 0): void
 	{
 		if ($depth > 10) {
 			throw new RuntimeException('Recursion limit exceeded. Please choose a more specific namespace.');
@@ -101,7 +93,7 @@ class NamespaceLoader
 				continue;
 			}
 
-			self::iterateClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $classLoader, $callback, $depth + 1);
+			self::iterateClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $callback, $depth + 1);
 		}
 
 		if ($lastPart === '') {
@@ -118,7 +110,9 @@ class NamespaceLoader
 				 */
 				$fqcn = $rootNs . '\\' . implode('\\', $nsPartsUsed->toList()) . $className;
 
-				$classLoader->loadClass($fqcn);
+				if (!class_exists($fqcn, false)) {
+					self::getClassLoader()->loadClass($fqcn);
+				}
 
 				$callback($fqcn);
 			}
