@@ -16,15 +16,14 @@ trait SubstitutesEnvironmentVariables
 
 	protected function substituteEnvironmentVariables(string $value): string
 	{
-		preg_match_all('/(?<!\$)\$\{([^\}]+)\}/m', $value, $matches);
+		// Replace unescaped environment variables with their values (${ENV_VAR} => value)
+		$value = preg_replace_callback('/(?<!\$)\${([^}]+)}/m', function (array $match) {
+			$substitute = $this->getEnvSubstitute($match[1]);
 
-		foreach ($matches[1] as $match) {
-			$substitute = $this->getEnvSubstitute($match);
-			if ($substitute !== null) {
-				$value = str_replace('${' . $match . '}', $substitute, $value);
-			}
-		}
+			return $substitute ?? $match[0];
+		}, $value);
 
-		return $value;
+		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})
+		return preg_replace_callback('/\$(\${[^}]+})/m', static fn (array $match) => $match[1], $value);
 	}
 }
