@@ -176,4 +176,17 @@ class ConfigurationRootTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$root->offsetGet(123);
 	}
+
+	public function testSubstitutesEnvironmentVariables(): void
+	{
+		$configBuilder = new ConfigurationBuilder();
+		$configBuilder->add(new MemoryConfigurationSource(['test' => 'this is an env value: ${TEST_VAR}', 'test2' => 'this env should not be replaced: $${TEST_VAR}', 'test3' => 'this env should remain: ${NOT_A_VAR}']));
+		$root = $configBuilder->build();
+
+		$_ENV['TEST_VAR'] = 'secret!';
+
+		static::assertEquals('this is an env value: secret!', $root->getSection('test')->getValue());
+		static::assertEquals('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
+		static::assertEquals('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
+	}
 }
