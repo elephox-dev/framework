@@ -8,7 +8,7 @@ use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\OOR\Str;
 
 /**
- * @extends ArrayAccess<string, string|int|float|bool|null>
+ * @extends ArrayAccess<string, array|string|int|float|bool|null>
  */
 interface Configuration extends ArrayAccess
 {
@@ -26,8 +26,5 @@ interface Configuration extends ArrayAccess
 
 	public function getSection(string|Str $key): ConfigurationSection;
 
-	/**
-	 * @return scalar|null
-	 */
-	public function offsetGet(mixed $offset): string|int|float|bool|null;
+	public function offsetGet(mixed $offset): array|string|int|float|bool|null;
 }
