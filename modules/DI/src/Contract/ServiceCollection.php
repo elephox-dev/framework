@@ -26,7 +26,7 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
+	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object
@@ -35,10 +35,11 @@ interface ServiceCollection
 	 * @param class-string<TService> $serviceName
 	 * @param class-string<TImplementation> $implementationName
 	 * @param Closure(mixed): TImplementation $implementationFactory
+	 * @param TImplementation|null $implementation
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 */
-	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory): ServiceCollection;
+	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object
@@ -52,7 +53,7 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
+	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object

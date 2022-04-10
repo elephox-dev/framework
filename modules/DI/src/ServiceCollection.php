@@ -384,7 +384,20 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
-		$this->services->removeBy(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName);
+		$this->services->removeBy(function (ServiceDescriptor $d) use ($serviceName) {
+			if ($d->serviceType !== $serviceName && $d->implementationType !== $serviceName) {
+				return false;
+			}
+
+			unset(
+				$this->descriptorCache[$d->serviceType],
+				$this->factoryCache[$d->serviceType],
+				$this->descriptorCache[$d->implementationType],
+				$this->factoryCache[$d->implementationType],
+			);
+
+			return true;
+		});
 
 		return $this;
 	}

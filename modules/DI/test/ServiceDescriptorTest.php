@@ -11,6 +11,8 @@ use stdClass;
 /**
  * @covers \Elephox\DI\ServiceDescriptor
  * @covers \Elephox\DI\InvalidServiceDescriptorException
+ *
+ * @internal
  */
 class ServiceDescriptorTest extends TestCase
 {
@@ -18,7 +20,7 @@ class ServiceDescriptorTest extends TestCase
 	{
 		$sd = new ServiceDescriptor(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, new TestServiceClass());
 
-		self::assertInstanceOf(TestServiceInterface::class, $sd->instance);
+		static::assertInstanceOf(TestServiceInterface::class, $sd->instance);
 	}
 
 	public function testEitherFactoryOrInstanceMustBeSet(): void

@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable
  * @uses \Elephox\DI\ServiceResolver
+ *
+ * @internal
  */
 class ServiceCollectionTest extends TestCase
 {
@@ -24,8 +26,8 @@ class ServiceCollectionTest extends TestCase
 	{
 		$container = new ServiceCollection();
 
-		self::assertTrue($container->has(Contract\ServiceCollection::class));
-		self::assertTrue($container->has(Contract\Resolver::class));
+		static::assertTrue($container->has(Contract\ServiceCollection::class));
+		static::assertTrue($container->has(Contract\Resolver::class));
 	}
 
 	public function testDescribeSingletonInstance(): void
@@ -34,52 +36,52 @@ class ServiceCollectionTest extends TestCase
 		$instance = new TestServiceClass();
 		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instance);
 
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
-		self::assertSame($instance, $container->get(TestServiceInterface::class));
-		self::assertSame($instance, $container->get(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
+		static::assertSame($instance, $container->get(TestServiceInterface::class));
+		static::assertSame($instance, $container->get(TestServiceClass::class));
 	}
 
 	public function testDescribeSingletonFactory(): void
 	{
 		$container = new ServiceCollection();
-		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, fn () => new TestServiceClass());
+		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, static fn () => new TestServiceClass());
 
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
 		$a = $container->get(TestServiceInterface::class);
 		$b = $container->get(TestServiceInterface::class);
 		$c = $container->get(TestServiceClass::class);
-		self::assertSame($a, $b);
-		self::assertSame($a, $c);
+		static::assertSame($a, $b);
+		static::assertSame($a, $c);
 	}
 
 	public function testDescribeTransientFactory(): void
 	{
 		$container = new ServiceCollection();
-		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Transient, fn () => new TestServiceClass());
+		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Transient, static fn () => new TestServiceClass());
 
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
 		$a = $container->get(TestServiceInterface::class);
 		$b = $container->get(TestServiceInterface::class);
 		$c = $container->get(TestServiceClass::class);
-		self::assertNotSame($a, $b);
-		self::assertNotSame($a, $c);
-		self::assertNotSame($b, $c);
+		static::assertNotSame($a, $b);
+		static::assertNotSame($a, $c);
+		static::assertNotSame($b, $c);
 	}
 
 	public function testAlias(): void
 	{
 		$container = new ServiceCollection();
-		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, fn () => new TestServiceClass());
+		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, static fn () => new TestServiceClass());
 		$container->setAlias('test', TestServiceClass::class);
 
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
-		self::assertTrue($container->has('test'));
-		self::assertSame($container->get('test'), $container->get(TestServiceClass::class));
-		self::assertSame($container->get('test'), $container->get(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has('test'));
+		static::assertSame($container->get('test'), $container->get(TestServiceClass::class));
+		static::assertSame($container->get('test'), $container->get(TestServiceInterface::class));
 	}
 
 	public function testDescribeServiceAgain(): void
@@ -89,30 +91,56 @@ class ServiceCollectionTest extends TestCase
 		$instanceB = new TestServiceClass();
 		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instanceA);
 
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
 		$a = $container->get(TestServiceInterface::class);
 		$b = $container->get(TestServiceClass::class);
 
-		self::assertSame($instanceA, $a);
-		self::assertSame($instanceA, $b);
+		static::assertSame($instanceA, $a);
+		static::assertSame($instanceA, $b);
 
 		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instanceB);
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
 		$c = $container->get(TestServiceInterface::class);
 		$d = $container->get(TestServiceClass::class);
 
-		self::assertSame($instanceA, $c);
-		self::assertSame($instanceA, $d);
+		static::assertSame($instanceA, $c);
+		static::assertSame($instanceA, $d);
 
 		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instanceB, true);
-		self::assertTrue($container->has(TestServiceInterface::class));
-		self::assertTrue($container->has(TestServiceClass::class));
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
 		$e = $container->get(TestServiceInterface::class);
 		$f = $container->get(TestServiceClass::class);
 
-		self::assertSame($instanceB, $e);
-		self::assertSame($instanceB, $f);
+		static::assertSame($instanceB, $e);
+		static::assertSame($instanceB, $f);
+	}
+
+	public function testRemove(): void
+	{
+		$container = new ServiceCollection();
+		$instanceA = new TestServiceClass();
+
+		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instanceA);
+
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
+
+		$container->remove(TestServiceInterface::class);
+
+		static::assertFalse($container->has(TestServiceInterface::class));
+		static::assertFalse($container->has(TestServiceClass::class));
+
+		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instanceA);
+
+		static::assertTrue($container->has(TestServiceInterface::class));
+		static::assertTrue($container->has(TestServiceClass::class));
+
+		$container->remove(TestServiceClass::class);
+
+		static::assertFalse($container->has(TestServiceInterface::class));
+		static::assertFalse($container->has(TestServiceClass::class));
 	}
 }
