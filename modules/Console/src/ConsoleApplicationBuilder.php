@@ -123,8 +123,7 @@ class ConsoleApplicationBuilder
 	public function build(): ConsoleApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->removeService(Configuration::class);
-		$this->services->addSingleton(Configuration::class, implementation: $configuration);
+		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
 
 		return new ConsoleApplication(
 			$this->services,
@@ -161,9 +160,8 @@ class ConsoleApplicationBuilder
 
 	public function addWhoops(): self
 	{
-		$this->services->removeService(ExceptionHandler::class);
 		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class);
-		$this->services->addSingleton(ExceptionHandler::class, WhoopsExceptionHandler::class);
+		$this->services->addSingleton(ExceptionHandler::class, WhoopsExceptionHandler::class, replace: true);
 
 		return $this;
 	}

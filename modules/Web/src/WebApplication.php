@@ -61,11 +61,7 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
-		// remove any previous request instance
-		$this->services->removeService(RequestContract::class);
-
-		// add current request instance
-		$this->services->addSingleton(RequestContract::class, implementation: $request);
+		$this->services->addSingleton(RequestContract::class, implementation: $request, replace: true);
 
 		return $this->pipeline->process($request)->get();
 	}

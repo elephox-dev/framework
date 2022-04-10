@@ -141,8 +141,7 @@ class WebApplicationBuilder
 	public function build(): WebApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->removeService(Configuration::class);
-		$this->services->addSingleton(Configuration::class, implementation: $configuration);
+		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
 
 		$builtPipeline = $this->pipeline->build();
 		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline);
@@ -170,8 +169,7 @@ class WebApplicationBuilder
 
 		$this->pipeline->push($whoopsExceptionHandler);
 
-		$this->services->removeService(ExceptionHandler::class);
-		$this->services->addSingleton(ExceptionHandler::class, implementation: $whoopsExceptionHandler);
+		$this->services->addSingleton(ExceptionHandler::class, implementation: $whoopsExceptionHandler, replace: true);
 	}
 
 	/**
@@ -200,27 +198,23 @@ class WebApplicationBuilder
 					);
 				};
 
-				/**
-				 * @psalm-suppress ArgumentTypeCoercion
-				 */
+				/** @psalm-suppress ArgumentTypeCoercion */
 				$setupConfig = $this->services->resolver()->callback($setup);
 				$connection = $configuration['doctrine:connection'];
 				if ($connection === null) {
 					throw new ConfigurationException('No doctrine connection specified at "doctrine:connection"');
 				}
 
-				/**
-				 * @psalm-suppress InvalidArgument
-				 */
+				/** @psalm-suppress MixedArgumentTypeCoercion */
 				return EntityManager::create($connection, $setupConfig);
 			},
 		);
 	}
 
-	public function setRequestRouterEndpoint(): RequestRouter
+	public function setRequestRouterEndpoint(?RequestRouter $router = null): RequestRouter
 	{
-		$router = new RequestRouter($this->services);
-		$this->services->addSingleton(RequestRouter::class, implementation: $router);
+		$router ??= new RequestRouter($this->services);
+		$this->services->addSingleton(RequestRouter::class, implementation: $router, replace: true);
 		$this->pipeline->endpoint($router);
 
 		return $router;
