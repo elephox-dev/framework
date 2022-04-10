@@ -4,17 +4,18 @@ declare(strict_types=1);
 namespace Elephox\Support;
 
 use BadMethodCallException;
+use Elephox\OOR\Casing;
 
 trait TransparentGetterSetter
 {
 	protected function buildGetterName(string $propertyName): string
 	{
-		return 'get' . ucfirst($propertyName);
+		return 'get' . Casing::toPascal($propertyName);
 	}
 
 	protected function buildSetterName(string $propertyName): string
 	{
-		return 'set' . ucfirst($propertyName);
+		return 'set' . Casing::toPascal($propertyName);
 	}
 
 	public function __get(string $name)
