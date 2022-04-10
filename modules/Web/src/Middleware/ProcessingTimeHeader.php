@@ -12,12 +12,11 @@ class ProcessingTimeHeader implements WebMiddleware
 {
 	public function handle(RequestContract $request, Closure $next): ResponseBuilderContract
 	{
-		$start = microtime(true);
+		$timer = -hrtime(true);
 		$responseBuilder = $next($request);
-		$end = microtime(true);
+		$timer += hrtime(true);
 
-		$diff = round(($end - $start) * 1000, 3);
-		$responseBuilder->header('X-Processing-Time', (string) $diff);
+		$responseBuilder->header('X-Processing-Time', (string) ($timer / 1e+6)); // nanoseconds to milliseconds
 
 		return $responseBuilder;
 	}
