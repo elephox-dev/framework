@@ -11,9 +11,6 @@ use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use InvalidArgumentException;
 
-/**
- * @psalm-type service-object = object
- */
 class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 {
 	use ServiceResolver;
@@ -67,20 +64,31 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
-	 * @template TImplementation of service-object
+	 * @template TService of object
+	 * @template TImplementation of object
 	 *
 	 * @param ServiceDescriptor<TService, TImplementation> $descriptor
 	 */
-	protected function add(ServiceDescriptor $descriptor): Contract\ServiceCollection
+	protected function add(ServiceDescriptor $descriptor, bool $replace): Contract\ServiceCollection
 	{
-		$this->services->add($descriptor);
+		$added = $this->services->add($descriptor);
+		if (!$added && $replace) {
+			unset(
+				$this->descriptorCache[$descriptor->serviceType],
+				$this->factoryCache[$descriptor->serviceType],
+				$this->descriptorCache[$descriptor->implementationType],
+				$this->factoryCache[$descriptor->implementationType],
+			);
+			$this->services->remove($descriptor);
+			$this->services->add($descriptor);
+		}
 
 		return $this;
 	}
 
-	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
+	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (empty($serviceName) || empty($implementationName)) {
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
@@ -89,29 +97,31 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			$implementationFactory = fn (): object => $this->resolver()->instantiate($implementationName);
 		}
 
-		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation));
+		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation), $replace);
 	}
 
-	public function addTransient(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
+	public function addTransient(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
-		return $this->describe($serviceName, $implementationName, ServiceLifetime::Transient, $implementationFactory, $implementation);
+		return $this->describe($serviceName, $implementationName, ServiceLifetime::Transient, $implementationFactory, $implementation, $replace);
 	}
 
-	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): Contract\ServiceCollection
+	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
 		if ($implementationName === null && $implementation === null) {
-			throw new InvalidArgumentException('Either implementation name and factory or an implementation must be provided.');
+			if (class_exists($serviceName)) {
+				$implementationName = $serviceName;
+			} else {
+				throw new InvalidArgumentException('Either implementation name and factory or an implementation must be provided.');
+			}
 		}
 
-		if ($implementationName === null) {
-			$implementationName = $implementation::class;
-		}
+		$implementationName ??= $implementation::class;
 
-		return $this->describe($serviceName, $implementationName, ServiceLifetime::Singleton, $implementationFactory, $implementation);
+		return $this->describe($serviceName, $implementationName, ServiceLifetime::Singleton, $implementationFactory, $implementation, $replace);
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -127,7 +137,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -139,6 +149,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 */
 	public function requireService(string $serviceName): object
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (empty($serviceName)) {
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
@@ -163,7 +174,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -188,7 +199,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param ServiceDescriptor<TService, TService> $descriptor
 	 *
@@ -237,6 +248,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	public function hasService(string $serviceName): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (empty($serviceName)) {
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
@@ -245,7 +257,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService|null
 	 *
@@ -259,6 +271,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 		/** @var class-string<TService> $serviceName */
 		$serviceName = $this->aliases->get($alias);
+
+		/** @psalm-suppress DocblockTypeContradiction */
 		if ($serviceName === null) {
 			return null;
 		}
@@ -267,7 +281,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService
 	 *
@@ -300,7 +314,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService|null
 	 *
@@ -321,7 +335,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	}
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService
 	 *
@@ -344,6 +358,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	public function setAlias(string $alias, string $serviceName): Contract\ServiceCollection
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (empty($alias) || empty($serviceName)) {
 			throw new InvalidArgumentException('Alias and service name must not be empty.');
 		}

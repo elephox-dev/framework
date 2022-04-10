@@ -10,16 +10,13 @@ use Elephox\DI\ServiceLifetime;
 use Elephox\DI\ServiceNotFoundException;
 use InvalidArgumentException;
 
-/**
- * @psalm-type service-object = object
- */
 interface ServiceCollection
 {
 	public function resolver(): Resolver;
 
 	/**
-	 * @template TService of service-object
-	 * @template TImplementation of service-object
+	 * @template TService of object
+	 * @template TImplementation of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 * @param class-string<TImplementation> $implementationName
@@ -32,8 +29,8 @@ interface ServiceCollection
 	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
 
 	/**
-	 * @template TService of service-object
-	 * @template TImplementation of service-object
+	 * @template TService of object
+	 * @template TImplementation of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 * @param class-string<TImplementation> $implementationName
@@ -44,8 +41,8 @@ interface ServiceCollection
 	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory): ServiceCollection;
 
 	/**
-	 * @template TService of service-object
-	 * @template TImplementation of service-object
+	 * @template TService of object
+	 * @template TImplementation of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 * @param null|class-string<TImplementation> $implementationName
@@ -58,7 +55,7 @@ interface ServiceCollection
 	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null): ServiceCollection;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -67,7 +64,7 @@ interface ServiceCollection
 	public function getService(string $serviceName): ?object;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -80,7 +77,7 @@ interface ServiceCollection
 	public function requireService(string $serviceName): object;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -89,7 +86,7 @@ interface ServiceCollection
 	public function hasService(string $serviceName): bool;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
 	 *
@@ -98,7 +95,7 @@ interface ServiceCollection
 	public function setAlias(string $alias, string $serviceName): ServiceCollection;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService|null
 	 *
@@ -107,7 +104,7 @@ interface ServiceCollection
 	public function getByAlias(string $alias): ?object;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService
 	 *
@@ -127,7 +124,7 @@ interface ServiceCollection
 	public function has(string $aliasOrServiceName): bool;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService|null
 	 *
@@ -136,7 +133,7 @@ interface ServiceCollection
 	public function get(string $aliasOrServiceName): ?object;
 
 	/**
-	 * @template TService of service-object
+	 * @template TService of object
 	 *
 	 * @return TService
 	 *
