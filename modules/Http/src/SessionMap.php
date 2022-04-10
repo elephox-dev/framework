@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use ArrayIterator;
+use Elephox\Collection\DeepCloneable;
 use Elephox\Collection\IsKeyedEnumerable;
-use Elephox\Support\DeepCloneable;
 use LogicException;
 
 class SessionMap implements Contract\SessionMap
