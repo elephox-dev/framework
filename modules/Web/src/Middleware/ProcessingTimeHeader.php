@@ -14,13 +14,12 @@ class ProcessingTimeHeader implements WebMiddleware
 {
 	public function handle(RequestContract $request, Closure $next): ResponseBuilderContract
 	{
+		$start = microtime(true);
 		$responseBuilder = $next($request);
-		if ($request instanceof ServerRequestContract) {
-			$requestStart = (float) $request->getParameters()->get('REQUEST_TIME_FLOAT', ParameterSource::Server) * 1000;
-			$now = microtime(true) * 1000;
-			$diff = round($now - $requestStart, 5);
-			$responseBuilder->header('X-Processing-Time', (string) $diff);
-		}
+		$end = microtime(true);
+
+		$diff = round(($end - $start) * 1000, 3);
+		$responseBuilder->header('X-Processing-Time', (string)$diff);
 
 		return $responseBuilder;
 	}
