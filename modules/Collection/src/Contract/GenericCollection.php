@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
-use Elephox\Support\Contract\DeepCloneable;
-
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
  *

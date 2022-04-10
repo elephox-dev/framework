@@ -7,7 +7,6 @@ use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Iterator\RangeIterator;
-use Elephox\Support\DeepCloneable;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;

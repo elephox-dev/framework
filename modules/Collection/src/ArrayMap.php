@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use ArrayAccess;
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericMap;
-use Elephox\Support\DeepCloneable;
 use InvalidArgumentException;
 use Iterator;
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\Grouping as GroupingContract;
-use Elephox\Support\DeepCloneable;
 use Iterator;
 
 /**

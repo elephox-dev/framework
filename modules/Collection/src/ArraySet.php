@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
-use Elephox\Support\DeepCloneable;
 
 /**
  * @template T

@@ -5,7 +5,6 @@ namespace Elephox\Collection;
 
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
-use Elephox\Support\DeepCloneable;
 use Iterator;
 
 /**
