@@ -91,6 +91,27 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
+	public function addHeader(string $name, array|string $value): static
+	{
+		if ($this->headers === null) {
+			$this->headers = new HeaderMap();
+		}
+
+		$value = is_array($value) ? $value : [$value];
+
+		if ($this->headers->has($name)) {
+			$previous = $this->headers->get($name);
+
+			$previous = is_array($previous) ? $previous : [$previous];
+		} else {
+			$previous = [];
+		}
+
+		$this->headers->put($name, array_merge($previous, $value));
+
+		return $this;
+	}
+
 	public function headerMap(Contract\HeaderMap $headers): static
 	{
 		$this->headers = $headers;

@@ -35,6 +35,11 @@ interface MessageBuilder
 	 */
 	public function header(string $name, string|array $value): static;
 
+	/**
+	 * @param string|list<string> $value
+	 */
+	public function addHeader(string $name, string|array $value): static;
+
 	public function headerMap(HeaderMap $headers): static;
 
 	public function getHeaderMap(): ?HeaderMap;
