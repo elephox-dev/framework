@@ -110,6 +110,7 @@ trait ServiceResolver
 
 	private function resolveArguments(ReflectionFunctionAbstract $method, array $overrides): ArrayList
 	{
+		/** @var ArrayList<mixed> $values */
 		$values = new ArrayList();
 		$parameters = $method->getParameters();
 

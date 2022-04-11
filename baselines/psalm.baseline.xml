@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="dev-master@c8cc3f460720fb051bf7e4c8ed2a47de2fd9124f">
+<files psalm-version="dev-master@916fddb51dce52b2267ec8a56502b234f6bc174d">
   <file src="development/Commands/ReleaseCommand.php">
     <PossiblyInvalidArgument occurrences="3">
       <code>$args</code>
@@ -18,31 +18,6 @@
     </DocblockTypeContradiction>
     <RedundantConditionGivenDocblockType occurrences="1">
       <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
-  </file>
-  <file src="modules/Collection/src/ArrayList.php">
-    <DocblockTypeContradiction occurrences="5">
-      <code>$offset === null</code>
-      <code>is_int($offset)</code>
-      <code>is_int($offset)</code>
-      <code>is_int($offset)</code>
-      <code>is_int($offset)</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="modules/Collection/src/ArrayMap.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>!is_string($key) &amp;&amp; !is_int($key)</code>
-    </DocblockTypeContradiction>
-    <MixedInferredReturnType occurrences="1">
-      <code>mixed</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>$this-&gt;items[$validKey]</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="modules/Collection/src/DefaultEqualityComparer.php">
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>is_numeric($result)</code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="modules/Collection/src/Enumerable.php">
@@ -125,15 +100,7 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="modules/Configuration/src/ConfigurationSection.php">
-    <DocblockTypeContradiction occurrences="3">
-      <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="modules/Configuration/src/GlobalEnvironment.php">
-    <DocblockTypeContradiction occurrences="4">
-      <code>is_string($offset)</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>is_string($offset)</code>
       <code>is_string($offset)</code>
       <code>is_string($offset)</code>
@@ -158,50 +125,9 @@
       <code>$this</code>
     </InvalidArgument>
   </file>
-  <file src="modules/Console/src/Command/CommandTemplate.php">
-    <MismatchingDocblockParamType occurrences="1">
-      <code>publicreadonlystring</code>
-    </MismatchingDocblockParamType>
-    <MismatchingDocblockPropertyType occurrences="1">
-      <code>publicreadonlystring</code>
-    </MismatchingDocblockPropertyType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>publicreadonlystring</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="modules/Console/src/Command/CommandTemplateBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;description ?? ''</code>
-    </InvalidArgument>
-    <MismatchingDocblockParamType occurrences="1">
-      <code>null|private?string</code>
-    </MismatchingDocblockParamType>
-    <MismatchingDocblockPropertyType occurrences="1">
-      <code>null|private?string</code>
-    </MismatchingDocblockPropertyType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>null|private?string</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="modules/Console/src/Command/HelpCommand.php">
-    <DocblockTypeContradiction occurrences="3">
+    <DocblockTypeContradiction occurrences="1">
       <code>empty($commandTemplate-&gt;argumentTemplates)</code>
-      <code>empty($commandTemplate-&gt;description)</code>
-      <code>empty($commandTemplate-&gt;description)</code>
-    </DocblockTypeContradiction>
-    <PossiblyInvalidArgument occurrences="2">
-      <code>empty($commandTemplate-&gt;description) ? Console::gray('No description') : $commandTemplate-&gt;description</code>
-      <code>empty($commandTemplate-&gt;description) ? Console::gray('No description') : $commandTemplate-&gt;description</code>
-    </PossiblyInvalidArgument>
-  </file>
-  <file src="modules/DI/src/ServiceCollection.php">
-    <DocblockTypeContradiction occurrences="6">
-      <code>$serviceName === null</code>
-      <code>empty($implementationName)</code>
-      <code>empty($serviceName)</code>
-      <code>empty($serviceName)</code>
-      <code>empty($serviceName)</code>
-      <code>empty($serviceName)</code>
     </DocblockTypeContradiction>
   </file>
   <file src="modules/DI/src/ServiceResolver.php">
@@ -260,79 +186,5 @@
     <MixedArgument occurrences="1">
       <code>$rest</code>
     </MixedArgument>
-  </file>
-  <file src="modules/Support/src/CustomMimeType.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>!is_string($file) &amp;&amp; !is_resource($file)</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="modules/Support/src/DeepCloneable.php">
-    <MixedAssignment occurrences="7">
-      <code>$clonedPropertyValue</code>
-      <code>$clonedValue</code>
-      <code>$clonedValue</code>
-      <code>$clonedValue</code>
-      <code>$propertyValue</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MixedAssignment>
-    <UnnecessaryVarAnnotation occurrences="1">
-      <code>SplObjectStorage</code>
-    </UnnecessaryVarAnnotation>
-  </file>
-  <file src="modules/Web/src/RequestPipeline.php">
-    <MismatchingDocblockParamType occurrences="1">
-      <code>privatereadonlyRequestPipelineEndpoint</code>
-    </MismatchingDocblockParamType>
-    <MismatchingDocblockPropertyType occurrences="1">
-      <code>privatereadonlyRequestPipelineEndpoint</code>
-    </MismatchingDocblockPropertyType>
-    <MixedInferredReturnType occurrences="1">
-      <code>ResponseBuilderContract</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>$this-&gt;endpoint-&gt;handle($r)</code>
-    </MixedReturnStatement>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$this-&gt;endpoint</code>
-      <code>privatereadonlyRequestPipelineEndpoint</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="modules/Web/src/RequestPipelineBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;endpoint</code>
-    </InvalidArgument>
-  </file>
-  <file src="modules/Web/src/Routing/RequestRouter.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>$this-&gt;services-&gt;get($className)</code>
-    </DocblockTypeContradiction>
-    <InvalidArgument occurrences="2">
-      <code>$methodReflection-&gt;getName()</code>
-      <code>'__invoke'</code>
-    </InvalidArgument>
-  </file>
-  <file src="modules/Web/src/Routing/RouteHandler.php">
-    <InvalidCast occurrences="1">
-      <code>$this-&gt;attributeMethod</code>
-    </InvalidCast>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;attributeMethod</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>string</code>
-    </InvalidReturnType>
-    <MismatchingDocblockParamType occurrences="1">
-      <code>privatereadonlystring</code>
-    </MismatchingDocblockParamType>
-    <MismatchingDocblockPropertyType occurrences="1">
-      <code>privatereadonlystring</code>
-    </MismatchingDocblockPropertyType>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>$pathRegex</code>
-    </PropertyNotSetInConstructor>
-    <UndefinedDocblockClass occurrences="1">
-      <code>privatereadonlystring</code>
-    </UndefinedDocblockClass>
   </file>
 </files>

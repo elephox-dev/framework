@@ -54,6 +54,10 @@ class ConfigurationManager implements Contract\ConfigurationManager
 		return $this;
 	}
 
+	/**
+	 * @param mixed $offset
+	 * @return array|string|int|float|bool|null
+	 */
 	public function offsetGet(mixed $offset): array|string|int|float|bool|null
 	{
 		$value = $this->innerOffsetGet($offset);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
+use RuntimeException;
 use Stringable;
 
 trait SubstitutesEnvironmentVariables
@@ -10,6 +11,7 @@ trait SubstitutesEnvironmentVariables
 	protected function getEnvSubstitute(string $name): ?string
 	{
 		if (array_key_exists($name, $_ENV)) {
+			/** @var mixed $value */
 			$value = $_ENV[$name];
 			$type = get_debug_type($value);
 
@@ -30,6 +32,7 @@ trait SubstitutesEnvironmentVariables
 	protected function substituteEnvironmentVariables(string $value): string
 	{
 		// Replace unescaped environment variables with their values (${ENV_VAR} => value)
+		/** @var string $value */
 		$value = preg_replace_callback('/(?<!\$)\${([^}]+)}/m', function (array $match) {
 			$substitute = $this->getEnvSubstitute($match[1]);
 
@@ -38,6 +41,7 @@ trait SubstitutesEnvironmentVariables
 		}, $value);
 
 		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})
+		/** @var string */
 		return preg_replace_callback('/\$(\${[^}]+})/m', static fn (array $match) => $match[1], $value);
 	}
 }

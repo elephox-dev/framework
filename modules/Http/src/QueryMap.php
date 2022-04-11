@@ -13,6 +13,7 @@ class QueryMap extends ArrayMap implements Contract\QueryMap
 	public static function fromString(string $queryString): Contract\QueryMap
 	{
 		parse_str($queryString, $queryArray);
+		/** @var array<string, int|list<int|string>|string> $queryArray */
 
 		return new self($queryArray);
 	}

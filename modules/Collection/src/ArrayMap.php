@@ -60,6 +60,9 @@ class ArrayMap implements GenericMap, ArrayAccess
 		throw new InvalidArgumentException('Cannot create ArrayMap from given value');
 	}
 
+	/**
+	 * @param array<TKey, TValue> $items
+	 */
 	public function __construct(
 		protected array $items = [],
 	) {
@@ -94,6 +97,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 
 	public function has(mixed $key): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {
 			return false;
 		}

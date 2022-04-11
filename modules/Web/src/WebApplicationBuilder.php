@@ -182,6 +182,7 @@ class WebApplicationBuilder
 			EntityManager::class,
 			implementationFactory: function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
 				$setup ??= static function (ConfigurationRoot $conf, WebEnvironment $env): DoctrineConfiguration {
+					/** @var string|null $setupDriver */
 					$setupDriver = $conf['doctrine:metadata:driver'];
 					if (!is_string($setupDriver)) {
 						throw new ConfigurationException('Doctrine configuration error: "doctrine:metadata:driver" must be a string.');
@@ -203,12 +204,14 @@ class WebApplicationBuilder
 
 				/** @psalm-suppress ArgumentTypeCoercion */
 				$setupConfig = $this->services->resolver()->callback($setup);
+
+				/** @var array<string, mixed>|null $connection */
 				$connection = $configuration['doctrine:connection'];
-				if ($connection === null) {
+				if (!is_array($connection)) {
 					throw new ConfigurationException('No doctrine connection specified at "doctrine:connection"');
 				}
 
-				/** @psalm-suppress MixedArgumentTypeCoercion */
+				/** @var EntityManager */
 				return EntityManager::create($connection, $setupConfig);
 			},
 		);

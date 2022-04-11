@@ -19,7 +19,7 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	public function add(mixed $value): bool;
 
 	/**
-	 * @param iterable<T> $values
+	 * @param iterable<mixed, T> $values
 	 */
 	public function addAll(iterable $values): bool;
 

@@ -5,6 +5,7 @@ namespace Elephox\Collection;
 
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
+use InvalidArgumentException;
 use Iterator;
 
 /**
@@ -24,7 +25,7 @@ class ArrayList implements GenericList
 	}
 
 	/**
-	 * @use IsArrayEnumerable<int, TValue>
+	 * @use IsArrayEnumerable<int, T>
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
@@ -45,16 +46,26 @@ class ArrayList implements GenericList
 		}
 
 		if (is_array($value)) {
+			if (!array_is_list($value)) {
+				throw new InvalidArgumentException('ArrayList::from() expects a list of values');
+			}
+
 			return new self($value);
 		}
 
 		if ($value instanceof Iterator) {
-			return new self(iterator_to_array($value));
+			return new self(array_values(iterator_to_array($value)));
 		}
 
-		return new self([$value]);
+		/** @var list<UValue> $value */
+		$value = [$value];
+
+		return new self($value);
 	}
 
+	/**
+	 * @param array<int, T> $items
+	 */
 	public function __construct(
 		protected array $items = [],
 	) {
@@ -67,6 +78,7 @@ class ArrayList implements GenericList
 
 	public function offsetExists(mixed $offset): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
 		}
@@ -76,6 +88,7 @@ class ArrayList implements GenericList
 
 	public function offsetGet(mixed $offset): mixed
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
 		}
@@ -85,12 +98,14 @@ class ArrayList implements GenericList
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if ($offset === null) {
 			$this->add($value);
 
 			return;
 		}
 
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
 		}
@@ -100,6 +115,7 @@ class ArrayList implements GenericList
 
 	public function offsetUnset(mixed $offset): void
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_int($offset)) {
 			throw new OffsetNotAllowedException($offset);
 		}
@@ -165,7 +181,6 @@ class ArrayList implements GenericList
 			throw new OffsetNotFoundException($index);
 		}
 
-		/** @var T */
 		$removed = $this->items[$index];
 
 		array_splice($this->items, $index, 1);
@@ -177,7 +192,6 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		/** @var T $item */
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
 				/** @var int */
@@ -192,7 +206,6 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		/** @var T $item */
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
 				/** @var int $index */

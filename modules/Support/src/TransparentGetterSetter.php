@@ -44,7 +44,7 @@ trait TransparentGetterSetter
 		throw new BadMethodCallException('None of the tried getter methods exists: ' . implode(', ', $tried));
 	}
 
-	public function __set(string $name, $value)
+	public function __set(string $name, mixed $value)
 	{
 		$tried = [];
 		foreach ($this->buildSetterNames($name) as $method) {
