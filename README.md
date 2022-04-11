@@ -51,6 +51,12 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ To Do
 
+- [ ] [modules/Collection/src/ArrayList.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayList.php)
+  - [ ] replace generic enumerable function with array-specific functions where possible
+- [ ] [modules/Collection/src/ArrayMap.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayMap.php)
+  - [ ] replace generic enumerable function with array-specific functions where possible
+- [ ] [modules/Collection/src/ArraySet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArraySet.php)
+  - [ ] replace generic enumerable function with array-specific functions where possible
 - [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
