@@ -15,6 +15,7 @@
         "elephox/autoloading": "dev-develop",
         "elephox/collection": "dev-develop",
         "elephox/configuration": "dev-develop",
+        "elephox/console": "dev-develop",
         "elephox/di": "dev-develop",
         "elephox/files": "dev-develop",
         "elephox/http": "dev-develop",

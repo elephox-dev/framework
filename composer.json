@@ -13,6 +13,8 @@
     "require": {
         "php": "^8.1 <8.3",
         "ext-mbstring": "*",
+        "ext-ctype": "*",
+        "ext-json": "*",
         "elephox/mimey": "^4.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/cache": "^3.0",
@@ -21,7 +23,6 @@
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
-        "ext-json": "*",
         "doctrine/orm": "^2.11",
         "elephox/composer-module-sync": "^1.5",
         "filp/whoops": "^2.14",
