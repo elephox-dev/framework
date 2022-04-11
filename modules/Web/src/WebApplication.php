@@ -11,13 +11,11 @@ use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
 use Elephox\Http\ResponseSender;
 use Elephox\Http\ServerRequestBuilder;
-use Elephox\Logging\Contract\Logger;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\WebEnvironment;
 
 class WebApplication
 {
-	protected ?Logger $logger = null;
 	protected ?ExceptionHandler $exceptionHandler = null;
 
 	public function __construct(
@@ -27,15 +25,6 @@ class WebApplication
 		public readonly RequestPipeline $pipeline,
 	) {
 		$this->services->addSingleton(__CLASS__, implementation: $this);
-	}
-
-	public function logger(): Logger
-	{
-		if ($this->logger === null) {
-			$this->logger = $this->services->requireService(Logger::class);
-		}
-
-		return $this->logger;
 	}
 
 	public function exceptionHandler(): ExceptionHandler
