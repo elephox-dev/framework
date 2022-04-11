@@ -104,6 +104,8 @@ class Casing
 	 *
 	 * Example input: "Hello beautiful World", 1<br>
 	 * Example output: "heLLo beaUTiFul WoRLD"
+	 *
+	 * @param ?int $seed
 	 */
 	public static function random(string $string, ?int $seed = null): string
 	{
