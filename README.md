@@ -61,8 +61,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] write tests for background and options
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
-- [ ] [modules/Web/src/Routing/RequestRouter.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/RequestRouter.php)
-  - [ ] make this tidier
 
 ### 🤔 Maybe
 
