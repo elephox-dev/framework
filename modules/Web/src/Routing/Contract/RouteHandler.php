@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing\Contract;
 
+use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Web\Contract\WebMiddleware;
@@ -15,7 +16,7 @@ interface RouteHandler extends Stringable
 
 	public function matches(Request $request): bool;
 
-	public function handle(Request $request): ResponseBuilder;
+	public function handle(ServiceCollection $services): ResponseBuilder;
 
 	/**
 	 * @return class-string

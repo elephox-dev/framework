@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Closure;
+use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\OOR\Regex;
@@ -21,7 +22,7 @@ class RouteHandler implements Contract\RouteHandler
 	 * @param class-string $attributeClass
 	 * @param string $attributeMethod
 	 * @param iterable<int, WebMiddleware> $middlewares
-	 * @param Closure(Request): ResponseBuilder $handler
+	 * @param Closure $handler
 	 */
 	public function __construct(
 		private readonly ControllerAttribute $controllerAttribute,
@@ -45,7 +46,7 @@ class RouteHandler implements Contract\RouteHandler
 		}
 
 		if (!str_starts_with($routePath, 'regex:')) {
-			if ($this->attributeMethod === 'index') {
+			if ($this->attributeMethod === 'index' || $this->attributeMethod === '__invoke') {
 				$routePath = '';
 			} else {
 				$routePath = trim($routePath, '/');
@@ -85,9 +86,18 @@ class RouteHandler implements Contract\RouteHandler
 		return ltrim($request->getUrl()->path, '/');
 	}
 
-	public function handle(Request $request): ResponseBuilder
+	public function handle(ServiceCollection $services): ResponseBuilder
 	{
-		return ($this->handler)($request);
+		$request = $services->requireService(Request::class);
+
+		$matchedParametersMap = MatchedUrlParametersMap::fromRegex($this->getNormalizedRequestRoute($request), $this->pathRegex);
+		$services->addSingleton(MatchedUrlParametersMap::class, implementation: $matchedParametersMap, replace: true);
+
+		/** @var ResponseBuilder */
+		return $services->resolver()->callback($this->handler, [
+			...$matchedParametersMap,
+			'request' => $request,
+		]);
 	}
 
 	public function getSourceAttribute(): ControllerAttribute
