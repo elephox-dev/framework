@@ -31,6 +31,7 @@ class GlobalEnvironment implements Contract\Environment
 
 	public function getEnvironmentName(): string
 	{
+		/** @var mixed $env */
 		$env = $this['APP_ENV'];
 		if (is_string($env)) {
 			return $env;
@@ -93,17 +94,22 @@ class GlobalEnvironment implements Contract\Environment
 	}
 
 	/**
-	 * @psalm-suppress MixedInferredReturnType
+	 * @param mixed $offset
+	 * @return scalar|null
 	 */
-	public function offsetGet(mixed $offset): mixed
+	public function offsetGet(mixed $offset): string|int|bool|null|float
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		/** @psalm-suppress MixedReturnStatement */
-		return $_ENV[$offset] ?? null;
+		$value = $_ENV[$offset] ?? null;
+
+		if (!is_scalar($value)) {
+			return null;
+		}
+
+		return $value;
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void

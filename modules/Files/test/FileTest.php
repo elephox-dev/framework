@@ -212,6 +212,12 @@ class FileTest extends MockeryTestCase
 
 	/**
 	 * @dataProvider invalidFopenFlagsProvider
+	 *
+	 * @param bool $read
+	 * @param bool $write
+	 * @param bool $create
+	 * @param bool $append
+	 * @param bool $truncate
 	 */
 	public function testInvalidFopenFlags(bool $read, bool $write, bool $create, bool $append, bool $truncate): void
 	{

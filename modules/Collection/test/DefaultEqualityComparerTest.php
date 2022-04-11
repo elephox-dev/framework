@@ -55,6 +55,10 @@ class DefaultEqualityComparerTest extends TestCase
 
 	/**
 	 * @dataProvider equalsDataProvider
+	 *
+	 * @param mixed $a
+	 * @param mixed $b
+	 * @param bool $result
 	 */
 	public function testEquals(mixed $a, mixed $b, bool $result): void
 	{
@@ -84,6 +88,10 @@ class DefaultEqualityComparerTest extends TestCase
 
 	/**
 	 * @dataProvider sameDataProvider
+	 *
+	 * @param mixed $a
+	 * @param mixed $b
+	 * @param bool $result
 	 */
 	public function testSame(mixed $a, mixed $b, bool $result): void
 	{
@@ -114,6 +122,10 @@ class DefaultEqualityComparerTest extends TestCase
 
 	/**
 	 * @dataProvider compareDataProvider
+	 *
+	 * @param mixed $a
+	 * @param mixed $b
+	 * @param int $result
 	 */
 	public function testCompareAndInvert(mixed $a, mixed $b, int $result): void
 	{
@@ -131,6 +143,9 @@ class DefaultEqualityComparerTest extends TestCase
 
 	/**
 	 * @dataProvider invalidCompareDataProvider
+	 *
+	 * @param mixed $a
+	 * @param mixed $b
 	 */
 	public function testInvalidCompare(mixed $a, mixed $b): void
 	{

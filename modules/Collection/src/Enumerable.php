@@ -52,6 +52,7 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @param int $start Inclusive
 	 * @param int $end Inclusive
+	 * @param int $step
 	 *
 	 * @return GenericEnumerable<int>
 	 */

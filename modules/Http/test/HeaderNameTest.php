@@ -117,6 +117,8 @@ class HeaderNameTest extends TestCase
 
 	/**
 	 * @dataProvider invalidHeaderNameProvider
+	 *
+	 * @param string $name
 	 */
 	public function testTryFromIgnoreCaseThrowsForInvalidInput(string $name): void
 	{

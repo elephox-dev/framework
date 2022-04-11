@@ -43,6 +43,7 @@ class NamespaceLoader
 
 	/**
 	 * @param callable(class-string): void $callback
+	 * @param string $namespace
 	 */
 	public static function iterateNamespace(string $namespace, callable $callback): void
 	{
@@ -77,8 +78,9 @@ class NamespaceLoader
 	 * @param ArrayList<string> $nsParts
 	 * @param ArrayList<string> $nsPartsUsed
 	 * @param callable(class-string): void $callback
-	 *
-	 * @noinspection PhpDocSignatureInspection
+	 * @param string $rootNs
+	 * @param DirectoryContract $directory
+	 * @param int $depth
 	 */
 	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, callable $callback, int $depth = 0): void
 	{

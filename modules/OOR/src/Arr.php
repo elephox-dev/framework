@@ -163,6 +163,8 @@ class Arr implements ArrayAccess, IteratorAggregate
 	 *
 	 * @param ?callable $key_compare_func
 	 * @param self|array[] $rest
+	 * @param self|array $array
+	 * @param Diff $type
 	 */
 	public function diff(self|array $array, Diff $type = Diff::Normal, ?callable $key_compare_func = null, self|array ...$rest): self
 	{
@@ -216,6 +218,8 @@ class Arr implements ArrayAccess, IteratorAggregate
 	 *
 	 * @param ?callable $callback
 	 * @param array|self[] $rest
+	 * @param Intersect $mode
+	 * @param array|self $array
 	 */
 	public function intersect(Intersect $mode, array|self $array, ?callable $callback = null, array|self ...$rest): self
 	{

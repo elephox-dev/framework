@@ -53,6 +53,7 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	/**
 	 * @param int $start Inclusive
 	 * @param int $end Inclusive
+	 * @param int $step
 	 *
 	 * @return GenericKeyedEnumerable<int, int>
 	 */

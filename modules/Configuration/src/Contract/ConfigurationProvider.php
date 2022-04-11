@@ -16,6 +16,8 @@ interface ConfigurationProvider
 
 	/**
 	 * @return \Elephox\Collection\Contract\GenericEnumerable<string>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable;
 

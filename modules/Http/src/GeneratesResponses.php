@@ -25,6 +25,7 @@ trait GeneratesResponses
 	 * @throws JsonException
 	 *
 	 * @param ?ResponseCode $responseCode
+	 * @param array $data
 	 */
 	private function jsonResponse(array $data, ?ResponseCode $responseCode = null): Contract\ResponseBuilder
 	{

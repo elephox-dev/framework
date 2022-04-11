@@ -73,6 +73,8 @@ class RequestBuilderTest extends TestCase
 
 	/**
 	 * @dataProvider invalidBodyResourceProvider
+	 *
+	 * @param mixed $body
 	 */
 	public function testInvalidResourceBody(mixed $body): void
 	{

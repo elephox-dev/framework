@@ -56,6 +56,10 @@ class LazyStreamTest extends MockeryTestCase
 
 	/**
 	 * @dataProvider methodNameProvider
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @param mixed $result
 	 */
 	public function testMockMethod(string $method, array $args, mixed $result): void
 	{

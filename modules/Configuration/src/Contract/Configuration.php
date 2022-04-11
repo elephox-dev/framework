@@ -14,11 +14,15 @@ interface Configuration extends ArrayAccess
 {
 	/**
 	 * @return GenericEnumerable<string>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable;
 
 	/**
 	 * @return GenericEnumerable<ConfigurationSection>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildren(string|Str|null $path = null): GenericEnumerable;
 

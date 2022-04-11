@@ -31,6 +31,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 {
 	/**
 	 * @return GenericKeyedEnumerable<int, ControllerAttribute>
+	 *
+	 * @param ReflectionClass $class
 	 */
 	private static function getControllers(ReflectionClass $class): GenericKeyedEnumerable
 	{
@@ -42,6 +44,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	/**
 	 * @return GenericKeyedEnumerable<int, RouteAttribute>
+	 *
+	 * @param ReflectionMethod $method
 	 */
 	private static function getRoutes(ReflectionMethod $method): GenericKeyedEnumerable
 	{
@@ -53,6 +57,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	/**
 	 * @return GenericKeyedEnumerable<int, WebMiddlewareAttribute>
+	 *
+	 * @param ReflectionClass|ReflectionMethod $reflection
 	 */
 	private static function getMiddlewares(ReflectionClass|ReflectionMethod $reflection): GenericKeyedEnumerable
 	{
@@ -122,6 +128,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 	/**
 	 * @throws InvalidRequestController
+	 *
+	 * @param string $namespace
 	 */
 	public function loadFromNamespace(string $namespace): static
 	{

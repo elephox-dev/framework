@@ -16,6 +16,8 @@ interface Cache extends ArrayAccess, CacheItemPoolInterface
 
 	/**
 	 * @return iterable<string, CacheItemInterface>
+	 *
+	 * @param array $keys
 	 */
 	public function getItems(array $keys = []): iterable;
 }

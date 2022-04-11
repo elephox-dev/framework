@@ -29,6 +29,7 @@ class UrlSchemeTest extends TestCase
 	 * @dataProvider defaultPortProvider
 	 *
 	 * @param ?int $port
+	 * @param UrlScheme $scheme
 	 */
 	public function testDefaultPorts(UrlScheme $scheme, ?int $port): void
 	{

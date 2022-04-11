@@ -75,6 +75,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	 * @throws JsonException
 	 *
 	 * @param ?MimeTypeInterface $mimeType
+	 * @param array $data
 	 */
 	public function jsonBody(array $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
 	{

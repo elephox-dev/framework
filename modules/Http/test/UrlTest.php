@@ -50,6 +50,10 @@ class UrlTest extends TestCase
 	 * @param ?string $host
 	 * @param ?int $port
 	 * @param ?string $fragment
+	 * @param string $uriString
+	 * @param string $toString
+	 * @param string $path
+	 * @param string $query
 	 */
 	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, string $query, ?string $fragment): void
 	{

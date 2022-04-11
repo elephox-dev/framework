@@ -25,12 +25,18 @@ interface File extends FilesystemNode, HasHash
 	/**
 	 * @throws FileMoveException
 	 * @throws FileAlreadyExistsException
+	 *
+	 * @param FilesystemNode $node
+	 * @param bool $overwrite
 	 */
 	public function moveTo(FilesystemNode $node, bool $overwrite = true): void;
 
 	/**
 	 * @throws FileCopyException
 	 * @throws FileAlreadyExistsException
+	 *
+	 * @param FilesystemNode $node
+	 * @param bool $overwrite
 	 */
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): void;
 

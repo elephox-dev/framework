@@ -24,6 +24,8 @@ interface ParameterMap extends ArrayAccess
 
 	/**
 	 * @return GenericKeyedEnumerable<ParameterSource, mixed>
+	 *
+	 * @param string $key
 	 */
 	public function all(string $key): GenericKeyedEnumerable;
 

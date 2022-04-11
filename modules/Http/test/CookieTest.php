@@ -65,6 +65,11 @@ class CookieTest extends TestCase
 
 	/**
 	 * @dataProvider getterSetterProvider
+	 *
+	 * @param string $setter
+	 * @param string $getter
+	 * @param mixed $value
+	 * @param string $cookieString
 	 */
 	public function testGettersAndSetters(string $setter, string $getter, mixed $value, string $cookieString): void
 	{
@@ -91,6 +96,9 @@ class CookieTest extends TestCase
 
 	/**
 	 * @dataProvider arrayKeyProvider
+	 *
+	 * @param string $key
+	 * @param mixed $value
 	 */
 	public function testArrayKey(string $key, mixed $value): void
 	{

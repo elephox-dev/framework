@@ -15,6 +15,8 @@ abstract class AbstractCache implements Cache
 {
 	/**
 	 * @throws \Elephox\Cache\InvalidTtlException
+	 *
+	 * @param DateTime $offset
 	 */
 	protected function calculateExpiresAt(DateTime $offset): ?DateTime
 	{
@@ -38,6 +40,8 @@ abstract class AbstractCache implements Cache
 
 	/**
 	 * @throws InvalidArgumentException
+	 *
+	 * @param mixed $offset
 	 */
 	public function offsetExists(mixed $offset): bool
 	{
@@ -51,6 +55,8 @@ abstract class AbstractCache implements Cache
 	/**
 	 * @throws InvalidKeyTypeException
 	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param mixed $offset
 	 */
 	public function offsetGet(mixed $offset): CacheItemInterface
 	{
@@ -63,6 +69,9 @@ abstract class AbstractCache implements Cache
 
 	/**
 	 * @throws InvalidValueTypeException
+	 *
+	 * @param mixed $offset
+	 * @param mixed $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
@@ -80,6 +89,8 @@ abstract class AbstractCache implements Cache
 	/**
 	 * @throws InvalidKeyTypeException
 	 * @throws InvalidArgumentException
+	 *
+	 * @param mixed $offset
 	 */
 	public function offsetUnset(mixed $offset): void
 	{

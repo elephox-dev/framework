@@ -11,6 +11,10 @@ class Regex
 {
 	/**
 	 * @return ArrayList<string>
+	 *
+	 * @param string $pattern
+	 * @param string $subject
+	 * @param int $limit
 	 */
 	public static function split(string $pattern, string $subject, int $limit = -1): ArrayList
 	{
@@ -25,6 +29,9 @@ class Regex
 
 	/**
 	 * @return ArrayMap<int|string, string>
+	 *
+	 * @param string $pattern
+	 * @param string $subject
 	 */
 	public static function match(string $pattern, string $subject): ArrayMap
 	{

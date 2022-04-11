@@ -68,6 +68,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @template TImplementation of object
 	 *
 	 * @param ServiceDescriptor<TService, TImplementation> $descriptor
+	 * @param bool $replace
 	 */
 	protected function add(ServiceDescriptor $descriptor, bool $replace): Contract\ServiceCollection
 	{
@@ -263,6 +264,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function getByAlias(string $alias): ?object
 	{
@@ -288,6 +291,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function requireByAlias(string $alias): object
 	{
@@ -320,6 +325,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function get(string $aliasOrServiceName): ?object
 	{
@@ -342,6 +349,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function require(string $aliasOrServiceName): object
 	{

@@ -7,7 +7,7 @@ use ArrayAccess;
 use Elephox\Files\Contract\Directory;
 
 /**
- * @extends ArrayAccess<string, scalar>
+ * @extends ArrayAccess<string, scalar|null>
  *
  * @property Directory $root
  * @property Directory $config

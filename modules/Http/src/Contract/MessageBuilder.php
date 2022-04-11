@@ -21,6 +21,8 @@ interface MessageBuilder
 
 	/**
 	 * @throws JsonException
+	 *
+	 * @param array $data
 	 */
 	public function jsonBody(array $data): static;
 
@@ -32,11 +34,13 @@ interface MessageBuilder
 
 	/**
 	 * @param string|list<string> $value
+	 * @param string $name
 	 */
 	public function header(string $name, string|array $value): static;
 
 	/**
 	 * @param string|list<string> $value
+	 * @param string $name
 	 */
 	public function addHeader(string $name, string|array $value): static;
 

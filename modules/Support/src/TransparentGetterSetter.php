@@ -10,6 +10,8 @@ trait TransparentGetterSetter
 {
 	/**
 	 * @return iterable<mixed, string>
+	 *
+	 * @param string $propertyName
 	 */
 	protected function buildGetterNames(string $propertyName): iterable
 	{
@@ -21,6 +23,8 @@ trait TransparentGetterSetter
 
 	/**
 	 * @return iterable<mixed, string>
+	 *
+	 * @param string $propertyName
 	 */
 	protected function buildSetterNames(string $propertyName): iterable
 	{

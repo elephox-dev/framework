@@ -32,6 +32,8 @@ interface Directory extends FilesystemNode
 
 	/**
 	 * @throws FilesystemNodeNotFoundException
+	 *
+	 * @param string $name
 	 */
 	public function getChild(string $name): FilesystemNode;
 
@@ -44,11 +46,16 @@ interface Directory extends FilesystemNode
 	/**
 	 * @throws DirectoryNotFoundException
 	 * @throws DirectoryNotEmptyException
+	 *
+	 * @param bool $recursive
 	 */
 	public function delete(bool $recursive = true): void;
 
 	/**
 	 * @throws DirectoryNotCreatedException
+	 *
+	 * @param bool $recursive
+	 * @param int $permissions
 	 */
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void;
 }

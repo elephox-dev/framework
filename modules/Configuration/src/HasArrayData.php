@@ -19,6 +19,8 @@ trait HasArrayData
 
 	/**
 	 * @return GenericEnumerable<string>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{

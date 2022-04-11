@@ -341,6 +341,7 @@ class ReleaseCommand implements CommandHandler
 	 * @return array{int, list<string>, list<string>}
 	 *
 	 * @param float|int|string[] $args
+	 * @param string $commandLine
 	 */
 	private function execute(string $commandLine, float|int|string ...$args): array
 	{

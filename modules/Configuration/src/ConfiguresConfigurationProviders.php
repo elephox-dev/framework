@@ -19,6 +19,8 @@ trait ConfiguresConfigurationProviders
 
 	/**
 	 * @return GenericEnumerable<string>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{
@@ -37,6 +39,8 @@ trait ConfiguresConfigurationProviders
 
 	/**
 	 * @return GenericEnumerable<Contract\ConfigurationSection>
+	 *
+	 * @param null|string|Str $path
 	 */
 	public function getChildren(string|Str|null $path = null): GenericEnumerable
 	{

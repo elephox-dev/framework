@@ -26,6 +26,9 @@ class UploadErrorTest extends TestCase
 
 	/**
 	 * @dataProvider messageProvider
+	 *
+	 * @param UploadError $error
+	 * @param string $message
 	 */
 	public function testGetMessage(UploadError $error, string $message): void
 	{

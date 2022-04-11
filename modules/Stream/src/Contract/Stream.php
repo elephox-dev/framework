@@ -40,6 +40,8 @@ interface Stream extends Stringable
 
 	/**
 	 * @return positive-int|0
+	 *
+	 * @param string $string
 	 */
 	public function write(string $string): int;
 

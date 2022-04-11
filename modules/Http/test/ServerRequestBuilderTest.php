@@ -42,6 +42,9 @@ class ServerRequestBuilderTest extends TestCase
 
 	/**
 	 * @dataProvider parameterMapProvider
+	 *
+	 * @param ParameterMap $parameterMap
+	 * @param string $requestUri
 	 */
 	public function testDefaultParametersComeFromServer(ParameterMap $parameterMap, string $requestUri): void
 	{

@@ -30,6 +30,8 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 
 	/**
 	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param string $key
 	 */
 	public function getItem(string $key): CacheItemInterface
 	{
@@ -113,6 +115,8 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 	 * @return ArrayMap<string, CacheItemInterface>
 	 *
 	 * @throws InvalidArgumentException
+	 *
+	 * @param array $keys
 	 */
 	public function getItems(array $keys = []): ArrayMap
 	{

@@ -10,6 +10,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "hello beautiful world"
+	 *
+	 * @param string $string
 	 */
 	public static function toLower(string $string): string
 	{
@@ -19,6 +21,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HELLO BEAUTIFUL WORLD"
+	 *
+	 * @param string $string
 	 */
 	public static function toUpper(string $string): string
 	{
@@ -28,6 +32,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "Hello Beautiful World"
+	 *
+	 * @param string $string
 	 */
 	public static function toTitle(string $string): string
 	{
@@ -37,6 +43,10 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World", "-"<br>
 	 * Example output: "Hello-beautiful-World"
+	 *
+	 * @param string $string
+	 * @param string $replacement
+	 * @param string $delimitersPattern
 	 */
 	public static function replaceDelimiters(string $string, string $replacement, string $delimitersPattern = '/([\s\-_]+)/'): string
 	{
@@ -47,6 +57,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "helloBeautifulWorld"
+	 *
+	 * @param string $string
 	 */
 	public static function toCamel(string $string): string
 	{
@@ -56,6 +68,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "hello_beautiful_world"
+	 *
+	 * @param string $string
 	 */
 	public static function toSnake(string $string): string
 	{
@@ -65,6 +79,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "hello-beautiful-world"
+	 *
+	 * @param string $string
 	 */
 	public static function toKebab(string $string): string
 	{
@@ -74,6 +90,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HELLO-BEAUTIFUL-WORLD"
+	 *
+	 * @param string $string
 	 */
 	public static function toCobol(string $string): string
 	{
@@ -83,6 +101,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HelloBeautifulWorld"
+	 *
+	 * @param string $string
 	 */
 	public static function toHttpHeader(string $string): string
 	{
@@ -92,6 +112,8 @@ class Casing
 	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HelloBeautifulWorld"
+	 *
+	 * @param string $string
 	 */
 	public static function toPascal(string $string): string
 	{
@@ -106,6 +128,7 @@ class Casing
 	 * Example output: "heLLo beaUTiFul WoRLD"
 	 *
 	 * @param ?int $seed
+	 * @param string $string
 	 */
 	public static function random(string $string, ?int $seed = null): string
 	{

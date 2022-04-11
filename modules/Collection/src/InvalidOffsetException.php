@@ -9,9 +9,10 @@ use Throwable;
 abstract class InvalidOffsetException extends InvalidArgumentException
 {
 	/**
-	 * @throws \Safe\Exceptions\StringsException
-	 *
 	 * @param ?Throwable $previous
+	 * @param mixed $offset
+	 * @param string $format
+	 * @param int $code
 	 */
 	public function __construct(mixed $offset, string $format, int $code = 0, ?Throwable $previous = null)
 	{

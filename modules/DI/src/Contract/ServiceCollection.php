@@ -22,6 +22,8 @@ interface ServiceCollection
 	 * @param class-string<TImplementation> $implementationName
 	 * @param null|Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
+	 * @param ServiceLifetime $lifetime
+	 * @param bool $replace
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
@@ -36,6 +38,7 @@ interface ServiceCollection
 	 * @param class-string<TImplementation> $implementationName
 	 * @param Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
+	 * @param bool $replace
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 */
@@ -49,6 +52,7 @@ interface ServiceCollection
 	 * @param null|class-string<TImplementation> $implementationName
 	 * @param null|Closure(mixed): TImplementation $implementationFactory
 	 * @param TImplementation|null $implementation
+	 * @param bool $replace
 	 *
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
@@ -90,6 +94,7 @@ interface ServiceCollection
 	 * @template TService of object
 	 *
 	 * @param class-string<TService> $serviceName
+	 * @param string $alias
 	 *
 	 * @throws InvalidArgumentException if the alias or the service name is empty
 	 */
@@ -101,6 +106,8 @@ interface ServiceCollection
 	 * @return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function getByAlias(string $alias): ?object;
 
@@ -111,16 +118,22 @@ interface ServiceCollection
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function requireByAlias(string $alias): object;
 
 	/**
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function hasAlias(string $alias): bool;
 
 	/**
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function has(string $aliasOrServiceName): bool;
 
@@ -130,6 +143,8 @@ interface ServiceCollection
 	 * @return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function get(string $aliasOrServiceName): ?object;
 
@@ -140,21 +155,29 @@ interface ServiceCollection
 	 *
 	 * @throws ServiceNotFoundException if no service with the given alias exists
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function require(string $aliasOrServiceName): object;
 
 	/**
 	 * @throws InvalidArgumentException if the service name is empty
+	 *
+	 * @param string $serviceName
 	 */
 	public function removeService(string $serviceName): ServiceCollection;
 
 	/**
 	 * @throws InvalidArgumentException if the alias is empty
+	 *
+	 * @param string $alias
 	 */
 	public function removeAlias(string $alias): ServiceCollection;
 
 	/**
 	 * @throws InvalidArgumentException if the alias or service name is empty
+	 *
+	 * @param string $aliasOrServiceName
 	 */
 	public function remove(string $aliasOrServiceName): ServiceCollection;
 }

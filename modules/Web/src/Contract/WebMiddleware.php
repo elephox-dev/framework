@@ -11,6 +11,7 @@ interface WebMiddleware
 {
 	/**
 	 * @param Closure(Request): ResponseBuilder $next
+	 * @param Request $request
 	 */
 	public function handle(Request $request, Closure $next): ResponseBuilder;
 }
