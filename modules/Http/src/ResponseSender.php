@@ -38,9 +38,7 @@ class ResponseSender
 		$contentTypeSent = false;
 		foreach ($response->getHeaderMap() as $headerName => $values) {
 			if (is_array($values)) {
-				foreach ($values as $value) {
-					header("$headerName: $value");
-				}
+				header("$headerName: " . implode(",", $values));
 			} else {
 				header("$headerName: $values");
 			}
