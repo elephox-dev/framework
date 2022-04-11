@@ -14,8 +14,8 @@
   <br>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/level&style=for-the-badge" alt="Psalm Level"></a>
   <a href="https://shepherd.dev/github/elephox-dev/framework"><img src="https://img.shields.io/endpoint?url=https://shepherd.dev/github/elephox-dev/framework/coverage&style=for-the-badge&label=type%20coverage" alt="Type Coverage"></a>
-  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/main?style=for-the-badge&label=test%20coverage" alt="Coverage Status"></a>
-  <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/develop"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Fdevelop" alt="Mutation Score Indicator"></a>
+  <a href="https://coveralls.io/github/elephox-dev/framework?branch=develop"><img src="https://img.shields.io/coveralls/github/elephox-dev/framework/release/0.3?style=for-the-badge&label=test%20coverage" alt="Coverage Status"></a>
+  <a href="https://dashboard.stryker-mutator.io/reports/github.com/elephox-dev/framework/release/0.3"><img src="https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Felephox-dev%2Fframework%2Frelease%2F0.3" alt="Mutation Score Indicator"></a>
 </p>
 
 ## 📚 Documentation
