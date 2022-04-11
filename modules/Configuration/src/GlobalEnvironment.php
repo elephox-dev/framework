@@ -10,6 +10,8 @@ use RuntimeException;
 
 class GlobalEnvironment implements Contract\Environment
 {
+	protected ?Directory $rootDirectory = null;
+
 	public function loadFromEnvFile(?string $envName = null): void
 	{
 		$envFile = '.env';
@@ -36,20 +38,26 @@ class GlobalEnvironment implements Contract\Environment
 
 	public function getRootDirectory(): Directory
 	{
+		if ($this->rootDirectory !== null) {
+			return $this->rootDirectory;
+		}
+
 		if (defined('APP_ROOT')) {
-			return new Directory(APP_ROOT);
+			$dir = new Directory(APP_ROOT);
+		} else if ($this->offsetExists('APP_ROOT')) {
+			$dir = new Directory((string)$this['APP_ROOT']);
+		} else {
+			$cwd = getcwd();
+			if (!$cwd) {
+				throw new RuntimeException('Cannot get current working directory');
+			}
+
+			$dir = new Directory($cwd);
 		}
 
-		if ($this->offsetExists('APP_ROOT')) {
-			return new Directory((string) $this['APP_ROOT']);
-		}
+		$this->rootDirectory = $dir;
 
-		$cwd = getcwd();
-		if (!$cwd) {
-			throw new RuntimeException('Cannot get current working directory');
-		}
-
-		return new Directory($cwd);
+		return $dir;
 	}
 
 	public function isDevelopment(): bool
