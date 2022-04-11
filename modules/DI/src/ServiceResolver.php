@@ -189,6 +189,6 @@ trait ServiceResolver
 			return null;
 		}
 
-		throw new UnresolvedParameterException((string) $type, $parameter->name);
+		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
 	}
 }
