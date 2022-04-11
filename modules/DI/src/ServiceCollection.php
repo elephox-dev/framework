@@ -193,7 +193,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			return null;
 		}
 
-		$this->descriptorCache[$serviceName] = $descriptor;
+		$this->descriptorCache[$descriptor->serviceType] = $descriptor;
+		$this->descriptorCache[$descriptor->implementationType] = $descriptor;
 
 		return $descriptor;
 	}
@@ -391,7 +392,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 			unset(
 				$this->descriptorCache[$d->serviceType],
-				$this->factoryCache[$d->serviceType],
 				$this->descriptorCache[$d->implementationType],
 				$this->factoryCache[$d->implementationType],
 			);
