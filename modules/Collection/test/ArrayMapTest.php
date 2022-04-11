@@ -159,21 +159,6 @@ class ArrayMapTest extends TestCase
 		static::assertEquals(['a', 'c'], $map->toArray());
 	}
 
-	public function testDeepClone(): void
-	{
-		$anObject = new stdClass();
-		$anObject->test = true;
-		$map = new ArrayMap(['obj' => $anObject, 'test' => 2, 'obj2' => $anObject]);
-		$clone = $map->deepClone();
-
-		static::assertInstanceOf(ArrayMap::class, $clone);
-		static::assertNotSame($map, $clone);
-		static::assertNotSame($map['obj'], $clone['obj']);
-		static::assertNotSame($map['obj2'], $clone['obj2']);
-		static::assertSame($clone['obj'], $clone['obj2']);
-		static::assertTrue($clone['obj']->test);
-	}
-
 	public function testOffsetExists(): void
 	{
 		$map = new ArrayMap([

@@ -191,20 +191,6 @@ class ArrayListTest extends TestCase
 		}
 	}
 
-	public function testDeepClone(): void
-	{
-		$anObject = new stdClass();
-		$anObject->test = true;
-		$list = new ArrayList([$anObject, 2, $anObject]);
-		$clone = $list->deepClone();
-
-		static::assertInstanceOf(ArrayList::class, $clone);
-		static::assertNotSame($list, $clone);
-		static::assertNotSame($list[0], $clone[0]);
-		static::assertNotSame($list[2], $clone[2]);
-		static::assertSame($clone[0], $clone[2]);
-	}
-
 	public function testRemoveAt(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);

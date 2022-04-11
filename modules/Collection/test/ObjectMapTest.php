@@ -108,20 +108,4 @@ class ObjectMapTest extends TestCase
 
 		static::assertFalse($removedAgain);
 	}
-
-	public function testDeepClone(): void
-	{
-		$anObject = new stdClass();
-		$anObject->test = true;
-		$anotherObject = new stdClass();
-		$anotherObject->test = false;
-
-		$map = new ObjectMap([$anObject], [$anotherObject]);
-		$clone = $map->deepClone();
-
-		static::assertInstanceOf(ObjectMap::class, $clone);
-		static::assertNotSame($map, $clone);
-		static::assertNotSame($anObject, $clone->keys()->first());
-		static::assertNotSame($anotherObject, $clone->values()->first());
-	}
 }
