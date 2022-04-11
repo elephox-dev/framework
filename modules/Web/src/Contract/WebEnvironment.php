@@ -7,7 +7,7 @@ use Elephox\Configuration\Contract\Environment;
 use Elephox\Files\Contract\Directory;
 
 /**
- * @property-read Directory $webRoot
+ * @property Directory $webRoot
  */
 interface WebEnvironment extends Environment
 {

@@ -215,7 +215,8 @@ class ConfigurationRootTest extends TestCase
 		$_ENV['TEST_VAR'] = new stdClass();
 		static::assertEquals('this is an env value: stdClass', $root->getSection('test')->getValue());
 
-		$_ENV['TEST_VAR'] = new class {};
+		$_ENV['TEST_VAR'] = new class {
+		};
 		static::assertEquals('this is an env value: class@anonymous', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new class implements Stringable {

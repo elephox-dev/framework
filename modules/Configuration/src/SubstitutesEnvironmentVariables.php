@@ -12,6 +12,7 @@ trait SubstitutesEnvironmentVariables
 		if (array_key_exists($name, $_ENV)) {
 			$value = $_ENV[$name];
 			$type = get_debug_type($value);
+
 			return match (true) {
 				$type === 'null' => 'null',
 				$type === 'bool' => $value ? 'true' : 'false',

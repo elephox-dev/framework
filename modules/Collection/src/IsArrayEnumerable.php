@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Elephox\Collection;
 
@@ -8,7 +9,9 @@ namespace Elephox\Collection;
  */
 trait IsArrayEnumerable
 {
-	/** @var array<TKey, TValue> */
+	/**
+	 * @var array<TKey, TValue>
+	 */
 	protected array $items;
 
 	/**

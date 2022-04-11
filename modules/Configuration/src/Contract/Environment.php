@@ -8,10 +8,11 @@ use Elephox\Files\Contract\Directory;
 
 /**
  * @extends ArrayAccess<string, scalar>
- * @property-read Directory $root
- * @property-read Directory $config
- * @property-read Directory $temp
- * @property-read bool $development
+ *
+ * @property Directory $root
+ * @property Directory $config
+ * @property Directory $temp
+ * @property bool $development
  */
 interface Environment extends ArrayAccess
 {

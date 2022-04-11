@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * @covers \Elephox\Collection\ArrayMap

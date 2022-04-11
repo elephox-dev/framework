@@ -47,8 +47,8 @@ class GlobalEnvironment implements Contract\Environment
 
 		if (defined('APP_ROOT')) {
 			$dir = new Directory(APP_ROOT);
-		} else if ($this->offsetExists('APP_ROOT')) {
-			$dir = new Directory((string)$this['APP_ROOT']);
+		} elseif ($this->offsetExists('APP_ROOT')) {
+			$dir = new Directory((string) $this['APP_ROOT']);
 		} else {
 			$cwd = getcwd();
 			if (!$cwd) {

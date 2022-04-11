@@ -9,7 +9,9 @@ use PhpBench\Attributes\Revs;
 
 class ArraySetBench
 {
-	/** @var ArraySet<int> */
+	/**
+	 * @var ArraySet<int>
+	 */
 	private ArraySet $set;
 
 	public function __construct()
@@ -29,6 +31,6 @@ class ArraySetBench
 	public function benchFirstOrDefault(): void
 	{
 		$this->set->firstOrDefault(0);
-		$this->set->firstOrDefault(0, fn (int $v) => $v % 2 === 0);
+		$this->set->firstOrDefault(0, static fn (int $v) => $v % 2 === 0);
 	}
 }
