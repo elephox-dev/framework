@@ -3,12 +3,24 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
+use Stringable;
+
 trait SubstitutesEnvironmentVariables
 {
 	protected function getEnvSubstitute(string $name): ?string
 	{
-		if (isset($_ENV[$name])) {
-			return (string) $_ENV[$name];
+		if (array_key_exists($name, $_ENV)) {
+			$value = $_ENV[$name];
+			$type = get_debug_type($value);
+			return match (true) {
+				$type === 'null' => 'null',
+				$type === 'bool' => $value ? 'true' : 'false',
+				$type === 'int',
+				$type === 'float',
+				$type === 'string',
+				$value instanceof Stringable => (string) $value,
+				default => $type,
+			};
 		}
 
 		return null;
@@ -20,7 +32,8 @@ trait SubstitutesEnvironmentVariables
 		$value = preg_replace_callback('/(?<!\$)\${([^}]+)}/m', function (array $match) {
 			$substitute = $this->getEnvSubstitute($match[1]);
 
-			return $substitute ?? $match[0];
+			// Replaced nested substitutions
+			return $substitute !== null ? $this->substituteEnvironmentVariables($substitute) : $match[0];
 		}, $value);
 
 		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})

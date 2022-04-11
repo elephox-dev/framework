@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+use Stringable;
 
 /**
  * @covers \Elephox\Configuration\ConfigurationBuilder
@@ -184,9 +185,51 @@ class ConfigurationRootTest extends TestCase
 		$root = $configBuilder->build();
 
 		$_ENV['TEST_VAR'] = 'secret!';
+		unset($_ENV['NOT_A_VAR']);
 
 		static::assertEquals('this is an env value: secret!', $root->getSection('test')->getValue());
 		static::assertEquals('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
 		static::assertEquals('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
+
+		$_ENV['NOT_A_VAR'] = 'now has a value!';
+		static::assertEquals('this env should remain: now has a value!', $root->getSection('test3')->getValue());
+
+		$_ENV['TEST_VAR'] = 123.2;
+		static::assertEquals('this is an env value: 123.2', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = true;
+		static::assertEquals('this is an env value: true', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = false;
+		static::assertEquals('this is an env value: false', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = null;
+		static::assertEquals('this is an env value: null', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = '${NOT_A_VAR}';
+		static::assertEquals('this is an env value: now has a value!', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = ['a' => 'b'];
+		static::assertEquals('this is an env value: array', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = new stdClass();
+		static::assertEquals('this is an env value: stdClass', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = new class {};
+		static::assertEquals('this is an env value: class@anonymous', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = new class implements Stringable {
+			public function __toString(): string
+			{
+				return 'this is a stringable object';
+			}
+		};
+		static::assertEquals('this is an env value: this is a stringable object', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = fopen('php://memory', 'rb');
+		static::assertEquals('this is an env value: resource (stream)', $root->getSection('test')->getValue());
+
+		fclose($_ENV['TEST_VAR']);
+		static::assertEquals('this is an env value: resource (closed)', $root->getSection('test')->getValue());
 	}
 }
