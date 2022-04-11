@@ -14,6 +14,7 @@ use Iterator;
  */
 class ArrayList implements GenericList
 {
+	// TODO: replace generic enumerable function with array-specific functions where possible
 	/**
 	 * @use IsKeyedEnumerable<int, T>
 	 */
@@ -241,5 +242,24 @@ class ArrayList implements GenericList
 	public function implode(string $separator = ', '): string
 	{
 		return implode($separator, array_map(static fn (mixed $v) => (string) $v, $this->items));
+	}
+
+	/**
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
+	 * @param null|callable(T, int): bool $predicate
+	 *
+	 * @return TDefault|T
+	 */
+	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
+	{
+		if ($predicate === null) {
+			/** @var T|TDefault */
+			return $this->items[0] ?? $defaultValue;
+		}
+
+		/** @var T|TDefault */
+		return array_filter($this->items, $predicate, ARRAY_FILTER_USE_BOTH)[0] ?? $defaultValue;
 	}
 }

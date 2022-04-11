@@ -18,6 +18,7 @@ use Iterator;
  */
 class ArrayMap implements GenericMap, ArrayAccess
 {
+	// TODO: replace generic enumerable function with array-specific functions where possible
 	/**
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
@@ -140,5 +141,24 @@ class ArrayMap implements GenericMap, ArrayAccess
 	public function offsetUnset(mixed $offset): void
 	{
 		$this->remove($offset);
+	}
+
+	/**
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
+	 * @param null|callable(TValue, TKey): bool $predicate
+	 *
+	 * @return TDefault|TValue
+	 */
+	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
+	{
+		if ($predicate === null) {
+			/** @var TValue|TDefault */
+			return $this->items[0] ?? $defaultValue;
+		}
+
+		/** @var TValue|TDefault */
+		return array_filter($this->items, $predicate, ARRAY_FILTER_USE_BOTH)[0] ?? $defaultValue;
 	}
 }

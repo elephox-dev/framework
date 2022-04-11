@@ -14,6 +14,7 @@ use Elephox\Collection\Contract\GenericSet;
  */
 class ArraySet implements GenericSet
 {
+	// TODO: replace generic enumerable function with array-specific functions where possible
 	/**
 	 * @use IsEnumerable<T>
 	 */
@@ -96,5 +97,14 @@ class ArraySet implements GenericSet
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->enumerableContains($value, $comparer ?? $this->comparer);
+	}
+
+	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
+	{
+		if ($predicate === null) {
+			return $this->items[0] ?? $defaultValue;
+		}
+
+		return array_filter($this->items, $predicate)[0] ?? $defaultValue;
 	}
 }
