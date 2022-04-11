@@ -22,7 +22,7 @@ class Enumerable implements GenericEnumerable
 	/**
 	 * @template T
 	 *
-	 * @param T $value
+	 * @param T|iterable<mixed, T> $value
 	 *
 	 * @return GenericEnumerable<T>
 	 */
