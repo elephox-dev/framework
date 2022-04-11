@@ -15,8 +15,8 @@ use Throwable;
 class RequestPipeline
 {
 	/**
+	 * @param RequestPipelineEndpoint $endpoint
 	 * @param ArrayList<WebMiddleware> $middlewares
-	 * @param privatereadonlyRequestPipelineEndpoint $endpoint
 	 */
 	public function __construct(
 		private readonly RequestPipelineEndpoint $endpoint,
