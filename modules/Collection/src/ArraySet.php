@@ -19,7 +19,16 @@ class ArraySet implements GenericSet
 	 * @use IsEnumerable<T>
 	 */
 	use IsEnumerable {
-		IsEnumerable::contains as enumerableContains;
+		IsEnumerable::contains as genericContains;
+		IsEnumerable::firstOrDefault as genericFirstOrDefault;
+	}
+
+	/**
+	 * @use IsArrayEnumerable<mixed, T>
+	 */
+	use IsArrayEnumerable {
+		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**
@@ -32,7 +41,7 @@ class ArraySet implements GenericSet
 	 * @param null|Closure(null|T, null|T): bool $comparer
 	 */
 	public function __construct(
-		private array $items = [],
+		protected array $items = [],
 		?Closure $comparer = null,
 	) {
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
@@ -96,15 +105,20 @@ class ArraySet implements GenericSet
 
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
-		return $this->enumerableContains($value, $comparer ?? $this->comparer);
+		return $this->arrayContains($value, $comparer ?? $this->comparer);
 	}
 
+	/**
+	 * @template TDefault
+	 *
+	 * @param TDefault $defaultValue
+	 * @param null|callable(T): bool $predicate
+	 *
+	 * @return TDefault|T
+	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
-		if ($predicate === null) {
-			return $this->items[0] ?? $defaultValue;
-		}
-
-		return array_filter($this->items, $predicate)[0] ?? $defaultValue;
+		/** @var T|TDefault */
+		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 }

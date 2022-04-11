@@ -18,7 +18,18 @@ class ArrayList implements GenericList
 	/**
 	 * @use IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable;
+	use IsKeyedEnumerable {
+		IsKeyedEnumerable::contains as genericContains;
+		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
+	}
+
+	/**
+	 * @use IsArrayEnumerable<int, TValue>
+	 */
+	use IsArrayEnumerable {
+		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+	}
 
 	/**
 	 * @template UValue
@@ -45,7 +56,7 @@ class ArrayList implements GenericList
 	}
 
 	public function __construct(
-		private array $items = [],
+		protected array $items = [],
 	) {
 	}
 
@@ -244,6 +255,11 @@ class ArrayList implements GenericList
 		return implode($separator, array_map(static fn (mixed $v) => (string) $v, $this->items));
 	}
 
+	public function contains(mixed $value, ?callable $comparer = null): bool
+	{
+		return $this->arrayContains($value, $comparer);
+	}
+
 	/**
 	 * @template TDefault
 	 *
@@ -254,12 +270,7 @@ class ArrayList implements GenericList
 	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
-		if ($predicate === null) {
-			/** @var T|TDefault */
-			return $this->items[0] ?? $defaultValue;
-		}
-
 		/** @var T|TDefault */
-		return array_filter($this->items, $predicate, ARRAY_FILTER_USE_BOTH)[0] ?? $defaultValue;
+		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 }

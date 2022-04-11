@@ -22,7 +22,18 @@ class ArrayMap implements GenericMap, ArrayAccess
 	/**
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
-	use IsKeyedEnumerable;
+	use IsKeyedEnumerable {
+		IsKeyedEnumerable::contains as genericContains;
+		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
+	}
+
+	/**
+	 * @use IsArrayEnumerable<TKey, TValue>
+	 */
+	use IsArrayEnumerable {
+		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+	}
 
 	/**
 	 * @template UKey of array-key
@@ -50,7 +61,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	}
 
 	public function __construct(
-		private array $items = [],
+		protected array $items = [],
 	) {
 	}
 
@@ -143,6 +154,11 @@ class ArrayMap implements GenericMap, ArrayAccess
 		$this->remove($offset);
 	}
 
+	public function contains(mixed $value, ?callable $comparer = null): bool
+	{
+		return $this->arrayContains($value, $comparer);
+	}
+
 	/**
 	 * @template TDefault
 	 *
@@ -153,12 +169,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 */
 	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
 	{
-		if ($predicate === null) {
-			/** @var TValue|TDefault */
-			return $this->items[0] ?? $defaultValue;
-		}
-
 		/** @var TValue|TDefault */
-		return array_filter($this->items, $predicate, ARRAY_FILTER_USE_BOTH)[0] ?? $defaultValue;
+		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 }
