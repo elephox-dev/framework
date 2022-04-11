@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
-use RuntimeException;
 use Stringable;
 
 trait SubstitutesEnvironmentVariables
