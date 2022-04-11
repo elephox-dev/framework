@@ -33,7 +33,8 @@
         "roave/no-leaks": "^1.3",
         "vimeo/psalm": "^5.0.0-alpha1",
         "ergebnis/composer-normalize": "dev-main",
-        "friendsofphp/php-cs-fixer": "dev-master"
+        "friendsofphp/php-cs-fixer": "dev-master",
+        "phpbench/phpbench": "^1.2"
     },
     "replace": {
         "elephox/autoloading": "self.version",
@@ -118,6 +119,10 @@
         "bin-dir": "./bin"
     },
     "scripts": {
+        "benchmark": [
+            "@putenv XDEBUG_MODE=off",
+            "phpbench run --report=overview --ref=baseline --retry-threshold=5 --iterations=10"
+        ],
         "check-dependencies": [
             "@putenv XDEBUG_MODE=off",
             "@composer modules:check --namespaces"
@@ -195,6 +200,10 @@
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",
             "phpunit --configuration=phpunit.xml.dist"
+        ],
+        "update-benchmark-baseline": [
+            "@putenv XDEBUG_MODE=off",
+            "phpbench run --tag=baseline --retry-threshold=5 --iterations=10 --dump-file=baselines/benchmark.baseline.xml"
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",

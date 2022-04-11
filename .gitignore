@@ -4,3 +4,4 @@ tmp/
 .phpunit.cache
 .php-cs-fixer.cache
 phpunit.xml
+baselines/benchmark.baseline.xml
