@@ -68,6 +68,11 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
 
+### ⚠️ Fixes
+
+- [ ] [modules/Collection/src/IsArrayEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsArrayEnumerable.php)
+  - [ ] this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
+
 ### 🤔 Maybe
 
 - [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
