@@ -95,6 +95,7 @@ class GlobalEnvironment implements Contract\Environment
 
 	/**
 	 * @param mixed $offset
+	 *
 	 * @return scalar|null
 	 */
 	public function offsetGet(mixed $offset): string|int|bool|null|float

@@ -10,16 +10,6 @@
       <code>(string) $v</code>
     </RedundantCastGivenDocblockType>
   </file>
-  <file src="modules/Cache/src/AbstractCache.php">
-    <DocblockTypeContradiction occurrences="3">
-      <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
-    </DocblockTypeContradiction>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
-  </file>
   <file src="modules/Collection/src/Enumerable.php">
     <UnusedPsalmSuppress occurrences="1">
       <code>RedundantConditionGivenDocblockType</code>
