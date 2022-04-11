@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection;
+namespace Elephox\Support;
 
 use Exception;
 use Iterator;

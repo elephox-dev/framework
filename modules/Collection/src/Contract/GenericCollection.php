@@ -8,7 +8,7 @@ namespace Elephox\Collection\Contract;
  *
  * @template TSource
  */
-interface GenericCollection extends DeepCloneable
+interface GenericCollection
 {
 	/**
 	 * @param NonNegativeInteger $size

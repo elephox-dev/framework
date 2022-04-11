@@ -19,7 +19,6 @@ class Grouping implements GroupingContract
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	/**
 	 * @param TGroupKey $groupKey

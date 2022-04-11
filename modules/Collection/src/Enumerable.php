@@ -72,7 +72,6 @@ class Enumerable implements GenericEnumerable
 	 * @use IsEnumerable<TSource>
 	 */
 	use IsEnumerable;
-	use DeepCloneable;
 
 	/**
 	 * @var Iterator<mixed, TSource>

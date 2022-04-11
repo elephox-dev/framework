@@ -19,7 +19,6 @@ class ObjectMap implements GenericMap
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	private SplObjectStorage $map;
 

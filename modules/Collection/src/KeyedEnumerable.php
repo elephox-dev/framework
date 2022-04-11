@@ -73,7 +73,6 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	 * @use IsKeyedEnumerable<TIteratorKey, TSource>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	/**
 	 * @var Iterator<TIteratorKey, TSource>

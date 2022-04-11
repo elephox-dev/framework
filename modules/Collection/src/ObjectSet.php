@@ -25,7 +25,6 @@ class ObjectSet implements GenericSet
 	use IsEnumerable {
 		IsEnumerable::contains as enumerableContains;
 	}
-	use DeepCloneable;
 
 	/**
 	 * @var SplObjectStorage<T, mixed>

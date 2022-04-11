@@ -20,7 +20,6 @@ class ArraySet implements GenericSet
 	use IsEnumerable {
 		IsEnumerable::contains as enumerableContains;
 	}
-	use DeepCloneable;
 
 	/**
 	 * @var Closure(null|T, null|T): bool

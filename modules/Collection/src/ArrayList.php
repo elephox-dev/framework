@@ -18,7 +18,6 @@ class ArrayList implements GenericList
 	 * @use IsKeyedEnumerable<int, T>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	/**
 	 * @template UValue

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Collection;
+namespace Elephox\Support;
 
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -9,11 +9,11 @@ use stdClass;
 use WeakMap;
 
 /**
- * @covers \Elephox\Collection\DeepCloneable
+ * @covers \Elephox\Support\DeepCloneable
  *
  * @internal
  */
-class DeepCloneTest extends TestCase
+class DeepCloneableTest extends TestCase
 {
 	public function testThrowsRuntimeException(): void
 	{

@@ -22,7 +22,6 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	/**
 	 * @template UKey of array-key
