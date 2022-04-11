@@ -57,7 +57,7 @@ trait HasArrayData
 		});
 	}
 
-	public function set(string|Str $key, string|float|bool|int|null $value): void
+	public function set(string|Str $key, array|string|float|bool|int|null $value): void
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
 		$data = &$this->data;
@@ -74,7 +74,7 @@ trait HasArrayData
 		$data = $value;
 	}
 
-	public function tryGet(string|Str $key, string|float|bool|int|null &$value = null): bool
+	public function tryGet(string|Str $key, array|string|float|bool|int|null &$value = null): bool
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
 		$data = $this->data;

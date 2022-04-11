@@ -8,9 +8,9 @@ use Elephox\OOR\Str;
 
 interface ConfigurationProvider
 {
-	public function set(string|Str $key, string|int|float|bool|null $value): void;
+	public function set(string|Str $key, array|string|int|float|bool|null $value): void;
 
-	public function tryGet(string|Str $key, string|int|float|bool|null &$value = null): bool;
+	public function tryGet(string|Str $key, array|string|int|float|bool|null &$value = null): bool;
 
 	public function remove(string|Str $key): void;
 

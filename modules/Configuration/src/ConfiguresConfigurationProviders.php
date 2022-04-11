@@ -69,7 +69,7 @@ trait ConfiguresConfigurationProviders
 		return $this->hasSection($offset);
 	}
 
-	public function offsetGet(mixed $offset): string|int|float|bool|null
+	public function offsetGet(mixed $offset): array|string|int|float|bool|null
 	{
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Offset must be a string');
