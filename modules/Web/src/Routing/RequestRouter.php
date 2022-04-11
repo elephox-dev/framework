@@ -84,7 +84,7 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 		$matchedHandlersGroup = $this->handlers
 			->where(static fn (RouteHandlerContract $handler): bool => $handler->matches($request))
 			->groupBy(static fn (RouteHandlerContract $handler): float => $handler->getMatchScore($request))
-			->orderBy(static fn (Grouping $grouping): mixed => $grouping->groupKey())
+			->orderByDescending(static fn (Grouping $grouping): mixed => $grouping->groupKey())
 			->firstOrDefault(null)
 		;
 
