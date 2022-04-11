@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use ArrayIterator;
-use Elephox\Collection\DeepCloneable;
 use Elephox\Collection\IsKeyedEnumerable;
 use LogicException;
 
@@ -52,7 +51,6 @@ class SessionMap implements Contract\SessionMap
 	 * @use IsKeyedEnumerable<array-key, mixed>
 	 */
 	use IsKeyedEnumerable;
-	use DeepCloneable;
 
 	private function __construct()
 	{
