@@ -30,6 +30,7 @@ class ServeCommand implements CommandHandler
 			->argument('port', 'Port to bind to (>=1024, <=65535)', '8000', false)
 			->argument('root', 'Root directory to serve from', $publicDir->getPath(), false)
 			->argument('env', 'The environment to use (e.g. development, staging or production)', 'development', false)
+			->argument('router', 'The router script to use', dirname(__DIR__, 2) . '/data/router.php', false)
 		;
 	}
 
@@ -39,8 +40,9 @@ class ServeCommand implements CommandHandler
 		$port = $command->getArgument('port')->value;
 		$root = $command->getArgument('root')->value;
 		$env = $command->getArgument('env')->value;
+		$router = $command->getArgument('router')->value;
 
-		if (!ctype_digit($port)) {
+		if (!is_string($port) || !ctype_digit($port)) {
 			throw new InvalidArgumentException('Port must be a number');
 		}
 
@@ -49,19 +51,34 @@ class ServeCommand implements CommandHandler
 			throw new InvalidArgumentException('Port must be between 1 and 65535');
 		}
 
-		if (!is_dir($root)) {
-			throw new InvalidArgumentException('Root directory (' . $root . ') does not exist');
+		if (!is_string($root) || !is_dir($root)) {
+			throw new InvalidArgumentException('Root directory (' . ((string) $root) . ') does not exist');
 		}
 
-		$root = realpath($root);
+		$documentRoot = realpath($root);
+		if (!is_string($documentRoot)) {
+			throw new RuntimeException('Unable to resolve document root');
+		}
+
+		if (!is_string($host)) {
+			throw new InvalidArgumentException('Host must be a string');
+		}
+
+		if (!is_string($env)) {
+			throw new InvalidArgumentException('Environment must be a string');
+		}
+
+		if (!is_string($router)) {
+			throw new InvalidArgumentException('Router must be a string');
+		}
 
 		$this->logger->info('Starting PHP built-in webserver on ' . $host . ':' . $port);
 
 		$process = proc_open(
-			sprintf('%s -S %s:%d', escapeshellarg(PHP_BINARY), $host, $port),
+			sprintf('%s -S %s:%d %s', escapeshellarg(PHP_BINARY), $host, $port, $router),
 			[STDIN],
 			$pipes,
-			$root,
+			$documentRoot,
 			array_merge(getenv(), $_ENV, ['APP_ENV' => $env]),
 		);
 
