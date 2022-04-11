@@ -8,6 +8,10 @@ use Elephox\Files\Contract\Directory;
 
 /**
  * @extends ArrayAccess<string, scalar>
+ * @property-read Directory $root
+ * @property-read Directory $config
+ * @property-read Directory $temp
+ * @property-read bool $development
  */
 interface Environment extends ArrayAccess
 {
@@ -15,7 +19,11 @@ interface Environment extends ArrayAccess
 
 	public function getEnvironmentName(): string;
 
-	public function getRootDirectory(): Directory;
+	public function getRoot(): Directory;
+
+	public function getTemp(): Directory;
+
+	public function getConfig(): Directory;
 
 	public function isDevelopment(): bool;
 }

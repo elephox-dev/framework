@@ -5,12 +5,15 @@ namespace Elephox\Configuration;
 
 use Dotenv\Dotenv;
 use Elephox\Files\Directory;
+use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
 use RuntimeException;
 
 class GlobalEnvironment implements Contract\Environment
 {
-	protected ?Directory $rootDirectory = null;
+	use TransparentGetterSetter;
+
+	protected ?Directory $cachedRootDirectory = null;
 
 	public function loadFromEnvFile(?string $envName = null): void
 	{
@@ -19,10 +22,10 @@ class GlobalEnvironment implements Contract\Environment
 			$envFile .= '.' . $envName;
 		}
 
-		$dotenv = Dotenv::createImmutable($this->getRootDirectory()->getPath(), $envFile);
+		$dotenv = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile);
 		$dotenv->safeLoad();
 
-		$dotenvLocal = Dotenv::createImmutable($this->getRootDirectory()->getPath(), $envFile . '.local');
+		$dotenvLocal = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile . '.local');
 		$dotenvLocal->safeLoad();
 	}
 
@@ -36,10 +39,10 @@ class GlobalEnvironment implements Contract\Environment
 		return 'production';
 	}
 
-	public function getRootDirectory(): Directory
+	public function getRoot(): Directory
 	{
-		if ($this->rootDirectory !== null) {
-			return $this->rootDirectory;
+		if ($this->cachedRootDirectory !== null) {
+			return $this->cachedRootDirectory;
 		}
 
 		if (defined('APP_ROOT')) {
@@ -55,9 +58,19 @@ class GlobalEnvironment implements Contract\Environment
 			$dir = new Directory($cwd);
 		}
 
-		$this->rootDirectory = $dir;
+		$this->cachedRootDirectory = $dir;
 
 		return $dir;
+	}
+
+	public function getTemp(): Directory
+	{
+		return $this->getRoot()->getDirectory('tmp');
+	}
+
+	public function getConfig(): Directory
+	{
+		return $this->getRoot();
 	}
 
 	public function isDevelopment(): bool

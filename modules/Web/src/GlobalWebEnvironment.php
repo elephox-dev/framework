@@ -9,8 +9,8 @@ use Elephox\Web\Contract\WebEnvironment;
 
 class GlobalWebEnvironment extends GlobalEnvironment implements WebEnvironment
 {
-	public function getWebRootDirectory(): Directory
+	public function getWebRoot(): Directory
 	{
-		return $this->getRootDirectory()->getDirectory('public');
+		return $this->getRoot()->getDirectory('public');
 	}
 }

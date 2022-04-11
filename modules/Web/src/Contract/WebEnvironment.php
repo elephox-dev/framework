@@ -6,7 +6,10 @@ namespace Elephox\Web\Contract;
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Files\Contract\Directory;
 
+/**
+ * @property-read Directory $webRoot
+ */
 interface WebEnvironment extends Environment
 {
-	public function getWebRootDirectory(): Directory;
+	public function getWebRoot(): Directory;
 }

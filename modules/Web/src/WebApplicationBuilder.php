@@ -100,14 +100,14 @@ class WebApplicationBuilder
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile('config.json')
 				->getPath(),
 		));
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile('config.local.json')
 				->getPath(),
 			true,
@@ -118,7 +118,7 @@ class WebApplicationBuilder
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getRoot()
 				->getFile("config.{$this->environment->getEnvironmentName()}.json")
 				->getPath(),
 			true,
@@ -126,7 +126,7 @@ class WebApplicationBuilder
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getRoot()
 				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
 				->getPath(),
 			true,
@@ -183,11 +183,14 @@ class WebApplicationBuilder
 			implementationFactory: function (ConfigurationRoot $configuration) use ($setup): EntityManagerInterface {
 				$setup ??= static function (ConfigurationRoot $conf, WebEnvironment $env): DoctrineConfiguration {
 					$setupDriver = $conf['doctrine:metadata:driver'];
+					if (!is_string($setupDriver)) {
+						throw new ConfigurationException('Doctrine configuration error: "doctrine:metadata:driver" must be a string.');
+					}
+
 					$setupMethod = match ($setupDriver) {
 						'annotation' => 'createAnnotationMetadataConfiguration',
 						'yaml' => 'createYAMLMetadataConfiguration',
 						'xml' => 'createXMLMetadataConfiguration',
-						null => throw new ConfigurationException('No doctrine metadata driver specified at "doctrine:metadata:driver"'),
 						default => throw new ConfigurationException('Unsupported doctrine metadata driver: ' . $setupDriver),
 					};
 

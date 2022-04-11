@@ -86,7 +86,7 @@ class ConsoleApplicationBuilder
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile('config.json')
 				->getPath(),
 			true,
@@ -94,7 +94,7 @@ class ConsoleApplicationBuilder
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile('config.local.json')
 				->getPath(),
 			true,
@@ -105,7 +105,7 @@ class ConsoleApplicationBuilder
 	{
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile("config.{$this->environment->getEnvironmentName()}.json")
 				->getPath(),
 			true,
@@ -113,7 +113,7 @@ class ConsoleApplicationBuilder
 
 		$this->configuration->add(new JsonFileConfigurationSource(
 			$this->environment
-				->getRootDirectory()
+				->getConfig()
 				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
 				->getPath(),
 			true,
