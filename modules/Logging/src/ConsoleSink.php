@@ -10,7 +10,7 @@ use ricardoboss\Console;
 
 class ConsoleSink implements Sink
 {
-	private const METADATA_MAX_LENGTH = 100;
+	private const METADATA_MAX_LENGTH = 200;
 
 	public function __construct()
 	{
