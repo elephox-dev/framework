@@ -23,7 +23,7 @@ use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
-use Elephox\Web\Middleware\ProcessingTimeHeader;
+use Elephox\Web\Middleware\ServerTimingHeaderMiddleware;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
 use Whoops\Run as WhoopsRun;
@@ -135,7 +135,7 @@ class WebApplicationBuilder
 
 	protected function addDefaultMiddleware(): void
 	{
-		$this->pipeline->push(new ProcessingTimeHeader());
+		$this->pipeline->push(new ServerTimingHeaderMiddleware('pipeline'));
 	}
 
 	public function build(): WebApplication
