@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use Elephox\DI\Data\TestServiceClass;
+use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as M;
 
 /**
  * @covers \Elephox\DI\ServiceCollection
@@ -20,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ServiceCollectionTest extends TestCase
+class ServiceCollectionTest extends MockeryTestCase
 {
 	public function testSelfRegister(): void
 	{
@@ -142,5 +144,44 @@ class ServiceCollectionTest extends TestCase
 
 		static::assertFalse($container->has(TestServiceInterface::class));
 		static::assertFalse($container->has(TestServiceClass::class));
+	}
+
+	public function testServiceResolverInstantiateNoConstructor(): void
+	{
+		$resolver = M::mock(ServiceResolver::class);
+
+		$instance = $resolver->instantiate(TestServiceClass::class);
+
+		self::assertInstanceOf(TestServiceClass::class, $instance);
+	}
+
+	public function testServiceResolverInstantiateWithConstructor(): void
+	{
+		$serviceCollection = M::mock(\Elephox\DI\Contract\ServiceCollection::class);
+		$resolver = M::mock(ServiceResolver::class)->shouldAllowMockingProtectedMethods();
+		$resolver
+			->allows('getServices')
+			->twice()
+			->withNoArgs()
+			->andReturn($serviceCollection)
+		;
+
+		$serviceCollection
+			->expects('get')
+			->with('testService')
+			->andReturn(null)
+		;
+
+		$testServiceClass = new TestServiceClass();
+		$serviceCollection
+			->expects('requireService')
+			->with(TestServiceInterface::class)
+			->andReturn($testServiceClass)
+		;
+
+		$instance = $resolver->instantiate(TestServiceClassWithConstructor::class);
+
+		self::assertInstanceOf(TestServiceClassWithConstructor::class, $instance);
+		self::assertSame($testServiceClass, $instance->testService);
 	}
 }
