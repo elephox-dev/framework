@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50ebe7b9c50e44866ac625248a51117c",
+    "content-hash": "253f70f3291761ec7c0d25f9fe12e92d",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -338,19 +338,20 @@
         },
         {
             "name": "ricardoboss/php-console-logger",
-            "version": "v1.9",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ricardoboss/php-console-logger.git",
-                "reference": "dde9990de3b92390e91a94f2e00f95230271dc8b"
+                "reference": "183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/dde9990de3b92390e91a94f2e00f95230271dc8b",
-                "reference": "dde9990de3b92390e91a94f2e00f95230271dc8b",
+                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66",
+                "reference": "183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66",
                 "shasum": ""
             },
             "require": {
+                "ext-mbstring": "*",
                 "php": "^8.0"
             },
             "type": "library",
@@ -372,9 +373,9 @@
             "description": "A simple console logger for scripts or small applications.",
             "support": {
                 "issues": "https://github.com/ricardoboss/php-console-logger/issues",
-                "source": "https://github.com/ricardoboss/php-console-logger/tree/v1.9"
+                "source": "https://github.com/ricardoboss/php-console-logger/tree/v2.1.2"
             },
-            "time": "2022-04-04T18:21:36+00:00"
+            "time": "2022-04-12T09:59:54+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2258,12 +2259,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "7c327a069f76e0a7060c454d92c3d7269c6c3eab"
+                "reference": "6bbc3f302143a2ae5d9fbbac6504785b5a89e674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/7c327a069f76e0a7060c454d92c3d7269c6c3eab",
-                "reference": "7c327a069f76e0a7060c454d92c3d7269c6c3eab",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/6bbc3f302143a2ae5d9fbbac6504785b5a89e674",
+                "reference": "6bbc3f302143a2ae5d9fbbac6504785b5a89e674",
                 "shasum": ""
             },
             "require": {
@@ -2326,7 +2327,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-04-04T22:02:43+00:00"
+            "time": "2022-04-11T22:02:22+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
@@ -7676,10 +7677,10 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1 <8.3",
-        "ext-mbstring": "*"
-    },
-    "platform-dev": {
+        "ext-mbstring": "*",
+        "ext-ctype": "*",
         "ext-json": "*"
     },
-    "plugin-api-version": "2.2.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }

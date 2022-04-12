@@ -12,11 +12,6 @@ class ConsoleSink implements Sink
 {
 	private const METADATA_MAX_LENGTH = 200;
 
-	public function __construct()
-	{
-		Console::open();
-	}
-
 	public function write(string $message, LogLevelContract $level, array $metaData): void
 	{
 		$method = match ($level->getLevel()) {
