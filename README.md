@@ -80,11 +80,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 - [ ] [modules/Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/develop/modules/Support/src/CustomMimeType.php)
   - [ ] try to get meta information of resource to get filename
 
-### 💡 Idea
-
-- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
-  - [ ] could possibly skip type checking here
-
 
 ### 🚧 Related issues
 
