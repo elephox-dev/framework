@@ -19,6 +19,7 @@
         "elephox/di": "dev-develop",
         "elephox/files": "dev-develop",
         "elephox/http": "dev-develop",
+        "elephox/logging": "dev-develop",
         "elephox/mimey": "^4.0",
         "elephox/oor": "dev-develop",
         "elephox/stream": "dev-develop",
