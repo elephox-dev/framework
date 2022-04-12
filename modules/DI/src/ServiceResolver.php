@@ -8,7 +8,6 @@ use BadMethodCallException;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
-use LogicException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -163,23 +162,12 @@ trait ServiceResolver
 			 * @var list<class-string> $typeNames
 			 */
 			foreach ($typeNames as $typeName) {
-				$possibleArgument = $this->getServices()->get($typeName);
-				if ($possibleArgument !== null) {
-					break;
+				try {
+					return $this->getServices()->requireService($typeName);
+				} catch (ServiceNotFoundException) {
+					continue;
 				}
 			}
-		}
-
-		if ($possibleArgument !== null) {
-			// IDEA: could possibly skip type checking here
-			if (empty(array_filter($typeNames, static fn (string $class) => $possibleArgument instanceof $class))) {
-				$paramName = '$' . $parameter->getName();
-				$possibleArgumentType = get_debug_type($possibleArgument);
-
-				throw new LogicException("Argument '$paramName' was resolved to type '$possibleArgumentType', which doesn't match the type hint '$type'");
-			}
-
-			return $possibleArgument;
 		}
 
 		if ($parameter->isDefaultValueAvailable()) {
@@ -190,6 +178,6 @@ trait ServiceResolver
 			return null;
 		}
 
-		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
+		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
 	}
 }
