@@ -65,7 +65,7 @@ class ConsoleApplication
 		} catch (RequiredArgumentMissingException $e) {
 			$this->logger()->error($e->getMessage());
 
-			$this->handle(RawCommandInvocation::fromCommandLine([$argv[0], 'help', $argv[1]]));
+			$this->logger()->error("Use '" . implode(' ', [$argv[0], 'help', $argv[1]]) . "' to get help for this command.");
 			$code = 1;
 		}
 
