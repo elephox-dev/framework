@@ -77,7 +77,7 @@ class GlobalEnvironment implements Contract\Environment
 	public function isDevelopment(): bool
 	{
 		if ($this->offsetExists('APP_DEBUG')) {
-			return (bool) $this['APP_DEBUG'];
+			return filter_var($this['APP_DEBUG'], FILTER_VALIDATE_BOOL);
 		}
 
 		return in_array($this->getEnvironmentName(), ['dev', 'local', 'debug', 'development'], true);
