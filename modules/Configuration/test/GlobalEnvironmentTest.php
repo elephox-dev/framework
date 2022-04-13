@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Configuration\GlobalEnvironment
+ *
+ * @internal
  */
 class GlobalEnvironmentTest extends TestCase
 {
@@ -36,22 +38,24 @@ class GlobalEnvironmentTest extends TestCase
 
 	/**
 	 * @dataProvider envDataProvider
+	 *
+	 * @param ?string $appDebug
+	 * @param ?string $appEnv
+	 * @param bool $shouldBeDevelopment
 	 */
 	public function testIsDevelopment(?string $appDebug, ?string $appEnv, bool $shouldBeDevelopment): void
 	{
 		unset($_ENV['APP_DEBUG'], $_ENV['APP_ENV']);
 
-		if ($appDebug !== null)
-		{
+		if ($appDebug !== null) {
 			$_ENV['APP_DEBUG'] = $appDebug;
 		}
 
-		if ($appEnv !== null)
-		{
+		if ($appEnv !== null) {
 			$_ENV['APP_ENV'] = $appEnv;
 		}
 
 		$env = new GlobalEnvironment();
-		self::assertEquals($shouldBeDevelopment, $env->isDevelopment());
+		static::assertEquals($shouldBeDevelopment, $env->isDevelopment());
 	}
 }

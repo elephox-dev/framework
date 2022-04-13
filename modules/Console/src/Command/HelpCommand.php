@@ -78,7 +78,6 @@ class HelpCommand implements Contract\CommandHandler
 					$name .= '=' . match (get_debug_type($argumentTemplate->default)) {
 						'null' => 'null',
 						'bool' => $argumentTemplate->default ? 'true' : 'false',
-						'array' => implode(',', $argumentTemplate->default),
 						'int', 'float', 'string', Stringable::class => (string) $argumentTemplate->default,
 						default => get_debug_type($argumentTemplate->default),
 					};

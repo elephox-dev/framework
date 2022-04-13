@@ -152,7 +152,7 @@ class ServiceCollectionTest extends MockeryTestCase
 
 		$instance = $resolver->instantiate(TestServiceClass::class);
 
-		self::assertInstanceOf(TestServiceClass::class, $instance);
+		static::assertInstanceOf(TestServiceClass::class, $instance);
 	}
 
 	public function testServiceResolverInstantiateWithConstructor(): void
@@ -181,7 +181,7 @@ class ServiceCollectionTest extends MockeryTestCase
 
 		$instance = $resolver->instantiate(TestServiceClassWithConstructor::class);
 
-		self::assertInstanceOf(TestServiceClassWithConstructor::class, $instance);
-		self::assertSame($testServiceClass, $instance->testService);
+		static::assertInstanceOf(TestServiceClassWithConstructor::class, $instance);
+		static::assertSame($testServiceClass, $instance->testService);
 	}
 }
