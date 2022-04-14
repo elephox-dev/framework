@@ -274,4 +274,9 @@ class File extends AbstractFilesystemNode implements Contract\File
 	{
 		$this->writeStream(new StringStream($contents));
 	}
+
+	public function getContents(): string
+	{
+		return $this->stream()->getContents();
+	}
 }
