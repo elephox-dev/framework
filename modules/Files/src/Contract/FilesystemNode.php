@@ -10,6 +10,8 @@ interface FilesystemNode extends Stringable
 {
 	public function getPath(): string;
 
+	public function getPathRelative(FilesystemNode $node): string;
+
 	public function getName(): string;
 
 	public function getModifiedTime(): DateTimeInterface;

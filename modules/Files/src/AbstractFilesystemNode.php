@@ -20,22 +20,27 @@ abstract class AbstractFilesystemNode implements FilesystemNode
 		return $this->path;
 	}
 
+	public function getPathRelative(FilesystemNode $node): string
+	{
+		return Path::relativeTo($this->getPath(), $node->getPath());
+	}
+
 	#[Pure]
 	public function getName(): string
 	{
-		return basename($this->path);
+		return basename($this->getPath());
 	}
 
 	#[Pure]
 	public function __toString(): string
 	{
-		return $this->path;
+		return $this->getPath();
 	}
 
 	public function getParent(int $levels = 1): Contract\Directory
 	{
 		try {
-			return new Directory(dirname($this->path, $levels));
+			return new Directory(dirname($this->getPath(), $levels));
 		} catch (ValueError $error) {
 			throw new InvalidParentLevelException($levels, previous: $error);
 		}
