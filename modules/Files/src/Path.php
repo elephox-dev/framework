@@ -31,7 +31,7 @@ class Path
 
 		$relativeParts = $targetParts;
 		foreach ($sourceParts as $depth => $part) {
-			if ($part === $targetParts[$depth]) {
+			if (isset($targetParts[$depth]) && $part === $targetParts[$depth]) {
 				array_shift($relativeParts);
 
 				continue;
