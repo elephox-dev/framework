@@ -55,6 +55,7 @@ class PathTest extends TestCase
 		yield ['/var/www/test', '/var/tmp/db', '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'db'];
 		yield ['C:\\data', 'C:\\data\\test\\more', 'test' . DIRECTORY_SEPARATOR . 'more'];
 		yield ['C:\\data\\test\\more', 'C:\\data', '..' . DIRECTORY_SEPARATOR . '..'];
+		yield ['C:\\test\\file.tmp', 'C:\\tmp\\new\\test.tmp', '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'new' . DIRECTORY_SEPARATOR . 'test.tmp'];
 	}
 
 	/**
