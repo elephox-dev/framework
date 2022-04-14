@@ -41,7 +41,7 @@ class Path
 			if ($remaining <= 1) {
 				$relativeParts[0] = '.' . DIRECTORY_SEPARATOR . $relativeParts[0];
 
-				continue;
+				break;
 			}
 
 			$padLength = (count($relativeParts) + $remaining) * -1;
