@@ -14,7 +14,43 @@ class Path
 		$parts = array_filter($args, static fn (string $arg) => $arg !== '');
 		$path = implode(DIRECTORY_SEPARATOR, $parts);
 
-		return (string) preg_replace('#' . DIRECTORY_SEPARATOR . '+#', DIRECTORY_SEPARATOR, $path);
+		return (string) preg_replace('#[/\\\\]{2,}#', DIRECTORY_SEPARATOR, $path);
+	}
+
+	#[Pure]
+	public static function canonicalize(string $path): string
+	{
+		return (string) preg_replace('#[/\\\\]#', DIRECTORY_SEPARATOR, $path);
+	}
+
+	#[Pure]
+	public static function relativeTo(string $source, string $target): string
+	{
+		$sourceParts = explode(DIRECTORY_SEPARATOR, self::canonicalize($source));
+		$targetParts = explode(DIRECTORY_SEPARATOR, self::canonicalize($target));
+
+		$relativeParts = $targetParts;
+		foreach ($sourceParts as $depth => $part) {
+			if ($part === $targetParts[$depth]) {
+				array_shift($relativeParts);
+
+				continue;
+			}
+
+			$remaining = count($sourceParts) - $depth;
+			if ($remaining <= 1) {
+				$relativeParts[0] = '.' . DIRECTORY_SEPARATOR . $relativeParts[0];
+
+				continue;
+			}
+
+			$padLength = (count($relativeParts) + $remaining) * -1;
+			$relativeParts = array_pad($relativeParts, $padLength, '..');
+
+			break;
+		}
+
+		return implode(DIRECTORY_SEPARATOR, $relativeParts);
 	}
 
 	#[Pure]
