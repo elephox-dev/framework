@@ -159,4 +159,38 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			throw new DirectoryNotCreatedException($this->path);
 		}
 	}
+
+	public function moveTo(Contract\Directory $directory, bool $overwrite = true): void
+	{
+		if ($directory->getPath() === $this->path) {
+			return;
+		}
+
+		$directory->ensureExists();
+
+		foreach ($this->getChildren() as $node) {
+			if ($node instanceof Contract\File || $node instanceof Contract\Directory) {
+				$node->moveTo($directory, $overwrite);
+			} else {
+				throw new FilesystemNodeNotImplementedException($node, 'Cannot move filesystem node for unimplemented type ' . get_debug_type($node));
+			}
+		}
+	}
+
+	public function copyTo(Contract\Directory $directory, bool $overwrite = true): void
+	{
+		if ($directory->getPath() === $this->path) {
+			return;
+		}
+
+		$directory->ensureExists();
+
+		foreach ($this->getChildren() as $node) {
+			if ($node instanceof Contract\File || $node instanceof Contract\Directory) {
+				$node->copyTo($directory, $overwrite);
+			} else {
+				throw new FilesystemNodeNotImplementedException($node, 'Cannot move filesystem node for unimplemented type ' . get_debug_type($node));
+			}
+		}
+	}
 }

@@ -233,7 +233,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		} elseif ($node instanceof Contract\File) {
 			$destination = $node;
 		} else {
-			throw new InvalidArgumentException('Given filesystem node is not a file or directory');
+			throw new FilesystemNodeNotImplementedException($node, 'Given filesystem node is not a file or directory');
 		}
 
 		if (!$overwrite && $destination->exists()) {

@@ -7,7 +7,11 @@ use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\DirectoryNotCreatedException;
 use Elephox\Files\DirectoryNotEmptyException;
 use Elephox\Files\DirectoryNotFoundException;
+use Elephox\Files\FileAlreadyExistsException;
+use Elephox\Files\FileCopyException;
+use Elephox\Files\FileMoveException;
 use Elephox\Files\FilesystemNodeNotFoundException;
+use Elephox\Files\FilesystemNodeNotImplementedException;
 
 interface Directory extends FilesystemNode
 {
@@ -58,4 +62,24 @@ interface Directory extends FilesystemNode
 	 * @param int $permissions
 	 */
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void;
+
+	/**
+	 * @param Directory $directory
+	 * @param bool $overwrite
+	 *
+	 * @throws FileMoveException
+	 * @throws FileAlreadyExistsException
+	 * @throws FilesystemNodeNotImplementedException
+	 */
+	public function moveTo(Directory $directory, bool $overwrite = true): void;
+
+	/**
+	 * @param Directory $directory
+	 * @param bool $overwrite
+	 *
+	 * @throws FileCopyException
+	 * @throws FileAlreadyExistsException
+	 * @throws FilesystemNodeNotImplementedException
+	 */
+	public function copyTo(Directory $directory, bool $overwrite = true): void;
 }
