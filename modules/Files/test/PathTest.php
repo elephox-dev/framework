@@ -50,6 +50,29 @@ class PathTest extends TestCase
 		static::assertEquals($isRoot, Path::isRoot($path));
 	}
 
+	public function rootedDataProvider(): iterable
+	{
+		yield ['/', true];
+		yield ['C:\\', true];
+		yield ['/long/path/to/test', true];
+		yield ['C:\\Windows\\System32', true];
+		yield ['../test/relative', false];
+		yield ['in/this/folder', false];
+		yield ['..\\test\\relative', false];
+		yield ['in\\this\\folder', false];
+	}
+
+	/**
+	 * @dataProvider rootedDataProvider
+	 *
+	 * @param string $path
+	 * @param bool $result
+	 */
+	public function testIsRooted(string $path, bool $result): void
+	{
+		static::assertEquals($result, Path::isRooted($path), "Path: $path");
+	}
+
 	public function relativeToProvider(): iterable
 	{
 		yield ['/var/www/test', '/var/tmp/db', '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'db'];
