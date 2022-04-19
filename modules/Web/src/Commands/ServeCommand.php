@@ -31,6 +31,7 @@ class ServeCommand implements CommandHandler
 			->argument('root', 'Root directory to serve from', $publicDir->getPath(), false)
 			->argument('env', 'The environment to use (e.g. development, staging or production)', 'development', false)
 			->argument('router', 'The router script to use', dirname(__DIR__, 2) . '/data/router.php', false)
+			->optional('workers', 'auto', 'How many threads to use for the PHP server (PHP_CLI_SERVER_WORKERS)')
 		;
 	}
 
@@ -41,6 +42,7 @@ class ServeCommand implements CommandHandler
 		$root = $command->getArgument('root')->value;
 		$env = $command->getArgument('env')->value;
 		$router = $command->getArgument('router')->value;
+		$workers = $command->getArgument('workers')->value;
 
 		if (!is_string($port) || !ctype_digit($port)) {
 			throw new InvalidArgumentException('Port must be a number');
@@ -68,8 +70,27 @@ class ServeCommand implements CommandHandler
 			throw new InvalidArgumentException('Environment must be a string');
 		}
 
+		$_ENV['APP_ENV'] = $env;
+
 		if (!is_string($router)) {
 			throw new InvalidArgumentException('Router must be a string');
+		}
+
+		if (is_string($workers)) {
+			if (ctype_digit($workers)) {
+				$_ENV['PHP_CLI_SERVER_WORKERS'] = (int) $workers;
+			} elseif ($workers === 'auto') {
+				$procCountCommand = PHP_OS_FAMILY === 'Windows' ? 'echo %NUMBER_OF_PROCESSORS%' : 'nproc';
+				exec($procCountCommand, $cores, $code);
+
+				if ($code === 0) {
+					$_ENV['PHP_CLI_SERVER_WORKERS'] = (int) $cores[0];
+				} else {
+					throw new RuntimeException("Unable to determine number of cores available (used: $procCountCommand)");
+				}
+			} elseif ($workers !== 'null') {
+				throw new InvalidArgumentException('Workers must be a number or "auto"');
+			}
 		}
 
 		$this->logger->info('Starting PHP built-in webserver on ' . $host . ':' . $port);
@@ -79,7 +100,7 @@ class ServeCommand implements CommandHandler
 			[STDIN],
 			$pipes,
 			$documentRoot,
-			array_merge(getenv(), $_ENV, ['APP_ENV' => $env]),
+			$_ENV,
 		);
 
 		if ($process === false) {
