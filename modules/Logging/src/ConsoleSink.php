@@ -10,8 +10,6 @@ use ricardoboss\Console;
 
 class ConsoleSink implements Sink
 {
-	private const METADATA_MAX_LENGTH = 200;
-
 	public function write(string $message, LogLevelContract $level, array $metaData): void
 	{
 		$method = match ($level->getLevel()) {
@@ -29,17 +27,12 @@ class ConsoleSink implements Sink
 			$metaDataSuffix = '';
 		} else {
 			try {
-				$metaDataSuffix = ' ' . Console::light_gray($this->truncate(json_encode($metaData, JSON_THROW_ON_ERROR)));
+				$metaDataSuffix = PHP_EOL . Console::light_gray(json_encode($metaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR));
 			} catch (JsonException $e) {
 				$metaDataSuffix = ' ' . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
 			}
 		}
 
 		Console::$method($message . $metaDataSuffix);
-	}
-
-	private function truncate(string $string): string
-	{
-		return (strlen($string) > self::METADATA_MAX_LENGTH) ? substr($string, 0, self::METADATA_MAX_LENGTH - 3) . '...' : $string;
 	}
 }

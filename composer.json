@@ -20,7 +20,8 @@
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "ricardoboss/php-console-logger": "^2.1",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "symfony/process": "^6.0"
     },
     "require-dev": {
         "doctrine/orm": "^2.11",

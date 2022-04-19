@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Configuration\Contract;
 
 use ArrayAccess;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\Contract\Directory;
 
 /**
@@ -27,4 +28,9 @@ interface Environment extends ArrayAccess
 	public function getConfig(): Directory;
 
 	public function isDevelopment(): bool;
+
+	/**
+	 * @return GenericKeyedEnumerable<string, scalar|null>
+	 */
+	public function asEnumerable(): GenericKeyedEnumerable;
 }

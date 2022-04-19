@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
-use ArrayIterator;
 use Dotenv\Dotenv;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\KeyedEnumerable;
@@ -12,11 +11,20 @@ use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
 use RuntimeException;
 
-class GlobalEnvironment extends AbstractEnvironment implements Contract\Environment
+class MemoryEnvironment extends AbstractEnvironment implements Contract\Environment
 {
 	use TransparentGetterSetter;
 
 	protected ?Directory $cachedRootDirectory = null;
+
+	/**
+	 * @var array<string, scalar|null>
+	 */
+	protected array $memory = [];
+
+	public function __construct(public readonly ?string $rootPath = null)
+	{
+	}
 
 	public function loadFromEnvFile(?string $envName = null): void
 	{
@@ -26,10 +34,9 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 		}
 
 		$dotenv = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile);
-		$dotenv->safeLoad();
-
 		$dotenvLocal = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile . '.local');
-		$dotenvLocal->safeLoad();
+
+		$this->memory = array_merge($this->memory, $dotenv->safeLoad(), $dotenvLocal->safeLoad());
 	}
 
 	public function getRoot(): Directory
@@ -38,9 +45,9 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 			return $this->cachedRootDirectory;
 		}
 
-		if (defined('APP_ROOT')) {
-			$dir = new Directory(APP_ROOT);
-		} elseif ($this->offsetExists('APP_ROOT')) {
+		if ($this->rootPath !== null) {
+			$dir = new Directory($this->rootPath);
+		}elseif ($this->offsetExists('APP_ROOT')) {
 			$dir = new Directory((string) $this['APP_ROOT']);
 		} else {
 			$cwd = getcwd();
@@ -63,7 +70,7 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		return isset($_ENV[$offset]);
+		return isset($this->memory[$offset]);
 	}
 
 	/**
@@ -77,7 +84,8 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}
 
-		$value = $_ENV[$offset] ?? null;
+		/** @var mixed $value */
+		$value = $this->memory[$offset] ?? null;
 
 		if (!is_scalar($value)) {
 			return null;
@@ -97,7 +105,7 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 			$this->cachedRootDirectory = null;
 		}
 
-		$_ENV[$offset] = $value;
+		$this->memory[$offset] = $value;
 	}
 
 	public function offsetUnset(mixed $offset): void
@@ -111,12 +119,12 @@ class GlobalEnvironment extends AbstractEnvironment implements Contract\Environm
 			$this->cachedRootDirectory = null;
 		}
 
-		unset($_ENV[$offset]);
+		unset($this->memory[$offset]);
 	}
 
 	public function asEnumerable(): GenericKeyedEnumerable
 	{
 		/** @var KeyedEnumerable<string, scalar|null> */
-		return KeyedEnumerable::from($_ENV);
+		return KeyedEnumerable::from($this->memory);
 	}
 }

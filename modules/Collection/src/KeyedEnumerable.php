@@ -21,11 +21,11 @@ use JetBrains\PhpStorm\Pure;
 class KeyedEnumerable implements GenericKeyedEnumerable
 {
 	/**
-	 * @template T
+	 * @template TValue
 	 *
-	 * @param T $value
+	 * @param TValue $value
 	 *
-	 * @return GenericKeyedEnumerable<mixed, T>
+	 * @return GenericKeyedEnumerable<mixed, TValue>
 	 */
 	public static function from(mixed $value): GenericKeyedEnumerable
 	{
