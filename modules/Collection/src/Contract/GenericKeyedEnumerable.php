@@ -52,6 +52,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function append(mixed $key, mixed $value): GenericKeyedEnumerable;
 
 	/**
+	 * @param iterable<TIteratorKey, TSource> $values
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function appendAll(iterable $values): GenericKeyedEnumerable;
+
+	/**
 	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
 	 * @return numeric

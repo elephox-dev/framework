@@ -44,6 +44,13 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function append(mixed $value): GenericEnumerable;
 
 	/**
+	 * @param iterable<TSource> $values
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function appendAll(iterable $values): GenericEnumerable;
+
+	/**
 	 * @param callable(TSource): numeric $selector
 	 *
 	 * @return numeric

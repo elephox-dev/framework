@@ -88,6 +88,14 @@ trait IsEnumerable
 		});
 	}
 
+	public function appendAll(iterable $values): GenericEnumerable
+	{
+		return new Enumerable(function () use ($values) {
+			yield from $this->getIterator();
+			yield from $values;
+		});
+	}
+
 	/**
 	 * @param callable(TSource): numeric $selector
 	 *

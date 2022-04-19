@@ -94,6 +94,14 @@ trait IsKeyedEnumerable
 		});
 	}
 
+	public function appendAll(iterable $values): GenericKeyedEnumerable
+	{
+		return new KeyedEnumerable(function () use ($values) {
+			yield from $this->getIterator();
+			yield from $values;
+		});
+	}
+
 	/**
 	 * @param callable(TSource, TIteratorKey): numeric $selector
 	 *
