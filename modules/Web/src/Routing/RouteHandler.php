@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Closure;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
@@ -78,7 +79,19 @@ class RouteHandler implements Contract\RouteHandler
 
 	public function matches(Request $request): bool
 	{
-		return Regex::matches($this->pathRegex, $this->getNormalizedRequestRoute($request));
+		$method = $request->getMethod();
+		if (!$this->getHandledRequestMethods()->contains($method)) {
+			return false;
+		}
+
+		$normalizedRoute = $this->getNormalizedRequestRoute($request);
+
+		return Regex::matches($this->pathRegex, $normalizedRoute);
+	}
+
+	private function getHandledRequestMethods(): GenericKeyedEnumerable
+	{
+		return $this->controllerAttribute->getRequestMethods()->appendAll($this->routeAttribute?->getRequestMethods() ?? []);
 	}
 
 	private function getNormalizedRequestRoute(Request $request): string
