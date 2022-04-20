@@ -11,24 +11,17 @@ use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
 use RuntimeException;
 
-class GlobalEnvironment extends AbstractEnvironment implements Contract\Environment
+class GlobalEnvironment extends DotEnvEnvironment implements Contract\Environment
 {
 	use TransparentGetterSetter;
 
 	protected ?Directory $cachedRootDirectory = null;
 
-	public function loadFromEnvFile(?string $envName = null): void
+	public function loadFromEnvFile(?string $envName = null, bool $local = false): void
 	{
-		$envFile = '.env';
-		if ($envName !== null) {
-			$envFile .= '.' . $envName;
-		}
-
+		$envFile = $this->getDotEnvFileName($local, $envName);
 		$dotenv = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile);
 		$dotenv->safeLoad();
-
-		$dotenvLocal = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile . '.local');
-		$dotenvLocal->safeLoad();
 	}
 
 	public function getRoot(): Directory

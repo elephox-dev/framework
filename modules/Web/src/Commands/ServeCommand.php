@@ -8,10 +8,13 @@ use Elephox\Configuration\MemoryEnvironment;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
+use Elephox\Files\Contract\File;
 use Elephox\Logging\Contract\Logger;
 use InvalidArgumentException;
 use ricardoboss\Console;
 use RuntimeException;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 class ServeCommand implements CommandHandler
 {
@@ -28,12 +31,13 @@ class ServeCommand implements CommandHandler
 		$builder
 			->name('serve')
 			->description('Starts the PHP built-in webserver for your application')
-			->optional('host', 'localhost', 'Host to bind to')
-			->optional('port', '8000', 'Port to bind to (>=1024, <=65535)')
+			->optional('host', $this->environment['SERVER_HOST'] ?? 'localhost', 'Host to bind to')
+			->optional('port', $this->environment['SERVER_PORT'] ?? '8000', 'Port to bind to (>=1024, <=65535)')
 			->optional('root', $publicDir->getPath(), 'Root directory to serve from')
 			->optional('env', 'development', 'The environment to use (e.g. development, staging or production)')
 			->optional('router', dirname(__DIR__, 2) . '/data/router.php', 'The router script to use')
 			->optional('workers', 'auto', 'How many threads to use for the PHP server (PHP_CLI_SERVER_WORKERS)')
+			->optional('no-reload', false, 'Whether to restart the server upon env file changes')
 		;
 	}
 
@@ -43,6 +47,7 @@ class ServeCommand implements CommandHandler
 		$port = $command->getArgument('port')->value;
 		$root = $command->getArgument('root')->value;
 		$router = $command->getArgument('router')->value;
+		$noReload = $command->getArgument('no-reload')->value;
 
 		if (!is_string($port) || !ctype_digit($port)) {
 			throw new InvalidArgumentException('Port must be a number');
@@ -79,61 +84,79 @@ class ServeCommand implements CommandHandler
 			}
 		}
 
-		$environment = $this->getEnvironment($command);
+		$environment = $this->getEnvironment(dirname($documentRoot), $command);
 
-		$serverCommand = [PHP_BINARY, '-S', "$host:$port", '-t', $documentRoot];
+		$serverCommand = [(new PhpExecutableFinder())->find(false), '-S', "$host:$port", '-t', $documentRoot];
 		if ($router) {
 			$serverCommand[] = $router;
 		}
 
 		$this->logger->info('Starting PHP built-in webserver on ' . Console::link('http://' . $host . ':' . $port), ['command' => implode(' ', $serverCommand)]);
 
-		$process = proc_open(
-			$serverCommand,
-			[STDIN],
-			$pipes,
-			$documentRoot,
-			$environment->asEnumerable()->toArray(),
-		);
+		// initialize timestamps
+		$environment->pollDotEnvFileChanged();
+		$environment->pollDotEnvFileChanged((string) $environment['APP_ENV']);
 
-		if ($process === false) {
-			throw new RuntimeException('Failed to start server');
-		}
+		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment);
 
-		// give the server time to start (0.5s)
-		usleep(500000);
+		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, File $envFile) use (&$process, $serverCommand, $documentRoot, $environment): void {
+			$this->logger->warning($envFile->getName() . ' file changed. Restarting server...', ['name' => $envName, 'local' => $local]);
 
-		$status = proc_get_status($process);
-		if ($status['running'] === false) {
-			$this->logger->error('Server exited unexpectedly');
+			$environment->loadFromEnvFile($envName);
+			$environment->loadFromEnvFile($envName, true);
 
-			return -1;
-		}
+			/** @var Process $process */
+			$process->stop();
 
-		register_shutdown_function(static fn (): bool => proc_terminate($process));
+			usleep(1000 * 1000);
 
-		$this->logger->info('Server process started', ['pid' => $status['pid']]);
+			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment);
+		});
 
-		while ($status = proc_get_status($process)) {
-			if (!$status['running']) {
-				break;
+		/** @var Process $process */
+		while ($process->isRunning()) {
+			if (!$noReload) {
+				$environment->pollDotEnvFileChanged();
+				$environment->pollDotEnvFileChanged((string) $environment['APP_ENV']);
 			}
 
-			sleep(1);
+			usleep(500 * 1000);
 		}
 
-		$this->logger->warning(sprintf('Server process exited with %d', $status['exitcode']));
+		$this->logger->warning(sprintf('Server process exited with code %s', $process->getExitCode() ?? '<unknown>'));
 
 		return 0;
 	}
 
-	private function getEnvironment(CommandInvocation $command): MemoryEnvironment
+	private function startServerProcess(array $serverCommand, string $documentRoot, Environment $environment): Process
+	{
+		$process = new Process(
+			$serverCommand,
+			$documentRoot,
+			$environment->asEnumerable()->toArray(),
+		);
+
+		/** @psalm-suppress UnusedClosureParam */
+		$process->start(function (string $type, string $buffer): void {
+			$buffer = trim($buffer);
+			foreach (explode("\n", $buffer) as $line) {
+				$this->logger->info(substr($line, strpos($line, ']') + 2));
+			}
+		});
+
+		$this->logger->info('Server process started', ['pid' => $process->getPid()]);
+
+		return $process;
+	}
+
+	private function getEnvironment(string $documentRoot, CommandInvocation $command): MemoryEnvironment
 	{
 		$envName = $command->getArgument('env')->value;
 		$workers = $command->getArgument('workers')->value;
 
-		$environment = new MemoryEnvironment($this->environment->getRoot()->getPath());
+		$environment = new MemoryEnvironment($documentRoot);
 		$environment->loadFromEnvFile();
+		$environment->loadFromEnvFile(local: true);
 
 		if (!is_string($envName)) {
 			throw new InvalidArgumentException('Environment must be a string');
@@ -143,6 +166,7 @@ class ServeCommand implements CommandHandler
 			$environment['APP_ENV'] = $envName;
 
 			$environment->loadFromEnvFile($envName);
+			$environment->loadFromEnvFile($envName, true);
 		}
 
 		if (is_string($workers)) {

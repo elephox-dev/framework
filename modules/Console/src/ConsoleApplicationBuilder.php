@@ -75,11 +75,13 @@ class ConsoleApplicationBuilder
 	protected function loadDotEnvFile(): void
 	{
 		$this->environment->loadFromEnvFile();
+		$this->environment->loadFromEnvFile(local: true);
 	}
 
 	protected function loadEnvironmentDotEnvFile(): void
 	{
 		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName());
+		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName(), true);
 	}
 
 	protected function loadConfigFile(): void

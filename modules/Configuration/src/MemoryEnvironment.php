@@ -11,7 +11,7 @@ use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
 use RuntimeException;
 
-class MemoryEnvironment extends AbstractEnvironment implements Contract\Environment
+class MemoryEnvironment extends DotEnvEnvironment implements Contract\Environment
 {
 	use TransparentGetterSetter;
 
@@ -26,17 +26,11 @@ class MemoryEnvironment extends AbstractEnvironment implements Contract\Environm
 	{
 	}
 
-	public function loadFromEnvFile(?string $envName = null): void
+	public function loadFromEnvFile(?string $envName = null, bool $local = false): void
 	{
-		$envFile = '.env';
-		if ($envName !== null) {
-			$envFile .= '.' . $envName;
-		}
-
-		$dotenv = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile);
-		$dotenvLocal = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile . '.local');
-
-		$this->memory = array_merge($this->memory, $dotenv->safeLoad(), $dotenvLocal->safeLoad());
+		$envFile = $this->getDotEnvFileName($local, $envName);
+		$dotenv = Dotenv::createArrayBacked($this->getRoot()->getPath(), $envFile);
+		$this->memory = $dotenv->safeLoad() + $this->memory;
 	}
 
 	public function getRoot(): Directory
