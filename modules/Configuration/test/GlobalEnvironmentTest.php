@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Configuration\GlobalEnvironment
+ * @covers \Elephox\Configuration\AbstractEnvironment
  *
  * @internal
  */

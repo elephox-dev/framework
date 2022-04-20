@@ -140,7 +140,11 @@ class ServeCommand implements CommandHandler
 		$process->start(function (string $type, string $buffer): void {
 			$buffer = trim($buffer);
 			foreach (explode("\n", $buffer) as $line) {
-				$this->logger->info(substr($line, strpos($line, ']') + 2));
+				if ($closingBracketPos = strpos($line, ']')) {
+					$line = substr($line, $closingBracketPos + 2);
+				}
+
+				$this->logger->info($line);
 			}
 		});
 
