@@ -6,6 +6,9 @@ namespace Elephox\Http;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
+/**
+ * @see https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+ */
 #[Immutable]
 enum ResponseCode: int
 {
@@ -26,11 +29,12 @@ enum ResponseCode: int
 	case AlreadyReported = 208;
 	case IMUsed = 226;
 	/* Redirection messages */
-	case MultipleChoice = 300;
+	case MultipleChoices = 300;
 	case MovedPermanently = 301;
 	case Found = 302;
 	case SeeOther = 303;
 	case NotModified = 304;
+	case UseProxy = 305;
 	case TemporaryRedirect = 307;
 	case PermanentRedirect = 308;
 	/* Client error responses */
@@ -47,14 +51,14 @@ enum ResponseCode: int
 	case Gone = 410;
 	case LengthRequired = 411;
 	case PreconditionFailed = 412;
-	case PayloadTooLarge = 413;
-	case RequestURITooLong = 414;
+	case ContentTooLarge = 413;
+	case URITooLong = 414;
 	case UnsupportedMediaType = 415;
-	case RequestedRangeNotSatisfiable = 416;
+	case RangeNotSatisfiable = 416;
 	case ExpectationFailed = 417;
 	case ImATeapot = 418;
 	case MisdirectedRequest = 421;
-	case UnprocessableEntity = 422;
+	case UnprocessableContent = 422;
 	case Locked = 423;
 	case FailedDependency = 424;
 	case TooEarly = 425;
@@ -73,74 +77,72 @@ enum ResponseCode: int
 	case VariantAlsoNegotiates = 506;
 	case InsufficientStorage = 507;
 	case LoopDetected = 508;
-	case NotExtended = 510;
 	case NetworkAuthenticationRequired = 511;
 	#[Pure]
 	public function getReasonPhrase(): string
 	{
-		// TODO: go over the reason phrases and check them against standards
 		return match ($this) {
-			self::Continue_ => 'Continue_',
-			self::SwitchingProtocols => 'SwitchingProtocols',
+			self::Continue_ => 'Continue',
+			self::SwitchingProtocols => 'Switching Protocols',
 			self::Processing => 'Processing',
-			self::EarlyHints => 'EarlyHints',
+			self::EarlyHints => 'Early Hints',
 			self::OK => 'OK',
 			self::Created => 'Created',
 			self::Accepted => 'Accepted',
-			self::NonAuthoritativeInformation => 'NonAuthoritativeInformation',
-			self::NoContent => 'NoContent',
-			self::ResetContent => 'ResetContent',
-			self::PartialContent => 'PartialContent',
-			self::MultiStatus => 'MultiStatus',
-			self::AlreadyReported => 'AlreadyReported',
-			self::IMUsed => 'IMUsed',
-			self::MultipleChoice => 'MultipleChoice',
-			self::MovedPermanently => 'MovedPermanently',
+			self::NonAuthoritativeInformation => 'Non-Authoritative Information',
+			self::NoContent => 'No Content',
+			self::ResetContent => 'Reset Content',
+			self::PartialContent => 'Partial Content',
+			self::MultiStatus => 'Multi-Status',
+			self::AlreadyReported => 'Already Reported',
+			self::IMUsed => 'IM Used',
+			self::MultipleChoices => 'Multiple Choices',
+			self::MovedPermanently => 'Moved Permanently',
 			self::Found => 'Found',
-			self::SeeOther => 'SeeOther',
-			self::NotModified => 'NotModified',
-			self::TemporaryRedirect => 'TemporaryRedirect',
-			self::PermanentRedirect => 'PermanentRedirect',
-			self::BadRequest => 'BadRequest',
+			self::SeeOther => 'See Other',
+			self::NotModified => 'Not Modified',
+			self::UseProxy => 'Use Proxy',
+			self::TemporaryRedirect => 'Temporary Redirect',
+			self::PermanentRedirect => 'Permanent Redirect',
+			self::BadRequest => 'Bad Request',
 			self::Unauthorized => 'Unauthorized',
-			self::PaymentRequired => 'PaymentRequired',
+			self::PaymentRequired => 'Payment Required',
 			self::Forbidden => 'Forbidden',
-			self::NotFound => 'NotFound',
-			self::MethodNotAllowed => 'MethodNotAllowed',
-			self::NotAcceptable => 'NotAcceptable',
-			self::ProxyAuthenticationRequired => 'ProxyAuthenticationRequired',
-			self::RequestTimeout => 'RequestTimeout',
+			self::NotFound => 'Not Found',
+			self::MethodNotAllowed => 'Method Not Allowed',
+			self::NotAcceptable => 'Not Acceptable',
+			self::ProxyAuthenticationRequired => 'Proxy Authentication Required',
+			self::RequestTimeout => 'Request Timeout',
 			self::Conflict => 'Conflict',
 			self::Gone => 'Gone',
-			self::LengthRequired => 'LengthRequired',
-			self::PreconditionFailed => 'PreconditionFailed',
-			self::PayloadTooLarge => 'PayloadTooLarge',
-			self::RequestURITooLong => 'RequestURITooLong',
-			self::UnsupportedMediaType => 'UnsupportedMediaType',
-			self::RequestedRangeNotSatisfiable => 'RequestedRangeNotSatisfiable',
-			self::ExpectationFailed => 'ExpectationFailed',
-			self::ImATeapot => 'ImATeapot',
-			self::MisdirectedRequest => 'MisdirectedRequest',
-			self::UnprocessableEntity => 'UnprocessableEntity',
+			self::LengthRequired => 'Length Required',
+			self::PreconditionFailed => 'Precondition Failed',
+			self::ContentTooLarge => 'Content Too Large',
+			self::URITooLong => 'URI Too Long',
+			self::UnsupportedMediaType => 'Unsupported Media Type',
+			self::RangeNotSatisfiable => 'Range Not Satisfiable',
+			self::ExpectationFailed => 'Expectation Failed',
+			self::ImATeapot => 'Im A Teapot',
+			self::MisdirectedRequest => 'Misdirected Request',
+			self::UnprocessableContent => 'Unprocessable Content',
 			self::Locked => 'Locked',
-			self::FailedDependency => 'FailedDependency',
-			self::TooEarly => 'TooEarly',
-			self::UpgradeRequired => 'UpgradeRequired',
-			self::PreconditionRequired => 'PreconditionRequired',
-			self::TooManyRequests => 'TooManyRequests',
-			self::RequestHeaderFieldsTooLarge => 'RequestHeaderFieldsTooLarge',
-			self::UnavailableForLegalReasons => 'UnavailableForLegalReasons',
-			self::InternalServerError => 'InternalServerError',
-			self::NotImplemented => 'NotImplemented',
-			self::BadGateway => 'BadGateway',
-			self::ServiceUnavailable => 'ServiceUnavailable',
-			self::GatewayTimeout => 'GatewayTimeout',
-			self::HTTPVersionNotSupported => 'HTTPVersionNotSupported',
-			self::VariantAlsoNegotiates => 'VariantAlsoNegotiates',
-			self::InsufficientStorage => 'InsufficientStorage',
-			self::LoopDetected => 'LoopDetected',
-			self::NotExtended => 'NotExtended',
-			self::NetworkAuthenticationRequired => 'NetworkAuthenticationRequired'
+			self::FailedDependency => 'Failed Dependency',
+			self::TooEarly => 'Too Early',
+			self::UpgradeRequired => 'Upgrade Required',
+			self::PreconditionRequired => 'Precondition Required',
+			self::TooManyRequests => 'Too Many Requests',
+			self::RequestHeaderFieldsTooLarge => 'Request Header Field sToo Large',
+			self::UnavailableForLegalReasons => 'Unavailable For Legal Reasons',
+			self::InternalServerError => 'Internal Server Error',
+			self::NotImplemented => 'Not Implemented',
+			self::BadGateway => 'Bad Gateway',
+			self::ServiceUnavailable => 'Service Unavailable',
+			self::GatewayTimeout => 'Gateway Timeout',
+			self::HTTPVersionNotSupported => 'HTTP Version Not Supported',
+			self::VariantAlsoNegotiates => 'Variant Also Negotiates',
+			self::InsufficientStorage => 'Insufficient Storage',
+			self::LoopDetected => 'Loop Detected',
+			self::NetworkAuthenticationRequired => 'Network Authentication Required'
 		};
 	}
 }
