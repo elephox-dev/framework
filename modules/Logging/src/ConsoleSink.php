@@ -27,7 +27,7 @@ class ConsoleSink implements Sink
 			$metaDataSuffix = '';
 		} else {
 			try {
-				$metaDataSuffix = PHP_EOL . Console::light_gray(json_encode($metaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR));
+				$metaDataSuffix = ' ' . Console::light_gray(json_encode($metaData, JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR));
 			} catch (JsonException $e) {
 				$metaDataSuffix = ' ' . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
 			}
