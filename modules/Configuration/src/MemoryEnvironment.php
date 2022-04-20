@@ -47,7 +47,7 @@ class MemoryEnvironment extends AbstractEnvironment implements Contract\Environm
 
 		if ($this->rootPath !== null) {
 			$dir = new Directory($this->rootPath);
-		}elseif ($this->offsetExists('APP_ROOT')) {
+		} elseif ($this->offsetExists('APP_ROOT')) {
 			$dir = new Directory((string) $this['APP_ROOT']);
 		} else {
 			$cwd = getcwd();

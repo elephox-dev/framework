@@ -137,7 +137,9 @@ class ServeCommand implements CommandHandler
 
 		if (!is_string($envName)) {
 			throw new InvalidArgumentException('Environment must be a string');
-		} elseif ($envName !== 'null') {
+		}
+
+		if ($envName !== 'null') {
 			$environment['APP_ENV'] = $envName;
 
 			$environment->loadFromEnvFile($envName);

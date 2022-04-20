@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
-use ArrayIterator;
 use Dotenv\Dotenv;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\KeyedEnumerable;
