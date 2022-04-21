@@ -5,18 +5,25 @@ namespace Elephox\Http;
 
 use ArrayIterator;
 use Elephox\Collection\IsKeyedEnumerable;
+use Elephox\Platform\Contract\SessionPlatform;
+use Elephox\Platform\PlatformManager;
 use LogicException;
 
 class SessionMap implements Contract\SessionMap
 {
+	private static function session(): SessionPlatform
+	{
+		return PlatformManager::get(SessionPlatform::class);
+	}
+
 	public static function fromGlobals(?array $session = null, bool $recreate = false): ?Contract\SessionMap
 	{
-		if (session_status() === PHP_SESSION_DISABLED) {
+		if (self::session()->status() === PHP_SESSION_DISABLED) {
 			throw new LogicException('Sessions are disabled');
 		}
 
-		if ($recreate && session_status() === PHP_SESSION_ACTIVE) {
-			session_regenerate_id(true);
+		if ($recreate && self::session()->status() === PHP_SESSION_ACTIVE) {
+			self::session()->regenerate_id(true);
 		}
 
 		$map = self::start();
@@ -33,8 +40,8 @@ class SessionMap implements Contract\SessionMap
 
 	public static function start(): Contract\SessionMap
 	{
-		if (session_status() === PHP_SESSION_NONE) {
-			session_start();
+		if (self::session()->status() === PHP_SESSION_NONE) {
+			self::session()->start();
 		}
 
 		return new self();
@@ -42,8 +49,8 @@ class SessionMap implements Contract\SessionMap
 
 	public static function destroy(): void
 	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_destroy();
+		if (self::session()->status() === PHP_SESSION_ACTIVE) {
+			self::session()->destroy();
 		}
 	}
 
@@ -58,21 +65,25 @@ class SessionMap implements Contract\SessionMap
 
 	public function put(mixed $key, mixed $value): bool
 	{
+		self::session()->globals($session);
 		/** @psalm-suppress MixedAssignment */
-		$_SESSION[$key] = $value;
+		$session[$key] = $value;
 
 		return true;
 	}
 
 	public function get(mixed $key): mixed
 	{
+		self::session()->globals($session);
 		/** @psalm-suppress MixedReturnStatement */
-		return $_SESSION[$key] ?? null;
+		return $session[$key] ?? null;
 	}
 
 	public function has(mixed $key): bool
 	{
-		return isset($_SESSION[$key]);
+		self::session()->globals($session);
+
+		return isset($session[$key]);
 	}
 
 	public function remove(mixed $key): bool
@@ -81,13 +92,16 @@ class SessionMap implements Contract\SessionMap
 			return false;
 		}
 
-		unset($_SESSION[$key]);
+		self::session()->globals($session);
+		unset($session[$key]);
 
 		return true;
 	}
 
 	public function getIterator(): ArrayIterator
 	{
-		return new ArrayIterator($_SESSION);
+		self::session()->globals($session);
+
+		return new ArrayIterator($session);
 	}
 }

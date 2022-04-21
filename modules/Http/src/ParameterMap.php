@@ -167,6 +167,7 @@ class ParameterMap implements Contract\ParameterMap
 				'AUTH_TYPE',
 				'PATH_INFO',
 				'ORIG_PATH_INFO',
+				'CONTENT_LENGTH',
 			] as $serverKey
 		) {
 			if (!array_key_exists($serverKey, $server)) {
