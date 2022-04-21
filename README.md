@@ -61,8 +61,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [modules/Http/src/ResponseCode.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/src/ResponseCode.php)
-  - [ ] go over the reason phrases and check them against standards
 - [ ] [modules/Logging/test/MessageFormatterSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/MessageFormatterSinkTest.php)
   - [ ] write tests for background and options
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
