@@ -14,6 +14,16 @@ use RuntimeException;
  */
 class StringStreamTest extends TestCase
 {
+	public function testFrom(): void
+	{
+		$stream = StringStream::from('foo');
+
+		static::assertSame('foo', $stream->getContents());
+		static::assertTrue($stream->isReadable());
+		static::assertFalse($stream->isWriteable());
+		static::assertTrue($stream->isSeekable());
+	}
+
 	public function testConstructor(): void
 	{
 		$stream = new StringStream('foo');

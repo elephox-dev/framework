@@ -89,4 +89,146 @@ class ResourceStreamTest extends TestCase
 		$stream->close();
 		static::assertNull($stream->detach());
 	}
+
+	public function testToString(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, writeable: true);
+
+		static::assertEquals('', (string) $stream);
+
+		$stream->write('a');
+
+		static::assertEquals('a', (string) $stream);
+
+		$stream->close();
+
+		static::assertEquals('', (string) $stream);
+	}
+
+	public function testClosedGetSizeThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->getSize();
+	}
+
+	public function testClosedTellThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->tell();
+	}
+
+	public function testClosedEofThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->eof();
+	}
+
+	public function testClosedSeekThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->seek(1);
+	}
+
+	public function testClosedRewindThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->rewind();
+	}
+
+	public function testClosedWriteThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->write("test");
+	}
+
+	public function testClosedReadThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->read(1);
+	}
+
+	public function testClosedGetContentsThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not available');
+
+		$stream->getContents();
+	}
+
+	public function testClosedGetMetadataIsEmpty(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$stream->close();
+
+		static::assertEmpty($stream->getMetadata());
+		static::assertNull($stream->getMetadata('size'));
+	}
+
+	public function testInvalidLengthReadThrows(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Length parameter cannot be negative');
+
+		$stream->read(-1);
+	}
 }

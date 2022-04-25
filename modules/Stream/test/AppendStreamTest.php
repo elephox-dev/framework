@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Stream;
 
 use Elephox\Stream\Contract\Stream;
+use InvalidArgumentException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\AppendStream
@@ -109,6 +111,54 @@ class AppendStreamTest extends MockeryTestCase
 		static::assertEquals(5, $appendStream->tell());
 	}
 
+	public function testReadNullSize(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage("AppendStream is only readable if the underlying streams sizes are known");
+
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->expects('getSize')->andReturns(3);
+		$appendedStreamMock->expects('getSize')->andReturns(null);
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->read(12);
+	}
+
+	public function testReadAboveStream(): void
+	{
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->allows('getSize')->twice()->withNoArgs()->andReturns(3);
+		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(3);
+
+		$streamMock->expects('eof')->andReturns(true);
+
+		$appendedStreamMock->expects('tell')->andReturns(1);
+		$appendedStreamMock->expects('read')->with(2)->andReturns('de');
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->read(2);
+	}
+
+	public function testReadWithinStream(): void
+	{
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->expects('getSize')->withNoArgs()->andReturns(3);
+		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(3);
+
+		$streamMock->expects('eof')->andReturns(false);
+		$streamMock->expects('tell')->andReturns(1);
+		$streamMock->expects('read')->with(2)->andReturns('de');
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->read(2);
+	}
+
 	public function testEof(): void
 	{
 		$streamMock = M::mock(Stream::class);
@@ -157,16 +207,70 @@ class AppendStreamTest extends MockeryTestCase
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
 
-		$streamMock->expects('getSize')->andReturns(1);
-		$appendedStreamMock->expects('getSize')->andReturns(1);
+		$streamMock->allows('getSize')->times(5)->andReturns(10);
+		$appendedStreamMock->allows('getSize')->times(4)->andReturns(10);
 
-		$streamMock->expects('eof')->andReturns(false);
-		$streamMock->expects('tell')->andReturns(0);
-
-		$streamMock->expects('seek')->with(1, SEEK_SET)->andReturns();
+		$streamMock->expects('seek')->with(10, SEEK_SET)->andReturns();
+		$appendedStreamMock->expects('seek')->with(2, SEEK_SET)->andReturns();
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		$appendStream->seek(1);
+		$appendStream->seek(10);
+		$appendStream->seek(12);
+
+		$streamMock->expects('eof')->withNoArgs()->andReturns(true);
+		$appendedStreamMock->expects('tell')->withNoArgs()->andReturns(2);
+		$appendedStreamMock->expects('seek')->with(5, SEEK_SET)->andReturns();
+
+		$appendStream->seek(3, SEEK_CUR);
+
+		$streamMock->expects('seek')->with(9, SEEK_SET)->andReturns();
+
+		$appendStream->seek(11, SEEK_END);
+	}
+
+	public function testSeekInvalidSize(): void
+	{
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage("AppendStream is only seekable if the underlying streams sizes are known");
+
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->expects('getSize')->withNoArgs()->andReturns(10);
+		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(null);
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->seek(10);
+	}
+
+	public function testSeekInvalidWhence(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("Invalid whence");
+
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->expects('getSize')->withNoArgs()->andReturns(10);
+		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(10);
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->seek(10, SEEK_SET - 1);
+	}
+
+	public function testSeekNegativeOffset(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage("Cannot seek to negative offset");
+
+		$streamMock = M::mock(Stream::class);
+		$appendedStreamMock = M::mock(Stream::class);
+
+		$streamMock->expects('getSize')->withNoArgs()->andReturns(2);
+		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(1);
+
+		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
+		$appendStream->seek(4, SEEK_END);
 	}
 
 	public function testRewind(): void

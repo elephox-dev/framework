@@ -15,11 +15,6 @@ class AppendStream extends AbstractStream implements Stream
 	) {
 	}
 
-	protected function getCurrentStream(): Stream
-	{
-		return $this->stream->eof() ? $this->appendedStream : $this->stream;
-	}
-
 	public function __toString(): string
 	{
 		return $this->stream . $this->appendedStream;

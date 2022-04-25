@@ -25,10 +25,28 @@ class LazyStreamTest extends MockeryTestCase
 			->andReturn(true)
 		;
 
+		$streamMock
+			->expects('isWriteable')
+			->withNoArgs()
+			->andReturn(true)
+		;
+
+		$streamMock
+			->expects('isSeekable')
+			->withNoArgs()
+			->andReturn(true)
+		;
+
 		$stream = new LazyStream(static fn () => $streamMock);
 
 		static::assertSame($streamMock, $stream->getStream());
 		static::assertTrue($stream->isReadable());
+
+		$stream = new LazyStream(static fn () => $streamMock);
+		static::assertTrue($stream->isWriteable());
+
+		$stream = new LazyStream(static fn () => $streamMock);
+		static::assertTrue($stream->isSeekable());
 	}
 
 	public function methodNameProvider(): array
