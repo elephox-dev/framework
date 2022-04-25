@@ -181,7 +181,7 @@ class ResourceStreamTest extends TestCase
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Resource is not available');
 
-		$stream->write("test");
+		$stream->write('test');
 	}
 
 	public function testClosedReadThrows(): void

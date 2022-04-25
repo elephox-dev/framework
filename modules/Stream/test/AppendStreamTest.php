@@ -114,7 +114,7 @@ class AppendStreamTest extends MockeryTestCase
 	public function testReadNullSize(): void
 	{
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage("AppendStream is only readable if the underlying streams sizes are known");
+		$this->expectExceptionMessage('AppendStream is only readable if the underlying streams sizes are known');
 
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
@@ -231,7 +231,7 @@ class AppendStreamTest extends MockeryTestCase
 	public function testSeekInvalidSize(): void
 	{
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage("AppendStream is only seekable if the underlying streams sizes are known");
+		$this->expectExceptionMessage('AppendStream is only seekable if the underlying streams sizes are known');
 
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
@@ -246,7 +246,7 @@ class AppendStreamTest extends MockeryTestCase
 	public function testSeekInvalidWhence(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage("Invalid whence");
+		$this->expectExceptionMessage('Invalid whence');
 
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
@@ -261,7 +261,7 @@ class AppendStreamTest extends MockeryTestCase
 	public function testSeekNegativeOffset(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage("Cannot seek to negative offset");
+		$this->expectExceptionMessage('Cannot seek to negative offset');
 
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
