@@ -101,7 +101,6 @@ class ResourceStream extends AbstractStream implements Stream
 
 		/** @var positive-int|false|0 $position */
 		$position = ftell($this->resource);
-
 		if ($position === false) {
 			throw new RuntimeException('Unable to determine the current position');
 		}
@@ -188,7 +187,7 @@ class ResourceStream extends AbstractStream implements Stream
 		}
 
 		if (!$this->readable) {
-			throw new RuntimeException('Cannot read from non-readable stream');
+			throw new RuntimeException('Cannot read from a non-readable resource');
 		}
 
 		if ($length === 0) {
@@ -197,7 +196,7 @@ class ResourceStream extends AbstractStream implements Stream
 
 		$buffer = fread($this->resource, $length);
 		if ($buffer === false) {
-			throw new RuntimeException('Unable to read from stream');
+			throw new RuntimeException('Unable to read from resource');
 		}
 
 		return $buffer;

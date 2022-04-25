@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Platform;
 
+use Elephox\Platform\Contract\FilesystemPlatform;
 use Elephox\Platform\Contract\PlatformInterface;
 use Elephox\Platform\Contract\SessionPlatform;
+use Elephox\Platform\Native\NativeFilesystemPlatform;
 use Elephox\Platform\Native\NativeSessionPlatform;
 
 class PlatformManager
@@ -19,6 +21,7 @@ class PlatformManager
 	 */
 	public static array $services = [
 		SessionPlatform::class => NativeSessionPlatform::class,
+		FilesystemPlatform::class => NativeFilesystemPlatform::class,
 	];
 
 	/**

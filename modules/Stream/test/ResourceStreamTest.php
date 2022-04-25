@@ -69,7 +69,7 @@ class ResourceStreamTest extends TestCase
 		$stream = new ResourceStream($fh);
 
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('Unable to read from stream');
+		$this->expectExceptionMessage('Unable to read from resource');
 
 		$stream->read(1);
 	}
@@ -230,5 +230,106 @@ class ResourceStreamTest extends TestCase
 		$this->expectExceptionMessage('Length parameter cannot be negative');
 
 		$stream->read(-1);
+	}
+
+	public function testTell(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, writeable: true);
+
+		static::assertEquals(0, $stream->tell());
+
+		$stream->write('a');
+
+		static::assertEquals(1, $stream->tell());
+	}
+
+	public function testEof(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, writeable: true);
+
+		static::assertEmpty($stream->getContents());
+		static::assertTrue($stream->eof());
+
+		$stream->write('a');
+
+		static::assertTrue($stream->eof());
+		$stream->rewind();
+		static::assertFalse($stream->eof());
+	}
+
+	public function testSeekThrowsIfNotSeekable(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, seekable: false);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Resource is not seekable');
+
+		$stream->seek(1);
+	}
+
+	public function testSeekThrowsForInvalidOffset(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, seekable: true);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Unable to seek to resource position -1 with whence 0');
+
+		$stream->seek(-1);
+	}
+
+	public function testWriteThrowsIfNotWriteable(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, writeable: false);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Cannot write to a non-writable resource');
+
+		$stream->write('test');
+	}
+
+	public function testReadThrowsIfNotReadable(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, readable: false);
+
+		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('Cannot read from a non-readable resource');
+
+		$stream->read(1);
+	}
+
+	public function testReadReturnsEmptyStringForZeroLength(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, readable: true);
+
+		static::assertEquals('', $stream->read(0));
+	}
+
+	public function testGetMetadata(): void
+	{
+		$fh = tmpfile();
+		$stream = new ResourceStream($fh, readable: true);
+
+		$data = $stream->getMetadata();
+		static::assertIsArray($data);
+		static::assertArrayHasKey('eof', $data);
+		static::assertArrayHasKey('seekable', $data);
+		static::assertArrayHasKey('mode', $data);
+		static::assertArrayHasKey('uri', $data);
+		static::assertArrayHasKey('timed_out', $data);
+		static::assertArrayHasKey('blocked', $data);
+		static::assertArrayHasKey('wrapper_type', $data);
+		static::assertArrayHasKey('stream_type', $data);
+
+		static::assertTrue($stream->getMetadata('seekable'));
+		static::assertFalse($stream->getMetadata('eof'));
+		static::assertEquals('plainfile', $stream->getMetadata('wrapper_type'));
+		static::assertNull($stream->getMetadata('non-existent'));
 	}
 }

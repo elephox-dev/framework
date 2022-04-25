@@ -8,6 +8,7 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\EmptyStream
+ * @covers \Elephox\Stream\AbstractStream
  *
  * @internal
  */
@@ -122,5 +123,25 @@ class EmptyStreamTest extends TestCase
 		$stream = new EmptyStream();
 
 		static::assertNull($stream->getMetadata());
+	}
+
+	public function testReadLine(): void
+	{
+		$stream = new EmptyStream();
+		static::assertEquals('', $stream->readLine());
+	}
+
+	public function testReadAllLines(): void
+	{
+		$stream = new EmptyStream();
+		static::assertEquals([], iterator_to_array($stream->readAllLines()));
+	}
+
+	public function testReadByte(): void
+	{
+		$this->expectException(RuntimeException::class);
+
+		$stream = new EmptyStream();
+		$stream->readByte();
 	}
 }

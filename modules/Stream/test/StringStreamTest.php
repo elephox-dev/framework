@@ -9,6 +9,7 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\StringStream
+ * @covers \Elephox\Stream\AbstractStream
  *
  * @internal
  */
@@ -206,5 +207,29 @@ class StringStreamTest extends TestCase
 		$stream = new StringStream('foo');
 
 		static::assertEquals([], $stream->getMetadata());
+	}
+
+	public function testReadLine(): void
+	{
+		$stream = new StringStream("foo\r\nbar\r\nbaz");
+
+		static::assertEquals('foo', $stream->readLine());
+		static::assertEquals('bar', $stream->readLine());
+		static::assertEquals('baz', $stream->readLine());
+	}
+
+	public function testReadAllLines(): void
+	{
+		$stream = new StringStream("foo\r\nbar\r\nbaz");
+
+		static::assertEquals(['foo', 'bar', 'baz'], iterator_to_array($stream->readAllLines()));
+	}
+
+	public function testReadByte(): void
+	{
+		$stream = new StringStream('foo');
+
+		static::assertEquals(102, $stream->readByte());
+		static::assertEquals(1, $stream->tell());
 	}
 }

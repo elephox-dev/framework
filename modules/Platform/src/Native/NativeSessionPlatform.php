@@ -38,52 +38,52 @@ class NativeSessionPlatform implements SessionPlatform
 	 *
 	 * @param ?array $_sessionRef
 	 */
-	public function globals(?array &$_sessionRef): void
+	public static function globals(?array &$_sessionRef): void
 	{
 		$_sessionRef = $_SESSION;
 	}
 
-	public function abort(): bool
+	public static function abort(): bool
 	{
 		return session_abort();
 	}
 
-	public function cache_expire(?int $value = null): int|false
+	public static function cache_expire(?int $value = null): int|false
 	{
 		return session_cache_expire($value);
 	}
 
-	public function cache_limiter(?string $value = null): string|false
+	public static function cache_limiter(?string $value = null): string|false
 	{
 		return session_cache_limiter($value);
 	}
 
-	public function commit(): bool
+	public static function commit(): bool
 	{
 		return session_commit();
 	}
 
-	public function create_id(string $prefix = ''): string|false
+	public static function create_id(string $prefix = ''): string|false
 	{
 		return session_create_id($prefix);
 	}
 
-	public function decode(string $data): bool
+	public static function decode(string $data): bool
 	{
 		return session_decode($data);
 	}
 
-	public function destroy(): bool
+	public static function destroy(): bool
 	{
 		return session_destroy();
 	}
 
-	public function encode(): string|false
+	public static function encode(): string|false
 	{
 		return session_encode();
 	}
 
-	public function gc(): int|false
+	public static function gc(): int|false
 	{
 		return session_gc();
 	}
@@ -96,52 +96,52 @@ class NativeSessionPlatform implements SessionPlatform
 		'httponly' => 'bool',
 		'samesite' => 'string',
 	])]
-	public function get_cookie_params(): array
+	public static function get_cookie_params(): array
 	{
 		return session_get_cookie_params();
 	}
 
-	public function id(?string $id = null): string|false
+	public static function id(?string $id = null): string|false
 	{
 		return session_id($id);
 	}
 
-	public function module_name(?string $module = null): string|false
+	public static function module_name(?string $module = null): string|false
 	{
 		return session_module_name($module);
 	}
 
-	public function name(?string $name = null): string|false
+	public static function name(?string $name = null): string|false
 	{
 		return session_name($name);
 	}
 
-	public function regenerate_id(bool $delete_old_session = false): bool
+	public static function regenerate_id(bool $delete_old_session = false): bool
 	{
 		return session_regenerate_id($delete_old_session);
 	}
 
-	public function register_shutdown(): void
+	public static function register_shutdown(): void
 	{
 		session_register_shutdown();
 	}
 
-	public function reset(): bool
+	public static function reset(): bool
 	{
 		return session_reset();
 	}
 
-	public function save_path(?string $path = null): string|false
+	public static function save_path(?string $path = null): string|false
 	{
 		return session_save_path($path);
 	}
 
-	public function set_cookie_params(array|int $lifetime_or_options, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httponly = null): bool
+	public static function set_cookie_params(array|int $lifetime_or_options, ?string $path = null, ?string $domain = null, ?bool $secure = null, ?bool $httponly = null): bool
 	{
 		return session_set_cookie_params($lifetime_or_options, $path, $domain, $secure, $httponly);
 	}
 
-	public function set_save_handler(callable|SessionHandlerInterface $sessionhandlerOrOpen, callable|bool $register_shutdownOrClose = true, ?callable $read = null, ?callable $write = null, ?callable $destroy = null, ?callable $gc = null, ?callable $create_sid = null, ?callable $validate_sid = null, ?callable $update_timestamp = null): bool
+	public static function set_save_handler(callable|SessionHandlerInterface $sessionhandlerOrOpen, callable|bool $register_shutdownOrClose = true, ?callable $read = null, ?callable $write = null, ?callable $destroy = null, ?callable $gc = null, ?callable $create_sid = null, ?callable $validate_sid = null, ?callable $update_timestamp = null): bool
 	{
 		if (is_a($sessionhandlerOrOpen, SessionHandlerInterface::class) && is_bool($register_shutdownOrClose)) {
 			return session_set_save_handler($sessionhandlerOrOpen, $register_shutdownOrClose);
@@ -153,22 +153,22 @@ class NativeSessionPlatform implements SessionPlatform
 		throw new InvalidArgumentException('Invalid combination of arguments');
 	}
 
-	public function start(array $options = []): bool
+	public static function start(array $options = []): bool
 	{
 		return session_start($options);
 	}
 
-	public function status(): int
+	public static function status(): int
 	{
 		return session_status();
 	}
 
-	public function unset(): bool
+	public static function unset(): bool
 	{
 		return session_unset();
 	}
 
-	public function write_close(): bool
+	public static function write_close(): bool
 	{
 		return session_write_close();
 	}
