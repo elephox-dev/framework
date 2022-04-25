@@ -93,7 +93,9 @@ class SessionMap implements Contract\SessionMap
 		}
 
 		self::session()->globals($session);
-		unset($session[$key]);
+		if ($session !== null) {
+			unset($session[$key]);
+		}
 
 		return true;
 	}
@@ -102,6 +104,6 @@ class SessionMap implements Contract\SessionMap
 	{
 		self::session()->globals($session);
 
-		return new ArrayIterator($session);
+		return new ArrayIterator($session ?? []);
 	}
 }

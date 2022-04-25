@@ -19,6 +19,7 @@
         <ignoreFiles>
             <file name="modules/Collection/src/IsKeyedEnumerable.php"/>
             <file name="modules/Collection/src/IsEnumerable.php"/>
+            <directory name="modules/Platform/src/Native" />
         </ignoreFiles>
     </projectFiles>
     <stubs>
