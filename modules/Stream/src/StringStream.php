@@ -10,7 +10,7 @@ use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 use Stringable;
 
-class StringStream implements Stream
+class StringStream extends AbstractStream implements Stream
 {
 	#[Pure]
 	public static function from(

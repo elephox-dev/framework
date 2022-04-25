@@ -7,7 +7,7 @@ use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use RuntimeException;
 
-class AppendStream implements Stream
+class AppendStream extends AbstractStream implements Stream
 {
 	public function __construct(
 		private Stream $stream,
@@ -83,50 +83,25 @@ class AppendStream implements Stream
 			throw new RuntimeException('AppendStream is only seekable if the underlying streams sizes are known');
 		}
 
-		$totalSize = $streamSize + $appendStreamSize;
-		$tell = $this->tell();
-
 		switch ($whence) {
-			case SEEK_SET:
-				if ($offset > $streamSize) {
-					$offset -= $streamSize;
-					/** @var positive-int|0 $offset */
-					$this->appendedStream->seek($offset, SEEK_SET);
-				} elseif ($offset >= 0) {
-					$this->stream->seek($offset, SEEK_SET);
-				} else {
-					throw new InvalidArgumentException('Cannot seek to negative offset');
-				}
-
-				break;
 			case SEEK_CUR:
-				$newOffset = $offset + $tell;
-				if ($newOffset > $streamSize) {
-					$newOffset -= $streamSize;
-					/** @var positive-int|0 $newOffset */
-					$this->appendedStream->seek($newOffset, SEEK_SET);
-				} elseif ($newOffset >= 0) {
-					$this->stream->seek($newOffset, SEEK_SET);
-				} else {
-					throw new InvalidArgumentException('Cannot seek to negative offset');
-				}
-
+				$offset += $this->tell();
 				break;
 			case SEEK_END:
-				$newOffset = $totalSize - $offset;
-				if ($newOffset > $streamSize) {
-					$newOffset -= $streamSize;
-					/** @var positive-int|0 $newOffset */
-					$this->appendedStream->seek($newOffset, SEEK_SET);
-				} elseif ($newOffset >= 0) {
-					$this->stream->seek($newOffset, SEEK_SET);
-				} else {
-					throw new InvalidArgumentException('Cannot seek to negative offset');
-				}
-
+				$offset = ($streamSize + $appendStreamSize) - $offset;
 				break;
 			default:
 				throw new InvalidArgumentException('Invalid whence');
+		}
+
+		if ($offset > $streamSize) {
+			$offset -= $streamSize;
+			/** @var positive-int|0 $offset */
+			$this->appendedStream->seek($offset, SEEK_SET);
+		} elseif ($offset >= 0) {
+			$this->stream->seek($offset, SEEK_SET);
+		} else {
+			throw new InvalidArgumentException('Cannot seek to negative offset');
 		}
 	}
 

@@ -52,4 +52,10 @@ interface Stream extends Stringable
 	public function getContents(): string;
 
 	public function getMetadata(?string $key = null): mixed;
+
+	public function readLine(string $eol = "\r\n"): string;
+
+	public function readAllLines(string $eol = "\r\n"): iterable;
+
+	public function readByte(): int;
 }

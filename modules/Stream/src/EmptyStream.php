@@ -7,7 +7,7 @@ use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-final class EmptyStream implements Stream
+final class EmptyStream extends AbstractStream implements Stream
 {
 	#[Pure]
 	public function __toString(): string

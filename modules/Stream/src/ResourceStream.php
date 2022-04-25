@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-class ResourceStream implements Stream
+class ResourceStream extends AbstractStream implements Stream
 {
 	/**
 	 * @param closed-resource|resource|null $resource
