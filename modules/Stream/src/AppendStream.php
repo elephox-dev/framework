@@ -84,6 +84,8 @@ class AppendStream extends AbstractStream implements Stream
 		}
 
 		switch ($whence) {
+			case SEEK_SET:
+				break;
 			case SEEK_CUR:
 				$offset += $this->tell();
 
