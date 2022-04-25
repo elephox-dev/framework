@@ -86,9 +86,11 @@ class AppendStream extends AbstractStream implements Stream
 		switch ($whence) {
 			case SEEK_CUR:
 				$offset += $this->tell();
+
 				break;
 			case SEEK_END:
 				$offset = ($streamSize + $appendStreamSize) - $offset;
+
 				break;
 			default:
 				throw new InvalidArgumentException('Invalid whence');
