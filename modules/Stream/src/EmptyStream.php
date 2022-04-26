@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
-use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-final class EmptyStream extends AbstractStream implements Stream
+final class EmptyStream extends AbstractStream
 {
 	#[Pure]
 	public function __toString(): string

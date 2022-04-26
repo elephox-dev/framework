@@ -10,7 +10,7 @@ use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 use Stringable;
 
-class StringStream extends AbstractStream implements Stream
+class StringStream extends AbstractStream
 {
 	#[Pure]
 	public static function from(
@@ -32,9 +32,9 @@ class StringStream extends AbstractStream implements Stream
 	#[Pure]
 	public function __construct(
 		private string $string,
-		private bool $readable = true,
-		private bool $seekable = true,
-		private bool $writeable = false,
+		private readonly bool $readable = true,
+		private readonly bool $seekable = true,
+		private readonly bool $writeable = false,
 	) {
 	}
 

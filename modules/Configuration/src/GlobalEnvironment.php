@@ -11,7 +11,7 @@ use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
 use RuntimeException;
 
-class GlobalEnvironment extends DotEnvEnvironment implements Contract\Environment
+class GlobalEnvironment extends DotEnvEnvironment
 {
 	use TransparentGetterSetter;
 

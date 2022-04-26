@@ -12,7 +12,7 @@ use Whoops\RunInterface as WhoopsRunInterface;
 class WhoopsExceptionHandler implements ExceptionHandler
 {
 	public function __construct(
-		private WhoopsRunInterface $whoopsRun,
+		private readonly WhoopsRunInterface $whoopsRun,
 	) {
 	}
 
@@ -22,6 +22,7 @@ class WhoopsExceptionHandler implements ExceptionHandler
 			/**
 			 * @psalm-suppress InternalClass
 			 * @psalm-suppress InternalMethod
+			 * @noinspection PhpInternalEntityUsedInspection
 			 */
 			if (class_exists(CollisionHandler::class)) {
 				$this->whoopsRun->pushHandler(new CollisionHandler());

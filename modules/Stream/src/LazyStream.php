@@ -6,7 +6,7 @@ namespace Elephox\Stream;
 use Closure;
 use Elephox\Stream\Contract\Stream;
 
-class LazyStream extends AbstractStream implements Stream
+class LazyStream extends AbstractStream
 {
 	protected ?Stream $stream = null;
 
@@ -14,7 +14,7 @@ class LazyStream extends AbstractStream implements Stream
 	 * @param Closure(): Stream $closure
 	 */
 	public function __construct(
-		protected Closure $closure,
+		private readonly Closure $closure,
 	) {
 	}
 

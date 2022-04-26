@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
-use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-class ResourceStream extends AbstractStream implements Stream
+class ResourceStream extends AbstractStream
 {
 	/**
 	 * @param closed-resource|resource|null $resource
@@ -18,11 +17,11 @@ class ResourceStream extends AbstractStream implements Stream
 	 * @param null|positive-int|0 $size
 	 */
 	public function __construct(
-		protected $resource,
-		protected bool $readable = true,
-		protected bool $writeable = false,
-		protected bool $seekable = true,
-		protected ?int $size = null,
+		private mixed $resource,
+		private readonly bool $readable = true,
+		private readonly bool $writeable = false,
+		private readonly bool $seekable = true,
+		private ?int $size = null,
 	) {
 		if (!is_resource($this->resource)) {
 			throw new InvalidArgumentException('ResourceStream expects a resource');

@@ -7,11 +7,11 @@ use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use RuntimeException;
 
-class AppendStream extends AbstractStream implements Stream
+class AppendStream extends AbstractStream
 {
 	public function __construct(
-		private Stream $stream,
-		private Stream $appendedStream,
+		private readonly Stream $stream,
+		private readonly Stream $appendedStream,
 	) {
 	}
 
