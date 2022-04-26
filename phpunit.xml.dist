@@ -5,7 +5,7 @@
          cacheResultFile="tmp/tests/cache"
          executionOrder="random"
          forceCoversAnnotation="true"
-         defaultTestSuite="default"
+         defaultTestSuite="without-files"
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
@@ -14,7 +14,11 @@
          failOnWarning="true"
          verbose="true">
     <testsuites>
-        <testsuite name="default">
+        <testsuite name="without-files">
+            <directory>modules/*/test</directory>
+            <exclude>modules/Files/test</exclude>
+        </testsuite>
+        <testsuite name="full">
             <directory>modules/*/test</directory>
         </testsuite>
     </testsuites>
