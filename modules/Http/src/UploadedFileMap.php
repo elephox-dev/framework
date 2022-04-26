@@ -35,7 +35,12 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 
 			$mimeType = MimeType::tryFrom($clientType);
 			if ($mimeType === null && $clientType !== '') {
-				$mimeType = new CustomMimeType($clientType);
+				$extension = '';
+				if (!empty($fullPath)) {
+					$extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+				}
+
+				$mimeType = CustomMimeType::from($clientType, $extension);
 			}
 
 			$uploadError = UploadError::from($error);
@@ -44,6 +49,7 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 			if ($size < 0) {
 				$size = null;
 			}
+
 			/** @var int<0, max>|null $size */
 			$uploadedFile = new UploadedFile($clientFilename, $fullPath, $resource, $mimeType, $size, $uploadError);
 

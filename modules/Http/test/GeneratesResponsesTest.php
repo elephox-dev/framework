@@ -64,6 +64,16 @@ class GeneratesResponsesTest extends TestCase
 		fclose($resource);
 	}
 
+	public function testResourceResponseWithExtension(): void
+	{
+		$resource = fopen(__FILE__, 'rb');
+
+		$response = $this->resourceResponse($resource)->get();
+		static::assertEquals(MimeType::ApplicationPhp, $response->getMimeType());
+
+		fclose($resource);
+	}
+
 	public function testFileResponse(): void
 	{
 		$response = $this->fileResponse(__FILE__)->get();
@@ -78,15 +88,3 @@ class GeneratesResponsesTest extends TestCase
 		static::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
 	}
 }
-
-// class MeGeneratesResponses
-// {
-//	use GeneratesResponses
-//	{
-//		getDefaultBuilder as public;
-//		jsonResponse as public;
-//		fileResponse as public;
-//		resourceResponse as public;
-//		stringResponse as public;
-//	}
-// }

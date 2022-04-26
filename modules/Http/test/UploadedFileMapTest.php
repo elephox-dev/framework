@@ -26,13 +26,14 @@ class UploadedFileMapTest extends TestCase
 	{
 		$tmp = tempnam(sys_get_temp_dir(), 'tmp');
 		fclose(fopen($tmp, 'wb+'));
+		$fname = pathinfo($tmp, PATHINFO_BASENAME);
 
 		$map = UploadedFileMap::fromGlobals([
 			'test' => [
 				'name' => 'test.txt',
 				'type' => 'text/plain',
 				'size' => 12,
-				'tmp_name' => pathinfo($tmp, PATHINFO_BASENAME),
+				'tmp_name' => $fname,
 				'full_path' => $tmp,
 				'error' => UPLOAD_ERR_OK,
 			],
@@ -40,16 +41,25 @@ class UploadedFileMapTest extends TestCase
 				'name' => 'strange.abc',
 				'type' => 'application/x-abc',
 				'size' => 1,
-				'tmp_name' => pathinfo($tmp, PATHINFO_BASENAME),
+				'tmp_name' => $fname,
+				'full_path' => $tmp,
+				'error' => UPLOAD_ERR_OK,
+			],
+			'unknown-filesize' => [
+				'name' => 'empty.txt',
+				'type' => 'text/plain',
+				'size' => -1,
+				'tmp_name' => $fname,
 				'full_path' => $tmp,
 				'error' => UPLOAD_ERR_OK,
 			],
 		]);
 
 		static::assertInstanceOf(UploadedFileMapContract::class, $map);
-		static::assertCount(2, $map);
+		static::assertCount(3, $map);
 		static::assertInstanceOf(UploadedFile::class, $map->get('test'));
 		static::assertInstanceOf(UploadedFile::class, $map->get('custom-mime'));
+		static::assertInstanceOf(UploadedFile::class, $map->get('unknown-filesize'));
 
 		unlink($tmp);
 	}
