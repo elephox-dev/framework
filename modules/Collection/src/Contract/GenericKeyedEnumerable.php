@@ -155,6 +155,16 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function flip(): GenericKeyedEnumerable;
 
 	/**
+	 * @template TGroupKey
+	 *
+	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param null|callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<Grouping<TGroupKey, TIteratorKey, TSource>>
+	 */
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable;
+
+	/**
 	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
@@ -359,6 +369,8 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 * @return array<TArrayKey, list<TSource>>
 	 */
 	public function toNestedArray(?callable $keySelector = null): array;
+
+	public function tryGetNonEnumeratedCount(): ?int;
 
 	/**
 	 * @return GenericEnumerable<TIteratorKey>

@@ -817,6 +817,20 @@ trait IsEnumerable
 		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
 	}
 
+	public function tryGetNonEnumeratedCount(): ?int
+	{
+		$iterator = $this->getIterator();
+		if ($iterator instanceof Countable) {
+			return $iterator->count();
+		}
+
+		if (property_exists($iterator, 'count')) {
+			return $iterator->count;
+		}
+
+		return null;
+	}
+
 	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer

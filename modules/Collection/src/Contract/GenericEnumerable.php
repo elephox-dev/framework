@@ -360,6 +360,8 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 */
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable;
 
+	public function tryGetNonEnumeratedCount(): ?int;
+
 	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer

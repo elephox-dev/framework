@@ -11,6 +11,7 @@ use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use Elephox\Collection\Iterator\FlipIterator;
+use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
 use Elephox\Collection\Iterator\OrderedIterator;
 use Elephox\Collection\Iterator\ReverseIterator;
@@ -358,6 +359,21 @@ trait IsKeyedEnumerable
 	public function flip(): GenericKeyedEnumerable
 	{
 		return new KeyedEnumerable(new FlipIterator($this->getIterator()));
+	}
+
+	/**
+	 * @template TGroupKey
+	 *
+	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<Grouping<TGroupKey, TIteratorKey, TSource>>
+	 */
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		return new GroupedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -847,6 +863,20 @@ trait IsKeyedEnumerable
 		}
 
 		return $array;
+	}
+
+	public function tryGetNonEnumeratedCount(): ?int
+	{
+		$iterator = $this->getIterator();
+		if ($iterator instanceof Countable) {
+			return $iterator->count();
+		}
+
+		if (property_exists($iterator, 'count')) {
+			return $iterator->count;
+		}
+
+		return null;
 	}
 
 	public function keys(): GenericEnumerable
