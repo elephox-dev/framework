@@ -14,7 +14,7 @@ use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
-use Elephox\Logging\MessageFormatterSink;
+use Elephox\Logging\AnsiColorSink;
 use Elephox\Logging\MultiSinkLogger;
 use Elephox\Support\Contract\ExceptionHandler;
 use Whoops\Run as WhoopsRun;
@@ -152,7 +152,7 @@ class ConsoleApplicationBuilder
 	{
 		$this->services->addSingleton(Logger::class, MultiSinkLogger::class, static function (): MultiSinkLogger {
 			$logger = new MultiSinkLogger();
-			$logger->addSink(new MessageFormatterSink(new ConsoleSink()));
+			$logger->addSink(new AnsiColorSink(new ConsoleSink()));
 
 			return $logger;
 		});

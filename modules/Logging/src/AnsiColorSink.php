@@ -7,7 +7,7 @@ use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\LogLevel as LogLevelEnum;
 
-class MessageFormatterSink implements Sink
+class AnsiColorSink implements Sink
 {
 	public function __construct(private readonly Sink $innerSink)
 	{
