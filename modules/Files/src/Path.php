@@ -26,31 +26,28 @@ class Path
 	#[Pure]
 	public static function relativeTo(string $source, string $target): string
 	{
-		$sourceParts = explode(DIRECTORY_SEPARATOR, self::canonicalize($source));
-		$targetParts = explode(DIRECTORY_SEPARATOR, self::canonicalize($target));
+		$source = self::canonicalize($source);
+		$target = self::canonicalize($target);
 
-		$relativeParts = $targetParts;
-		foreach ($sourceParts as $depth => $part) {
-			if (isset($targetParts[$depth]) && $part === $targetParts[$depth]) {
-				array_shift($relativeParts);
+		$fromParts = explode(DIRECTORY_SEPARATOR, $source);
+		$toParts = explode(DIRECTORY_SEPARATOR, $target);
 
-				continue;
-			}
-
-			$remaining = count($sourceParts) - $depth;
-			if ($remaining <= 1) {
-				$relativeParts[0] = '.' . DIRECTORY_SEPARATOR . $relativeParts[0];
-
-				break;
-			}
-
-			$padLength = (count($relativeParts) + $remaining) * -1;
-			$relativeParts = array_pad($relativeParts, $padLength, '..');
-
-			break;
+		while (($fromParts[0] ?? null) === ($toParts[0] ?? null)) {
+			array_shift($fromParts);
+			array_shift($toParts);
 		}
 
-		return implode(DIRECTORY_SEPARATOR, $relativeParts);
+		if (empty($toParts)) {
+			array_unshift($toParts, '');
+		}
+
+		if (count($fromParts) === 0 || $fromParts[0] === '') {
+			array_unshift($toParts, '.');
+		} else {
+			$toParts = array_pad($toParts, -1 * (count(array_filter($fromParts)) + count($toParts)), '..');
+		}
+
+		return implode(DIRECTORY_SEPARATOR, $toParts);
 	}
 
 	#[Pure]
