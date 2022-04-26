@@ -54,8 +54,9 @@ abstract class DotEnvEnvironment extends AbstractEnvironment
 
 	public function pollDotEnvFileChanged(?string $envName = null, bool $notifyListeners = true): bool
 	{
-		return $this->updateDotEnvFileTimestamps($envName, false, $notifyListeners) ||
-			$this->updateDotEnvFileTimestamps($envName, true, $notifyListeners);
+		$changed = $this->updateDotEnvFileTimestamps($envName, false, $notifyListeners);
+
+		return $this->updateDotEnvFileTimestamps($envName, true, $notifyListeners) || $changed;
 	}
 
 	protected function updateDotEnvFileTimestamps(?string $envName, bool $local, bool $notifyListeners): bool
