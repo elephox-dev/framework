@@ -9,6 +9,7 @@ use JetBrains\PhpStorm\Pure;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
 use RuntimeException;
+use Throwable;
 
 #[Immutable]
 class CustomMimeType implements MimeTypeInterface
@@ -30,32 +31,42 @@ class CustomMimeType implements MimeTypeInterface
 	 */
 	public static function fromFile(mixed $file): MimeTypeInterface
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($file) && !is_resource($file)) {
-			throw new InvalidArgumentException('MimeType::fromFile only accepts strings or resource streams!');
-		}
-
 		$mime = null;
 		if (is_string($file) && function_exists('mime_content_type')) {
-			$mime = mime_content_type($file);
+			try {
+				$mime = mime_content_type($file);
+			} catch (Throwable) {
+				// ignore
+			}
 		}
 
 		if (empty($mime)) {
-			if (is_string($file)) {
-				return self::fromFileExtension($file);
+			if (is_string($file) && !empty($file)) {
+				return self::fromFilename($file);
 			}
 
-			// MAYBE: try to get meta information of resource to get filename
+			if (is_resource($file)) {
+				$metadata = stream_get_meta_data($file);
+				if (array_key_exists('uri', $metadata)) {
+					$filename = pathinfo($metadata['uri'], PATHINFO_BASENAME);
+					if (!empty($filename)) {
+						return self::fromFilename($filename);
+					}
+				}
+			}
 
-			throw new RuntimeException('Unable to determine mime type of file resource');
+			throw new RuntimeException('Unable to determine mime type of file');
 		}
 
 		return MimeType::tryFrom($mime) ?? new self($mime);
 	}
 
-	public static function fromFileExtension(string $filename): MimeTypeInterface
+	public static function fromFilename(string $filename): MimeTypeInterface
 	{
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		if (empty($extension)) {
+			return MimeType::ApplicationOctetStream;
+		}
 
 		try {
 			return MimeType::fromExtension($extension);
@@ -69,9 +80,9 @@ class CustomMimeType implements MimeTypeInterface
 	 * @param string $extension
 	 */
 	#[Pure]
-	public function __construct(
-		private string $value,
-		private string $extension = '',
+	protected function __construct(
+		private readonly string $value,
+		private readonly string $extension = '',
 	) {
 	}
 
