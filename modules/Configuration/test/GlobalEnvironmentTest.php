@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Elephox\Configuration\GlobalEnvironment
  * @covers \Elephox\Configuration\AbstractEnvironment
+ * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Files\Directory
+ * @covers \Elephox\Files\Path
  *
  * @internal
  */
@@ -58,5 +61,19 @@ class GlobalEnvironmentTest extends TestCase
 
 		$env = new GlobalEnvironment();
 		static::assertEquals($shouldBeDevelopment, $env->isDevelopment());
+	}
+
+	public function testGetTemp(): void
+	{
+		$env = new GlobalEnvironment();
+
+		static::assertEquals('.' . DIRECTORY_SEPARATOR . 'tmp', $env->getRoot()->getPathRelative($env->getTemp()));
+	}
+
+	public function testGetConfig(): void
+	{
+		$env = new GlobalEnvironment();
+
+		static::assertEquals($env->getRoot()->getPath(), $env->getConfig()->getPath());
 	}
 }
