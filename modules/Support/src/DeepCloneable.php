@@ -159,9 +159,27 @@ trait DeepCloneable
 				continue;
 			}
 
+			$behaviours = $property->getAttributes(CloneBehaviour::class);
+			if (count($behaviours) === 1) {
+				/** @var CloneBehaviour $behaviour */
+				$behaviour = $behaviours[0]->newInstance();
+
+				$action = $behaviour->action;
+			} else {
+				$action = CloneAction::Clone;
+			}
+
+			if ($action === CloneAction::Skip) {
+				continue;
+			}
+
 			$propertyValue = $property->getValue($object);
 
-			$clonedPropertyValue = self::cloneRecursive($propertyValue, $cloneStorage);
+			$clonedPropertyValue = match ($action) {
+				CloneAction::Keep => $propertyValue,
+				CloneAction::Clone => self::cloneRecursive($propertyValue, $cloneStorage),
+			};
+
 			$property->setValue($clone, $clonedPropertyValue);
 		}
 
