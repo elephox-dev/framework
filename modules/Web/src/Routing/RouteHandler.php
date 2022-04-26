@@ -80,7 +80,8 @@ class RouteHandler implements Contract\RouteHandler
 	public function matches(Request $request): bool
 	{
 		$method = $request->getMethod();
-		if (!$this->getHandledRequestMethods()->contains($method)) {
+		$handledMethods = $this->getHandledRequestMethods();
+		if (!$handledMethods->isEmpty() && !$handledMethods->contains($method)) {
 			return false;
 		}
 
