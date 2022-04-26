@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="dev-master@916fddb51dce52b2267ec8a56502b234f6bc174d">
+<files psalm-version="dev-master@b5b5c20f325712fc8f6775d67c678e76060a9724">
   <file src="development/Commands/ReleaseCommand.php">
     <PossiblyInvalidArgument occurrences="3">
       <code>$args</code>
@@ -11,9 +11,12 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="modules/Collection/src/Enumerable.php">
-    <UnusedPsalmSuppress occurrences="1">
-      <code>RedundantConditionGivenDocblockType</code>
-    </UnusedPsalmSuppress>
+    <MixedReturnTypeCoercion occurrences="4">
+      <code>GenericEnumerable&lt;int&gt;</code>
+      <code>GenericEnumerable&lt;never&gt;</code>
+      <code>new self(new EmptyIterator())</code>
+      <code>new self(new RangeIterator($start, $end, $step))</code>
+    </MixedReturnTypeCoercion>
   </file>
   <file src="modules/Collection/src/Iterator/KeySelectIterator.php">
     <PossiblyNullArgument occurrences="2">
@@ -65,10 +68,19 @@
       <code>$this-&gt;iterator-&gt;key()</code>
     </PossiblyNullArgument>
   </file>
+  <file src="modules/Collection/src/IteratorProvider.php">
+    <ImplementedReturnTypeMismatch occurrences="2">
+      <code>Iterator&lt;TIteratorKey, TSource&gt;</code>
+      <code>Iterator&lt;TIteratorKey, TSource&gt;</code>
+    </ImplementedReturnTypeMismatch>
+  </file>
   <file src="modules/Collection/src/KeyedEnumerable.php">
-    <UnusedPsalmSuppress occurrences="1">
-      <code>RedundantConditionGivenDocblockType</code>
-    </UnusedPsalmSuppress>
+    <MixedReturnTypeCoercion occurrences="4">
+      <code>GenericKeyedEnumerable&lt;int, int&gt;</code>
+      <code>GenericKeyedEnumerable&lt;never, never&gt;</code>
+      <code>new self(new EmptyIterator())</code>
+      <code>new self(new RangeIterator($start, $end, $step))</code>
+    </MixedReturnTypeCoercion>
   </file>
   <file src="modules/Collection/src/ObjectMap.php">
     <UnusedPsalmSuppress occurrences="3">
@@ -92,8 +104,6 @@
   <file src="modules/Configuration/src/ConfigurationSection.php">
     <DocblockTypeContradiction occurrences="1">
       <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
-      <code>is_string($offset)</code>
     </DocblockTypeContradiction>
   </file>
   <file src="modules/Configuration/src/Json/JsonConfigurationProvider.php">
@@ -115,14 +125,8 @@
       <code>$this</code>
     </InvalidArgument>
   </file>
-  <file src="modules/Console/src/Command/HelpCommand.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>empty($commandTemplate-&gt;argumentTemplates)</code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="modules/DI/src/ServiceResolver.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>$possibleArgument !== null</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>$possibleArgument !== null</code>
     </DocblockTypeContradiction>
   </file>

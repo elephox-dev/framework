@@ -122,6 +122,7 @@ class ParameterMap implements Contract\ParameterMap
 			}
 		}
 
+		/** @var KeyedEnumerable<array-key, mixed> */
 		return new KeyedEnumerable($iterator);
 	}
 

@@ -30,9 +30,9 @@ interface ParameterMap extends ArrayAccess
 	public function all(string $key): GenericKeyedEnumerable;
 
 	/**
-	 * @return GenericKeyedEnumerable<string, mixed>
-	 *
 	 * @param ?ParameterSource $source
+	 *
+	 * @return GenericKeyedEnumerable<array-key, mixed>
 	 */
 	public function allFrom(?ParameterSource $source = null): GenericKeyedEnumerable;
 }

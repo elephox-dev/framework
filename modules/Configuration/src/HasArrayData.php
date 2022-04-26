@@ -24,6 +24,7 @@ trait HasArrayData
 	 */
 	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
 	{
+		/** @var Enumerable<string> */
 		return new Enumerable(function () use ($path): Generator {
 			if (empty($path)) {
 				foreach (array_keys($this->data) as $key) {

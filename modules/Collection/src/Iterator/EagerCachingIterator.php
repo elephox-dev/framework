@@ -103,6 +103,7 @@ class EagerCachingIterator implements Iterator, ArrayAccess, Countable
 			$this->rewind();
 		}
 
+		/** @var TValue */
 		return $this->values[$offset];
 	}
 
