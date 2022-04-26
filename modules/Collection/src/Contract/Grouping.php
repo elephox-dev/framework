@@ -5,10 +5,10 @@ namespace Elephox\Collection\Contract;
 
 /**
  * @template TGroupKey
- * @template TKey
+ * @template TIteratorKey
  * @template TSource
  *
- * @extends GenericKeyedEnumerable<TKey, TSource>
+ * @extends GenericKeyedEnumerable<TIteratorKey, TSource>
  */
 interface Grouping extends GenericKeyedEnumerable
 {

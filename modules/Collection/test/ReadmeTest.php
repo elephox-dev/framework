@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\KeyedEnumerable
  * @covers \Elephox\Collection\Iterator\OrderedIterator
  * @covers \Elephox\Collection\OrderedEnumerable
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses   \Elephox\Collection\IsKeyedEnumerable
  *

@@ -4,21 +4,20 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
-use Closure;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Iterator\RangeIterator;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @template TIteratorKey
  * @template TSource
  *
+ * @extends IteratorProvider<TIteratorKey, TSource>
  * @implements GenericKeyedEnumerable<TIteratorKey, TSource>
  */
-class KeyedEnumerable implements GenericKeyedEnumerable
+class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 {
 	/**
 	 * @template TValue
@@ -74,37 +73,4 @@ class KeyedEnumerable implements GenericKeyedEnumerable
 	 * @use IsKeyedEnumerable<TIteratorKey, TSource>
 	 */
 	use IsKeyedEnumerable;
-
-	/**
-	 * @var Iterator<TIteratorKey, TSource>
-	 */
-	private Iterator $iterator;
-
-	/**
-	 * @param Iterator<TIteratorKey, TSource>|Closure(): Iterator<TIteratorKey, TSource> $iterator
-	 * @psalm-suppress RedundantConditionGivenDocblockType
-	 */
-	public function __construct(
-		Iterator|Closure $iterator,
-	) {
-		if ($iterator instanceof Iterator) {
-			$this->iterator = $iterator;
-		} else {
-			$result = $iterator();
-			if ($result instanceof Iterator) {
-				$this->iterator = $result;
-			} else {
-				throw new InvalidArgumentException('The closure must return an instance of Iterator');
-			}
-		}
-	}
-
-	/**
-	 * @return Iterator<TIteratorKey, TSource>
-	 */
-	#[Pure]
-	public function getIterator(): Iterator
-	{
-		return $this->iterator;
-	}
 }

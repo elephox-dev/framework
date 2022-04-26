@@ -8,6 +8,7 @@ use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericGroupedKeyedEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use Elephox\Collection\Iterator\FlipIterator;
@@ -367,13 +368,13 @@ trait IsKeyedEnumerable
 	 * @param callable(TSource): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<Grouping<TGroupKey, TIteratorKey, TSource>>
+	 * @return GenericGroupedKeyedEnumerable<TGroupKey, TIteratorKey, TSource>
 	 */
-	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericGroupedKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new GroupedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
+		return new GroupedKeyedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -710,6 +711,10 @@ trait IsKeyedEnumerable
 
 	public function skipLast(int $count): GenericKeyedEnumerable
 	{
+		if ($count <= 0) {
+			throw new InvalidArgumentException('Count must be greater than zero');
+		}
+
 		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
 		while ($cachedIterator->valid()) {
@@ -718,7 +723,7 @@ trait IsKeyedEnumerable
 
 		$size = count($cachedIterator);
 		$offset = $size - $count;
-		if ($offset >= 0) {
+		if ($offset > 0) {
 			$iterator = new LimitIterator($cachedIterator, 0, $offset);
 		} else {
 			$iterator = new EmptyIterator();
@@ -863,20 +868,6 @@ trait IsKeyedEnumerable
 		}
 
 		return $array;
-	}
-
-	public function tryGetNonEnumeratedCount(): ?int
-	{
-		$iterator = $this->getIterator();
-		if ($iterator instanceof Countable) {
-			return $iterator->count();
-		}
-
-		if (property_exists($iterator, 'count')) {
-			return $iterator->count;
-		}
-
-		return null;
 	}
 
 	public function keys(): GenericEnumerable

@@ -8,9 +8,9 @@ use CachingIterator;
 use CallbackFilterIterator;
 use Countable;
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericGroupedKeyedEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
-use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
 use Elephox\Collection\Iterator\OrderedIterator;
@@ -33,6 +33,8 @@ use NoRewindIterator;
  */
 trait IsEnumerable
 {
+	// FIXME: de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
+
 	/**
 	 * @return Iterator<mixed, TSource>
 	 */
@@ -311,13 +313,13 @@ trait IsEnumerable
 	 * @param callable(TSource): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<Grouping<TGroupKey, mixed, TSource>>
+	 * @return GenericGroupedKeyedEnumerable<TGroupKey, mixed, TSource>
 	 */
-	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericGroupedKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		return new GroupedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
+		return new GroupedKeyedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -668,6 +670,10 @@ trait IsEnumerable
 
 	public function skipLast(int $count): GenericEnumerable
 	{
+		if ($count <= 0) {
+			throw new InvalidArgumentException('Count must be greater than zero');
+		}
+
 		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
 		while ($cachedIterator->valid()) {
@@ -676,7 +682,7 @@ trait IsEnumerable
 
 		$size = count($cachedIterator);
 		$offset = $size - $count;
-		if ($offset >= 0) {
+		if ($offset > 0) {
 			$iterator = new LimitIterator($cachedIterator, 0, $offset);
 		} else {
 			$iterator = new EmptyIterator();
@@ -815,20 +821,6 @@ trait IsEnumerable
 		$valueProxy = static fn (mixed $key, mixed $value): mixed => $keySelector($value);
 
 		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
-	}
-
-	public function tryGetNonEnumeratedCount(): ?int
-	{
-		$iterator = $this->getIterator();
-		if ($iterator instanceof Countable) {
-			return $iterator->count();
-		}
-
-		if (property_exists($iterator, 'count')) {
-			return $iterator->count;
-		}
-
-		return null;
 	}
 
 	/**

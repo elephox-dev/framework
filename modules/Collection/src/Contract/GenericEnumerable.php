@@ -130,9 +130,9 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 * @param callable(TSource): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
-	 * @return GenericEnumerable<Grouping<TGroupKey, mixed, TSource>>
+	 * @return GenericGroupedKeyedEnumerable<TGroupKey, mixed, TSource>
 	 */
-	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable;
+	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericGroupedKeyedEnumerable;
 
 	/**
 	 * @param GenericEnumerable<TSource> $other
@@ -359,8 +359,6 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable;
-
-	public function tryGetNonEnumeratedCount(): ?int;
 
 	/**
 	 * @param GenericEnumerable<TSource> $other

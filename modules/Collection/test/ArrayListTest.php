@@ -13,6 +13,10 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\EmptySequenceException
+ * @covers \Elephox\Collection\Iterator\ReverseIterator
+ * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @internal
  */
@@ -278,5 +282,121 @@ class ArrayListTest extends TestCase
 
 		$this->expectException(OffsetNotFoundException::class);
 		$list->removeAt(4);
+	}
+
+	public function testFromThrowsForNonList(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('ArrayList::from() expects a list of values');
+
+		ArrayList::from(['a' => 1, 'b' => 2]);
+	}
+
+	public function testPop(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals(3, $list->pop());
+		static::assertEquals(2, $list->pop());
+		static::assertEquals(1, $list->pop());
+		static::assertEquals(0, $list->count());
+	}
+
+	public function testPopWithPredicate(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals(3, $list->pop(static fn ($item) => $item % 2 === 1));
+		static::assertEquals(1, $list->pop(static fn ($item) => $item % 2 === 1));
+		static::assertEquals(1, $list->count());
+	}
+
+	public function testPopThrowsForEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		$list = new ArrayList();
+		$list->pop();
+	}
+
+	public function testPopWithPredicateThrowsForEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		$list = new ArrayList([1, 3]);
+		$list->pop(static fn ($item) => $item % 2 === 0);
+	}
+
+	public function testShift(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals(1, $list->shift());
+		static::assertEquals(2, $list->shift());
+		static::assertEquals(3, $list->shift());
+		static::assertEquals(0, $list->count());
+	}
+
+	public function testShiftWithPredicate(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals(1, $list->shift(static fn ($item) => $item % 2 === 1));
+		static::assertEquals(3, $list->shift(static fn ($item) => $item % 2 === 1));
+		static::assertEquals(1, $list->count());
+	}
+
+	public function testShiftThrowsForEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		$list = new ArrayList();
+		$list->shift();
+	}
+
+	public function testShiftWithPredicateThrowsForEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		$list = new ArrayList([1, 3]);
+		$list->shift(static fn ($item) => $item % 2 === 0);
+	}
+
+	public function testUnshift(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		$list->unshift(0);
+
+		static::assertEquals(0, $list[0]);
+		static::assertEquals(1, $list[1]);
+	}
+
+	public function testImplode(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals('1, 2, 3', $list->implode());
+	}
+
+	public function testImplodeWithGlue(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertEquals('1-2-3', $list->implode('-'));
+	}
+
+	public function testContains(): void
+	{
+		$list = new ArrayList([1, 2, 3]);
+
+		static::assertTrue($list->contains(1));
+		static::assertTrue($list->contains(2));
+		static::assertTrue($list->contains(3));
+		static::assertFalse($list->contains(4));
 	}
 }

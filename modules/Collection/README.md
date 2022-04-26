@@ -52,3 +52,4 @@ echo $arr->aggregate(fn (int $acc, int $item) => $acc + $item, 0);
 - `AsParallel` and `AsQueryable` are not implemented
 - None of the `System.Xml` extension methods are implemented (`Ancestors`, `Descendants`, `Elements`, etc.)
 - No read only or immutable interfaces or methods to get them exist (yet?)
+- `TryGetNonEnumeratedCount` is not implemented

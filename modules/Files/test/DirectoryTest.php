@@ -22,6 +22,7 @@ use RuntimeException;
  * @covers \Elephox\Files\FilesystemNodeNotFoundException
  * @covers \Elephox\Files\UnknownFilesystemNode
  * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @internal
  */

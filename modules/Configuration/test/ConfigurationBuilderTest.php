@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationProvider
  * @covers \Elephox\Configuration\ConfigurationRoot
  * @covers \Elephox\Configuration\Memory\MemoryConfigurationSource
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @internal
  */

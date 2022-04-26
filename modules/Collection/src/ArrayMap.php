@@ -23,7 +23,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 * @use IsKeyedEnumerable<TKey, TValue>
 	 */
 	use IsKeyedEnumerable {
-		IsKeyedEnumerable::contains as genericContains;
+//		IsKeyedEnumerable::contains as genericContains;
 		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
 	}
 
@@ -32,7 +32,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
-		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**

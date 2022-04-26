@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Iterator\OrderedIterator
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

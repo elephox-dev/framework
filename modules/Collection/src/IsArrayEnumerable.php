@@ -14,32 +14,32 @@ trait IsArrayEnumerable
 	 */
 	protected array $items;
 
-	/**
-	 * @template TDefault
-	 *
-	 * @param TDefault $defaultValue
-	 * @param null|callable(TValue, TKey): bool $predicate
-	 *
-	 * @return TDefault|TValue
-	 */
-	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
-	{
-		// FIXME: this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
-		if ($predicate === null) {
-			if (empty($this->items)) {
-				return $defaultValue;
-			}
-
-			return reset($this->items);
-		}
-
-		$result = array_filter($this->items, $predicate);
-		if (empty($result)) {
-			return $defaultValue;
-		}
-
-		return reset($result);
-	}
+//	/**
+//	 * @template TDefault
+//	 *
+//	 * @param TDefault $defaultValue
+//	 * @param null|callable(TValue, TKey): bool $predicate
+//	 *
+//	 * @return TDefault|TValue
+//	 */
+//	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
+//	{
+//		// FIXME: this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
+//		if ($predicate === null) {
+//			if (empty($this->items)) {
+//				return $defaultValue;
+//			}
+//
+//			return reset($this->items);
+//		}
+//
+//		$result = array_filter($this->items, $predicate);
+//		if (empty($result)) {
+//			return $defaultValue;
+//		}
+//
+//		return reset($result);
+//	}
 
 	/**
 	 * @param TValue $value

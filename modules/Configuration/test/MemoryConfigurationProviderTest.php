@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Arr
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsEnumerable
  *

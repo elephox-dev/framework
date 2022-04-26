@@ -5,6 +5,9 @@ namespace Elephox\Collection;
 
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Iterator\EagerCachingIterator;
+use EmptyIterator;
+use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +26,11 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\AmbiguousMatchException
  * @covers \Elephox\Collection\Iterator\OrderedIterator
  * @covers \Elephox\Collection\OrderedEnumerable
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\IteratorProvider
+ * @covers \Elephox\Collection\Iterator\GroupingIterator
+ * @covers \Elephox\Collection\Grouping
+ * @covers \Elephox\Collection\GroupedKeyedEnumerable
  *
  * @uses \Elephox\Collection\IsEnumerable
  *
@@ -62,10 +70,13 @@ class EnumerableTest extends TestCase
 		Enumerable::from(null);
 	}
 
-	public function testConstructorClosureThrows(): void
+	public function testGetIteratorThrowsForInvalidClosure(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		new Enumerable(static fn () => null);
+		$this->expectExceptionMessage('Given iterator generator does not return an iterator');
+
+		$enum = new Enumerable(static fn () => null);
+		$enum->getIterator();
 	}
 
 	public function testAggregate(): void
@@ -103,9 +114,25 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testAppendAll(): void
+	{
+		static::assertEquals(
+			[1, 2, 3, 4, 5],
+			Enumerable::range(1, 3)->appendAll([4, 5])->toArray(),
+		);
+	}
+
 	public function testAverage(): void
 	{
 		static::assertEquals(2, Enumerable::range(1, 3)->average(static fn (int $x) => $x));
+	}
+
+	public function testAverageThrowsIfEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		Enumerable::empty()->average(static fn (int $x) => $x);
 	}
 
 	public function testChunk(): void
@@ -118,6 +145,14 @@ class EnumerableTest extends TestCase
 			],
 			Enumerable::range(1, 9)->chunk(3)->toList(),
 		);
+	}
+
+	public function testChunkInvalidSize(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Chunk size must be greater than zero');
+
+		Enumerable::range(1, 3)->chunk(0);
 	}
 
 	public function testConcat(): void
@@ -214,6 +249,31 @@ class EnumerableTest extends TestCase
 		static::assertNull(Enumerable::empty()->firstOrDefault(null));
 	}
 
+	public function testGroupBy(): void
+	{
+		static::assertEquals(
+			[
+				0 => [
+					['name' => 'alice', 'age' => 5],
+					['name' => 'bob', 'age' => 10],
+					['name' => 'dory', 'age' => 5],
+				],
+				4 => [
+					['name' => 'charlie', 'age' => 4],
+				],
+			],
+			Enumerable::from([
+				['name' => 'alice', 'age' => 5],
+				['name' => 'bob', 'age' => 10],
+				['name' => 'charlie', 'age' => 4],
+				['name' => 'dory', 'age' => 5],
+			])
+				->groupBy(static fn (array $x): int => $x['age'] % 5)
+				->select(static fn (Contract\Grouping $group): array => $group->toList())
+				->toArray(),
+		);
+	}
+
 	public function testIntersect(): void
 	{
 		static::assertEquals(
@@ -269,6 +329,14 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testLastThrowsIfEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		Enumerable::empty()->last();
+	}
+
 	public function testLastOrDefault(): void
 	{
 		static::assertEquals(3, Enumerable::from([1, 2, 3])->lastOrDefault(null));
@@ -283,12 +351,28 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testMaxThrowsIfEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		Enumerable::empty()->max(static fn (int $x) => $x);
+	}
+
 	public function testMin(): void
 	{
 		static::assertEquals(
 			1,
 			Enumerable::range(1, 3)->min(static fn (int $x) => $x),
 		);
+	}
+
+	public function testMinThrowsIfEmpty(): void
+	{
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
+		Enumerable::empty()->min(static fn (int $x) => $x);
 	}
 
 	public function testOrderBy(): void
@@ -385,12 +469,16 @@ class EnumerableTest extends TestCase
 	public function testSingleMultipleElements(): void
 	{
 		$this->expectException(AmbiguousMatchException::class);
+		$this->expectExceptionMessage('Sequence contains more than one matching element');
+
 		Enumerable::from([1, 2])->single();
 	}
 
 	public function testSingleNoElements(): void
 	{
 		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+
 		Enumerable::empty()->single();
 	}
 
@@ -404,6 +492,14 @@ class EnumerableTest extends TestCase
 		static::assertNull(
 			Enumerable::range(1, 5)->singleOrDefault(null, static fn (int $x): bool => $x === 6),
 		);
+	}
+
+	public function testSingleOrDefaultMultipleElements(): void
+	{
+		$this->expectException(AmbiguousMatchException::class);
+		$this->expectExceptionMessage('Sequence contains more than one matching element');
+
+		Enumerable::from([1, 2])->singleOrDefault(null);
 	}
 
 	public function testSkip(): void
@@ -424,6 +520,32 @@ class EnumerableTest extends TestCase
 				->skipLast(2)
 				->toList(),
 		);
+
+		static::assertEquals(
+			[1],
+			Enumerable::range(1, 2)
+				->skipLast(1)
+				->toList(),
+		);
+
+		static::assertEquals(
+			[],
+			Enumerable::range(1, 2)
+				->skipLast(2)
+				->toList(),
+		);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Count must be greater than zero');
+
+		Enumerable::range(1, 2)->skipLast(0);
+	}
+
+	public function testSkipLastEmpty(): void
+	{
+		$enum = Enumerable::empty()->skipLast(2);
+
+		static::assertInstanceOf(EmptyIterator::class, $enum->getIterator());
 	}
 
 	public function testSkipWhile(): void
@@ -481,6 +603,23 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testToNestedArray(): void
+	{
+		static::assertEquals(
+			[
+				2 => ['a', 'c', 'e'],
+				3 => ['b', 'd'],
+			],
+			Enumerable::from([
+				'a',
+				'b',
+				'c',
+				'd',
+				'e',
+			])->toNestedArray(static fn (int $k): int => $k % 2 + 2),
+		);
+	}
+
 	public function testToKeyed(): void
 	{
 		static::assertEquals(
@@ -529,5 +668,69 @@ class EnumerableTest extends TestCase
 			],
 			Enumerable::range(1, 3)->zip(Enumerable::range(4, 6))->toList(),
 		);
+	}
+
+	public function testDoubleEnumerationIsPossibleWithGeneratorFunction(): void
+	{
+		$enumerable = new Enumerable(static function () {
+			yield 1;
+			yield 2;
+		});
+
+		static::assertFalse($enumerable->isEmpty());
+		static::assertFalse($enumerable->isEmpty());
+	}
+
+	public function testClosureWithSameGeneratorThrows(): void
+	{
+		$generator = (static function () {
+			yield 1;
+			yield 2;
+		})();
+
+		$enumerable = new Enumerable(static fn () => $generator);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Cannot traverse an already closed generator');
+
+		$enumerable->isEmpty();
+		$enumerable->isEmpty();
+	}
+
+	public function testDoubleEnumerationWithGeneratorGeneratorClosure(): void
+	{
+		$enumerable = new Enumerable(static fn () => (static function () {
+			yield 1;
+			yield 2;
+		})());
+
+		static::assertFalse($enumerable->isEmpty());
+		static::assertFalse($enumerable->isEmpty());
+	}
+
+	public function testGeneratorGetsWrappedInEagerCachingIterator(): void
+	{
+		$generator = (static function () {
+			yield 1;
+			yield 2;
+		})();
+
+		$enum = new Enumerable($generator);
+		static::assertInstanceOf(EagerCachingIterator::class, $enum->getIterator());
+	}
+
+	public function testDoubleEnumerationWithGeneratorObjectWithCachedIterator(): void
+	{
+		$generator = (static function () {
+			yield 1;
+			yield 2;
+		})();
+
+		$iterator = new EagerCachingIterator($generator);
+
+		$enumerable = new Enumerable($iterator);
+
+		static::assertFalse($enumerable->isEmpty());
+		static::assertFalse($enumerable->isEmpty());
 	}
 }

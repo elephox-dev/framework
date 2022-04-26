@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Iterator\KeySelectIterator
  * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @internal
  */

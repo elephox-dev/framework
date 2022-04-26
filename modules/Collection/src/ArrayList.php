@@ -20,7 +20,7 @@ class ArrayList implements GenericList
 	 * @use IsKeyedEnumerable<int, T>
 	 */
 	use IsKeyedEnumerable {
-		IsKeyedEnumerable::contains as genericContains;
+//		IsKeyedEnumerable::contains as genericContains;
 		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
 	}
 
@@ -29,7 +29,7 @@ class ArrayList implements GenericList
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
-		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**
@@ -232,7 +232,8 @@ class ArrayList implements GenericList
 			return array_pop($this->items);
 		}
 
-		$value = $this->firstOrDefault(null, $predicate);
+		/** @var T|null $value */
+		$value = $this->reverse()->firstOrDefault(null, $predicate);
 		if ($value === null) {
 			throw new EmptySequenceException();
 		}
@@ -243,16 +244,29 @@ class ArrayList implements GenericList
 	}
 
 	/**
+	 * @param null|callable(T): bool $predicate
+	 *
 	 * @return T
 	 */
-	public function shift(): mixed
+	public function shift(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {
 			throw new EmptySequenceException();
 		}
 
-		/** @var T */
-		return array_shift($this->items);
+		if ($predicate === null) {
+			/** @var T */
+			return array_shift($this->items);
+		}
+
+		$value = $this->firstOrDefault(null, $predicate);
+		if ($value === null) {
+			throw new EmptySequenceException();
+		}
+
+		$this->remove($value);
+
+		return $value;
 	}
 
 	/**

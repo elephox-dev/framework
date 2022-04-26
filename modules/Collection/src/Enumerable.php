@@ -4,20 +4,19 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
-use Closure;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Iterator\RangeIterator;
 use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @template TSource
  *
+ * @extends IteratorProvider<mixed, TSource>
  * @implements GenericEnumerable<TSource>
  */
-class Enumerable implements GenericEnumerable
+class Enumerable extends IteratorProvider implements GenericEnumerable
 {
 	/**
 	 * @template T
@@ -73,37 +72,4 @@ class Enumerable implements GenericEnumerable
 	 * @use IsEnumerable<TSource>
 	 */
 	use IsEnumerable;
-
-	/**
-	 * @var Iterator<mixed, TSource>
-	 */
-	private Iterator $iterator;
-
-	/**
-	 * @param Iterator<mixed, TSource>|Closure(): Iterator<mixed, TSource> $iterator
-	 * @psalm-suppress RedundantConditionGivenDocblockType
-	 */
-	public function __construct(
-		Iterator|Closure $iterator,
-	) {
-		if ($iterator instanceof Iterator) {
-			$this->iterator = $iterator;
-		} else {
-			$result = $iterator();
-			if ($result instanceof Iterator) {
-				$this->iterator = $result;
-			} else {
-				throw new InvalidArgumentException('The closure must return an instance of Iterator');
-			}
-		}
-	}
-
-	/**
-	 * @return Iterator<mixed, TSource>
-	 */
-	#[Pure]
-	public function getIterator(): Iterator
-	{
-		return $this->iterator;
-	}
 }

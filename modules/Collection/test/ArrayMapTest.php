@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Enumerable
  * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsEnumerable
  *
@@ -184,10 +185,10 @@ class ArrayMapTest extends TestCase
 		$map->offsetSet('a', 4);
 		$map->offsetSet('d', 5);
 
-		static::assertEquals(4, $map->get('a'));
-		static::assertEquals(2, $map->get('b'));
-		static::assertEquals(3, $map->get('c'));
-		static::assertEquals(5, $map->get('d'));
+		static::assertEquals(4, $map->offsetGet('a'));
+		static::assertEquals(2, $map->offsetGet('b'));
+		static::assertEquals(3, $map->offsetGet('c'));
+		static::assertEquals(5, $map->offsetGet('d'));
 	}
 
 	public function testOffsetUnset(): void
@@ -202,5 +203,19 @@ class ArrayMapTest extends TestCase
 
 		static::assertFalse($map->offsetExists('a'));
 		static::assertTrue($map->offsetExists('b'));
+	}
+
+	public function testFirstOrDefault(): void
+	{
+		$emptyMap = new ArrayMap();
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		]);
+
+		static::assertNull($emptyMap->firstOrDefault(null));
+		static::assertEquals(1, $map->firstOrDefault(null));
+		static::assertEquals(2, $map->firstOrDefault(null, static fn (int $v) => $v % 2 === 0));
 	}
 }

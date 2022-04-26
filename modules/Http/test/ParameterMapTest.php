@@ -17,6 +17,8 @@ use RuntimeException;
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\OffsetNotFoundException
  * @covers \Elephox\Collection\KeyedEnumerable
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

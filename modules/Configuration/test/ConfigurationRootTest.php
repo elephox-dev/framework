@@ -30,6 +30,8 @@ use Stringable;
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
  * @covers \Elephox\Configuration\ConfigurationPath
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

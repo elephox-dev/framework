@@ -12,8 +12,8 @@ use Iterator;
 use RuntimeException;
 
 /**
- * @template TKey
  * @template TGroupKey
+ * @template TKey
  * @template TValue
  *
  * @implements Iterator<TGroupKey, GroupingContract<TGroupKey, TKey, TValue>>
@@ -62,6 +62,11 @@ class GroupingIterator implements Iterator
 
 	public function key(): mixed
 	{
+		$idx = key($this->groupKeys);
+		if ($idx === null) {
+			throw new RuntimeException('No current group key');
+		}
+
 		return current($this->groupKeys);
 	}
 
