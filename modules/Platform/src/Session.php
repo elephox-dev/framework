@@ -40,8 +40,10 @@ final class Session implements SessionPlatform
 		return self::$implementation::cache_limiter($value);
 	}
 
-	#[Deprecated(reason: 'Alias of session_write_close()', replacement: 'write_close(%parametersList%)')] public static function commit(): bool
+	#[Deprecated(reason: 'Alias of session_write_close()', replacement: 'write_close(%parametersList%)')]
+	public static function commit(): bool
 	{
+		/** @psalm-suppress DeprecatedMethod */
 		return self::$implementation::commit();
 	}
 

@@ -66,6 +66,7 @@ final class Filesystem implements FilesystemPlatform
 	#[Deprecated(reason: 'Alias of disk_free_space()', replacement: 'disk_free_space(%parametersList%)')]
 	public static function diskfreespace(string $directory): float|false
 	{
+		/** @psalm-suppress DeprecatedMethod */
 		return self::$implementation::diskfreespace($directory);
 	}
 

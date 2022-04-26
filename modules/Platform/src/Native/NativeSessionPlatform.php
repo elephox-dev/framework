@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-/** @psalm-suppress all */
 
 namespace Elephox\Platform\Native;
 
@@ -33,6 +32,7 @@ use function session_status;
 use function session_unset;
 use function session_write_close;
 
+/** @psalm-suppress all */
 class NativeSessionPlatform implements SessionPlatform
 {
 	/**

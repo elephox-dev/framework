@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-/** @psalm-suppress all */
 
 namespace Elephox\Platform\Native;
 
@@ -80,6 +79,7 @@ use function touch;
 use function umask;
 use function unlink;
 
+/** @psalm-suppress all */
 class NativeFilesystemPlatform implements FilesystemPlatform
 {
 	public static function basename(string $path, string $suffix = ''): string
