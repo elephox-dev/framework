@@ -31,7 +31,6 @@
       <sourceFolder url="file://$MODULE_DIR$/development" isTestSource="true" packagePrefix="Elephox\Development\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Autoloading/test" isTestSource="true" packagePrefix="Elephox\Autoloading\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Console/test" isTestSource="true" packagePrefix="Elephox\Console\" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/Text/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Platform/src" isTestSource="false" packagePrefix="Elephox\Platform\" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/openlss/lib-array2xml" />
