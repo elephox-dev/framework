@@ -1,20 +1,24 @@
 {
-    "$schema": "vendor/infection/infection/resources/schema.json",
-    "source": {
-        "directories": [
-            "modules/*/src"
-        ],
-        "excludes": [
-            "/Exception\\.php/"
-        ]
-    },
-    "logs": {
-      "stryker": {
-        "report": "develop"
-      }
-    },
-    "mutators": {
-        "@default": true
-    },
-    "tmpDir": "tmp"
+  "$schema": "vendor/infection/infection/resources/schema.json",
+  "source": {
+    "directories": [
+      "modules/*/src"
+    ],
+    "excludes": [
+      "/Exception\\.php/",
+      "modules/Autoloading/src/*",
+      "modules/Console/src/*",
+      "modules/Platform/src/*",
+      "modules/Web/src/*"
+    ]
+  },
+  "logs": {
+    "stryker": {
+      "report": "develop"
+    }
+  },
+  "mutators": {
+    "@default": true
+  },
+  "tmpDir": "tmp"
 }
