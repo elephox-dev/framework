@@ -29,7 +29,7 @@ interface File extends FilesystemNode, HasHash
 	 * @param FilesystemNode $node
 	 * @param bool $overwrite
 	 */
-	public function moveTo(FilesystemNode $node, bool $overwrite = true): void;
+	public function moveTo(FilesystemNode $node, bool $overwrite = true): File;
 
 	/**
 	 * @throws FileCopyException
@@ -38,7 +38,7 @@ interface File extends FilesystemNode, HasHash
 	 * @param FilesystemNode $node
 	 * @param bool $overwrite
 	 */
-	public function copyTo(FilesystemNode $node, bool $overwrite = true): void;
+	public function copyTo(FilesystemNode $node, bool $overwrite = true): File;
 
 	public function isReadable(): bool;
 

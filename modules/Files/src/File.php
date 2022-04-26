@@ -181,7 +181,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return file_exists($this->path);
 	}
 
-	public function copyTo(FilesystemNode $node, bool $overwrite = true): void
+	public function copyTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
@@ -194,6 +194,8 @@ class File extends AbstractFilesystemNode implements Contract\File
 		if (!$success) {
 			throw new FileCopyException($this->path, $destination->getPath());
 		}
+
+		return new self($destination->getPath());
 	}
 
 	public function delete(): void
@@ -207,7 +209,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		}
 	}
 
-	public function moveTo(FilesystemNode $node, bool $overwrite = true): void
+	public function moveTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
 			throw new FileNotFoundException($this->path);
@@ -224,6 +226,8 @@ class File extends AbstractFilesystemNode implements Contract\File
 		if (!$success) {
 			throw new FileMoveException($this->path, $destination->getPath());
 		}
+
+		return new self($destination->getPath());
 	}
 
 	private function getDestination(FilesystemNode $node, bool $overwrite): Contract\File
