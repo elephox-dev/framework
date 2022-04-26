@@ -26,6 +26,7 @@
         </include>
         <exclude>
             <file>**/*Exception.php</file>
+            <directory>modules/Platform/src/*</directory>
         </exclude>
     </coverage>
 </phpunit>

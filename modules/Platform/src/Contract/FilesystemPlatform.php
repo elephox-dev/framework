@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Platform\Contract;
 
+use JetBrains\PhpStorm\Deprecated;
+
 interface FilesystemPlatform extends PlatformInterface
 {
 	public static function basename(string $path, string $suffix = ''): string;
@@ -28,6 +30,7 @@ interface FilesystemPlatform extends PlatformInterface
 
 	public static function disk_total_space(string $directory): float|false;
 
+	#[Deprecated(reason: 'Alias of disk_free_space()', replacement: 'disk_free_space(%parametersList%)')]
 	public static function diskfreespace(string $directory): float|false;
 
 	/**

@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
+/** @psalm-suppress all */
 
 namespace Elephox\Platform\Native;
 
 use Elephox\Platform\Contract\FilesystemPlatform;
+use JetBrains\PhpStorm\Deprecated;
 use function basename;
 use function chgrp;
 use function chmod;
@@ -125,8 +127,10 @@ class NativeFilesystemPlatform implements FilesystemPlatform
 		return disk_total_space($directory);
 	}
 
+	#[Deprecated(reason: 'Alias of disk_free_space()', replacement: 'disk_free_space(%parametersList%)')]
 	public static function diskfreespace(string $directory): float|false
 	{
+		/** @noinspection AliasFunctionsUsageInspection */
 		return diskfreespace($directory);
 	}
 

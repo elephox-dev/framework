@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Http\SessionMap
- * @covers \Elephox\Platform\PlatformManager
+ * @covers \Elephox\Platform\Session
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest

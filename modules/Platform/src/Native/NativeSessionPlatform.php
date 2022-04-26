@@ -1,11 +1,13 @@
 <?php
 declare(strict_types=1);
+/** @psalm-suppress all */
 
 namespace Elephox\Platform\Native;
 
 use Elephox\Platform\Contract\SessionPlatform;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 use SessionHandlerInterface;
 use function session_abort;
 use function session_cache_expire;
@@ -58,8 +60,10 @@ class NativeSessionPlatform implements SessionPlatform
 		return session_cache_limiter($value);
 	}
 
+	#[Deprecated(reason: 'Alias of session_write_close()', replacement: 'write_close(%parametersList%)')]
 	public static function commit(): bool
 	{
+		/** @noinspection AliasFunctionsUsageInspection */
 		return session_commit();
 	}
 

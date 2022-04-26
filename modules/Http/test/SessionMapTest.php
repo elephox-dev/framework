@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Http\SessionMap
- * @covers \Elephox\Platform\PlatformManager
+ * @covers \Elephox\Platform\Session
  *
  * @internal
  */

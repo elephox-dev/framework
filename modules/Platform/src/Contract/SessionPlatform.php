@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Platform\Contract;
 
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 use SessionHandlerInterface;
 
 interface SessionPlatform extends PlatformInterface
@@ -16,6 +17,7 @@ interface SessionPlatform extends PlatformInterface
 
 	public static function cache_limiter(?string $value = null): string|false;
 
+	#[Deprecated(reason: 'Alias of session_write_close()', replacement: 'write_close(%parametersList%)')]
 	public static function commit(): bool;
 
 	public static function create_id(string $prefix = ''): string|false;
