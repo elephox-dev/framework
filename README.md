@@ -61,7 +61,7 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [modules/Logging/test/MessageFormatterSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/MessageFormatterSinkTest.php)
+- [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)
   - [ ] write tests for background and options
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
@@ -75,8 +75,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 - [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
-- [ ] [modules/Support/src/CustomMimeType.php](https://github.com/elephox-dev/framework/tree/develop/modules/Support/src/CustomMimeType.php)
-  - [ ] try to get meta information of resource to get filename
 
 
 ### 🚧 Related issues
