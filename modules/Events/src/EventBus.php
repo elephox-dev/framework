@@ -49,8 +49,12 @@ class EventBus implements Contract\EventBus
 		return $subscription;
 	}
 
-	public function unsubscribe(string $id): void
+	public function unsubscribe(Contract\Subscription|string $id): void
 	{
+		if ($id instanceof Contract\Subscription) {
+			$id = $id->getId();
+		}
+
 		if (!$this->subscriptionSubscriberMapping->has($id)) {
 			return;
 		}

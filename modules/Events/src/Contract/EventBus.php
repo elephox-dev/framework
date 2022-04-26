@@ -16,7 +16,7 @@ interface EventBus
 	/**
 	 * @param non-empty-string $id
 	 */
-	public function unsubscribe(string $id): void;
+	public function unsubscribe(Subscription|string $id): void;
 
 	/**
 	 * @return GenericEnumerable<Subscription>
