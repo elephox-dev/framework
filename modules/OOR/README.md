@@ -1,4 +1,4 @@
-# OOR
+# Elephox OOR Module
 > Object-Oriented Revolution
 
 This library provides wrappers for strings and arrays that allow you to work with them in an object-oriented way.
