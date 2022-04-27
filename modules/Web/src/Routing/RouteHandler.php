@@ -90,9 +90,15 @@ class RouteHandler implements Contract\RouteHandler
 
 	public function __toString(): string
 	{
-		$attributeName = array_slice(explode('\\', $this->routeAttribute::class ?? $this->controllerAttribute::class), -1, 1)[0];
+		if ($this->routeAttribute !== null) {
+			$className = $this->routeAttribute::class;
+		} else {
+			$className = $this->controllerAttribute::class;
+		}
 
-		return "[$attributeName] $this->attributeClass::$this->attributeMethod";
+		$attributeName = array_slice(explode('\\', $className), -1, 1)[0];
+
+		return "[$attributeName $this->pathRegex] $this->attributeClass::$this->attributeMethod";
 	}
 
 	public function getMatchScore(Request $request): float
