@@ -67,6 +67,12 @@ class FileTest extends MockeryTestCase
 		static::assertEquals('txt', $file->getExtension());
 	}
 
+	public function testToString(): void
+	{
+		$file = new File('/tmp/test.txt');
+		static::assertEquals('/tmp/test.txt', (string) $file);
+	}
+
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
@@ -77,7 +83,8 @@ class FileTest extends MockeryTestCase
 	{
 		$file = new File('/non-existent-file.txt');
 
-		$this->expectException(FileNotFoundException::class);
+		$this->expectException(FilesystemNodeNotFoundException::class);
+		$this->expectExceptionMessage('Filesystem node at /non-existent-file.txt not found');
 
 		$file->getModifiedTime();
 	}
@@ -365,6 +372,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$this->expectException(RuntimeException::class);
+		$this->expectExceptionMessage('[2] fopen(/path/to/file): Failed to open stream: No such file or directory in ');
 
 		File::openStream($fileMock);
 	}
@@ -468,12 +476,25 @@ class FileTest extends MockeryTestCase
 
 	public function testDeleteNonExistent(): void
 	{
-		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));
-		$file->delete();
+		$file = new File('/path/to/non/existent/file');
 
 		static::assertFalse($file->exists());
 
 		$this->expectException(FileNotFoundException::class);
+		$this->expectExceptionMessage('File at /path/to/non/existent/file not found');
+
 		$file->delete();
+	}
+
+	public function testIsWritableThrowsIfNotExists(): void
+	{
+		$file = new File('/path/to/non/existent/file');
+
+		static::assertFalse($file->exists());
+
+		$this->expectException(FileNotFoundException::class);
+		$this->expectExceptionMessage('File at /path/to/non/existent/file not found');
+
+		$file->isWritable();
 	}
 }

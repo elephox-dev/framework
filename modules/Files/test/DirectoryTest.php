@@ -71,6 +71,18 @@ class DirectoryTest extends TestCase
 		static::assertEquals('/test/path', $directory->getPath());
 	}
 
+	public function testGetPathWithTrailingSlash(): void
+	{
+		$directory = new Directory('/test/path/');
+		static::assertEquals('/test/path/', $directory->getPath());
+	}
+
+	public function testToString(): void
+	{
+		$directory = new Directory('/test/path');
+		static::assertEquals('/test/path', (string) $directory);
+	}
+
 	public function testGetChild(): void
 	{
 		$directory = new Directory($this->dirPath);
@@ -108,7 +120,9 @@ class DirectoryTest extends TestCase
 	{
 		$directory = new Directory('/test/path');
 
-		$this->expectException(DirectoryNotFoundException::class);
+		$this->expectException(FilesystemNodeNotFoundException::class);
+		$this->expectExceptionMessage('Filesystem node at /test/path not found');
+
 		$directory->getModifiedTime();
 	}
 

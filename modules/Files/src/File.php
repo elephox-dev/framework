@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
-use DateTime;
 use Elephox\Files\Contract\FilesystemNode;
 use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
-use Exception;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
@@ -43,12 +41,12 @@ class File extends AbstractFilesystemNode implements Contract\File
 		$flags = match (true) {
 			$readable && $writeable && $create && $append && !$truncate => 'ab+',
 			!$readable && $writeable && $create && $append && !$truncate => 'ab',
-			 $readable && $writeable && $create && !$append && $truncate => 'wb+',
+			$readable && $writeable && $create && !$append && $truncate => 'wb+',
 			!$readable && $writeable && $create && !$append && $truncate => 'wb',
-			 $readable && $writeable && $create && !$append && !$truncate => 'cb+',
+			$readable && $writeable && $create && !$append && !$truncate => 'cb+',
 			!$readable && $writeable && $create && !$append && !$truncate => 'cb',
-			 $readable && $writeable && !$create && !$append && !$truncate => 'rb+',
-			 $readable && !$writeable && !$create && !$append && !$truncate => 'rb',
+			$readable && $writeable && !$create && !$append && !$truncate => 'rb+',
+			$readable && !$writeable && !$create && !$append && !$truncate => 'rb',
 			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
 		};
 
@@ -122,24 +120,6 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return $this->mimeType;
 	}
 
-	public function getModifiedTime(): DateTime
-	{
-		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path);
-		}
-
-		$timestamp = filemtime($this->path);
-		if ($timestamp === false) {
-			throw new RuntimeException("Failed to get modified time of file ($this->path)");
-		}
-
-		try {
-			return new DateTime('@' . $timestamp);
-		} catch (Exception $e) {
-			throw new RuntimeException('Could not parse timestamp', previous: $e);
-		}
-	}
-
 	public function getHash(): string
 	{
 		if (!$this->exists()) {
@@ -190,7 +170,6 @@ class File extends AbstractFilesystemNode implements Contract\File
 		$destination = $this->getDestination($node, $overwrite);
 
 		$success = copy($this->path, $destination->getPath());
-
 		if (!$success) {
 			throw new FileCopyException($this->path, $destination->getPath());
 		}

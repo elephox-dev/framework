@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
+use DateTime;
 use Elephox\Files\Contract\FilesystemNode;
+use Exception;
 use JetBrains\PhpStorm\Pure;
+use RuntimeException;
 use ValueError;
 
 abstract class AbstractFilesystemNode implements FilesystemNode
@@ -29,6 +32,24 @@ abstract class AbstractFilesystemNode implements FilesystemNode
 	public function getName(): string
 	{
 		return basename($this->getPath());
+	}
+
+	public function getModifiedTime(): DateTime
+	{
+		if (!$this->exists()) {
+			throw new FilesystemNodeNotFoundException($this->getPath());
+		}
+
+		$timestamp = filemtime($this->getPath());
+		if ($timestamp === false) {
+			throw new RuntimeException("Failed to get modified time of filesystem node ({$this->getPath()})");
+		}
+
+		try {
+			return new DateTime('@' . $timestamp);
+		} catch (Exception $e) {
+			throw new RuntimeException('Could not parse timestamp', previous: $e);
+		}
 	}
 
 	#[Pure]

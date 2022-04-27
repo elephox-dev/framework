@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
-use DateTime;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\Contract\FilesystemNode;
-use Exception;
 use JetBrains\PhpStorm\Pure;
-use RuntimeException;
 
 class Directory extends AbstractFilesystemNode implements Contract\Directory
 {
@@ -57,24 +54,6 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function isEmpty(): bool
 	{
 		return $this->getChildren()->count() === 0;
-	}
-
-	public function getModifiedTime(): DateTime
-	{
-		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path);
-		}
-
-		$timestamp = filemtime($this->path);
-		if ($timestamp === false) {
-			throw new RuntimeException("Failed to get modified time of directory ($this->path)");
-		}
-
-		try {
-			return new DateTime('@' . $timestamp);
-		} catch (Exception $e) {
-			throw new RuntimeException('Could not parse timestamp', previous: $e);
-		}
 	}
 
 	public function getFile(string $filename): File
@@ -138,11 +117,11 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			throw new DirectoryNotEmptyException($this->path);
 		}
 
-		foreach ($children as $child) {
-			if ($child instanceof Contract\Directory) {
-				$child->delete(true);
-			} elseif ($child instanceof Contract\File) {
-				$child->delete();
+		foreach ($children as $node) {
+			if ($node instanceof Contract\Directory || $node instanceof Contract\File) {
+				$node->delete();
+			} else {
+				throw new FilesystemNodeNotImplementedException($node, 'Cannot delete filesystem node for unimplemented type ' . get_debug_type($node));
 			}
 		}
 
@@ -189,7 +168,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			if ($node instanceof Contract\File || $node instanceof Contract\Directory) {
 				$node->copyTo($directory, $overwrite);
 			} else {
-				throw new FilesystemNodeNotImplementedException($node, 'Cannot move filesystem node for unimplemented type ' . get_debug_type($node));
+				throw new FilesystemNodeNotImplementedException($node, 'Cannot copy filesystem node for unimplemented type ' . get_debug_type($node));
 			}
 		}
 	}

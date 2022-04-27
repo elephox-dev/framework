@@ -3,31 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
-use DateTime;
-use Exception;
-use RuntimeException;
 use ValueError;
 
 class UnknownFilesystemNode extends AbstractFilesystemNode
 {
-	public function getModifiedTime(): DateTime
-	{
-		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path);
-		}
-
-		$timestamp = filemtime($this->path);
-		if ($timestamp === false) {
-			throw new RuntimeException("Failed to get modified time of unknown filesystem node ($this->path)");
-		}
-
-		try {
-			return new DateTime('@' . $timestamp);
-		} catch (Exception $e) {
-			throw new RuntimeException('Could not parse timestamp', previous: $e);
-		}
-	}
-
 	public function getParent(int $levels = 1): Contract\Directory
 	{
 		try {
