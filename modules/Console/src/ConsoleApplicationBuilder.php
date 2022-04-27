@@ -5,16 +5,17 @@ namespace Elephox\Console;
 
 use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\Configuration;
+use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderContract;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\Environment;
-use Elephox\Configuration\Json\JsonFileConfigurationSource;
+use Elephox\Configuration\LoadsDefaultConfiguration;
 use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
+use Elephox\Logging\AnsiColorSink;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\Contract\Logger;
-use Elephox\Logging\AnsiColorSink;
 use Elephox\Logging\MultiSinkLogger;
 use Elephox\Support\Contract\ExceptionHandler;
 use Whoops\Run as WhoopsRun;
@@ -25,6 +26,8 @@ use Whoops\RunInterface as WhoopsRunInterface;
  */
 class ConsoleApplicationBuilder
 {
+	use LoadsDefaultConfiguration;
+
 	public static function create(
 		?ServiceCollectionContract $services = null,
 		?ConfigurationManager $configuration = null,
@@ -72,54 +75,14 @@ class ConsoleApplicationBuilder
 		$this->loadEnvironmentConfigFile();
 	}
 
-	protected function loadDotEnvFile(): void
+	protected function getEnvironment(): Environment
 	{
-		$this->environment->loadFromEnvFile();
-		$this->environment->loadFromEnvFile(local: true);
+		return $this->environment;
 	}
 
-	protected function loadEnvironmentDotEnvFile(): void
+	protected function getConfigurationBuilder(): ConfigurationBuilderContract
 	{
-		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName());
-		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName(), true);
-	}
-
-	protected function loadConfigFile(): void
-	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile('config.json')
-				->getPath(),
-			true,
-		));
-
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile('config.local.json')
-				->getPath(),
-			true,
-		));
-	}
-
-	protected function loadEnvironmentConfigFile(): void
-	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile("config.{$this->environment->getEnvironmentName()}.json")
-				->getPath(),
-			true,
-		));
-
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
-				->getPath(),
-			true,
-		));
+		return $this->configuration;
 	}
 
 	public function build(): ConsoleApplication

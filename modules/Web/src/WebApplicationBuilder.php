@@ -9,10 +9,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\Configuration;
+use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderContract;
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\ConfigurationRoot;
 use Elephox\Configuration\Contract\Environment;
-use Elephox\Configuration\Json\JsonFileConfigurationSource;
+use Elephox\Configuration\LoadsDefaultConfiguration;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Http\Contract\Request as RequestContract;
@@ -34,6 +35,8 @@ use Whoops\RunInterface as WhoopsRunInterface;
  */
 class WebApplicationBuilder
 {
+	use LoadsDefaultConfiguration;
+
 	public static function create(
 		?ServiceCollectionContract $services = null,
 		?ConfigurationManagerContract $configuration = null,
@@ -86,53 +89,14 @@ class WebApplicationBuilder
 		$this->addDefaultMiddleware();
 	}
 
-	protected function loadDotEnvFile(): void
+	protected function getEnvironment(): Environment
 	{
-		$this->environment->loadFromEnvFile();
-		$this->environment->loadFromEnvFile(local: true);
+		return $this->environment;
 	}
 
-	protected function loadEnvironmentDotEnvFile(): void
+	protected function getConfigurationBuilder(): ConfigurationBuilderContract
 	{
-		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName());
-		$this->environment->loadFromEnvFile($this->environment->getEnvironmentName(), true);
-	}
-
-	protected function loadConfigFile(): void
-	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile('config.json')
-				->getPath(),
-		));
-
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getConfig()
-				->getFile('config.local.json')
-				->getPath(),
-			true,
-		));
-	}
-
-	protected function loadEnvironmentConfigFile(): void
-	{
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getRoot()
-				->getFile("config.{$this->environment->getEnvironmentName()}.json")
-				->getPath(),
-			true,
-		));
-
-		$this->configuration->add(new JsonFileConfigurationSource(
-			$this->environment
-				->getRoot()
-				->getFile("config.{$this->environment->getEnvironmentName()}.local.json")
-				->getPath(),
-			true,
-		));
+		return $this->configuration;
 	}
 
 	protected function addDefaultMiddleware(): void
