@@ -1,6 +1,7 @@
 # Elephox Logging Module
 
 This module is used by [Elephox] to log information to one or more destinations (sinks).
+It also supports formatting with [ANSI escape codes].
 
 ## Example
 
@@ -36,3 +37,4 @@ $logger->alert("This is an alert!");
 ```
 
 [Elephox]: https://github.com/elephox-dev/framework
+[ANSI escape codes]: https://en.wikipedia.org/wiki/ANSI_escape_code

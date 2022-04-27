@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Collection\Iterator\FlipIterator;
-use Elephox\Logging\Contract\Logger;
+use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
 use Stringable;
 
@@ -12,7 +12,7 @@ class HelpCommand implements Contract\CommandHandler
 {
 	public function __construct(
 		private readonly CommandCollection $commands,
-		private readonly Logger $logger,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

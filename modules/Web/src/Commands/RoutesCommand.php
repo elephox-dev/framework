@@ -7,14 +7,14 @@ use Elephox\Collection\Enumerable;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
-use Elephox\Logging\Contract\Logger;
 use Elephox\Web\Routing\Contract\RouteHandler;
 use Elephox\Web\Routing\Contract\Router;
+use Psr\Log\LoggerInterface;
 
 class RoutesCommand implements CommandHandler
 {
 	public function __construct(
-		private readonly Logger $logger,
+		private readonly LoggerInterface $logger,
 		private readonly Router $router,
 	) {
 	}

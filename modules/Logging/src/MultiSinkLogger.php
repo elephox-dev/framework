@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Logging;
 
-use Elephox\Logging\Contract\LogLevel;
-use Stringable;
-use Throwable;
+use Psr\Log\LoggerInterface;
 
-class MultiSinkLogger extends AbstractLogger
+class MultiSinkLogger implements LoggerInterface
 {
+	use LogLevelProxy;
+	use LogsToSink;
+
 	/**
 	 * @var list<Contract\Sink>
 	 */
@@ -24,19 +25,10 @@ class MultiSinkLogger extends AbstractLogger
 		$this->sinks[] = $sink;
 	}
 
-	public function log(Throwable|Stringable|string $message, LogLevel $level, array $metaData = []): void
+	protected function logToSink(Contract\LogLevel $level, string $message, array $context): void
 	{
-		if ($message instanceof Throwable) {
-			$message = $message->getMessage();
-			if (!array_key_exists('exception', $metaData)) {
-				$metaData['exception'] = $message;
-			}
-		} elseif ($message instanceof Stringable) {
-			$message = $message->__toString();
-		}
-
 		foreach ($this->sinks as $sink) {
-			$sink->write($message, $level, $metaData);
+			$sink->write($level, $message, $context);
 		}
 	}
 }

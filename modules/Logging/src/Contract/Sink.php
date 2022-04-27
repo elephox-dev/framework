@@ -5,5 +5,5 @@ namespace Elephox\Logging\Contract;
 
 interface Sink
 {
-	public function write(string $message, LogLevel $level, array $metaData): void;
+	public function write(LogLevel $level, string $message, array $context): void;
 }

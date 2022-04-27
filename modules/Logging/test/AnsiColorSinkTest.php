@@ -21,12 +21,12 @@ class AnsiColorSinkTest extends MockeryTestCase
 
 		$sink
 			->expects('write')
-			->with('Hello World', LogLevel::INFO, [])
+			->with(LogLevel::INFO, 'Hello World', [])
 			->andReturns()
 		;
 
 		$messageFormatterSink = new AnsiColorSink($sink);
-		$messageFormatterSink->write('Hello World', LogLevel::INFO, []);
+		$messageFormatterSink->write(LogLevel::INFO, 'Hello World', []);
 	}
 
 	public function testSimpleFormatWrite(): void
@@ -35,19 +35,19 @@ class AnsiColorSinkTest extends MockeryTestCase
 
 		$sink
 			->expects('write')
-			->with("Hello \033[32mWorld\033[39m", LogLevel::INFO, [])
+			->with(LogLevel::INFO, "Hello \033[32mWorld\033[39m", [])
 			->andReturns()
 		;
 
 		$sink
 			->expects('write')
-			->with("This \033[32mis\033[33m a \033[31mwarning\033[33m", LogLevel::WARNING, [])
+			->with(LogLevel::WARNING, "This \033[32mis\033[33m a \033[31mwarning\033[33m", [])
 			->andReturns()
 		;
 
 		$messageFormatterSink = new AnsiColorSink($sink);
-		$messageFormatterSink->write('Hello <green>World</green>', LogLevel::INFO, []);
-		$messageFormatterSink->write('This <green>is</green> a <red>warning</red>', LogLevel::WARNING, []);
+		$messageFormatterSink->write(LogLevel::INFO, 'Hello <green>World</green>', []);
+		$messageFormatterSink->write(LogLevel::WARNING, 'This <green>is</green> a <red>warning</red>', []);
 	}
 
 	// TODO: write tests for background and options

@@ -12,12 +12,12 @@ use Elephox\Console\Command\RawCommandInvocation;
 use Elephox\Console\Command\RequiredArgumentMissingException;
 use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
-use Elephox\Logging\Contract\Logger;
 use Elephox\Support\Contract\ExceptionHandler;
+use Psr\Log\LoggerInterface;
 
 class ConsoleApplication
 {
-	protected ?Logger $logger = null;
+	protected ?LoggerInterface $logger = null;
 	protected ?ExceptionHandler $exceptionHandler = null;
 
 	public function __construct(
@@ -29,10 +29,10 @@ class ConsoleApplication
 		$this->services->addSingleton(__CLASS__, implementation: $this);
 	}
 
-	public function logger(): Logger
+	public function logger(): LoggerInterface
 	{
 		if ($this->logger === null) {
-			$this->logger = $this->services->requireService(Logger::class);
+			$this->logger = $this->services->requireService(LoggerInterface::class);
 		}
 
 		return $this->logger;

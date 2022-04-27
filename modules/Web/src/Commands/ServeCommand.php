@@ -9,8 +9,8 @@ use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\Files\Contract\File;
-use Elephox\Logging\Contract\Logger;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
 use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -19,7 +19,7 @@ use Symfony\Component\Process\Process;
 class ServeCommand implements CommandHandler
 {
 	public function __construct(
-		private readonly Logger $logger,
+		private readonly LoggerInterface $logger,
 		private readonly Environment $environment,
 	) {
 	}

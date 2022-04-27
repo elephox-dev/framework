@@ -13,7 +13,7 @@ class AnsiColorSink implements Sink
 	{
 	}
 
-	public function write(string $message, LogLevel $level, array $metaData): void
+	public function write(LogLevel $level, string $message, array $context): void
 	{
 		foreach ([
 			'black' => 30,
@@ -87,6 +87,6 @@ class AnsiColorSink implements Sink
 			);
 		}
 
-		$this->innerSink->write($message, $level, $metaData);
+		$this->innerSink->write($level, $message, $context);
 	}
 }

@@ -6,7 +6,7 @@ namespace Elephox\Development\Commands;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
-use Elephox\Logging\Contract\Logger;
+use Psr\Log\LoggerInterface;
 
 class ReleaseCommand implements CommandHandler
 {
@@ -17,7 +17,7 @@ class ReleaseCommand implements CommandHandler
 	public const CLONE_ORIGIN_PREFIX = 'https://github.com/elephox-dev/';
 
 	public function __construct(
-		private readonly Logger $logger,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

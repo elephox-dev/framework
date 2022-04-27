@@ -10,7 +10,7 @@ use ricardoboss\Console;
 
 class ConsoleSink implements Sink
 {
-	public function write(string $message, LogLevelContract $level, array $metaData): void
+	public function write(LogLevelContract $level, string $message, array $context): void
 	{
 		$method = match ($level->getLevel()) {
 			LogLevel::DEBUG->getLevel() => 'debug',
@@ -23,11 +23,11 @@ class ConsoleSink implements Sink
 			default => 'notice',
 		};
 
-		if (empty($metaData)) {
+		if (empty($context)) {
 			$metaDataSuffix = '';
 		} else {
 			try {
-				$metaDataSuffix = ' ' . Console::light_gray((string) json_encode($metaData, JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR));
+				$metaDataSuffix = ' ' . Console::light_gray((string) json_encode($context, JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR));
 			} catch (JsonException $e) {
 				$metaDataSuffix = ' ' . Console::light_gray("[JSON_ENCODE_ERROR: {$e->getMessage()}]");
 			}

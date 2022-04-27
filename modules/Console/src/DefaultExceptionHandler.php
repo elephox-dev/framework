@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Console;
 
-use Elephox\Logging\Contract\Logger;
 use Elephox\Support\Contract\ExceptionHandler;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class DefaultExceptionHandler implements ExceptionHandler
 {
 	public function __construct(
-		private readonly Logger $logger,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 
