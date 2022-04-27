@@ -32,6 +32,7 @@ trait LoadsDefaultConfiguration
 				->getConfig()
 				->getFile('config.json')
 				->getPath(),
+			true,
 		));
 
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
