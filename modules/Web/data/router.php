@@ -9,13 +9,13 @@ $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
 
 // If $path is a direct file hit let the cli server handle this simple case.
 // Also prevent access to files outside of $_SERVER['DOCUMENT_ROOT'] (e.g. /../../../etc/passwd)
-if (is_file($path) && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($path))) {
+if (is_file($path) && str_starts_with(realpath($path), $_SERVER['DOCUMENT_ROOT'])) {
 	return false;
 }
 
 // If $path is a directory and contains an index.html file let the
 // cli server handle it, because we know it _will_ serve that index.html
-if (is_dir($path) && is_file("$path/index.html") && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($path))) {
+if (is_dir($path) && is_file("$path/index.html") && str_starts_with(realpath($path), $_SERVER['DOCUMENT_ROOT'])) {
 	return false;
 }
 
