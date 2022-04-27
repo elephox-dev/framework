@@ -38,6 +38,7 @@ class ServeCommand implements CommandHandler
 			->optional('router', dirname(__DIR__, 2) . '/data/router.php', 'The router script to use')
 			->optional('workers', 'auto', 'How many threads to use for the PHP server (PHP_CLI_SERVER_WORKERS)')
 			->optional('no-reload', false, 'Whether to restart the server upon env file changes')
+			->optional('verbose', false, 'Whether to print debug output')
 		;
 	}
 
@@ -47,7 +48,8 @@ class ServeCommand implements CommandHandler
 		$port = $command->getArgument('port')->value;
 		$root = $command->getArgument('root')->value;
 		$router = $command->getArgument('router')->value;
-		$noReload = $command->getArgument('no-reload')->value;
+		$noReload = (bool) $command->getArgument('no-reload')->value;
+		$verbose = (bool) $command->getArgument('verbose')->value;
 
 		if (!is_string($port) || !ctype_digit($port)) {
 			throw new InvalidArgumentException('Port must be a number');
@@ -97,10 +99,11 @@ class ServeCommand implements CommandHandler
 		$environment->pollDotEnvFileChanged();
 		$environment->pollDotEnvFileChanged((string) $environment['APP_ENV']);
 
-		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment);
+		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 
-		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, File $envFile) use (&$process, $serverCommand, $documentRoot, $environment): void {
-			$this->logger->warning($envFile->getName() . ' file changed. Restarting server...', ['name' => $envName, 'local' => $local]);
+		/** @psalm-suppress UnusedClosureParam */
+		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, File $envFile) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
+			$this->logger->warning($envFile->getName() . ' file changed. Restarting server...');
 
 			$environment->loadFromEnvFile($envName);
 			$environment->loadFromEnvFile($envName, true);
@@ -110,7 +113,7 @@ class ServeCommand implements CommandHandler
 
 			usleep(1000 * 1000);
 
-			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment);
+			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 		});
 
 		/** @var Process $process */
@@ -128,7 +131,7 @@ class ServeCommand implements CommandHandler
 		return 0;
 	}
 
-	private function startServerProcess(array $serverCommand, string $documentRoot, Environment $environment): Process
+	private function startServerProcess(array $serverCommand, string $documentRoot, Environment $environment, bool $verbose): Process
 	{
 		$process = new Process(
 			$serverCommand,
@@ -137,14 +140,24 @@ class ServeCommand implements CommandHandler
 		);
 
 		/** @psalm-suppress UnusedClosureParam */
-		$process->start(function (string $type, string $buffer): void {
+		$process->start(function (string $type, string $buffer) use ($verbose): void {
 			$buffer = trim($buffer);
 			foreach (explode("\n", $buffer) as $line) {
 				if ($closingBracketPos = strpos($line, ']')) {
 					$line = substr($line, $closingBracketPos + 2);
 				}
 
-				$this->logger->info($line);
+				if (preg_match('/^(?<ip>.+):(?<port>\d{1,5}) (?:(?<action>Accepted|Closing)|\[(?<status>\d{3})]: (?<verb>\S+) (?<path>.*))$/i', $line, $matches)) {
+					if (isset($matches['action']) && !empty($matches['action'])) {
+						if ($verbose) {
+							$this->logger->debug(sprintf('%s connection at %s:%d', $matches['action'], $matches['ip'], $matches['port']));
+						}
+					} else {
+						$this->logger->info(sprintf('%s %s -> %d', $matches['verb'], $matches['path'], $matches['status']), ['ip' => $matches['ip'], 'port' => $matches['port']]);
+					}
+				} else {
+					$this->logger->warning($line);
+				}
 			}
 		});
 
