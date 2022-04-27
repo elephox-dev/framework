@@ -18,5 +18,12 @@ if (is_dir($path) && is_file("$path/index.html")) {
 	return false;
 }
 
+// provide STDERR as the built-in webserver only provides it for CLI scripts
+define('STDERR', fopen('php://stderr', 'wb'));
+
 // All other cases should be handled by the real front controller
 require_once $_SERVER['DOCUMENT_ROOT'] . '/index.php';
+
+// Log request in PHP built-in server format: [Wed Apr 27 01:33:35 2022] [::1]:56061 [200]: GET /favicon.ico
+fwrite(STDERR, sprintf("[%s] %s:%d [%d]: %s %s\n", (new DateTime())->format('D M d H:i:s Y'), str_contains($_SERVER['REMOTE_ADDR'], ':') ? ('[' . $_SERVER['REMOTE_ADDR'] . ']') : $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], http_response_code(), $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']));
+fclose(STDERR);
