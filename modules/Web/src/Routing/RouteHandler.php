@@ -8,6 +8,7 @@ use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\DI\Contract\ServiceCollection;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
+use Elephox\Http\RequestMethod;
 use Elephox\OOR\Regex;
 use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
@@ -16,10 +17,16 @@ use Elephox\Web\Routing\Attribute\Controller;
 
 class RouteHandler implements Contract\RouteHandler
 {
-	public static function fromCallback(string $path, Closure $callback): self
+	/**
+	 * @param Closure(): ResponseBuilder $callback
+	 * @param non-empty-string|RequestMethod|iterable<non-empty-string|RequestMethod> $methods
+	 * @param string $path
+	 * @param int $weight
+	 */
+	public static function fromCallback(string $path, Closure $callback, int $weight = Controller::DEFAULT_WEIGHT, string|RequestMethod|iterable $methods = []): self
 	{
 		return new self(
-			new Controller($path),
+			new Controller($path, $weight, $methods),
 			null,
 			(new class {
 			})::class,
