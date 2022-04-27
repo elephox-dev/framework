@@ -116,7 +116,8 @@
     "extra": {
         "bin-dir": "./bin",
         "branch-alias": {
-            "dev-develop": "0.4.x-dev",
+            "dev-develop": "0.5.x-dev",
+            "release/0.4": "0.4.x-dev",
             "release/0.3": "0.3.x-dev"
         },
         "module-sync": {
