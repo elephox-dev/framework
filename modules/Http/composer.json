@@ -12,13 +12,13 @@
     "require": {
         "php": "^8.1 <8.3",
         "ext-mbstring": "*",
-        "elephox/collection": "dev-develop",
-        "elephox/files": "dev-develop",
+        "elephox/collection": "^0.4",
+        "elephox/files": "^0.4",
         "elephox/mimey": "^4.0",
-        "elephox/oor": "dev-develop",
-        "elephox/platform": "dev-develop",
-        "elephox/stream": "dev-develop",
-        "elephox/support": "dev-develop",
+        "elephox/oor": "^0.4",
+        "elephox/platform": "^0.4",
+        "elephox/stream": "^0.4",
+        "elephox/support": "^0.4",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload": {
