@@ -15,6 +15,19 @@ use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 
 class RouteHandler implements Contract\RouteHandler
 {
+	public static function fromCallback(string $path, Closure $callback): self
+	{
+		return new self(
+			new Controller($path),
+			null,
+			(new class {
+			})::class,
+			'__invoke',
+			[],
+			$callback,
+		);
+	}
+
 	private readonly string $pathRegex;
 
 	/**
