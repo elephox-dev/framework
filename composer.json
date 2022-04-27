@@ -64,7 +64,8 @@
         "ext-fileinfo": "To use MimeType::fromFile()",
         "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())",
         "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
-        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage"
+        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage",
+        "ext-curl": "To use the Logtail sink"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

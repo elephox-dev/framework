@@ -29,7 +29,7 @@ class CustomLogLevel implements Contract\LogLevel
 			$intLevel = null;
 		}
 
-		foreach (LogLevel::cases() as $enum){
+		foreach (LogLevel::cases() as $enum) {
 			if ($enum->value === $intLevel || strtolower($enum->name) === strtolower($nonEmptyLevel)) {
 				return $enum;
 			}

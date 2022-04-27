@@ -20,13 +20,20 @@ use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Logging\Contract\Sink;
+use Elephox\Logging\SingleSinkLogger;
+use Elephox\Logging\Vendors\Logtail\LogtailClient;
+use Elephox\Logging\Vendors\Logtail\LogtailConfiguration;
+use Elephox\Logging\Vendors\Logtail\LogtailSink;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
+use Elephox\Web\Middleware\LoggingMiddleware;
 use Elephox\Web\Middleware\ServerTimingHeaderMiddleware;
 use Elephox\Web\Middleware\WhoopsExceptionHandler;
 use Elephox\Web\Routing\RequestRouter;
+use Psr\Log\LoggerInterface;
 use Whoops\Run as WhoopsRun;
 use Whoops\RunInterface as WhoopsRunInterface;
 
@@ -181,6 +188,40 @@ class WebApplicationBuilder
 				return EntityManager::create($connection, $setupConfig);
 			},
 		);
+	}
+
+	public function addLogtail(): void
+	{
+		$this->services->addSingleton(LogtailConfiguration::class, implementationFactory: static function (Configuration $config) {
+			/** @var scalar|null $token */
+			$token = $config['logtail:token'] ?? null;
+			if (!is_string($token)) {
+				throw new ConfigurationException('Logtail configuration error: "logtail:token" must be a string.');
+			}
+
+			$endpoint = $config['logtail:endpoint'] ?? LogtailConfiguration::DEFAULT_ENDPOINT;
+			if (!is_string($endpoint)) {
+				throw new ConfigurationException('Logtail configuration error: "logtail:endpoint" must be a string.');
+			}
+
+			return new LogtailConfiguration($token, $endpoint);
+		});
+		$this->services->addSingleton(LogtailClient::class);
+		$this->services->addSingleton(Sink::class, LogtailSink::class, replace: true);
+		$this->services->addSingleton(LoggerInterface::class, SingleSinkLogger::class, replace: true);
+
+		$this->addRequestLogging();
+	}
+
+	public function addRequestLogging(): void
+	{
+		if ($this->services->has(LoggingMiddleware::class)) {
+			$middleware = $this->services->requireService(LoggingMiddleware::class);
+		} else {
+			$middleware = $this->services->resolver()->instantiate(LoggingMiddleware::class);
+		}
+
+		$this->pipeline->push($middleware);
 	}
 
 	public function setRequestRouterEndpoint(?RequestRouter $router = null): RequestRouter
