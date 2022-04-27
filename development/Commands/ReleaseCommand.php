@@ -79,6 +79,7 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['flag'] ??= '';
 
 		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
+		$versionTag = "v$versionName";
 		$targetBranch = match ($type) {
 			'major', 'minor', 'patch' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
@@ -161,10 +162,10 @@ class ReleaseCommand implements CommandHandler
 		}
 
 		if (!$this->executeRequireSuccess(
-			"Failed to tag current release (<yellow>$versionName</yellow>)",
+			"Failed to tag current release (<yellow>$versionTag</yellow>)",
 			'git tag -a %s -m %s',
-			$versionName,
-			"Release $versionName",
+			$versionTag,
+			"Release $versionTag",
 		)) {
 			return 1;
 		}
