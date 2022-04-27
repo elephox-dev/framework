@@ -12,6 +12,7 @@ use Elephox\OOR\Regex;
 use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
+use Elephox\Web\Routing\Attribute\Controller;
 
 class RouteHandler implements Contract\RouteHandler
 {
@@ -49,12 +50,14 @@ class RouteHandler implements Contract\RouteHandler
 		$controllerPath = $this->controllerAttribute->getPath() ?? array_slice(explode('\\', $this->attributeClass), -1, 1)[0];
 		$routePath = $this->routeAttribute?->getPath() ?? $this->attributeMethod;
 
+		$patternWrapper = '#';
+
 		if (!str_starts_with($controllerPath, 'regex:')) {
 			if (str_ends_with($controllerPath, 'Controller')) {
 				$controllerPath = substr($controllerPath, 0, -10);
 			}
 
-			$controllerPath = Regex::escape(trim($controllerPath, '/'));
+			$controllerPath = Regex::escape(trim($controllerPath, $patternWrapper));
 		} else {
 			$controllerPath = substr($controllerPath, 6);
 		}
@@ -63,7 +66,7 @@ class RouteHandler implements Contract\RouteHandler
 			if ($this->attributeMethod === 'index' || $this->attributeMethod === '__invoke') {
 				$routePath = '';
 			} else {
-				$routePath = trim($routePath, '/');
+				$routePath = trim($routePath, $patternWrapper);
 			}
 
 			if ($controllerPath !== '' && $routePath !== '') {
@@ -75,7 +78,7 @@ class RouteHandler implements Contract\RouteHandler
 			$routePath = substr($routePath, 6);
 		}
 
-		$this->pathRegex = sprintf('/^%s%s$/i', $controllerPath, $routePath);
+		$this->pathRegex = sprintf('%s^%s%s$%si', $patternWrapper, $controllerPath, $routePath, $patternWrapper);
 	}
 
 	public function __toString(): string
