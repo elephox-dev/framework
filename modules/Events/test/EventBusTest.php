@@ -41,7 +41,7 @@ class EventBusTest extends TestCase
 
 		static::assertTrue($triggered);
 
-		$bus->unsubscribe($subscription->getId());
+		$bus->unsubscribe($subscription);
 
 		$triggered = false;
 

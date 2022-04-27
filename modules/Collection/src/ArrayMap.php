@@ -151,7 +151,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
 		if ($offset === null) {
-			throw new InvalidArgumentException('Cannot set null offset');
+			throw new InvalidArgumentException('Cannot set null offset in ArrayMap');
 		}
 
 		$this->put($offset, $value);

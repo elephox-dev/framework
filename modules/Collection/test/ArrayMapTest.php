@@ -189,6 +189,11 @@ class ArrayMapTest extends TestCase
 		static::assertEquals(2, $map->offsetGet('b'));
 		static::assertEquals(3, $map->offsetGet('c'));
 		static::assertEquals(5, $map->offsetGet('d'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Cannot set null offset in ArrayMap');
+
+		$map->offsetSet(null, 'test');
 	}
 
 	public function testOffsetUnset(): void
