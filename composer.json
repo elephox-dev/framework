@@ -28,11 +28,9 @@
         "doctrine/orm": "^2.11",
         "elephox/composer-module-sync": "^1.5",
         "ergebnis/composer-normalize": "dev-main",
-        "filp/whoops": "^2.14",
         "friendsofphp/php-cs-fixer": "dev-master",
         "infection/infection": "^0.26",
         "mockery/mockery": "^1.5",
-        "nunomaduro/collision": "^6.2",
         "phpbench/phpbench": "^1.2",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16",
@@ -61,11 +59,8 @@
         "psr/log-implementation": "1.0"
     },
     "suggest": {
-        "ext-fileinfo": "To use MimeType::fromFile()",
-        "doctrine/orm": "To be able to use the Doctrine ORM ($builder->addDoctrine())",
-        "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
-        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage",
-        "ext-curl": "To use the Logtail sink"
+        "ext-curl": "To use the Logtail sink",
+        "ext-fileinfo": "To use MimeType::fromFile()"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

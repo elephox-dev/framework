@@ -20,18 +20,16 @@
         "elephox/files": "dev-develop",
         "elephox/http": "dev-develop",
         "elephox/logging": "dev-develop",
-        "elephox/mimey": "^4.0",
         "elephox/oor": "dev-develop",
-        "elephox/stream": "dev-develop",
         "elephox/support": "dev-develop",
         "jetbrains/phpstorm-attributes": "^1.0",
         "symfony/process": "^6.0"
     },
-    "suggest": {
-        "psr/log": "If you want to use logging."
-    },
     "provide": {
         "psr/log-implementation": "3.0"
+    },
+    "suggest": {
+        "psr/log": "If you want to use logging."
     },
     "autoload": {
         "psr-4": {

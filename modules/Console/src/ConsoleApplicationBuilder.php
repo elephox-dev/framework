@@ -18,8 +18,6 @@ use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\MultiSinkLogger;
 use Elephox\Support\Contract\ExceptionHandler;
 use Psr\Log\LoggerInterface;
-use Whoops\Run as WhoopsRun;
-use Whoops\RunInterface as WhoopsRunInterface;
 
 /**
  * @psalm-consistent-constructor
@@ -111,7 +109,7 @@ class ConsoleApplicationBuilder
 		return $this->services->require($name);
 	}
 
-	public function addLogging(): self
+	public function addLogging(): void
 	{
 		$this->services->addSingleton(LoggerInterface::class, MultiSinkLogger::class, static function (): MultiSinkLogger {
 			$logger = new MultiSinkLogger();
@@ -119,15 +117,5 @@ class ConsoleApplicationBuilder
 
 			return $logger;
 		});
-
-		return $this;
-	}
-
-	public function addWhoops(): self
-	{
-		$this->services->addSingleton(WhoopsRunInterface::class, WhoopsRun::class);
-		$this->services->addSingleton(ExceptionHandler::class, WhoopsExceptionHandler::class, replace: true);
-
-		return $this;
 	}
 }

@@ -21,10 +21,6 @@
         "elephox/support": "dev-develop",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
-    "suggest": {
-        "filp/whoops": "To be able to use the Whoops error handler ($builder->addWhoops())",
-        "nunomaduro/collision": "For pretty formatting of exceptions in command line usage"
-    },
     "autoload": {
         "psr-4": {
             "Elephox\\Console\\": "src/"
