@@ -65,11 +65,7 @@ class Regex
 			}
 		}
 
-		if ($score === 0) {
-			return 0;
-		}
-
-		return 1 - ($score / $maxScore);
+		return 1.0 - ($score / ($maxScore + 1.0));
 	}
 
 	public static function escape(string $pattern): string

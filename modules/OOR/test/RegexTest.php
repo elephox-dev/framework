@@ -59,11 +59,36 @@ class RegexTest extends TestCase
 	public function testSpecificity(): void
 	{
 		static::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
-		static::assertEquals(0, Regex::specificity('/hello world/', 'hello world'));
-
+		static::assertEquals(1, Regex::specificity('/hello world/', 'hello world'));
 		static::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
-		static::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
-		static::assertLessThan(Regex::specificity('/alice@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
-		static::assertLessThan(Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'), Regex::specificity('/.*/', 'alice@foo.com'));
+	}
+
+	public function relativeSpecificityDataProvider(): iterable
+	{
+		yield ['/alice@[a-z]+\.[a-z]+/', '/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com', false];
+		yield ['/alice@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com', false];
+		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com', false];
+		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*@.*\..*/', 'alice@foo.com', true];
+		yield ['/^foo$/', '/^.*$/', 'foo', false];
+	}
+
+	/**
+	 * @dataProvider relativeSpecificityDataProvider
+	 *
+	 * @param string $more
+	 * @param string $less
+	 * @param string $subject
+	 * @param bool $equalAllowed
+	 */
+	public function testRelativeSpecificity(string $more, string $less, string $subject, bool $equalAllowed): void
+	{
+		$shouldBeMore = Regex::specificity($more, $subject);
+		$shouldBeLess = Regex::specificity($less, $subject);
+
+		if ($equalAllowed) {
+			static::assertLessThanOrEqual($shouldBeMore, $shouldBeLess);
+		} else {
+			static::assertLessThan($shouldBeMore, $shouldBeLess);
+		}
 	}
 }
