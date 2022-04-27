@@ -8,5 +8,6 @@ This module is used by [Elephox] to add an abstraction layer above parts of the 
 - [x] filesystem functions
 - [ ] `pdo_*` functions?
 - [ ] crypto/ssl functions
+- [ ] `stream_*` functions
 
 [Elephox]: https://github.com/elephox-dev/framework
