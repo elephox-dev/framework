@@ -122,8 +122,10 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	{
 		try {
 			return $this->getRouteHandler($request)->handle($this->services);
-		} catch (RouteNotFoundException|AmbiguousRouteHandlerException $e) {
+		} catch (RouteNotFoundException $e) {
 			return Response::build()->exception($e, ResponseCode::NotFound);
+		} catch (AmbiguousRouteHandlerException $e) {
+			return Response::build()->exception($e);
 		}
 	}
 
