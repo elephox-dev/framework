@@ -86,7 +86,8 @@ class ReleaseCommand implements CommandHandler
 		};
 
 		$baseBranch = match ($type) {
-			'major', 'minor' => self::BASE_BRANCH,
+			'major' => self::BASE_BRANCH,
+			'minor' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 			'patch' => $targetBranch,
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
