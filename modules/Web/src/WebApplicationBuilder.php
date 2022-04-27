@@ -6,7 +6,7 @@ namespace Elephox\Web;
 use Doctrine\ORM\Configuration as DoctrineConfiguration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup as DoctrineSetup;
+use Doctrine\ORM\ORMSetup as DoctrineSetup;
 use Elephox\Configuration\ConfigurationManager;
 use Elephox\Configuration\Contract\Configuration;
 use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderContract;
