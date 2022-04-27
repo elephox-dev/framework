@@ -193,7 +193,7 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$dryRun && !$this->executeRequireSuccess(
 			'Failed to push to the remote repository',
-			'git push --all',
+			'git push --all --force',
 		)) {
 			return 1;
 		}
@@ -294,7 +294,7 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$dryRun && !$this->executeRequireSuccess(
 			'Failed to push to the remote repository',
-			'git push --all',
+			'git push --all --force',
 		)) {
 			return 1;
 		}
