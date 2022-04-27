@@ -51,31 +51,31 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ To Do
 
-- [ ] [modules/Collection/src/ArrayList.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayList.php)
+- [ ] [modules/Collection/src/ArrayList.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/ArrayList.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/ArrayMap.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayMap.php)
+- [ ] [modules/Collection/src/ArrayMap.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/ArrayMap.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/ArraySet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArraySet.php)
+- [ ] [modules/Collection/src/ArraySet.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/ArraySet.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
+- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
+- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
-- [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)
+- [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Logging/test/AnsiColorSinkTest.php)
   - [ ] write tests for background and options
-- [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
+- [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
 
 ### ⚠️ Fixes
 
-- [ ] [modules/Collection/src/IsArrayEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsArrayEnumerable.php)
+- [ ] [modules/Collection/src/IsArrayEnumerable.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/IsArrayEnumerable.php)
   - [ ] this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
-- [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsEnumerable.php)
+- [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/IsEnumerable.php)
   - [ ] de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
 
 ### 🤔 Maybe
 
-- [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
+- [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/release/0.4/modules/Collection/src/Iterator/ReverseIterator.php)
   - [ ] only reverse key order if key is numeric
 
 
