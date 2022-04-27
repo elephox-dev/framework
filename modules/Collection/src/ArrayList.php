@@ -98,7 +98,6 @@ class ArrayList implements GenericList
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if ($offset === null) {
 			$this->add($value);
 

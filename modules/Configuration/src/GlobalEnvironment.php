@@ -80,7 +80,6 @@ class GlobalEnvironment extends DotEnvEnvironment
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Environment offset must be a string');
 		}

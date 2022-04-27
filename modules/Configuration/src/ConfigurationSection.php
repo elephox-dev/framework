@@ -92,7 +92,6 @@ class ConfigurationSection implements Contract\ConfigurationSection
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($offset)) {
 			throw new InvalidArgumentException('Offset must be a string');
 		}

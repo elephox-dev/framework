@@ -123,7 +123,11 @@ class Arr implements ArrayAccess, IteratorAggregate
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		$this->source[$offset] = $value;
+		if ($offset === null) {
+			$this->source[] = $value;
+		} else {
+			$this->source[$offset] = $value;
+		}
 	}
 
 	public function offsetUnset(mixed $offset): void
