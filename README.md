@@ -63,6 +63,8 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] cache keys
 - [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)
   - [ ] write tests for background and options
+- [ ] [modules/Web/src/Middleware/LoggingMiddleware.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Middleware/LoggingMiddleware.php)
+  - [ ] improve context for ServerRequest instances
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
 
