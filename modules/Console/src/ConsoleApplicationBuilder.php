@@ -78,6 +78,16 @@ class ConsoleApplicationBuilder
 		return $this->environment;
 	}
 
+	protected function getServices(): ServiceCollectionContract
+	{
+		return $this->services;
+	}
+
+	protected function getCommands(): CommandCollection
+	{
+		return $this->commands;
+	}
+
 	protected function getConfigurationBuilder(): ConfigurationBuilderContract
 	{
 		return $this->configuration;

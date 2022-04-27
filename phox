@@ -2,15 +2,14 @@
 <?php
 declare(strict_types=1);
 
-use Elephox\Console\ConsoleApplicationBuilder;
+use Elephox\Development\DevConsoleAppBuilder;
 
 require_once 'vendor/autoload.php';
 const APP_ROOT = __DIR__;
 
-$builder = ConsoleApplicationBuilder::create()
-	->addLogging()
-	->addWhoops()
-;
+$builder = DevConsoleAppBuilder::create();
+$builder->addLogging();
+$builder->addWhoops();
 
 $builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
 

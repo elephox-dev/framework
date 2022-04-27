@@ -86,6 +86,16 @@ class WebApplicationBuilder
 		return $this->environment;
 	}
 
+	protected function getServices(): ServiceCollectionContract
+	{
+		return $this->services;
+	}
+
+	protected function getPipeline(): RequestPipelineBuilder
+	{
+		return $this->pipeline;
+	}
+
 	protected function getConfigurationBuilder(): ConfigurationBuilderContract
 	{
 		return $this->configuration;
