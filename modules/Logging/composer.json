@@ -15,9 +15,6 @@
         "psr/log": "^3.0",
         "ricardoboss/php-console-logger": "^2.1"
     },
-    "suggest": {
-        "ext-curl": "To use the Logtail sink"
-    },
     "autoload": {
         "psr-4": {
             "Elephox\\Logging\\": "src/"
