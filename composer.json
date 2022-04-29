@@ -36,9 +36,9 @@
         "psalm/plugin-phpunit": "^0.16",
         "roave/no-leaks": "^1.3",
         "vimeo/psalm": "dev-master",
-        "elephox/builder-whoops-handler": "dev-main",
+        "elephox/builder-whoops-handler": "dev-develop",
         "nunomaduro/collision": "^6.2",
-        "elephox/builder-whoops-middleware": "dev-main"
+        "elephox/builder-whoops-middleware": "dev-develop"
     },
     "replace": {
         "elephox/autoloading": "self.version",
