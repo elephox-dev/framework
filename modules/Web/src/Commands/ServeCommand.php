@@ -156,7 +156,7 @@ class ServeCommand implements CommandHandler
 						$this->logger->info(sprintf('%s %s -> %d', $matches['verb'], $matches['path'], $matches['status']), ['ip' => $matches['ip'], 'port' => $matches['port']]);
 					}
 				} else {
-					$this->logger->warning($line);
+					$this->logger->notice($line);
 				}
 			}
 		});
