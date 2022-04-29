@@ -23,7 +23,6 @@
         "elephox/di": "dev-develop",
         "elephox/files": "dev-develop",
         "elephox/http": "dev-develop",
-        "elephox/logging": "dev-develop",
         "elephox/oor": "dev-develop",
         "elephox/support": "dev-develop",
         "jetbrains/phpstorm-attributes": "^1.0",
