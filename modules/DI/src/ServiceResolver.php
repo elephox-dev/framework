@@ -85,6 +85,32 @@ trait ServiceResolver
 	}
 
 	/**
+	 * @template T as object
+	 * @template TResult
+	 *
+	 * @param class-string<T> $className
+	 * @param non-empty-string $method
+	 * @param argument-list $overrideArguments
+	 *
+	 * @return TResult
+	 *
+	 * @throws BadMethodCallException
+	 */
+	public function callStatic(string $className, string $method, array $overrideArguments = []): mixed
+	{
+		try {
+			$reflectionClass = new ReflectionClass($className);
+			$reflectionMethod = $reflectionClass->getMethod($method);
+			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments);
+
+			/** @var TResult */
+			return $reflectionMethod->invokeArgs(null, $arguments->toList());
+		} catch (ReflectionException $e) {
+			throw new BadMethodCallException("Failed to call method '$method' on class '$className'", previous: $e);
+		}
+	}
+
+	/**
 	 * @template T
 	 *
 	 * @param Closure|Closure(mixed): T $callback

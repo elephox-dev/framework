@@ -38,6 +38,17 @@ interface Resolver
 	public function call(string $className, string $method, array $overrideArguments = []): mixed;
 
 	/**
+	 * @template T as object
+	 *
+	 * @param class-string<T> $className
+	 * @param non-empty-string $method
+	 * @param argument-list $overrideArguments
+	 *
+	 * @throws BadMethodCallException
+	 */
+	public function callStatic(string $className, string $method, array $overrideArguments = []): mixed;
+
+	/**
 	 * @template T
 	 *
 	 * @param Closure|Closure(mixed): T $callback
