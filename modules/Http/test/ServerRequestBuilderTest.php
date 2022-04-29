@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Http\SessionMap
- * @covers \Elephox\Platform\Session
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest
@@ -62,7 +61,7 @@ class ServerRequestBuilderTest extends TestCase
 	 */
 	public function testFromGlobals(ParameterMap $parameterMap, string $requestUri, ?int $bodyStreamLength, ?string $protocolVersion, string $expectedProtocolVersion, ?RequestMethod $requestMethod, RequestMethod $expectedRequestMethod): void
 	{
-		$request = ServerRequestBuilder::fromGlobals($parameterMap, protocolVersion: $protocolVersion, requestMethod: $requestMethod);
+		$request = ServerRequestBuilder::fromGlobals($parameterMap, session: new FakeSessionMap(), protocolVersion: $protocolVersion, requestMethod: $requestMethod);
 
 		static::assertEquals($requestUri, $request->getUrl()->path);
 		static::assertEquals($bodyStreamLength, $request->getBody()->getSize());

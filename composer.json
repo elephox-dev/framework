@@ -52,7 +52,6 @@
         "elephox/http": "self.version",
         "elephox/logging": "self.version",
         "elephox/oor": "self.version",
-        "elephox/platform": "self.version",
         "elephox/stream": "self.version",
         "elephox/support": "self.version",
         "elephox/web": "self.version"
@@ -80,7 +79,6 @@
             "Elephox\\Http\\": "modules/Http/src/",
             "Elephox\\Logging\\": "modules/Logging/src/",
             "Elephox\\OOR\\": "modules/OOR/src/",
-            "Elephox\\Platform\\": "modules/Platform/src/",
             "Elephox\\Stream\\": "modules/Stream/src/",
             "Elephox\\Support\\": "modules/Support/src/",
             "Elephox\\Web\\": "modules/Web/src/"
