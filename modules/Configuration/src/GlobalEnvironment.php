@@ -17,10 +17,17 @@ class GlobalEnvironment extends DotEnvEnvironment
 
 	protected ?Directory $cachedRootDirectory = null;
 
-	public function loadFromEnvFile(?string $envName = null, bool $local = false): void
+	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void
 	{
+		$root = $this->getRoot()->getPath();
 		$envFile = $this->getDotEnvFileName($local, $envName);
-		$dotenv = Dotenv::createImmutable($this->getRoot()->getPath(), $envFile);
+
+		if ($overwriteExisting) {
+			$dotenv = Dotenv::createMutable($root, $envFile);
+		} else {
+			$dotenv = Dotenv::createImmutable($root, $envFile);
+		}
+
 		$dotenv->safeLoad();
 	}
 
