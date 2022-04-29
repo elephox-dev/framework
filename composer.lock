@@ -388,16 +388,16 @@
         },
         {
             "name": "ricardoboss/php-console-logger",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ricardoboss/php-console-logger.git",
-                "reference": "183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66"
+                "reference": "e3329a5dd672c3d27fa202a69d99633f782e2305"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66",
-                "reference": "183eeb3a40b6fbe3eb0f9f1a3f49a5b674de9d66",
+                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/e3329a5dd672c3d27fa202a69d99633f782e2305",
+                "reference": "e3329a5dd672c3d27fa202a69d99633f782e2305",
                 "shasum": ""
             },
             "require": {
@@ -423,9 +423,9 @@
             "description": "A simple console logger for scripts or small applications.",
             "support": {
                 "issues": "https://github.com/ricardoboss/php-console-logger/issues",
-                "source": "https://github.com/ricardoboss/php-console-logger/tree/v2.1.2"
+                "source": "https://github.com/ricardoboss/php-console-logger/tree/v2.2.0"
             },
-            "time": "2022-04-12T09:59:54+00:00"
+            "time": "2022-04-29T09:53:55+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2333,12 +2333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-handler.git",
-                "reference": "66903f9c8070ae6952609825f4248901cf80e2b4"
+                "reference": "4f22c7fdfc71285cb00c800d8938b28896833de3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/66903f9c8070ae6952609825f4248901cf80e2b4",
-                "reference": "66903f9c8070ae6952609825f4248901cf80e2b4",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/4f22c7fdfc71285cb00c800d8938b28896833de3",
+                "reference": "4f22c7fdfc71285cb00c800d8938b28896833de3",
                 "shasum": ""
             },
             "require": {
@@ -2347,7 +2347,8 @@
                 "php": "^8.1 <8.3"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.8"
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "nunomaduro/collision": "^6.2"
             },
             "suggest": {
                 "nunomaduro/collision": "For pretty formatting of exceptions in the console"
@@ -2374,7 +2375,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-handler/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-handler/tree/develop"
             },
-            "time": "2022-04-29T07:57:15+00:00"
+            "time": "2022-04-29T08:01:51+00:00"
         },
         {
             "name": "elephox/builder-whoops-middleware",
@@ -2382,17 +2383,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-middleware.git",
-                "reference": "4466c25c6a905d1f0af533ca2db1cc55acac9229"
+                "reference": "8e33a171376ad1a92516cdaf4a75df20014963f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/4466c25c6a905d1f0af533ca2db1cc55acac9229",
-                "reference": "4466c25c6a905d1f0af533ca2db1cc55acac9229",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/8e33a171376ad1a92516cdaf4a75df20014963f6",
+                "reference": "8e33a171376ad1a92516cdaf4a75df20014963f6",
                 "shasum": ""
             },
             "require": {
                 "elephox/web": "dev-develop",
-                "filp/whoops": "^2.14"
+                "filp/whoops": "^2.14",
+                "php": "^8.1 <8.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "dev-master"
             },
             "default-branch": true,
             "type": "library",
@@ -2416,7 +2421,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-middleware/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-middleware/tree/develop"
             },
-            "time": "2022-04-29T07:34:24+00:00"
+            "time": "2022-04-29T08:10:05+00:00"
         },
         {
             "name": "elephox/composer-module-sync",
