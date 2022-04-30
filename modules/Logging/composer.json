@@ -19,6 +19,9 @@
         "psr/log": "^3.0",
         "ricardoboss/php-console-logger": "^2.1"
     },
+    "provide": {
+        "psr/log-implementation": "3.0"
+    },
     "autoload": {
         "psr-4": {
             "Elephox\\Logging\\": "src/"

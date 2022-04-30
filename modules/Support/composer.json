@@ -19,7 +19,7 @@
         "elephox/oor": "dev-develop"
     },
     "suggest": {
-        "ext-json": "To use Elephox\\JsonConvertible"
+        "ext-fileinfo": "To get the mime type of a file"
     },
     "autoload": {
         "psr-4": {

@@ -28,12 +28,6 @@
         "jetbrains/phpstorm-attributes": "^1.0",
         "symfony/process": "^6.0"
     },
-    "provide": {
-        "psr/log-implementation": "3.0"
-    },
-    "suggest": {
-        "psr/log": "If you want to use logging."
-    },
     "autoload": {
         "psr-4": {
             "Elephox\\Web\\": "src/"
