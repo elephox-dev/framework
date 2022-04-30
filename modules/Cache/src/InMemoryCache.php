@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateTime;
-use Elephox\Cache\Contract\InMemoryCacheConfiguration;
 use Elephox\Collection\ArrayMap;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use WeakReference;
 
-class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
+class InMemoryCache extends AbstractCache
 {
 	/**
 	 * @var array<string, WeakReference<CacheItemInterface>>
@@ -24,12 +23,17 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 	private array $deferred = [];
 
 	#[Pure]
-	public function __construct(private InMemoryCacheConfiguration $configuration)
+	public function __construct(private readonly InMemoryCacheConfiguration $configuration)
 	{
 	}
 
+	public function getConfiguration(): InMemoryCacheConfiguration
+	{
+		return $this->configuration;
+	}
+
 	/**
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 *
 	 * @param string $key
 	 */
@@ -134,10 +138,5 @@ class InMemoryCache extends AbstractCache implements Contract\InMemoryCache
 		}
 
 		return $map;
-	}
-
-	public function getConfiguration(): InMemoryCacheConfiguration
-	{
-		return $this->configuration;
 	}
 }

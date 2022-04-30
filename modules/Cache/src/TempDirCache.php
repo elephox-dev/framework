@@ -4,13 +4,11 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateTime;
-use Elephox\Cache\Contract\TempDirCacheConfiguration;
 use Elephox\Files\Contract\Directory as DirectoryContract;
-use Elephox\Files\Directory;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 
-class TempDirCache extends AbstractCache implements Contract\TempDirCache
+class TempDirCache extends AbstractCache
 {
 	/**
 	 * @var array<string, CacheItemInterface>
@@ -30,21 +28,21 @@ class TempDirCache extends AbstractCache implements Contract\TempDirCache
 	}
 
 	#[Pure]
-	private function getCacheDir(): DirectoryContract
+	protected function getCacheDir(): DirectoryContract
 	{
-		return new Directory($this->configuration->getTempDir());
+		return $this->configuration->tempDir;
 	}
 
 	#[Pure]
-	private function getWriteBackThreshold(): int
+	protected function getWriteBackThreshold(): int
 	{
-		return $this->configuration->getWriteBackThreshold();
+		return $this->configuration->writeBackThreshold;
 	}
 
 	#[Pure]
-	private function getCacheId(): string
+	protected function getCacheId(): string
 	{
-		return $this->configuration->getCacheId();
+		return $this->configuration->cacheId;
 	}
 
 	public function getItems(array $keys = []): iterable

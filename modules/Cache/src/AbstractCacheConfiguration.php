@@ -11,8 +11,9 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 abstract class AbstractCacheConfiguration implements CacheConfiguration
 {
+	#[Pure]
 	public function __construct(
-		private readonly DateInterval|int|null $ttl = null,
+		public readonly DateInterval|int|null $ttl = null,
 	) {
 	}
 

@@ -19,9 +19,9 @@ class ImmutableCacheItem implements CacheItem
 	#[Pure]
 	public function __construct(
 		private readonly string $key,
-		private mixed $value,
+		private readonly mixed $value,
 		private readonly bool $isHit,
-		private ?DateTimeInterface $expiresAt,
+		private readonly ?DateTimeInterface $expiresAt,
 	) {
 	}
 

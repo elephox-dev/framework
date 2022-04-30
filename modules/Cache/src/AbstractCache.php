@@ -14,7 +14,7 @@ use Psr\Cache\InvalidArgumentException;
 abstract class AbstractCache implements Cache
 {
 	/**
-	 * @throws \Elephox\Cache\InvalidTtlException
+	 * @throws InvalidTtlException
 	 *
 	 * @param DateTime $offset
 	 */
@@ -54,7 +54,7 @@ abstract class AbstractCache implements Cache
 
 	/**
 	 * @throws InvalidKeyTypeException
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 *
 	 * @param mixed $offset
 	 */

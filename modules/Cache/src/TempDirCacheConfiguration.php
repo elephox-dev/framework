@@ -4,22 +4,22 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateInterval;
+use Elephox\Configuration\Contract\Environment;
+use Elephox\Files\Contract\Directory as DirectoryContract;
+use Elephox\Files\Directory;
 use Elephox\Files\Path;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-class TempDirCacheConfiguration extends AbstractCacheConfiguration implements Contract\TempDirCacheConfiguration
+class TempDirCacheConfiguration extends AbstractCacheConfiguration
 {
 	/**
 	 * @var non-empty-string $cacheId
 	 */
-	private string $cacheId;
+	public readonly string $cacheId;
 
-	/**
-	 * @var non-empty-string $tempDir
-	 */
-	private string $tempDir;
+	public readonly DirectoryContract $tempDir;
 
 	/**
 	 * @param DateInterval|int|null $ttl
@@ -32,7 +32,8 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration implements Co
 		DateInterval|int|null $ttl = null,
 		?string $cacheId = null,
 		?string $tempDir = null,
-		private int $writeBackThreshold = 200,
+		public readonly int $writeBackThreshold = 200,
+		?Environment $environment = null,
 	) {
 		parent::__construct($ttl);
 
@@ -42,36 +43,17 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration implements Co
 			/**
 			 * @var non-empty-string
 			 */
-			$this->cacheId = md5(uniqid('', true));
+			$this->cacheId = uniqid('', true);
 		}
 
 		if ($tempDir !== null) {
-			$this->tempDir = $tempDir;
+			$this->tempDir = new Directory($tempDir);
+		} elseif ($environment !== null) {
+			/** @psalm-suppress ImpureMethodCall */
+			$this->tempDir = $environment->getTemp()->getDirectory('cache');
 		} else {
-			/**
-			 * @psalm-suppress ImpureFunctionCall
-			 *
-			 * @var non-empty-string
-			 */
-			$this->tempDir = Path::join(sys_get_temp_dir(), 'elephox-cache');
+			/** @psalm-suppress ImpureFunctionCall */
+			$this->tempDir = new Directory(Path::join(sys_get_temp_dir(), 'elephox-cache'));
 		}
-	}
-
-	#[Pure]
-	public function getTempDir(): string
-	{
-		return $this->tempDir;
-	}
-
-	#[Pure]
-	public function getWriteBackThreshold(): int
-	{
-		return $this->writeBackThreshold;
-	}
-
-	#[Pure]
-	public function getCacheId(): string
-	{
-		return $this->cacheId;
 	}
 }
