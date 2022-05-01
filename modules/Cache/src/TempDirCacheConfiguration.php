@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateInterval;
-use Elephox\Configuration\Contract\Environment;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Directory;
 use Elephox\Files\Path;
@@ -33,7 +32,6 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration
 		?string $cacheId = null,
 		?Directory $tempDir = null,
 		public readonly int $writeBackThreshold = 200,
-		?Environment $environment = null,
 	) {
 		parent::__construct($ttl);
 
@@ -48,9 +46,6 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration
 
 		if ($tempDir !== null) {
 			$this->tempDir = $tempDir;
-		} elseif ($environment !== null) {
-			/** @psalm-suppress ImpureMethodCall */
-			$this->tempDir = $environment->getTemp()->getDirectory('cache');
 		} else {
 			/** @psalm-suppress ImpureFunctionCall */
 			$this->tempDir = new Directory(Path::join(sys_get_temp_dir(), 'elephox-cache'));
