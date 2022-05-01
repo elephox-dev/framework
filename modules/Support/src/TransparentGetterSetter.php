@@ -15,7 +15,8 @@ trait TransparentGetterSetter
 	 */
 	protected function buildGetterNames(string $propertyName): iterable
 	{
-		$getterPropertyName = Casing::toPascal($propertyName);
+		$getterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
+
 		yield 'get' . $getterPropertyName;
 		yield 'is' . $getterPropertyName;
 		yield 'has' . $getterPropertyName;
@@ -28,7 +29,7 @@ trait TransparentGetterSetter
 	 */
 	protected function buildSetterNames(string $propertyName): iterable
 	{
-		$setterPropertyName = Casing::toPascal($propertyName);
+		$setterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
 
 		yield 'set' . $setterPropertyName;
 		yield 'put' . $setterPropertyName;
