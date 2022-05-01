@@ -14,8 +14,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Cache\AbstractCache
  *
- * @uses \Elephox\Cache\Contract\InMemoryCacheConfiguration
- *
  * @internal
  */
 class InMemoryCacheTest extends TestCase
