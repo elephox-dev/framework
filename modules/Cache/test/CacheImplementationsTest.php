@@ -32,9 +32,14 @@ use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
  */
 class CacheImplementationsTest extends TestCase
 {
+	private static array $implementations = [];
+
 	public static function setUpBeforeClass(): void
 	{
 		self::deleteCacheDir();
+
+		self::$implementations[] = new InMemoryCache(new InMemoryCacheConfiguration());
+		self::$implementations[] = new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: self::getCacheDir()));
 	}
 
 	private static function getCacheDir(): Directory
@@ -53,8 +58,7 @@ class CacheImplementationsTest extends TestCase
 
 	public function cacheImplementationProvider(): iterable
 	{
-		yield [new InMemoryCache(new InMemoryCacheConfiguration())];
-		yield [new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: self::getCacheDir()))];
+		yield from self::$implementations;
 	}
 
 	/**
