@@ -87,15 +87,9 @@ class TempDirCache extends AbstractCache
 		return true;
 	}
 
-	public function deleteItems(array $keys): bool
+	public function deleteItems(iterable $keys): bool
 	{
-		foreach ($keys as $key) {
-			if (!$this->hasItem($key)) {
-				continue;
-			}
-
-			unset($this->floatingItems[$key]);
-		}
+		parent::deleteItems($keys);
 
 		$this->persist();
 

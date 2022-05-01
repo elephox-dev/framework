@@ -6,6 +6,7 @@ namespace Elephox\Cache\Contract;
 use ArrayAccess;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 
 /**
  * @extends ArrayAccess<string, CacheItemInterface>
@@ -15,9 +16,20 @@ interface Cache extends ArrayAccess, CacheItemPoolInterface
 	public function getConfiguration(): CacheConfiguration;
 
 	/**
-	 * @param array $keys
+	 * @param iterable $keys
 	 *
 	 * @return iterable<string, CacheItemInterface>
+	 *
+	 * @throws InvalidArgumentException
 	 */
-	public function getItems(array $keys = []): iterable;
+	public function getItems(iterable $keys = []): iterable;
+
+	/**
+	 * @param iterable $keys
+	 *
+	 * @return bool
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	public function deleteItems(iterable $keys): bool;
 }

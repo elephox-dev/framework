@@ -40,11 +40,11 @@ abstract class AbstractCache implements Cache
 	}
 
 	/**
-	 * @param array $keys
+	 * @param iterable $keys
 	 *
 	 * @return iterable<string, CacheItemInterface>
 	 */
-	public function getItems(array $keys = []): iterable
+	public function getItems(iterable $keys = []): iterable
 	{
 		/** @var KeyedEnumerable<string, CacheItemInterface> */
 		return new KeyedEnumerable(function () use ($keys) {
@@ -56,6 +56,19 @@ abstract class AbstractCache implements Cache
 				yield $key => $this->getItem($key);
 			}
 		});
+	}
+
+	public function deleteItems(iterable $keys): bool
+	{
+		foreach ($keys as $key) {
+			if (!is_string($key)) {
+				throw new InvalidKeyTypeException($key);
+			}
+
+			$this->deleteItem($key);
+		}
+
+		return true;
 	}
 
 	/**

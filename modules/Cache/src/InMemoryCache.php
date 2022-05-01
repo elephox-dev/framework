@@ -71,15 +71,6 @@ class InMemoryCache extends AbstractCache
 		return true;
 	}
 
-	public function deleteItems(array $keys): bool
-	{
-		foreach ($keys as $key) {
-			$this->deleteItem($key);
-		}
-
-		return true;
-	}
-
 	public function save(CacheItemInterface $item): bool
 	{
 		$this->cache[$item->getKey()] = $item;
