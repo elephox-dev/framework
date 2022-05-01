@@ -67,6 +67,8 @@ class CacheImplementationsTest extends TestCase
 		static::assertTrue($cache->commit());
 		static::assertTrue($cache->hasItem('test'));
 		static::assertTrue($cache->offsetExists('test'));
+
+		$cache->clear();
 	}
 
 	/**
@@ -107,6 +109,8 @@ class CacheImplementationsTest extends TestCase
 		$cache->deleteItem('test');
 		$cache[] = $item;
 		static::assertTrue($cache->hasItem('test'));
+
+		$cache->clear();
 	}
 
 	/**
@@ -154,6 +158,8 @@ class CacheImplementationsTest extends TestCase
 		static::assertTrue($cache->hasItem('test'));
 		$item3 = $cache->getItem('test');
 		static::assertSame($item, $item3);
+
+		$cache->clear();
 	}
 
 	/**
