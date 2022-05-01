@@ -4,21 +4,19 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateTime;
-use Elephox\Collection\ArrayMap;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
-use WeakReference;
 
 class InMemoryCache extends AbstractCache
 {
 	/**
-	 * @var array<string, WeakReference<CacheItemInterface>>
+	 * @var array<string, CacheItemInterface>
 	 */
 	private array $cache = [];
 
 	/**
-	 * @var array<string, WeakReference<CacheItemInterface>>
+	 * @var array<string, CacheItemInterface>
 	 */
 	private array $deferred = [];
 
@@ -40,10 +38,7 @@ class InMemoryCache extends AbstractCache
 	public function getItem(string $key): CacheItemInterface
 	{
 		if ($this->hasItem($key)) {
-			$item = $this->cache[$key];
-			if ($item->get() !== null) {
-				return $item->get();
-			}
+			return $this->cache[$key];
 		}
 
 		$expiresAt = $this->calculateExpiresAt(new DateTime());
@@ -53,7 +48,7 @@ class InMemoryCache extends AbstractCache
 
 	public function hasItem(string $key): bool
 	{
-		return isset($this->cache[$key]) && $this->cache[$key]->get() !== null;
+		return isset($this->cache[$key]);
 	}
 
 	public function clear(): bool
@@ -78,24 +73,23 @@ class InMemoryCache extends AbstractCache
 
 	public function deleteItems(array $keys): bool
 	{
-		$anyDeleted = false;
 		foreach ($keys as $key) {
-			$anyDeleted = $this->deleteItem($key) || $anyDeleted;
+			$this->deleteItem($key);
 		}
 
-		return $anyDeleted;
+		return true;
 	}
 
 	public function save(CacheItemInterface $item): bool
 	{
-		$this->cache[$item->getKey()] = WeakReference::create($item);
+		$this->cache[$item->getKey()] = $item;
 
 		return true;
 	}
 
 	public function saveDeferred(CacheItemInterface $item): bool
 	{
-		$this->deferred[$item->getKey()] = WeakReference::create($item);
+		$this->deferred[$item->getKey()] = $item;
 
 		return true;
 	}
@@ -103,9 +97,7 @@ class InMemoryCache extends AbstractCache
 	public function commit(): bool
 	{
 		foreach ($this->deferred as $key => $item) {
-			if ($item->get() !== null) {
-				$this->cache[$key] = $item;
-			}
+			$this->cache[$key] = $item;
 		}
 
 		$this->deferred = [];

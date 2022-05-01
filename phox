@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 use Elephox\Development\DevConsoleAppBuilder;
 
-require_once 'vendor/autoload.php';
-const APP_ROOT = __DIR__;
+require_once 'bootstrap.php';
 
 $builder = DevConsoleAppBuilder::create();
 $builder->addLogging();

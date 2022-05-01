@@ -6,6 +6,7 @@ namespace Elephox\Cache;
 use DateInterval;
 use DateTime;
 use Elephox\Cache\Contract\Cache;
+use Elephox\Collection\KeyedEnumerable;
 use Exception;
 use LogicException;
 use Psr\Cache\CacheItemInterface;
@@ -39,18 +40,22 @@ abstract class AbstractCache implements Cache
 	}
 
 	/**
-	 * @throws InvalidKeyTypeException
-	 * @throws InvalidArgumentException
+	 * @param array $keys
+	 *
+	 * @return iterable<string, CacheItemInterface>
 	 */
 	public function getItems(array $keys = []): iterable
 	{
-		foreach ($keys as $key) {
-			if (!is_string($key)) {
-				throw new InvalidKeyTypeException($key);
-			}
+		/** @var KeyedEnumerable<string, CacheItemInterface> */
+		return new KeyedEnumerable(function () use ($keys) {
+			foreach ($keys as $key) {
+				if (!is_string($key)) {
+					throw new InvalidKeyTypeException($key);
+				}
 
-			yield $key => $this->getItem($key);
-		}
+				yield $key => $this->getItem($key);
+			}
+		});
 	}
 
 	/**
