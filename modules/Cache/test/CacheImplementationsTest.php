@@ -8,6 +8,7 @@ use Elephox\Cache\Contract\CacheConfiguration;
 use Elephox\Files\Directory;
 use Elephox\Files\DirectoryNotFoundException;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 
 /**
  * @covers \Elephox\Cache\InMemoryCache
@@ -58,7 +59,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testCommit(Cache $cache): void
 	{
@@ -73,7 +77,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testDeleteItem(Cache $cache): void
 	{
@@ -90,7 +97,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testSave(Cache $cache): void
 	{
@@ -107,7 +117,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testDeleteItems(Cache $cache): void
 	{
@@ -130,7 +143,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testGetItem(Cache $cache): void
 	{
@@ -148,7 +164,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testClear(Cache $cache): void
 	{
@@ -161,7 +180,10 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
-	 * @throws \Psr\Cache\InvalidArgumentException
+	 *
+	 * @param Cache $cache
+	 *
+	 * @throws PsrInvalidArgumentException
 	 */
 	public function testGetItems(Cache $cache): void
 	{
@@ -185,6 +207,8 @@ class CacheImplementationsTest extends TestCase
 
 	/**
 	 * @dataProvider cacheImplementationProvider
+	 *
+	 * @param Cache $cache
 	 */
 	public function testGetConfiguration(Cache $cache): void
 	{

@@ -10,10 +10,14 @@ use Psr\Cache\CacheItemInterface;
 
 class TempDirCache extends AbstractCache
 {
-	/** @var array<string, CacheItemInterface> */
+	/**
+	 * @var array<string, CacheItemInterface>
+	 */
 	private array $floatingItems = [];
 
-	/** @var list<string> */
+	/**
+	 * @var list<string>
+	 */
 	private array $persistedItemKeys = [];
 
 	private int $changes = 0;
@@ -158,7 +162,7 @@ class TempDirCache extends AbstractCache
 			array_merge(
 				array_values(
 					array_map(
-						static fn(CacheItemInterface $item): string => $item::class,
+						static fn (CacheItemInterface $item): string => $item::class,
 						$this->floatingItems,
 					),
 				),
