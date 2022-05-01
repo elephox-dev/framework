@@ -24,14 +24,14 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration
 	/**
 	 * @param DateInterval|int|null $ttl
 	 * @param non-empty-string|null $cacheId
-	 * @param non-empty-string|null $tempDir
+	 * @param Directory|null $tempDir
 	 * @param positive-int|0 $writeBackThreshold
 	 */
 	#[Pure]
 	public function __construct(
 		DateInterval|int|null $ttl = null,
 		?string $cacheId = null,
-		?string $tempDir = null,
+		?Directory $tempDir = null,
 		public readonly int $writeBackThreshold = 200,
 		?Environment $environment = null,
 	) {
@@ -47,7 +47,7 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration
 		}
 
 		if ($tempDir !== null) {
-			$this->tempDir = new Directory($tempDir);
+			$this->tempDir = $tempDir;
 		} elseif ($environment !== null) {
 			/** @psalm-suppress ImpureMethodCall */
 			$this->tempDir = $environment->getTemp()->getDirectory('cache');

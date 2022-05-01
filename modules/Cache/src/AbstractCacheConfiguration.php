@@ -13,13 +13,13 @@ abstract class AbstractCacheConfiguration implements CacheConfiguration
 {
 	#[Pure]
 	public function __construct(
-		public readonly DateInterval|int|null $ttl = null,
+		public readonly DateInterval|int|null $defaultTtl = null,
 	) {
 	}
 
 	#[Pure]
 	public function getDefaultTTL(): DateInterval|int|null
 	{
-		return $this->ttl;
+		return $this->defaultTtl;
 	}
 }

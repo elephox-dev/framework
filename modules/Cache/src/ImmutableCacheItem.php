@@ -6,15 +6,15 @@ namespace Elephox\Cache;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
-use Elephox\Cache\Contract\CacheItem;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Cache\CacheItemInterface;
 
 /**
  * @psalm-consistent-constructor
  */
 #[Immutable]
-class ImmutableCacheItem implements CacheItem
+class ImmutableCacheItem implements CacheItemInterface
 {
 	#[Pure]
 	public function __construct(

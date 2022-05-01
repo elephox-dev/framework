@@ -166,10 +166,10 @@ class TempDirCache extends AbstractCache
 		}
 
 		/** @var list<class-string> */
-		$classes = unserialize($classesFile->stream()->getContents(), ['allowed_classes' => false]);
+		$classes = unserialize($classesFile->getContents(), ['allowed_classes' => false]);
 
 		$file = $this->getCacheDir()->getFile($this->getCacheId());
-		$contents = $file->stream()->getContents();
+		$contents = $file->getContents();
 
 		/** @var array<string, CacheItemInterface> */
 		$this->items = unserialize($contents, ['allowed_classes' => $classes]);
