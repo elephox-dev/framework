@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6915b7e14a0146a316adf09870cc7658",
+    "content-hash": "185c6b54081ae5ecb2ca4bd63851e793",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -2333,12 +2333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-handler.git",
-                "reference": "4f22c7fdfc71285cb00c800d8938b28896833de3"
+                "reference": "b253b7dbc4cc3477aa44ecdc30772882686d8f6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/4f22c7fdfc71285cb00c800d8938b28896833de3",
-                "reference": "4f22c7fdfc71285cb00c800d8938b28896833de3",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/b253b7dbc4cc3477aa44ecdc30772882686d8f6c",
+                "reference": "b253b7dbc4cc3477aa44ecdc30772882686d8f6c",
                 "shasum": ""
             },
             "require": {
@@ -2375,7 +2375,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-handler/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-handler/tree/develop"
             },
-            "time": "2022-04-29T08:01:51+00:00"
+            "time": "2022-04-29T17:50:21+00:00"
         },
         {
             "name": "elephox/builder-whoops-middleware",
