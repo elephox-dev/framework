@@ -67,6 +67,10 @@ class ConfigurationManager implements Contract\ConfigurationManager
 			return $this->substituteEnvironmentVariables($value);
 		}
 
+		if (is_iterable($value)) {
+			return [...$this->substituteEnvironmentVariablesRecursive($value)];
+		}
+
 		return $value;
 	}
 }

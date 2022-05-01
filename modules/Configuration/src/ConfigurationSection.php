@@ -51,12 +51,12 @@ class ConfigurationSection implements Contract\ConfigurationSection
 		return (string) $this->key;
 	}
 
-	public function getValue(): string|int|float|bool|null
+	public function getValue(): string|int|float|bool|null|array
 	{
 		return $this->root->offsetGet($this->getPath());
 	}
 
-	public function setValue(float|bool|int|string|null $value): void
+	public function setValue(float|bool|int|string|null|array $value): void
 	{
 		$this->root->offsetSet($this->getPath(), $value);
 	}

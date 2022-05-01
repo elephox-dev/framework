@@ -183,7 +183,14 @@ class ConfigurationRootTest extends TestCase
 	public function testSubstitutesEnvironmentVariables(): void
 	{
 		$configBuilder = new ConfigurationBuilder();
-		$configBuilder->add(new MemoryConfigurationSource(['test' => 'this is an env value: ${TEST_VAR}', 'test2' => 'this env should not be replaced: $${TEST_VAR}', 'test3' => 'this env should remain: ${NOT_A_VAR}']));
+		$configBuilder->add(new MemoryConfigurationSource([
+			'test' => 'this is an env value: ${TEST_VAR}',
+			'test2' => 'this env should not be replaced: $${TEST_VAR}',
+			'test3' => 'this env should remain: ${NOT_A_VAR}',
+			'test4' => [
+				'test' => 'this is a nested env value: ${TEST_VAR}',
+			],
+		]));
 		$root = $configBuilder->build();
 
 		$_ENV['TEST_VAR'] = 'secret!';
@@ -192,6 +199,7 @@ class ConfigurationRootTest extends TestCase
 		static::assertEquals('this is an env value: secret!', $root->getSection('test')->getValue());
 		static::assertEquals('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
 		static::assertEquals('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
+		static::assertEquals(['test' => 'this is a nested env value: secret!'], $root->getSection('test4')->getValue());
 
 		$_ENV['NOT_A_VAR'] = 'now has a value!';
 		static::assertEquals('this env should remain: now has a value!', $root->getSection('test3')->getValue());
