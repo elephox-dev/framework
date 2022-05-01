@@ -5,7 +5,7 @@
          cacheResultFile="tmp/tests/cache"
          executionOrder="random"
          forceCoversAnnotation="true"
-         defaultTestSuite="without-files"
+         defaultTestSuite="full"
          beStrictAboutCoversAnnotation="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
@@ -14,12 +14,12 @@
          failOnWarning="true"
          verbose="true">
     <testsuites>
+        <testsuite name="full">
+            <directory>modules/*/test</directory>
+        </testsuite>
         <testsuite name="without-files">
             <directory>modules/*/test</directory>
             <exclude>modules/Files/test</exclude>
-        </testsuite>
-        <testsuite name="full">
-            <directory>modules/*/test</directory>
         </testsuite>
     </testsuites>
 
@@ -31,7 +31,6 @@
         <exclude>
             <file>**/*Exception.php</file>
             <directory>modules/Autoloading/src/*</directory>
-            <directory>modules/Platform/src/*</directory>
             <directory>modules/Console/src/*</directory>
             <directory>modules/Web/src/*</directory>
         </exclude>
