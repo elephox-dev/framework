@@ -37,7 +37,7 @@ trait SubstitutesEnvironmentVariables
 
 			// Replaced nested substitutions
 			return $substitute !== null ? $this->substituteEnvironmentVariables($substitute) : $match[0];
-		}, $value);
+		}, (string) $value);
 
 		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})
 		/** @var string */
@@ -46,6 +46,10 @@ trait SubstitutesEnvironmentVariables
 
 	protected function substituteEnvironmentVariablesRecursive(iterable $values): iterable
 	{
+		/**
+		 * @var mixed $key
+		 * @var mixed $value
+		 */
 		foreach ($values as $key => $value) {
 			if (is_iterable($value)) {
 				yield $key => [...$this->substituteEnvironmentVariablesRecursive($value)];
