@@ -45,15 +45,6 @@ class TempDirCache extends AbstractCache
 		return $this->configuration->cacheId;
 	}
 
-	public function getItems(array $keys = []): iterable
-	{
-		return array_filter(
-			$this->items,
-			static fn (string $key): bool => in_array($key, $keys, true),
-			ARRAY_FILTER_USE_KEY,
-		);
-	}
-
 	public function getItem(string $key): CacheItemInterface
 	{
 		if ($this->hasItem($key)) {

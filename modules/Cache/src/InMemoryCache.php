@@ -114,29 +114,4 @@ class InMemoryCache extends AbstractCache
 
 		return true;
 	}
-
-	/**
-	 * @return ArrayMap<string, CacheItemInterface>
-	 *
-	 * @throws InvalidArgumentException
-	 *
-	 * @param array $keys
-	 */
-	public function getItems(array $keys = []): ArrayMap
-	{
-		/**
-		 * @var ArrayMap<string, CacheItemInterface>
-		 */
-		$map = new ArrayMap();
-
-		foreach ($keys as $key) {
-			if (!is_string($key)) {
-				throw new InvalidKeyTypeException($key);
-			}
-
-			$map->put($key, $this->getItem($key));
-		}
-
-		return $map;
-	}
 }

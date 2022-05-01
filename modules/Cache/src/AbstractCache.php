@@ -39,6 +39,21 @@ abstract class AbstractCache implements Cache
 	}
 
 	/**
+	 * @throws InvalidKeyTypeException
+	 * @throws InvalidArgumentException
+	 */
+	public function getItems(array $keys = []): iterable
+	{
+		foreach ($keys as $key) {
+			if (!is_string($key)) {
+				throw new InvalidKeyTypeException($key);
+			}
+
+			yield $key => $this->getItem($key);
+		}
+	}
+
+	/**
 	 * @throws InvalidArgumentException
 	 *
 	 * @param mixed $offset
