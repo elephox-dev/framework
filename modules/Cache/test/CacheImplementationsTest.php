@@ -6,7 +6,6 @@ namespace Elephox\Cache;
 use Elephox\Cache\Contract\Cache;
 use Elephox\Cache\Contract\CacheConfiguration;
 use Elephox\Files\Directory;
-use Elephox\Files\DirectoryNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 
@@ -32,33 +31,24 @@ use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
  */
 class CacheImplementationsTest extends TestCase
 {
-	private static array $implementations = [];
-
-	public static function setUpBeforeClass(): void
-	{
-		self::deleteCacheDir();
-
-		self::$implementations[] = new InMemoryCache(new InMemoryCacheConfiguration());
-		self::$implementations[] = new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: self::getCacheDir()));
-	}
-
 	private static function getCacheDir(): Directory
 	{
 		return new Directory(APP_ROOT . '/tmp/cache');
 	}
 
-	private static function deleteCacheDir(): void
-	{
-		try {
-			self::getCacheDir()->delete();
-		} catch (DirectoryNotFoundException) {
-			// ignore
-		}
-	}
-
 	public function cacheImplementationProvider(): iterable
 	{
-		yield from self::$implementations;
+		$argGroups = [
+			['cache' => new InMemoryCache(new InMemoryCacheConfiguration())],
+			['cache' => new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: self::getCacheDir()))],
+		];
+
+		foreach ($argGroups as $args) {
+			// make sure cache is cleared before each test
+			$args['cache']->clear();
+
+			yield $args;
+		}
 	}
 
 	/**
