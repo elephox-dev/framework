@@ -36,6 +36,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('Foo', Casing::toTitle('foo'));
 		static::assertEquals('Foo', Casing::toTitle('Foo'));
+		static::assertEquals('Foobar', Casing::toTitle('FooBar'));
 		static::assertEquals('Foo Bar', Casing::toTitle('foo bar'));
 		static::assertEquals('Foo Bar', Casing::toTitle('Foo Bar'));
 		static::assertEquals('Foo Bar', Casing::toTitle('FOO BAR'));
@@ -57,6 +58,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('foo', Casing::toCamel('foo'));
 		static::assertEquals('foo', Casing::toCamel('Foo'));
+		static::assertEquals('foobar', Casing::toCamel('FooBar'));
 		static::assertEquals('fooBar', Casing::toCamel('foo bar'));
 		static::assertEquals('fooBar', Casing::toCamel('Foo Bar'));
 		static::assertEquals('fooBar', Casing::toCamel('FOO BAR'));
@@ -72,6 +74,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('foo', Casing::toSnake('foo'));
 		static::assertEquals('foo', Casing::toSnake('Foo'));
+		static::assertEquals('foobar', Casing::toSnake('FooBar'));
 		static::assertEquals('foo_bar', Casing::toSnake('foo bar'));
 		static::assertEquals('foo_bar', Casing::toSnake('Foo Bar'));
 		static::assertEquals('foo_bar', Casing::toSnake('FOO BAR'));
@@ -87,6 +90,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('foo', Casing::toKebab('foo'));
 		static::assertEquals('foo', Casing::toKebab('Foo'));
+		static::assertEquals('foobar', Casing::toKebab('FooBar'));
 		static::assertEquals('foo-bar', Casing::toKebab('foo bar'));
 		static::assertEquals('foo-bar', Casing::toKebab('Foo Bar'));
 		static::assertEquals('foo-bar', Casing::toKebab('FOO BAR'));
@@ -102,6 +106,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('Foo', Casing::toHttpHeader('foo'));
 		static::assertEquals('Foo', Casing::toHttpHeader('Foo'));
+		static::assertEquals('Foobar', Casing::toHttpHeader('FooBar'));
 		static::assertEquals('Foo-Bar', Casing::toHttpHeader('foo bar'));
 		static::assertEquals('Foo-Bar', Casing::toHttpHeader('Foo Bar'));
 		static::assertEquals('Foo-Bar', Casing::toHttpHeader('FOO BAR'));
@@ -117,6 +122,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('FOO', Casing::toCobol('foo'));
 		static::assertEquals('FOO', Casing::toCobol('Foo'));
+		static::assertEquals('FOOBAR', Casing::toCobol('FooBar'));
 		static::assertEquals('FOO-BAR', Casing::toCobol('foo bar'));
 		static::assertEquals('FOO-BAR', Casing::toCobol('Foo Bar'));
 		static::assertEquals('FOO-BAR', Casing::toCobol('FOO BAR'));
@@ -132,6 +138,7 @@ class CasingTest extends TestCase
 	{
 		static::assertEquals('Foo', Casing::toPascal('foo'));
 		static::assertEquals('Foo', Casing::toPascal('Foo'));
+		static::assertEquals('Foobar', Casing::toPascal('FooBar'));
 		static::assertEquals('FooBar', Casing::toPascal('foo bar'));
 		static::assertEquals('FooBar', Casing::toPascal('Foo Bar'));
 		static::assertEquals('FooBar', Casing::toPascal('FOO BAR'));

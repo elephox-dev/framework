@@ -30,7 +30,7 @@ class Casing
 	}
 
 	/**
-	 * Example input: "Hello beautiful World"<br>
+	 * Example input: "Hello beautiful WoRld"<br>
 	 * Example output: "Hello Beautiful World"
 	 *
 	 * @param string $string
@@ -62,7 +62,7 @@ class Casing
 	 */
 	public static function toCamel(string $string): string
 	{
-		return lcfirst(self::replaceDelimiters(self::toTitle($string), ''));
+		return lcfirst(self::toPascal($string));
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Casing
 	}
 
 	/**
-	 * Example input: "Hello beautiful World"<br>
+	 * Example input: "Hello beautiful WoRld"<br>
 	 * Example output: "HelloBeautifulWorld"
 	 *
 	 * @param string $string
