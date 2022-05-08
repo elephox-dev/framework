@@ -53,7 +53,7 @@ jobs:
     needs: [ composer-setup ]
     strategy:
       matrix:
-        php-version: [ '8.1', '8.2' ]
+        php-version: [ '8.1' ] # skip 8.2 for now
         os: [ 'ubuntu-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
