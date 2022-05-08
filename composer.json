@@ -1,6 +1,6 @@
 {
     "name": "elephox/framework",
-    "description": "Yet another PHP framework.",
+    "description": "A type-safe PHP framework.",
     "license": "MIT",
     "type": "library",
     "authors": [
