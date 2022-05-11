@@ -773,6 +773,14 @@ trait IsEnumerable
 	}
 
 	/**
+	 * @return ArrayList<TSource>
+	 */
+	public function toArrayList(): ArrayList
+	{
+		return new ArrayList($this->toList());
+	}
+
+	/**
 	 * @template USource
 	 * @template UKey
 	 *

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use Elephox\Collection\ArrayList;
+
 /**
  * @psalm-type NonNegativeInteger = 0|positive-int
  *
@@ -29,4 +31,9 @@ interface GenericCollection
 	 * @return list<TSource>
 	 */
 	public function toList(): array;
+
+	/**
+	 * @return ArrayList<TSource>
+	 */
+	public function toArrayList(): ArrayList;
 }

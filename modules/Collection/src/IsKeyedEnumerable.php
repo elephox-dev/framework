@@ -845,6 +845,14 @@ trait IsKeyedEnumerable
 		return $list;
 	}
 
+	/**
+	 * @return ArrayList<TSource>
+	 */
+	public function toArrayList(): ArrayList
+	{
+		return new ArrayList($this->toList());
+	}
+
 	public function toArray(?callable $keySelector = null): array
 	{
 		$keySelector ??= static fn (mixed $key, mixed $value): mixed => $key;
