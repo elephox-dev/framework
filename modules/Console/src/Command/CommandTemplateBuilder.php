@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-use Closure;
 use Elephox\Collection\ArrayList;
 use InvalidArgumentException;
 

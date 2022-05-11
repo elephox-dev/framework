@@ -47,7 +47,7 @@ class ArgumentList extends ArrayMap
 
 	public function tryGet(string $name): ?Argument
 	{
-		return $this->firstOrDefault(null, static fn(Argument $a) => $a->name === $name);
+		return $this->firstOrDefault(null, static fn (Argument $a) => $a->name === $name);
 	}
 
 	public function get(mixed $key): Argument
@@ -71,6 +71,6 @@ class ArgumentList extends ArrayMap
 
 	public function __set(string $name, mixed $value): void
 	{
-		throw new LogicException("Cannot set arguments.");
+		throw new LogicException('Cannot set arguments.');
 	}
 }

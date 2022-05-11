@@ -19,10 +19,10 @@ class OptionList extends ArrayMap
 			$matchedPair = $argumentsMap->firstPairOrDefault(null, static fn (bool|string $value, string|int $key) => $key === $optionTemplate->name || $key === $optionTemplate->short);
 			if ($matchedPair === null) {
 				if (!$optionTemplate->hasValue) {
-					continue;
+					$option = Option::fromTemplate($optionTemplate, false);
+				} else {
+					$option = Option::fromTemplate($optionTemplate, $optionTemplate->default);
 				}
-
-				$option = Option::fromTemplate($optionTemplate, $optionTemplate->default);
 			} else {
 				$option = Option::fromTemplate($optionTemplate, $matchedPair->getValue());
 			}
@@ -38,7 +38,7 @@ class OptionList extends ArrayMap
 
 	public function tryGet(string $name): ?Option
 	{
-		return $this->firstOrDefault(null, static fn(Option $o) => $o->name === $name || $o->short === $name);
+		return $this->firstOrDefault(null, static fn (Option $o) => $o->name === $name || $o->short === $name);
 	}
 
 	public function get(mixed $key): Option
@@ -58,6 +58,6 @@ class OptionList extends ArrayMap
 
 	public function __set(string $name, mixed $value): void
 	{
-		throw new LogicException("Cannot set options.");
+		throw new LogicException('Cannot set options.');
 	}
 }

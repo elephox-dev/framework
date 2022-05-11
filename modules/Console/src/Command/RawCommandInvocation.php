@@ -16,8 +16,8 @@ class RawCommandInvocation
 	 */
 	public static function fromCommandLine(array $commandLineArgs): RawCommandInvocation
 	{
-		$argList = ArrayList::from($commandLineArgs)->select(fn(string $a) => str_contains($a, ' ') ? "\"$a\"" : $a)->toArrayList();
-		$raw = $argList->aggregate(static fn(string $line, string $arg): string => $line . ' ' . $arg, "");
+		$argList = ArrayList::from($commandLineArgs)->select(static fn (string $a) => str_contains($a, ' ') ? "\"$a\"" : $a)->toArrayList();
+		$raw = $argList->aggregate(static fn (string $line, string $arg): string => $line . ' ' . $arg, '');
 
 		if ($argList->isEmpty()) {
 			throw new EmptyCommandLineException();

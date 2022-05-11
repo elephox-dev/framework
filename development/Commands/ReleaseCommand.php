@@ -31,14 +31,14 @@ class ReleaseCommand implements CommandHandler
 
 	public function handle(CommandInvocation $command): int|null
 	{
-		$type = $command->getArgument('type')->value;
+		$type = $command->arguments->get('type')->value;
 		if (!in_array($type, self::RELEASE_TYPES, true)) {
 			$this->logger->error(sprintf('Invalid release type: <cyan>%s</cyan>', is_string($type) ? $type : get_debug_type($type)));
 
 			return 1;
 		}
 
-		$version = $command->getArgument('version')->value;
+		$version = $command->arguments->get('version')->value;
 		if (!is_string($version)) {
 			$this->logger->error('The version must be a string.');
 
@@ -89,7 +89,7 @@ class ReleaseCommand implements CommandHandler
 			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
 		};
 
-		$dryRun = (bool) $command->getArgument('dry-run')->value;
+		$dryRun = (bool) $command->options->get('dry-run')->value;
 		if ($dryRun) {
 			$this->logger->warning('Performing a dry run. No changes will be made.');
 		}

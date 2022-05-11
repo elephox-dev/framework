@@ -232,7 +232,7 @@ class CommandInvocationParametersMap extends ArrayMap
 					if ($char === ' ') {
 						$state = 'n';
 					} else {
-						throw new IncompleteCommandLineException("Additional characters after quoted argument");
+						throw new IncompleteCommandLineException('Additional characters after quoted argument');
 					}
 
 					break;
@@ -270,14 +270,13 @@ class CommandInvocationParametersMap extends ArrayMap
 				$map->put($option, null);
 
 				break;
-
 			case 's':
-				throw new IncompleteCommandLineException("Expected short option identifier");
+				throw new IncompleteCommandLineException('Expected short option identifier');
 			case 'o':
-				throw new IncompleteCommandLineException("Expected long option identifier");
+				throw new IncompleteCommandLineException('Expected long option identifier');
 			case 'qv':
 			case 'qa':
-				throw new IncompleteCommandLineException("Expected second quote to end quoted argument");
+				throw new IncompleteCommandLineException('Expected second quote to end quoted argument');
 		}
 
 		return $map;

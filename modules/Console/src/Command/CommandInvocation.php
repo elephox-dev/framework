@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-use InvalidArgumentException;
-use LogicException;
-
 /**
  * @property string $name
  * @property string $invokedBinary

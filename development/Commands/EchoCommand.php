@@ -14,7 +14,7 @@ class EchoCommand implements CommandHandler
 		$builder->setName('echo');
 		$builder->setDescription('Echo a message');
 		$builder->addArgument('message', description: 'The message to echo');
-		$builder->addOption('repeat', 'r', true, '1', 'Repeat the message', 'ctype_digit');
+		$builder->addOption('repeat', 'r', true, '1', 'Repeat the message', static fn (mixed $v) => ctype_digit((string) $v));
 	}
 
 	public function handle(CommandInvocation $command): int|null
