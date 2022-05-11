@@ -59,7 +59,7 @@ class ConsoleApplication
 			$invocation = RawCommandInvocation::fromCommandLine($argv);
 
 			try {
-				if ($invocation->arguments->has('help') || $invocation->arguments->has('?')) {
+				if ($invocation->parameters->has('help') || $invocation->parameters->has('?')) {
 					$code = $this->handle(RawCommandInvocation::fromCommandLine([$invocation->invokedBinary, 'help', $invocation->name]));
 				} else {
 					$code = $this->handle($invocation);
@@ -71,9 +71,11 @@ class ConsoleApplication
 				$this->logger()->error($e->getMessage());
 				$this->logger()->error("Use '$invocation->invokedBinary $invocation->name --help' to get help for this command.");
 			}
-		} catch (EmptyCommandLineException $e) {
-		} catch (NoCommandInCommandLineException $e) {
+		} catch (EmptyCommandLineException|NoCommandInCommandLineException $e) {
+			$this->logger()->error($e->getMessage());
 		} catch (IncompleteCommandLineException $e) {
+			$this->logger()->error($e->getMessage());
+			$this->logger()->error("Please check the syntax of your invoked command line. For help, refer to https://elephox.dev/console/syntax");
 		} finally {
 			$code ??= 1;
 		}

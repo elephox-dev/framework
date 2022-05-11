@@ -3,14 +3,27 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-use JetBrains\PhpStorm\Pure;
 use LogicException;
 
+/**
+ * @property-read string $name
+ * @property-read null|string $short
+ * @property-read bool $hasValue
+ * @property-read null|string|int|float|bool $default
+ * @property-read null|string $description
+ * @property-read null|Closure $validator
+ */
 class Option
 {
-	#[Pure]
 	public static function fromTemplate(OptionTemplate $template, null|string|int|float|bool $value): self
 	{
+		if ($template->validator !== null) {
+			$isValid = (bool)($template->validator)($value);
+			if (!$isValid) {
+				throw new OptionValidationException($template->name);
+			}
+		}
+
 		return new self(
 			$template,
 			$value,

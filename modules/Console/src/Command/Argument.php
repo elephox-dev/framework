@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-use JetBrains\PhpStorm\Pure;
 use LogicException;
 
 /**
@@ -15,9 +14,15 @@ use LogicException;
  */
 class Argument
 {
-	#[Pure]
 	public static function fromTemplate(ArgumentTemplate $template, null|string|int|float|bool $value): self
 	{
+		if ($template->validator !== null) {
+			$isValid = (bool)($template->validator)($value);
+			if (!$isValid) {
+				throw new ArgumentValidationException($template->name);
+			}
+		}
+
 		return new self(
 			$template,
 			$value,

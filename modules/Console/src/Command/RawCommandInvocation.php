@@ -16,8 +16,8 @@ class RawCommandInvocation
 	 */
 	public static function fromCommandLine(array $commandLineArgs): RawCommandInvocation
 	{
-		$raw = implode(' ', $commandLineArgs);
-		$argList = ArrayList::from($commandLineArgs);
+		$argList = ArrayList::from($commandLineArgs)->select(fn(string $a) => str_contains($a, ' ') ? "\"$a\"" : $a)->toArrayList();
+		$raw = $argList->aggregate(static fn(string $line, string $arg): string => $line . ' ' . $arg, "");
 
 		if ($argList->isEmpty()) {
 			throw new EmptyCommandLineException();
@@ -33,7 +33,7 @@ class RawCommandInvocation
 
 		return new self(
 			$commandName,
-			CommandInvocationArgumentsMap::fromCommandLine($argList->implode(' ')),
+			CommandInvocationParametersMap::fromCommandLine($argList->implode(' ')),
 			$binary,
 			$raw,
 		);
@@ -41,7 +41,7 @@ class RawCommandInvocation
 
 	public function __construct(
 		public readonly string $name,
-		public readonly CommandInvocationArgumentsMap $arguments,
+		public readonly CommandInvocationParametersMap $parameters,
 		public readonly string $invokedBinary,
 		public readonly string $commandLine,
 	) {
@@ -51,7 +51,8 @@ class RawCommandInvocation
 	{
 		return new CommandInvocation(
 			$this,
-			ArgumentList::create($template, $this->arguments),
+			ArgumentList::create($template, $this->parameters),
+			OptionList::create($template, $this->parameters),
 		);
 	}
 }

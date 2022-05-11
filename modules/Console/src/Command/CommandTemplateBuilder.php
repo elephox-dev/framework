@@ -47,7 +47,7 @@ class CommandTemplateBuilder
 		return $this->description;
 	}
 
-	public function addArgument(string $name, bool $hasDefault = false, null|string|int|float|bool $default = null, ?string $description = null, ?Closure $validator = null): ArgumentTemplateBuilder
+	public function addArgument(string $name, bool $hasDefault = false, null|string|int|float|bool $default = null, ?string $description = null, ?callable $validator = null): ArgumentTemplateBuilder
 	{
 		/** @var ArrayList<ArgumentTemplateBuilder> */
 		$this->arguments ??= new ArrayList();
@@ -56,7 +56,7 @@ class CommandTemplateBuilder
 			throw new InvalidArgumentException("Argument with name '$name' already exists.");
 		}
 
-		$builder = new ArgumentTemplateBuilder($name, $hasDefault, $default, $description, $validator);
+		$builder = new ArgumentTemplateBuilder($name, $hasDefault, $default, $description, $validator !== null ? $validator(...) : null);
 		$this->arguments->add($builder);
 
 		return $builder;
@@ -67,7 +67,7 @@ class CommandTemplateBuilder
 		return $this->arguments?->any(static fn (ArgumentTemplateBuilder $argument) => $argument->getName() === $name) ?? false;
 	}
 
-	public function addOption(string $name, ?string $short = null, bool $hasValue = false, null|string|int|float|bool $default = null, ?string $description = null, ?Closure $validator = null): OptionTemplateBuilder
+	public function addOption(string $name, ?string $short = null, bool $hasValue = false, null|string|int|float|bool $default = null, ?string $description = null, ?callable $validator = null): OptionTemplateBuilder
 	{
 		/** @var ArrayList<OptionTemplateBuilder> */
 		$this->options ??= new ArrayList();
@@ -80,7 +80,7 @@ class CommandTemplateBuilder
 			throw new InvalidArgumentException(sprintf('Option with short "%s" already exists.', $name));
 		}
 
-		$builder = new OptionTemplateBuilder($name, $short, $hasValue, $default, $description, $validator);
+		$builder = new OptionTemplateBuilder($name, $short, $hasValue, $default, $description, $validator !== null ? $validator(...) : null);
 		$this->options->add($builder);
 
 		return $builder;
