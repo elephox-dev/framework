@@ -22,8 +22,8 @@ class RoutesCommand implements CommandHandler
 	public function configure(CommandTemplateBuilder $builder): void
 	{
 		$builder
-			->name('routes')
-			->description('List all routes')
+			->setName('routes')
+			->setDescription('List all routes')
 		;
 	}
 

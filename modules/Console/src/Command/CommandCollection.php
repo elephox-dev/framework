@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Autoloading\Composer\NamespaceLoader;
+use Elephox\Collection\Contract\GenericKeyValuePair;
 use Elephox\Collection\ObjectMap;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\DI\Contract\Resolver;
+use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 
@@ -41,12 +43,15 @@ class CommandCollection implements IteratorAggregate
 
 	protected function preProcessCommandTemplate(CommandTemplateBuilder $builder): void
 	{
-		// Do nothing by default
+		$builder->addOption('help', '?', description: 'Show this help message and exit');
 	}
 
 	protected function postProcessCommandTemplate(CommandTemplateBuilder $builder): void
 	{
-		// Do nothing by default
+		$commandName = $builder->getName();
+		if ($commandName === null) {
+			throw new InvalidArgumentException('Command name is not set');
+		}
 	}
 
 	/**
@@ -73,20 +78,29 @@ class CommandCollection implements IteratorAggregate
 
 	public function findCompiled(RawCommandInvocation $invocation): CompiledCommandHandler
 	{
-		return $this->templateMap
-			->whereKey(static fn (CommandTemplate $template): bool => $template->name === $invocation->name)
-			->select(static fn (CommandHandler $handler, CommandTemplate $template): CompiledCommandHandler => new CompiledCommandHandler($invocation, $template, $handler))
-			->firstOrDefault(null)
-			?? throw new CommandNotFoundException($invocation->name);
+		$pair = $this->findPairByName($invocation->name);
+
+		return new CompiledCommandHandler($invocation, $pair->getKey(), $pair->getValue());
 	}
 
 	public function getTemplateByName(string $name): CommandTemplate
 	{
+		return $this->findPairByName($name)->getKey();
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return GenericKeyValuePair<CommandTemplate, CommandHandler>
+	 *
+	 * @throws CommandNotFoundException
+	 */
+	protected function findPairByName(string $name): GenericKeyValuePair
+	{
 		return $this->templateMap
-			->flip()
-			->where(static fn (CommandTemplate $template): bool => $template->name === $name)
-			->firstOrDefault(null)
-		?? throw new CommandNotFoundException($name);
+			->whereKey(static fn (CommandTemplate $template): bool => $template->name === $name)
+			->firstPairOrDefault(null)
+			?? throw new CommandNotFoundException($name);
 	}
 
 	public function getIterator(): Iterator

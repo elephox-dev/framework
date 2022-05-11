@@ -5,12 +5,12 @@ namespace Elephox\Console\Command;
 
 use Closure;
 
-class ArgumentTemplate extends ParameterTemplate
+class OptionTemplate extends ParameterTemplate
 {
 	public function __construct(
 		string $name,
-		public readonly bool $hasDefault = false,
-		null|string|int|float|bool $default = null,
+		public readonly ?string $short,
+		null|string|int|float|bool $default,
 		?string $description = null,
 		?Closure $validator = null,
 	) {

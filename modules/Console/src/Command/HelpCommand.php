@@ -19,9 +19,9 @@ class HelpCommand implements Contract\CommandHandler
 	public function configure(CommandTemplateBuilder $builder): void
 	{
 		$builder
-			->name('help')
-			->description('Display help for a command')
-			->argument('command', 'The command to display help for', required: false)
+			->setName('help')
+			->setDescription('Display help for a command')
+			->addArgument('command', description: 'The command to display help for')->setDefault(null)
 		;
 	}
 

@@ -11,8 +11,8 @@ class EchoCommand implements CommandHandler
 {
 	public function configure(CommandTemplateBuilder $builder): void
 	{
-		$builder->name('echo');
-		$builder->description('Echo a message');
+		$builder->setName('echo');
+		$builder->setDescription('Echo a message');
 		$builder->required('message', 'The message to echo');
 	}
 

@@ -24,9 +24,9 @@ class ReleaseCommand implements CommandHandler
 	public function configure(CommandTemplateBuilder $builder): void
 	{
 		$builder
-			->name('release')
-			->description('Release a new version of the framework and its modules.')
-			->argument('type', 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')')
+			->setName('release')
+			->setDescription('Release a new version of the framework and its modules.')
+			->addArgument('type', 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')')
 			->argument('version', 'The version to release')
 			->argument('dry-run', 'Whether to perform a dry run (no changes will be pushed)', false, false)
 		;
