@@ -10,5 +10,5 @@ interface CommandHandler
 {
 	public function configure(CommandTemplateBuilder $builder): void;
 
-	public function handle(CommandInvocation $command): int|null;
+	public function handle(CommandInvocation $command): ?int;
 }
