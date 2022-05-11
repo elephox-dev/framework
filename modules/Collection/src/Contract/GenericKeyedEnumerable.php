@@ -130,6 +130,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function firstKey(?callable $predicate = null): mixed;
 
 	/**
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return GenericKeyValuePair<TIteratorKey, TSource>
+	 */
+	public function firstPair(?callable $predicate = null): GenericKeyValuePair;
+
+	/**
 	 * @template TDefault
 	 *
 	 * @param TDefault $defaultValue
@@ -148,6 +155,14 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 * @return TDefault|TIteratorKey
 	 */
 	public function firstKeyOrDefault(mixed $defaultKey, ?callable $predicate = null): mixed;
+
+	/**
+	 * @param null|GenericKeyValuePair<TIteratorKey, TSource> $defaultPair
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return null|GenericKeyValuePair<TIteratorKey, TSource>
+	 */
+	public function firstPairOrDefault(?GenericKeyValuePair $defaultPair, ?callable $predicate = null): ?GenericKeyValuePair;
 
 	/**
 	 * @return GenericKeyedEnumerable<TSource, TIteratorKey>

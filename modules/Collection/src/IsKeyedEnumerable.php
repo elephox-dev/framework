@@ -11,6 +11,7 @@ use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Contract\GenericGroupedKeyedEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericOrderedEnumerable;
+use Elephox\Collection\Contract\GenericKeyValuePair;
 use Elephox\Collection\Iterator\FlipIterator;
 use Elephox\Collection\Iterator\GroupingIterator;
 use Elephox\Collection\Iterator\KeySelectIterator;
@@ -316,6 +317,17 @@ trait IsKeyedEnumerable
 		throw new EmptySequenceException();
 	}
 
+	public function firstPair(?callable $predicate = null): GenericKeyValuePair
+	{
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				return new KeyValuePair($elementKey, $element);
+			}
+		}
+
+		throw new EmptySequenceException();
+	}
+
 	/**
 	 * @template TDefault
 	 *
@@ -352,6 +364,23 @@ trait IsKeyedEnumerable
 		}
 
 		return $defaultKey;
+	}
+
+	/**
+	 * @param null|GenericKeyValuePair<TIteratorKey, TSource> $defaultPair
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
+	 * @return null|GenericKeyValuePair<TIteratorKey, TSource>
+	 */
+	public function firstPairOrDefault(?GenericKeyValuePair $defaultPair, ?callable $predicate = null): ?GenericKeyValuePair
+	{
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				return new KeyValuePair($elementKey, $element);
+			}
+		}
+
+		return $defaultPair;
 	}
 
 	/**
