@@ -71,10 +71,10 @@ class HelpCommand implements Contract\CommandHandler
 
 			$argumentData = [];
 			foreach ($commandTemplate->argumentTemplates as $argumentTemplate) {
-				$openBracket = $argumentTemplate->required ? '<' : '[';
-				$closeBracket = $argumentTemplate->required ? '>' : ']';
+				$openBracket = $argumentTemplate->hasDefault ? '[' : '<';
+				$closeBracket = $argumentTemplate->hasDefault ? ']' : '>';
 				$name = $openBracket . $argumentTemplate->name;
-				if (!$argumentTemplate->required) {
+				if ($argumentTemplate->hasDefault) {
 					$name .= '=' . match (get_debug_type($argumentTemplate->default)) {
 						'null' => 'null',
 						'bool' => $argumentTemplate->default ? 'true' : 'false',
@@ -83,7 +83,7 @@ class HelpCommand implements Contract\CommandHandler
 					};
 				}
 				$name .= $closeBracket;
-				$name = $argumentTemplate->required ? Console::blue($name) : Console::light_gray($name);
+				$name = $argumentTemplate->hasDefault ? Console::light_gray($name) : Console::blue($name);
 
 				$description = empty($argumentTemplate->description) ? Console::gray('No description') : $argumentTemplate->description;
 
@@ -91,6 +91,39 @@ class HelpCommand implements Contract\CommandHandler
 			}
 
 			foreach (Console::table($argumentData, noBorder: true) as $line) {
+				$this->logger->info($line);
+			}
+
+			$this->logger->info(Console::green('Options:'));
+
+			$optionData = [];
+			foreach ($commandTemplate->optionTemplates as $optionTemplate) {
+				$name = '[';
+
+				if ($optionTemplate->short !== null) {
+					$name .= '-' . $optionTemplate->short . '|';
+				}
+
+				$name .= '--' . $optionTemplate->name;
+
+				if ($optionTemplate->hasValue) {
+					$type = get_debug_type($optionTemplate->default);
+					$name .= '=' . match ($type) {
+						'null' => 'null',
+							'bool' => $optionTemplate->default ? 'true' : 'false',
+							'int', 'float', 'string', Stringable::class => (string) $optionTemplate->default,
+							default => $type,
+					};
+				}
+				$name .= ']';
+				$name = Console::light_gray($name);
+
+				$description = empty($optionTemplate->description) ? Console::gray('No description') : $optionTemplate->description;
+
+				$optionData[] = ["\t", $name, "\t", $description];
+			}
+
+			foreach (Console::table($optionData, noBorder: true) as $line) {
 				$this->logger->info($line);
 			}
 

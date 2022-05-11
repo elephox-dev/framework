@@ -11,6 +11,7 @@ class OptionTemplateBuilder extends ParameterTemplateBuilder
 	public function __construct(
 		?string $name = null,
 		private ?string $short = null,
+		private bool $hasValue = false,
 		null|string|int|float|bool $default = null,
 		?string $description = null,
 		?Closure $validator = null,
@@ -30,11 +31,24 @@ class OptionTemplateBuilder extends ParameterTemplateBuilder
 		return $this->short;
 	}
 
+	public function setHasValue(bool $hasValue): static
+	{
+		$this->hasValue = $hasValue;
+
+		return $this;
+	}
+
+	public function getHasValue(): bool
+	{
+		return $this->hasValue;
+	}
+
 	public function build(): OptionTemplate
 	{
 		return new OptionTemplate(
 			$this->getName() ?? throw new LogicException('Option name is required'),
 			$this->short,
+			$this->hasValue,
 			$this->getDefault(),
 			$this->getDescription(),
 			$this->getValidator(),

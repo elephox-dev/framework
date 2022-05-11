@@ -67,7 +67,7 @@ class CommandTemplateBuilder
 		return $this->arguments?->any(static fn (ArgumentTemplateBuilder $argument) => $argument->getName() === $name) ?? false;
 	}
 
-	public function addOption(string $name, ?string $short = null, null|string|int|float|bool $default = null, ?string $description = null, ?Closure $validator = null): OptionTemplateBuilder
+	public function addOption(string $name, ?string $short = null, bool $hasValue = false, null|string|int|float|bool $default = null, ?string $description = null, ?Closure $validator = null): OptionTemplateBuilder
 	{
 		/** @var ArrayList<OptionTemplateBuilder> */
 		$this->options ??= new ArrayList();
@@ -80,7 +80,7 @@ class CommandTemplateBuilder
 			throw new InvalidArgumentException(sprintf('Option with short "%s" already exists.', $name));
 		}
 
-		$builder = new OptionTemplateBuilder($name, $short, $default, $description, $validator);
+		$builder = new OptionTemplateBuilder($name, $short, $hasValue, $default, $description, $validator);
 		$this->options->add($builder);
 
 		return $builder;

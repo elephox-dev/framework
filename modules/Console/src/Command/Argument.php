@@ -8,9 +8,10 @@ use LogicException;
 
 /**
  * @property string $name
- * @property null|string $description
+ * @property bool $hasDefault
  * @property null|string|int|float|bool $default
- * @property bool $required
+ * @property null|string $description
+ * @property null|Closure $validator
  */
 class Argument
 {

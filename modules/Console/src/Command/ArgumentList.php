@@ -33,7 +33,7 @@ class ArgumentList extends ArrayList
 		$missingArguments = $template->argumentTemplates->where(static fn (ArgumentTemplate $t) => $arguments->where(static fn (Argument $a) => $a->name === $t->name)->isEmpty())->toList();
 		if (!empty($missingArguments)) {
 			foreach ($missingArguments as $missingArgument) {
-				if ($missingArgument->required) {
+				if (!$missingArgument->hasDefault) {
 					throw new RequiredArgumentMissingException($missingArgument->name);
 				}
 

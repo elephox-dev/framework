@@ -9,6 +9,10 @@ class RawCommandInvocation
 {
 	/**
 	 * @param array<int, string> $commandLineArgs
+	 *
+	 * @throws EmptyCommandLineException
+	 * @throws NoCommandInCommandLineException
+	 * @throws IncompleteCommandLineException
 	 */
 	public static function fromCommandLine(array $commandLineArgs): RawCommandInvocation
 	{
@@ -29,7 +33,7 @@ class RawCommandInvocation
 
 		return new self(
 			$commandName,
-			CommandInvocationArgumentsMap::fromArgs($argList),
+			CommandInvocationArgumentsMap::fromCommandLine($argList->implode(' ')),
 			$binary,
 			$raw,
 		);

@@ -6,7 +6,9 @@ namespace Elephox\Console;
 use Elephox\Configuration\Contract\Configuration;
 use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\Command\CommandNotFoundException;
+use Elephox\Console\Command\EmptyCommandLineException;
 use Elephox\Console\Command\HelpCommand;
+use Elephox\Console\Command\IncompleteCommandLineException;
 use Elephox\Console\Command\NoCommandInCommandLineException;
 use Elephox\Console\Command\RawCommandInvocation;
 use Elephox\Console\Command\RequiredArgumentMissingException;
@@ -47,7 +49,7 @@ class ConsoleApplication
 		return $this->exceptionHandler;
 	}
 
-	public function run(): void
+	public function run(): never
 	{
 		global $argv;
 
@@ -56,17 +58,24 @@ class ConsoleApplication
 		try {
 			$invocation = RawCommandInvocation::fromCommandLine($argv);
 
-			$code = $this->handle($invocation);
-		} catch (CommandNotFoundException|NoCommandInCommandLineException $e) {
-			$this->logger()->error($e->getMessage());
-
-			$this->handle(RawCommandInvocation::fromCommandLine([$argv[0], 'help']));
-			$code = 1;
-		} catch (RequiredArgumentMissingException $e) {
-			$this->logger()->error($e->getMessage());
-
-			$this->logger()->error("Use '" . implode(' ', [$argv[0], 'help', $argv[1]]) . "' to get help for this command.");
-			$code = 1;
+			try {
+				if ($invocation->arguments->has('help') || $invocation->arguments->has('?')) {
+					$code = $this->handle(RawCommandInvocation::fromCommandLine([$invocation->invokedBinary, 'help', $invocation->name]));
+				} else {
+					$code = $this->handle($invocation);
+				}
+			} catch (CommandNotFoundException $e) {
+				$this->logger()->error($e->getMessage());
+				$this->logger()->error("Try '$invocation->invokedBinary help' to get a list of available commands.");
+			} catch (RequiredArgumentMissingException $e) {
+				$this->logger()->error($e->getMessage());
+				$this->logger()->error("Use '$invocation->invokedBinary $invocation->name --help' to get help for this command.");
+			}
+		} catch (EmptyCommandLineException $e) {
+		} catch (NoCommandInCommandLineException $e) {
+		} catch (IncompleteCommandLineException $e) {
+		} finally {
+			$code ??= 1;
 		}
 
 		exit($code);

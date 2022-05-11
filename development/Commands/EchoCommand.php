@@ -13,7 +13,7 @@ class EchoCommand implements CommandHandler
 	{
 		$builder->setName('echo');
 		$builder->setDescription('Echo a message');
-		$builder->required('message', 'The message to echo');
+		$builder->addArgument('message', description: 'The message to echo');
 	}
 
 	public function handle(CommandInvocation $command): int|null

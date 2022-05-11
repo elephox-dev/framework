@@ -9,8 +9,9 @@ class OptionTemplate extends ParameterTemplate
 {
 	public function __construct(
 		string $name,
-		public readonly ?string $short,
-		null|string|int|float|bool $default,
+		public readonly ?string $short = null,
+		public readonly bool $hasValue = false,
+		null|string|int|float|bool $default = null,
 		?string $description = null,
 		?Closure $validator = null,
 	) {
