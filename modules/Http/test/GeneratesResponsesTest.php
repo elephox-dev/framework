@@ -77,8 +77,9 @@ class GeneratesResponsesTest extends TestCase
 	public function testFileResponse(): void
 	{
 		$response = $this->fileResponse(__FILE__)->get();
-		static::assertEquals(MimeType::TextXPhp, $response->getMimeType());
-		static::assertEquals(file_get_contents(__FILE__), $response->getBody()->getContents());
+		// TODO: Add test for both cases in which mime_content_type exists and not
+		static::assertEquals(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getMimeType());
+		static::assertStringEqualsFile(__FILE__, $response->getBody()->getContents());
 	}
 
 	public function testFileNotFoundResponse(): void
