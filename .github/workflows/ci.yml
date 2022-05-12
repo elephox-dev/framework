@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '8.1', '8.2' ]
-        os: [ 'ubuntu-latest' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -114,7 +114,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '8.1', '8.2' ]
-        os: [ 'ubuntu-latest' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -151,7 +151,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '8.1', '8.2' ]
-        os: [ 'ubuntu-latest' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
@@ -190,7 +190,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '8.1', '8.2' ]
-        os: [ 'ubuntu-latest' ]
+        os: [ 'ubuntu-latest', 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: ⤵️ Checkout Sources
