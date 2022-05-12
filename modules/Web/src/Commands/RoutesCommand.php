@@ -27,7 +27,7 @@ class RoutesCommand implements CommandHandler
 		;
 	}
 
-	public function handle(CommandInvocation $command): int|null
+	public function handle(CommandInvocation $command): ?int
 	{
 		$routes = Enumerable::from($this->router->getRouteHandlers());
 

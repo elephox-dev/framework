@@ -8,11 +8,19 @@ use LogicException;
 
 class OptionTemplateBuilder extends ParameterTemplateBuilder
 {
+	/**
+	 * @param string|null $name
+	 * @param string|null $short
+	 * @param bool $hasValue
+	 * @param string|int|float|bool|null $default
+	 * @param string|null $description
+	 * @param null|Closure(string|int|float|bool|null): (bool|string) $validator
+	 */
 	public function __construct(
 		?string $name = null,
 		private ?string $short = null,
 		private bool $hasValue = false,
-		null|string|int|float|bool $default = null,
+		null|string|int|float|bool $default = false,
 		?string $description = null,
 		?Closure $validator = null,
 	) {
@@ -31,16 +39,12 @@ class OptionTemplateBuilder extends ParameterTemplateBuilder
 		return $this->short;
 	}
 
-	public function setHasValue(bool $hasValue): static
+	public function setDefault(float|bool|int|string|null $default): static
 	{
-		$this->hasValue = $hasValue;
+		parent::setDefault($default);
+		$this->hasValue = !is_bool($default);
 
 		return $this;
-	}
-
-	public function getHasValue(): bool
-	{
-		return $this->hasValue;
 	}
 
 	public function build(): OptionTemplate

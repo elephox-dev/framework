@@ -14,13 +14,13 @@ class EchoCommand implements CommandHandler
 		$builder->setName('echo');
 		$builder->setDescription('Echo a message');
 		$builder->addArgument('message', description: 'The message to echo');
-		$builder->addOption('repeat', 'r', true, '1', 'Repeat the message', static fn (mixed $v) => ctype_digit((string) $v));
+		$builder->addOption('repeat', 'r', '1', 'Repeat the message', static fn (mixed $v) => ctype_digit((string) $v));
 	}
 
 	public function handle(CommandInvocation $command): int|null
 	{
-		for ($i = 0; $i < $command->options['repeat']->value; $i++) {
-			echo $command->arguments['message']->value . PHP_EOL;
+		for ($i = 0; $i < $command->options->get('repeat')->value; $i++) {
+			echo $command->arguments->get('message')->value . PHP_EOL;
 		}
 
 		return 0;

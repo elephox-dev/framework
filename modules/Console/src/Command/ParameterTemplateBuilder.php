@@ -7,6 +7,12 @@ use Closure;
 
 abstract class ParameterTemplateBuilder
 {
+	/**
+	 * @param string|null $name
+	 * @param string|int|float|bool|null $default
+	 * @param string|null $description
+	 * @param null|Closure(string|int|float|bool|null): (bool|string) $validator
+	 */
 	public function __construct(
 		private ?string $name,
 		private null|string|int|float|bool $default,
@@ -51,13 +57,21 @@ abstract class ParameterTemplateBuilder
 		return $this->description;
 	}
 
-	public function setValidator(Closure $validator): static
+	/**
+	 * @param callable(string|int|float|bool|null): (bool|string) $validator
+	 *
+	 * @return static
+	 */
+	public function setValidator(callable $validator): static
 	{
-		$this->validator = $validator;
+		$this->validator = $validator(...);
 
 		return $this;
 	}
 
+	/**
+	 * @return null|Closure(string|int|float|bool|null): (string|bool) $validator
+	 */
 	public function getValidator(): ?Closure
 	{
 		return $this->validator;

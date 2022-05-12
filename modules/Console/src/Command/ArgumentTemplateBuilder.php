@@ -8,6 +8,13 @@ use LogicException;
 
 class ArgumentTemplateBuilder extends ParameterTemplateBuilder
 {
+	/**
+	 * @param string|null $name
+	 * @param bool $hasDefault
+	 * @param string|int|float|bool|null $default
+	 * @param string|null $description
+	 * @param null|Closure(string|int|float|bool|null): (bool|string) $validator
+	 */
 	public function __construct(
 		?string $name = null,
 		private bool $hasDefault = false,

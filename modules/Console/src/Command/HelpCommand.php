@@ -20,14 +20,14 @@ class HelpCommand implements Contract\CommandHandler
 	{
 		$builder
 			->setName('help')
-			->setDescription('Display help for a command')
-			->addArgument('command', description: 'The command to display help for')->setDefault(null)
+			->setDescription('Display a list of available commands or help for a specific command')
+			->addArgument('command', true, description: 'The command to display help for')
 		;
 	}
 
-	public function handle(CommandInvocation $command): int|null
+	public function handle(CommandInvocation $command): ?int
 	{
-		$requestedCommand = $command->getOptionalArgument('command')?->value;
+		$requestedCommand = $command->arguments->get('command')->value;
 		if (!is_string($requestedCommand)) {
 			$this->logger->info(Console::underscore('Available commands:'));
 

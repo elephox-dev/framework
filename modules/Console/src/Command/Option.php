@@ -18,9 +18,13 @@ class Option
 	public static function fromTemplate(OptionTemplate $template, null|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
-			$isValid = (bool) ($template->validator)($value);
-			if (!$isValid) {
-				throw new OptionValidationException($template->name);
+			$validationResult = ($template->validator)($value);
+			if ((is_bool($validationResult) && !$validationResult)) {
+				throw new OptionValidationException("Validation failed for option '$template->name'");
+			}
+
+			if (is_string($validationResult)) {
+				throw new OptionValidationException($validationResult);
 			}
 		}
 

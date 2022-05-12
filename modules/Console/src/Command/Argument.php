@@ -17,9 +17,13 @@ class Argument
 	public static function fromTemplate(ArgumentTemplate $template, null|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
-			$isValid = (bool) ($template->validator)($value);
-			if (!$isValid) {
-				throw new ArgumentValidationException($template->name);
+			$validationResult = ($template->validator)($value);
+			if ((is_bool($validationResult) && !$validationResult)) {
+				throw new ArgumentValidationException("Validation failed for argument '$template->name'");
+			}
+
+			if (is_string($validationResult)) {
+				throw new ArgumentValidationException($validationResult);
 			}
 		}
 

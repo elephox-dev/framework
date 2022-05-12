@@ -143,6 +143,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/ondram/ci-detector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/felixfbecker/language-server-protocol" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/felixfbecker/advanced-json-rpc" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -8,7 +8,7 @@ use Elephox\Configuration\MemoryEnvironment;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
-use Elephox\Files\Contract\File;
+use Elephox\Files\Contract\File as FileContract;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
@@ -26,39 +26,35 @@ class ServeCommand implements CommandHandler
 
 	public function configure(CommandTemplateBuilder $builder): void
 	{
-		$publicDir = $this->environment->getRoot()->getDirectory('public');
-
 		$builder
 			->setName('serve')
 			->setDescription('Starts the PHP built-in webserver for your application')
-			->optional('host', $this->environment['SERVER_HOST'] ?? 'localhost', 'Host to bind to')
-			->optional('port', $this->environment['SERVER_PORT'] ?? '8000', 'Port to bind to (>=1024, <=65535)')
-			->optional('root', $publicDir->getPath(), 'Root directory to serve from')
-			->optional('env', 'development', 'The environment to use (e.g. development, staging or production)')
-			->optional('router', dirname(__DIR__, 2) . '/data/router.php', 'The router script to use')
-			->optional('workers', 'auto', 'How many threads to use for the PHP server (PHP_CLI_SERVER_WORKERS)')
-			->optional('no-reload', false, 'Whether to restart the server upon env file changes')
-			->optional('verbose', false, 'Whether to print debug output')
 		;
+		$builder->addArgument('host')
+			->setDefault($this->environment['SERVER_HOST'] ?? 'localhost')
+			->setDescription('Host to bind to')
+		;
+		$builder->addArgument('port')
+			->setDefault($this->environment['SERVER_PORT'] ?? '8000')
+			->setDescription('Port to bind to (>=1, <=65535)')
+			->setValidator(static fn (mixed $val) => is_string($val) && ctype_digit($val) && $val >= 1 && $val <= 65535 ? true : 'Port must be a number between 1 and 65535')
+		;
+		$builder->addOption('root', default: null, description: 'Root directory to serve from');
+		$builder->addOption('env', default: 'development', description: 'The environment to use (e.g. development, staging or production)');
+		$builder->addOption('router', default: null, description: 'The router script to use');
+		$builder->addOption('workers', default: 'auto', description: 'How many threads to use for the PHP server (PHP_CLI_SERVER_WORKERS)');
+		$builder->addOption('no-reload', description: 'Whether to restart the server upon env file changes');
+		$builder->addOption('verbose', 'v', description: 'Whether to print debug output');
 	}
 
-	public function handle(CommandInvocation $command): int|null
+	public function handle(CommandInvocation $command): ?int
 	{
-		$host = $command->getArgument('host')->value;
-		$port = $command->getArgument('port')->value;
-		$root = $command->getArgument('root')->value;
-		$router = $command->getArgument('router')->value;
-		$noReload = (bool) $command->getArgument('no-reload')->value;
-		$verbose = (bool) $command->getArgument('verbose')->value;
-
-		if (!is_string($port) || !ctype_digit($port)) {
-			throw new InvalidArgumentException('Port must be a number');
-		}
-
-		$port = (int) $port;
-		if ($port < 1 || $port > 65535) {
-			throw new InvalidArgumentException('Port must be between 1 and 65535');
-		}
+		$host = $command->arguments->get('host')->value;
+		$port = (int) $command->arguments->get('port')->value;
+		$root = $command->options->get('root')->value ?? ($this->environment->getRoot()->getDirectory('public')->getPath());
+		$router = $command->options->get('router')->value ?? (dirname(__DIR__, 2) . '/data/router.php');
+		$noReload = (bool) $command->options->get('no-reload')->value;
+		$verbose = (bool) $command->options->get('verbose')->value;
 
 		if (!is_string($root) || !is_dir($root)) {
 			throw new InvalidArgumentException('Root directory (' . ((string) $root) . ') does not exist');
@@ -102,7 +98,7 @@ class ServeCommand implements CommandHandler
 		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 
 		/** @psalm-suppress UnusedClosureParam */
-		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, File $envFile) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
+		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, FileContract $envFile) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
 			$this->logger->warning($envFile->getName() . ' file changed. Restarting server...');
 
 			$environment->loadFromEnvFile($envName);
@@ -168,8 +164,8 @@ class ServeCommand implements CommandHandler
 
 	private function getEnvironment(string $documentRoot, CommandInvocation $command): MemoryEnvironment
 	{
-		$envName = $command->getArgument('env')->value;
-		$workers = $command->getArgument('workers')->value;
+		$envName = $command->options->get('env')->value;
+		$workers = $command->options->get('workers')->value;
 
 		$environment = new MemoryEnvironment($documentRoot);
 		$environment->loadFromEnvFile();

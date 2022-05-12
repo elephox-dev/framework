@@ -73,6 +73,7 @@ class ConsoleApplication
 			}
 		} catch (EmptyCommandLineException|NoCommandInCommandLineException $e) {
 			$this->logger()->error($e->getMessage());
+			$this->logger()->error("Use the 'help' command to get a list of available commands.");
 		} catch (IncompleteCommandLineException $e) {
 			$this->logger()->error($e->getMessage());
 			$this->logger()->error('Please check the syntax of your invoked command line. For help, refer to https://elephox.dev/console/syntax');
