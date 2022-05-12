@@ -7,7 +7,7 @@ use Elephox\Collection\ArrayMap;
 use RuntimeException;
 
 /**
- * @extends ArrayMap<int|string, string|bool>
+ * @extends ArrayMap<int|string, string|bool|null>
  */
 class CommandInvocationParametersMap extends ArrayMap
 {
@@ -132,6 +132,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'sn':
+					/** @var non-empty-string $shortOptions */
 					$shortOptionCount = strlen($shortOptions);
 					if ($char === '=') {
 						$option = $shortOptions[$shortOptionCount - 1];
@@ -167,6 +168,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'on':
+					/** @var non-empty-string $option */
 					if ($char === '=') {
 						$state = 'ov';
 					} elseif ($char === ' ') {
@@ -191,6 +193,10 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'uv':
+					/**
+					 * @var non-empty-string $option
+					 * @var string $optionValue
+					 */
 					if ($char === ' ') {
 						$map->put($option, $optionValue);
 						$state = 'n';
@@ -200,6 +206,10 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'qv':
+					/**
+					 * @var non-empty-string $option
+					 * @var string $optionValue
+					 */
 					if ($char === $quotation) {
 						$map->put($option, $optionValue);
 						$state = 'qe';
@@ -209,6 +219,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'ua':
+					/** @var string $argument */
 					if ($char === ' ') {
 						$map->put($argumentCount, $argument);
 						$argumentCount++;
@@ -219,6 +230,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'qa':
+					/** @var string $argument */
 					if ($char === $quotation) {
 						$map->put($argumentCount, $argument);
 						$argumentCount++;
@@ -237,6 +249,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				default:
+					/** @var string $state */
 					throw new RuntimeException("Unknown state: $state");
 			}
 
@@ -249,24 +262,32 @@ class CommandInvocationParametersMap extends ArrayMap
 			case 'qe':
 				break;
 			case 'ua':
+				/** @var string $argument */
 				$map->put($argumentCount, $argument);
 
 				break;
 			case 'sn':
+				/** @var non-empty-string $shortOptions */
 				for ($j = 0, $shortOptionCount = strlen($shortOptions); $j < $shortOptionCount; $j++) {
 					$map->put($shortOptions[$j], true);
 				}
 
 				break;
 			case 'on':
+				/** @var string $option */
 				$map->put($option, true);
 
 				break;
 			case 'uv':
+				/**
+				 * @var non-empty-string $option
+				 * @var string $optionValue
+				 */
 				$map->put($option, $optionValue);
 
 				break;
 			case 'ov':
+				/** @var non-empty-string $option */
 				$map->put($option, null);
 
 				break;
@@ -276,7 +297,8 @@ class CommandInvocationParametersMap extends ArrayMap
 				throw new IncompleteCommandLineException('Expected long option identifier');
 			case 'qv':
 			case 'qa':
-				throw new IncompleteCommandLineException('Expected second quote to end quoted argument');
+				/** @var string $quotation */
+				throw new IncompleteCommandLineException('Expected second quote (' . $quotation . ') to end quoted argument');
 		}
 
 		return $map;

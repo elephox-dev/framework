@@ -47,8 +47,8 @@ trait IsKeyedEnumerable
 	/**
 	 * @template TAccumulate
 	 *
-	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
-	 * @param TAccumulate|null $seed
+	 * @param callable(TAccumulate, TSource, TIteratorKey): TAccumulate $accumulator
+	 * @param TAccumulate $seed
 	 *
 	 * @return TAccumulate
 	 */

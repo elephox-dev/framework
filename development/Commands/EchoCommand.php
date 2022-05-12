@@ -20,6 +20,7 @@ class EchoCommand implements CommandHandler
 	public function handle(CommandInvocation $command): int|null
 	{
 		for ($i = 0; $i < $command->options->get('repeat')->value; $i++) {
+			/** @psalm-suppress PossiblyNullOperand */
 			echo $command->arguments->get('message')->value . PHP_EOL;
 		}
 
