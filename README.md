@@ -61,6 +61,8 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys
+- [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/test/GeneratesResponsesTest.php)
+  - [ ] Add test for both cases in which mime_content_type exists and not
 - [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)
   - [ ] write tests for background and options
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
