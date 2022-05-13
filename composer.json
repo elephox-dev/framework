@@ -116,7 +116,6 @@
         }
     },
     "extra": {
-        "bin-dir": "./bin",
         "branch-alias": {
             "dev-develop": "0.6.x-dev",
             "release/0.3": "0.3.x-dev",
@@ -216,7 +215,7 @@
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
-            "@php bin/update-readme-annotations.php"
+            "@php development/bin/update-readme-annotations.php"
         ],
         "update-static-analysis-baseline": [
             "@putenv XDEBUG_MODE=off",
