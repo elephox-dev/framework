@@ -110,9 +110,9 @@ class HelpCommand implements Contract\CommandHandler
 					$type = get_debug_type($optionTemplate->default);
 					$name .= '=' . match ($type) {
 						'null' => 'null',
-							'bool' => $optionTemplate->default ? 'true' : 'false',
-							'int', 'float', 'string', Stringable::class => (string) $optionTemplate->default,
-							default => $type,
+						'bool' => $optionTemplate->default ? 'true' : 'false',
+						'int', 'float', 'string', Stringable::class => (string) $optionTemplate->default,
+						default => $type,
 					};
 				}
 				$name .= ']';

@@ -121,7 +121,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 'ua';
 					}
 
-					break;
+				break;
 				case 's':
 					if ($char === '-') {
 						$state = 'o';
@@ -130,7 +130,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 'sn';
 					}
 
-					break;
+				break;
 				case 'sn':
 					/** @var non-empty-string $shortOptions */
 					$shortOptionCount = strlen($shortOptions);
@@ -153,7 +153,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$shortOptions .= $char;
 					}
 
-					break;
+				break;
 				case 'o':
 					if ($char === ' ') {
 						$option = '--';
@@ -163,10 +163,10 @@ class CommandInvocationParametersMap extends ArrayMap
 						break 2;
 					}
 
-					$option = $char;
-					$state = 'on';
+				$option = $char;
+				$state = 'on';
 
-					break;
+				break;
 				case 'on':
 					/** @var non-empty-string $option */
 					if ($char === '=') {
@@ -178,7 +178,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$option .= $char;
 					}
 
-					break;
+				break;
 				case 'ov':
 					if ($char === '"') {
 						$quotation = '"';
@@ -191,7 +191,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 'uv';
 					}
 
-					break;
+				break;
 				case 'uv':
 					/**
 					 * @var non-empty-string $option
@@ -204,7 +204,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$optionValue .= $char;
 					}
 
-					break;
+				break;
 				case 'qv':
 					/**
 					 * @var non-empty-string $option
@@ -217,7 +217,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$optionValue .= $char;
 					}
 
-					break;
+				break;
 				case 'ua':
 					/** @var string $argument */
 					if ($char === ' ') {
@@ -228,7 +228,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$argument .= $char;
 					}
 
-					break;
+				break;
 				case 'qa':
 					/** @var string $argument */
 					if ($char === $quotation) {
@@ -239,7 +239,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$argument .= $char;
 					}
 
-					break;
+				break;
 				case 'qe':
 					if ($char === ' ') {
 						$state = 'n';
@@ -247,7 +247,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						throw new IncompleteCommandLineException('Additional characters after quoted argument');
 					}
 
-					break;
+				break;
 				default:
 					/** @var string $state */
 					throw new RuntimeException("Unknown state: $state");
@@ -272,7 +272,7 @@ class CommandInvocationParametersMap extends ArrayMap
 					$map->put($shortOptions[$j], true);
 				}
 
-				break;
+			break;
 			case 'on':
 				/** @var string $option */
 				$map->put($option, true);
