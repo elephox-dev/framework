@@ -26,7 +26,7 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 	return $results;
 }
 
-$root = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+$root = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR;
 $src = $root . 'modules' . DIRECTORY_SEPARATOR;
 $developmentSrc = $root . 'development' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
