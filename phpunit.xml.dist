@@ -15,7 +15,6 @@
          verbose="true">
     <php>
         <ini name="assertion.exception" value="1" />
-        <ini name="zend.assertions" value="1" />
     </php>
     <testsuites>
         <testsuite name="full">

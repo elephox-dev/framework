@@ -124,6 +124,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
+          ini-values: zend.assertions=1
           coverage: xdebug
       - name: 📦 Get composer cache directory
         id: composer-cache
@@ -161,6 +162,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
+          ini-values: zend.assertions=1
           coverage: xdebug
       - name: 📦 Get composer cache directory
         id: composer-cache
@@ -200,6 +202,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
+          ini-values: zend.assertions=1
           coverage: xdebug
       - name: 📦 Get composer cache directory
         id: composer-cache
