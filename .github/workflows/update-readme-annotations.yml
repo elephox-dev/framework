@@ -7,6 +7,9 @@ on:
       - 'modules/**'
       - 'development/bin/update-readme-annotations'
 
+permissions:
+  contents: write
+
 jobs:
   update-todos:
     name: 📋 Update README Annotations
