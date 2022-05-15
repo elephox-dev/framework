@@ -62,7 +62,11 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 - [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
 - [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
-  - [ ] cache keys
+  - [ ] cache keys so they won't have to be re-calculated
+- [ ] [modules/Collection/src/ObjectSet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ObjectSet.php)
+  - [ ] use this style of assertion error messages for all assertions
+- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
+  - [ ] implement positional overrides with integer keys in $overrides
 - [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/test/GeneratesResponsesTest.php)
   - [ ] Add test for both cases in which mime_content_type exists and not
 - [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)

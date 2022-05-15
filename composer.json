@@ -215,7 +215,7 @@
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
-            "@php development/bin/update-readme-annotations.php"
+            "@php development/bin/update-readme-annotations"
         ],
         "update-static-analysis-baseline": [
             "@putenv XDEBUG_MODE=off",

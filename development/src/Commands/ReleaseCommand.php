@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Development\Commands;
+namespace Elephox\Development\src\Commands;
 
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Psr\Log\LoggerInterface;
+use const Elephox\Development\Commands\APP_ROOT;
 
 class ReleaseCommand implements CommandHandler
 {

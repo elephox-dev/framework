@@ -29,7 +29,7 @@ function gatherSourceFiles(string $dir, array &$results = []): array
 
 $root = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR;
 $src = $root . 'modules' . DIRECTORY_SEPARATOR;
-$developmentSrc = $root . 'development' . DIRECTORY_SEPARATOR;
+$developmentSrc = $root . 'development' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR;
 $readmeFile = $root . 'README.md';
 
 echo "Gathering files...\n";
@@ -104,7 +104,7 @@ if (!empty($matches)) {
 		$annotations .= "### $emojiMap[$category] $titleMap[$category]\n\n";
 		echo "Category $category contains " . count($files) . " files.\n";
 		foreach ($files as $matchedCategory => $entries) {
-			$matchedCategory = str_replace($root, '', $matchedCategory);
+			$matchedCategory = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', $root), '', $matchedCategory);
 			$annotations .= "- [ ] [$matchedCategory](https://github.com/elephox-dev/framework/tree/$currentBranch/$matchedCategory)\n";
 			foreach ($entries as $entry) {
 				$annotations .= "  - [ ] $entry\n";
