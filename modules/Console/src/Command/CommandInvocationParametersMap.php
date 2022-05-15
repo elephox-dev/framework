@@ -7,7 +7,7 @@ use Elephox\Collection\ArrayMap;
 use RuntimeException;
 
 /**
- * @extends ArrayMap<int|string, string|bool|null>
+ * @extends ArrayMap<int|string, int|string|bool|null>
  */
 class CommandInvocationParametersMap extends ArrayMap
 {
@@ -269,7 +269,21 @@ class CommandInvocationParametersMap extends ArrayMap
 			case 'sn':
 				/** @var non-empty-string $shortOptions */
 				for ($j = 0, $shortOptionCount = strlen($shortOptions); $j < $shortOptionCount; $j++) {
-					$map->put($shortOptions[$j], true);
+					$char = $shortOptions[$j];
+					if ($map->has($char)) {
+						$old = $map->get($char);
+						if (is_bool($old)) {
+							$value = 2;
+						} elseif (is_int($old)) {
+							$value = $old + 1;
+						} else {
+							throw new IncompleteCommandLineException(sprintf("Cannot repeat short option '%s' if a value was already set", $char));
+						}
+					} else {
+						$value = true;
+					}
+
+					$map->put($char, $value);
 				}
 
 			break;
