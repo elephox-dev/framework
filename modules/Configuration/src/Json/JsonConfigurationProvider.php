@@ -15,10 +15,10 @@ class JsonConfigurationProvider implements ConfigurationProvider
 	/**
 	 * @throws JsonException
 	 *
-	 * @param privateJsonDataConfigurationSource $source
+	 * @param JsonDataConfigurationSource $source
 	 */
 	public function __construct(
-		private JsonDataConfigurationSource $source,
+		private readonly JsonDataConfigurationSource $source,
 	) {
 		$this->data = [];
 		foreach ($this->source->getData() as $key => $value) {

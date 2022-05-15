@@ -13,6 +13,7 @@ use IteratorAggregate;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use Exception;
+use Stringable;
 
 /**
  * @psalm-suppress MixedArrayOffset
@@ -163,22 +164,21 @@ class Arr implements ArrayAccess, IteratorAggregate
 	}
 
 	/**
-	 * @psalm-suppress TooManyArguments
-	 *
-	 * @param ?callable $key_compare_func
-	 * @param self|array[] $rest
 	 * @param self|array $array
 	 * @param Diff $type
+	 * @param self|array ...$rest
+	 *
+	 * @return self
 	 */
-	public function diff(self|array $array, Diff $type = Diff::Normal, ?callable $key_compare_func = null, self|array ...$rest): self
+	public function diff(self|array $array, Diff $type = Diff::Normal, self|array ...$rest): self
 	{
 		$firstArray = self::mapToArray($array);
 		$restArrays = self::mapAllToArray(...$rest);
 
 		$result = match ($type) {
-			Diff::Normal => $key_compare_func !== null ? throw new InvalidArgumentException('Cannot use a key compare function for normal array diff.') : array_diff($this->source, $firstArray, ...$restArrays),
-			Diff::Assoc => $key_compare_func !== null ? array_diff_uassoc($this->source, $firstArray, $key_compare_func, ...$restArrays) : array_diff_assoc($this->source, $firstArray, ...$restArrays),
-			Diff::Key => $key_compare_func !== null ? array_diff_ukey($this->source, $firstArray, $key_compare_func, ...$restArrays) : array_diff_key($this->source, $firstArray, ...$restArrays),
+			Diff::Normal => array_diff($this->source, $firstArray, ...$restArrays),
+			Diff::Assoc => array_diff_assoc($this->source, $firstArray, ...$restArrays),
+			Diff::Key => array_diff_key($this->source, $firstArray, ...$restArrays),
 		};
 
 		return new self($result);
@@ -221,7 +221,7 @@ class Arr implements ArrayAccess, IteratorAggregate
 	 * @psalm-suppress TooManyArguments
 	 *
 	 * @param ?callable $callback
-	 * @param array|self[] $rest
+	 * @param array|self ...$rest
 	 * @param Intersect $mode
 	 * @param array|self $array
 	 */
@@ -384,6 +384,9 @@ class Arr implements ArrayAccess, IteratorAggregate
 		return new self(array_unique($this->source, $flags));
 	}
 
+	/**
+	 * @param mixed ...$values
+	 */
 	public function unshift(mixed ...$values): int
 	{
 		return array_unshift($this->source, ...$values);
@@ -528,12 +531,12 @@ class Arr implements ArrayAccess, IteratorAggregate
 		return usort($this->source, $callback);
 	}
 
-	public function implode(?string $separator = null): string
+	public function implode(null|string|Stringable $separator = null): string
 	{
 		if ($separator === null) {
 			return implode($this->source);
 		}
 
-		return implode($separator, $this->source);
+		return implode((string) $separator, $this->source);
 	}
 }

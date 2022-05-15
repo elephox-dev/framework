@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
-use InvalidArgumentException;
 
 /**
  * @extends ArrayMap<string, Contract\Cookie>
@@ -25,9 +24,7 @@ class CookieMap extends ArrayMap implements Contract\CookieMap
 		 * @var string|null $value
 		 */
 		foreach ($cookie as $key => $value) {
-			if (!is_string($key) || !is_string($value)) {
-				throw new InvalidArgumentException('CookieMap::fromGlobals() expects an array of strings with string keys');
-			}
+			assert(is_string($key) && ($value === null || is_string($value)), 'CookieMap::fromGlobals() expects an array of strings with string keys');
 
 			$map->put($key, new Cookie($key, $value));
 		}

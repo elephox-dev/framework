@@ -20,8 +20,8 @@ class KeySelectIterator implements Iterator
 	 * @param Closure(TKey, TValue): TResultKey $keySelector
 	 */
 	public function __construct(
-		private Iterator $iterator,
-		private Closure $keySelector,
+		private readonly Iterator $iterator,
+		private readonly Closure $keySelector,
 	) {
 	}
 
@@ -37,6 +37,7 @@ class KeySelectIterator implements Iterator
 
 	public function key(): mixed
 	{
+		/** @psalm-suppress PossiblyNullArgument since the usage may allow null as a parameter */
 		return ($this->keySelector)($this->iterator->key(), $this->iterator->current());
 	}
 

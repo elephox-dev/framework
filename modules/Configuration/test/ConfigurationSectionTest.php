@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Configuration;
 
+use AssertionError;
 use Elephox\Configuration\Memory\MemoryConfigurationSource;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -50,7 +50,9 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Offset must be a string');
+
 		$config->offsetUnset(123);
 	}
 
@@ -62,7 +64,9 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Offset must be a string');
+
 		$config->offsetSet(123, 'test');
 	}
 
@@ -74,7 +78,9 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Offset must be a string');
+
 		$config->offsetExists(123);
 	}
 
@@ -86,7 +92,9 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Offset must be a string');
+
 		$config->offsetGet(123);
 	}
 }

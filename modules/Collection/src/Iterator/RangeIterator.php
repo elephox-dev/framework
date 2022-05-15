@@ -14,9 +14,9 @@ class RangeIterator implements SeekableIterator, Countable
 	private int $offset = 0;
 
 	public function __construct(
-		private int $start,
-		private int $end,
-		private int $step = 1,
+		private readonly int $start,
+		private readonly int $end,
+		private readonly int $step = 1,
 	) {
 	}
 

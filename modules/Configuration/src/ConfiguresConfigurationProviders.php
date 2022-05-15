@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
-use Elephox\OOR\Str;
 use InvalidArgumentException;
 use RuntimeException;
+use Stringable;
 
 trait ConfiguresConfigurationProviders
 {
@@ -18,11 +18,11 @@ trait ConfiguresConfigurationProviders
 	abstract protected function getRoot(): Contract\ConfigurationRoot;
 
 	/**
-	 * @return GenericEnumerable<string>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 * @return GenericEnumerable<string>
 	 */
-	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
+	public function getChildKeys(string|Stringable|null $path = null): GenericEnumerable
 	{
 		/** @psalm-suppress NoValue str_starts_with returns a value, wtf psalm? */
 		return $this->getProviders()
@@ -38,16 +38,16 @@ trait ConfiguresConfigurationProviders
 	}
 
 	/**
-	 * @return GenericEnumerable<Contract\ConfigurationSection>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 * @return GenericEnumerable<Contract\ConfigurationSection>
 	 */
-	public function getChildren(string|Str|null $path = null): GenericEnumerable
+	public function getChildren(string|Stringable|null $path = null): GenericEnumerable
 	{
 		return $this->getChildKeys($path)->select(fn (string $key): Contract\ConfigurationSection => $this->getSection($key));
 	}
 
-	public function hasSection(string|Str $key): bool
+	public function hasSection(string|Stringable $key): bool
 	{
 		$value = null;
 		foreach ($this->getProviders()->reverse() as $provider) {
@@ -59,7 +59,7 @@ trait ConfiguresConfigurationProviders
 		return false;
 	}
 
-	public function getSection(string|Str $key): Contract\ConfigurationSection
+	public function getSection(string|Stringable $key): Contract\ConfigurationSection
 	{
 		return new ConfigurationSection($this->getRoot(), $key);
 	}
@@ -82,6 +82,7 @@ trait ConfiguresConfigurationProviders
 		$value = null;
 		foreach ($this->getProviders()->reverse() as $provider) {
 			if ($provider->tryGet($offset, $value)) {
+				/** @var array|string|int|float|bool|null $value */
 				return $value;
 			}
 		}

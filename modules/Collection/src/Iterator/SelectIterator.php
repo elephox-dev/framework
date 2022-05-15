@@ -20,13 +20,14 @@ class SelectIterator implements Iterator
 	 * @param Closure(TValue, TKey): TResult $elementSelector
 	 */
 	public function __construct(
-		private Iterator $iterator,
-		private Closure $elementSelector,
+		private readonly Iterator $iterator,
+		private readonly Closure $elementSelector,
 	) {
 	}
 
 	public function current(): mixed
 	{
+		/** @psalm-suppress PossiblyNullArgument since the usage may allow null as a parameter */
 		return ($this->elementSelector)($this->iterator->current(), $this->iterator->key());
 	}
 

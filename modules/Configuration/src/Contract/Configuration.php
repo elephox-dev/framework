@@ -5,7 +5,7 @@ namespace Elephox\Configuration\Contract;
 
 use ArrayAccess;
 use Elephox\Collection\Contract\GenericEnumerable;
-use Elephox\OOR\Str;
+use Stringable;
 
 /**
  * @extends ArrayAccess<string, array|string|int|float|bool|null>
@@ -13,22 +13,22 @@ use Elephox\OOR\Str;
 interface Configuration extends ArrayAccess
 {
 	/**
-	 * @return GenericEnumerable<string>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 *@return GenericEnumerable<string>
 	 */
-	public function getChildKeys(string|Str|null $path = null): GenericEnumerable;
+	public function getChildKeys(string|Stringable|null $path = null): GenericEnumerable;
 
 	/**
-	 * @return GenericEnumerable<ConfigurationSection>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 *@return GenericEnumerable<ConfigurationSection>
 	 */
-	public function getChildren(string|Str|null $path = null): GenericEnumerable;
+	public function getChildren(string|Stringable|null $path = null): GenericEnumerable;
 
-	public function hasSection(string|Str $key): bool;
+	public function hasSection(string|Stringable $key): bool;
 
-	public function getSection(string|Str $key): ConfigurationSection;
+	public function getSection(string|Stringable $key): ConfigurationSection;
 
 	public function offsetGet(mixed $offset): array|string|int|float|bool|null;
 }

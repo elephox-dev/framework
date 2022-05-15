@@ -5,10 +5,10 @@ namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Enumerable;
-use Elephox\OOR\Str;
 use Generator;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
+use Stringable;
 
 trait HasArrayData
 {
@@ -18,11 +18,11 @@ trait HasArrayData
 	protected array $data;
 
 	/**
-	 * @return GenericEnumerable<string>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 * @return GenericEnumerable<string>
 	 */
-	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
+	public function getChildKeys(string|Stringable|null $path = null): GenericEnumerable
 	{
 		/** @var Enumerable<string> */
 		return new Enumerable(function () use ($path): Generator {
@@ -60,7 +60,7 @@ trait HasArrayData
 		});
 	}
 
-	public function set(string|Str $key, array|string|float|bool|int|null $value): void
+	public function set(string|Stringable $key, array|string|float|bool|int|null $value): void
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
 		$data = &$this->data;
@@ -77,7 +77,7 @@ trait HasArrayData
 		$data = $value;
 	}
 
-	public function tryGet(string|Str $key, array|string|float|bool|int|null &$value = null): bool
+	public function tryGet(string|Stringable $key, array|string|float|bool|int|null &$value = null): bool
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
 		$data = $this->data;
@@ -102,7 +102,7 @@ trait HasArrayData
 		return false;
 	}
 
-	public function remove(string|Str $key): void
+	public function remove(string|Stringable $key): void
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
 		$data = &$this->data;

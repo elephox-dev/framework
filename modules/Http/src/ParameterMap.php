@@ -11,7 +11,6 @@ use Elephox\Collection\KeyedEnumerable;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
 use Generator;
-use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 
@@ -44,6 +43,7 @@ class ParameterMap implements Contract\ParameterMap
 						throw new RuntimeException("Ambiguous parameter key: '$key'. Found in both '$parameterSource->name' and '$candidateSource->name'.");
 					}
 
+					/** @var mixed $candidate */
 					$candidate = $parameterList->get($key);
 					$candidateSource = $parameterSource;
 					$candidateFound = true;
@@ -204,18 +204,14 @@ class ParameterMap implements Contract\ParameterMap
 
 	public function offsetExists(mixed $offset): bool
 	{
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Parameter map keys must be strings.');
-		}
+		assert(is_string($offset), 'Parameter map keys must be strings.');
 
 		return $this->has($offset);
 	}
 
 	public function offsetGet(mixed $offset): mixed
 	{
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Parameter map keys must be strings.');
-		}
+		assert(is_string($offset), 'Parameter map keys must be strings.');
 
 		/**
 		 * @psalm-suppress MixedReturnStatement
@@ -230,9 +226,7 @@ class ParameterMap implements Contract\ParameterMap
 
 	public function offsetUnset(mixed $offset): void
 	{
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Parameter map keys must be strings.');
-		}
+		assert(is_string($offset), 'Parameter map keys must be strings.');
 
 		$this->remove($offset);
 	}

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use AssertionError;
 use Elephox\Collection\OffsetNotFoundException;
 use Elephox\Http\Contract\ParameterMap as ParameterMapContract;
 use LogicException;
@@ -95,7 +96,9 @@ class ParameterMapTest extends TestCase
 	{
 		$map = new ParameterMap();
 
-		$this->expectException(LogicException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Parameter map keys must be strings.');
+
 		$map->offsetGet(0);
 	}
 
@@ -103,7 +106,9 @@ class ParameterMapTest extends TestCase
 	{
 		$map = new ParameterMap();
 
-		$this->expectException(LogicException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Parameter map keys must be strings.');
+
 		$map->offsetExists(0);
 	}
 
@@ -111,7 +116,9 @@ class ParameterMapTest extends TestCase
 	{
 		$map = new ParameterMap();
 
-		$this->expectException(LogicException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Parameter map keys must be strings.');
+
 		$map->offsetUnset(0);
 	}
 

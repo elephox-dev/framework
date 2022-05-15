@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use InvalidArgumentException;
+use AssertionError;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -28,7 +28,8 @@ class ObjectSetTest extends TestCase
 
 	public function testAddInvalid(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Argument 1 passed to Elephox\Collection\ObjectSet::add() must be an object, null given');
 
 		$set = new ObjectSet();
 		$set->add(null);
@@ -46,7 +47,8 @@ class ObjectSetTest extends TestCase
 
 	public function testInvalidRemove(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Argument 1 passed to Elephox\Collection\ObjectSet::remove() must be an object, null given');
 
 		$set = new ObjectSet();
 		$set->remove(null);

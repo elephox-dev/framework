@@ -20,8 +20,8 @@ class WhileIterator implements OuterIterator
 	 * @param Closure(TValue, TKey): bool $predicate
 	 */
 	public function __construct(
-		private Iterator $iterator,
-		private Closure $predicate,
+		private readonly Iterator $iterator,
+		private readonly Closure $predicate,
 	) {
 	}
 
@@ -42,6 +42,7 @@ class WhileIterator implements OuterIterator
 
 	public function valid(): bool
 	{
+		/** @psalm-suppress PossiblyNullArgument since the usage may allow null as a parameter */
 		return $this->iterator->valid() && ($this->predicate)($this->iterator->current(), $this->iterator->key());
 	}
 

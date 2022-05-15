@@ -97,9 +97,21 @@ class OrderedIterator implements Iterator
 			foreach ($this->comparators as $index => $comparator) {
 				$keySelector = $this->keySelectors[$index];
 
-				// TODO: cache keys
-				$keyA = $keySelector($a['value'], $a['key']);
-				$keyB = $keySelector($b['value'], $b['key']);
+				/** @var TValue $aValue */
+				$aValue = $a['value'];
+
+				/** @var TKey $aKey */
+				$aKey = $a['key'];
+
+				/** @var TValue $bValue */
+				$bValue = $b['value'];
+
+				/** @var TKey $bKey */
+				$bKey = $b['key'];
+
+				// TODO: cache keys so they won't have to be re-calculated
+				$keyA = $keySelector($aValue, $aKey);
+				$keyB = $keySelector($bValue, $bKey);
 
 				$result = $comparator($keyA, $keyB);
 				if ($result !== 0) {

@@ -22,19 +22,21 @@ class UniqueByIterator implements Iterator
 
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
+	 * @param Closure(TValue): TCompareKey $keySelector
 	 * @param Closure(TCompareKey, TCompareKey): bool $comparer
-	 * @param privateClosure $keySelector
 	 */
 	public function __construct(
-		private Iterator $iterator,
-		private Closure $keySelector,
-		private Closure $comparer,
+		private readonly Iterator $iterator,
+		private readonly Closure $keySelector,
+		private readonly Closure $comparer,
 	) {
 	}
 
 	public function current(): mixed
 	{
 		$current = $this->iterator->current();
+
+		assert($current !== null, 'Current iterator was null when claiming to be valid');
 
 		$this->iteratedKeys[] = ($this->keySelector)($current);
 
@@ -43,7 +45,15 @@ class UniqueByIterator implements Iterator
 
 	public function next(): void
 	{
-		while ($this->iterator->valid() && $this->wasIterated($this->iterator->current())) {
+		while ($this->iterator->valid()) {
+			$current = $this->iterator->current();
+
+			assert($current !== null, 'Current iterator was null when claiming to be valid');
+
+			if (!$this->wasIterated($current)) {
+				return;
+			}
+
 			$this->iterator->next();
 		}
 	}

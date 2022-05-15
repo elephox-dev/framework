@@ -59,14 +59,11 @@ class ObjectMap implements GenericMap
 	 */
 	public function get(mixed $key): mixed
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		if (!$this->map->offsetExists($key)) {
 			throw new OffsetNotFoundException($key);
 		}
 
 		/**
-		 * @psalm-suppress ImpureMethodCall
-		 *
 		 * @var TValue
 		 */
 		return $this->map->offsetGet($key);
@@ -77,7 +74,6 @@ class ObjectMap implements GenericMap
 	 */
 	public function has(mixed $key): bool
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		return $this->map->offsetExists($key);
 	}
 

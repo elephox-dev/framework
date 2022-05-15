@@ -98,4 +98,17 @@ class ArrTest extends TestCase
 		static::assertEquals([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]], $arr->chunk(5, false)->getSource());
 		static::assertEquals([[1, 2, 3, 4, 5], [5 => 6, 6 => 7, 7 => 8, 8 => 9, 9 => 10]], $arr->chunk(5, true)->getSource());
 	}
+
+	public function testDiff(): void
+	{
+		$arr = Arr::range(1, 10);
+		static::assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], $arr->diff([])->getSource());
+		static::assertEquals([], $arr->diff([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])->getSource());
+		static::assertEquals([9 => 10], $arr->diff([1, 2, 3, 4, 5, 6, 7, 8, 9, 11])->getSource());
+
+		$arr2 = Arr::wrap(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
+		static::assertEquals(['c' => 3, 'd' => 4], $arr2->diff(['a' => 5], Diff::Key, ['b' => 6])->getSource());
+		static::assertEquals(['a' => 1, 'b' => 2, 'd' => 4], $arr2->diff(['c' => 3, 'e' => 5], Diff::Assoc)->getSource());
+		static::assertEquals(['a' => 1, 'b' => 2], $arr2->diff(['c' => 3, 'e' => 5], Diff::Normal, ['g' => 4])->getSource());
+	}
 }

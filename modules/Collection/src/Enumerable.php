@@ -57,6 +57,7 @@ class Enumerable extends IteratorProvider implements GenericEnumerable
 	 */
 	public static function range(int $start, int $end, int $step = 1): GenericEnumerable
 	{
+		/** @var Enumerable<int> */
 		return new self(new RangeIterator($start, $end, $step));
 	}
 
@@ -65,6 +66,7 @@ class Enumerable extends IteratorProvider implements GenericEnumerable
 	 */
 	public static function empty(): GenericEnumerable
 	{
+		/** @var Enumerable<never> */
 		return new self(new EmptyIterator());
 	}
 

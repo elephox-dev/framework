@@ -6,14 +6,16 @@ namespace Elephox\Collection;
 use Closure;
 use Elephox\Collection\Iterator\EagerCachingIterator;
 use Generator;
-use InvalidArgumentException;
 use Iterator;
+use IteratorAggregate;
 
 /**
  * @template-covariant TIteratorKey
  * @template-covariant TSource
+ *
+ * @implements IteratorAggregate<TIteratorKey, TSource>
  */
-class IteratorProvider
+class IteratorProvider implements IteratorAggregate
 {
 	/**
 	 * @var null|Iterator<TIteratorKey, TSource>
@@ -44,6 +46,8 @@ class IteratorProvider
 	}
 
 	/**
+	 * @psalm-suppress ImplementedReturnTypeMismatch Psalm seems to have problems with analyzing traits and abstract classes together...
+	 *
 	 * @return Iterator<TIteratorKey, TSource>
 	 */
 	public function getIterator(): Iterator
@@ -56,10 +60,7 @@ class IteratorProvider
 
 		$result = ($this->iteratorGenerator)();
 
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!$result instanceof Iterator) {
-			throw new InvalidArgumentException('Given iterator generator does not return an iterator');
-		}
+		assert($result instanceof Iterator, sprintf('Given iterator generator does not return an iterator, got %s instead', get_debug_type($result)));
 
 		if ($result instanceof Generator) {
 			return new EagerCachingIterator($result);

@@ -17,7 +17,7 @@ class UniqueByIteratorTest extends TestCase
 {
 	public function testIterator(): void
 	{
-		$iterator = new UniqueByIterator(new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]), static fn ($value) => $value % 2, DefaultEqualityComparer::same(...));
+		$iterator = new UniqueByIterator(new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]), static fn (int $value): int => $value % 2, DefaultEqualityComparer::same(...));
 
 		static::assertEquals(['a' => 1, 'b' => 2], iterator_to_array($iterator));
 	}

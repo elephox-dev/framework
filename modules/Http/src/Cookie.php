@@ -245,9 +245,7 @@ class Cookie implements Contract\Cookie
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset,
 	): void {
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException("Cookie '$offset' is not a valid property name");
-		}
+		assert(is_string($offset), 'Cookie offset must be a string');
 
 		$method = 'set' . ucfirst($offset);
 		if ($offset === 'name' || !method_exists($this, $method)) {

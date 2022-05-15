@@ -5,7 +5,7 @@ namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\OOR\Str;
-use InvalidArgumentException;
+use Stringable;
 
 class ConfigurationSection implements Contract\ConfigurationSection
 {
@@ -13,31 +13,31 @@ class ConfigurationSection implements Contract\ConfigurationSection
 
 	public function __construct(
 		private readonly Contract\ConfigurationRoot $root,
-		private readonly string|Str $path,
+		private readonly string|Stringable $path,
 	) {
 	}
 
 	/**
-	 * @return GenericEnumerable<string>
+	 * @param null|string|Stringable $path
 	 *
-	 * @param null|string|Str $path
+	 *@return GenericEnumerable<string>
 	 */
-	public function getChildKeys(string|Str|null $path = null): GenericEnumerable
+	public function getChildKeys(string|Stringable|null $path = null): GenericEnumerable
 	{
 		return $this->root->getChildKeys($path !== null ? ConfigurationPath::appendKey($this->path, (string) $path) : $this->path);
 	}
 
-	public function getChildren(string|Str|null $path = null): GenericEnumerable
+	public function getChildren(string|Stringable|null $path = null): GenericEnumerable
 	{
 		return $this->root->getChildren($path !== null ? ConfigurationPath::appendKey($this->path, (string) $path) : $this->path);
 	}
 
-	public function hasSection(string|Str $key): bool
+	public function hasSection(string|Stringable $key): bool
 	{
 		return $this->getChildKeys()->contains((string) $key);
 	}
 
-	public function getSection(string|Str $key): Contract\ConfigurationSection
+	public function getSection(string|Stringable $key): Contract\ConfigurationSection
 	{
 		return new self($this->root, ConfigurationPath::appendKey($this->path, (string) $key));
 	}
@@ -73,38 +73,28 @@ class ConfigurationSection implements Contract\ConfigurationSection
 
 	public function offsetGet(mixed $offset): array|string|int|float|bool|null
 	{
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Offset must be a string');
-		}
+		assert(is_string($offset), 'Offset must be a string');
 
 		return $this->root->offsetGet((string) ConfigurationPath::appendKey($this->path, $offset));
 	}
 
 	public function offsetExists(mixed $offset): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Offset must be a string');
-		}
+		assert(is_string($offset), 'Offset must be a string');
 
 		return $this->root->offsetExists((string) ConfigurationPath::appendKey($this->path, $offset));
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
 	{
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Offset must be a string');
-		}
+		assert(is_string($offset), 'Offset must be a string');
 
 		$this->root->offsetSet((string) ConfigurationPath::appendKey($this->path, $offset), $value);
 	}
 
 	public function offsetUnset(mixed $offset): void
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Offset must be a string');
-		}
+		assert(is_string($offset), 'Offset must be a string');
 
 		$this->root->offsetUnset((string) ConfigurationPath::appendKey($this->path, $offset));
 	}

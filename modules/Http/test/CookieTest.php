@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use AssertionError;
 use DateTime;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -193,7 +194,9 @@ class CookieTest extends TestCase
 	{
 		$cookie = new Cookie('name1');
 
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('Cookie offset must be a string');
+
 		unset($cookie[0]);
 	}
 

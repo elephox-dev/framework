@@ -9,16 +9,16 @@ use Stringable;
 class Str implements Stringable
 {
 	#[Pure]
-	public static function wrap(string|self $string): self
+	public static function wrap(string|Stringable|self $string): self
 	{
 		if ($string instanceof self) {
 			return $string;
 		}
 
-		return new self($string);
+		return new self((string) $string);
 	}
 
-	public static function implode(string|self|null $separator, string|self $string, string|self ...$concat): self
+	public static function implode(string|Stringable|self|null $separator, string|Stringable|self $string, string|Stringable|self ...$concat): self
 	{
 		if ($separator instanceof self) {
 			$separator = (string) $separator;
@@ -46,12 +46,12 @@ class Str implements Stringable
 		 * @var mixed $value
 		 */
 		foreach ($values as $key => $value) {
-			if ($key instanceof self && $value instanceof self) {
-				yield $key->source => $value->source;
-			} elseif ($key instanceof self) {
-				yield $key->source => $value;
-			} elseif ($value instanceof self) {
-				yield $key => $value->source;
+			if ($key instanceof Stringable && $value instanceof Stringable) {
+				yield $key->__toString() => $value->__toString();
+			} elseif ($key instanceof Stringable) {
+				yield $key->__toString() => $value;
+			} elseif ($value instanceof Stringable) {
+				yield $key => $value->__toString();
 			} else {
 				yield $key => $value;
 			}
@@ -71,12 +71,12 @@ class Str implements Stringable
 	}
 
 	#[Pure]
-	public function explode(string $separator, int $limit = PHP_INT_MAX): Arr
+	public function explode(string|Stringable $separator, int $limit = PHP_INT_MAX): Arr
 	{
-		return Arr::wrap(explode($separator, $this->source, $limit));
+		return Arr::wrap(explode((string) $separator, $this->source, $limit));
 	}
 
-	public function sprintf(float|int|string|self ...$values): self
+	public function sprintf(float|int|string|Stringable|self ...$values): self
 	{
 		/** @psalm-suppress InvalidArgument */
 		return self::wrap(sprintf($this->source, ...self::mapStrsToStrings($values)));
@@ -89,12 +89,12 @@ class Str implements Stringable
 	}
 
 	#[Pure]
-	public function concat(string|self $value): self
+	public function concat(string|Stringable|self $value): self
 	{
-		return self::wrap($this->source . $value);
+		return self::wrap($this->source . (string) $value);
 	}
 
-	public function startsWith(string|self $value): bool
+	public function startsWith(string|Stringable|self $value): bool
 	{
 		return str_starts_with($this->source, (string) $value);
 	}

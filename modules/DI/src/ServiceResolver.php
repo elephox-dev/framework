@@ -16,9 +16,6 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
 
-/**
- * @psalm-type argument-list = array<non-empty-string, mixed>
- */
 trait ServiceResolver
 {
 	abstract protected function getServices(): ServiceCollectionContract;
@@ -27,7 +24,7 @@ trait ServiceResolver
 	 * @template T
 	 *
 	 * @param class-string<T> $className
-	 * @param argument-list $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 *
@@ -62,7 +59,7 @@ trait ServiceResolver
 	 *
 	 * @param class-string<T> $className
 	 * @param non-empty-string $method
-	 * @param argument-list $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return TResult
 	 *
@@ -90,7 +87,7 @@ trait ServiceResolver
 	 *
 	 * @param class-string<T> $className
 	 * @param non-empty-string $method
-	 * @param argument-list $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return TResult
 	 *
@@ -114,7 +111,7 @@ trait ServiceResolver
 	 * @template T
 	 *
 	 * @param Closure|Closure(mixed): T $callback
-	 * @param argument-list $overrideArguments
+	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 *
@@ -139,6 +136,7 @@ trait ServiceResolver
 		$values = new ArrayList();
 		$parameters = $method->getParameters();
 
+		// TODO: implement positional overrides with integer keys in $overrides
 		$usedOverrides = 0;
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
@@ -160,6 +158,7 @@ trait ServiceResolver
 
 	private function resolveArgument(ReflectionParameter $parameter): mixed
 	{
+		/** @var mixed $possibleArgument */
 		$possibleArgument = $this->getServices()->get($parameter->getName());
 		$type = $parameter->getType();
 		if ($type === null) {

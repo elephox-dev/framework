@@ -339,12 +339,12 @@ class ReleaseCommand implements CommandHandler
 	/**
 	 * @return array{int, list<string>, list<string>}
 	 *
-	 * @param float|int|string[] $args
+	 * @param string[] $args
 	 * @param string $commandLine
 	 */
-	private function execute(string $commandLine, float|int|string ...$args): array
+	private function execute(string $commandLine, string ...$args): array
 	{
-		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', array_map(static fn ($v) => (string) $v, $args)));
+		$commandLine = sprintf($commandLine, ...array_map('escapeshellarg', $args));
 		$this->logger->debug("<green>$</green> <gray>$commandLine</gray>");
 
 		ob_start();
@@ -361,7 +361,7 @@ class ReleaseCommand implements CommandHandler
 		return [$resultCode, $output, $errors];
 	}
 
-	private function executeGetLastLine(string $commandLine, float|int|string ...$args): string
+	private function executeGetLastLine(string $commandLine, string ...$args): string
 	{
 		/**
 		 * @var string[] $output
@@ -371,7 +371,7 @@ class ReleaseCommand implements CommandHandler
 		return (string) end($output);
 	}
 
-	private function executeRequireSuccess(string $failedMessage, string $commandLine, float|int|string ...$args): bool
+	private function executeRequireSuccess(string $failedMessage, string $commandLine, string ...$args): bool
 	{
 		[$resultCode, $output] = $this->execute($commandLine, ...$args);
 		if ($resultCode === 0) {
@@ -384,7 +384,7 @@ class ReleaseCommand implements CommandHandler
 		return false;
 	}
 
-	private function executeIsSuccess(string $commandLine, float|int|string ...$args): bool
+	private function executeIsSuccess(string $commandLine, string ...$args): bool
 	{
 		[$resultCode] = $this->execute($commandLine, ...$args);
 

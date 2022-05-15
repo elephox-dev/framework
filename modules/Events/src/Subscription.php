@@ -18,7 +18,7 @@ class Subscription implements Contract\Subscription
 	/**
 	 * @param non-empty-string $eventName
 	 * @param Closure(Contract\Event): void $callback
-	 * @param privatereadonlyint $priority
+	 * @param int $priority
 	 */
 	public function __construct(
 		private readonly string $eventName,

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use AssertionError;
 use Elephox\Http\Contract\Cookie as CookieContract;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -21,7 +21,7 @@ class CookieMapTest extends TestCase
 {
 	public function testFromGlobals(): void
 	{
-		$map = CookieMap::fromGlobals(['foo' => 'bar']);
+		$map = CookieMap::fromGlobals(['foo' => 'bar', 'baz' => null]);
 
 		static::assertInstanceOf(CookieMap::class, $map);
 		static::assertInstanceOf(CookieContract::class, $map->get('foo'));
@@ -39,14 +39,16 @@ class CookieMapTest extends TestCase
 
 	public function testFromGlobalsInvalidValueType(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('CookieMap::fromGlobals() expects an array of strings with string keys');
 
 		CookieMap::fromGlobals(['test' => new stdClass()]);
 	}
 
 	public function testFromGlobalsInvalidKeyType(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage('CookieMap::fromGlobals() expects an array of strings with string keys');
 
 		CookieMap::fromGlobals(['test']);
 	}

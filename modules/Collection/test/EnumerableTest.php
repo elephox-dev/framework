@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
+use AssertionError;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Iterator\EagerCachingIterator;
 use EmptyIterator;
@@ -72,7 +73,7 @@ class EnumerableTest extends TestCase
 
 	public function testGetIteratorThrowsForInvalidClosure(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(AssertionError::class);
 		$this->expectExceptionMessage('Given iterator generator does not return an iterator');
 
 		$enum = new Enumerable(static fn () => null);

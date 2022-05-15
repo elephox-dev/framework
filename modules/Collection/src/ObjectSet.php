@@ -7,7 +7,6 @@ use Closure;
 use Elephox\Collection\Contract\GenericSet;
 use Elephox\Collection\Iterator\FlipIterator;
 use Elephox\Collection\Iterator\SplObjectStorageIterator;
-use InvalidArgumentException;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
@@ -56,9 +55,8 @@ class ObjectSet implements GenericSet
 
 	public function add(mixed $value): bool
 	{
-		if (!is_object($value)) {
-			throw new InvalidArgumentException('Cannot add non-object to ' . $this::class);
-		}
+		// TODO: use this style of assertion error messages for all assertions
+		assert(is_object($value), sprintf('Argument 1 passed to %s() must be an object, %s given', __METHOD__, get_debug_type($value)));
 
 		$existed = $this->contains($value);
 
@@ -69,9 +67,7 @@ class ObjectSet implements GenericSet
 
 	public function remove(mixed $value): bool
 	{
-		if (!is_object($value)) {
-			throw new InvalidArgumentException('Cannot remove non-object from ' . $this::class);
-		}
+		assert(is_object($value), sprintf('Argument 1 passed to %s() must be an object, %s given', __METHOD__, get_debug_type($value)));
 
 		$existed = $this->contains($value);
 

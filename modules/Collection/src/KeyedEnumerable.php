@@ -58,6 +58,7 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 	 */
 	public static function range(int $start, int $end, int $step = 1): GenericKeyedEnumerable
 	{
+		/** @var KeyedEnumerable<int, int> */
 		return new self(new RangeIterator($start, $end, $step));
 	}
 
@@ -66,6 +67,7 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 	 */
 	public static function empty(): GenericKeyedEnumerable
 	{
+		/** @var KeyedEnumerable<never, never> */
 		return new self(new EmptyIterator());
 	}
 
