@@ -16,6 +16,7 @@ use Elephox\DI\ServiceCollection;
 use Elephox\Logging\AnsiColorSink;
 use Elephox\Logging\ConsoleSink;
 use Elephox\Logging\MultiSinkLogger;
+use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
 use Psr\Log\LoggerInterface;
 
@@ -45,6 +46,7 @@ class ConsoleApplicationBuilder
 		$services->addSingleton(CommandCollection::class, implementation: $commands);
 
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
+		$services->addSingleton(ErrorHandler::class, DefaultExceptionHandler::class);
 
 		return new static(
 			$configuration,
@@ -97,6 +99,12 @@ class ConsoleApplicationBuilder
 	{
 		$configuration = $this->configuration->build();
 		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
+
+		if ($this->services->has(ErrorHandler::class)) {
+			set_error_handler(function (int $severity, string $message, string $file, int $line): bool {
+				return $this->services->requireService(ErrorHandler::class)->handleError($severity, $message, $file, $line);
+			});
+		}
 
 		return new ConsoleApplication(
 			$this->services,
