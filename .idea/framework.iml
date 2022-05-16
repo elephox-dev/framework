@@ -2,7 +2,6 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/development" isTestSource="true" packagePrefix="Elephox\Development\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Autoloading/src" isTestSource="false" packagePrefix="Elephox\Autoloading\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Autoloading/test" isTestSource="true" packagePrefix="Elephox\Autoloading\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Cache/src" isTestSource="false" packagePrefix="Elephox\Cache\" />
@@ -31,6 +30,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Support/test" isTestSource="true" packagePrefix="Elephox\Support\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/src" isTestSource="false" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
+      <sourceFolder url="file://$MODULE_DIR$/development/src" isTestSource="true" packagePrefix="Elephox\Development\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ricardoboss/php-console-logger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/facade/ignition-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />

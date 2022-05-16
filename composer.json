@@ -104,7 +104,7 @@
             "Elephox\\Stream\\": "modules/Stream/test/",
             "Elephox\\Support\\": "modules/Support/test/",
             "Elephox\\Web\\": "modules/Web/test/",
-            "Elephox\\Development\\": "development/"
+            "Elephox\\Development\\": "development/src/"
         }
     },
     "config": {

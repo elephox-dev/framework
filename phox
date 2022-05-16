@@ -2,11 +2,19 @@
 <?php
 declare(strict_types=1);
 
-use Elephox\Development\DevConsoleAppBuilder;
+use Elephox\Builder\Whoops\AddsWhoopsHandler;
+use Elephox\Console\ConsoleApplicationBuilder;
 
 require_once 'bootstrap.php';
 
-$builder = DevConsoleAppBuilder::create();
+/**
+ * @internal
+ */
+class ConsoleAppBuilder extends ConsoleApplicationBuilder {
+	use AddsWhoopsHandler;
+}
+
+$builder = ConsoleAppBuilder::create();
 $builder->addLogging();
 $builder->addWhoops();
 
