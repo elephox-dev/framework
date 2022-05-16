@@ -11,21 +11,21 @@ class ArgumentTemplateBuilder extends ParameterTemplateBuilder
 	/**
 	 * @param string|null $name
 	 * @param bool $hasDefault
-	 * @param string|int|float|bool|null $default
+	 * @param list<string>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|Closure(string|int|float|bool|null): (bool|string) $validator
+	 * @param null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
 	 */
 	public function __construct(
 		?string $name = null,
 		private bool $hasDefault = false,
-		null|string|int|float|bool $default = null,
+		null|array|string|int|float|bool $default = null,
 		?string $description = null,
 		?Closure $validator = null,
 	) {
 		parent::__construct($name, $default, $description, $validator);
 	}
 
-	public function setDefault(null|string|int|float|bool $default): static
+	public function setDefault(null|array|string|int|float|bool $default): static
 	{
 		parent::setDefault($default);
 		$this->hasDefault = true;

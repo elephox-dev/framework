@@ -17,16 +17,24 @@ class OptionList extends ArrayMap
 
 		foreach ($template->optionTemplates as $optionTemplate) {
 			/** @psalm-suppress UnusedClosureParam */
-			$matchedPair = $argumentsMap->firstPairOrDefault(null, static fn (int|bool|string|null $value, string|int $key) => $key === $optionTemplate->name || $key === $optionTemplate->short);
+			$matchedPair = $argumentsMap->firstPairOrDefault(null, static fn (mixed $value, string|int $key) => $key === $optionTemplate->name || $key === $optionTemplate->short);
 			if ($matchedPair === null) {
 				if (!$optionTemplate->hasValue) {
-					$option = Option::fromTemplate($optionTemplate, false);
+					$value = false;
 				} else {
-					$option = Option::fromTemplate($optionTemplate, $optionTemplate->default);
+					$value = $optionTemplate->default;
 				}
 			} else {
-				$option = Option::fromTemplate($optionTemplate, $matchedPair->getValue());
+				$value = $matchedPair->getValue();
 			}
+
+			if ($optionTemplate->repeated) {
+				$value = is_array($value) ? $value : [$value];
+			} elseif (is_array($value)) {
+				throw new IncompleteCommandLineException("Option '$optionTemplate->name' cannot be repeated. If you want to provide an array as a default value, use the repeated option or implode() your values to a string.");
+			}
+
+			$option = Option::fromTemplate($optionTemplate, $value);
 
 			$options->put($optionTemplate->name, $option);
 			if ($optionTemplate->short !== null) {

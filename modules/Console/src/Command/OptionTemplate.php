@@ -11,15 +11,17 @@ class OptionTemplate extends ParameterTemplate
 	 * @param string $name
 	 * @param string|null $short
 	 * @param bool $hasValue
-	 * @param string|int|float|bool|null $default
+	 * @param bool $repeated
+	 * @param list<string>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|Closure(string|int|float|bool|null): (bool|string) $validator
+	 * @param null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
 	 */
 	public function __construct(
 		string $name,
 		public readonly ?string $short = null,
 		public readonly bool $hasValue = false,
-		null|string|int|float|bool $default = null,
+		public readonly bool $repeated = false,
+		null|array|string|int|float|bool $default = null,
 		?string $description = null,
 		?Closure $validator = null,
 	) {

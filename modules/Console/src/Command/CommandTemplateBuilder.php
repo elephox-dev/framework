@@ -78,13 +78,14 @@ class CommandTemplateBuilder
 	/**
 	 * @param string $name
 	 * @param string|null $short
-	 * @param string|int|float|bool|null $default
+	 * @param list<string>|string|int|float|bool|null $default
+	 * @param bool $repeated
 	 * @param string|null $description
-	 * @param null|callable(string|int|float|bool|null): (string|bool) $validator
+	 * @param null|callable(list<string>|string|int|float|bool|null): (string|bool) $validator
 	 *
 	 * @return OptionTemplateBuilder
 	 */
-	public function addOption(string $name, ?string $short = null, null|string|int|float|bool $default = false, ?string $description = null, ?callable $validator = null): OptionTemplateBuilder
+	public function addOption(string $name, ?string $short = null, null|array|string|int|float|bool $default = false, bool $repeated = false, ?string $description = null, ?callable $validator = null): OptionTemplateBuilder
 	{
 		/** @var ArrayList<OptionTemplateBuilder> */
 		$this->options ??= new ArrayList();
@@ -97,7 +98,7 @@ class CommandTemplateBuilder
 			throw new InvalidArgumentException(sprintf('Option with short "%s" already exists.', $name));
 		}
 
-		$builder = new OptionTemplateBuilder($name, $short, !is_bool($default), $default, $description, $validator !== null ? $validator(...) : null);
+		$builder = new OptionTemplateBuilder($name, $short, !is_bool($default), $repeated, $default, $description, $validator !== null ? $validator(...) : null);
 		$this->options->add($builder);
 
 		return $builder;

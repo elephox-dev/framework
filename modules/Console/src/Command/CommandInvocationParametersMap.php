@@ -7,7 +7,7 @@ use Elephox\Collection\ArrayMap;
 use RuntimeException;
 
 /**
- * @extends ArrayMap<int|string, int|string|bool|null>
+ * @extends ArrayMap<int|string, list<string>|int|string|bool|null>
  */
 class CommandInvocationParametersMap extends ArrayMap
 {
@@ -98,6 +98,28 @@ class CommandInvocationParametersMap extends ArrayMap
 		$optionValue = null;
 		$quotation = null;
 
+		$addShortOptionsToMap = static function (string $opts) use ($map): void {
+			for ($j = 0, $optsCount = strlen($opts); $j < $optsCount; $j++) {
+				$opt = $opts[$j];
+				if ($map->has($opt)) {
+					$old = $map->get($opt);
+					if (is_bool($old)) {
+						$value = 2;
+					} elseif (is_int($old)) {
+						$value = $old + 1;
+					} else {
+						trigger_error(sprintf("Option '%s' was already defined with value '%s'. Repeated option reset this to 'true'", $opt, print_r($old, true)), E_USER_WARNING);
+
+						$value = true;
+					}
+				} else {
+					$value = true;
+				}
+
+				$map->put($opt, $value);
+			}
+		};
+
 		$max = strlen($commandLine);
 		$i = 0;
 		while ($i < $max) {
@@ -136,16 +158,12 @@ class CommandInvocationParametersMap extends ArrayMap
 					$shortOptionCount = strlen($shortOptions);
 					if ($char === '=') {
 						$option = $shortOptions[$shortOptionCount - 1];
-						for ($j = 0; $j < $shortOptionCount - 1; $j++) {
-							$map->put($shortOptions[$j], true);
-						}
+						$addShortOptionsToMap(substr($shortOptions, 0, -1));
 
 						$shortOptions = null;
 						$state = 'ov';
 					} elseif ($char === ' ') {
-						for ($j = 0; $j < $shortOptionCount; $j++) {
-							$map->put($shortOptions[$j], true);
-						}
+						$addShortOptionsToMap($shortOptions);
 
 						$shortOptions = null;
 						$state = 'n';
@@ -172,6 +190,10 @@ class CommandInvocationParametersMap extends ArrayMap
 					if ($char === '=') {
 						$state = 'ov';
 					} elseif ($char === ' ') {
+						if ($map->has($option)) {
+							trigger_error(sprintf("Option '%s' was already defined with value '%s'. Repeated option reset this to 'true'", $option, print_r($map->get($option), true)), E_USER_WARNING);
+						}
+
 						$map->put($option, true);
 						$state = 'n';
 					} else {
@@ -198,7 +220,16 @@ class CommandInvocationParametersMap extends ArrayMap
 					 * @var string $optionValue
 					 */
 					if ($char === ' ') {
-						$map->put($option, $optionValue);
+						if ($map->has($option)) {
+							$old = $map->get($option);
+
+							/** @var list<string> $value */
+							$value = [$old, $optionValue];
+						} else {
+							$value = $optionValue;
+						}
+
+						$map->put($option, $value);
 						$state = 'n';
 					} else {
 						$optionValue .= $char;
@@ -211,7 +242,16 @@ class CommandInvocationParametersMap extends ArrayMap
 					 * @var string $optionValue
 					 */
 					if ($char === $quotation) {
-						$map->put($option, $optionValue);
+						if ($map->has($option)) {
+							$old = $map->get($option);
+
+							/** @var list<string> $value */
+							$value = [$old, $optionValue];
+						} else {
+							$value = $optionValue;
+						}
+
+						$map->put($option, $value);
 						$state = 'qe';
 					} else {
 						$optionValue .= $char;
@@ -262,46 +302,33 @@ class CommandInvocationParametersMap extends ArrayMap
 			case 'qe':
 				break;
 			case 'ua':
-				/** @var string $argument */
+				assert(is_string($argument));
+
 				$map->put($argumentCount, $argument);
 
 				break;
 			case 'sn':
-				/** @var non-empty-string $shortOptions */
-				for ($j = 0, $shortOptionCount = strlen($shortOptions); $j < $shortOptionCount; $j++) {
-					$char = $shortOptions[$j];
-					if ($map->has($char)) {
-						$old = $map->get($char);
-						if (is_bool($old)) {
-							$value = 2;
-						} elseif (is_int($old)) {
-							$value = $old + 1;
-						} else {
-							throw new IncompleteCommandLineException(sprintf("Cannot repeat short option '%s' if a value was already set", $char));
-						}
-					} else {
-						$value = true;
-					}
+				assert(is_string($shortOptions));
 
-					$map->put($char, $value);
-				}
+				$addShortOptionsToMap($shortOptions);
 
-			break;
+				break;
 			case 'on':
-				/** @var string $option */
+				assert(is_string($option));
+
 				$map->put($option, true);
 
 				break;
 			case 'uv':
-				/**
-				 * @var non-empty-string $option
-				 * @var string $optionValue
-				 */
+				assert(is_string($option) && $option !== '');
+				assert(is_string($optionValue));
+
 				$map->put($option, $optionValue);
 
 				break;
 			case 'ov':
-				/** @var non-empty-string $option */
+				assert(is_string($option) && $option !== '');
+
 				$map->put($option, null);
 
 				break;
@@ -311,7 +338,8 @@ class CommandInvocationParametersMap extends ArrayMap
 				throw new IncompleteCommandLineException('Expected long option identifier');
 			case 'qv':
 			case 'qa':
-				/** @var string $quotation */
+				assert(is_string($quotation));
+
 				throw new IncompleteCommandLineException('Expected second quote (' . $quotation . ') to end quoted argument');
 		}
 

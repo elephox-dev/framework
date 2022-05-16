@@ -9,13 +9,13 @@ use LogicException;
  * @property string $name
  * @property null|string $short
  * @property bool $hasValue
- * @property null|string|int|float|bool $default
+ * @property null|list<string>|string|int|float|bool $default
  * @property null|string $description
  * @property null|Closure $validator
  */
 class Option
 {
-	public static function fromTemplate(OptionTemplate $template, null|string|int|float|bool $value): self
+	public static function fromTemplate(OptionTemplate $template, null|array|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
 			$validationResult = ($template->validator)($value);
@@ -36,7 +36,7 @@ class Option
 
 	public function __construct(
 		public readonly OptionTemplate $template,
-		public readonly null|string|int|float|bool $value,
+		public readonly null|array|string|int|float|bool $value,
 	) {
 	}
 

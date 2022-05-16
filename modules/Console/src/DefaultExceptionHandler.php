@@ -34,14 +34,17 @@ class DefaultExceptionHandler implements ExceptionHandler, ErrorHandler
 			case E_USER_WARNING:
 			case E_WARNING:
 				$this->logger->warning($message, ['file' => $file, 'line' => $line]);
+
 				break;
 			case E_USER_NOTICE:
 			case E_NOTICE:
 				$this->logger->notice($message, ['file' => $file, 'line' => $line]);
+
 				break;
 			case E_USER_ERROR:
 			case E_ERROR:
 				$this->logger->error($message, ['file' => $file, 'line' => $line]);
+
 				break;
 			default:
 				$this->logger->critical($message, ['file' => $file, 'line' => $line]);

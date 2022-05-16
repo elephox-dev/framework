@@ -6,15 +6,15 @@ namespace Elephox\Console\Command;
 use LogicException;
 
 /**
- * @property string $name
  * @property bool $hasDefault
- * @property null|string|int|float|bool $default
+ * @property null|list<string>|string|int|float|bool $default
  * @property null|string $description
- * @property null|Closure $validator
+ * @property string $name
+ * @property null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
  */
 class Argument
 {
-	public static function fromTemplate(ArgumentTemplate $template, null|string|int|float|bool $value): self
+	public static function fromTemplate(ArgumentTemplate $template, null|array|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
 			$validationResult = ($template->validator)($value);
@@ -35,7 +35,7 @@ class Argument
 
 	public function __construct(
 		public readonly ArgumentTemplate $template,
-		public readonly null|string|int|float|bool $value,
+		public readonly null|array|string|int|float|bool $value,
 	) {
 	}
 
