@@ -25,6 +25,7 @@
         "psr/container": "^2.0",
         "psr/log": "^3.0",
         "ricardoboss/php-console-logger": "^2.1",
+        "stella-maris/clock": "^0.1",
         "symfony/process": "^6.0",
         "vlucas/phpdotenv": "^5.4"
     },
@@ -47,6 +48,7 @@
     "replace": {
         "elephox/autoloading": "self.version",
         "elephox/cache": "self.version",
+        "elephox/clock": "self.version",
         "elephox/collection": "self.version",
         "elephox/configuration": "self.version",
         "elephox/console": "self.version",
@@ -63,7 +65,8 @@
     "provide": {
         "psr/cache-implementation": "3.0",
         "psr/container-implementation": "2.0",
-        "psr/log-implementation": "3.0"
+        "psr/log-implementation": "3.0",
+        "psr/clock-implementation": "1.0"
     },
     "suggest": {
         "ext-fileinfo": "To get the mime type of a file"
@@ -74,6 +77,7 @@
         "psr-4": {
             "Elephox\\Autoloading\\": "modules/Autoloading/src/",
             "Elephox\\Cache\\": "modules/Cache/src/",
+            "Elephox\\Clock\\": "modules/Clock/src/",
             "Elephox\\Collection\\": "modules/Collection/src/",
             "Elephox\\Configuration\\": "modules/Configuration/src/",
             "Elephox\\Console\\": "modules/Console/src/",
@@ -92,6 +96,7 @@
         "psr-4": {
             "Elephox\\Autoloading\\": "modules/Autoloading/test/",
             "Elephox\\Cache\\": "modules/Cache/test/",
+            "Elephox\\Clock\\": "modules/Clock/test/",
             "Elephox\\Collection\\": "modules/Collection/test/",
             "Elephox\\Configuration\\": "modules/Configuration/test/",
             "Elephox\\Console\\": "modules/Console/test/",
