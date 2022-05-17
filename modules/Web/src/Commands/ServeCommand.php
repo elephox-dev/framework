@@ -56,8 +56,12 @@ class ServeCommand implements CommandHandler
 		$noReload = (bool) $command->options->get('no-reload')->value;
 		$verbose = (bool) $command->options->get('verbose')->value;
 
-		if (!is_string($root) || !is_dir($root)) {
-			throw new InvalidArgumentException('Root directory (' . ((string) $root) . ') does not exist');
+		if (!is_string($root)) {
+			throw new InvalidArgumentException('Root directory must be a string');
+		}
+
+		if (!is_dir($root)) {
+			throw new InvalidArgumentException("Root directory ($root) does not exist");
 		}
 
 		$documentRoot = realpath($root);

@@ -49,13 +49,13 @@ class CommandTemplateBuilder
 	/**
 	 * @param string $name
 	 * @param bool $hasDefault
-	 * @param string|int|float|bool|null $default
+	 * @param list<string>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|callable(string|int|float|bool|null): (string|bool) $validator
+	 * @param null|callable(list<string>|string|int|float|bool|null): (string|bool) $validator
 	 *
 	 * @return ArgumentTemplateBuilder
 	 */
-	public function addArgument(string $name, bool $hasDefault = false, null|string|int|float|bool $default = null, ?string $description = null, ?callable $validator = null): ArgumentTemplateBuilder
+	public function addArgument(string $name, bool $hasDefault = false, null|array|string|int|float|bool $default = null, ?string $description = null, ?callable $validator = null): ArgumentTemplateBuilder
 	{
 		/** @var ArrayList<ArgumentTemplateBuilder> */
 		$this->arguments ??= new ArrayList();

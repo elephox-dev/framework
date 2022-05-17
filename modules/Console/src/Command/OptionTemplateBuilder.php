@@ -41,6 +41,11 @@ class OptionTemplateBuilder extends ParameterTemplateBuilder
 		return $this->short;
 	}
 
+	/**
+	 * @param list<string>|string|int|float|bool|null $default
+	 *
+	 * @return static
+	 */
 	public function setDefault(array|float|bool|int|string|null $default): static
 	{
 		parent::setDefault($default);

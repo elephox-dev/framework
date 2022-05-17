@@ -25,6 +25,11 @@ class ArgumentTemplateBuilder extends ParameterTemplateBuilder
 		parent::__construct($name, $default, $description, $validator);
 	}
 
+	/**
+	 * @param list<string>|string|int|float|bool|null $default
+	 *
+	 * @return static
+	 */
 	public function setDefault(null|array|string|int|float|bool $default): static
 	{
 		parent::setDefault($default);

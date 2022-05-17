@@ -33,6 +33,11 @@ abstract class ParameterTemplateBuilder
 		return $this->name;
 	}
 
+	/**
+	 * @param list<string>|string|int|float|bool|null $default
+	 *
+	 * @return static
+	 */
 	public function setDefault(null|array|string|int|float|bool $default): static
 	{
 		$this->default = $default;
@@ -40,6 +45,9 @@ abstract class ParameterTemplateBuilder
 		return $this;
 	}
 
+	/**
+	 * @return list<string>|string|int|float|bool|null
+	 */
 	public function getDefault(): null|array|string|int|float|bool
 	{
 		return $this->default;

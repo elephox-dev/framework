@@ -15,6 +15,12 @@ use LogicException;
  */
 class Option
 {
+	/**
+	 * @param OptionTemplate $template
+	 * @param list<string>|string|int|float|bool|null $value
+	 *
+	 * @return self
+	 */
 	public static function fromTemplate(OptionTemplate $template, null|array|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
@@ -34,6 +40,10 @@ class Option
 		);
 	}
 
+	/**
+	 * @param OptionTemplate $template
+	 * @param list<string>|string|int|float|bool|null $value
+	 */
 	public function __construct(
 		public readonly OptionTemplate $template,
 		public readonly null|array|string|int|float|bool $value,
