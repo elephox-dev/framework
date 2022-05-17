@@ -5,6 +5,7 @@ namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayMap;
 use RuntimeException;
+use JsonException;
 
 /**
  * @extends ArrayMap<int|string, list<string>|int|string|bool|null>
@@ -68,6 +69,7 @@ class CommandInvocationParametersMap extends ArrayMap
 	 * @return self
 	 *
 	 * @throws IncompleteCommandLineException
+	 * @throws JsonException
 	 */
 	public static function fromCommandLine(string $commandLine): self
 	{
@@ -76,7 +78,6 @@ class CommandInvocationParametersMap extends ArrayMap
 
 		/*
 		 * States:
-		 * i  = initial
 		 * n  = none
 		 * s  = short option
 		 * sn = short option names
@@ -89,7 +90,7 @@ class CommandInvocationParametersMap extends ArrayMap
 		 * qa = quoted argument
 		 * qe = quoted value end
 		 */
-		$state = 'i';
+		$state = 'n';
 
 		$argument = null;
 		$argumentCount = 0;
@@ -108,7 +109,7 @@ class CommandInvocationParametersMap extends ArrayMap
 					} elseif (is_int($old)) {
 						$value = $old + 1;
 					} else {
-						trigger_error(sprintf("Option '%s' was already defined with value '%s'. Repeated option reset this to 'true'", $opt, print_r($old, true)), E_USER_WARNING);
+						trigger_error(sprintf("Option '%s' was already defined with value %s. Repeated option reset this to 'true'", $opt, json_encode($old, JSON_THROW_ON_ERROR)), E_USER_WARNING);
 
 						$value = true;
 					}
@@ -126,7 +127,6 @@ class CommandInvocationParametersMap extends ArrayMap
 			$char = $commandLine[$i];
 
 			switch ($state) {
-				case 'i':
 				case 'n':
 					if ($char === '-') {
 						$state = 's';
@@ -191,7 +191,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 'ov';
 					} elseif ($char === ' ') {
 						if ($map->has($option)) {
-							trigger_error(sprintf("Option '%s' was already defined with value '%s'. Repeated option reset this to 'true'", $option, print_r($map->get($option), true)), E_USER_WARNING);
+							trigger_error(sprintf("Option '%s' was already defined with value %s. Repeated option reset this to 'true'", $option, json_encode($map->get($option), JSON_THROW_ON_ERROR)), E_USER_WARNING);
 						}
 
 						$map->put($option, true);
@@ -297,7 +297,6 @@ class CommandInvocationParametersMap extends ArrayMap
 		}
 
 		switch ($state) {
-			case 'i':
 			case 'n':
 			case 'qe':
 				break;

@@ -17,12 +17,9 @@ class ConsoleAppBuilder extends ConsoleApplicationBuilder {
 $builder = ConsoleAppBuilder::create();
 $builder->addLogging();
 $builder->addWhoops();
+$builder->services->addSingleton(ErrorHandler::class, DefaultExceptionHandler::class);
 
 $builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
 
 $app = $builder->build();
-try {
-	$app->run();
-} catch (Throwable $e) {
-	$app->exceptionHandler()->handleException($e);
-}
+$app->run();

@@ -2333,12 +2333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-handler.git",
-                "reference": "b253b7dbc4cc3477aa44ecdc30772882686d8f6c"
+                "reference": "3df89bf5f744deffbcdadb21aa38bdf0c44d20f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/b253b7dbc4cc3477aa44ecdc30772882686d8f6c",
-                "reference": "b253b7dbc4cc3477aa44ecdc30772882686d8f6c",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/3df89bf5f744deffbcdadb21aa38bdf0c44d20f8",
+                "reference": "3df89bf5f744deffbcdadb21aa38bdf0c44d20f8",
                 "shasum": ""
             },
             "require": {
@@ -2375,7 +2375,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-handler/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-handler/tree/develop"
             },
-            "time": "2022-04-29T17:50:21+00:00"
+            "time": "2022-05-16T23:59:49+00:00"
         },
         {
             "name": "elephox/builder-whoops-middleware",
@@ -2480,12 +2480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "3147acd3d2104651d99e2099fca66fa75ea48454"
+                "reference": "0e8b557237fd819ee8d494c35b8073c12992dee7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/3147acd3d2104651d99e2099fca66fa75ea48454",
-                "reference": "3147acd3d2104651d99e2099fca66fa75ea48454",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/0e8b557237fd819ee8d494c35b8073c12992dee7",
+                "reference": "0e8b557237fd819ee8d494c35b8073c12992dee7",
                 "shasum": ""
             },
             "require": {
@@ -2548,7 +2548,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-05-09T08:26:38+00:00"
+            "time": "2022-05-16T22:05:06+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",

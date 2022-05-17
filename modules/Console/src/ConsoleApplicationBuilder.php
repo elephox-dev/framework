@@ -19,6 +19,7 @@ use Elephox\Logging\MultiSinkLogger;
 use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * @psalm-consistent-constructor
@@ -99,6 +100,12 @@ class ConsoleApplicationBuilder
 	{
 		$configuration = $this->configuration->build();
 		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
+
+		if ($this->services->has(ExceptionHandler::class)) {
+			set_exception_handler(function (Throwable $exception): void {
+				$this->services->requireService(ExceptionHandler::class)->handleException($exception);
+			});
+		}
 
 		if ($this->services->has(ErrorHandler::class)) {
 			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->requireService(ErrorHandler::class)->handleError($severity, $message, $file, $line));

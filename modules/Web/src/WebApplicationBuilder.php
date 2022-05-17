@@ -15,12 +15,14 @@ use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
+use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
 use Elephox\Web\Middleware\ServerTimingHeaderMiddleware;
 use Elephox\Web\Routing\RequestRouter;
+use Throwable;
 
 /**
  * @psalm-consistent-constructor
@@ -113,6 +115,16 @@ class WebApplicationBuilder
 
 		$builtPipeline = $this->pipeline->build();
 		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline);
+
+		if ($this->services->has(ExceptionHandler::class)) {
+			set_exception_handler(function (Throwable $exception): void {
+				$this->services->requireService(ExceptionHandler::class)->handleException($exception);
+			});
+		}
+
+		if ($this->services->has(ErrorHandler::class)) {
+			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->requireService(ErrorHandler::class)->handleError($severity, $message, $file, $line));
+		}
 
 		return new WebApplication(
 			$this->services,
