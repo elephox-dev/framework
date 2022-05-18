@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Hooks\Contract;
 
-use Elephox\DI\Hooks\ServiceHookData;
+use Elephox\DI\Hooks\ServiceDescriptorHookData;
 
 interface ServiceRemovedHook
 {
 	/**
 	 * @template TService of object
 	 *
-	 * @param ServiceHookData<TService> $data
+	 * @param ServiceDescriptorHookData<TService> $data
 	 *
 	 * @return void
 	 */
-	public function serviceRemoved(ServiceHookData $data): void;
+	public function serviceRemoved(ServiceDescriptorHookData $data): void;
 }

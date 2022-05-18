@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Hooks\Contract;
 
-use Elephox\DI\Hooks\ServiceHookData;
+use Elephox\DI\Hooks\ServiceResolvedHookData;
 
 interface ServiceResolvedHook
 {
 	/**
 	 * @template TService of object
 	 *
-	 * @param ServiceHookData<TService> $data
+	 * @param ServiceResolvedHookData<TService> $data
 	 *
 	 * @return void
 	 */
-	public function serviceResolved(ServiceHookData $data): void;
+	public function serviceResolved(ServiceResolvedHookData $data): void;
 }
