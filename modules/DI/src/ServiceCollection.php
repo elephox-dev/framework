@@ -9,20 +9,13 @@ use Elephox\Collection\ArrayMap;
 use Elephox\Collection\ArraySet;
 use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
-use Elephox\DI\Hooks\AliasHookData;
-use Elephox\DI\Hooks\Contract\AliasAddedHook;
 use Elephox\DI\Hooks\Contract\AliasRemovedHook;
-use Elephox\DI\Hooks\Contract\ServiceAddedHook;
 use Elephox\DI\Hooks\Contract\ServiceRemovedHook;
 use Elephox\DI\Hooks\Contract\ServiceReplacedHook;
 use Elephox\DI\Hooks\Contract\ServiceRequestedHook;
 use Elephox\DI\Hooks\Contract\ServiceResolvedHook;
 use Elephox\DI\Hooks\Contract\UnknownAliasRequestedHook;
 use Elephox\DI\Hooks\Contract\UnknownServiceRequestedHook;
-use Elephox\DI\Hooks\ServiceDescriptorHookData;
-use Elephox\DI\Hooks\ServiceHookData;
-use Elephox\DI\Hooks\ServiceReplacedHookData;
-use Elephox\DI\Hooks\ServiceResolvedHookData;
 use InvalidArgumentException;
 
 class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
@@ -50,9 +43,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	private array $factoryCache = [];
 
 	private array $hooks = [
-		AliasAddedHook::class => /** @var list<AliasAddedHook> */ [],
 		AliasRemovedHook::class => /** @var list<AliasRemovedHook> */ [],
-		ServiceAddedHook::class => /** @var list<ServiceAddedHook> */ [],
 		ServiceRemovedHook::class => /** @var list<ServiceRemovedHook> */ [],
 		ServiceReplacedHook::class => /** @var list<ServiceReplacedHook> */ [],
 		ServiceRequestedHook::class => /** @var list<ServiceRequestedHook> */ [],
@@ -61,15 +52,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		UnknownServiceRequestedHook::class => /** @var list<UnknownServiceRequestedHook> */ [],
 	];
 
-	private static function compareServiceDescriptors(?ServiceDescriptor $a, ?ServiceDescriptor $b): bool
-	{
-		return $a?->serviceType === $b?->serviceType;
-	}
-
 	public function __construct()
 	{
 		$this->services = new ArraySet(
-			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => self::compareServiceDescriptors($a, $b),
+			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType,
 		);
 
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
@@ -104,52 +90,15 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	protected function add(ServiceDescriptor $descriptor, bool $replace): Contract\ServiceCollection
 	{
 		$added = $this->services->add($descriptor);
-		$replacedData = null;
-		$addedData = null;
-
-		if ($added) {
-			$addedData = new ServiceDescriptorHookData($descriptor);
-		} elseif ($replace) {
+		if (!$added && $replace) {
 			unset(
 				$this->descriptorCache[$descriptor->serviceType],
 				$this->factoryCache[$descriptor->serviceType],
 				$this->descriptorCache[$descriptor->implementationType],
 				$this->factoryCache[$descriptor->implementationType],
 			);
-
-			/** @var ServiceDescriptor<TService, object> $oldDescriptor */
-			$oldDescriptor = $this->services->first(static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b) => self::compareServiceDescriptors($a, $b));
-
-			$replacedData = new ServiceReplacedHookData($oldDescriptor, $descriptor);
-			/** @var ServiceReplacedHook $replacedHook */
-			foreach ($this->hooks[ServiceReplacedHook::class] as $replacedHook) {
-				$replacedHook->serviceReplaced($replacedData);
-			}
-
-			if (!$replacedData->cancel) {
-				$this->services->remove($replacedData->oldService);
-				$this->services->add($replacedData->newService);
-
-				$addedData = new ServiceDescriptorHookData($replacedData->newService);
-			}
-		}
-
-		if ($replacedData !== null && !$replacedData->cancel) {
-			$removedData = new ServiceDescriptorHookData($replacedData->oldService);
-			/** @var ServiceRemovedHook $removedHook */
-			foreach ($this->hooks[ServiceRemovedHook::class] as $removedHook) {
-				$removedHook->serviceRemoved($removedData);
-			}
-		}
-
-		if ($addedData !== null) {
-			/**
-			 * @var ServiceDescriptorHookData<TService> $addedData
-			 * @var ServiceAddedHook $hook
-			 */
-			foreach ($this->hooks[ServiceAddedHook::class] as $hook) {
-				$hook->serviceAdded($addedData);
-			}
+			$this->services->remove($descriptor);
+			$this->services->add($descriptor);
 		}
 
 		return $this;
@@ -231,35 +180,14 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 */
 	public function requireService(string $serviceName): object
 	{
-		$requestedData = new ServiceHookData($serviceName, null);
-
-		/** @var ServiceRequestedHook $hook */
-		foreach ($this->hooks[ServiceRequestedHook::class] as $hook) {
-			$hook->serviceRequested($requestedData);
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (empty($serviceName)) {
+			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
-		if ($requestedData->serviceDescriptor !== null) {
-			$descriptor = $requestedData->serviceDescriptor;
-		} else {
-			/** @psalm-suppress DocblockTypeContradiction */
-			if (empty($serviceName)) {
-				throw new InvalidArgumentException('Service name must not be empty.');
-			}
-
-			$descriptor = $this->tryFindDescriptor($serviceName);
-			if ($descriptor === null) {
-				/** @var UnknownServiceRequestedHook $hook */
-				foreach ($this->hooks[UnknownServiceRequestedHook::class] as $hook) {
-					$hook->unknownServiceRequested($requestedData);
-				}
-
-				if ($requestedData->serviceDescriptor === null) {
-					throw new ServiceNotFoundException($serviceName);
-				}
-
-				/** @var ServiceDescriptor<TService, TService> $descriptor */
-				$descriptor = $requestedData->serviceDescriptor;
-			}
+		$descriptor = $this->tryFindDescriptor($serviceName);
+		if ($descriptor === null) {
+			throw new ServiceNotFoundException($serviceName);
 		}
 
 		if ($descriptor->lifetime === ServiceLifetime::Singleton && $descriptor->instance !== null) {
@@ -271,19 +199,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 		try {
 			/** @var TService */
-			$service = $this->callback($factory);
+			return $this->callback($factory);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($serviceName, previous: $e);
 		}
-
-		$resolvedData = new ServiceResolvedHookData($serviceName, $descriptor, $service);
-
-		/** @var ServiceResolvedHook $hook */
-		foreach ($this->hooks[ServiceResolvedHook::class] as $hook) {
-			$hook->serviceResolved($resolvedData);
-		}
-
-		return $service;
 	}
 
 	/**
@@ -413,23 +332,13 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Alias must not be empty.');
 		}
 
-		if ($this->hasAlias($alias)) {
-			$serviceName = $this->aliases->get($alias);
-		} else {
-			$data = new AliasHookData($alias, null);
-			/** @var UnknownAliasRequestedHook $hook */
-			foreach ($this->hooks[UnknownAliasRequestedHook::class] as $hook) {
-				$hook->unknownAliasRequested($data);
-			}
-
-			if ($data->serviceName === null) {
-				throw new ServiceAliasNotFoundException($alias);
-			}
-
-			$serviceName = $data->serviceName;
+		if (!$this->hasAlias($alias)) {
+			throw new ServiceAliasNotFoundException($alias);
 		}
 
 		/** @var class-string<TService> $serviceName */
+		$serviceName = $this->aliases->get($alias);
+
 		return $this->requireService($serviceName);
 	}
 
@@ -496,17 +405,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Alias and service name must not be empty.');
 		}
 
-		$aliasData = new AliasHookData($alias, $serviceName);
-		/** @var AliasAddedHook $hook */
-		foreach ($this->hooks[AliasAddedHook::class] as $hook) {
-			$hook->aliasAdded($aliasData);
-		}
-
-		if ($aliasData->serviceName === null) {
-			throw new InvalidArgumentException('Alias hook must not set service name to null.');
-		}
-
-		$this->aliases->put($aliasData->alias, $aliasData->serviceName);
+		$this->aliases->put($alias, $serviceName);
 
 		return $this;
 	}
@@ -538,13 +437,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 				$this->factoryCache[$d->implementationType],
 			);
 
-			$data = new ServiceDescriptorHookData($d);
-
-			/** @var ServiceRemovedHook $hook */
-			foreach ($this->hooks[ServiceRemovedHook::class] as $hook) {
-				$hook->serviceRemoved($data);
-			}
-
 			return true;
 		});
 
@@ -557,18 +449,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Alias must not be empty.');
 		}
 
-		if (!$this->hasAlias($alias)) {
-			return $this;
-		}
-
 		$this->aliases->remove($alias);
-
-		$data = new AliasHookData($alias, null);
-
-		/** @var AliasRemovedHook $hook */
-		foreach ($this->hooks[AliasRemovedHook::class] as $hook) {
-			$hook->aliasRemoved($data);
-		}
 
 		return $this;
 	}
