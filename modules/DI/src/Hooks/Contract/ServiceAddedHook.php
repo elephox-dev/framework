@@ -5,7 +5,7 @@ namespace Elephox\DI\Hooks\Contract;
 
 use Elephox\DI\Hooks\ServiceDescriptorHookData;
 
-interface ServiceRemovedHook
+interface ServiceAddedHook
 {
 	/**
 	 * @template TService of object
@@ -14,5 +14,5 @@ interface ServiceRemovedHook
 	 *
 	 * @return void
 	 */
-	public function serviceRemoved(ServiceDescriptorHookData $data): void;
+	public function serviceAdded(ServiceDescriptorHookData $data): void;
 }
