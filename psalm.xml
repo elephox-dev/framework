@@ -11,7 +11,7 @@
         findUnusedPsalmSuppress="true"
         sealAllMethods="true"
 
-        errorBaseline="baselines/psalm.baseline.xml"
+        errorBaseline="development/psalm.baseline.xml"
 >
     <projectFiles>
         <directory name="development"/>
