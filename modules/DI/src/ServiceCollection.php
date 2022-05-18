@@ -9,6 +9,13 @@ use Elephox\Collection\ArrayMap;
 use Elephox\Collection\ArraySet;
 use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\DI\Hooks\Contract\AliasRemovedHook;
+use Elephox\DI\Hooks\Contract\ServiceRemovedHook;
+use Elephox\DI\Hooks\Contract\ServiceReplacedHook;
+use Elephox\DI\Hooks\Contract\ServiceRequestedHook;
+use Elephox\DI\Hooks\Contract\ServiceResolvedHook;
+use Elephox\DI\Hooks\Contract\UnknownAliasRequestedHook;
+use Elephox\DI\Hooks\Contract\UnknownServiceRequestedHook;
 use InvalidArgumentException;
 
 class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
@@ -34,6 +41,16 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @var array<class-string, Closure>
 	 */
 	private array $factoryCache = [];
+
+	private array $hooks = [
+		AliasRemovedHook::class => /** @var list<AliasRemovedHook> */ [],
+		ServiceRemovedHook::class => /** @var list<ServiceRemovedHook> */ [],
+		ServiceReplacedHook::class => /** @var list<ServiceReplacedHook> */ [],
+		ServiceRequestedHook::class => /** @var list<ServiceRequestedHook> */ [],
+		ServiceResolvedHook::class => /** @var list<ServiceResolvedHook> */ [],
+		UnknownAliasRequestedHook::class => /** @var list<UnknownAliasRequestedHook> */ [],
+		UnknownServiceRequestedHook::class => /** @var list<UnknownServiceRequestedHook> */ [],
+	];
 
 	public function __construct()
 	{
@@ -85,6 +102,19 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		}
 
 		return $this;
+	}
+
+	public function registerHooks(object $consumer): void
+	{
+		$interfaces = class_implements($consumer);
+		if (is_array($interfaces)) {
+			foreach (array_keys($this->hooks) as $hookType) {
+				if (in_array($hookType, $interfaces, true)) {
+					/** @psalm-suppress MixedArrayAssignment */
+					$this->hooks[$hookType][] = $consumer;
+				}
+			}
+		}
 	}
 
 	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
