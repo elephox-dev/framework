@@ -118,7 +118,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			);
 
 			/** @var ServiceDescriptor<TService, object> $oldDescriptor */
-			$oldDescriptor = $this->services->first(static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b) => self::compareServiceDescriptors($a, $b));
+			$oldDescriptor = $this->services->first(static fn (ServiceDescriptor $d) => $d->serviceType === $descriptor->serviceType);
 
 			$replacedData = new ServiceReplacedHookData($oldDescriptor, $descriptor);
 			/** @var ServiceReplacedHook $replacedHook */
