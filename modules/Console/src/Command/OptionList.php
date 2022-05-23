@@ -29,7 +29,7 @@ class OptionList extends ArrayMap
 			}
 
 			if ($optionTemplate->repeated) {
-				$value = is_array($value) ? $value : [$value];
+				$value = is_array($value) ? $value : [(string) $value];
 			} elseif (is_array($value)) {
 				throw new IncompleteCommandLineException("Option '$optionTemplate->name' cannot be repeated. If you want to provide an array as a default value, use the repeated option or implode() your values to a string.");
 			}

@@ -75,9 +75,11 @@ class HelpCommand implements Contract\CommandHandler
 				$closeBracket = $argumentTemplate->hasDefault ? ']' : '>';
 				$name = $openBracket . $argumentTemplate->name;
 				if ($argumentTemplate->hasDefault) {
+					/** @psalm-suppress PossiblyInvalidCast */
 					$name .= '=' . match (get_debug_type($argumentTemplate->default)) {
 						'null' => 'null',
 						'bool' => $argumentTemplate->default ? 'true' : 'false',
+						'array' => implode(', ', (array) $argumentTemplate->default),
 						'int', 'float', 'string', Stringable::class => (string) $argumentTemplate->default,
 						default => get_debug_type($argumentTemplate->default),
 					};
@@ -108,9 +110,11 @@ class HelpCommand implements Contract\CommandHandler
 
 				if ($optionTemplate->hasValue) {
 					$type = get_debug_type($optionTemplate->default);
+					/** @psalm-suppress PossiblyInvalidCast */
 					$name .= '=' . match ($type) {
 						'null' => 'null',
 						'bool' => $optionTemplate->default ? 'true' : 'false',
+						'array' => implode(', ', (array) $optionTemplate->default),
 						'int', 'float', 'string', Stringable::class => (string) $optionTemplate->default,
 						default => $type,
 					};

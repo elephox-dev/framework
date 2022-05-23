@@ -14,6 +14,11 @@ use LogicException;
  */
 class Argument
 {
+	/**
+	 * @param ArgumentTemplate $template
+	 * @param list<string>|string|int|float|bool|null $value
+	 * @return self
+	 */
 	public static function fromTemplate(ArgumentTemplate $template, null|array|string|int|float|bool $value): self
 	{
 		if ($template->validator !== null) {
