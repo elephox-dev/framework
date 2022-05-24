@@ -62,15 +62,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		UnknownServiceRequestedHook::class => /** @var list<UnknownServiceRequestedHook> */ [],
 	];
 
-	private static function compareServiceDescriptors(?ServiceDescriptor $a, ?ServiceDescriptor $b): bool
-	{
-		return $a?->serviceType === $b?->serviceType;
-	}
-
 	public function __construct()
 	{
 		$this->services = new ArraySet(
-			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => self::compareServiceDescriptors($a, $b),
+			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType,
 		);
 
 		/** @var ArrayMap<non-empty-string, class-string> aliases */
