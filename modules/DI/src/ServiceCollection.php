@@ -401,7 +401,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			$serviceName = null;
 		}
 
-		/** @psalm-suppress DocblockTypeContradiction */
 		if ($serviceName === null) {
 			$data = new AliasHookData($alias, null);
 			/** @var UnknownAliasRequestedHook $hook */
