@@ -7,6 +7,7 @@ use BadFunctionCallException;
 use Closure;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\ArraySet;
+use Elephox\Collection\OffsetNotFoundException;
 use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\Hooks\AliasHookData;
@@ -263,6 +264,13 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		}
 
 		if ($descriptor->lifetime === ServiceLifetime::Singleton && $descriptor->instance !== null) {
+			$resolvedData = new ServiceResolvedHookData($serviceName, $descriptor, $descriptor->instance);
+
+			/** @var ServiceResolvedHook $hook */
+			foreach ($this->hooks[ServiceResolvedHook::class] as $hook) {
+				$hook->serviceResolved($resolvedData);
+			}
+
 			return $descriptor->instance;
 		}
 
@@ -386,11 +394,21 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Alias must not be empty.');
 		}
 
-		/** @var class-string<TService> $serviceName */
-		$serviceName = $this->aliases->get($alias);
+		try {
+			/** @var class-string<TService> $serviceName */
+			$serviceName = $this->aliases->get($alias);
+		} catch (OffsetNotFoundException) {
+			$serviceName = null;
+		}
 
 		/** @psalm-suppress DocblockTypeContradiction */
 		if ($serviceName === null) {
+			$data = new AliasHookData($alias, null);
+			/** @var UnknownAliasRequestedHook $hook */
+			foreach ($this->hooks[UnknownAliasRequestedHook::class] as $hook) {
+				$hook->unknownAliasRequested($data);
+			}
+
 			return null;
 		}
 
