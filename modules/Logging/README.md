@@ -9,12 +9,12 @@ It also supports formatting with [ANSI escape codes].
 <?php
 
 use Elephox\Logging\MultiSinkLogger;
-use Elephox\Logging\ConsoleSink;
+use Elephox\Logging\ColoredConsoleSink;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\LogLevel;
 
 $logger = new MultiSinkLogger();
-$logger->addSink(new ConsoleSink());
+$logger->addSink(new ColoredConsoleSink());
 
 $logger->info('Hello world!'); // Prints to console: [26.04.22 11:04:10.713] [INF] Hello world!
 

@@ -8,12 +8,12 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as M;
 
 /**
- * @covers \Elephox\Logging\AnsiColorSink
+ * @covers \Elephox\Logging\SimpleFormatColorSink
  * @covers \Elephox\Logging\LogLevel
  *
  * @internal
  */
-class AnsiColorSinkTest extends MockeryTestCase
+class SimpleFormatColorSinkTest extends MockeryTestCase
 {
 	public function testSimpleWrite(): void
 	{
@@ -25,7 +25,7 @@ class AnsiColorSinkTest extends MockeryTestCase
 			->andReturns()
 		;
 
-		$messageFormatterSink = new AnsiColorSink($sink);
+		$messageFormatterSink = new SimpleFormatColorSink($sink);
 		$messageFormatterSink->write(LogLevel::INFO, 'Hello World', []);
 	}
 
@@ -45,7 +45,7 @@ class AnsiColorSinkTest extends MockeryTestCase
 			->andReturns()
 		;
 
-		$messageFormatterSink = new AnsiColorSink($sink);
+		$messageFormatterSink = new SimpleFormatColorSink($sink);
 		$messageFormatterSink->write(LogLevel::INFO, 'Hello <green>World</green>', []);
 		$messageFormatterSink->write(LogLevel::WARNING, 'This <green>is</green> a <red>warning</red>', []);
 	}

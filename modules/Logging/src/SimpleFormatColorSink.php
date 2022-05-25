@@ -5,9 +5,10 @@ namespace Elephox\Logging;
 
 use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
+use Elephox\Logging\Contract\SinkProxy;
 use Elephox\Logging\LogLevel as LogLevelEnum;
 
-class AnsiColorSink implements Sink
+class SimpleFormatColorSink implements Sink, SinkProxy
 {
 	public function __construct(private readonly Sink $innerSink)
 	{
@@ -15,6 +16,13 @@ class AnsiColorSink implements Sink
 
 	public function write(LogLevel $level, string $message, array $context): void
 	{
+		if (!$this->getInnerSink()->hasCapability(SinkCapability::AnsiFormatting)) {
+			// TODO: remove formatting tags from message
+			$this->getInnerSink()->write($level, $message, $context);
+
+			return;
+		}
+
 		foreach ([
 			'black' => 30,
 			'red' => 31,
@@ -87,6 +95,16 @@ class AnsiColorSink implements Sink
 			);
 		}
 
-		$this->innerSink->write($level, $message, $context);
+		$this->getInnerSink()->write($level, $message, $context);
+	}
+
+	public function getInnerSink(): Sink
+	{
+		return $this->innerSink;
+	}
+
+	public function hasCapability(SinkCapability $capability): bool
+	{
+		return $capability === SinkCapability::ElephoxFormatting || $this->getInnerSink()->hasCapability($capability);
 	}
 }

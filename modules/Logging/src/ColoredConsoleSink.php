@@ -8,7 +8,7 @@ use Elephox\Logging\Contract\Sink;
 use JsonException;
 use ricardoboss\Console;
 
-class ConsoleSink implements Sink
+class ColoredConsoleSink implements Sink
 {
 	public function write(LogLevelContract $level, string $message, array $context): void
 	{
@@ -34,5 +34,10 @@ class ConsoleSink implements Sink
 		}
 
 		Console::$method($message . $metaDataSuffix);
+	}
+
+	public function hasCapability(SinkCapability $capability): bool
+	{
+		return $capability === SinkCapability::AnsiFormatting;
 	}
 }

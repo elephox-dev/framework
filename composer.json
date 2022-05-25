@@ -21,6 +21,7 @@
         "ext-mbstring": "*",
         "elephox/mimey": "^4.0",
         "jetbrains/phpstorm-attributes": "^1.0",
+        "nunomaduro/termwind": "^1.10",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "psr/log": "^3.0",
