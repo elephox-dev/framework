@@ -6,7 +6,8 @@ namespace Elephox\Console\Logging;
 use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\SinkCapability;
-use function Termwind\{render, style};
+use function Termwind\render;
+use function Termwind\style;
 
 /**
  * @psalm-suppress InternalMethod

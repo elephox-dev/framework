@@ -13,7 +13,6 @@ enum LogLevel: int implements Contract\LogLevel
 	case CRITICAL = 5;
 	case ALERT = 6;
 	case EMERGENCY = 7;
-
 	public function getLevel(): int
 	{
 		return $this->value;

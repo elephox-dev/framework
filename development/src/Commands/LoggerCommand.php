@@ -7,7 +7,6 @@ use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\DI\Contract\ServiceCollection;
-use Elephox\Logging\SimpleFormatColorSink;
 use Elephox\Logging\ColoredConsoleSink;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\Contract\SinkProxy;
@@ -15,15 +14,13 @@ use Elephox\Logging\LogLevel;
 use Elephox\Logging\SingleSinkLogger;
 use Elephox\Logging\StandardSink;
 use Psr\Log\LoggerInterface;
-use function ctype_digit;
 
 class LoggerCommand implements CommandHandler
 {
 	public function __construct(
 		private readonly LoggerInterface $logger,
 		private readonly ServiceCollection $services,
-	)
-	{
+	) {
 	}
 
 	public function configure(CommandTemplateBuilder $builder): void
