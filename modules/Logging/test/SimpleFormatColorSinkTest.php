@@ -78,13 +78,13 @@ class SimpleFormatColorSinkTest extends MockeryTestCase
 
 		$sink
 			->expects('write')
-			->with(M::capture($firstLogLevel), "Hello World", [])
+			->with(M::capture($firstLogLevel), 'Hello World', [])
 			->andReturns()
 		;
 
 		$sink
 			->expects('write')
-			->with(M::capture($secondLogLevel), "This is a warning", [])
+			->with(M::capture($secondLogLevel), 'This is a warning', [])
 			->andReturns()
 		;
 
