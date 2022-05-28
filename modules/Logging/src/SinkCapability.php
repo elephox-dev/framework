@@ -6,6 +6,5 @@ namespace Elephox\Logging;
 enum SinkCapability
 {
 	case AnsiFormatting;
-	case SymfonyFormatting;
 	case ElephoxFormatting;
 }
