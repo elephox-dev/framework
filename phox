@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Elephox\Builder\Whoops\AddsWhoopsHandler;
 use Elephox\Console\ConsoleApplicationBuilder;
+use Elephox\Console\DefaultExceptionHandler;
+use Elephox\Support\Contract\ErrorHandler;
 
 require_once 'bootstrap.php';
 
