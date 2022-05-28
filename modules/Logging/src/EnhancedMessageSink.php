@@ -52,17 +52,7 @@ class EnhancedMessageSink implements Sink, SinkProxy
 
 	protected function getLevelName(LogLevelContract $level): string
 	{
-		return match ($level->getLevel()) {
-			LogLevel::DEBUG->getLevel() => 'DEBG',
-			LogLevel::INFO->getLevel() => 'INFO',
-			LogLevel::NOTICE->getLevel() => 'NOTI',
-			LogLevel::WARNING->getLevel() => 'WARN',
-			LogLevel::ERROR->getLevel() => 'ERRO',
-			LogLevel::CRITICAL->getLevel() => 'CRIT',
-			LogLevel::ALERT->getLevel() => 'ALRT',
-			LogLevel::EMERGENCY->getLevel() => 'EMGY',
-			default => $level->getName(),
-		};
+		return substr(str_pad($level->getName(), 6), 0, 6);
 	}
 
 	protected function getForeground(LogLevelContract $level): string
@@ -108,21 +98,23 @@ class EnhancedMessageSink implements Sink, SinkProxy
 			$message = "<$op>$message</$op>";
 		}
 
-		return "<gray>[</gray>%s<gray>]</gray> $message";
+		return "<gray>[</gray>%s<gray>] [</gray>%s<gray>]</gray> $message";
 	}
 
 	protected function enhanceMessage(LogLevelContract $level, string $message): string
 	{
+		$format = $this->getDefaultFormat();
 		$timestamp = $this->getCurrentTimestamp();
+		$levelName = $this->getLevelName($level);
 
 		if ($this->useFormatting) {
-			return sprintf($this->getEnhancedFormat($level), $timestamp, $message);
+			$format = $this->getEnhancedFormat($level);
 		}
 
 		return sprintf(
-			$this->getDefaultFormat(),
+			$format,
 			$timestamp,
-			$this->getLevelName($level),
+			$levelName,
 			$message,
 		);
 	}
