@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Logging;
 
+use DateTime;
 use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\SinkCapability;
@@ -33,12 +34,12 @@ class TermwindSink implements Sink
 
 	protected function setAlertStyle(): void
 	{
-		style('level-alert')->apply('font-bold text-white bg-yellow p-4');
+		style('level-alert')->apply('font-bold text-black bg-yellow p-4');
 	}
 
 	protected function setCriticalStyle(): void
 	{
-		style('level-critical')->apply('font-normal text-magenta');
+		style('level-critical')->apply('font-normal text-magenta font-bold');
 	}
 
 	protected function setErrorStyle(): void
@@ -66,15 +67,36 @@ class TermwindSink implements Sink
 		style('level-debug')->apply('font-normal text-gray');
 	}
 
+	protected function getTimestampFormat(): string
+	{
+		return 'd.m.y H:i:s.v';
+	}
+
+	protected function getCurrentTimestamp(): string
+	{
+		return (new DateTime())->format($this->getTimestampFormat());
+	}
+
+	protected function formatTimestamp(): string
+	{
+		$timestamp = $this->getCurrentTimestamp();
+
+		return "<span>[$timestamp]</span>";
+	}
+
 	public function write(LogLevel $level, string $message, array $context): void
 	{
 		$className = strtolower($level->getName());
+		$timestamp = $this->formatTimestamp();
 
-		render(<<<HTML
+		render(
+			<<<HTML
 <div class="level-$className">
+	$timestamp
 	$message
 </div>
-HTML);
+HTML,
+		);
 	}
 
 	public function hasCapability(SinkCapability $capability): bool
