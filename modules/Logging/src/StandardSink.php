@@ -19,7 +19,6 @@ class StandardSink implements Sink
 
 	public function hasCapability(SinkCapability $capability): bool
 	{
-		// TODO: check if current shell actually supports ANSI formatting
-		return $capability === SinkCapability::AnsiFormatting;
+		return stream_isatty(STDOUT) && stream_isatty(STDERR) && $capability === SinkCapability::AnsiFormatting;
 	}
 }
