@@ -13,9 +13,10 @@ use Elephox\Console\Command\CommandCollection;
 use Elephox\Console\Contract\ConsoleEnvironment;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
-use Elephox\Logging\AnsiColorSink;
-use Elephox\Logging\ConsoleSink;
+use Elephox\Logging\EnhancedMessageSink;
 use Elephox\Logging\MultiSinkLogger;
+use Elephox\Logging\SimpleFormatColorSink;
+use Elephox\Logging\StandardSink;
 use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
 use Psr\Log\LoggerInterface;
@@ -136,7 +137,7 @@ class ConsoleApplicationBuilder
 	{
 		$this->services->addSingleton(LoggerInterface::class, MultiSinkLogger::class, static function (): MultiSinkLogger {
 			$logger = new MultiSinkLogger();
-			$logger->addSink(new AnsiColorSink(new ConsoleSink()));
+			$logger->addSink(new EnhancedMessageSink(new SimpleFormatColorSink(new StandardSink())));
 
 			return $logger;
 		});

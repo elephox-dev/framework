@@ -5,9 +5,7 @@ namespace Elephox\Logging\Contract;
 
 use Elephox\Logging\SinkCapability;
 
-interface Sink
+interface SinkLogger
 {
 	public function hasCapability(SinkCapability $capability): bool;
-
-	public function write(LogLevel $level, string $message, array $context): void;
 }
