@@ -95,6 +95,12 @@ class File extends AbstractFilesystemNode implements Contract\File
 	}
 
 	#[Pure]
+	public function getNameWithoutExtension(): string
+	{
+		return pathinfo($this->getPath(), PATHINFO_FILENAME);
+	}
+
+	#[Pure]
 	public function getExtension(): string
 	{
 		return pathinfo($this->getPath(), PATHINFO_EXTENSION);

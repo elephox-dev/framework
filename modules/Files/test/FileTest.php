@@ -67,6 +67,12 @@ class FileTest extends MockeryTestCase
 		static::assertEquals('txt', $file->getExtension());
 	}
 
+	public function testGetNameWithoutExtension(): void
+	{
+		$file = new File('/tmp/test.txt');
+		static::assertEquals('test', $file->getNameWithoutExtension());
+	}
+
 	public function testToString(): void
 	{
 		$file = new File('/tmp/test.txt');
