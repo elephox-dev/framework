@@ -178,6 +178,7 @@ trait DeepCloneable
 			$clonedPropertyValue = match ($action) {
 				CloneAction::Keep => $propertyValue,
 				CloneAction::Clone => self::cloneRecursive($propertyValue, $cloneStorage),
+				default => throw new RuntimeException('Unexpected match value'),
 			};
 
 			$property->setValue($clone, $clonedPropertyValue);

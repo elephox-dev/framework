@@ -168,6 +168,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		$factory = $this->getImplementationFactory($descriptor);
 
 		try {
+			/** @var TService */
 			return $this->callback($factory);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($serviceName, previous: $e);
@@ -241,6 +242,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 					throw new InvalidServiceDescriptorException("Singleton service '$descriptor->implementationType' has no factory and no instance.");
 				}
 
+				/** @var object */
 				$descriptor->instance = $this->callback($descriptor->implementationFactory);
 			}
 

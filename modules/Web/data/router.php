@@ -8,7 +8,7 @@ declare(strict_types=1);
 $path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
 
 // If $path is a direct file hit let the cli server handle this simple case.
-// Also prevent access to files outside of $_SERVER['DOCUMENT_ROOT'] (e.g. /../../../etc/passwd)
+// Also prevent access to files outside $_SERVER['DOCUMENT_ROOT'] (e.g. /../../../etc/passwd)
 if (is_file($path) && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($path))) {
 	return false;
 }

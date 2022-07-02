@@ -915,7 +915,7 @@ trait IsEnumerable
 			/** @var SelectIterator<mixed, TResult> */
 			new SelectIterator(
 				$mit,
-				static function (mixed $values) use ($resultSelector): mixed {
+				static function (mixed $values) use ($resultSelector): array {
 					/** @var array{TSource, TOther} $values */
 					return $resultSelector($values[0], $values[1]);
 				},

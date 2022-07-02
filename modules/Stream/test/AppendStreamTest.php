@@ -210,8 +210,8 @@ class AppendStreamTest extends MockeryTestCase
 		$streamMock->allows('getSize')->times(5)->andReturns(10);
 		$appendedStreamMock->allows('getSize')->times(4)->andReturns(10);
 
-		$streamMock->expects('seek')->with(10, SEEK_SET)->andReturns();
-		$appendedStreamMock->expects('seek')->with(2, SEEK_SET)->andReturns();
+		$streamMock->expects('seek')->with(10)->andReturns();
+		$appendedStreamMock->expects('seek')->with(2)->andReturns();
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
 		$appendStream->seek(10);
@@ -219,11 +219,11 @@ class AppendStreamTest extends MockeryTestCase
 
 		$streamMock->expects('eof')->withNoArgs()->andReturns(true);
 		$appendedStreamMock->expects('tell')->withNoArgs()->andReturns(2);
-		$appendedStreamMock->expects('seek')->with(5, SEEK_SET)->andReturns();
+		$appendedStreamMock->expects('seek')->with(5)->andReturns();
 
 		$appendStream->seek(3, SEEK_CUR);
 
-		$streamMock->expects('seek')->with(9, SEEK_SET)->andReturns();
+		$streamMock->expects('seek')->with(9)->andReturns();
 
 		$appendStream->seek(11, SEEK_END);
 	}

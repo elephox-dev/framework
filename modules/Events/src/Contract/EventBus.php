@@ -14,7 +14,7 @@ interface EventBus
 	public function subscribe(string $eventName, callable $callback): Subscription;
 
 	/**
-	 * @param non-empty-string $id
+	 * @param Subscription|non-empty-string $id
 	 */
 	public function unsubscribe(Subscription|string $id): void;
 

@@ -96,9 +96,9 @@ class AppendStream extends AbstractStream
 		if ($offset > $streamSize) {
 			$offset -= $streamSize;
 			/** @var positive-int|0 $offset */
-			$this->appendedStream->seek($offset, SEEK_SET);
+			$this->appendedStream->seek($offset);
 		} elseif ($offset >= 0) {
-			$this->stream->seek($offset, SEEK_SET);
+			$this->stream->seek($offset);
 		} else {
 			throw new InvalidArgumentException('Cannot seek to negative offset');
 		}

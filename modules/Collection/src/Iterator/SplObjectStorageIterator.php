@@ -15,7 +15,7 @@ use SplObjectStorage;
 class SplObjectStorageIterator implements Iterator
 {
 	public function __construct(
-		private SplObjectStorage $storage,
+		private readonly SplObjectStorage $storage,
 	) {
 	}
 

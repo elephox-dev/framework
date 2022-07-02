@@ -26,7 +26,7 @@ class Subscription implements Contract\Subscription
 		private readonly int $priority = 0,
 	) {
 		/** @var non-empty-string */
-		$this->id = spl_object_hash((object) $this);
+		$this->id = spl_object_hash($this);
 	}
 
 	#[Pure]

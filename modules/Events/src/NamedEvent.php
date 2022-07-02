@@ -11,7 +11,7 @@ abstract class NamedEvent implements Contract\Event
 	 * @param non-empty-string $name
 	 */
 	public function __construct(
-		private string $name,
+		private readonly string $name,
 	) {
 	}
 

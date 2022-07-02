@@ -1013,7 +1013,7 @@ trait IsKeyedEnumerable
 						return $keySelector($keys[0], $keys[1]);
 					},
 				),
-				static function (mixed $values) use ($resultSelector): mixed {
+				static function (mixed $values) use ($resultSelector): array {
 					/** @var array{TSource, TOther} $values */
 					return $resultSelector($values[0], $values[1]);
 				},

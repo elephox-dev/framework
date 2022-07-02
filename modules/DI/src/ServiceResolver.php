@@ -110,7 +110,7 @@ trait ServiceResolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure|Closure(mixed): T $callback
+	 * @param Closure $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T

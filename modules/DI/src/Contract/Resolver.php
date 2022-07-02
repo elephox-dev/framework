@@ -51,7 +51,7 @@ interface Resolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure|Closure(mixed): T $callback
+	 * @param Closure $callback
 	 * @param argument-list $overrideArguments
 	 *
 	 * @return T

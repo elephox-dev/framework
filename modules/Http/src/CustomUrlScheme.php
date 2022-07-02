@@ -11,8 +11,8 @@ class CustomUrlScheme implements Contract\UrlScheme
 {
 	#[Pure]
 	public function __construct(
-		private string $scheme,
-		private ?int $defaultPort = null,
+		private readonly string $scheme,
+		private readonly ?int $defaultPort = null,
 	) {
 	}
 
