@@ -47,7 +47,7 @@ class RequestPipelineBuilder
 		return $this;
 	}
 
-	public function exceptionHandler(WebMiddleware & ExceptionHandler $exceptionHandler): RequestPipelineBuilder
+	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): RequestPipelineBuilder
 	{
 		try {
 			/** @var int $key */
