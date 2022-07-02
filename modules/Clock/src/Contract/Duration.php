@@ -58,7 +58,6 @@ interface Duration
 	public const YEARS_PER_DAY = 1 / self::DAYS_PER_YEAR;
 	public const YEARS_PER_MONTH = 1 / self::MONTHS_PER_YEAR;
 
-	#[Pure]
 	public static function from(
 		bool $negative = false,
 		float $microseconds = 0,
