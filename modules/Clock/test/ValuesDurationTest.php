@@ -127,7 +127,7 @@ class ValuesDurationTest extends TestCase
 	public function testNegatives(): void
 	{
 		$this->expectException(AssertionError::class);
-		$this->expectExceptionMessage("Microseconds must be greater than or equal to 0. To represent negative durations, pass \"negative: true\"");
+		$this->expectExceptionMessage('Microseconds must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 
 		ValuesDuration::from(microseconds: -1);
 	}
