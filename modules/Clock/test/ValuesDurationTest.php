@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Clock;
 
+use AssertionError;
 use Elephox\Clock\Contract\Duration;
 use PHPUnit\Framework\TestCase;
 
@@ -112,8 +113,7 @@ class ValuesDurationTest extends TestCase
 	{
 		$a = AbstractDuration::toInterval(ValuesDuration::from(microseconds: 1234, seconds: 1));
 
-		static::assertEquals(0, $a->invert)
-		;
+		static::assertEquals(0, $a->invert);
 		static::assertEquals(0.001234, $a->f);
 		static::assertEquals(1, $a->s);
 
@@ -122,5 +122,13 @@ class ValuesDurationTest extends TestCase
 		static::assertEquals(1, $b->invert);
 		static::assertEquals(0.001, $b->f);
 		static::assertEquals(12, $b->s);
+	}
+
+	public function testNegatives(): void
+	{
+		$this->expectException(AssertionError::class);
+		$this->expectExceptionMessage("Microseconds must be greater than or equal to 0. To represent negative durations, pass \"negative: true\"");
+
+		ValuesDuration::from(microseconds: -1);
 	}
 }

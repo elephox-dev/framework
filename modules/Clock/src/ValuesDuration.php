@@ -9,13 +9,11 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 class ValuesDuration extends AbstractDuration
 {
-	#[Pure]
 	public static function from(bool $negative = false, float $microseconds = 0, int $seconds = 0, int $minutes = 0, int $hours = 0, int $days = 0, int $months = 0, int $years = 0): Contract\Duration
 	{
 		return new self($negative, $microseconds, $seconds, $minutes, $hours, $days, $months, $years);
 	}
 
-	#[Pure]
 	public function __construct(
 		private readonly bool $negative = false,
 		private readonly float $microseconds = 0,
@@ -26,6 +24,13 @@ class ValuesDuration extends AbstractDuration
 		private readonly int $months = 0,
 		private readonly int $years = 0,
 	) {
+		assert($this->microseconds >= 0, 'Microseconds must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->seconds >= 0, 'Seconds must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->minutes >= 0, 'Minutes must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->hours >= 0, 'Hours must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->days >= 0, 'Days must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->months >= 0, 'Months must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+		assert($this->years >= 0, 'Years must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 	}
 
 	#[Pure]
