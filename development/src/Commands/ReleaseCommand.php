@@ -136,7 +136,7 @@ class ReleaseCommand implements CommandHandler
 
 		$this->logger->warning("You are now on the release branch for <yellow>$version</yellow> (<green>$versionReleaseBranch</green>).");
 		$this->logger->warning('You can make last-minute adjustments now and commit them.');
-		$this->logger->warning("This branch will be merged into the <green>$baseBranch</green> branch and deleted afterwards.");
+		$this->logger->warning("This branch will eventually be merged into the <green>$targetBranch</green> branch and then the <green>$baseBranch</green> branch and deleted afterwards.");
 		$this->logger->warning('When you are done, press enter and the release will continue.');
 		fgets(STDIN);
 
@@ -248,7 +248,7 @@ class ReleaseCommand implements CommandHandler
 		chdir($moduleFolder);
 
 		if (!$this->executeRequireSuccess(
-			"Failed to checkout base branch (<green>$baseBranch</green>)",
+			"Failed to check out base branch (<green>$baseBranch</green>)",
 			'git checkout -B %s',
 			$baseBranch,
 		)) {
