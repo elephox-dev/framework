@@ -15,8 +15,8 @@
     },
     "require": {
         "php": "^8.1 <8.3",
-        "elephox/collection": "dev-develop",
-        "elephox/files": "dev-develop",
+        "elephox/collection": "^0.6",
+        "elephox/files": "^0.6",
         "jetbrains/phpstorm-attributes": "^1.0",
         "psr/cache": "^3.0"
     },
