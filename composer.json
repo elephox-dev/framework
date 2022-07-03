@@ -122,10 +122,11 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "0.6.x-dev",
+            "dev-develop": "0.7.x-dev",
             "release/0.3": "0.3.x-dev",
             "release/0.4": "0.4.x-dev",
-            "release/0.5": "0.5.x-dev"
+            "release/0.5": "0.5.x-dev",
+            "release/0.6": "0.6.x-dev"
         },
         "module-sync": {
             "repository-base": "https://github.com/elephox-dev/"
