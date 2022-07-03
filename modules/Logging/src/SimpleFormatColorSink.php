@@ -68,6 +68,7 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 	}
 
 	/**
+	 * @param int $default
 	 * @param array<string, int> $map
 	 * @param string $message
 	 * @param callable(int): string $openerGenerator
@@ -81,7 +82,12 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 
 		/** @var string */
 		return preg_replace_callback("/<([\/a-zA-Z]+?)>/", static function (array $matches) use (
-			&$stack, $default, $map, $openerGenerator, $closerGenerator): string {
+			&$stack,
+			$default,
+			$map,
+			$openerGenerator,
+			$closerGenerator
+		): string {
 			[$original, $color] = $matches;
 			$closer = false;
 			if (str_starts_with($color, '/')) {
@@ -94,7 +100,6 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 			}
 
 			/** @var list<int> $stack */
-
 			if (!$closer) {
 				$stack[] = $map[$color];
 
