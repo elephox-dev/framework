@@ -91,7 +91,7 @@ class ReleaseCommand implements CommandHandler
 
 		$dryRun = (bool) $command->options->get('dry-run')->value;
 		if ($dryRun) {
-			$this->logger->warning('Performing a dry run. No changes will be made.');
+			$this->logger->warning('Performing a dry run. No changes will be pushed.');
 		}
 
 		$this->logger->debug("Full version: <yellow>$versionName</yellow>");
@@ -100,7 +100,7 @@ class ReleaseCommand implements CommandHandler
 		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
 		if ($currentBranch !== $baseBranch) {
 			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this <yellow>$type</yellow> version.");
-			$this->logger->error("You are currently on the <red>$currentBranch</red> branch.");
+			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
 
 			return 1;
 		}
