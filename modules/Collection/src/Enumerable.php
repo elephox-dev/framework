@@ -37,6 +37,7 @@ class Enumerable extends IteratorProvider implements GenericEnumerable
 
 		if (is_object($value)) {
 			if ($value instanceof Iterator) {
+				/** @var Iterator<mixed, mixed> $value */
 				return new self($value);
 			}
 
