@@ -173,6 +173,7 @@ trait ServiceResolver
 			throw new MissingTypeHintException($parameter);
 		}
 
+		// TODO: add support for disjunctive normal form types (https://wiki.php.net/rfc/dnf_types)
 		if ($type instanceof ReflectionUnionType) {
 			$typeNames = array_map(static fn (ReflectionNamedType $t) => $t->getName(), $type->getTypes());
 		} else {
