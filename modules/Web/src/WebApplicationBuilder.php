@@ -41,18 +41,18 @@ class WebApplicationBuilder
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalWebEnvironment();
 		$services ??= new ServiceCollection();
-		$pipeline ??= new RequestPipelineBuilder(new class implements RequestPipelineEndpoint {
+
+		$defaultEndpoint = new class implements RequestPipelineEndpoint {
 			public function handle(RequestContract $request): ResponseBuilder
 			{
 				return Response::build()->responseCode(ResponseCode::BadRequest);
 			}
-		});
+		};
+		$pipeline ??= new RequestPipelineBuilder($defaultEndpoint, $services->resolver());
 
 		$services->addSingleton(Environment::class, implementation: $environment);
 		$services->addSingleton(WebEnvironment::class, implementation: $environment);
-
 		$services->addSingleton(Configuration::class, implementation: $configuration);
-
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 
 		return new static(

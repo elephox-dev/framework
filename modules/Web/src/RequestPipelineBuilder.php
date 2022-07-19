@@ -5,6 +5,7 @@ namespace Elephox\Web;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\EmptySequenceException;
+use Elephox\DI\Contract\Resolver;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
@@ -18,14 +19,24 @@ class RequestPipelineBuilder
 
 	public function __construct(
 		private RequestPipelineEndpoint $endpoint,
+		private readonly Resolver $resolver,
 	) {
 		/** @var ArrayList<WebMiddleware> */
 		$this->pipeline = new ArrayList();
 	}
 
-	public function push(WebMiddleware $middleware): RequestPipelineBuilder
+	/**
+	 * @param class-string<WebMiddleware>|WebMiddleware $middleware
+	 */
+	public function push(WebMiddleware|string $middleware): RequestPipelineBuilder
 	{
-		$this->pipeline->add($middleware);
+		if (is_string($middleware)) {
+			$concreteMiddleware = $this->resolver->instantiate($middleware);
+		} else {
+			$concreteMiddleware = $middleware;
+		}
+
+		$this->pipeline->add($concreteMiddleware);
 
 		return $this;
 	}
