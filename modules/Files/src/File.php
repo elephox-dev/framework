@@ -164,7 +164,8 @@ class File extends AbstractFilesystemNode implements Contract\File
 
 	public function exists(): bool
 	{
-		return file_exists($this->getPath());
+		$path = $this->getPath();
+		return file_exists($path) && is_file($path);
 	}
 
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): Contract\File
@@ -241,7 +242,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		try {
 			self::openStream($this, false, true, true)->close();
 		} catch (RuntimeException $e) {
-			throw new FileNotCreatedException($this->path, previous: $e);
+			throw new FileNotCreatedException($this->getPath(), previous: $e);
 		}
 	}
 

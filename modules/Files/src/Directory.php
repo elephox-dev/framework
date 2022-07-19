@@ -25,17 +25,17 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function getChildren(): GenericKeyedEnumerable
 	{
 		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path);
+			throw new DirectoryNotFoundException($this->getPath());
 		}
 
 		/** @var list<string> $nodes */
-		$nodes = scandir($this->path);
+		$nodes = scandir($this->getPath());
 
 		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
 			->where(static fn (mixed $name) => $name !== '.' && $name !== '..')
 			->select(function (mixed $name): Contract\FilesystemNode {
-				$path = Path::join($this->path, $name);
+				$path = Path::join($this->getPath(), $name);
 				if (is_dir($path)) {
 					return new Directory($path);
 				}
@@ -48,7 +48,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	#[Pure]
 	public function isRoot(): bool
 	{
-		return Path::isRoot($this->path);
+		return Path::isRoot($this->getPath());
 	}
 
 	public function isEmpty(): bool
@@ -58,21 +58,21 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 
 	public function getFile(string $filename): File
 	{
-		$path = Path::join($this->path, $filename);
+		$path = Path::join($this->getPath(), $filename);
 
 		return new File($path);
 	}
 
 	public function getDirectory(string $dirname): Directory
 	{
-		$path = Path::join($this->path, $dirname);
+		$path = Path::join($this->getPath(), $dirname);
 
 		return new Directory($path);
 	}
 
 	public function getChild(string $name, bool $throwForNotFound = false): FilesystemNode
 	{
-		$path = Path::join($this->path, $name);
+		$path = Path::join($this->getPath(), $name);
 
 		if (is_dir($path)) {
 			return new Directory($path);
@@ -92,29 +92,30 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	#[Pure]
 	public function isReadonly(): bool
 	{
-		return !is_writable($this->path);
+		return !is_writable($this->getPath());
 	}
 
 	public function exists(): bool
 	{
-		return is_dir($this->path);
+		$path = $this->getPath();
+		return file_exists($path) && is_dir($path);
 	}
 
 	public function delete(bool $recursive = true): void
 	{
 		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path);
+			throw new DirectoryNotFoundException($this->getPath());
 		}
 
 		$children = $this->getChildren();
 		if ($children->isEmpty()) {
-			rmdir($this->path);
+			rmdir($this->getPath());
 
 			return;
 		}
 
 		if (!$recursive) {
-			throw new DirectoryNotEmptyException($this->path);
+			throw new DirectoryNotEmptyException($this->getPath());
 		}
 
 		foreach ($children as $node) {
@@ -125,7 +126,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			}
 		}
 
-		rmdir($this->path);
+		rmdir($this->getPath());
 	}
 
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void
@@ -134,14 +135,14 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			return;
 		}
 
-		if (!mkdir($this->path, $permissions, $recursive) && !is_dir($this->path)) {
-			throw new DirectoryNotCreatedException($this->path);
+		if (!mkdir($this->getPath(), $permissions, $recursive) && !is_dir($this->getPath())) {
+			throw new DirectoryNotCreatedException($this->getPath());
 		}
 	}
 
 	public function moveTo(Contract\Directory $directory, bool $overwrite = true): void
 	{
-		if ($directory->getPath() === $this->path) {
+		if ($directory->getPath() === $this->getPath()) {
 			return;
 		}
 
@@ -158,7 +159,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 
 	public function copyTo(Contract\Directory $directory, bool $overwrite = true): void
 	{
-		if ($directory->getPath() === $this->path) {
+		if ($directory->getPath() === $this->getPath()) {
 			return;
 		}
 

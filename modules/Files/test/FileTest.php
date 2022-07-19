@@ -432,6 +432,12 @@ class FileTest extends MockeryTestCase
 		$invalidFile->touch();
 	}
 
+	public function testExistsIsFalseOnDirectories(): void
+	{
+		$file = new File(sys_get_temp_dir());
+		static::assertFalse($file->exists());
+	}
+
 	public function testMoveTo(): void
 	{
 		$file = new File(tempnam(sys_get_temp_dir(), 'ele'));

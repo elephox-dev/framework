@@ -110,6 +110,12 @@ class DirectoryTest extends TestCase
 		static::assertTrue($directory->isEmpty());
 	}
 
+	public function testExistsIsFalseOnFiles(): void
+	{
+		$directory = new Directory($this->filePath);
+		static::assertFalse($directory->exists());
+	}
+
 	public function testGetModifiedTime(): void
 	{
 		$directory = new Directory($this->dirPath);
