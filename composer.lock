@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac52bde124e05344d96f00a7d3a811a3",
+    "content-hash": "a5c75531ea3ced237d2f3cd5bcc1e5fb",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -2522,12 +2522,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "4152d7e9493cb4c8444a1a732be2545f7f3e751a"
+                "reference": "f4ccd1da0a46f948d3dafe824d016359f0a5d429"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/4152d7e9493cb4c8444a1a732be2545f7f3e751a",
-                "reference": "4152d7e9493cb4c8444a1a732be2545f7f3e751a",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/f4ccd1da0a46f948d3dafe824d016359f0a5d429",
+                "reference": "f4ccd1da0a46f948d3dafe824d016359f0a5d429",
                 "shasum": ""
             },
             "require": {
@@ -2539,9 +2539,9 @@
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^2.3.5",
+                "composer/composer": "^2.3.9",
                 "ergebnis/license": "^1.2.0",
-                "ergebnis/php-cs-fixer-config": "^4.4.0",
+                "ergebnis/php-cs-fixer-config": "^4.5.0",
                 "fakerphp/faker": "^1.19.0",
                 "phpunit/phpunit": "^9.5.21",
                 "psalm/plugin-phpunit": "~0.17.0",
@@ -2584,7 +2584,7 @@
                 "issues": "https://github.com/ergebnis/composer-normalize/issues",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "time": "2022-06-27T22:03:58+00:00"
+            "time": "2022-07-11T22:28:38+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
@@ -3016,12 +3016,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "866715801ac121a0a4cde6fdb9d9a3dd6873b606"
+                "reference": "76c9c0ec767630056278441e6153d3e690f8610e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/866715801ac121a0a4cde6fdb9d9a3dd6873b606",
-                "reference": "866715801ac121a0a4cde6fdb9d9a3dd6873b606",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/76c9c0ec767630056278441e6153d3e690f8610e",
+                "reference": "76c9c0ec767630056278441e6153d3e690f8610e",
                 "shasum": ""
             },
             "require": {
@@ -3098,7 +3098,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-30T17:37:29+00:00"
+            "time": "2022-07-13T09:54:31+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -7611,12 +7611,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "fbd240b6b64e38efc2d628cfeb38548b81ab7339"
+                "reference": "2a72a24435d672eef51c1be36775463f1d6c2fc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/fbd240b6b64e38efc2d628cfeb38548b81ab7339",
-                "reference": "fbd240b6b64e38efc2d628cfeb38548b81ab7339",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/2a72a24435d672eef51c1be36775463f1d6c2fc1",
+                "reference": "2a72a24435d672eef51c1be36775463f1d6c2fc1",
                 "shasum": ""
             },
             "require": {
@@ -7706,7 +7706,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2022-06-28T16:32:01+00:00"
+            "time": "2022-07-13T22:07:07+00:00"
         },
         {
             "name": "webmozart/assert",

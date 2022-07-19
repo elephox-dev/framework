@@ -34,7 +34,8 @@ class ConsoleApplicationBuilder
 		?ConfigurationManager $configuration = null,
 		?ConsoleEnvironment $environment = null,
 		?CommandCollection $commands = null,
-	): static {
+	): static
+	{
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalConsoleEnvironment();
 		$services ??= new ServiceCollection();
