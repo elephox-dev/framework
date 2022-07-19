@@ -78,6 +78,7 @@ enum ResponseCode: int
 	case InsufficientStorage = 507;
 	case LoopDetected = 508;
 	case NetworkAuthenticationRequired = 511;
+
 	#[Pure]
 	public function getReasonPhrase(): string
 	{
@@ -144,5 +145,35 @@ enum ResponseCode: int
 			self::LoopDetected => 'Loop Detected',
 			self::NetworkAuthenticationRequired => 'Network Authentication Required'
 		};
+	}
+
+	#[Pure]
+	public function isInformational(): bool
+	{
+		return $this->value >= 100 && $this->value < 200;
+	}
+
+	#[Pure]
+	public function isSuccessful(): bool
+	{
+		return $this->value >= 200 && $this->value < 300;
+	}
+
+	#[Pure]
+	public function isRedirection(): bool
+	{
+		return $this->value >= 300 && $this->value < 400;
+	}
+
+	#[Pure]
+	public function isClientError(): bool
+	{
+		return $this->value >= 400 && $this->value < 500;
+	}
+
+	#[Pure]
+	public function isServerError(): bool
+	{
+		return $this->value >= 500;
 	}
 }
