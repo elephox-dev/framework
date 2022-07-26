@@ -98,6 +98,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function exists(): bool
 	{
 		$path = $this->getPath();
+
 		return file_exists($path) && is_dir($path);
 	}
 

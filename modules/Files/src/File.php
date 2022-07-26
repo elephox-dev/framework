@@ -165,6 +165,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function exists(): bool
 	{
 		$path = $this->getPath();
+
 		return file_exists($path) && is_file($path);
 	}
 
