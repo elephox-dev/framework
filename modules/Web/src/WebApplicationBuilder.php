@@ -20,7 +20,9 @@ use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
+use Elephox\Web\Middleware\FileExtensionToContentType;
 use Elephox\Web\Middleware\ServerTimingHeaderMiddleware;
+use Elephox\Web\Middleware\StaticContentHandler;
 use Elephox\Web\Routing\RequestRouter;
 use Throwable;
 
@@ -84,7 +86,7 @@ class WebApplicationBuilder
 		$this->addDefaultMiddleware();
 	}
 
-	protected function getEnvironment(): Environment
+	protected function getEnvironment(): WebEnvironment
 	{
 		return $this->environment;
 	}
@@ -107,6 +109,8 @@ class WebApplicationBuilder
 	protected function addDefaultMiddleware(): void
 	{
 		$this->pipeline->push(new ServerTimingHeaderMiddleware('pipeline'));
+		$this->pipeline->push(new FileExtensionToContentType());
+		$this->pipeline->push(new StaticContentHandler($this->getEnvironment()));
 	}
 
 	public function build(): WebApplication
