@@ -38,8 +38,7 @@ class WebApplicationBuilder
 		?ConfigurationManagerContract $configuration = null,
 		?WebEnvironment $environment = null,
 		?RequestPipelineBuilder $pipeline = null,
-	): static
-	{
+	): static {
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalWebEnvironment();
 		$services ??= new ServiceCollection();
