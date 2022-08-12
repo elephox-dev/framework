@@ -118,16 +118,22 @@ class WebApplicationBuilder
 		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
 
 		$builtPipeline = $this->pipeline->build();
-		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline);
+		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline, replace: true);
 
 		if ($this->services->has(ExceptionHandler::class)) {
 			set_exception_handler(function (Throwable $exception): void {
-				$this->services->requireService(ExceptionHandler::class)->handleException($exception);
+				$this->services->requireService(ExceptionHandler::class)
+					->handleException($exception);
 			});
 		}
 
 		if ($this->services->has(ErrorHandler::class)) {
-			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->requireService(ErrorHandler::class)->handleError($severity, $message, $file, $line));
+			set_error_handler(
+				function (int $severity, string $message, string $file, int $line): bool {
+					return $this->services->requireService(ErrorHandler::class)
+						->handleError($severity, $message, $file, $line);
+				}
+			);
 		}
 
 		return new WebApplication(
