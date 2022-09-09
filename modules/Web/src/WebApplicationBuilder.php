@@ -123,7 +123,8 @@ class WebApplicationBuilder
 		if ($this->services->has(ExceptionHandler::class)) {
 			set_exception_handler(function (Throwable $exception): void {
 				$this->services->requireService(ExceptionHandler::class)
-					->handleException($exception);
+					->handleException($exception)
+				;
 			});
 		}
 
@@ -131,8 +132,9 @@ class WebApplicationBuilder
 			set_error_handler(
 				function (int $severity, string $message, string $file, int $line): bool {
 					return $this->services->requireService(ErrorHandler::class)
-						->handleError($severity, $message, $file, $line);
-				}
+						->handleError($severity, $message, $file, $line)
+					;
+				},
 			);
 		}
 
