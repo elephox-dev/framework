@@ -30,8 +30,11 @@ class EventBus implements Contract\EventBus
 		$this->subscriptionSubscriberMapping = new ArrayMap();
 	}
 
-	public function subscribe(string $eventName, callable $callback, int $priority = 0): Contract\Subscription
-	{
+	public function subscribe(
+		string $eventName,
+		callable $callback,
+		int $priority = 0,
+	): Contract\Subscription {
 		if ($this->eventSubscriptionsMapping->has($eventName)) {
 			$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
 		} else {
@@ -39,12 +42,23 @@ class EventBus implements Contract\EventBus
 			$subscriptions = new ArraySet();
 		}
 
-		$subscription = new Subscription($eventName, $callback(...), $priority);
+		$subscription =
+			new Subscription(
+				$eventName,
+				$callback(...),
+				$priority,
+			);
 
 		$subscriptions->add($subscription);
 
-		$this->eventSubscriptionsMapping->put($eventName, $subscriptions);
-		$this->subscriptionSubscriberMapping->put($subscription->getId(), $subscription);
+		$this->eventSubscriptionsMapping->put(
+			$eventName,
+			$subscriptions,
+		);
+		$this->subscriptionSubscriberMapping->put(
+			$subscription->getId(),
+			$subscription,
+		);
 
 		return $subscription;
 	}
@@ -62,11 +76,16 @@ class EventBus implements Contract\EventBus
 		$eventName = $this->subscriptionSubscriberMapping->get($id)->getEventName();
 
 		$subscriptions = $this->eventSubscriptionsMapping->get($eventName);
-		$subscriptions->removeBy(static fn (Contract\Subscription $subscription) => $subscription->getId() === $id);
+		$subscriptions->removeBy(
+			static fn (Contract\Subscription $subscription) => $subscription->getId() === $id,
+		);
 		if ($subscriptions->isEmpty()) {
 			$this->eventSubscriptionsMapping->remove($eventName);
 		} else {
-			$this->eventSubscriptionsMapping->put($eventName, $subscriptions);
+			$this->eventSubscriptionsMapping->put(
+				$eventName,
+				$subscriptions,
+			);
 		}
 
 		$this->subscriptionSubscriberMapping->remove($id);
@@ -79,12 +98,9 @@ class EventBus implements Contract\EventBus
 			return;
 		}
 
-		$subscriptions = $this->eventSubscriptionsMapping
-			->get($eventName)
-			->orderByDescending(
-				static fn (Contract\Subscription $s): int => $s->getPriority(),
-			)
-		;
+		$subscriptions = $this->eventSubscriptionsMapping->get($eventName)->orderByDescending(
+			static fn (Contract\Subscription $s): int => $s->getPriority(),
+		);
 
 		foreach ($subscriptions as $subscription) {
 			$callback = $subscription->getCallback();
@@ -97,9 +113,18 @@ class EventBus implements Contract\EventBus
 		}
 	}
 
-	public function getSubscriptions(): GenericEnumerable
+	public function getSubscriptions(?string $eventName = null): GenericEnumerable
 	{
-		/** @var GenericEnumerable<Contract\Subscription> */
-		return $this->subscriptionSubscriberMapping->values();
+		/** @var GenericEnumerable<Contract\Subscription> $subscriptions */
+		$subscriptions = $this->subscriptionSubscriberMapping->values();
+
+		if ($eventName !== null) {
+			return $subscriptions->where(
+				static fn (Contract\Subscription $subscription) => $subscription->getEventName() ===
+					$eventName,
+			);
+		}
+
+		return $subscriptions;
 	}
 }

@@ -19,9 +19,11 @@ interface EventBus
 	public function unsubscribe(Subscription|string $id): void;
 
 	/**
+	 * @param null|non-empty-string $eventName
+	 *
 	 * @return GenericEnumerable<Subscription>
 	 */
-	public function getSubscriptions(): GenericEnumerable;
+	public function getSubscriptions(?string $eventName = null): GenericEnumerable;
 
 	public function publish(Event $event): void;
 }

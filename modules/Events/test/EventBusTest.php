@@ -106,6 +106,29 @@ class EventBusTest extends TestCase
 		static::assertSame($subscription, $bus->getSubscriptions()->first());
 	}
 
+	public function testGetSubscribersByName(): void
+	{
+		$bus = new EventBus();
+
+		static::assertEmpty($bus->getSubscriptions());
+		static::assertEmpty($bus->getSubscriptions('test'));
+		static::assertEmpty($bus->getSubscriptions('test2'));
+
+		$subscription = $bus->subscribe('test', static function (): void {});
+
+		static::assertCount(1, $bus->getSubscriptions());
+		static::assertCount(1, $bus->getSubscriptions('test'));
+		static::assertEmpty($bus->getSubscriptions('test2'));
+		static::assertSame($subscription, $bus->getSubscriptions('test')->first());
+
+		$subscription2 = $bus->subscribe('test2', static function (): void {});
+
+		static::assertCount(2, $bus->getSubscriptions());
+		static::assertCount(1, $bus->getSubscriptions('test'));
+		static::assertCount(1, $bus->getSubscriptions('test2'));
+		static::assertSame($subscription2, $bus->getSubscriptions('test2')->first());
+	}
+
 	public function testStopPropagation(): void
 	{
 		$bus = new EventBus();
