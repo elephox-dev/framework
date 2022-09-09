@@ -12,6 +12,7 @@ use Elephox\Collection\Iterator\GroupingIterator;
  * @template TSource
  *
  * @extends KeyedEnumerable<TGroupKey, Grouping<TGroupKey, TIteratorKey, TSource>>
+ *
  * @implements Contract\GenericGroupedKeyedEnumerable<TGroupKey, TIteratorKey, TSource>
  */
 class GroupedKeyedEnumerable extends KeyedEnumerable implements Contract\GenericGroupedKeyedEnumerable

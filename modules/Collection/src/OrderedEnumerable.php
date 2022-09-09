@@ -15,6 +15,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
  * @internal
  *
  * @extends KeyedEnumerable<NonNegativeInteger, TSource>
+ *
  * @implements GenericOrderedEnumerable<TSource>
  */
 class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumerable

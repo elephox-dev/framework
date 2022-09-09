@@ -220,7 +220,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			$request->getHeaderMap(),
 			$request->getBody(),
 			$request->getMethod(),
-			$request->getUrl()
+			$request->getUrl(),
 		);
 	}
 }

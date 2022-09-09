@@ -15,6 +15,7 @@ use Iterator;
  * @template TSource
  *
  * @extends IteratorProvider<TIteratorKey, TSource>
+ *
  * @implements GenericKeyedEnumerable<TIteratorKey, TSource>
  */
 class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable

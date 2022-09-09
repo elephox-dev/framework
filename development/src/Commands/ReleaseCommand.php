@@ -366,7 +366,7 @@ class ReleaseCommand implements CommandHandler
 		/**
 		 * @var string[] $output
 		 */
-		[, $output,] = $this->execute($commandLine, ...$args);
+		[, $output] = $this->execute($commandLine, ...$args);
 
 		return (string) end($output);
 	}

@@ -7,6 +7,7 @@ use Elephox\Collection\ArrayMap;
 
 /**
  * @extends ArrayMap<non-empty-string, null|string>
+ *
  * @psalm-consistent-constructor
  */
 class MatchedUrlParametersMap extends ArrayMap

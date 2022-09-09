@@ -14,6 +14,7 @@ use Iterator;
  * @template TSource
  *
  * @extends IteratorProvider<mixed, TSource>
+ *
  * @implements GenericEnumerable<TSource>
  */
 class Enumerable extends IteratorProvider implements GenericEnumerable
