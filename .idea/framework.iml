@@ -36,10 +36,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Entity/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ricardoboss/php-console-logger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/felixfbecker/advanced-json-rpc" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/facade/ignition-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/felixfbecker/language-server-protocol" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ondram/ci-detector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psalm/plugin-phpunit" />
