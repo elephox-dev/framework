@@ -36,6 +36,12 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	public function put(int $index, mixed $value): bool;
 
 	/**
+	 * @param int $index
+	 * @param T $value
+	 */
+	public function insertAt(int $index, mixed $value): void;
+
+	/**
 	 * @return T
 	 *
 	 * @param int $index

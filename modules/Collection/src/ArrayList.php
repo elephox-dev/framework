@@ -299,4 +299,13 @@ class ArrayList implements GenericList
 		/** @var T|TDefault */
 		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
+
+	/**
+	 * @param int $index
+	 * @param T $value
+	 */
+	public function insertAt(int $index, mixed $value): void
+	{
+		array_splice($this->items, $index, 0, $value);
+	}
 }
