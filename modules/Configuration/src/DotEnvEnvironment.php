@@ -61,14 +61,14 @@ abstract class DotEnvEnvironment extends AbstractEnvironment
 
 	protected function updateDotEnvFileTimestamps(?string $envName, bool $local, bool $notifyListeners): bool
 	{
-		$envFile = $this->getRoot()->getFile($this->getDotEnvFileName($local, $envName));
+		$envFile = $this->root()->file($this->getDotEnvFileName($local, $envName));
 
-		$oldChangedAt = $this->dotEnvFileTimestamps[$envFile->getPath()] ?? null;
+		$oldChangedAt = $this->dotEnvFileTimestamps[$envFile->path()] ?? null;
 		if ($envFile->exists()) {
-			clearstatcache(true, $envFile->getPath());
-			$modifiedAt = $envFile->getModifiedTime();
+			clearstatcache(true, $envFile->path());
+			$modifiedAt = $envFile->modifiedAt();
 
-			$this->dotEnvFileTimestamps[$envFile->getPath()] = $modifiedAt;
+			$this->dotEnvFileTimestamps[$envFile->path()] = $modifiedAt;
 
 			if ($modifiedAt->getTimestamp() !== $oldChangedAt?->getTimestamp()) {
 				// file was modified or this is the first time the timestamps are checked
@@ -84,7 +84,7 @@ abstract class DotEnvEnvironment extends AbstractEnvironment
 		} elseif ($oldChangedAt !== null) {
 			// file was deleted
 
-			unset($this->dotEnvFileTimestamps[$envFile->getPath()]);
+			unset($this->dotEnvFileTimestamps[$envFile->path()]);
 
 			if ($notifyListeners) {
 				foreach ($this->dotEnvFileChangeListeners as $listener) {

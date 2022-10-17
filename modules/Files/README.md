@@ -15,10 +15,10 @@ use Elephox\Files\Path;
 $file = new File('/var/tmp/file.txt');
 
 $file->exists(); // false
-$file->putContents('Hello world!');
+$file->writeContents('Hello world!');
 $file->exists(); // true
-$file->getContents(); // 'Hello world!'
-$file->getExtension(); // 'txt'
+$file->contents(); // 'Hello world!'
+$file->extension(); // 'txt'
 
 $newParent = new Directory('/home/user/');
 
@@ -27,8 +27,8 @@ $newFile = $file->moveTo($newParent);
 $file->exists(); // false
 $newFile->exists(); // true
 
-$newParent->getFiles()->select(fn (File $f) => $f->getPath())->toArray(); // ['/home/user/file.txt']
-$newParent->getPathRelative($file->getParent()); // '../../var/tmp'
+$newParent->files()->select(fn (File $f) => $f->path())->toArray(); // ['/home/user/file.txt']
+$newParent->relativePathTo($file->parent()); // '../../var/tmp'
 
 Path::join("/home/user/", "file.txt"); // '/home/user/file.txt'
 Path::join("/home/user/", "../../var/tmp/file.txt"); // '/home/user/../../var/tmp/file.txt'

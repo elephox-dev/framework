@@ -7,7 +7,7 @@ use Elephox\Files\Contract\Directory;
 
 abstract class AbstractEnvironment implements Contract\Environment
 {
-	public function getEnvironmentName(): string
+	public function environmentName(): string
 	{
 		if ($this->offsetExists('APP_ENV')) {
 			return (string) $this->offsetGet('APP_ENV');
@@ -16,14 +16,14 @@ abstract class AbstractEnvironment implements Contract\Environment
 		return 'production';
 	}
 
-	public function getTemp(): Directory
+	public function temp(): Directory
 	{
-		return $this->getRoot()->getDirectory('tmp');
+		return $this->root()->directory('tmp');
 	}
 
-	public function getConfig(): Directory
+	public function config(): Directory
 	{
-		return $this->getRoot();
+		return $this->root();
 	}
 
 	public function isDevelopment(): bool
@@ -32,6 +32,6 @@ abstract class AbstractEnvironment implements Contract\Environment
 			return (bool) filter_var($this['APP_DEBUG'], (int) FILTER_VALIDATE_BOOL);
 		}
 
-		return in_array($this->getEnvironmentName(), ['dev', 'local', 'debug', 'development'], true);
+		return in_array($this->environmentName(), ['dev', 'local', 'debug', 'development'], true);
 	}
 }

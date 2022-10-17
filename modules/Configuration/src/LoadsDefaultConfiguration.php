@@ -19,7 +19,7 @@ trait LoadsDefaultConfiguration
 
 	protected function loadEnvironmentDotEnvFile(): void
 	{
-		$envName = $this->getEnvironment()->getEnvironmentName();
+		$envName = $this->getEnvironment()->environmentName();
 
 		$this->getEnvironment()->loadFromEnvFile($envName);
 		$this->getEnvironment()->loadFromEnvFile($envName, true);
@@ -29,17 +29,17 @@ trait LoadsDefaultConfiguration
 	{
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
-				->getConfig()
-				->getFile('config.json')
-				->getPath(),
+				->config()
+				->file('config.json')
+				->path(),
 			true,
 		));
 
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
-				->getConfig()
-				->getFile('config.local.json')
-				->getPath(),
+				->config()
+				->file('config.local.json')
+				->path(),
 			true,
 		));
 	}
@@ -48,17 +48,17 @@ trait LoadsDefaultConfiguration
 	{
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
-				->getRoot()
-				->getFile("config.{$this->getEnvironment()->getEnvironmentName()}.json")
-				->getPath(),
+				->root()
+				->file("config.{$this->getEnvironment()->environmentName()}.json")
+				->path(),
 			true,
 		));
 
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
-				->getRoot()
-				->getFile("config.{$this->getEnvironment()->getEnvironmentName()}.local.json")
-				->getPath(),
+				->root()
+				->file("config.{$this->getEnvironment()->environmentName()}.local.json")
+				->path(),
 			true,
 		));
 	}

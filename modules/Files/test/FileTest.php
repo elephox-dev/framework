@@ -64,7 +64,7 @@ class FileTest extends MockeryTestCase
 	public function testGetExtension(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('txt', $file->getExtension());
+		static::assertEquals('txt', $file->extension());
 	}
 
 	public function testGetNameWithoutExtension(): void
@@ -82,7 +82,7 @@ class FileTest extends MockeryTestCase
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
-		static::assertEquals(filemtime($this->filePath), $file->getModifiedTime()->getTimestamp());
+		static::assertEquals(filemtime($this->filePath), $file->modifiedAt()->getTimestamp());
 	}
 
 	public function testFileNotFoundModifiedTime(): void
@@ -92,7 +92,7 @@ class FileTest extends MockeryTestCase
 		$this->expectException(FilesystemNodeNotFoundException::class);
 		$this->expectExceptionMessage('Filesystem node at /non-existent-file.txt not found');
 
-		$file->getModifiedTime();
+		$file->modifiedAt();
 	}
 
 	public function testFileNotFoundSize(): void
@@ -101,7 +101,7 @@ class FileTest extends MockeryTestCase
 
 		$this->expectException(FileNotFoundException::class);
 
-		$file->getSize();
+		$file->size();
 	}
 
 	public function testFileNotFoundHash(): void
@@ -116,16 +116,16 @@ class FileTest extends MockeryTestCase
 	public function testGetPath(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('/tmp/test.txt', $file->getPath());
+		static::assertEquals('/tmp/test.txt', $file->path());
 	}
 
 	public function testGetMimeType(): void
 	{
 		$file = new File($this->filePath);
-		static::assertNull($file->getMimeType());
+		static::assertNull($file->mimeType());
 
 		$fileWithType = new File($this->filePath, MimeType::TextPlain);
-		static::assertEquals(MimeType::TextPlain, $fileWithType->getMimeType());
+		static::assertEquals(MimeType::TextPlain, $fileWithType->mimeType());
 	}
 
 	public function testGetHash(): void
@@ -137,28 +137,28 @@ class FileTest extends MockeryTestCase
 	public function testGetSize(): void
 	{
 		$file = new File($this->filePath);
-		static::assertEquals(strlen(self::FileContents), $file->getSize());
+		static::assertEquals(strlen(self::FileContents), $file->size());
 	}
 
 	public function testGetParent(): void
 	{
 		$file = new File('/tmp/nested/deep/file/test.txt');
-		$dir = $file->getParent();
+		$dir = $file->parent();
 		static::assertInstanceOf(Directory::class, $dir);
-		static::assertEquals('/tmp/nested/deep/file', $dir->getPath());
+		static::assertEquals('/tmp/nested/deep/file', $dir->path());
 
-		$upperDir = $file->getParent(2);
+		$upperDir = $file->parent(2);
 		static::assertInstanceOf(Directory::class, $upperDir);
-		static::assertEquals('/tmp/nested/deep', $upperDir->getPath());
+		static::assertEquals('/tmp/nested/deep', $upperDir->path());
 
 		$this->expectException(InvalidParentLevelException::class);
-		$file->getParent(0);
+		$file->parent(0);
 	}
 
 	public function testGetName(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('test.txt', $file->getName());
+		static::assertEquals('test.txt', $file->name());
 	}
 
 	public function testIsExecutable(): void
@@ -251,7 +251,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getPath')
+			->expects('path')
 			->withNoArgs()
 			->andReturn('/path/to/file')
 		;
@@ -284,7 +284,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getPath')
+			->expects('path')
 			->withNoArgs()
 			->andReturn('/path/to/file')
 		;
@@ -317,7 +317,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getPath')
+			->expects('path')
 			->withNoArgs()
 			->andReturn('/path/to/file')
 		;
@@ -339,7 +339,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getParent')
+			->expects('parent')
 			->withNoArgs()
 			->andReturn($directoryMock)
 		;
@@ -351,7 +351,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getPath')
+			->expects('path')
 			->withNoArgs()
 			->andReturn('/path/to/file')
 		;
@@ -372,7 +372,7 @@ class FileTest extends MockeryTestCase
 		;
 
 		$fileMock
-			->expects('getPath')
+			->expects('path')
 			->withNoArgs()
 			->andReturn('/path/to/file')
 		;
@@ -444,7 +444,7 @@ class FileTest extends MockeryTestCase
 
 		$destinationFilename = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true)));
 		$destinationDirectory = new Directory(Path::join(sys_get_temp_dir(), 'movetest'));
-		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->getName()));
+		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->name()));
 
 		$destinationDirectory->ensureExists();
 
@@ -468,7 +468,7 @@ class FileTest extends MockeryTestCase
 
 		$destinationFilename = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true)));
 		$destinationDirectory = new Directory(Path::join(sys_get_temp_dir(), 'movetest'));
-		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->getName()));
+		$destinationDirectoryFilename = new File(Path::join(sys_get_temp_dir(), 'movetest', $destinationFilename->name()));
 
 		$destinationDirectory->ensureExists();
 

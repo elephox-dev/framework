@@ -29,7 +29,7 @@ class MemoryEnvironment extends DotEnvEnvironment
 	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void
 	{
 		$envFile = $this->getDotEnvFileName($local, $envName);
-		$dotenv = Dotenv::createArrayBacked($this->getRoot()->getPath(), $envFile);
+		$dotenv = Dotenv::createArrayBacked($this->root()->path(), $envFile);
 		$entries = $dotenv->safeLoad();
 
 		if ($overwriteExisting) {
@@ -39,7 +39,7 @@ class MemoryEnvironment extends DotEnvEnvironment
 		}
 	}
 
-	public function getRoot(): Directory
+	public function root(): Directory
 	{
 		if ($this->cachedRootDirectory !== null) {
 			return $this->cachedRootDirectory;

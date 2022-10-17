@@ -90,8 +90,8 @@ class NamespaceLoader
 
 		$lastPart = $nsParts->shift();
 		$nsPartsUsed->add($lastPart);
-		foreach ($directory->getDirectories() as $dir) {
-			if ($dir->getName() !== $lastPart) {
+		foreach ($directory->directories() as $dir) {
+			if ($dir->name() !== $lastPart) {
 				continue;
 			}
 
@@ -99,8 +99,8 @@ class NamespaceLoader
 		}
 
 		if ($lastPart === '') {
-			foreach ($directory->getFiles() as $file) {
-				$filename = $file->getName();
+			foreach ($directory->files() as $file) {
+				$filename = $file->name();
 				if (!str_ends_with($filename, '.php')) {
 					continue;
 				}

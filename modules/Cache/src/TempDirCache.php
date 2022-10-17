@@ -134,8 +134,8 @@ class TempDirCache extends AbstractCache
 	{
 		$this->getCacheDir()->ensureExists();
 
-		$file = $this->getCacheDir()->getFile($this->getCacheId());
-		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . '.classes');
+		$file = $this->getCacheDir()->file($this->getCacheId());
+		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes');
 
 		if (empty($this->floatingItems)) {
 			if ($file->exists()) {
@@ -152,7 +152,7 @@ class TempDirCache extends AbstractCache
 			return;
 		}
 
-		$file->putContents(serialize($this->floatingItems));
+		$file->writeContents(serialize($this->floatingItems));
 
 		$classes = array_unique(
 			array_merge(
@@ -181,7 +181,7 @@ class TempDirCache extends AbstractCache
 				[CacheItemInterface::class],
 			),
 		);
-		$classesFile->putContents(serialize($classes));
+		$classesFile->writeContents(serialize($classes));
 
 		$this->changes = 0;
 		$this->persistedItemKeys = array_keys($this->floatingItems);
@@ -193,16 +193,16 @@ class TempDirCache extends AbstractCache
 			return;
 		}
 
-		$classesFile = $this->getCacheDir()->getFile($this->getCacheId() . '.classes');
+		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes');
 		if (!$classesFile->exists()) {
 			return;
 		}
 
 		/** @var list<class-string> */
-		$classes = unserialize($classesFile->getContents(), ['allowed_classes' => false]);
+		$classes = unserialize($classesFile->contents(), ['allowed_classes' => false]);
 
-		$file = $this->getCacheDir()->getFile($this->getCacheId());
-		$contents = $file->getContents();
+		$file = $this->getCacheDir()->file($this->getCacheId());
+		$contents = $file->contents();
 
 		/** @var array<string, CacheItemInterface> */
 		$this->floatingItems = unserialize($contents, ['allowed_classes' => $classes]);

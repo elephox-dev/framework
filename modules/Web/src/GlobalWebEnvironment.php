@@ -11,6 +11,6 @@ class GlobalWebEnvironment extends GlobalEnvironment implements WebEnvironment
 {
 	public function getWebRoot(): Directory
 	{
-		return $this->getRoot()->getDirectory('public');
+		return $this->root()->directory('public');
 	}
 }

@@ -18,28 +18,28 @@ interface Directory extends FilesystemNode
 	/**
 	 * @return GenericKeyedEnumerable<int, File>
 	 */
-	public function getFiles(): GenericKeyedEnumerable;
+	public function files(): GenericKeyedEnumerable;
 
-	public function getFile(string $filename): File;
+	public function file(string $filename): File;
 
 	/**
 	 * @return GenericKeyedEnumerable<int, Directory>
 	 */
-	public function getDirectories(): GenericKeyedEnumerable;
+	public function directories(): GenericKeyedEnumerable;
 
-	public function getDirectory(string $dirname): Directory;
+	public function directory(string $dirname): Directory;
 
 	/**
 	 * @return GenericKeyedEnumerable<int, FilesystemNode>
 	 */
-	public function getChildren(): GenericKeyedEnumerable;
+	public function children(): GenericKeyedEnumerable;
 
 	/**
 	 * @throws FilesystemNodeNotFoundException
 	 *
 	 * @param string $name
 	 */
-	public function getChild(string $name): FilesystemNode;
+	public function child(string $name): FilesystemNode;
 
 	public function isRoot(): bool;
 

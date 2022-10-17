@@ -19,7 +19,7 @@ class GlobalEnvironment extends DotEnvEnvironment
 
 	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void
 	{
-		$root = $this->getRoot()->getPath();
+		$root = $this->root()->path();
 		$envFile = $this->getDotEnvFileName($local, $envName);
 
 		if ($overwriteExisting) {
@@ -31,7 +31,7 @@ class GlobalEnvironment extends DotEnvEnvironment
 		$dotenv->safeLoad();
 	}
 
-	public function getRoot(): Directory
+	public function root(): Directory
 	{
 		if ($this->cachedRootDirectory !== null) {
 			return $this->cachedRootDirectory;

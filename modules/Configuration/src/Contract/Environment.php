@@ -19,13 +19,13 @@ interface Environment extends ArrayAccess
 {
 	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void;
 
-	public function getEnvironmentName(): string;
+	public function environmentName(): string;
 
-	public function getRoot(): Directory;
+	public function root(): Directory;
 
-	public function getTemp(): Directory;
+	public function temp(): Directory;
 
-	public function getConfig(): Directory;
+	public function config(): Directory;
 
 	public function isDevelopment(): bool;
 

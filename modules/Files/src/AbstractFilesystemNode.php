@@ -18,31 +18,31 @@ abstract class AbstractFilesystemNode implements FilesystemNode
 	}
 
 	#[Pure]
-	public function getPath(): string
+	public function path(): string
 	{
 		return $this->path;
 	}
 
-	public function getPathRelative(FilesystemNode $node): string
+	public function relativePathTo(FilesystemNode $node): string
 	{
-		return Path::relativeTo($this->getPath(), $node->getPath());
+		return Path::relativeTo($this->path(), $node->path());
 	}
 
 	#[Pure]
-	public function getName(): string
+	public function name(): string
 	{
-		return basename($this->getPath());
+		return basename($this->path());
 	}
 
-	public function getModifiedTime(): DateTime
+	public function modifiedAt(): DateTime
 	{
 		if (!$this->exists()) {
-			throw new FilesystemNodeNotFoundException($this->getPath());
+			throw new FilesystemNodeNotFoundException($this->path());
 		}
 
-		$timestamp = filemtime($this->getPath());
+		$timestamp = filemtime($this->path());
 		if ($timestamp === false) {
-			throw new RuntimeException("Failed to get modified time of filesystem node ({$this->getPath()})");
+			throw new RuntimeException("Failed to get modified time of filesystem node ({$this->path()})");
 		}
 
 		try {
@@ -55,13 +55,13 @@ abstract class AbstractFilesystemNode implements FilesystemNode
 	#[Pure]
 	public function __toString(): string
 	{
-		return $this->getPath();
+		return $this->path();
 	}
 
-	public function getParent(int $levels = 1): Contract\Directory
+	public function parent(int $levels = 1): Contract\Directory
 	{
 		try {
-			return new Directory(dirname($this->getPath(), $levels));
+			return new Directory(dirname($this->path(), $levels));
 		} catch (ValueError $error) {
 			throw new InvalidParentLevelException($levels, previous: $error);
 		}

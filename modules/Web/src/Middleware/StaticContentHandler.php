@@ -20,7 +20,7 @@ class StaticContentHandler implements WebMiddleware
 
 	public function handle(Request $request, Closure $next): ResponseBuilder
 	{
-		$file = $this->environment->getWebRoot()->getFile($request->getUrl()->path);
+		$file = $this->environment->getWebRoot()->file($request->getUrl()->path);
 		if (!$file->exists()) {
 			return $next($request);
 		}

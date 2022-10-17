@@ -16,11 +16,11 @@ interface File extends FilesystemNode, HasHash
 {
 	public const DEFAULT_STREAM_CHUNK_SIZE = 4096;
 
-	public function getExtension(): string;
+	public function extension(): string;
 
-	public function getSize(): int;
+	public function size(): int;
 
-	public function getMimeType(): ?MimeTypeInterface;
+	public function mimeType(): ?MimeTypeInterface;
 
 	/**
 	 * @throws FileMoveException
@@ -58,9 +58,9 @@ interface File extends FilesystemNode, HasHash
 
 	public function stream(): Stream;
 
-	public function writeStream(Stream $contents, int $chunkSize = self::DEFAULT_STREAM_CHUNK_SIZE): void;
+	public function writeStream(Stream $stream, int $chunkSize = self::DEFAULT_STREAM_CHUNK_SIZE): void;
 
-	public function putContents(string $contents): void;
+	public function writeContents(string $contents): void;
 
-	public function getContents(): string;
+	public function contents(): string;
 }

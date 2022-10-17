@@ -8,18 +8,18 @@ use Stringable;
 
 interface FilesystemNode extends Stringable
 {
-	public function getPath(): string;
+	public function path(): string;
 
-	public function getPathRelative(FilesystemNode $node): string;
+	public function relativePathTo(FilesystemNode $node): string;
 
-	public function getName(): string;
+	public function name(): string;
 
-	public function getModifiedTime(): DateTimeInterface;
+	public function modifiedAt(): DateTimeInterface;
 
 	/**
 	 * @param positive-int $levels
 	 */
-	public function getParent(int $levels = 1): Directory;
+	public function parent(int $levels = 1): Directory;
 
 	public function exists(): bool;
 }

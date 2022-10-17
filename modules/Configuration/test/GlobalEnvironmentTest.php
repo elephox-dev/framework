@@ -67,13 +67,13 @@ class GlobalEnvironmentTest extends TestCase
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertEquals('.' . DIRECTORY_SEPARATOR . 'tmp', $env->getRoot()->getPathRelative($env->getTemp()));
+		static::assertEquals('.' . DIRECTORY_SEPARATOR . 'tmp', $env->root()->relativePathTo($env->temp()));
 	}
 
 	public function testGetConfig(): void
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertEquals($env->getRoot()->getPath(), $env->getConfig()->getPath());
+		static::assertEquals($env->root()->path(), $env->config()->path());
 	}
 }

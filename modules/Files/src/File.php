@@ -27,15 +27,15 @@ class File extends AbstractFilesystemNode implements Contract\File
 		}
 
 		if ($readable && !$file->isReadable()) {
-			throw new UnreadableFileException($file->getPath());
+			throw new UnreadableFileException($file->path());
 		}
 
 		if (($writeable || $append) && $file->exists() && !$file->isWritable()) {
-			throw new ReadOnlyFileException($file->getPath());
+			throw new ReadOnlyFileException($file->path());
 		}
 
-		if ($create && $file->getParent()->isReadonly()) {
-			throw new ReadonlyParentException($file->getPath());
+		if ($create && $file->parent()->isReadonly()) {
+			throw new ReadonlyParentException($file->path());
 		}
 
 		$flags = match (true) {
@@ -59,7 +59,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 			return true;
 		});
 
-		$resource = fopen($file->getPath(), $flags);
+		$resource = fopen($file->path(), $flags);
 
 		restore_error_handler();
 		if ($exception !== null) {
@@ -71,7 +71,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		}
 
 		if ($resource === false) {
-			$exception = new RuntimeException('Unable to open file stream: ' . $file->getPath());
+			$exception = new RuntimeException('Unable to open file stream: ' . $file->path());
 		}
 
 		if ($exception !== null) {
@@ -97,31 +97,31 @@ class File extends AbstractFilesystemNode implements Contract\File
 	#[Pure]
 	public function getNameWithoutExtension(): string
 	{
-		return pathinfo($this->getPath(), PATHINFO_FILENAME);
+		return pathinfo($this->path(), PATHINFO_FILENAME);
 	}
 
 	#[Pure]
-	public function getExtension(): string
+	public function extension(): string
 	{
-		return pathinfo($this->getPath(), PATHINFO_EXTENSION);
+		return pathinfo($this->path(), PATHINFO_EXTENSION);
 	}
 
-	public function getSize(): int
+	public function size(): int
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
-		$size = filesize($this->getPath());
+		$size = filesize($this->path());
 		if ($size === false) {
-			throw new RuntimeException("Unable to get the size of file ({$this->getPath()})");
+			throw new RuntimeException("Unable to get the size of file ({$this->path()})");
 		}
 
 		return $size;
 	}
 
 	#[Pure]
-	public function getMimeType(): ?MimeTypeInterface
+	public function mimeType(): ?MimeTypeInterface
 	{
 		return $this->mimeType;
 	}
@@ -129,10 +129,10 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function getHash(): string
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
-		$hash = md5_file($this->getPath());
+		$hash = md5_file($this->path());
 		if ($hash === false) {
 			throw new RuntimeException('Could not hash file');
 		}
@@ -144,27 +144,27 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function isReadable(): bool
 	{
 		/** @psalm-suppress ImpureFunctionCall */
-		return is_readable($this->getPath());
+		return is_readable($this->path());
 	}
 
 	public function isWritable(): bool
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
-		return is_writable($this->getPath());
+		return is_writable($this->path());
 	}
 
 	#[Pure]
 	public function isExecutable(): bool
 	{
-		return is_executable($this->getPath());
+		return is_executable($this->path());
 	}
 
 	public function exists(): bool
 	{
-		$path = $this->getPath();
+		$path = $this->path();
 
 		return file_exists($path) && is_file($path);
 	}
@@ -172,55 +172,55 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
 		$destination = $this->getDestination($node, $overwrite);
 
-		$success = copy($this->getPath(), $destination->getPath());
+		$success = copy($this->path(), $destination->path());
 		if (!$success) {
-			throw new FileCopyException($this->getPath(), $destination->getPath());
+			throw new FileCopyException($this->path(), $destination->path());
 		}
 
-		return new self($destination->getPath());
+		return new self($destination->path());
 	}
 
 	public function delete(): void
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
-		if (!unlink($this->getPath())) {
-			throw new FileDeleteException($this->getPath());
+		if (!unlink($this->path())) {
+			throw new FileDeleteException($this->path());
 		}
 	}
 
 	public function moveTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->getPath());
+			throw new FileNotFoundException($this->path());
 		}
 
 		$destination = $this->getDestination($node, $overwrite);
 
-		if (is_uploaded_file($this->getPath())) {
-			$success = move_uploaded_file($this->getPath(), $destination->getPath());
+		if (is_uploaded_file($this->path())) {
+			$success = move_uploaded_file($this->path(), $destination->path());
 		} else {
-			$success = rename($this->getPath(), $destination->getPath());
+			$success = rename($this->path(), $destination->path());
 		}
 
 		if (!$success) {
-			throw new FileMoveException($this->getPath(), $destination->getPath());
+			throw new FileMoveException($this->path(), $destination->path());
 		}
 
-		return new self($destination->getPath());
+		return new self($destination->path());
 	}
 
 	private function getDestination(FilesystemNode $node, bool $overwrite): Contract\File
 	{
 		if ($node instanceof Contract\Directory) {
-			$destination = new self(Path::join($node->getPath(), $this->getName()));
+			$destination = new self(Path::join($node->path(), $this->name()));
 		} elseif ($node instanceof Contract\File) {
 			$destination = $node;
 		} else {
@@ -228,7 +228,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		}
 
 		if (!$overwrite && $destination->exists()) {
-			throw new FileAlreadyExistsException($destination->getPath());
+			throw new FileAlreadyExistsException($destination->path());
 		}
 
 		return $destination;
@@ -243,7 +243,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		try {
 			self::openStream($this, false, true, true)->close();
 		} catch (RuntimeException $e) {
-			throw new FileNotCreatedException($this->getPath(), previous: $e);
+			throw new FileNotCreatedException($this->path(), previous: $e);
 		}
 	}
 
@@ -252,21 +252,21 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return self::openStream($this, true, $writeable, $writeable, $writeable);
 	}
 
-	public function writeStream(Stream $contents, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
+	public function writeStream(Stream $stream, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
 	{
 		$stream = self::openStream($this, false, true, true, false, true);
 
-		while (!$contents->eof()) {
-			$stream->write($contents->read($chunkSize));
+		while (!$stream->eof()) {
+			$stream->write($stream->read($chunkSize));
 		}
 	}
 
-	public function putContents(string $contents): void
+	public function writeContents(string $contents): void
 	{
 		$this->writeStream(new StringStream($contents));
 	}
 
-	public function getContents(): string
+	public function contents(): string
 	{
 		return $this->stream()->getContents();
 	}

@@ -51,7 +51,7 @@ class ServeCommand implements CommandHandler
 	{
 		$host = $command->arguments->get('host')->value;
 		$port = (int) $command->arguments->get('port')->value;
-		$root = $command->options->get('root')->value ?? ($this->environment->getRoot()->getDirectory('public')->getPath());
+		$root = $command->options->get('root')->value ?? ($this->environment->root()->directory('public')->path());
 		$router = $command->options->get('router')->value ?? (dirname(__DIR__, 2) . '/data/router.php');
 		$noReload = (bool) $command->options->get('no-reload')->value;
 		$verbose = (bool) $command->options->get('verbose')->value;
@@ -103,7 +103,7 @@ class ServeCommand implements CommandHandler
 
 		/** @psalm-suppress UnusedClosureParam */
 		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, FileContract $envFile) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
-			$this->logger->warning($envFile->getName() . ' file changed. Restarting server...');
+			$this->logger->warning($envFile->name() . ' file changed. Restarting server...');
 
 			$environment->loadFromEnvFile($envName);
 			$environment->loadFromEnvFile($envName, true);

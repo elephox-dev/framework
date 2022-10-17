@@ -69,7 +69,7 @@ trait GeneratesResponses
 
 		return $this->getDefaultBuilder()
 			->responseCode($responseCode ?? ResponseCode::OK)
-			->contentType($mimeType ?? $file->getMimeType() ?? CustomMimeType::fromFile($file->getPath()))
+			->contentType($mimeType ?? $file->mimeType() ?? CustomMimeType::fromFile($file->path()))
 			->body($file->stream())
 		;
 	}
