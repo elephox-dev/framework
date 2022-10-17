@@ -164,38 +164,38 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		}
 	}
 
-	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
+	public function describe(string $service, string $concrete, ServiceLifetime $lifetime, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
 		/** @psalm-suppress DocblockTypeContradiction */
-		if (empty($serviceName) || empty($implementationName)) {
+		if (empty($service) || empty($concrete)) {
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
 
-		if (empty($implementation) && empty($implementationFactory)) {
-			$implementationFactory = fn (): object => $this->resolver()->instantiate($implementationName);
+		if (empty($implementation) && empty($factory)) {
+			$factory = fn (): object => $this->resolver()->instantiate($concrete);
 		}
 
-		return $this->add(new ServiceDescriptor($serviceName, $implementationName, $lifetime, $implementationFactory, $implementation), $replace);
+		return $this->add(new ServiceDescriptor($service, $concrete, $lifetime, $factory, $implementation), $replace);
 	}
 
-	public function addTransient(string $serviceName, string $implementationName, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
+	public function addTransient(string $service, string $concrete, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
-		return $this->describe($serviceName, $implementationName, ServiceLifetime::Transient, $implementationFactory, $implementation, $replace);
+		return $this->describe($service, $concrete, ServiceLifetime::Transient, $factory, $implementation, $replace);
 	}
 
-	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
+	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
-		if ($implementationName === null && $implementation === null) {
-			if (class_exists($serviceName)) {
-				$implementationName = $serviceName;
+		if ($concrete === null && $implementation === null) {
+			if (class_exists($service)) {
+				$concrete = $service;
 			} else {
 				throw new InvalidArgumentException('Either implementation name and factory or an implementation must be provided.');
 			}
 		}
 
-		$implementationName ??= $implementation::class;
+		$concrete ??= $implementation::class;
 
-		return $this->describe($serviceName, $implementationName, ServiceLifetime::Singleton, $implementationFactory, $implementation, $replace);
+		return $this->describe($service, $concrete, ServiceLifetime::Singleton, $factory, $implementation, $replace);
 	}
 
 	/**

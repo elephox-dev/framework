@@ -18,9 +18,9 @@ interface ServiceCollection
 	 * @template TService of object
 	 * @template TImplementation of object
 	 *
-	 * @param class-string<TService> $serviceName
-	 * @param class-string<TImplementation> $implementationName
-	 * @param null|Closure(mixed): TImplementation $implementationFactory
+	 * @param class-string<TService> $service
+	 * @param class-string<TImplementation> $concrete
+	 * @param null|Closure(mixed): TImplementation $factory
 	 * @param TImplementation|null $implementation
 	 * @param ServiceLifetime $lifetime
 	 * @param bool $replace
@@ -28,36 +28,36 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function describe(string $serviceName, string $implementationName, ServiceLifetime $lifetime, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function describe(string $service, string $concrete, ServiceLifetime $lifetime, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object
 	 * @template TImplementation of object
 	 *
-	 * @param class-string<TService> $serviceName
-	 * @param class-string<TImplementation> $implementationName
-	 * @param Closure(mixed): TImplementation $implementationFactory
+	 * @param class-string<TService> $service
+	 * @param class-string<TImplementation> $concrete
+	 * @param Closure(mixed): TImplementation $factory
 	 * @param TImplementation|null $implementation
 	 * @param bool $replace
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 */
-	public function addTransient(string $serviceName, string $implementationName, Closure $implementationFactory, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function addTransient(string $service, string $concrete, Closure $factory, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object
 	 * @template TImplementation of object
 	 *
-	 * @param class-string<TService> $serviceName
-	 * @param null|class-string<TImplementation> $implementationName
-	 * @param null|Closure(mixed): TImplementation $implementationFactory
+	 * @param class-string<TService> $service
+	 * @param null|class-string<TImplementation> $concrete
+	 * @param null|Closure(mixed): TImplementation $factory
 	 * @param TImplementation|null $implementation
 	 * @param bool $replace
 	 *
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function addSingleton(string $serviceName, ?string $implementationName = null, ?Closure $implementationFactory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
 
 	/**
 	 * @template TService of object
