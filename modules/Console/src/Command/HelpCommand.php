@@ -63,7 +63,7 @@ class HelpCommand implements Contract\CommandHandler
 				[Console::green('Description'), "\t", (empty($commandTemplate->description) ? Console::gray('No description') : $commandTemplate->description)],
 			];
 
-			foreach (Console::table($metaData, noBorder: true) as $line) {
+			foreach (Console::table($metaData, noOuterBorder: true, noInnerBorder: true) as $line) {
 				$this->logger->info($line);
 			}
 
@@ -92,7 +92,7 @@ class HelpCommand implements Contract\CommandHandler
 				$argumentData[] = ["\t", $name, "\t", $description];
 			}
 
-			foreach (Console::table($argumentData, noBorder: true) as $line) {
+			foreach (Console::table($argumentData, noOuterBorder: true, noInnerBorder: true) as $line) {
 				$this->logger->info($line);
 			}
 
@@ -127,7 +127,7 @@ class HelpCommand implements Contract\CommandHandler
 				$optionData[] = ["\t", $name, "\t", $description];
 			}
 
-			foreach (Console::table($optionData, noBorder: true) as $line) {
+			foreach (Console::table($optionData, noOuterBorder: true, noInnerBorder: true) as $line) {
 				$this->logger->info($line);
 			}
 
