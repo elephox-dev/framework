@@ -125,8 +125,8 @@ class CommandTemplateBuilder
 		return new CommandTemplate(
 			$this->name ?? throw new InvalidArgumentException('Command name is required'),
 			$this->description ?? '',
-			$this->arguments->select(static fn ($b) => $b->build()),
-			$this->options->select(static fn ($b) => $b->build()),
+			$this->arguments->select(static fn (ArgumentTemplateBuilder $b) => $b->build()),
+			$this->options->select(static fn (OptionTemplateBuilder $b) => $b->build()),
 		);
 	}
 }

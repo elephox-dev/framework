@@ -6,7 +6,7 @@ namespace Elephox\Collection\Contract;
 use Elephox\Collection\ArrayList;
 
 /**
- * @psalm-type NonNegativeInteger = 0|positive-int
+ * @psalm-type NonNegativeInteger = int<0,max>
  *
  * @template TSource
  */

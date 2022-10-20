@@ -27,7 +27,7 @@ use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
 
 /**
- * @psalm-type NonNegativeInteger = 0|positive-int
+ * @psalm-type NonNegativeInteger = int<0,max>
  *
  * @template TSource
  */

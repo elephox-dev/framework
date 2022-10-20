@@ -7,7 +7,7 @@ use Elephox\Collection\Contract\GenericOrderedEnumerable;
 use Elephox\Collection\Iterator\OrderedIterator;
 
 /**
- * @psalm-type NonNegativeInteger = 0|positive-int
+ * @psalm-type NonNegativeInteger = int<0,max>
  *
  * @template TSource
  * @template TCompareKey
@@ -41,7 +41,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 		$comparer ??= DefaultEqualityComparer::compare(...);
 
 		/**
-		 * @var OrderedIterator<NonNegativeInteger, TSource, TNextCompareKey>
+		 * @var OrderedIterator<NonNegativeInteger, TSource, TNextCompareKey> $orderedIterator
 		 * @var callable(TSource, NonNegativeInteger): mixed $keySelector
 		 * @var callable(TNextCompareKey, TNextCompareKey): int $comparer
 		 */
@@ -68,7 +68,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 		$comparer = DefaultEqualityComparer::invert($comparer);
 
 		/**
-		 * @var OrderedIterator<NonNegativeInteger, TSource, TNextCompareKey>
+		 * @var OrderedIterator<NonNegativeInteger, TSource, TNextCompareKey> $orderedIterator
 		 * @var callable(TSource, NonNegativeInteger): mixed $keySelector
 		 * @var callable(TNextCompareKey, TNextCompareKey): int $comparer
 		 */

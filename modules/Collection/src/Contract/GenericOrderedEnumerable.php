@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection\Contract;
 
 /**
- * @psalm-type NonNegativeInteger = 0|positive-int
+ * @psalm-type NonNegativeInteger = int<0,max>
  *
  * @template TSource
  *
