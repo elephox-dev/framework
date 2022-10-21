@@ -29,7 +29,9 @@ abstract class AbstractDuration implements Duration
 			$d->f = $duration->getMicroseconds() / self::MICROSECONDS_PER_SECOND;
 
 			return $d;
-		} catch (Exception) {
+		} catch (Exception $e) {
+			trigger_error("Failed to create a valid DateInterval. Exception: $e", E_USER_WARNING);
+
 			return new DateInterval('PT0S');
 		}
 	}
