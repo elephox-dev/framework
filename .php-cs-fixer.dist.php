@@ -111,7 +111,7 @@ return $config
 		'php_unit_internal_class' => true,
 		'php_unit_method_casing' => true,
 		'php_unit_test_case_static_method_calls' => true,
-		'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
+		'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
 		'phpdoc_align' => ['align' => 'left', 'tags' => ['method', 'param', 'property', 'property-read', 'property-write', 'return', 'throws', 'type', 'var']],
 		'phpdoc_indent' => true,
 		'phpdoc_line_span' => true,
