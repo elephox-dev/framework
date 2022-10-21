@@ -32,9 +32,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -64,9 +61,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -94,9 +88,6 @@ jobs:
         with:
           php-version: '8.1'
           extensions: ${{ env.php-extensions }}
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -126,9 +117,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -164,9 +152,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
@@ -204,9 +189,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 📦 Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: 💾 Cache dependencies
         uses: actions/cache@v2
         with:
