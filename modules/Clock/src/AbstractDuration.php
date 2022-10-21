@@ -146,7 +146,7 @@ abstract class AbstractDuration implements Duration
 	public function subtract(Duration $duration): Duration
 	{
 		return new ValuesDuration(
-			$this->getTotalYears() - $duration->getTotalYears() < 0,
+			$this->getTotalMicroseconds() - $duration->getTotalMicroseconds() < 0,
 			abs($this->getMicroseconds() - $duration->getMicroseconds()),
 			abs($this->getSeconds() - $duration->getSeconds()),
 			abs($this->getMinutes() - $duration->getMinutes()),
