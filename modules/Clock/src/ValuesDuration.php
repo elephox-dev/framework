@@ -9,11 +9,13 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 class ValuesDuration extends AbstractDuration
 {
+	#[Pure]
 	public static function from(bool $negative = false, float $microseconds = 0, int $seconds = 0, int $minutes = 0, int $hours = 0, int $days = 0, int $months = 0, int $years = 0): Contract\Duration
 	{
 		return new self($negative, $microseconds, $seconds, $minutes, $hours, $days, $months, $years);
 	}
 
+	#[Pure]
 	public function __construct(
 		private readonly bool $negative = false,
 		private readonly float $microseconds = 0,
