@@ -209,6 +209,8 @@ class Cookie implements Contract\Cookie
 	/**
 	 * @psalm-suppress UnusedPsalmSuppress
 	 * @psalm-suppress InvalidReturnType
+	 *
+	 * @param #[ExpectedValues(['name','value','expires','path','domain','secure','httpOnly','sameSite','maxAge'])]mixed $offset
 	 */
 	public function offsetGet(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]

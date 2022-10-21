@@ -864,7 +864,7 @@ trait IsKeyedEnumerable
 
 			if ($key instanceof Stringable) {
 				$key = (string) $key;
-			} else if (!is_scalar($key)) {
+			} elseif (!is_scalar($key)) {
 				throw new OutOfBoundsException('Invalid array key: ' . get_debug_type($key));
 			}
 

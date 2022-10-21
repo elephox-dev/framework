@@ -68,19 +68,19 @@ class Option
 	public function int(): int
 	{
 		if (!is_numeric($this->value)) {
-			throw new OptionValidationException("Value cannot be converted to int: " . get_debug_type($this->value));
+			throw new OptionValidationException('Value cannot be converted to int: ' . get_debug_type($this->value));
 		}
 
-		return (int)$this->value;
+		return (int) $this->value;
 	}
 
 	public function float(): float
 	{
 		if (!is_numeric($this->value)) {
-			throw new OptionValidationException("Value cannot be converted to float: " . get_debug_type($this->value));
+			throw new OptionValidationException('Value cannot be converted to float: ' . get_debug_type($this->value));
 		}
 
-		return (float)$this->value;
+		return (float) $this->value;
 	}
 
 	public function bool(): bool
@@ -93,7 +93,7 @@ class Option
 			return $this->value;
 		}
 
-		throw new OptionValidationException("Value cannot be converted to bool: " . get_debug_type($this->value));
+		throw new OptionValidationException('Value cannot be converted to bool: ' . get_debug_type($this->value));
 	}
 
 	public function string(): string
@@ -103,13 +103,14 @@ class Option
 			is_numeric($this->value) ||
 			is_bool($this->value)
 		) {
-			return (string)$this->value;
+			return (string) $this->value;
 		}
 
-		throw new OptionValidationException("Value cannot be converted to string: " . get_debug_type($this->value));
+		throw new OptionValidationException('Value cannot be converted to string: ' . get_debug_type($this->value));
 	}
 
-	public function array(): array {
+	public function array(): array
+	{
 		if (is_array($this->value)) {
 			return $this->value;
 		}
@@ -117,7 +118,8 @@ class Option
 		return [$this->value];
 	}
 
-	public function nullableInt(): ?int {
+	public function nullableInt(): ?int
+	{
 		if ($this->value === null) {
 			return null;
 		}
@@ -125,7 +127,8 @@ class Option
 		return $this->int();
 	}
 
-	public function nullableFloat(): ?float {
+	public function nullableFloat(): ?float
+	{
 		if ($this->value === null) {
 			return null;
 		}
@@ -133,7 +136,8 @@ class Option
 		return $this->float();
 	}
 
-	public function nullableBool(): ?bool {
+	public function nullableBool(): ?bool
+	{
 		if ($this->value === null) {
 			return null;
 		}
@@ -141,7 +145,8 @@ class Option
 		return $this->bool();
 	}
 
-	public function nullableString(): ?string {
+	public function nullableString(): ?string
+	{
 		if ($this->value === null) {
 			return null;
 		}
@@ -149,7 +154,8 @@ class Option
 		return $this->string();
 	}
 
-	public function nullableArray(): ?array {
+	public function nullableArray(): ?array
+	{
 		if ($this->value === null) {
 			return null;
 		}

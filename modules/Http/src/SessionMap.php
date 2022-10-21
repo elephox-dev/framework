@@ -68,7 +68,7 @@ class SessionMap implements Contract\SessionMap
 	public function get(mixed $key): mixed
 	{
 		if (!is_string($key)) {
-			throw new InvalidArgumentException("SessionMap key must be a string");
+			throw new InvalidArgumentException('SessionMap key must be a string');
 		}
 
 		/** @psalm-suppress MixedReturnStatement */

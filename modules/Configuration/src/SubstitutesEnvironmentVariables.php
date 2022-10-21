@@ -21,7 +21,7 @@ trait SubstitutesEnvironmentVariables
 				$type === 'int',
 				$type === 'float',
 				$type === 'string',
-				$value instanceof Stringable => /** @var (int|float|string|Stringable) $value */ (string)$value,
+				$value instanceof Stringable => /** @var (int|float|string|Stringable) $value */ (string) $value,
 				default => $type,
 			};
 		}
@@ -38,11 +38,11 @@ trait SubstitutesEnvironmentVariables
 
 			// Replaced nested substitutions
 			return $substitute !== null ? $this->substituteEnvironmentVariables($substitute) : $match[0];
-		}, (string)$value);
+		}, (string) $value);
 
 		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})
 		/** @var string */
-		return preg_replace_callback('/\$(\${[^}]+})/m', static fn(array $match) => $match[1], $value);
+		return preg_replace_callback('/\$(\${[^}]+})/m', static fn (array $match) => $match[1], $value);
 	}
 
 	protected function substituteEnvironmentVariablesRecursive(iterable $values): iterable
