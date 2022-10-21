@@ -14,7 +14,7 @@ class ReleaseCommand implements CommandHandler
 	public const BASE_BRANCH = 'develop';
 	public const RELEASE_BRANCH_PREFIX = 'release/';
 	public const RELEASE_TYPES = ['major', 'minor', 'patch', 'preview'];
-	public const CLONE_ORIGIN_PREFIX = 'https://github.com/elephox-dev/';
+	public const DEFAULT_CLONE_ORIGIN_PREFIX = 'https://github.com/elephox-dev/';
 
 	public function __construct(
 		private readonly LoggerInterface $logger,
@@ -27,6 +27,7 @@ class ReleaseCommand implements CommandHandler
 		$builder->addArgument('type', description: 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')');
 		$builder->addArgument('version', description: 'The version to release');
 		$builder->addOption('dry-run', description: 'Whether to perform a dry run (no changes will be pushed)');
+		$builder->addOption('origin', default: self::DEFAULT_CLONE_ORIGIN_PREFIX, description: 'The git origin to use for all modules and the framework.', validator: fn (mixed $v) => is_string($v) && str_ends_with($v, '/') ? true : "Origin url must end with /");
 	}
 
 	public function handle(CommandInvocation $command): int|null
@@ -217,10 +218,12 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		$origin = $command->options->get('origin')->string();
+
 		foreach (array_filter($dirs, static fn ($dir) => is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.') as $moduleDir) {
 			$moduleName = strtolower(basename($moduleDir));
 
-			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionTag, $dryRun);
+			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionTag, $dryRun, $origin);
 			if ($result !== 0) {
 				return $result;
 			}
@@ -231,7 +234,7 @@ class ReleaseCommand implements CommandHandler
 		return 0;
 	}
 
-	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionTag, bool $dryRun): int
+	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionTag, bool $dryRun, string $origin): int
 	{
 		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
 
@@ -239,7 +242,7 @@ class ReleaseCommand implements CommandHandler
 		if (!$this->executeRequireSuccess(
 			'Failed to clone the module repository',
 			'git clone --depth=1 %s %s',
-			self::CLONE_ORIGIN_PREFIX . $name,
+			$origin . $name,
 			$moduleFolder,
 		)) {
 			return 1;
