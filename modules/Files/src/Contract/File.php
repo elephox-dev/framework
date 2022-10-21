@@ -58,7 +58,7 @@ interface File extends FilesystemNode, HasHash
 
 	public function stream(): Stream;
 
-	public function writeStream(Stream $stream, int $chunkSize = self::DEFAULT_STREAM_CHUNK_SIZE): void;
+	public function writeStream(Stream $input, int $chunkSize = self::DEFAULT_STREAM_CHUNK_SIZE): void;
 
 	public function writeContents(string $contents): void;
 

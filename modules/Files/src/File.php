@@ -252,12 +252,12 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return self::openStream($this, true, $writeable, $writeable, $writeable);
 	}
 
-	public function writeStream(Stream $stream, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
+	public function writeStream(Stream $input, int $chunkSize = Contract\File::DEFAULT_STREAM_CHUNK_SIZE): void
 	{
-		$stream = self::openStream($this, false, true, true, false, true);
+		$output = self::openStream($this, false, true, true, false, true);
 
-		while (!$stream->eof()) {
-			$stream->write($stream->read($chunkSize));
+		while (!$input->eof()) {
+			$output->write($input->read($chunkSize));
 		}
 	}
 
