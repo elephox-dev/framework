@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b05c5e945303a3a3055ced9d69034f7",
+    "content-hash": "f76caba69d89181daa540864c67532c3",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -7543,16 +7543,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "dev-master",
+            "version": "4.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "b0970a6994318a476d81d50cb0a95055b42fa676"
+                "reference": "7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/b0970a6994318a476d81d50cb0a95055b42fa676",
-                "reference": "b0970a6994318a476d81d50cb0a95055b42fa676",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3",
+                "reference": "7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3",
                 "shasum": ""
             },
             "require": {
@@ -7569,33 +7569,33 @@
                 "ext-mbstring": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "felixfbecker/advanced-json-rpc": "^3.1",
+                "felixfbecker/advanced-json-rpc": "^3.0.3",
                 "felixfbecker/language-server-protocol": "^1.5",
                 "netresearch/jsonmapper": "^1.0 || ^2.0 || ^3.0 || ^4.0",
                 "nikic/php-parser": "^4.13",
                 "openlss/lib-array2xml": "^1.0",
-                "php": "^7.4 || ~8.0.0 || ~8.1.0",
-                "sebastian/diff": "^4.0",
+                "php": "^7.1|^8",
+                "sebastian/diff": "^3.0 || ^4.0",
                 "symfony/console": "^3.4.17 || ^4.1.6 || ^5.0 || ^6.0",
-                "symfony/filesystem": "^5.4 || ^6.0",
-                "symfony/polyfill-php80": "^1.25"
+                "symfony/polyfill-php80": "^1.25",
+                "webmozart/path-util": "^2.3"
             },
             "provide": {
                 "psalm/psalm": "self.version"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4",
+                "bamarni/composer-bin-plugin": "^1.2",
                 "brianium/paratest": "^4.0||^6.0",
                 "ext-curl": "*",
-                "nunomaduro/mock-final-classes": "^1.1",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpspec/prophecy": "^1.15",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpstan/phpdoc-parser": "1.6.4",
-                "phpunit/phpunit": "^9.5",
+                "phpdocumentor/reflection-docblock": "^5",
+                "phpmyadmin/sql-parser": "5.1.0||dev-master",
+                "phpspec/prophecy": ">=1.9.0",
+                "phpstan/phpdoc-parser": "1.2.* || 1.6.4",
+                "phpunit/phpunit": "^9.0",
                 "psalm/plugin-phpunit": "^0.16",
                 "slevomat/coding-standard": "^7.0",
-                "squizlabs/php_codesniffer": "^3.6",
+                "squizlabs/php_codesniffer": "^3.5",
                 "symfony/process": "^4.3 || ^5.0 || ^6.0",
                 "weirdan/prophecy-shim": "^1.0 || ^2.0"
             },
@@ -7613,14 +7613,17 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.x-dev",
-                    "dev-4.x": "4.x-dev",
+                    "dev-master": "4.x-dev",
                     "dev-3.x": "3.x-dev",
                     "dev-2.x": "2.x-dev",
                     "dev-1.x": "1.x-dev"
                 }
             },
             "autoload": {
+                "files": [
+                    "src/functions.php",
+                    "src/spl_object_id.php"
+                ],
                 "psr-4": {
                     "Psalm\\": "src/Psalm/"
                 }
@@ -7642,9 +7645,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/master"
+                "source": "https://github.com/vimeo/psalm/tree/4.29.0"
             },
-            "time": "2022-10-19T20:06:00+00:00"
+            "time": "2022-10-11T17:09:17+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -7752,6 +7755,57 @@
                 "source": "https://github.com/webmozarts/glob/tree/4.6.0"
             },
             "time": "2022-05-24T19:45:58+00:00"
+        },
+        {
+            "name": "webmozart/path-util",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozart/path-util.git",
+                "reference": "d939f7edc24c9a1bb9c0dee5cb05d8e859490725"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozart/path-util/zipball/d939f7edc24c9a1bb9c0dee5cb05d8e859490725",
+                "reference": "d939f7edc24c9a1bb9c0dee5cb05d8e859490725",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "webmozart/assert": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.6",
+                "sebastian/version": "^1.0.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\PathUtil\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "A robust cross-platform utility for normalizing, comparing and modifying file paths.",
+            "support": {
+                "issues": "https://github.com/webmozart/path-util/issues",
+                "source": "https://github.com/webmozart/path-util/tree/2.3.0"
+            },
+            "abandoned": "symfony/filesystem",
+            "time": "2015-12-17T08:42:14+00:00"
         }
     ],
     "aliases": [],
