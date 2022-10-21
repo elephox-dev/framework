@@ -47,7 +47,7 @@ class ReleaseCommand implements CommandHandler
 
 		if (!preg_match(self::VERSION_REGEX, $version, $versionParts)) {
 			$this->logger->error("Invalid version: <yellow>$version</yellow>");
-			$this->logger->error("The version must be in the format: <major>[.<minor>[.<patch>]]");
+			$this->logger->error('The version must be in the format: <major>[.<minor>[.<patch>]]');
 
 			return 1;
 		}
