@@ -32,12 +32,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
       - name: ✔️ Validate composer.lock
         run: composer validate --strict --no-interaction
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: ↔️ Check module requirements
@@ -61,12 +55,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: ${{ env.php-extensions }}
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 🔎 Run Psalm
@@ -88,12 +76,6 @@ jobs:
         with:
           php-version: '8.1'
           extensions: ${{ env.php-extensions }}
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-8.1-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-8.1-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 💅 Run PHP CS Fixer (diff)
@@ -117,12 +99,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 🧪 Run PHPUnit
@@ -152,12 +128,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 📥 Download coverage data
@@ -189,12 +159,6 @@ jobs:
           extensions: ${{ env.php-extensions }}
           ini-values: zend.assertions=1
           coverage: xdebug
-      - name: 💾 Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 💉 Run Memory Leak Tests
