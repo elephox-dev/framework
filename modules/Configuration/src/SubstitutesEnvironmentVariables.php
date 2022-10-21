@@ -56,6 +56,8 @@ trait SubstitutesEnvironmentVariables
 				yield $key => KeyedEnumerable::from($this->substituteEnvironmentVariablesRecursive($value))->toArray();
 			} elseif (is_string($value) || is_a($value, Stringable::class)) {
 				yield $key => $this->substituteEnvironmentVariables($value);
+			} else {
+				yield $key => $value;
 			}
 		}
 	}

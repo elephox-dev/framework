@@ -189,6 +189,7 @@ class ConfigurationRootTest extends TestCase
 			'test3' => 'this env should remain: ${NOT_A_VAR}',
 			'test4' => [
 				'test' => 'this is a nested env value: ${TEST_VAR}',
+				'not-a-string-and-not-iterable' => 2,
 			],
 		]));
 		$root = $configBuilder->build();
@@ -199,7 +200,7 @@ class ConfigurationRootTest extends TestCase
 		static::assertEquals('this is an env value: secret!', $root->getSection('test')->getValue());
 		static::assertEquals('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
 		static::assertEquals('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
-		static::assertEquals(['test' => 'this is a nested env value: secret!'], $root->getSection('test4')->getValue());
+		static::assertEquals(['test' => 'this is a nested env value: secret!', 'not-a-string-and-not-iterable' => 2], $root->getSection('test4')->getValue());
 
 		$_ENV['NOT_A_VAR'] = 'now has a value!';
 		static::assertEquals('this env should remain: now has a value!', $root->getSection('test3')->getValue());
