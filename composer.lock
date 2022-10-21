@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70d4a24336c9b58017e80d418e9c2157",
+    "content-hash": "7b05c5e945303a3a3055ced9d69034f7",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -7760,8 +7760,7 @@
         "elephox/builder-whoops-handler": 20,
         "elephox/builder-whoops-middleware": 20,
         "ergebnis/composer-normalize": 20,
-        "friendsofphp/php-cs-fixer": 20,
-        "vimeo/psalm": 20
+        "friendsofphp/php-cs-fixer": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
