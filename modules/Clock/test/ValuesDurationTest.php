@@ -54,7 +54,7 @@ class ValuesDurationTest extends TestCase
 	 */
 	public function testTotals(Duration $duration, string $unit, float $total): void
 	{
-		static::assertEquals($total, $duration->{'getTotal' . ucfirst($unit)}());
+		static::assertEqualsWithDelta($total, $duration->{'getTotal' . ucfirst($unit)}(), 1.0E-13);
 	}
 
 	public function testAdd(): void
