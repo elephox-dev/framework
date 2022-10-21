@@ -69,16 +69,17 @@ final class DefaultEqualityComparer
 	}
 
 	/**
-	 * @template TCallable as callable(...mixed): (bool|int)
+	 * @template TCallable as callable(...mixed): (bool|numeric)
 	 *
 	 * @param TCallable $comparer
 	 *
-	 * @return callable(...mixed): (bool|int)
+	 * @return callable(...mixed): (bool|numeric)
 	 */
 	#[Pure]
 	public static function invert(callable $comparer): callable
 	{
 		return static function (mixed ...$args) use ($comparer) {
+			/** @var mixed $result */
 			$result = $comparer(...$args);
 
 			if (is_bool($result)) {

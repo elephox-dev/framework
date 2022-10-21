@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Configuration;
 
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\KeyedEnumerable;
 use Elephox\Collection\ObjectSet;
 use JetBrains\PhpStorm\Pure;
 
@@ -47,7 +48,7 @@ class ConfigurationRoot implements Contract\ConfigurationRoot
 		}
 
 		if (is_iterable($value)) {
-			return [...$this->substituteEnvironmentVariablesRecursive($value)];
+			return KeyedEnumerable::from($this->substituteEnvironmentVariablesRecursive($value))->toArray();
 		}
 
 		return $value;

@@ -21,7 +21,6 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		$map = new self();
 
 		/**
-		 * @var string $name
 		 * @var string|list<string> $value
 		 */
 		foreach ($server as $name => $value) {

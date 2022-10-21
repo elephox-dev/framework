@@ -101,8 +101,8 @@ class GlobalEnvironment extends DotEnvEnvironment
 	public function offsetUnset(mixed $offset): void
 	{
 		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($offset)) {
-			throw new InvalidArgumentException('Environment offset must be a string');
+		if (!is_string($offset) || empty($offset)) {
+			throw new InvalidArgumentException('Environment offset must be a non-empty string');
 		}
 
 		if ($offset === 'APP_ROOT') {

@@ -64,4 +64,96 @@ class Option
 	{
 		return isset($this->template->$name);
 	}
+
+	public function int(): int
+	{
+		if (!is_numeric($this->value)) {
+			throw new OptionValidationException("Value cannot be converted to int: " . get_debug_type($this->value));
+		}
+
+		return (int)$this->value;
+	}
+
+	public function float(): float
+	{
+		if (!is_numeric($this->value)) {
+			throw new OptionValidationException("Value cannot be converted to float: " . get_debug_type($this->value));
+		}
+
+		return (float)$this->value;
+	}
+
+	public function bool(): bool
+	{
+		if (is_string($this->value)) {
+			return filter_var($this->value, FILTER_VALIDATE_BOOLEAN);
+		}
+
+		if (is_bool($this->value)) {
+			return $this->value;
+		}
+
+		throw new OptionValidationException("Value cannot be converted to bool: " . get_debug_type($this->value));
+	}
+
+	public function string(): string
+	{
+		if (
+			is_string($this->value) ||
+			is_numeric($this->value) ||
+			is_bool($this->value)
+		) {
+			return (string)$this->value;
+		}
+
+		throw new OptionValidationException("Value cannot be converted to string: " . get_debug_type($this->value));
+	}
+
+	public function array(): array {
+		if (is_array($this->value)) {
+			return $this->value;
+		}
+
+		return [$this->value];
+	}
+
+	public function nullableInt(): ?int {
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->int();
+	}
+
+	public function nullableFloat(): ?float {
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->float();
+	}
+
+	public function nullableBool(): ?bool {
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->bool();
+	}
+
+	public function nullableString(): ?string {
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->string();
+	}
+
+	public function nullableArray(): ?array {
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->array();
+	}
 }

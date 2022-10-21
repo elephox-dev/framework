@@ -306,6 +306,6 @@ class ArrayList implements GenericList
 	 */
 	public function insertAt(int $index, mixed $value): void
 	{
-		array_splice($this->items, $index, 0, $value);
+		array_splice($this->items, $index, 0, [$value]);
 	}
 }

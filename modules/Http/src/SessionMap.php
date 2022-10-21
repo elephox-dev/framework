@@ -5,6 +5,7 @@ namespace Elephox\Http;
 
 use ArrayIterator;
 use Elephox\Collection\IsKeyedEnumerable;
+use InvalidArgumentException;
 use LogicException;
 
 class SessionMap implements Contract\SessionMap
@@ -66,18 +67,22 @@ class SessionMap implements Contract\SessionMap
 
 	public function get(mixed $key): mixed
 	{
+		if (!is_string($key)) {
+			throw new InvalidArgumentException("SessionMap key must be a string");
+		}
+
 		/** @psalm-suppress MixedReturnStatement */
 		return $_SESSION[$key] ?? null;
 	}
 
 	public function has(mixed $key): bool
 	{
-		return isset($_SESSION[$key]);
+		return is_string($key) && isset($_SESSION[$key]);
 	}
 
 	public function remove(mixed $key): bool
 	{
-		if (!$this->has($key)) {
+		if (!is_string($key) || !$this->has($key)) {
 			return false;
 		}
 

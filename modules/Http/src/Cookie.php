@@ -206,10 +206,15 @@ class Cookie implements Contract\Cookie
 		};
 	}
 
+	/**
+	 * @psalm-suppress UnusedPsalmSuppress
+	 * @psalm-suppress InvalidReturnType
+	 */
 	public function offsetGet(
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset,
 	): int|string|bool|null|DateTime|CookieSameSite {
+		/** @psalm-suppress InvalidReturnStatement */
 		return match ($offset) {
 			'name' => $this->name,
 			'value' => $this->value,

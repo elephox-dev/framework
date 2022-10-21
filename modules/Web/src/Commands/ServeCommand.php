@@ -49,16 +49,12 @@ class ServeCommand implements CommandHandler
 
 	public function handle(CommandInvocation $command): ?int
 	{
-		$host = $command->arguments->get('host')->value;
-		$port = (int) $command->arguments->get('port')->value;
-		$root = $command->options->get('root')->value ?? ($this->environment->root()->directory('public')->path());
-		$router = $command->options->get('router')->value ?? (dirname(__DIR__, 2) . '/data/router.php');
-		$noReload = (bool) $command->options->get('no-reload')->value;
-		$verbose = (bool) $command->options->get('verbose')->value;
-
-		if (!is_string($root)) {
-			throw new InvalidArgumentException('Root directory must be a string');
-		}
+		$host = $command->arguments->get('host')->string();
+		$port = $command->arguments->get('port')->int();
+		$root = $command->options->get('root')->nullableString() ?? ($this->environment->root()->directory('public')->path());
+		$router = $command->options->get('router')->nullableString() ?? (dirname(__DIR__, 2) . '/data/router.php');
+		$noReload = $command->options->get('no-reload')->bool();
+		$verbose = $command->options->get('verbose')->bool();
 
 		if (!is_dir($root)) {
 			throw new InvalidArgumentException("Root directory ($root) does not exist");
@@ -67,14 +63,6 @@ class ServeCommand implements CommandHandler
 		$documentRoot = realpath($root);
 		if (!is_string($documentRoot)) {
 			throw new RuntimeException('Unable to resolve document root');
-		}
-
-		if (!is_string($host)) {
-			throw new InvalidArgumentException('Host must be a string');
-		}
-
-		if (!is_string($router)) {
-			throw new InvalidArgumentException('Router must be a string');
 		}
 
 		if ($router === 'null') {
@@ -168,16 +156,12 @@ class ServeCommand implements CommandHandler
 
 	private function getEnvironment(string $documentRoot, CommandInvocation $command): MemoryEnvironment
 	{
-		$envName = $command->options->get('env')->value;
+		$envName = $command->options->get('env')->string();
 		$workers = $command->options->get('workers')->value;
 
 		$environment = new MemoryEnvironment($documentRoot);
 		$environment->loadFromEnvFile();
 		$environment->loadFromEnvFile(local: true);
-
-		if (!is_string($envName)) {
-			throw new InvalidArgumentException('Environment must be a string');
-		}
 
 		if ($envName !== 'null') {
 			$environment['APP_ENV'] = $envName;

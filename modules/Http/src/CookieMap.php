@@ -19,10 +19,6 @@ class CookieMap extends ArrayMap implements Contract\CookieMap
 
 		$map = new self();
 
-		/**
-		 * @var string $key
-		 * @var string|null $value
-		 */
 		foreach ($cookie as $key => $value) {
 			assert(is_string($key) && ($value === null || is_string($value)), 'CookieMap::fromGlobals() expects an array of strings with string keys');
 

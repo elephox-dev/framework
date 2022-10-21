@@ -98,7 +98,6 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 			throw new RouteNotFoundException($request);
 		}
 
-		/** @var list<RouteHandlerContract> $orderedHandlers */
 		$orderedHandlers = $matchedHandlersGroup
 			->orderByDescending(static fn (RouteHandlerContract $handler): int => $handler->getSourceAttribute()->getWeight())
 			->toList()
