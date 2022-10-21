@@ -36,14 +36,28 @@ class FrozenClockTest extends TestCase
 
 	public function testDiff(): void
 	{
-		$source = new DateTimeImmutable('now');
-		$clock = new FrozenClock($source);
+		$source = new FrozenClock(new DateTimeImmutable('now'));
+		$target = new FrozenClock(new DateTimeImmutable('+1 day'));
+		$diff = $source->diff($target);
+		$diffRev = $target->diff($source);
 
-		$target = new DateTimeImmutable('+1 day');
-		$clockTarget = new FrozenClock($target);
-		$diff = $clock->diff($clockTarget);
+		static::assertEqualsWithDelta(1, $diff->getTotalDays(), 1.0E-15);
+		static::assertFalse($diff->isNegative());
+		static::assertEqualsWithDelta(1, $diffRev->getTotalDays(), 1.0E-15);
+		static::assertTrue($diffRev->isNegative());
+	}
 
-		static::assertEquals(1, $diff->getTotalDays());
+	public function testExtremeDiff(): void
+	{
+		$source = new FrozenClock(new DateTimeImmutable('0000-00-00 00:00:00.000000'));
+		$target = new FrozenClock(new DateTimeImmutable('9999-12-31 23:59:59.999999'));
+		$diff = $source->diff($target);
+		$diffRev = $target->diff($source);
+
+		static::assertEqualsWithDelta(3652457.4368634, $diff->getTotalDays(), 1.0E-7);
+		static::assertFalse($diff->isNegative());
+		static::assertEqualsWithDelta(3652457.4368634, $diffRev->getTotalDays(), 1.0E-7);
+		static::assertTrue($diffRev->isNegative());
 	}
 
 	public function testEqualsAndCompare(): void
