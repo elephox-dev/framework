@@ -27,7 +27,7 @@ class ReleaseCommand implements CommandHandler
 		$builder->addArgument('type', description: 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')');
 		$builder->addArgument('version', description: 'The version to release');
 		$builder->addOption('dry-run', description: 'Whether to perform a dry run (no changes will be pushed)');
-		$builder->addOption('origin', default: self::DEFAULT_CLONE_ORIGIN_PREFIX, description: 'The git origin to use for all modules and the framework.', validator: fn (mixed $v) => is_string($v) && str_ends_with($v, '/') ? true : "Origin url must end with /");
+		$builder->addOption('origin', default: self::DEFAULT_CLONE_ORIGIN_PREFIX, description: 'The git origin to use for all modules and the framework.', validator: static fn (mixed $v) => is_string($v) && str_ends_with($v, '/') ? true : 'Origin url must end with /');
 	}
 
 	public function handle(CommandInvocation $command): int|null
