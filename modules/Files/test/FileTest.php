@@ -64,25 +64,25 @@ class FileTest extends MockeryTestCase
 	public function testGetExtension(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('txt', $file->extension());
+		static::assertSame('txt', $file->extension());
 	}
 
 	public function testGetNameWithoutExtension(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('test', $file->getNameWithoutExtension());
+		static::assertSame('test', $file->getNameWithoutExtension());
 	}
 
 	public function testToString(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('/tmp/test.txt', (string) $file);
+		static::assertSame('/tmp/test.txt', (string) $file);
 	}
 
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
-		static::assertEquals(filemtime($this->filePath), $file->modifiedAt()->getTimestamp());
+		static::assertSame(filemtime($this->filePath), $file->modifiedAt()->getTimestamp());
 	}
 
 	public function testFileNotFoundModifiedTime(): void
@@ -116,7 +116,7 @@ class FileTest extends MockeryTestCase
 	public function testGetPath(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('/tmp/test.txt', $file->path());
+		static::assertSame('/tmp/test.txt', $file->path());
 	}
 
 	public function testGetMimeType(): void
@@ -125,19 +125,19 @@ class FileTest extends MockeryTestCase
 		static::assertNull($file->mimeType());
 
 		$fileWithType = new File($this->filePath, MimeType::TextPlain);
-		static::assertEquals(MimeType::TextPlain, $fileWithType->mimeType());
+		static::assertSame(MimeType::TextPlain, $fileWithType->mimeType());
 	}
 
 	public function testGetHash(): void
 	{
 		$file = new File($this->filePath);
-		static::assertEquals(md5(self::FileContents), $file->getHash());
+		static::assertSame(md5(self::FileContents), $file->getHash());
 	}
 
 	public function testGetSize(): void
 	{
 		$file = new File($this->filePath);
-		static::assertEquals(strlen(self::FileContents), $file->size());
+		static::assertSame(strlen(self::FileContents), $file->size());
 	}
 
 	public function testGetParent(): void
@@ -145,11 +145,11 @@ class FileTest extends MockeryTestCase
 		$file = new File('/tmp/nested/deep/file/test.txt');
 		$dir = $file->parent();
 		static::assertInstanceOf(Directory::class, $dir);
-		static::assertEquals('/tmp/nested/deep/file', $dir->path());
+		static::assertSame('/tmp/nested/deep/file', $dir->path());
 
 		$upperDir = $file->parent(2);
 		static::assertInstanceOf(Directory::class, $upperDir);
-		static::assertEquals('/tmp/nested/deep', $upperDir->path());
+		static::assertSame('/tmp/nested/deep', $upperDir->path());
 
 		$this->expectException(InvalidParentLevelException::class);
 		$file->parent(0);
@@ -158,7 +158,7 @@ class FileTest extends MockeryTestCase
 	public function testGetName(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertEquals('test.txt', $file->name());
+		static::assertSame('test.txt', $file->name());
 	}
 
 	public function testIsExecutable(): void

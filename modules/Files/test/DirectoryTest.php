@@ -68,19 +68,19 @@ class DirectoryTest extends TestCase
 	public function testGetPath(): void
 	{
 		$directory = new Directory('/test/path');
-		static::assertEquals('/test/path', $directory->path());
+		static::assertSame('/test/path', $directory->path());
 	}
 
 	public function testGetPathWithTrailingSlash(): void
 	{
 		$directory = new Directory('/test/path/');
-		static::assertEquals('/test/path/', $directory->path());
+		static::assertSame('/test/path/', $directory->path());
 	}
 
 	public function testToString(): void
 	{
 		$directory = new Directory('/test/path');
-		static::assertEquals('/test/path', (string) $directory);
+		static::assertSame('/test/path', (string) $directory);
 	}
 
 	public function testGetChild(): void
@@ -89,11 +89,11 @@ class DirectoryTest extends TestCase
 
 		$fileChild = $directory->child(pathinfo($this->filePath, PATHINFO_BASENAME));
 		static::assertInstanceOf(File::class, $fileChild);
-		static::assertEquals($this->filePath, $fileChild->path());
+		static::assertSame($this->filePath, $fileChild->path());
 
 		$dirChild = $directory->child('test');
 		static::assertInstanceOf(Directory::class, $dirChild);
-		static::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . 'test', $dirChild->path());
+		static::assertSame($this->dirPath . DIRECTORY_SEPARATOR . 'test', $dirChild->path());
 
 		$emptyDir = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
 		$nonExistentChild = $emptyDir->child('test123');
@@ -119,7 +119,7 @@ class DirectoryTest extends TestCase
 	public function testGetModifiedTime(): void
 	{
 		$directory = new Directory($this->dirPath);
-		static::assertEquals(filemtime($this->filePath), $directory->modifiedAt()->getTimestamp());
+		static::assertSame(filemtime($this->filePath), $directory->modifiedAt()->getTimestamp());
 	}
 
 	public function testGetModifiedTimeNonExistent(): void
@@ -154,7 +154,7 @@ class DirectoryTest extends TestCase
 	public function testGetParent(): void
 	{
 		$directory = new Directory('/long/path/to/test');
-		static::assertEquals('/long/path/to', $directory->parent()->path());
+		static::assertSame('/long/path/to', $directory->parent()->path());
 
 		$this->expectException(InvalidParentLevelException::class);
 		$directory->parent(0);
@@ -174,13 +174,13 @@ class DirectoryTest extends TestCase
 	public function testGetFile(): void
 	{
 		$directory = new Directory($this->dirPath);
-		static::assertEquals($this->filePath, $directory->file(pathinfo($this->filePath, PATHINFO_BASENAME))->path());
+		static::assertSame($this->filePath, $directory->file(pathinfo($this->filePath, PATHINFO_BASENAME))->path());
 	}
 
 	public function testGetDirectory(): void
 	{
 		$directory = new Directory($this->dirPath);
-		static::assertEquals($this->dirPath . DIRECTORY_SEPARATOR . 'test', $directory->directory('test')->path());
+		static::assertSame($this->dirPath . DIRECTORY_SEPARATOR . 'test', $directory->directory('test')->path());
 	}
 
 	public function testGetDirectories(): void
@@ -197,7 +197,7 @@ class DirectoryTest extends TestCase
 	public function testGetName(): void
 	{
 		$directory = new Directory('/path/test');
-		static::assertEquals('test', $directory->name());
+		static::assertSame('test', $directory->name());
 	}
 
 	public function testIsRoot(): void

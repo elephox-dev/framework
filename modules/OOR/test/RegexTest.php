@@ -18,10 +18,10 @@ class RegexTest extends TestCase
 	public function testSplit(): void
 	{
 		$simple = Regex::split('/\s+/', 'hello world');
-		static::assertEquals(['hello', 'world'], $simple->toList());
+		static::assertSame(['hello', 'world'], $simple->toList());
 
 		$multiline = Regex::split('/\n/', "This is\na multiline\ntest");
-		static::assertEquals(['This is', 'a multiline', 'test'], $multiline->toList());
+		static::assertSame(['This is', 'a multiline', 'test'], $multiline->toList());
 	}
 
 	public function testInvalidSplitPattern(): void
@@ -35,7 +35,7 @@ class RegexTest extends TestCase
 	public function testMatch(): void
 	{
 		$simple = Regex::match('/(?<hello>hello)*/', 'hello world');
-		static::assertEquals([
+		static::assertSame([
 			0 => 'hello',
 			1 => 'hello',
 			'hello' => 'hello',
@@ -59,7 +59,7 @@ class RegexTest extends TestCase
 	public function testSpecificity(): void
 	{
 		static::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
-		static::assertEquals(1, Regex::specificity('/hello world/', 'hello world'));
+		static::assertSame(1, Regex::specificity('/hello world/', 'hello world'));
 		static::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
 	}
 

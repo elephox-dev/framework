@@ -51,7 +51,7 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 			$comparer(...),
 		);
 
-		return new OrderedEnumerable($orderedIterator);
+		return new self($orderedIterator);
 	}
 
 	/**
@@ -78,6 +78,6 @@ class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumera
 			$comparer(...),
 		);
 
-		return new OrderedEnumerable($orderedIterator);
+		return new self($orderedIterator);
 	}
 }

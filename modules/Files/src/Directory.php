@@ -37,7 +37,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			->select(function (mixed $name): Contract\FilesystemNode {
 				$path = Path::join($this->path(), $name);
 				if (is_dir($path)) {
-					return new Directory($path);
+					return new self($path);
 				}
 
 				return new File($path);
@@ -63,11 +63,11 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 		return new File($path);
 	}
 
-	public function directory(string $dirname): Directory
+	public function directory(string $dirname): self
 	{
 		$path = Path::join($this->path(), $dirname);
 
-		return new Directory($path);
+		return new self($path);
 	}
 
 	public function child(string $name, bool $throwForNotFound = false): FilesystemNode
@@ -75,7 +75,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 		$path = Path::join($this->path(), $name);
 
 		if (is_dir($path)) {
-			return new Directory($path);
+			return new self($path);
 		}
 
 		if (file_exists($path)) {

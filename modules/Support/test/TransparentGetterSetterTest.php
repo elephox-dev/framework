@@ -18,7 +18,7 @@ class TransparentGetterSetterTest extends TestCase
 	{
 		$obj = new ExampleGetterSetterTestClass();
 		$obj->internalValue = 123;
-		static::assertEquals(123, $obj->value);
+		static::assertSame(123, $obj->value);
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('None of the tried getter methods exists: getNotExisting, isNotExisting, hasNotExisting');
@@ -29,7 +29,7 @@ class TransparentGetterSetterTest extends TestCase
 	{
 		$obj = new ExampleGetterSetterTestClass();
 		$obj->value = 123;
-		static::assertEquals(123, $obj->internalValue);
+		static::assertSame(123, $obj->internalValue);
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('None of the tried setter methods exists: setNotExisting, putNotExisting');

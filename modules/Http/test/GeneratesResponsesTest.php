@@ -33,7 +33,7 @@ class GeneratesResponsesTest extends TestCase
 		$builder->responseCode(ResponseCode::OK);
 
 		$response = $builder->get();
-		static::assertEquals(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
+		static::assertSame(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
 	}
 
 	/**
@@ -42,15 +42,15 @@ class GeneratesResponsesTest extends TestCase
 	public function testJsonResponse(): void
 	{
 		$response = $this->jsonResponse(['foo' => 'bar'])->get();
-		static::assertEquals(MimeType::ApplicationJson, $response->getMimeType());
-		static::assertEquals('{"foo":"bar"}', $response->getBody()->getContents());
+		static::assertSame(MimeType::ApplicationJson, $response->getMimeType());
+		static::assertSame('{"foo":"bar"}', $response->getBody()->getContents());
 	}
 
 	public function testStringResponse(): void
 	{
 		$response = $this->stringResponse('Hello World')->get();
-		static::assertEquals(MimeType::TextPlain, $response->getMimeType());
-		static::assertEquals('Hello World', $response->getBody()->getContents());
+		static::assertSame(MimeType::TextPlain, $response->getMimeType());
+		static::assertSame('Hello World', $response->getBody()->getContents());
 	}
 
 	public function testResourceResponse(): void
@@ -59,7 +59,7 @@ class GeneratesResponsesTest extends TestCase
 		fwrite($resource, 'Hello World');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertEquals(MimeType::ApplicationOctetStream, $response->getMimeType());
+		static::assertSame(MimeType::ApplicationOctetStream, $response->getMimeType());
 
 		fclose($resource);
 	}
@@ -69,7 +69,7 @@ class GeneratesResponsesTest extends TestCase
 		$resource = fopen(__FILE__, 'rb');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertEquals(MimeType::ApplicationPhp, $response->getMimeType());
+		static::assertSame(MimeType::ApplicationPhp, $response->getMimeType());
 
 		fclose($resource);
 	}
@@ -78,7 +78,7 @@ class GeneratesResponsesTest extends TestCase
 	{
 		$response = $this->fileResponse(__FILE__)->get();
 		// TODO: Add test for both cases in which mime_content_type exists and not
-		static::assertEquals(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getMimeType());
+		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getMimeType());
 		static::assertStringEqualsFile(__FILE__, $response->getBody()->getContents());
 	}
 
@@ -86,6 +86,6 @@ class GeneratesResponsesTest extends TestCase
 	{
 		$response = $this->fileResponse('/tmp/file-that-does-not-exist')->get();
 
-		static::assertEquals(ResponseCode::NotFound, $response->getResponseCode());
+		static::assertSame(ResponseCode::NotFound, $response->getResponseCode());
 	}
 }

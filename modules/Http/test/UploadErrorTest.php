@@ -32,6 +32,6 @@ class UploadErrorTest extends TestCase
 	 */
 	public function testGetMessage(UploadError $error, string $message): void
 	{
-		static::assertEquals($message, $error->getMessage());
+		static::assertSame($message, $error->getMessage());
 	}
 }

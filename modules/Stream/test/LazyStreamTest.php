@@ -93,6 +93,6 @@ class LazyStreamTest extends MockeryTestCase
 
 		$actual = $stream->{$method}(...$args);
 
-		static::assertEquals($result, $actual);
+		static::assertSame($result, $actual);
 	}
 }

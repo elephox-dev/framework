@@ -26,12 +26,12 @@ class ReadmeTest extends TestCase
 		$identity = static fn (int $item): int => $item;
 
 		$sum = $pie->sum($identity);
-		static::assertEquals(15, $sum);
+		static::assertSame(15, $sum);
 
 		$evenSum = $pie->where(static fn (int $item) => $item % 2 === 0)->sum($identity);
-		static::assertEquals(6, $evenSum);
+		static::assertSame(6, $evenSum);
 
 		$ordered = $pie->orderBy($identity)->toArray();
-		static::assertEquals([1, 2, 3, 4, 5], $ordered);
+		static::assertSame([1, 2, 3, 4, 5], $ordered);
 	}
 }

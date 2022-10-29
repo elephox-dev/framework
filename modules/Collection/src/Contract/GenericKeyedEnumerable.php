@@ -49,14 +49,14 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function append(mixed $key, mixed $value): GenericKeyedEnumerable;
+	public function append(mixed $key, mixed $value): self;
 
 	/**
 	 * @param iterable<TIteratorKey, TSource> $values
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function appendAll(iterable $values): GenericKeyedEnumerable;
+	public function appendAll(iterable $values): self;
 
 	/**
 	 * @param callable(TSource, TIteratorKey): numeric $selector
@@ -70,7 +70,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function concat(GenericKeyedEnumerable ...$other): GenericKeyedEnumerable;
+	public function concat(self ...$other): self;
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
@@ -84,7 +84,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function distinct(?callable $comparer = null): GenericKeyedEnumerable;
+	public function distinct(?callable $comparer = null): self;
 
 	/**
 	 * @template TCompareKey
@@ -94,7 +94,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function distinctBy(callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function distinctBy(callable $keySelector, ?callable $comparer = null): self;
 
 	/**
 	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
@@ -102,7 +102,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function except(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function except(self $other, ?callable $comparer = null): self;
 
 	/**
 	 * @template TCompareKey
@@ -113,7 +113,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function exceptBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function exceptBy(self $other, callable $keySelector, ?callable $comparer = null): self;
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
@@ -167,7 +167,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @return GenericKeyedEnumerable<TSource, TIteratorKey>
 	 */
-	public function flip(): GenericKeyedEnumerable;
+	public function flip(): self;
 
 	/**
 	 * @template TGroupKey
@@ -185,7 +185,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function intersect(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function intersect(self $other, ?callable $comparer = null): self;
 
 	/**
 	 * @template TCompareKey
@@ -196,7 +196,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function intersectBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function intersectBy(self $other, callable $keySelector, ?callable $comparer = null): self;
 
 	/**
 	 * @template TInner
@@ -212,7 +212,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function join(GenericKeyedEnumerable $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function join(self $inner, callable $outerKeySelector, callable $innerKeySelector, callable $resultSelector, ?callable $comparer = null): self;
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
@@ -269,12 +269,12 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function prepend(mixed $key, mixed $value): GenericKeyedEnumerable;
+	public function prepend(mixed $key, mixed $value): self;
 
 	/**
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function reverse(): GenericKeyedEnumerable;
+	public function reverse(): self;
 
 	/**
 	 * @template TResult
@@ -283,7 +283,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TResult>
 	 */
-	public function select(callable $selector): GenericKeyedEnumerable;
+	public function select(callable $selector): self;
 
 	/**
 	 * @template TCollection
@@ -295,13 +295,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
 	 */
-	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): GenericKeyedEnumerable;
+	public function selectMany(callable $collectionSelector, ?callable $resultSelector = null): self;
 
 	/**
 	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param null|callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer
 	 */
-	public function sequenceEqual(GenericKeyedEnumerable $other, ?callable $comparer = null): bool;
+	public function sequenceEqual(self $other, ?callable $comparer = null): bool;
 
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
@@ -323,21 +323,21 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function skip(int $count): GenericKeyedEnumerable;
+	public function skip(int $count): self;
 
 	/**
 	 * @param NonNegativeInteger $count
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function skipLast(int $count): GenericKeyedEnumerable;
+	public function skipLast(int $count): self;
 
 	/**
 	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function skipWhile(callable $predicate): GenericKeyedEnumerable;
+	public function skipWhile(callable $predicate): self;
 
 	/**
 	 * @param callable(TSource, TIteratorKey): numeric $selector
@@ -351,21 +351,21 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function take(int $count): GenericKeyedEnumerable;
+	public function take(int $count): self;
 
 	/**
 	 * @param NonNegativeInteger $count
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function takeLast(int $count): GenericKeyedEnumerable;
+	public function takeLast(int $count): self;
 
 	/**
 	 * @param callable(TSource, TIteratorKey): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function takeWhile(callable $predicate): GenericKeyedEnumerable;
+	public function takeWhile(callable $predicate): self;
 
 	/**
 	 * @template TArrayKey as array-key
@@ -401,7 +401,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function union(GenericKeyedEnumerable $other, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function union(self $other, ?callable $comparer = null): self;
 
 	/**
 	 * @template TCompareKey
@@ -412,21 +412,21 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function unionBy(GenericKeyedEnumerable $other, callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable;
+	public function unionBy(self $other, callable $keySelector, ?callable $comparer = null): self;
 
 	/**
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function where(callable $predicate): GenericKeyedEnumerable;
+	public function where(callable $predicate): self;
 
 	/**
 	 * @param callable(TIteratorKey, TSource, Iterator<TSource, TIteratorKey>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function whereKey(callable $predicate): GenericKeyedEnumerable;
+	public function whereKey(callable $predicate): self;
 
 	/**
 	 * @template TOther
@@ -440,5 +440,5 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return GenericKeyedEnumerable<TResultKey, TResult>
 	 */
-	public function zip(GenericKeyedEnumerable $other, ?callable $resultSelector = null, ?callable $keySelector = null): GenericKeyedEnumerable;
+	public function zip(self $other, ?callable $resultSelector = null, ?callable $keySelector = null): self;
 }

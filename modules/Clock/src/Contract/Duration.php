@@ -115,14 +115,14 @@ interface Duration
 	public function getTotalYears(): float;
 
 	#[Pure]
-	public function add(Duration $duration): Duration;
+	public function add(self $duration): self;
 
 	#[Pure]
-	public function subtract(Duration $duration): Duration;
+	public function subtract(self $duration): self;
 
 	#[Pure]
-	public function equals(Duration $duration): bool;
+	public function equals(self $duration): bool;
 
 	#[Pure]
-	public function compare(Duration $duration): int;
+	public function compare(self $duration): int;
 }

@@ -10,6 +10,11 @@ use LogicException;
 
 class SessionMap implements Contract\SessionMap
 {
+	/**
+	 * @use IsKeyedEnumerable<array-key, mixed>
+	 */
+	use IsKeyedEnumerable;
+
 	public static function fromGlobals(?array $session = null, bool $recreate = false): ?Contract\SessionMap
 	{
 		if (session_status() === PHP_SESSION_DISABLED) {
@@ -47,11 +52,6 @@ class SessionMap implements Contract\SessionMap
 			session_destroy();
 		}
 	}
-
-	/**
-	 * @use IsKeyedEnumerable<array-key, mixed>
-	 */
-	use IsKeyedEnumerable;
 
 	private function __construct()
 	{

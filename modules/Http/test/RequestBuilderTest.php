@@ -41,20 +41,20 @@ class RequestBuilderTest extends TestCase
 
 		$request = $builder->get();
 		static::assertInstanceOf(RequestContract::class, $request);
-		static::assertEquals(RequestMethod::GET, $request->getMethod());
-		static::assertEquals('https://example.com/', (string) $request->getUrl());
-		static::assertEquals('2.0', $request->getProtocolVersion());
-		static::assertEquals('{"foo":"bar"}', $request->getBody()->getContents());
-		static::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		static::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		static::assertSame(RequestMethod::GET, $request->getMethod());
+		static::assertSame('https://example.com/', (string) $request->getUrl());
+		static::assertSame('2.0', $request->getProtocolVersion());
+		static::assertSame('{"foo":"bar"}', $request->getBody()->getContents());
+		static::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		static::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
 
 		$newRequest = $request->with()->jsonBody(['foo2' => 'bar2'])->get();
-		static::assertEquals(RequestMethod::GET, $request->getMethod());
-		static::assertEquals('https://example.com/', (string) $request->getUrl());
-		static::assertEquals('2.0', $request->getProtocolVersion());
-		static::assertEquals('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
-		static::assertEquals(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		static::assertEquals(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		static::assertSame(RequestMethod::GET, $request->getMethod());
+		static::assertSame('https://example.com/', (string) $request->getUrl());
+		static::assertSame('2.0', $request->getProtocolVersion());
+		static::assertSame('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
+		static::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		static::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
 	}
 
 	public function invalidBodyResourceProvider(): iterable

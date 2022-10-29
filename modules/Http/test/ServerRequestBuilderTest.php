@@ -63,10 +63,10 @@ class ServerRequestBuilderTest extends TestCase
 	{
 		$request = ServerRequestBuilder::fromGlobals($parameterMap, session: new FakeSessionMap(), protocolVersion: $protocolVersion, requestMethod: $requestMethod);
 
-		static::assertEquals($requestUri, $request->getUrl()->path);
-		static::assertEquals($bodyStreamLength, $request->getBody()->getSize());
-		static::assertEquals($expectedProtocolVersion, $request->getProtocolVersion());
-		static::assertEquals($expectedRequestMethod, $request->getMethod());
+		static::assertSame($requestUri, $request->getUrl()->path);
+		static::assertSame($bodyStreamLength, $request->getBody()->getSize());
+		static::assertSame($expectedProtocolVersion, $request->getProtocolVersion());
+		static::assertSame($expectedRequestMethod, $request->getMethod());
 	}
 
 	public function testMissingParameterIsThrown(): void
@@ -83,8 +83,8 @@ class ServerRequestBuilderTest extends TestCase
 		$builder->requestMethod(RequestMethod::GET);
 		$builder->requestUrl(Url::fromString('http://example.com/foo'));
 
-		static::assertEquals(RequestMethod::GET, $builder->getRequestMethod());
-		static::assertEquals('http://example.com/foo', (string) $builder->getRequestUrl());
+		static::assertSame(RequestMethod::GET, $builder->getRequestMethod());
+		static::assertSame('http://example.com/foo', (string) $builder->getRequestUrl());
 	}
 
 	public function testFromRequest(): void
@@ -101,9 +101,9 @@ class ServerRequestBuilderTest extends TestCase
 
 		$serverRequestBuilder = ServerRequestBuilder::fromRequest($request);
 
-		static::assertEquals('2.0', $serverRequestBuilder->getProtocolVersion());
-		static::assertEquals(['value', 'another'], $serverRequestBuilder->getHeaderMap()?->get('header'));
-		static::assertEquals('html', $serverRequestBuilder->getBody()?->getContents());
-		static::assertEquals(RequestMethod::GET, $serverRequestBuilder->getRequestMethod());
+		static::assertSame('2.0', $serverRequestBuilder->getProtocolVersion());
+		static::assertSame(['value', 'another'], $serverRequestBuilder->getHeaderMap()?->get('header'));
+		static::assertSame('html', $serverRequestBuilder->getBody()?->getContents());
+		static::assertSame(RequestMethod::GET, $serverRequestBuilder->getRequestMethod());
 	}
 }

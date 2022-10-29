@@ -33,13 +33,13 @@ class ResponseTest extends TestCase
 
 		$newResponse = $builder->get();
 
-		static::assertEquals(ResponseCode::OK, $newResponse->getResponseCode());
-		static::assertEquals(['bar'], $newResponse->getHeaderMap()->get('X-Foo'));
+		static::assertSame(ResponseCode::OK, $newResponse->getResponseCode());
+		static::assertSame(['bar'], $newResponse->getHeaderMap()->get('X-Foo'));
 
 		$newNewResponse = $newResponse->with()->exception(new Exception('test'))->get();
 
-		static::assertEquals(ResponseCode::InternalServerError, $newNewResponse->getResponseCode());
-		static::assertEquals(['bar'], $newNewResponse->getHeaderMap()->get('X-Foo'));
-		static::assertEquals('test', $newNewResponse->getException()?->getMessage());
+		static::assertSame(ResponseCode::InternalServerError, $newNewResponse->getResponseCode());
+		static::assertSame(['bar'], $newNewResponse->getHeaderMap()->get('X-Foo'));
+		static::assertSame('test', $newNewResponse->getException()?->getMessage());
 	}
 }

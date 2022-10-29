@@ -34,7 +34,7 @@ class EventBusTest extends TestCase
 		$subscription = $bus->subscribe(TestEvent::class, static function (TestEvent $event) use (&$triggered): void {
 			$triggered = true;
 
-			self::assertEquals(5, $event->data);
+			self::assertSame(5, $event->data);
 		});
 
 		$bus->publish(new TestEvent(5));
@@ -60,7 +60,7 @@ class EventBusTest extends TestCase
 		$bus->subscribe('testA', static function (TestNamedEvent $event) use (&$triggeredA1): void {
 			$triggeredA1 = true;
 
-			self::assertEquals(5, $event->data);
+			self::assertSame(5, $event->data);
 		});
 
 		$subscription = $bus->subscribe('testA', static function () use (&$triggeredA2): void {
@@ -70,7 +70,7 @@ class EventBusTest extends TestCase
 		$bus->subscribe('testB', static function (TestNamedEvent $event) use (&$triggeredB): void {
 			$triggeredB = true;
 
-			self::assertEquals(6, $event->data);
+			self::assertSame(6, $event->data);
 		});
 
 		$bus->publish(new TestNamedEvent('testA', 5));
@@ -91,7 +91,7 @@ class EventBusTest extends TestCase
 	{
 		$testEvent = new TestEvent(5);
 
-		static::assertEquals(TestEvent::class, $testEvent->getName());
+		static::assertSame(TestEvent::class, $testEvent->getName());
 	}
 
 	public function testGetSubscribers(): void

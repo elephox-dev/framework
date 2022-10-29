@@ -20,11 +20,11 @@ class UploadedFileTest extends TestCase
 	public function testConstructor(): void
 	{
 		$file = new UploadedFile('client name', 'client path', new StringStream('contents'), MimeType::TextPlain, 123, UploadError::Ok);
-		static::assertEquals('client name', $file->getClientFilename());
-		static::assertEquals('client path', $file->getClientPath());
-		static::assertEquals('contents', $file->getStream()->getContents());
-		static::assertEquals(123, $file->getSize());
-		static::assertEquals(MimeType::TextPlain, $file->getClientMimeType());
-		static::assertEquals(UploadError::Ok, $file->getError());
+		static::assertSame('client name', $file->getClientFilename());
+		static::assertSame('client path', $file->getClientPath());
+		static::assertSame('contents', $file->getStream()->getContents());
+		static::assertSame(123, $file->getSize());
+		static::assertSame(MimeType::TextPlain, $file->getClientMimeType());
+		static::assertSame(UploadError::Ok, $file->getError());
 	}
 }

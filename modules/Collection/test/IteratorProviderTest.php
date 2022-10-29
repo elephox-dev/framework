@@ -24,7 +24,7 @@ class IteratorProviderTest extends TestCase
 
 		static::assertInstanceOf(ArrayIterator::class, $iterator);
 		static::assertSame($iterator, $iterator2);
-		static::assertEquals([1, 2, 3], iterator_to_array($iterator));
+		static::assertSame([1, 2, 3], iterator_to_array($iterator));
 	}
 
 	public function testGenerator(): void
@@ -41,7 +41,7 @@ class IteratorProviderTest extends TestCase
 
 		static::assertInstanceOf(EagerCachingIterator::class, $iterator);
 		static::assertSame($iterator, $iterator2);
-		static::assertEquals([1, 2, 3], iterator_to_array($iterator));
+		static::assertSame([1, 2, 3], iterator_to_array($iterator));
 	}
 
 	public function testIteratorGenerator(): void
@@ -53,7 +53,7 @@ class IteratorProviderTest extends TestCase
 
 		static::assertInstanceOf(ArrayIterator::class, $iterator);
 		static::assertSame($iterator, $iterator2);
-		static::assertEquals([1, 2, 3], iterator_to_array($iterator));
+		static::assertSame([1, 2, 3], iterator_to_array($iterator));
 	}
 
 	public function testGeneratorGenerator(): void
@@ -70,7 +70,7 @@ class IteratorProviderTest extends TestCase
 		static::assertInstanceOf(EagerCachingIterator::class, $iterator);
 		static::assertInstanceOf(EagerCachingIterator::class, $iterator2);
 		static::assertNotSame($iterator, $iterator2);
-		static::assertEquals([1, 2, 3], iterator_to_array($iterator));
-		static::assertEquals([1, 2, 3], iterator_to_array($iterator2));
+		static::assertSame([1, 2, 3], iterator_to_array($iterator));
+		static::assertSame([1, 2, 3], iterator_to_array($iterator2));
 	}
 }

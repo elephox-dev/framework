@@ -33,14 +33,14 @@ class UrlSchemeTest extends TestCase
 	 */
 	public function testDefaultPorts(UrlScheme $scheme, ?int $port): void
 	{
-		static::assertEquals($scheme->getDefaultPort(), $port);
+		static::assertSame($scheme->getDefaultPort(), $port);
 	}
 
 	public function testCustomScheme(): void
 	{
 		$scheme = new CustomUrlScheme('custom', 80);
 
-		static::assertEquals('custom', $scheme->getScheme());
-		static::assertEquals(80, $scheme->getDefaultPort());
+		static::assertSame('custom', $scheme->getScheme());
+		static::assertSame(80, $scheme->getDefaultPort());
 	}
 }

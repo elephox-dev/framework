@@ -64,8 +64,8 @@ class ArrayListTest extends TestCase
 		static::assertArrayHasKey(0, $arr);
 		static::assertArrayHasKey(1, $arr);
 		static::assertArrayNotHasKey(2, $arr);
-		static::assertEquals('test2', $arr[0]);
-		static::assertEquals('test3', $arr[1]);
+		static::assertSame('test2', $arr[0]);
+		static::assertSame('test3', $arr[1]);
 	}
 
 	public function testOffsetSetInvalidType(): void
@@ -90,8 +90,8 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		static::assertEquals('test', $arr->offsetGet(0));
-		static::assertEquals('test2', $arr[1]);
+		static::assertSame('test', $arr->offsetGet(0));
+		static::assertSame('test2', $arr[1]);
 
 		$this->expectException(OffsetNotAllowedException::class);
 		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
@@ -119,8 +119,8 @@ class ArrayListTest extends TestCase
 		$arr[] = 'test2';
 
 		static::assertCount(2, $arr);
-		static::assertEquals('test', $arr->elementAt(0));
-		static::assertEquals('test2', $arr->elementAt(1));
+		static::assertSame('test', $arr->elementAt(0));
+		static::assertSame('test2', $arr->elementAt(1));
 	}
 
 	public function testAddAll(): void
@@ -132,8 +132,8 @@ class ArrayListTest extends TestCase
 		$arr->addAll(['test', 'test2']);
 
 		static::assertCount(2, $arr);
-		static::assertEquals('test', $arr->elementAt(0));
-		static::assertEquals('test2', $arr->elementAt(1));
+		static::assertSame('test', $arr->elementAt(0));
+		static::assertSame('test2', $arr->elementAt(1));
 	}
 
 	public function testIsEmpty(): void
@@ -149,15 +149,15 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList(['123', '456']);
 
-		static::assertEquals(['123', '456'], $arr->toList());
+		static::assertSame(['123', '456'], $arr->toList());
 	}
 
 	public function testFromArray(): void
 	{
 		$arr = ArrayList::from(['123', '456']);
 
-		static::assertEquals('123', $arr->elementAt(0));
-		static::assertEquals('456', $arr->elementAt(1));
+		static::assertSame('123', $arr->elementAt(0));
+		static::assertSame('456', $arr->elementAt(1));
 	}
 
 	public function testFromSelf(): void
@@ -172,15 +172,15 @@ class ArrayListTest extends TestCase
 	{
 		$arr = ArrayList::from(new ArrayIterator(['123', '456']));
 
-		static::assertEquals('123', $arr->elementAt(0));
-		static::assertEquals('456', $arr->elementAt(1));
+		static::assertSame('123', $arr->elementAt(0));
+		static::assertSame('456', $arr->elementAt(1));
 	}
 
 	public function testFromValue(): void
 	{
 		$arr = ArrayList::from('123');
 
-		static::assertEquals('123', $arr->elementAt(0));
+		static::assertSame('123', $arr->elementAt(0));
 	}
 
 	public function testIterator(): void
@@ -190,7 +190,7 @@ class ArrayListTest extends TestCase
 		]);
 
 		foreach ($map as $value) {
-			static::assertEquals('1', $value);
+			static::assertSame('1', $value);
 		}
 	}
 
@@ -202,12 +202,12 @@ class ArrayListTest extends TestCase
 
 		$removed = $list->removeAt(2);
 
-		static::assertEquals(3, $removed);
-		static::assertEquals(4, $list->count());
-		static::assertEquals(1, $list->elementAt(0));
-		static::assertEquals(2, $list->elementAt(1));
-		static::assertEquals(4, $list->elementAt(2));
-		static::assertEquals(5, $list->elementAt(3));
+		static::assertSame(3, $removed);
+		static::assertSame(4, $list->count());
+		static::assertSame(1, $list->elementAt(0));
+		static::assertSame(2, $list->elementAt(1));
+		static::assertSame(4, $list->elementAt(2));
+		static::assertSame(5, $list->elementAt(3));
 	}
 
 	public function testRemove(): void
@@ -219,11 +219,11 @@ class ArrayListTest extends TestCase
 		$removed = $list->remove(3);
 
 		static::assertTrue($removed);
-		static::assertEquals(4, $list->count());
-		static::assertEquals(1, $list->elementAt(0));
-		static::assertEquals(2, $list->elementAt(1));
-		static::assertEquals(4, $list->elementAt(2));
-		static::assertEquals(5, $list->elementAt(3));
+		static::assertSame(4, $list->count());
+		static::assertSame(1, $list->elementAt(0));
+		static::assertSame(2, $list->elementAt(1));
+		static::assertSame(4, $list->elementAt(2));
+		static::assertSame(5, $list->elementAt(3));
 	}
 
 	public function testOffsetExistThrows(): void
@@ -248,25 +248,25 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertEquals(0, $list->indexOf(1));
-		static::assertEquals(1, $list->indexOf(2));
-		static::assertEquals(2, $list->indexOf(3));
-		static::assertEquals(3, $list->indexOf(4));
-		static::assertEquals(4, $list->indexOf(5));
-		static::assertEquals(-1, $list->indexOf(6));
+		static::assertSame(0, $list->indexOf(1));
+		static::assertSame(1, $list->indexOf(2));
+		static::assertSame(2, $list->indexOf(3));
+		static::assertSame(3, $list->indexOf(4));
+		static::assertSame(4, $list->indexOf(5));
+		static::assertSame(-1, $list->indexOf(6));
 	}
 
 	public function testLastIndexOf(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertEquals(4, $list->lastIndexOf(5));
-		static::assertEquals(3, $list->lastIndexOf(4));
-		static::assertEquals(2, $list->lastIndexOf(3));
-		static::assertEquals(1, $list->lastIndexOf(2));
-		static::assertEquals(0, $list->lastIndexOf(1));
-		static::assertEquals(-1, $list->lastIndexOf(0));
-		static::assertEquals(-1, $list->lastIndexOf(7));
+		static::assertSame(4, $list->lastIndexOf(5));
+		static::assertSame(3, $list->lastIndexOf(4));
+		static::assertSame(2, $list->lastIndexOf(3));
+		static::assertSame(1, $list->lastIndexOf(2));
+		static::assertSame(0, $list->lastIndexOf(1));
+		static::assertSame(-1, $list->lastIndexOf(0));
+		static::assertSame(-1, $list->lastIndexOf(7));
 	}
 
 	public function testRemoveNotExists(): void
@@ -296,19 +296,19 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals(3, $list->pop());
-		static::assertEquals(2, $list->pop());
-		static::assertEquals(1, $list->pop());
-		static::assertEquals(0, $list->count());
+		static::assertSame(3, $list->pop());
+		static::assertSame(2, $list->pop());
+		static::assertSame(1, $list->pop());
+		static::assertSame(0, $list->count());
 	}
 
 	public function testPopWithPredicate(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals(3, $list->pop(static fn ($item) => $item % 2 === 1));
-		static::assertEquals(1, $list->pop(static fn ($item) => $item % 2 === 1));
-		static::assertEquals(1, $list->count());
+		static::assertSame(3, $list->pop(static fn ($item) => $item % 2 === 1));
+		static::assertSame(1, $list->pop(static fn ($item) => $item % 2 === 1));
+		static::assertSame(1, $list->count());
 	}
 
 	public function testPopThrowsForEmpty(): void
@@ -333,19 +333,19 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals(1, $list->shift());
-		static::assertEquals(2, $list->shift());
-		static::assertEquals(3, $list->shift());
-		static::assertEquals(0, $list->count());
+		static::assertSame(1, $list->shift());
+		static::assertSame(2, $list->shift());
+		static::assertSame(3, $list->shift());
+		static::assertSame(0, $list->count());
 	}
 
 	public function testShiftWithPredicate(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals(1, $list->shift(static fn ($item) => $item % 2 === 1));
-		static::assertEquals(3, $list->shift(static fn ($item) => $item % 2 === 1));
-		static::assertEquals(1, $list->count());
+		static::assertSame(1, $list->shift(static fn ($item) => $item % 2 === 1));
+		static::assertSame(3, $list->shift(static fn ($item) => $item % 2 === 1));
+		static::assertSame(1, $list->count());
 	}
 
 	public function testShiftThrowsForEmpty(): void
@@ -372,22 +372,22 @@ class ArrayListTest extends TestCase
 
 		$list->unshift(0);
 
-		static::assertEquals(0, $list[0]);
-		static::assertEquals(1, $list[1]);
+		static::assertSame(0, $list[0]);
+		static::assertSame(1, $list[1]);
 	}
 
 	public function testImplode(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals('1, 2, 3', $list->implode());
+		static::assertSame('1, 2, 3', $list->implode());
 	}
 
 	public function testImplodeWithGlue(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertEquals('1-2-3', $list->implode('-'));
+		static::assertSame('1-2-3', $list->implode('-'));
 	}
 
 	public function testContains(): void

@@ -19,7 +19,7 @@ class ReverseIteratorTest extends TestCase
 		$arrayIterator = new ArrayIterator([1, 2, 3]);
 		$iterator = new ReverseIterator($arrayIterator);
 
-		static::assertEquals([3, 2, 1], iterator_to_array($iterator));
+		static::assertSame([3, 2, 1], iterator_to_array($iterator));
 		static::assertSame($arrayIterator, $iterator->getInnerIterator());
 		static::assertCount(3, $iterator);
 	}

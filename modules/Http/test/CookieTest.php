@@ -33,7 +33,7 @@ class CookieTest extends TestCase
 			1234,
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			'name=value; Expires=' . $timestamp->format(Cookie::ExpiresFormat) . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234',
 			(string) $cookie,
 		);
@@ -79,7 +79,7 @@ class CookieTest extends TestCase
 		$cookie->{$setter}($value);
 
 		static::assertSame($value, $cookie->{$getter}());
-		static::assertEquals($cookieString, $cookie->__toString());
+		static::assertSame($cookieString, $cookie->__toString());
 	}
 
 	public function arrayKeyProvider(): iterable

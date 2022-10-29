@@ -128,13 +128,13 @@ class EmptyStreamTest extends TestCase
 	public function testReadLine(): void
 	{
 		$stream = new EmptyStream();
-		static::assertEquals('', $stream->readLine());
+		static::assertSame('', $stream->readLine());
 	}
 
 	public function testReadAllLines(): void
 	{
 		$stream = new EmptyStream();
-		static::assertEquals([], iterator_to_array($stream->readAllLines()));
+		static::assertSame([], iterator_to_array($stream->readAllLines()));
 	}
 
 	public function testReadByte(): void

@@ -69,9 +69,9 @@ class CasingTest extends TestCase
 	public function testReplaceDelimiters(string $output, string $input, string $replacement, ?string $delimitersPattern): void
 	{
 		if ($delimitersPattern !== null) {
-			static::assertEquals($output, Casing::replaceDelimiters($input, $replacement, $delimitersPattern));
+			static::assertSame($output, Casing::replaceDelimiters($input, $replacement, $delimitersPattern));
 		} else {
-			static::assertEquals($output, Casing::replaceDelimiters($input, $replacement));
+			static::assertSame($output, Casing::replaceDelimiters($input, $replacement));
 		}
 	}
 }

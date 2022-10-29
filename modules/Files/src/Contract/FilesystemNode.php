@@ -10,7 +10,7 @@ interface FilesystemNode extends Stringable
 {
 	public function path(): string;
 
-	public function relativePathTo(FilesystemNode $node): string;
+	public function relativePathTo(self $node): string;
 
 	public function name(): string;
 

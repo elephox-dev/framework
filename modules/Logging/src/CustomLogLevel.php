@@ -35,7 +35,7 @@ class CustomLogLevel implements Contract\LogLevel
 			}
 		}
 
-		return new CustomLogLevel($nonEmptyLevel, $intLevel ?? 0);
+		return new self($nonEmptyLevel, $intLevel ?? 0);
 	}
 
 	/**

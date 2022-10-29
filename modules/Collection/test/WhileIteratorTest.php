@@ -19,7 +19,7 @@ class WhileIteratorTest extends TestCase
 		$arrayIterator = new ArrayIterator([1, 2, 3]);
 		$iterator = new WhileIterator($arrayIterator, static fn ($value) => $value < 3);
 
-		static::assertEquals([1, 2], iterator_to_array($iterator));
+		static::assertSame([1, 2], iterator_to_array($iterator));
 		static::assertSame($arrayIterator, $iterator->getInnerIterator());
 	}
 }

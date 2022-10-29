@@ -28,7 +28,7 @@ class PathTest extends TestCase
 	public function testJoin(array $parts, string $targetPath): void
 	{
 		$path = Path::join(...$parts);
-		static::assertEquals($path, $targetPath);
+		static::assertSame($path, $targetPath);
 	}
 
 	public function rootDataProvider(): iterable
@@ -47,7 +47,7 @@ class PathTest extends TestCase
 	 */
 	public function testIsRoot(string $path, bool $isRoot): void
 	{
-		static::assertEquals($isRoot, Path::isRoot($path));
+		static::assertSame($isRoot, Path::isRoot($path));
 	}
 
 	public function rootedDataProvider(): iterable
@@ -70,7 +70,7 @@ class PathTest extends TestCase
 	 */
 	public function testIsRooted(string $path, bool $result): void
 	{
-		static::assertEquals($result, Path::isRooted($path), "Path: $path");
+		static::assertSame($result, Path::isRooted($path), "Path: $path");
 	}
 
 	public function relativeToProvider(): iterable
@@ -95,6 +95,6 @@ class PathTest extends TestCase
 	 */
 	public function testRelativeTo(string $pathA, string $pathB, string $result): void
 	{
-		static::assertEquals($result, Path::relativeTo($pathA, $pathB));
+		static::assertSame($result, Path::relativeTo($pathA, $pathB));
 	}
 }

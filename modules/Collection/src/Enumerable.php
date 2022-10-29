@@ -20,6 +20,10 @@ use Iterator;
 class Enumerable extends IteratorProvider implements GenericEnumerable
 {
 	/**
+	 * @use IsEnumerable<TSource>
+	 */
+	use IsEnumerable;
+	/**
 	 * @template T
 	 *
 	 * @param T|iterable<mixed, T> $value
@@ -71,9 +75,4 @@ class Enumerable extends IteratorProvider implements GenericEnumerable
 		/** @var Enumerable<never> */
 		return new self(new EmptyIterator());
 	}
-
-	/**
-	 * @use IsEnumerable<TSource>
-	 */
-	use IsEnumerable;
 }

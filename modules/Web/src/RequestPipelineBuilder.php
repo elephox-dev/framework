@@ -28,7 +28,7 @@ class RequestPipelineBuilder
 	/**
 	 * @param class-string<WebMiddleware>|WebMiddleware $middleware
 	 */
-	public function push(WebMiddleware|string $middleware): RequestPipelineBuilder
+	public function push(WebMiddleware|string $middleware): self
 	{
 		if (is_string($middleware)) {
 			$concreteMiddleware = $this->resolver->instantiate($middleware);
@@ -51,14 +51,14 @@ class RequestPipelineBuilder
 		return $this->pipeline->pop($predicate);
 	}
 
-	public function endpoint(RequestPipelineEndpoint $endpoint): RequestPipelineBuilder
+	public function endpoint(RequestPipelineEndpoint $endpoint): self
 	{
 		$this->endpoint = $endpoint;
 
 		return $this;
 	}
 
-	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): RequestPipelineBuilder
+	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): self
 	{
 		try {
 			/** @var int $key */

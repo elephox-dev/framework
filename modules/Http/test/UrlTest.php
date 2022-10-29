@@ -70,7 +70,7 @@ class UrlTest extends TestCase
 
 		$userInfo = empty($username) ? null : ($username . (empty($password) ? null : (':' . $password)));
 		$authority = empty($host) ? null : ($host . ($port === null ? null : (':' . $port)));
-		static::assertEquals([
+		static::assertSame([
 			'scheme' => $scheme !== null ? (UrlScheme::tryFrom($scheme) ?? new CustomUrlScheme($scheme)) : null,
 			'username' => $username,
 			'password' => $password,

@@ -60,18 +60,18 @@ class ParameterMapTest extends TestCase
 		static::assertInstanceOf(ParameterMapContract::class, $map);
 
 		static::assertArrayHasKey('foo', $map);
-		static::assertEquals('bar', $map['foo']);
+		static::assertSame('bar', $map['foo']);
 
 		static::assertArrayHasKey('faa', $map);
-		static::assertEquals('bor', $map['faa']);
+		static::assertSame('bor', $map['faa']);
 
 		static::assertFalse($map->has('invalid'));
 
 		$allGet = $map->allFrom(ParameterSource::Get)->toArray();
-		static::assertEquals($get, $allGet);
+		static::assertSame($get, $allGet);
 
 		$ambiguous = $map->all('ambiguous')->toArray(static fn (ParameterSource $source) => $source->name);
-		static::assertEquals(
+		static::assertSame(
 			[
 				ParameterSource::Post->name => 'test post',
 				ParameterSource::Get->name => 'test get',

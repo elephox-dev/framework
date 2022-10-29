@@ -26,14 +26,14 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertSame($start, $iterator->getStart());
 		static::assertSame($end, $iterator->getEnd());
-		static::assertEquals(new ValuesDuration(days: 1), $iterator->getTotalDuration());
+		static::assertSame(new ValuesDuration(days: 1), $iterator->getTotalDuration());
 
 		$iterator->rewind();
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
 		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 0)));
-		static::assertEquals(0, $iterator->key());
+		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
 		$iterator->next();
@@ -41,7 +41,7 @@ class PeriodIteratorTest extends TestCase
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($end));
 		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 1)));
-		static::assertEquals(1, $iterator->key());
+		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
@@ -62,7 +62,7 @@ class PeriodIteratorTest extends TestCase
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
 		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 0)));
-		static::assertEquals(0, $iterator->key());
+		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
 		$iterator->next();
@@ -70,14 +70,14 @@ class PeriodIteratorTest extends TestCase
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start->add(new ValuesDuration(days: 1))));
 		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 1)));
-		static::assertEquals(1, $iterator->key());
+		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start->add(new ValuesDuration(days: 2))));
 		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 2)));
-		static::assertEquals(2, $iterator->key());
+		static::assertSame(2, $iterator->key());
 
 		$iterator->next();
 

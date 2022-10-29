@@ -29,7 +29,7 @@ class ResourceStreamTest extends TestCase
 		static::assertTrue($stream->isReadable());
 		static::assertTrue($stream->isSeekable());
 		static::assertFalse($stream->isWriteable());
-		static::assertEquals(0, $stream->getSize());
+		static::assertSame(0, $stream->getSize());
 	}
 
 	public function testConstructorNoResource(): void
@@ -44,15 +44,15 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = new ResourceStream($fh, writeable: true);
 
-		static::assertEquals(0, $stream->getSize());
+		static::assertSame(0, $stream->getSize());
 
 		$stream->read(1);
 
-		static::assertEquals(0, $stream->getSize());
+		static::assertSame(0, $stream->getSize());
 
 		$stream->write('a');
 
-		static::assertEquals(1, $stream->getSize());
+		static::assertSame(1, $stream->getSize());
 	}
 
 	public function testGetInvalidSizeFromFstat(): void
@@ -95,15 +95,15 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = new ResourceStream($fh, writeable: true);
 
-		static::assertEquals('', (string) $stream);
+		static::assertSame('', (string) $stream);
 
 		$stream->write('a');
 
-		static::assertEquals('a', (string) $stream);
+		static::assertSame('a', (string) $stream);
 
 		$stream->close();
 
-		static::assertEquals('', (string) $stream);
+		static::assertSame('', (string) $stream);
 	}
 
 	public function testClosedGetSizeThrows(): void
@@ -237,11 +237,11 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = new ResourceStream($fh, writeable: true);
 
-		static::assertEquals(0, $stream->tell());
+		static::assertSame(0, $stream->tell());
 
 		$stream->write('a');
 
-		static::assertEquals(1, $stream->tell());
+		static::assertSame(1, $stream->tell());
 	}
 
 	public function testEof(): void
@@ -308,7 +308,7 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = new ResourceStream($fh, readable: true);
 
-		static::assertEquals('', $stream->read(0));
+		static::assertSame('', $stream->read(0));
 	}
 
 	public function testGetMetadata(): void
@@ -329,7 +329,7 @@ class ResourceStreamTest extends TestCase
 
 		static::assertTrue($stream->getMetadata('seekable'));
 		static::assertFalse($stream->getMetadata('eof'));
-		static::assertEquals('plainfile', $stream->getMetadata('wrapper_type'));
+		static::assertSame('plainfile', $stream->getMetadata('wrapper_type'));
 		static::assertNull($stream->getMetadata('non-existent'));
 	}
 }

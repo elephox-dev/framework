@@ -39,7 +39,7 @@ class ConfigurationSectionTest extends TestCase
 		$config = new ConfigurationSection($root, 'nested');
 		$section = $config->getSection('c');
 		static::assertInstanceOf(ConfigurationSection::class, $section);
-		static::assertEquals('bar', $section->getSection('foo')->getValue());
+		static::assertSame('bar', $section->getSection('foo')->getValue());
 	}
 
 	public function testInvalidOffsetUnset(): void

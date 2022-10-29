@@ -60,20 +60,20 @@ class GlobalEnvironmentTest extends TestCase
 		}
 
 		$env = new GlobalEnvironment();
-		static::assertEquals($shouldBeDevelopment, $env->isDevelopment());
+		static::assertSame($shouldBeDevelopment, $env->isDevelopment());
 	}
 
 	public function testGetTemp(): void
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertEquals('.' . DIRECTORY_SEPARATOR . 'tmp', $env->root()->relativePathTo($env->temp()));
+		static::assertSame('.' . DIRECTORY_SEPARATOR . 'tmp', $env->root()->relativePathTo($env->temp()));
 	}
 
 	public function testGetConfig(): void
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertEquals($env->root()->path(), $env->config()->path());
+		static::assertSame($env->root()->path(), $env->config()->path());
 	}
 }

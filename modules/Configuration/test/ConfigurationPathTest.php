@@ -17,7 +17,7 @@ class ConfigurationPathTest extends TestCase
 {
 	public function testGetChildKeys(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			['x', 'y'],
 			ConfigurationPath::getChildKeys(['foo' => ['a' => ['x' => ['z' => 0], 'y' => false], 'b' => 2], 'bar' => ['c' => 3], 'baz' => ['d' => 4]], 'foo:a')->getSource(),
 		);
@@ -25,7 +25,7 @@ class ConfigurationPathTest extends TestCase
 
 	public function testAppendKey(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			'test:path:appended',
 			ConfigurationPath::appendKey('test:path', 'appended')->getSource(),
 		);
@@ -33,7 +33,7 @@ class ConfigurationPathTest extends TestCase
 
 	public function testGetSectionKey(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			'appended',
 			ConfigurationPath::getSectionKey('test:path:appended')->getSource(),
 		);
@@ -41,7 +41,7 @@ class ConfigurationPathTest extends TestCase
 
 	public function testGetSectionKeys(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			['foo', 'bar', 'baz'],
 			ConfigurationPath::getSectionKeys('foo:bar:baz')->getSource(),
 		);

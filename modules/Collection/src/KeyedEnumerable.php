@@ -21,6 +21,11 @@ use Iterator;
 class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 {
 	/**
+	 * @use IsKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	use IsKeyedEnumerable;
+
+	/**
 	 * @template TValue
 	 *
 	 * @param TValue $value
@@ -71,9 +76,4 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 		/** @var KeyedEnumerable<never, never> */
 		return new self(new EmptyIterator());
 	}
-
-	/**
-	 * @use IsKeyedEnumerable<TIteratorKey, TSource>
-	 */
-	use IsKeyedEnumerable;
 }

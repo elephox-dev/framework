@@ -59,8 +59,8 @@ class ServerRequestTest extends TestCase
 		static::assertCount(1, $files);
 
 		static::assertTrue($cookies->has('cookie'));
-		static::assertEquals('value', $cookies->get('cookie')->getValue());
-		static::assertEquals('bar', $parameters->get('foo'));
-		static::assertEquals('value', $session?->get('session'));
+		static::assertSame('value', $cookies->get('cookie')->getValue());
+		static::assertSame('bar', $parameters->get('foo'));
+		static::assertSame('value', $session?->get('session'));
 	}
 }

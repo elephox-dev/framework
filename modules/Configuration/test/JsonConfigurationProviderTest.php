@@ -53,7 +53,7 @@ JSON);
 		$provider = new JsonConfigurationProvider($source);
 
 		static::assertTrue($provider->tryGet('baz:guz', $value));
-		static::assertEquals('qux', $value);
+		static::assertSame('qux', $value);
 	}
 
 	/**
@@ -63,6 +63,6 @@ JSON);
 	{
 		$source = new JsonFileConfigurationSource('/does/not/exist', true);
 
-		static::assertEquals([], $source->getData());
+		static::assertSame([], $source->getData());
 	}
 }

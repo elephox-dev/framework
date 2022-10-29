@@ -13,7 +13,7 @@ class Url implements Stringable
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
-	public static function fromString(string $uri): Url
+	public static function fromString(string $uri): self
 	{
 		$builder = new UrlBuilder();
 

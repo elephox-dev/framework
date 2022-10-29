@@ -37,7 +37,7 @@ class ResponseBuilderTest extends TestCase
 
 		$response = $builder->get();
 
-		static::assertEquals(ResponseCode::OK, $response->getResponseCode());
+		static::assertSame(ResponseCode::OK, $response->getResponseCode());
 	}
 
 	public function testGetter(): void
@@ -50,12 +50,12 @@ class ResponseBuilderTest extends TestCase
 		$builder->header('X-Foo', ['bar']);
 		$builder->body(new StringStream('Hello World'));
 
-		static::assertEquals('2.0', $builder->getProtocolVersion());
-		static::assertEquals(ResponseCode::OK, $builder->getResponseCode());
-		static::assertEquals(MimeType::TextPlain, $builder->getContentType());
-		static::assertEquals(['bar'], $builder->getHeaderMap()?->get('X-Foo'));
-		static::assertEquals('Hello World', $builder->getBody()?->getContents());
-		static::assertEquals('Test', $builder->getException()?->getMessage());
+		static::assertSame('2.0', $builder->getProtocolVersion());
+		static::assertSame(ResponseCode::OK, $builder->getResponseCode());
+		static::assertSame(MimeType::TextPlain, $builder->getContentType());
+		static::assertSame(['bar'], $builder->getHeaderMap()?->get('X-Foo'));
+		static::assertSame('Hello World', $builder->getBody()?->getContents());
+		static::assertSame('Test', $builder->getException()?->getMessage());
 	}
 
 	/**
@@ -69,11 +69,11 @@ class ResponseBuilderTest extends TestCase
 		$fileResponse = $builder->get()->with()->fileBody(__FILE__)->get();
 		$jsonResponse = $builder->get()->with()->jsonBody(['foo' => 'bar'])->get();
 
-		static::assertEquals(MimeType::TextHtml, $htmlResponse->getMimeType());
+		static::assertSame(MimeType::TextHtml, $htmlResponse->getMimeType());
 		static::assertInstanceOf(StringStream::class, $htmlResponse->getBody());
-		static::assertEquals(MimeType::ApplicationOctetStream, $fileResponse->getMimeType());
+		static::assertSame(MimeType::ApplicationOctetStream, $fileResponse->getMimeType());
 		static::assertInstanceOf(ResourceStream::class, $fileResponse->getBody());
-		static::assertEquals(MimeType::ApplicationJson, $jsonResponse->getMimeType());
+		static::assertSame(MimeType::ApplicationJson, $jsonResponse->getMimeType());
 		static::assertInstanceOf(StringStream::class, $jsonResponse->getBody());
 	}
 }

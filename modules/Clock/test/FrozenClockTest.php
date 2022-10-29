@@ -69,9 +69,9 @@ class FrozenClockTest extends TestCase
 		static::assertFalse($b->equals($a));
 		static::assertTrue($b->equals($b));
 
-		static::assertEquals(0, $a->compare($a));
-		static::assertEquals(-1, $a->compare($b));
-		static::assertEquals(1, $b->compare($a));
+		static::assertSame(0, $a->compare($a));
+		static::assertSame(-1, $a->compare($b));
+		static::assertSame(1, $b->compare($a));
 	}
 
 	public function testAddAndSub(): void
@@ -79,8 +79,8 @@ class FrozenClockTest extends TestCase
 		$a = new FrozenClock(new DateTimeImmutable('now'));
 		$b = new FrozenClock(new DateTimeImmutable('+1 day'));
 
-		static::assertNotEquals($b->now()->format(DateTimeInterface::ATOM), $a->now()->format(DateTimeInterface::ATOM));
-		static::assertEquals($b->now()->format(DateTimeInterface::ATOM), $a->add(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
-		static::assertEquals($a->now()->format(DateTimeInterface::ATOM), $b->sub(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		static::assertNotSame($b->now()->format(DateTimeInterface::ATOM), $a->now()->format(DateTimeInterface::ATOM));
+		static::assertSame($b->now()->format(DateTimeInterface::ATOM), $a->add(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		static::assertSame($a->now()->format(DateTimeInterface::ATOM), $b->sub(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
 	}
 }

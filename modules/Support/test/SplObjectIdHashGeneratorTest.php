@@ -27,7 +27,7 @@ class SplObjectIdHashGeneratorTest extends MockeryTestCase
 		$hashA = $generator->generateHash($a);
 		$hashB = $generator->generateHash($b);
 
-		static::assertNotEquals($hashA, $hashB);
+		static::assertNotSame($hashA, $hashB);
 
 		$hasHashMock
 			->expects('getHash')
@@ -38,6 +38,6 @@ class SplObjectIdHashGeneratorTest extends MockeryTestCase
 
 		$testHash = $generator->generateHash($hasHashMock);
 
-		static::assertEquals('testhash', $testHash);
+		static::assertSame('testhash', $testHash);
 	}
 }

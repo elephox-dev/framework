@@ -28,7 +28,7 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function describe(string $service, string $concrete, ServiceLifetime $lifetime, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function describe(string $service, string $concrete, ServiceLifetime $lifetime, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): self;
 
 	/**
 	 * @template TService of object
@@ -42,7 +42,7 @@ interface ServiceCollection
 	 *
 	 * @throws InvalidArgumentException if the service name or the implementation name is empty
 	 */
-	public function addTransient(string $service, string $concrete, Closure $factory, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function addTransient(string $service, string $concrete, Closure $factory, ?object $implementation = null, bool $replace = false): self;
 
 	/**
 	 * @template TService of object
@@ -57,7 +57,7 @@ interface ServiceCollection
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
-	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): ServiceCollection;
+	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): self;
 
 	/**
 	 * @template TService of object
@@ -98,7 +98,7 @@ interface ServiceCollection
 	 *
 	 * @throws InvalidArgumentException if the alias or the service name is empty
 	 */
-	public function setAlias(string $alias, string $serviceName): ServiceCollection;
+	public function setAlias(string $alias, string $serviceName): self;
 
 	/**
 	 * @template TService of object
@@ -165,19 +165,19 @@ interface ServiceCollection
 	 *
 	 * @param string $serviceName
 	 */
-	public function removeService(string $serviceName): ServiceCollection;
+	public function removeService(string $serviceName): self;
 
 	/**
 	 * @throws InvalidArgumentException if the alias is empty
 	 *
 	 * @param string $alias
 	 */
-	public function removeAlias(string $alias): ServiceCollection;
+	public function removeAlias(string $alias): self;
 
 	/**
 	 * @throws InvalidArgumentException if the alias or service name is empty
 	 *
 	 * @param string $aliasOrServiceName
 	 */
-	public function remove(string $aliasOrServiceName): ServiceCollection;
+	public function remove(string $aliasOrServiceName): self;
 }

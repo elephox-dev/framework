@@ -29,7 +29,7 @@ class MemoryConfigurationProviderTest extends TestCase
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar']));
 		static::assertTrue($provider->tryGet('foo', $val));
-		static::assertEquals('bar', $val);
+		static::assertSame('bar', $val);
 
 		static::assertFalse($provider->tryGet('bar', $val));
 		static::assertFalse($provider->tryGet('', $val));

@@ -20,7 +20,7 @@ class ArraySetTest extends TestCase
 	{
 		$set = new ArraySet(['a', 'b', 'c']);
 
-		static::assertEquals(['a', 'b', 'c'], $set->toArray());
+		static::assertSame(['a', 'b', 'c'], $set->toArray());
 	}
 
 	public function testAdd(): void
@@ -28,10 +28,10 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 		$set->add('d');
 
-		static::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
+		static::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
 
 		$set->add('b');
-		static::assertEquals(['a', 'b', 'c', 'd'], $set->toArray());
+		static::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
 	}
 
 	public function testRemove(): void
@@ -40,11 +40,11 @@ class ArraySetTest extends TestCase
 
 		$removed = $set->remove('b');
 		static::assertTrue($removed);
-		static::assertEquals(['a', 'c'], $set->toArray());
+		static::assertSame(['a', 'c'], $set->toArray());
 
 		$removed2 = $set->remove('b');
 		static::assertFalse($removed2);
-		static::assertEquals(['a', 'c'], $set->toArray());
+		static::assertSame(['a', 'c'], $set->toArray());
 	}
 
 	public function testRemoveBy(): void
@@ -54,6 +54,6 @@ class ArraySetTest extends TestCase
 		$removed = $set->removeBy(static fn ($item) => $item >= 'b');
 
 		static::assertTrue($removed);
-		static::assertEquals(['a'], $set->toArray());
+		static::assertSame(['a'], $set->toArray());
 	}
 }

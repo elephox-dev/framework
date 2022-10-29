@@ -30,7 +30,7 @@ class ObjectMapTest extends TestCase
 			],
 		);
 
-		static::assertEquals(123, $map->get($inst));
+		static::assertSame(123, $map->get($inst));
 	}
 
 	public function testConstructorUnevenArrays(): void
@@ -74,8 +74,8 @@ class ObjectMapTest extends TestCase
 		$map = new ObjectMap([$inst], [123]);
 
 		foreach ($map as $key => $value) {
-			static::assertEquals($inst, $key);
-			static::assertEquals(123, $value);
+			static::assertSame($inst, $key);
+			static::assertSame(123, $value);
 		}
 	}
 
@@ -87,7 +87,7 @@ class ObjectMapTest extends TestCase
 		$added = $map->put($inst, 456);
 
 		static::assertFalse($added);
-		static::assertEquals(456, $map->get($inst));
+		static::assertSame(456, $map->get($inst));
 
 		$anotherAdded = $map->put(new stdClass(), 789);
 

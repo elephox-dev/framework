@@ -44,7 +44,7 @@ class OrderedEnumerableTest extends TestCase
 			->toList()
 		;
 
-		static::assertEquals(
+		static::assertSame(
 			[
 				[
 					'age' => 10,
@@ -92,7 +92,7 @@ class OrderedEnumerableTest extends TestCase
 			->toList()
 		;
 
-		static::assertEquals(
+		static::assertSame(
 			[
 				[
 					'age' => 30,

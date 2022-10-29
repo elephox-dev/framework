@@ -41,7 +41,7 @@ class EnumerableTest extends TestCase
 {
 	public function testFromString(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			['a'],
 			Enumerable::from('a')->toList(),
 		);
@@ -49,7 +49,7 @@ class EnumerableTest extends TestCase
 
 	public function testFromIterator(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			['a', 'b', 'c'],
 			Enumerable::from(new ArrayIterator(['a', 'b', 'c']))->toList(),
 		);
@@ -82,12 +82,12 @@ class EnumerableTest extends TestCase
 
 	public function testAggregate(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			120,
 			Enumerable::range(1, 5)->aggregate(static fn ($a, $b) => $a * $b, 1),
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			'abc',
 			Enumerable::from(['a', 'b', 'c'])->aggregate(static fn ($a, $b) => $a . $b),
 		);
@@ -109,7 +109,7 @@ class EnumerableTest extends TestCase
 
 	public function testAppend(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3, 4, 5],
 			Enumerable::range(1, 3)->append(4)->append(5)->toArray(),
 		);
@@ -117,7 +117,7 @@ class EnumerableTest extends TestCase
 
 	public function testAppendAll(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3, 4, 5],
 			Enumerable::range(1, 3)->appendAll([4, 5])->toArray(),
 		);
@@ -125,7 +125,7 @@ class EnumerableTest extends TestCase
 
 	public function testAverage(): void
 	{
-		static::assertEquals(2, Enumerable::range(1, 3)->average(static fn (int $x) => $x));
+		static::assertSame(2, Enumerable::range(1, 3)->average(static fn (int $x) => $x));
 	}
 
 	public function testAverageThrowsIfEmpty(): void
@@ -138,7 +138,7 @@ class EnumerableTest extends TestCase
 
 	public function testChunk(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				[1, 2, 3],
 				[4, 5, 6],
@@ -158,7 +158,7 @@ class EnumerableTest extends TestCase
 
 	public function testConcat(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 			Enumerable::range(1, 3)
 				->concat(Enumerable::range(4, 7), Enumerable::range(8, 10))
@@ -174,18 +174,18 @@ class EnumerableTest extends TestCase
 
 	public function testCount(): void
 	{
-		static::assertEquals(10, Enumerable::range(1, 10)->count());
-		static::assertEquals(5, Enumerable::range(1, 10)->count(static fn (int $x): bool => $x % 2 === 0));
+		static::assertSame(10, Enumerable::range(1, 10)->count());
+		static::assertSame(5, Enumerable::range(1, 10)->count(static fn (int $x): bool => $x % 2 === 0));
 	}
 
 	public function testDistinct(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 			Enumerable::range(1, 10)->distinct()->toList(),
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			[1, 3, 2],
 			Enumerable::from([1, 1, 3, 2, 3, 1, 2, 3])->distinct()->toList(),
 		);
@@ -193,12 +193,12 @@ class EnumerableTest extends TestCase
 
 	public function testDistinctBy(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3],
 			Enumerable::range(1, 10)->distinctBy(static fn (int $x): int => $x % 3)->toList(),
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			[1, 3, 2],
 			Enumerable::from([1, 1, 3, 2, 3, 1, 2, 3])->distinctBy(static fn (int $x): int => $x % 3)->toList(),
 		);
@@ -206,7 +206,7 @@ class EnumerableTest extends TestCase
 
 	public function testExcept(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 7, 8, 9, 10],
 			Enumerable::range(1, 10)->except(Enumerable::range(3, 6))->toList(),
 		);
@@ -214,7 +214,7 @@ class EnumerableTest extends TestCase
 
 	public function testExceptBy(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				['name' => 'alice', 'age' => 5],
 				['name' => 'charlie', 'age' => 4],
@@ -236,8 +236,8 @@ class EnumerableTest extends TestCase
 
 	public function testFirst(): void
 	{
-		static::assertEquals(1, Enumerable::range(1, 10)->first());
-		static::assertEquals(2, Enumerable::range(1, 10)->first(static fn (int $x): bool => $x % 2 === 0));
+		static::assertSame(1, Enumerable::range(1, 10)->first());
+		static::assertSame(2, Enumerable::range(1, 10)->first(static fn (int $x): bool => $x % 2 === 0));
 
 		$this->expectException(EmptySequenceException::class);
 		Enumerable::empty()->first();
@@ -245,14 +245,14 @@ class EnumerableTest extends TestCase
 
 	public function testFirstOrDefault(): void
 	{
-		static::assertEquals(1, Enumerable::range(1, 10)->firstOrDefault(null));
-		static::assertEquals(2, Enumerable::range(1, 10)->firstOrDefault(null, static fn (int $x): bool => $x % 2 === 0));
+		static::assertSame(1, Enumerable::range(1, 10)->firstOrDefault(null));
+		static::assertSame(2, Enumerable::range(1, 10)->firstOrDefault(null, static fn (int $x): bool => $x % 2 === 0));
 		static::assertNull(Enumerable::empty()->firstOrDefault(null));
 	}
 
 	public function testGroupBy(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				0 => [
 					['name' => 'alice', 'age' => 5],
@@ -277,7 +277,7 @@ class EnumerableTest extends TestCase
 
 	public function testIntersect(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[3, 4, 5],
 			Enumerable::range(1, 5)->intersect(Enumerable::range(3, 8))->toList(),
 		);
@@ -285,7 +285,7 @@ class EnumerableTest extends TestCase
 
 	public function testIntersectBy(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				['name' => 'bob', 'age' => 10],
 			],
@@ -311,7 +311,7 @@ class EnumerableTest extends TestCase
 
 	public function testJoin(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[2, 4, 6, 8, 10],
 			Enumerable::range(1, 5)->join(
 				Enumerable::range(1, 5),
@@ -324,7 +324,7 @@ class EnumerableTest extends TestCase
 
 	public function testLast(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			'c',
 			Enumerable::from(['a', 'b', 'c'])->last(),
 		);
@@ -340,13 +340,13 @@ class EnumerableTest extends TestCase
 
 	public function testLastOrDefault(): void
 	{
-		static::assertEquals(3, Enumerable::from([1, 2, 3])->lastOrDefault(null));
+		static::assertSame(3, Enumerable::from([1, 2, 3])->lastOrDefault(null));
 		static::assertNull(Enumerable::empty()->lastOrDefault(null));
 	}
 
 	public function testMax(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			10,
 			Enumerable::range(1, 10)->max(static fn (int $x) => $x),
 		);
@@ -362,7 +362,7 @@ class EnumerableTest extends TestCase
 
 	public function testMin(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			1,
 			Enumerable::range(1, 3)->min(static fn (int $x) => $x),
 		);
@@ -378,7 +378,7 @@ class EnumerableTest extends TestCase
 
 	public function testOrderBy(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3, 4, 5, 6],
 			Enumerable::from([6, 2, 5, 1, 4, 3])->orderBy(static fn (int $x) => $x)->toList(),
 		);
@@ -386,7 +386,7 @@ class EnumerableTest extends TestCase
 
 	public function testOrderByDescending(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				[
 					'name' => 'b',
@@ -406,7 +406,7 @@ class EnumerableTest extends TestCase
 
 	public function testPrepend(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[4, 5, 1, 2, 3],
 			Enumerable::range(1, 3)->prepend(5)->prepend(4)->toList(),
 		);
@@ -414,7 +414,7 @@ class EnumerableTest extends TestCase
 
 	public function testReverse(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[5, 4, 3, 2, 1],
 			Enumerable::range(1, 5)->reverse()->toArray(),
 		);
@@ -422,7 +422,7 @@ class EnumerableTest extends TestCase
 
 	public function testSelect(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[2, 4, 6, 8, 10],
 			Enumerable::range(1, 5)
 				->select(static fn (int $x): int => $x * 2)
@@ -432,7 +432,7 @@ class EnumerableTest extends TestCase
 
 	public function testSelectMany(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				1,
 				1, 2,
@@ -461,7 +461,7 @@ class EnumerableTest extends TestCase
 
 	public function testSingle(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			2,
 			Enumerable::from([2])->single(),
 		);
@@ -485,7 +485,7 @@ class EnumerableTest extends TestCase
 
 	public function testSingleOrDefault(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			1,
 			Enumerable::range(1, 5)->singleOrDefault(null, static fn (int $x): bool => $x === 1),
 		);
@@ -505,7 +505,7 @@ class EnumerableTest extends TestCase
 
 	public function testSkip(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[3, 4, 5],
 			Enumerable::range(1, 5)
 				->skip(2)
@@ -515,21 +515,21 @@ class EnumerableTest extends TestCase
 
 	public function testSkipLast(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[1, 2, 3],
 			Enumerable::range(1, 5)
 				->skipLast(2)
 				->toList(),
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			[1],
 			Enumerable::range(1, 2)
 				->skipLast(1)
 				->toList(),
 		);
 
-		static::assertEquals(
+		static::assertSame(
 			[],
 			Enumerable::range(1, 2)
 				->skipLast(2)
@@ -551,7 +551,7 @@ class EnumerableTest extends TestCase
 
 	public function testSkipWhile(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[3, 4, 5],
 			Enumerable::range(1, 5)
 				->skipWhile(static fn (int $x): bool => $x < 3)
@@ -561,12 +561,12 @@ class EnumerableTest extends TestCase
 
 	public function testSum(): void
 	{
-		static::assertEquals(15, Enumerable::range(1, 5)->sum(static fn ($x) => $x));
+		static::assertSame(15, Enumerable::range(1, 5)->sum(static fn ($x) => $x));
 	}
 
 	public function testTake(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[0, 1, 2],
 			Enumerable::range(0, 6)->take(3)->toList(),
 		);
@@ -574,7 +574,7 @@ class EnumerableTest extends TestCase
 
 	public function testTakeLast(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[5, 6],
 			Enumerable::range(0, 6)->takeLast(2)->toList(),
 		);
@@ -582,7 +582,7 @@ class EnumerableTest extends TestCase
 
 	public function testTakeLastInvalid(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[],
 			Enumerable::range(0, 6)->takeLast(-2)->toList(),
 		);
@@ -590,7 +590,7 @@ class EnumerableTest extends TestCase
 
 	public function testTakeLastEmpty(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[],
 			Enumerable::empty()->takeLast(1)->toList(),
 		);
@@ -598,7 +598,7 @@ class EnumerableTest extends TestCase
 
 	public function testTakeWhile(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[0, 1, 2],
 			Enumerable::range(0, 6)->takeWhile(static fn (int $x): bool => $x < 3)->toList(),
 		);
@@ -606,7 +606,7 @@ class EnumerableTest extends TestCase
 
 	public function testToNestedArray(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				2 => ['a', 'c', 'e'],
 				3 => ['b', 'd'],
@@ -623,7 +623,7 @@ class EnumerableTest extends TestCase
 
 	public function testToKeyed(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			['a' => 97, 'b' => 98, 'c' => 99],
 			Enumerable::range(97, 99)->toKeyed(static fn ($x) => chr($x))->toArray(),
 		);
@@ -634,7 +634,7 @@ class EnumerableTest extends TestCase
 		$a = Enumerable::from([5, 3, 9, 7, 5, 9, 3, 7]);
 		$b = Enumerable::from([8, 3, 6, 4, 4, 9, 1, 0]);
 
-		static::assertEquals(
+		static::assertSame(
 			[5, 3, 9, 7, 8, 6, 4, 1, 0],
 			$a->union($b)->toList(),
 		);
@@ -645,7 +645,7 @@ class EnumerableTest extends TestCase
 		$a = Enumerable::from([5, 3, 9, 7, 5, 9, 3, 7]);
 		$b = Enumerable::from([8, 3, 6, 4, 4, 9, 1, 0]);
 
-		static::assertEquals(
+		static::assertSame(
 			[5, 3, 9, 7, 6],
 			$a->unionBy($b, static fn (int $a) => $a % 5)->toList(),
 		);
@@ -653,7 +653,7 @@ class EnumerableTest extends TestCase
 
 	public function testWhere(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[5, 6, 7],
 			Enumerable::range(1, 7)->where(static fn ($x) => $x > 4)->toList(),
 		);
@@ -661,7 +661,7 @@ class EnumerableTest extends TestCase
 
 	public function testZip(): void
 	{
-		static::assertEquals(
+		static::assertSame(
 			[
 				[1, 4],
 				[2, 5],

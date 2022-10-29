@@ -27,7 +27,7 @@ interface Directory extends FilesystemNode
 	 */
 	public function directories(): GenericKeyedEnumerable;
 
-	public function directory(string $dirname): Directory;
+	public function directory(string $dirname): self;
 
 	/**
 	 * @return GenericKeyedEnumerable<int, FilesystemNode>
@@ -71,7 +71,7 @@ interface Directory extends FilesystemNode
 	 * @throws FileAlreadyExistsException
 	 * @throws FilesystemNodeNotImplementedException
 	 */
-	public function moveTo(Directory $directory, bool $overwrite = true): void;
+	public function moveTo(self $directory, bool $overwrite = true): void;
 
 	/**
 	 * @param Directory $directory
@@ -81,5 +81,5 @@ interface Directory extends FilesystemNode
 	 * @throws FileAlreadyExistsException
 	 * @throws FilesystemNodeNotImplementedException
 	 */
-	public function copyTo(Directory $directory, bool $overwrite = true): void;
+	public function copyTo(self $directory, bool $overwrite = true): void;
 }

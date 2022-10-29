@@ -31,11 +31,11 @@ class GroupingIteratorTest extends TestCase
 	{
 		$iterator = new GroupingIterator(new ArrayIterator([1, 2, 3]), static fn ($v) => $v % 2);
 		$iterator->rewind();
-		static::assertEquals(1, $iterator->key());
+		static::assertSame(1, $iterator->key());
 		$iterator->next();
-		static::assertEquals(0, $iterator->key());
+		static::assertSame(0, $iterator->key());
 		$group = $iterator->current();
-		static::assertEquals($iterator->key(), $group->groupKey());
+		static::assertSame($iterator->key(), $group->groupKey());
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('No current group key');

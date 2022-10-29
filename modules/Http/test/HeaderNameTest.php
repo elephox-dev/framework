@@ -100,10 +100,10 @@ class HeaderNameTest extends TestCase
 			$uppercase = strtoupper($name->value);
 			$randomCase = Casing::random($name->value, (int) ($_ENV['ELEPHOX_TEST_SEED'] ?? time()));
 
-			static::assertEquals($name, HeaderName::tryFromIgnoreCase($name->value));
-			static::assertEquals($name, HeaderName::tryFromIgnoreCase($lowercase));
-			static::assertEquals($name, HeaderName::tryFromIgnoreCase($uppercase));
-			static::assertEquals($name, HeaderName::tryFromIgnoreCase($randomCase));
+			static::assertSame($name, HeaderName::tryFromIgnoreCase($name->value));
+			static::assertSame($name, HeaderName::tryFromIgnoreCase($lowercase));
+			static::assertSame($name, HeaderName::tryFromIgnoreCase($uppercase));
+			static::assertSame($name, HeaderName::tryFromIgnoreCase($randomCase));
 		}
 
 		static::assertNull(HeaderName::tryFromIgnoreCase('foo'));

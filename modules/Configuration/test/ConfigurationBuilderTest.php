@@ -63,8 +63,8 @@ class ConfigurationBuilderTest extends TestCase
 		$provider = $root->getProviders()->first();
 		static::assertInstanceOf(MemoryConfigurationProvider::class, $provider);
 
-		static::assertEquals('bar', $root->offsetGet('foo'));
-		static::assertEquals('garply', $root->offsetGet('baz:corge:grault'));
+		static::assertSame('bar', $root->offsetGet('foo'));
+		static::assertSame('garply', $root->offsetGet('baz:corge:grault'));
 		static::assertNull($root->offsetGet('baz:not:there'));
 	}
 }

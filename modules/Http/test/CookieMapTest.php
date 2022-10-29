@@ -25,7 +25,7 @@ class CookieMapTest extends TestCase
 
 		static::assertInstanceOf(CookieMap::class, $map);
 		static::assertInstanceOf(CookieContract::class, $map->get('foo'));
-		static::assertEquals('bar', $map->get('foo')->getValue());
+		static::assertSame('bar', $map->get('foo')->getValue());
 	}
 
 	public function testFromGlobalsNull(): void

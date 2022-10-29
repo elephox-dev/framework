@@ -26,38 +26,38 @@ class OrderedIteratorTest extends TestCase
 		$iterator->rewind();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(1, $iterator->current());
-		static::assertEquals(0, $iterator->key());
+		static::assertSame(1, $iterator->current());
+		static::assertSame(0, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(2, $iterator->current());
-		static::assertEquals(1, $iterator->key());
+		static::assertSame(2, $iterator->current());
+		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(2, $iterator->current());
-		static::assertEquals(2, $iterator->key());
+		static::assertSame(2, $iterator->current());
+		static::assertSame(2, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(3, $iterator->current());
-		static::assertEquals(3, $iterator->key());
+		static::assertSame(3, $iterator->current());
+		static::assertSame(3, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(4, $iterator->current());
-		static::assertEquals(4, $iterator->key());
+		static::assertSame(4, $iterator->current());
+		static::assertSame(4, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertEquals(5, $iterator->current());
-		static::assertEquals(5, $iterator->key());
+		static::assertSame(5, $iterator->current());
+		static::assertSame(5, $iterator->key());
 
 		$iterator->next();
 

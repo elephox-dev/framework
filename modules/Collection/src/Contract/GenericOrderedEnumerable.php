@@ -20,7 +20,7 @@ interface GenericOrderedEnumerable extends GenericKeyedEnumerable
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
 	 */
-	public function thenBy(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
+	public function thenBy(callable $keySelector, ?callable $comparer = null): self;
 
 	/**
 	 * @template TCompareKey
@@ -30,5 +30,5 @@ interface GenericOrderedEnumerable extends GenericKeyedEnumerable
 	 *
 	 * @return GenericOrderedEnumerable<TSource>
 	 */
-	public function thenByDescending(callable $keySelector, ?callable $comparer = null): GenericOrderedEnumerable;
+	public function thenByDescending(callable $keySelector, ?callable $comparer = null): self;
 }

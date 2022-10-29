@@ -13,5 +13,5 @@ interface HeaderMap extends GenericMap
 	/**
 	 * @param array<string, string|list<string>>|null $server
 	 */
-	public static function fromGlobals(?array $server = null): HeaderMap;
+	public static function fromGlobals(?array $server = null): self;
 }

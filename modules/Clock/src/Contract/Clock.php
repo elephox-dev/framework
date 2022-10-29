@@ -9,9 +9,9 @@ interface Clock extends ClockInterface
 {
 	public function diff(ClockInterface $clock): Duration;
 
-	public function add(Duration $duration): Clock;
+	public function add(Duration $duration): self;
 
-	public function sub(Duration $duration): Clock;
+	public function sub(Duration $duration): self;
 
 	public function equals(ClockInterface $clock): bool;
 

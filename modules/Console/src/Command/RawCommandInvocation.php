@@ -14,7 +14,7 @@ class RawCommandInvocation
 	 * @throws NoCommandInCommandLineException
 	 * @throws IncompleteCommandLineException
 	 */
-	public static function fromCommandLine(array $commandLineArgs): RawCommandInvocation
+	public static function fromCommandLine(array $commandLineArgs): self
 	{
 		$argList = ArrayList::from($commandLineArgs)->select(static fn (string $a) => str_contains($a, ' ') ? "\"$a\"" : $a)->toArrayList();
 		$raw = $argList->aggregate(static fn (string $line, string $arg): string => $line . ' ' . $arg, '');

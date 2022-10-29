@@ -19,27 +19,27 @@ class MemoryEnvironmentTest extends TestCase
 		$env = new MemoryEnvironment(__DIR__ . '/data');
 		$env->loadFromEnvFile();
 
-		static::assertEquals('default', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
+		static::assertSame('default', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
 		static::assertFalse(isset($env['TEST1']));
 		static::assertFalse(isset($env['TEST2']));
 
 		$env['TEST1'] = 'false';
-		static::assertEquals('false', $env['TEST1']);
+		static::assertSame('false', $env['TEST1']);
 
 		$env->loadFromEnvFile('test1');
 
-		static::assertEquals('test1', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
-		static::assertEquals('true', $env['TEST1']);
+		static::assertSame('test1', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
+		static::assertSame('true', $env['TEST1']);
 		static::assertFalse(isset($env['TEST2']));
 
 		$env->loadFromEnvFile('test2');
 
-		static::assertEquals('test2', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
-		static::assertEquals('true', $env['TEST1']);
-		static::assertEquals('true', $env['TEST2']);
+		static::assertSame('test2', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
+		static::assertSame('true', $env['TEST1']);
+		static::assertSame('true', $env['TEST2']);
 	}
 
 	public function testLoadFromEnvFileDoesntOverwriteIfGiven(): void
@@ -47,29 +47,29 @@ class MemoryEnvironmentTest extends TestCase
 		$env = new MemoryEnvironment(__DIR__ . '/data');
 		$env->loadFromEnvFile(overwriteExisting: false);
 
-		static::assertEquals('default', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
+		static::assertSame('default', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
 		static::assertFalse(isset($env['TEST1']));
 		static::assertFalse(isset($env['TEST2']));
 
 		$env['TEST1'] = 'false';
-		static::assertEquals('false', $env['TEST1']);
+		static::assertSame('false', $env['TEST1']);
 
 		$env->loadFromEnvFile('test1', overwriteExisting: false);
 
-		static::assertEquals('default', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
-		static::assertEquals('false', $env['TEST1']);
+		static::assertSame('default', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
+		static::assertSame('false', $env['TEST1']);
 		static::assertFalse(isset($env['TEST2']));
 
 		unset($env['TEST1']);
 
 		$env->loadFromEnvFile('test2', overwriteExisting: false);
 
-		static::assertEquals('default', $env['SOURCE']);
-		static::assertEquals('true', $env['DEFAULT']);
+		static::assertSame('default', $env['SOURCE']);
+		static::assertSame('true', $env['DEFAULT']);
 		static::assertFalse(isset($env['TEST1']));
-		static::assertEquals('true', $env['TEST2']);
+		static::assertSame('true', $env['TEST2']);
 
 		unset($env['TEST2']);
 

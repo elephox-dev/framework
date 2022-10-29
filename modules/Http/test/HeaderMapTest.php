@@ -24,10 +24,10 @@ class HeaderMapTest extends TestCase
 		]);
 
 		static::assertTrue($map->has(HeaderName::Accept->value));
-		static::assertEquals('text/html', $map->get(HeaderName::Accept->value));
+		static::assertSame('text/html', $map->get(HeaderName::Accept->value));
 
 		static::assertTrue($map->has(HeaderName::AcceptLanguage->value));
-		static::assertEquals('en-US,en;q=0.9', $map->get(HeaderName::AcceptLanguage->value));
+		static::assertSame('en-US,en;q=0.9', $map->get(HeaderName::AcceptLanguage->value));
 
 		static::assertFalse($map->has('TEST_HEADER'));
 		static::assertFalse($map->has('TestHeader'));
