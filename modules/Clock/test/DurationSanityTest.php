@@ -21,15 +21,15 @@ class DurationSanityTest extends TestCase
 		static::assertSame(60000000, Duration::MICROSECONDS_PER_MINUTE);
 		static::assertSame(3600000000, Duration::MICROSECONDS_PER_HOUR);
 		static::assertSame(86400000000, Duration::MICROSECONDS_PER_DAY);
-		static::assertSame(2629746000000, Duration::MICROSECONDS_PER_MONTH);
-		static::assertSame(31556952000000, Duration::MICROSECONDS_PER_YEAR);
+		static::assertSame(2629746000000.0, Duration::MICROSECONDS_PER_MONTH);
+		static::assertSame(31556952000000.0, Duration::MICROSECONDS_PER_YEAR);
 
 		static::assertSame(1.0E-6, Duration::SECONDS_PER_MICROSECOND);
 		static::assertSame(60, Duration::SECONDS_PER_MINUTE);
 		static::assertSame(3600, Duration::SECONDS_PER_HOUR);
 		static::assertSame(86400, Duration::SECONDS_PER_DAY);
-		static::assertSame(2629746, Duration::SECONDS_PER_MONTH);
-		static::assertSame(31556952, Duration::SECONDS_PER_YEAR);
+		static::assertSame(2629746.0, Duration::SECONDS_PER_MONTH);
+		static::assertSame(31556952.0, Duration::SECONDS_PER_YEAR);
 
 		static::assertEqualsWithDelta(1.6666666666667E-8, Duration::MINUTES_PER_MICROSECOND, 1.0E-21);
 		static::assertEqualsWithDelta(0.016666666666666, Duration::MINUTES_PER_SECOND, 1.0E-15);

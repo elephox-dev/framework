@@ -43,19 +43,8 @@ class UrlTest extends TestCase
 
 	/**
 	 * @dataProvider dataProvider
-	 *
-	 * @param ?string $scheme
-	 * @param ?string $username
-	 * @param ?string $password
-	 * @param ?string $host
-	 * @param ?int $port
-	 * @param ?string $fragment
-	 * @param string $uriString
-	 * @param string $toString
-	 * @param string $path
-	 * @param string $query
 	 */
-	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, string $query, ?string $fragment): void
+	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
 	{
 		$uri = Url::fromString($uriString);
 		static::assertSame($scheme, $uri->scheme?->getScheme(), 'Unexpected scheme.');
@@ -68,20 +57,28 @@ class UrlTest extends TestCase
 		static::assertSame($fragment, $uri->fragment, 'Unexpected fragment.');
 		static::assertSame($toString, (string) $uri);
 
-		$userInfo = empty($username) ? null : ($username . (empty($password) ? null : (':' . $password)));
-		$authority = empty($host) ? null : ($host . ($port === null ? null : (':' . $port)));
-		static::assertSame([
-			'scheme' => $scheme !== null ? (UrlScheme::tryFrom($scheme) ?? new CustomUrlScheme($scheme)) : null,
-			'username' => $username,
-			'password' => $password,
-			'host' => $host,
-			'port' => $port,
-			'path' => $path,
-			'query' => $query,
-			'fragment' => $fragment,
-			'authority' => empty($userInfo) ? $authority : ($userInfo . '@' . $authority),
-			'userInfo' => $userInfo,
-		], $uri->toArray());
+		if (empty($query)) {
+			$queryMap = null;
+		} else {
+			$queryMap = [];
+			parse_str($query, $queryMap);
+		}
+
+		$userInfo = empty($username) ? '' : ($username . (empty($password) ? '' : (':' . $password)));
+		$hostAuthorityPart = empty($host) ? '' : ($host . ($port === null ? '' : (':' . $port)));
+		$authority = empty($userInfo) ? $hostAuthorityPart : ($userInfo . '@' . $hostAuthorityPart);
+
+		$array = $uri->toArray();
+		static::assertSame($scheme, $array['scheme']?->getScheme());
+		static::assertSame($username, $array['username']);
+		static::assertSame($password, $array['password']);
+		static::assertSame($host, $array['host']);
+		static::assertSame($port, $array['port']);
+		static::assertSame($authority, $array['authority']);
+		static::assertSame($userInfo, $array['userInfo']);
+		static::assertSame($path, $array['path']);
+		static::assertSame($queryMap, $array['query']?->toArray());
+		static::assertSame($fragment, $array['fragment']);
 	}
 
 	public function testWith(): void

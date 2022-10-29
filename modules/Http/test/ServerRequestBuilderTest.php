@@ -40,7 +40,7 @@ class ServerRequestBuilderTest extends TestCase
 	{
 		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test'], []), '/test', null, null, AbstractMessageBuilder::DefaultProtocolVersion, null, RequestMethod::GET];
 		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/foo'], ['REQUEST_URI' => '/bar']), '/foo', null, null, AbstractMessageBuilder::DefaultProtocolVersion, null, RequestMethod::GET];
-		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test', 'CONTENT_LENGTH' => 0], []), '/test', null, null, AbstractMessageBuilder::DefaultProtocolVersion, null, RequestMethod::GET];
+		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test', 'CONTENT_LENGTH' => 0], []), '/test', 0, null, AbstractMessageBuilder::DefaultProtocolVersion, null, RequestMethod::GET];
 		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test', 'CONTENT_LENGTH' => 1], []), '/test', 1, null, AbstractMessageBuilder::DefaultProtocolVersion, null, RequestMethod::GET];
 		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test', 'SERVER_PROTOCOL' => 'HTTP/2.0'], []), '/test', null, '2.1', '2.1', null, RequestMethod::GET];
 		yield [ParameterMap::fromGlobals([], [], ['REQUEST_URI' => '/test', 'SERVER_PROTOCOL' => 'HTTP/2.0'], []), '/test', null, null, '2.0', null, RequestMethod::GET];

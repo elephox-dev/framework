@@ -26,7 +26,7 @@ class ValuesDurationTest extends TestCase
 		static::assertSame(4, $duration->getHours());
 		static::assertSame(3, $duration->getMinutes());
 		static::assertSame(2, $duration->getSeconds());
-		static::assertSame(1, $duration->getMicroseconds());
+		static::assertSame(1.0, $duration->getMicroseconds());
 	}
 
 	public function totalsDataProvider(): iterable
@@ -62,7 +62,7 @@ class ValuesDurationTest extends TestCase
 		$duration = ValuesDuration::from(microseconds: 1234, seconds: 1);
 		$duration = $duration->add(ValuesDuration::from(microseconds: 1000, seconds: 12));
 
-		static::assertSame(ValuesDuration::from(microseconds: 2234, seconds: 13), $duration);
+		static::assertSame(ValuesDuration::from(microseconds: 2234, seconds: 13)->getTotalMicroseconds(), $duration->getTotalMicroseconds());
 	}
 
 	public function testSubtract(): void
@@ -70,7 +70,7 @@ class ValuesDurationTest extends TestCase
 		$a = ValuesDuration::from(microseconds: 1234, seconds: 1);
 		$b = ValuesDuration::from(microseconds: 1000, seconds: 12);
 
-		static::assertSame(ValuesDuration::from(negative: true, microseconds: 234, seconds: 11), $a->subtract($b));
+		static::assertSame(ValuesDuration::from(negative: true, microseconds: 234, seconds: 11)->getTotalMicroseconds(), $a->subtract($b)->getTotalMicroseconds());
 	}
 
 	public function testEquals(): void

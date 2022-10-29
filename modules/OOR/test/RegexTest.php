@@ -37,8 +37,8 @@ class RegexTest extends TestCase
 		$simple = Regex::match('/(?<hello>hello)*/', 'hello world');
 		static::assertSame([
 			0 => 'hello',
-			1 => 'hello',
 			'hello' => 'hello',
+			1 => 'hello',
 		], $simple->toArray());
 	}
 
@@ -59,7 +59,7 @@ class RegexTest extends TestCase
 	public function testSpecificity(): void
 	{
 		static::assertGreaterThan(0, Regex::specificity('/(foo)(bar)(baz)/', 'world'));
-		static::assertSame(1, Regex::specificity('/hello world/', 'hello world'));
+		static::assertSame(1.0, Regex::specificity('/hello world/', 'hello world'));
 		static::assertLessThanOrEqual(1, Regex::specificity('/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'));
 	}
 

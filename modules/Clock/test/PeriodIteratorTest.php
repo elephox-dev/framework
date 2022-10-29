@@ -26,7 +26,7 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertSame($start, $iterator->getStart());
 		static::assertSame($end, $iterator->getEnd());
-		static::assertSame(new ValuesDuration(days: 1), $iterator->getTotalDuration());
+		static::assertSame((new ValuesDuration(days: 1))->getTotalMicroseconds(), $iterator->getTotalDuration()->getTotalMicroseconds());
 
 		$iterator->rewind();
 
