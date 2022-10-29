@@ -22,9 +22,9 @@ class UrlTest extends TestCase
 		return [
 			['', '/', null, null, null, null, null, '', '', null],
 			[':', '/:', null, null, null, null, null, ':', '', null],
-			['?', '/?', null, null, null, null, null, '', '', null],
+			['?', '/', null, null, null, null, null, '', '', null],
 			['#', '/#', null, null, null, null, null, '', '', ''],
-			[':?#', '/:?#', null, null, null, null, null, ':', '', ''],
+			[':?#', '/:#', null, null, null, null, null, ':', '', ''],
 			['s//', '//s//', null, null, null, 's', null, '//', '', null],
 			['a://', 'a:/', 'a', null, null, null, null, '', '', null],
 			['/test', '/test', null, null, null, null, null, '/test', '', null],

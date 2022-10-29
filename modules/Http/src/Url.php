@@ -44,7 +44,7 @@ class Url implements Stringable
 		}
 		$builder->path($path);
 
-		if (array_key_exists('query', $matches) && str_starts_with($matches['query'], '?')) {
+		if (array_key_exists('query', $matches) && strlen($matches['query']) > 1 && str_starts_with($matches['query'], '?')) {
 			$builder->queryMap(QueryMap::fromString(substr($matches['query'], 1)));
 		}
 
