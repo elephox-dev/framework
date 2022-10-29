@@ -39,30 +39,30 @@ jobs:
       - name: 🧐 Check composer.json format
         run: composer ci:normalize-composer
 
-  static-analysis:
-    name: 🔎 Static Analysis
-    needs: [ composer-setup ]
-    strategy:
-      matrix:
-        php-version: [ '8.1' ] # skip 8.2 for now
-        os: [ 'ubuntu-latest' ]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: ⤵️ Checkout Sources
-        uses: actions/checkout@v3
-      - name: 🐘 Setup PHP ${{ matrix.php-version }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: ${{ env.php-extensions }}
-      - name: 📦 Install dependencies
-        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
-      - name: 🔎 Run Psalm
-        if: ${{ matrix.os != 'ubuntu-latest' || matrix.php-version != '8.1' }}
-        run: composer run ci:static-analysis
-      - name: 🔎 Run Psalm & publish
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php-version == '8.1' }}
-        run: composer run ci:static-analysis:publish
+#  static-analysis:
+#    name: 🔎 Static Analysis
+#    needs: [ composer-setup ]
+#    strategy:
+#      matrix:
+#        php-version: [ '8.1' ] # skip 8.2 for now
+#        os: [ 'ubuntu-latest' ]
+#    runs-on: ${{ matrix.os }}
+#    steps:
+#      - name: ⤵️ Checkout Sources
+#        uses: actions/checkout@v3
+#      - name: 🐘 Setup PHP ${{ matrix.php-version }}
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php-version }}
+#          extensions: ${{ env.php-extensions }}
+#      - name: 📦 Install dependencies
+#        run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
+#      - name: 🔎 Run Psalm
+#        if: ${{ matrix.os != 'ubuntu-latest' || matrix.php-version != '8.1' }}
+#        run: composer run ci:static-analysis
+#      - name: 🔎 Run Psalm & publish
+#        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php-version == '8.1' }}
+#        run: composer run ci:static-analysis:publish
 
   fix-cs:
     name: 💅 Check Code Style
