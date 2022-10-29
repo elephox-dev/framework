@@ -67,9 +67,10 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] use this style of assertion error messages for all assertions
 - [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
   - [ ] implement positional overrides with integer keys in $overrides
+  - [ ] add support for disjunctive normal form types (https://wiki.php.net/rfc/dnf_types)
 - [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/test/GeneratesResponsesTest.php)
   - [ ] Add test for both cases in which mime_content_type exists and not
-- [ ] [modules/Logging/test/AnsiColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/AnsiColorSinkTest.php)
+- [ ] [modules/Logging/test/SimpleFormatColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/SimpleFormatColorSinkTest.php)
   - [ ] write tests for background and options
 - [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
   - [ ] change message to be more general and/or create more specific exceptions
