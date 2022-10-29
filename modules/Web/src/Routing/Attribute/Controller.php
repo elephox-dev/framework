@@ -13,7 +13,7 @@ use InvalidArgumentException;
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Controller implements ControllerAttribute
 {
-	public const DEFAULT_PATH = null;
+	public const DEFAULT_PATH = '';
 	public const DEFAULT_WEIGHT = 0;
 
 	/**
