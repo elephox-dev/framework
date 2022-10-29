@@ -15,7 +15,7 @@
     },
     "require": {
         "php": "^8.1 <8.3",
-        "elephox/collection": "^0.7"
+        "elephox/collection": "dev-develop"
     },
     "autoload": {
         "psr-4": {

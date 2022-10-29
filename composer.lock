@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c52a9146357da7dac050ea42096b052",
+    "content-hash": "7b05c5e945303a3a3055ced9d69034f7",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -2474,12 +2474,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-handler.git",
-                "reference": "ab3c6216f2e41acdc5478de776003aa0a520c1c3"
+                "reference": "8df949e0e6e1b6dd7e83bb83850610c0630e1a21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/ab3c6216f2e41acdc5478de776003aa0a520c1c3",
-                "reference": "ab3c6216f2e41acdc5478de776003aa0a520c1c3",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-handler/zipball/8df949e0e6e1b6dd7e83bb83850610c0630e1a21",
+                "reference": "8df949e0e6e1b6dd7e83bb83850610c0630e1a21",
                 "shasum": ""
             },
             "require": {
@@ -2488,8 +2488,8 @@
                 "php": "^8.1 <8.3"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.12",
-                "nunomaduro/collision": "^6.3"
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "nunomaduro/collision": "^6.2"
             },
             "suggest": {
                 "nunomaduro/collision": "For pretty formatting of exceptions in the console"
@@ -2516,7 +2516,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-handler/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-handler/tree/develop"
             },
-            "time": "2022-10-21T19:03:37+00:00"
+            "time": "2022-05-23T21:10:07+00:00"
         },
         {
             "name": "elephox/builder-whoops-middleware",
@@ -2524,12 +2524,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-middleware.git",
-                "reference": "55baa6317bcf92464f044c61b044664d309c92d6"
+                "reference": "c0f25eb291a2d97d63d1f1ede5da8a99f03178a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/55baa6317bcf92464f044c61b044664d309c92d6",
-                "reference": "55baa6317bcf92464f044c61b044664d309c92d6",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/c0f25eb291a2d97d63d1f1ede5da8a99f03178a0",
+                "reference": "c0f25eb291a2d97d63d1f1ede5da8a99f03178a0",
                 "shasum": ""
             },
             "require": {
@@ -2562,7 +2562,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-middleware/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-middleware/tree/develop"
             },
-            "time": "2022-10-21T23:19:36+00:00"
+            "time": "2022-05-23T21:11:42+00:00"
         },
         {
             "name": "elephox/composer-module-sync",
