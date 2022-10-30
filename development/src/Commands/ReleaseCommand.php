@@ -24,51 +24,37 @@ class ReleaseCommand implements CommandHandler
 	public function configure(CommandTemplateBuilder $builder): void
 	{
 		$builder->setName('release')->setDescription('Release a new version of the framework and its modules.');
-		$builder->addArgument('type', description: 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')');
+		$builder->addArgument('type', description: 'The type of release (' . implode(', ', self::RELEASE_TYPES) . ')', validator: static fn (mixed $value) => in_array($value, self::RELEASE_TYPES, true) ? true : sprintf('Invalid release type: %s', is_string($value) ? $value : get_debug_type($value)));
 		$builder->addArgument('version', description: 'The version to release');
 		$builder->addOption('dry-run', description: 'Whether to perform a dry run (no changes will be pushed)');
 		$builder->addOption('origin', default: self::DEFAULT_CLONE_ORIGIN_PREFIX, description: 'The git origin to use for all modules and the framework.', validator: static fn (mixed $v) => is_string($v) && str_ends_with($v, '/') ? true : 'Origin url must end with /');
 	}
 
-	public function handle(CommandInvocation $command): int|null
+	private function extractVersionParts(string $type, string $version): ?array
 	{
-		$type = $command->arguments->get('type')->value;
-		if (!in_array($type, self::RELEASE_TYPES, true)) {
-			$this->logger->error(sprintf('Invalid release type: <cyan>%s</cyan>', is_string($type) ? $type : get_debug_type($type)));
-
-			return 1;
-		}
-
-		$version = $command->arguments->get('version')->value;
-		if (!is_string($version)) {
-			$this->logger->error('The version must be a string.');
-
-			return 1;
-		}
-
 		if (!preg_match(self::VERSION_REGEX, $version, $versionParts)) {
 			$this->logger->error("Invalid version: <yellow>$version</yellow>");
 			$this->logger->error('The version must be in the format: <major>[.<minor>[.<patch>]]');
 
-			return 1;
+			return null;
 		}
 
 		if ($type === 'preview' && !array_key_exists('flag', $versionParts)) {
 			$this->logger->error("The <green>preview</green> release type can only be used on preview releases. <yellow>$version</yellow> is missing a flag (e.g. 1.0<yellowBack>-alpha1</yellowBack>).");
 
-			return 1;
+			return null;
 		}
 
 		if ($type === 'patch' && !array_key_exists('patch', $versionParts)) {
 			$this->logger->error("The <green>patch</green> release type can only be used on patch releases. <yellow>$version</yellow> is missing a patch number (e.g. 1.0<yellowBack>.2</yellowBack>).");
 
-			return 1;
+			return null;
 		}
 
 		if ($type === 'minor' && !array_key_exists('minor', $versionParts)) {
 			$this->logger->error("The <green>minor</green> release type can only be used on minor releases. <yellow>$version</yellow> is missing a minor number (e.g. 1.<yellowBack>2</yellowBack>).");
 
-			return 1;
+			return null;
 		}
 
 		$versionParts['major'] = (int) $versionParts['major'];
@@ -76,21 +62,65 @@ class ReleaseCommand implements CommandHandler
 		$versionParts['patch'] = (int) ($versionParts['patch'] ?? 0);
 		$versionParts['flag'] ??= '';
 
-		$versionName = $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'] . $versionParts['flag'];
-		$versionTag = "v$versionName";
-		$targetBranch = match ($type) {
-			'major', 'minor', 'patch' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
-			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+		return $versionParts;
+	}
+
+	private function validateGitStatus(string $baseBranch, string $releaseType): bool
+	{
+		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
+		if ($currentBranch !== $baseBranch) {
+			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this <yellow>$releaseType</yellow> version.");
+			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
+
+			return false;
+		}
+
+		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
+			$this->logger->error('Your working directory is dirty. Please commit or stash your changes.');
+
+			return false;
+		}
+
+		if ($this->executeGetLastLine('git rev-parse HEAD') !== $this->executeGetLastLine("git rev-parse origin/$baseBranch")) {
+			$this->logger->error('Your local branch is not up to date with the remote branch. Please pull or push first.');
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function handle(CommandInvocation $command): int|null
+	{
+		$releaseType = $command->arguments->get('type')->string();
+		$version = $command->arguments->get('version')->string();
+		$versionParts = $this->extractVersionParts($releaseType, $version);
+		if ($versionParts === null) {
+			return 1;
+		}
+
+		/**
+		 * @var int $major
+		 * @var int $minor
+		 * @var int $patch
+		 * @var string $flag
+		 */
+		['major' => $major, 'minor' => $minor, 'patch' => $patch, 'flag' => $flag] = $versionParts;
+
+		$versionName = $major . '.' . $minor . '.' . $patch . $flag;
+		$targetBranch = match ($releaseType) {
+			'major', 'minor', 'patch' => self::RELEASE_BRANCH_PREFIX . $major . '.' . $minor,
+			'preview' => $patch === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $major . '.' . $minor,
 		};
 
-		$baseBranch = match ($type) {
+		$baseBranch = match ($releaseType) {
 			'major' => self::BASE_BRANCH,
-			'minor' => self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'minor' => self::RELEASE_BRANCH_PREFIX . $major . '.' . $minor,
 			'patch' => $targetBranch,
-			'preview' => $versionParts['patch'] === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'],
+			'preview' => $patch === 0 ? self::BASE_BRANCH : self::RELEASE_BRANCH_PREFIX . $major . '.' . $minor,
 		};
 
-		$dryRun = (bool) $command->options->get('dry-run')->value;
+		$dryRun = $command->options->get('dry-run')->bool();
 		if ($dryRun) {
 			$this->logger->warning('Performing a dry run. No changes will be pushed.');
 		}
@@ -98,96 +128,18 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->debug("Full version: <yellow>$versionName</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 
-		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
-		if ($currentBranch !== $baseBranch) {
-			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this <yellow>$type</yellow> version.");
-			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
-
-			return 1;
-		}
-
-		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
-			$this->logger->error('Your working directory is dirty. Please commit or stash your changes.');
-
-			return 1;
-		}
-
-		if ($this->executeGetLastLine('git rev-parse HEAD') !== $this->executeGetLastLine("git rev-parse origin/$baseBranch")) {
-			$this->logger->error('Your local branch is not up to date with the remote branch. Please pull or push first.');
-
+		if (!$this->validateGitStatus($baseBranch, $releaseType)) {
 			return 1;
 		}
 
 		if (!$this->executeRequireSuccess(
-			'The framework modules are not in sync:',
-			'composer modules:check --namespaces',
+			'Local CI was not successful',
+			'composer local-ci',
 		)) {
 			return 1;
 		}
 
-		$versionReleaseBranch = self::RELEASE_BRANCH_PREFIX . $versionParts['major'] . '.' . $versionParts['minor'] . '.' . $versionParts['patch'];
-
-		if (!$this->executeRequireSuccess(
-			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
-			'git switch -c %s',
-			$versionReleaseBranch,
-		)) {
-			return 1;
-		}
-
-		$this->logger->warning("You are now on the release branch for <yellow>$version</yellow> (<green>$versionReleaseBranch</green>).");
-		$this->logger->warning('You can make last-minute adjustments now and commit them.');
-		$this->logger->warning("This branch will eventually be merged into the <green>$targetBranch</green> branch and then the <green>$baseBranch</green> branch and deleted afterwards.");
-		$this->logger->warning('When you are done, press enter and the release will continue.');
-		fgets(STDIN);
-
-		$this->logger->info("Releasing framework <cyan>$type</cyan> version <yellow>$version</yellow>");
-
-		if (
-			!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
-			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
-		) {
-			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
-
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
-			'git branch -d %s',
-			$versionReleaseBranch,
-		)) {
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			"Failed to tag current release (<yellow>$versionTag</yellow>)",
-			'git tag -a %s -m %s',
-			$versionTag,
-			"Release $versionTag",
-		)) {
-			return 1;
-		}
-
-		if (
-			!$this->executeIsSuccess('git checkout -B %s', $baseBranch) ||
-			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $targetBranch)
-		) {
-			$this->logger->error("Failed to back-merge the release commit into the base branch (<green>$baseBranch</green>).");
-
-			return 1;
-		}
-
-		if ($targetBranch !== self::BASE_BRANCH) {
-			if (
-				!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
-				!$this->executeIsSuccess('git merge --no-ff --no-edit %s', self::BASE_BRANCH)
-			) {
-				$this->logger->error('Failed to back-merge the release commit into the <green>' . self::BASE_BRANCH . '</green> branch.');
-
-				return 1;
-			}
-		}
+		$this->logger->info("Tagging framework <cyan>$releaseType</cyan> version <yellow>$version</yellow>");
 
 		if (!$dryRun && !$this->executeRequireSuccess(
 			'Failed to push to the remote repository',
@@ -203,140 +155,9 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		$modulesDir = APP_ROOT . '/modules';
-		$this->logger->info('Releasing modules...');
-
-		$dirs = scandir($modulesDir);
-		if ($dirs === false) {
-			$this->logger->error('Failed to scan the modules directory.');
-
-			return 1;
-		}
-
-		$tmpDir = APP_ROOT . '/tmp/release/';
-		if (!$this->mkdir($tmpDir)) {
-			return 1;
-		}
-
-		$origin = $command->options->get('origin')->string();
-
-		foreach (array_filter($dirs, static fn ($dir) => is_dir($modulesDir . DIRECTORY_SEPARATOR . $dir) && $dir[0] !== '.') as $moduleDir) {
-			$moduleName = strtolower(basename($moduleDir));
-
-			$result = $this->releaseModule($tmpDir, $moduleName, $baseBranch, $targetBranch, $versionReleaseBranch, $versionTag, $dryRun, $origin);
-			if ($result !== 0) {
-				return $result;
-			}
-		}
-
-		$this->rmdirRecursive($tmpDir);
+		$this->logger->info('Release successful!');
 
 		return 0;
-	}
-
-	private function releaseModule(string $tmpFolder, string $name, string $baseBranch, string $targetBranch, string $versionReleaseBranch, string $versionTag, bool $dryRun, string $origin): int
-	{
-		$this->logger->info("<bold>Releasing module <magenta>$name</magenta></bold>");
-
-		$moduleFolder = $tmpFolder . $name;
-		if (!$this->executeRequireSuccess(
-			'Failed to clone the module repository',
-			'git clone --depth=1 %s %s',
-			$origin . $name,
-			$moduleFolder,
-		)) {
-			return 1;
-		}
-
-		chdir($moduleFolder);
-
-		if (!$this->executeRequireSuccess(
-			"Failed to check out base branch (<green>$baseBranch</green>)",
-			'git checkout -B %s',
-			$baseBranch,
-		)) {
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			"Failed to create the release branch: <green>$versionReleaseBranch</green>",
-			'git switch -c %s',
-			$versionReleaseBranch,
-		)) {
-			return 1;
-		}
-
-		if (
-			!$this->executeIsSuccess('git checkout -B %s', $targetBranch) ||
-			!$this->executeIsSuccess('git merge --no-ff --no-edit %s', $versionReleaseBranch)
-		) {
-			$this->logger->error("Failed to merge the version release branch (<green>$versionReleaseBranch</green>) into the target branch (<green>$targetBranch</green>).");
-
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			"Failed to delete version release branch (<green>$versionReleaseBranch</green>)",
-			'git branch -d %s',
-			$versionReleaseBranch,
-		)) {
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			"Failed to tag current release (<yellow>$versionTag</yellow>)",
-			'git tag -a %s -m %s',
-			$versionTag,
-			"Release $versionTag",
-		)) {
-			return 1;
-		}
-
-		if (!$dryRun && !$this->executeRequireSuccess(
-			'Failed to push to the remote repository',
-			'git push --all --force',
-		)) {
-			return 1;
-		}
-
-		if (!$dryRun && !$this->executeRequireSuccess(
-			'Failed to push tags to the remote repository',
-			'git push --tags',
-		)) {
-			return 1;
-		}
-
-		chdir(APP_ROOT);
-		$this->rmdirRecursive($moduleFolder);
-
-		return 0;
-	}
-
-	private function rmdirRecursive(string $dir): bool
-	{
-		if (PHP_OS === 'WINNT') {
-			$this->execute('rd /s /q %s', $dir);
-		} else {
-			$this->execute('rm -rf %s', $dir);
-		}
-
-		return !is_dir($dir);
-	}
-
-	private function mkdir(string $dir): bool
-	{
-		if (is_dir($dir)) {
-			return true;
-		}
-
-		$this->logger->debug("<green>$</green> <gray>mkdir -p $dir</gray>");
-		if (!mkdir($dir, recursive: true) || !is_dir($dir)) {
-			$this->logger->error(sprintf('Directory "%s" was not created', $dir));
-
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -385,12 +206,5 @@ class ReleaseCommand implements CommandHandler
 		$this->logger->error(PHP_EOL . implode(PHP_EOL, $output));
 
 		return false;
-	}
-
-	private function executeIsSuccess(string $commandLine, string ...$args): bool
-	{
-		[$resultCode] = $this->execute($commandLine, ...$args);
-
-		return $resultCode === 0;
 	}
 }
