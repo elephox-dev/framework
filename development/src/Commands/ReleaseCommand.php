@@ -155,7 +155,7 @@ class ReleaseCommand implements CommandHandler
 
 		return $this->executeRequireSuccess(
 			'Failed to switch to target branch',
-			'git switch -c ' . $targetBranch,
+			'git switch ' . $targetBranch,
 		);
 	}
 
