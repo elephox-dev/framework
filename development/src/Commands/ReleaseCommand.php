@@ -312,7 +312,7 @@ class ReleaseCommand implements CommandHandler
 
 		if (!$this->executeRequireSuccess(
 			'Failed to create commit',
-			"git commit -m \"Updated README.md TODOs\"",
+			'git commit -m "Updated README.md TODOs"',
 		)) {
 			return 1;
 		}
