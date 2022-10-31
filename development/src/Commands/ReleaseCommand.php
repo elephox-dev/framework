@@ -97,7 +97,7 @@ class ReleaseCommand implements CommandHandler
 			(int) $versionParts['major'],
 			(int) $versionParts['minor'],
 			(int) $versionParts['patch'],
-			$versionParts['flag'],
+			$versionParts['flag'] ?? '',
 		);
 	}
 
