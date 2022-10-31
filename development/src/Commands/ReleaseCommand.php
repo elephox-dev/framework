@@ -266,14 +266,14 @@ class ReleaseCommand implements CommandHandler
 			$file->writeContents($json);
 		}
 
-		$this->logger->info('Normalizing composer.json files');
-
-		if (!$this->executeRequireSuccess(
-			'Failed to normalize composer.json files',
-			'composer modules:normalize',
-		)) {
-			return 1;
-		}
+//		$this->logger->info('Normalizing composer.json files');
+//
+//		if (!$this->executeRequireSuccess(
+//			'Failed to normalize composer.json files',
+//			'composer modules:normalize',
+//		)) {
+//			return 1;
+//		}
 
 		$this->logger->info('Committing changes to composer.json files');
 
