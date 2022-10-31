@@ -101,8 +101,9 @@ class ReleaseCommand implements CommandHandler
 		);
 	}
 
-	private function validateGitStatus(string $currentBranch, string $baseBranch): bool
+	private function validateGitStatus(string $baseBranch): bool
 	{
+		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
 		if ($currentBranch !== $baseBranch) {
 			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this version.");
 			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
@@ -128,21 +129,18 @@ class ReleaseCommand implements CommandHandler
 
 	private function prepareRelease(ReleaseType $releaseType, Version $version): bool
 	{
-		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
-
 		$targetBranch = self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor;
 
 		$baseBranch = match ($releaseType) {
 			ReleaseType::Major => self::BASE_BRANCH,
-			ReleaseType::Minor, ReleaseType::Patch => $targetBranch,
-			ReleaseType::Preview => $currentBranch,
+			ReleaseType::Minor, ReleaseType::Patch, ReleaseType::Preview => $targetBranch,
 		};
 
 		$this->logger->debug("Version name: <yellow>$version->name</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 		$this->logger->debug("Target branch: <green>$targetBranch</green>");
 
-		if (!$this->validateGitStatus($currentBranch, $baseBranch)) {
+		if (!$this->validateGitStatus($baseBranch)) {
 			return false;
 		}
 
@@ -180,6 +178,27 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
+		if (!$this->executeRequireSuccess(
+			'Lockfile is not up-to-date',
+			'composer validate --no-interaction --strict',
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			'Dependencies are not in sync',
+			'composer check-dependencies',
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			'Code style is not appropriate',
+			'composer fix-cs:dry-run',
+		)) {
+			return 1;
+		}
+
 		$skipCi = $command->options->get('skip-ci')->bool();
 		if ($skipCi) {
 			$this->logger->warning('Skipping tests and checks');
@@ -187,8 +206,15 @@ class ReleaseCommand implements CommandHandler
 			$this->logger->info('Running tests and checks');
 
 			if (!$this->executeRequireSuccess(
-				'Local CI was not successful',
-				'composer local-ci',
+				'Static analysis is not successful',
+				'composer static-analysis',
+			)) {
+				return 1;
+			}
+
+			if (!$this->executeRequireSuccess(
+				'Tests are not successful',
+				'composer unit-test',
 			)) {
 				return 1;
 			}
@@ -209,9 +235,9 @@ class ReleaseCommand implements CommandHandler
 		) {
 			$json = $file->contents();
 
-			/** @var array{require: array<string, string>}|false $composer */
+			/** @var array{require: array<string, string>}|null $composer */
 			$composer = json_decode($json, true);
-			if ($composer === false) {
+			if ($composer === null) {
 				$this->logger->error('Unable to decode ' . $file->path() . ' as JSON');
 
 				continue;
@@ -240,7 +266,16 @@ class ReleaseCommand implements CommandHandler
 			$file->writeContents($json);
 		}
 
-		$this->logger->info('Committing changes');
+		$this->logger->info('Normalizing composer.json files');
+
+		if (!$this->executeRequireSuccess(
+			'Failed to normalize composer.json files',
+			'composer modules:normalize',
+		)) {
+			return 1;
+		}
+
+		$this->logger->info('Committing changes to composer.json files');
 
 		if (!$this->executeRequireSuccess(
 			'Failed to add changed files to commit',
@@ -252,6 +287,30 @@ class ReleaseCommand implements CommandHandler
 		if (!$this->executeRequireSuccess(
 			'Failed to create commit',
 			"git commit -m \"Pin inter-module dependencies to $version->composerDependency\"",
+		)) {
+			return 1;
+		}
+		$this->logger->info('Updating TODOs');
+
+		if (!$this->executeRequireSuccess(
+			'Failed to update README with TODOs',
+			'composer update-readme',
+		)) {
+			return 1;
+		}
+
+		$this->logger->info('Committing changes to README.md');
+
+		if (!$this->executeRequireSuccess(
+			'Failed to add changed files to commit',
+			'git add README.md',
+		)) {
+			return 1;
+		}
+
+		if (!$this->executeRequireSuccess(
+			'Failed to create commit',
+			'git commit -m "Updated README.md TODOs"',
 		)) {
 			return 1;
 		}
