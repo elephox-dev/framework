@@ -148,10 +148,17 @@ class ReleaseCommand implements CommandHandler
 
 		$this->logger->info("Switching to target branch <green>$targetBranch</green>");
 
-		return $this->executeRequireSuccess(
-			'Failed to switch to target branch',
+		if (!$this->executeRequireSuccess(
+			'Target branch does not exist. Creating',
 			'git switch ' . $targetBranch,
-		);
+		)) {
+			return $this->executeRequireSuccess(
+				'Failed to switch to target branch',
+				'git switch -c ' . $targetBranch,
+			);
+		}
+
+		return true;
 	}
 
 	public function handle(CommandInvocation $command): int|null
