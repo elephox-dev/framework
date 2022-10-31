@@ -161,6 +161,11 @@ class ReleaseCommand implements CommandHandler
 		return true;
 	}
 
+	private function shouldSkipDependency(string $dependency): bool
+	{
+		return !str_starts_with($dependency, 'elephox/') || $dependency === 'elephox/mimey';
+	}
+
 	public function handle(CommandInvocation $command): int|null
 	{
 		$releaseTypeStr = $command->arguments->get('type')->string();
@@ -217,7 +222,7 @@ class ReleaseCommand implements CommandHandler
 			$dependencies = &$composer['require'];
 
 			foreach ($dependencies as $dependency => &$dependencyVersion) {
-				if (!str_starts_with($dependency, 'elephox/')) {
+				if ($this->shouldSkipDependency($dependency)) {
 					continue;
 				}
 
@@ -251,7 +256,7 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		$this->logger->info("Tagging framework <cyan>$releaseType->name</cyan> version <yellow>$version->name</yellow>");
+		$this->logger->info("Tagging framework <cyan>$releaseType->value</cyan> version <yellow>$version->name</yellow>");
 
 		if (!$this->executeRequireSuccess(
 			'Failed to tag framework',
