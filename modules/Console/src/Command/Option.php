@@ -21,8 +21,10 @@ class Option
 	 *
 	 * @return self
 	 */
-	public static function fromTemplate(OptionTemplate $template, null|array|string|int|float|bool $value): self
-	{
+	public static function fromTemplate(
+		OptionTemplate $template,
+		null|array|string|int|float|bool $value,
+	): self {
 		if ($template->validator !== null) {
 			$validationResult = ($template->validator)($value);
 			if ((is_bool($validationResult) && !$validationResult)) {
@@ -34,10 +36,7 @@ class Option
 			}
 		}
 
-		return new self(
-			$template,
-			$value,
-		);
+		return new self($template, $value);
 	}
 
 	/**
@@ -68,7 +67,8 @@ class Option
 	public function int(): int
 	{
 		if (!is_numeric($this->value)) {
-			throw new OptionValidationException('Value cannot be converted to int: ' . get_debug_type($this->value));
+			throw new OptionValidationException('Value cannot be converted to int: ' .
+				get_debug_type($this->value), );
 		}
 
 		return (int) $this->value;
@@ -77,7 +77,8 @@ class Option
 	public function float(): float
 	{
 		if (!is_numeric($this->value)) {
-			throw new OptionValidationException('Value cannot be converted to float: ' . get_debug_type($this->value));
+			throw new OptionValidationException('Value cannot be converted to float: ' .
+				get_debug_type($this->value), );
 		}
 
 		return (float) $this->value;
@@ -93,20 +94,18 @@ class Option
 			return $this->value;
 		}
 
-		throw new OptionValidationException('Value cannot be converted to bool: ' . get_debug_type($this->value));
+		throw new OptionValidationException('Value cannot be converted to bool: ' .
+			get_debug_type($this->value), );
 	}
 
 	public function string(): string
 	{
-		if (
-			is_string($this->value) ||
-			is_numeric($this->value) ||
-			is_bool($this->value)
-		) {
+		if (is_string($this->value) || is_numeric($this->value) || is_bool($this->value)) {
 			return (string) $this->value;
 		}
 
-		throw new OptionValidationException('Value cannot be converted to string: ' . get_debug_type($this->value));
+		throw new OptionValidationException('Value cannot be converted to string: ' .
+			get_debug_type($this->value), );
 	}
 
 	public function array(): array

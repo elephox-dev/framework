@@ -190,13 +190,12 @@
         "local-ci": [
             "@composer validate --no-interaction --strict",
             "@composer install --no-interaction --no-scripts --ignore-platform-req=php+",
+            "@update-readme",
             "@composer modules:normalize",
             "@fix-cs:dry-run",
             "@check-dependencies",
             "@static-analysis",
-            "@unit-test",
-            "@mutation-test",
-            "@update-readme"
+            "@unit-test"
         ],
         "memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
