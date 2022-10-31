@@ -212,7 +212,7 @@ class ReleaseCommand implements CommandHandler
 			}
 			unset($dependencyVersion);
 
-			$json = json_encode($composer, JSON_PRETTY_PRINT);
+			$json = json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 			if ($json === false) {
 				$this->logger->error('Unable to decode ' . $file->path() . ' as JSON');
 
