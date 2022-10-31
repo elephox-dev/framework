@@ -128,13 +128,7 @@ class ReleaseCommand implements CommandHandler
 
 	private function prepareRelease(ReleaseType $releaseType, Version $version): bool
 	{
-		$targetBranch = match ($releaseType) {
-			ReleaseType::Preview => match ($version->patch) {
-				0 => self::BASE_BRANCH,
-				default => self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor,
-			},
-			default => self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor,
-		};
+		$targetBranch = self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor;
 
 		$baseBranch = match ($releaseType) {
 			ReleaseType::Major => self::BASE_BRANCH,
