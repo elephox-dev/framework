@@ -266,30 +266,33 @@ class ReleaseCommand implements CommandHandler
 			$file->writeContents($json);
 		}
 
-		$this->logger->info('Normalizing composer.json files');
+		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
+			$this->logger->info('Normalizing composer.json files');
 
-		if (!$this->executeRequireSuccess(
-			'Failed to normalize composer.json files',
-			'composer modules:normalize',
-		)) {
-			return 1;
+			if (!$this->executeRequireSuccess(
+				'Failed to normalize composer.json files',
+				'composer modules:normalize',
+			)) {
+				return 1;
+			}
+
+			$this->logger->info('Committing changes to composer.json files');
+
+			if ($this->executeRequireSuccess(
+				'Failed to add changed files to commit',
+				'git add **/composer.json',
+			)) {
+				return 1;
+			}
+
+			if (!$this->executeRequireSuccess(
+				'Failed to create commit',
+				"git commit -m \"Pin inter-module dependencies to $version->composerDependency\"",
+			)) {
+				return 1;
+			}
 		}
 
-		$this->logger->info('Committing changes to composer.json files');
-
-		if (!$this->executeRequireSuccess(
-			'Failed to add changed files to commit',
-			'git add **/composer.json',
-		)) {
-			return 1;
-		}
-
-		if (!$this->executeRequireSuccess(
-			'Failed to create commit',
-			"git commit -m \"Pin inter-module dependencies to $version->composerDependency\"",
-		)) {
-			return 1;
-		}
 		$this->logger->info('Updating TODOs');
 
 		if (!$this->executeRequireSuccess(
@@ -299,20 +302,18 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		$this->logger->info('Committing changes to README.md');
+		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
+			$this->logger->info('Committing changes to README.md');
 
-		if (!$this->executeRequireSuccess(
-			'Failed to add changed files to commit',
-			'git add README.md',
-		)) {
-			return 1;
-		}
+			if (!$this->executeRequireSuccess('Failed to add changed files to commit',
+				'git add README.md',)) {
+				return 1;
+			}
 
-		if (!$this->executeRequireSuccess(
-			'Failed to create commit',
-			'git commit -m "Updated README.md TODOs"',
-		)) {
-			return 1;
+			if (!$this->executeRequireSuccess('Failed to create commit',
+				'git commit -m "Updated README.md TODOs"',)) {
+				return 1;
+			}
 		}
 
 		$this->logger->info("Tagging framework <cyan>$releaseType->value</cyan> version <yellow>$version->name</yellow>");
