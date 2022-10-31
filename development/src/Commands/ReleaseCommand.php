@@ -63,6 +63,7 @@ class ReleaseCommand implements CommandHandler
 			default: APP_ROOT . '/modules',
 			description: 'The directory containing the framework modules',
 		);
+		$builder->addOption('skip-ci', description: 'Skips running local checks and tests.');
 	}
 
 	private function parseVersion(ReleaseType $type, string $version): ?Version
@@ -100,9 +101,8 @@ class ReleaseCommand implements CommandHandler
 		);
 	}
 
-	private function validateGitStatus(string $baseBranch): bool
+	private function validateGitStatus(string $currentBranch, string $baseBranch): bool
 	{
-		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
 		if ($currentBranch !== $baseBranch) {
 			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this version.");
 			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
@@ -128,20 +128,21 @@ class ReleaseCommand implements CommandHandler
 
 	private function prepareRelease(ReleaseType $releaseType, Version $version): bool
 	{
+		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
+
 		$targetBranch = self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor;
 
 		$baseBranch = match ($releaseType) {
 			ReleaseType::Major => self::BASE_BRANCH,
-			ReleaseType::Minor => self::RELEASE_BRANCH_PREFIX . $version->major . '.' .
-				$version->minor,
-			ReleaseType::Patch, ReleaseType::Preview => $targetBranch,
+			ReleaseType::Minor, ReleaseType::Patch => $targetBranch,
+			ReleaseType::Preview => $currentBranch,
 		};
 
 		$this->logger->debug("Version name: <yellow>$version->name</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 		$this->logger->debug("Target branch: <green>$targetBranch</green>");
 
-		if (!$this->validateGitStatus($baseBranch)) {
+		if (!$this->validateGitStatus($currentBranch, $baseBranch)) {
 			return false;
 		}
 
@@ -167,13 +168,18 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		$this->logger->info('Running tests and checks');
+		$skipCi = $command->options->get('skip-ci')->bool();
+		if ($skipCi) {
+			$this->logger->warning('Skipping tests and checks');
+		} else {
+			$this->logger->info('Running tests and checks');
 
-		if (!$this->executeRequireSuccess(
-			'Local CI was not successful',
-			'composer local-ci',
-		)) {
-			return 1;
+			if (!$this->executeRequireSuccess(
+				'Local CI was not successful',
+				'composer local-ci',
+			)) {
+				return 1;
+			}
 		}
 
 		if (!$this->prepareRelease($releaseType, $version)) {
