@@ -224,7 +224,7 @@ class ReleaseCommand implements CommandHandler
 			return 1;
 		}
 
-		$this->logger->info("Updating <yellow>dev-develop</yellow> dependencies to <yellow>$version->name</yellow> in modules");
+		$this->logger->info("Updating <yellow>dev-develop</yellow> dependencies to <yellow>$version->composerDependency</yellow> in modules");
 
 		$modulesDir = $command->options->get('modules')->string();
 		foreach (
