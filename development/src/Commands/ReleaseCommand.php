@@ -325,7 +325,9 @@ class ReleaseCommand implements CommandHandler
 		}
 
 		$this->logger->error($failedMessage);
-		$this->logger->error(PHP_EOL . implode(PHP_EOL, $output));
+		if (!empty($output)) {
+			$this->logger->error(PHP_EOL . implode(PHP_EOL, $output));
+		}
 
 		return false;
 	}
