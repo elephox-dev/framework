@@ -305,13 +305,17 @@ class ReleaseCommand implements CommandHandler
 		if (!empty($this->executeGetLastLine('git status --porcelain'))) {
 			$this->logger->info('Committing changes to README.md');
 
-			if (!$this->executeRequireSuccess('Failed to add changed files to commit',
-				'git add README.md',)) {
+			if (!$this->executeRequireSuccess(
+				'Failed to add changed files to commit',
+				'git add README.md',
+			)) {
 				return 1;
 			}
 
-			if (!$this->executeRequireSuccess('Failed to create commit',
-				'git commit -m "Updated README.md TODOs"',)) {
+			if (!$this->executeRequireSuccess(
+				'Failed to create commit',
+				'git commit -m "Updated README.md TODOs"',
+			)) {
 				return 1;
 			}
 		}
