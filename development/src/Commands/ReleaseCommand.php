@@ -101,8 +101,9 @@ class ReleaseCommand implements CommandHandler
 		);
 	}
 
-	private function validateGitStatus(string $currentBranch, string $baseBranch): bool
+	private function validateGitStatus(string $baseBranch): bool
 	{
+		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
 		if ($currentBranch !== $baseBranch) {
 			$this->logger->error("You must be on the <green>$baseBranch</green> branch to release this version.");
 			$this->logger->error("You are currently on the <underline>$currentBranch</underline> branch.");
@@ -128,21 +129,18 @@ class ReleaseCommand implements CommandHandler
 
 	private function prepareRelease(ReleaseType $releaseType, Version $version): bool
 	{
-		$currentBranch = $this->executeGetLastLine('git rev-parse --abbrev-ref HEAD');
-
 		$targetBranch = self::RELEASE_BRANCH_PREFIX . $version->major . '.' . $version->minor;
 
 		$baseBranch = match ($releaseType) {
 			ReleaseType::Major => self::BASE_BRANCH,
-			ReleaseType::Minor, ReleaseType::Patch => $targetBranch,
-			ReleaseType::Preview => $currentBranch,
+			ReleaseType::Minor, ReleaseType::Patch, ReleaseType::Preview => $targetBranch,
 		};
 
 		$this->logger->debug("Version name: <yellow>$version->name</yellow>");
 		$this->logger->debug("Expected base branch: <green>$baseBranch</green>");
 		$this->logger->debug("Target branch: <green>$targetBranch</green>");
 
-		if (!$this->validateGitStatus($currentBranch, $baseBranch)) {
+		if (!$this->validateGitStatus($baseBranch)) {
 			return false;
 		}
 
