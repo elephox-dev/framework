@@ -13,16 +13,22 @@ trait LoadsDefaultConfiguration
 
 	protected function loadDotEnvFile(): void
 	{
-		$this->getEnvironment()->loadFromEnvFile();
-		$this->getEnvironment()->loadFromEnvFile(local: true);
+		$envFile = $this->getEnvironment()->getDotEnvFileName();
+		$this->getEnvironment()->loadFromEnvFile($envFile);
+
+		$localEnvFile = $this->getEnvironment()->getDotEnvFileName(true);
+		$this->getEnvironment()->loadFromEnvFile($localEnvFile);
 	}
 
 	protected function loadEnvironmentDotEnvFile(): void
 	{
 		$envName = $this->getEnvironment()->environmentName();
 
-		$this->getEnvironment()->loadFromEnvFile($envName);
-		$this->getEnvironment()->loadFromEnvFile($envName, true);
+		$envFile = $this->getEnvironment()->getDotEnvFileName(envName: $envName);
+		$this->getEnvironment()->loadFromEnvFile($envFile);
+
+		$localEnvFile = $this->getEnvironment()->getDotEnvFileName(true, $envName);
+		$this->getEnvironment()->loadFromEnvFile($localEnvFile);
 	}
 
 	protected function loadConfigFile(): void

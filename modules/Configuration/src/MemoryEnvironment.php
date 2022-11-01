@@ -6,6 +6,7 @@ namespace Elephox\Configuration;
 use Dotenv\Dotenv;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\KeyedEnumerable;
+use Elephox\Files\Contract\File;
 use Elephox\Files\Directory;
 use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
@@ -26,10 +27,9 @@ class MemoryEnvironment extends DotEnvEnvironment
 	{
 	}
 
-	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void
+	public function loadFromEnvFile(File $envFile, bool $overwriteExisting = true): void
 	{
-		$envFile = $this->getDotEnvFileName($local, $envName);
-		$dotenv = Dotenv::createArrayBacked($this->root()->path(), $envFile);
+		$dotenv = Dotenv::createArrayBacked($this->root()->path(), $envFile->path());
 		$entries = $dotenv->safeLoad();
 
 		if ($overwriteExisting) {

@@ -6,6 +6,7 @@ namespace Elephox\Configuration\Contract;
 use ArrayAccess;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\Contract\Directory;
+use Elephox\Files\Contract\File;
 
 /**
  * @extends ArrayAccess<string, scalar|null>
@@ -17,7 +18,7 @@ use Elephox\Files\Contract\Directory;
  */
 interface Environment extends ArrayAccess
 {
-	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void;
+	public function loadFromEnvFile(File $envFile, bool $overwriteExisting = true): void;
 
 	public function environmentName(): string;
 

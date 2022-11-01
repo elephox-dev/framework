@@ -16,6 +16,7 @@
     "require": {
         "php": "^8.1 <8.3",
         "elephox/collection": "dev-develop",
+        "elephox/events": "dev-develop",
         "elephox/mimey": "^4.0",
         "elephox/stream": "dev-develop",
         "elephox/support": "dev-develop",

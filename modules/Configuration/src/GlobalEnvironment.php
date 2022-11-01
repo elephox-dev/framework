@@ -6,6 +6,7 @@ namespace Elephox\Configuration;
 use Dotenv\Dotenv;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\KeyedEnumerable;
+use Elephox\Files\Contract\File;
 use Elephox\Files\Directory;
 use Elephox\Support\TransparentGetterSetter;
 use InvalidArgumentException;
@@ -17,15 +18,12 @@ class GlobalEnvironment extends DotEnvEnvironment
 
 	protected ?Directory $cachedRootDirectory = null;
 
-	public function loadFromEnvFile(?string $envName = null, bool $local = false, bool $overwriteExisting = true): void
+	public function loadFromEnvFile(File $envFile, bool $overwriteExisting = true): void
 	{
-		$root = $this->root()->path();
-		$envFile = $this->getDotEnvFileName($local, $envName);
-
 		if ($overwriteExisting) {
-			$dotenv = Dotenv::createMutable($root, $envFile);
+			$dotenv = Dotenv::createMutable($envFile->parent()->path(), $envFile->name());
 		} else {
-			$dotenv = Dotenv::createImmutable($root, $envFile);
+			$dotenv = Dotenv::createImmutable($envFile->parent()->path(), $envFile->name());
 		}
 
 		$dotenv->safeLoad();

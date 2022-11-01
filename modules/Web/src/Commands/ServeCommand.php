@@ -8,7 +8,8 @@ use Elephox\Configuration\MemoryEnvironment;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
-use Elephox\Files\Contract\File as FileContract;
+use Elephox\Files\Contract\FileChangedEvent;
+use Elephox\Files\FileWatcher;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
@@ -83,18 +84,13 @@ class ServeCommand implements CommandHandler
 
 		$this->logger->info('Starting PHP built-in webserver on ' . Console::link('http://' . $host . ':' . $port), ['command' => implode(' ', $serverCommand)]);
 
-		// initialize timestamps
-		$environment->pollDotEnvFileChanged();
-		$environment->pollDotEnvFileChanged((string) $environment['APP_ENV']);
-
 		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 
 		/** @psalm-suppress UnusedClosureParam */
-		$environment->addDotEnvChangeListener(function (?string $envName, bool $local, FileContract $envFile) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
-			$this->logger->warning($envFile->name() . ' file changed. Restarting server...');
+		$onEnvFileChanged = function (FileChangedEvent $fileChangedEvent) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
+			$this->logger->warning($fileChangedEvent->file()->name() . ' file changed. Restarting server...');
 
-			$environment->loadFromEnvFile($envName);
-			$environment->loadFromEnvFile($envName, true);
+			$environment->loadFromEnvFile($fileChangedEvent->file());
 
 			/** @var Process $process */
 			$process->stop();
@@ -102,13 +98,22 @@ class ServeCommand implements CommandHandler
 			usleep(1000 * 1000);
 
 			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
-		});
+		};
+
+		$fileWatcher = new FileWatcher();
+		$fileWatcher->add(
+			$onEnvFileChanged,
+			$environment->getDotEnvFileName(),
+			$environment->getDotEnvFileName(true),
+			$environment->getDotEnvFileName(envName: (string) $environment['APP_ENV']),
+			$environment->getDotEnvFileName(true, (string) $environment['APP_ENV']),
+		);
+		$fileWatcher->poll(false);
 
 		/** @var Process $process */
 		while ($process->isRunning()) {
 			if (!$noReload) {
-				$environment->pollDotEnvFileChanged();
-				$environment->pollDotEnvFileChanged((string) $environment['APP_ENV']);
+				$fileWatcher->poll();
 			}
 
 			usleep(500 * 1000);
@@ -160,14 +165,18 @@ class ServeCommand implements CommandHandler
 		$workers = $command->options->get('workers')->value;
 
 		$environment = new MemoryEnvironment($documentRoot);
-		$environment->loadFromEnvFile();
-		$environment->loadFromEnvFile(local: true);
+		$envFile = $environment->getDotEnvFileName();
+		$environment->loadFromEnvFile($envFile);
+		$localEnvFile = $environment->getDotEnvFileName();
+		$environment->loadFromEnvFile($localEnvFile);
 
 		if ($envName !== 'null') {
 			$environment['APP_ENV'] = $envName;
 
-			$environment->loadFromEnvFile($envName);
-			$environment->loadFromEnvFile($envName, true);
+			$namedEnvFile = $environment->getDotEnvFileName();
+			$environment->loadFromEnvFile($namedEnvFile);
+			$localNamedEnvFile = $environment->getDotEnvFileName(true);
+			$environment->loadFromEnvFile($localNamedEnvFile);
 		}
 
 		if (is_string($workers)) {

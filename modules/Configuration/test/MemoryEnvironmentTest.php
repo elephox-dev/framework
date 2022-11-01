@@ -17,7 +17,8 @@ class MemoryEnvironmentTest extends TestCase
 	public function testLoadFromEnvFileOverwritesByDefault(): void
 	{
 		$env = new MemoryEnvironment(__DIR__ . '/data');
-		$env->loadFromEnvFile();
+		$envFile = $env->getDotEnvFileName();
+		$env->loadFromEnvFile($envFile);
 
 		static::assertSame('default', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
@@ -27,14 +28,16 @@ class MemoryEnvironmentTest extends TestCase
 		$env['TEST1'] = 'false';
 		static::assertSame('false', $env['TEST1']);
 
-		$env->loadFromEnvFile('test1');
+		$test1EnvFile = $env->getDotEnvFileName(envName: 'test1');
+		$env->loadFromEnvFile($test1EnvFile);
 
 		static::assertSame('test1', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
 		static::assertSame('true', $env['TEST1']);
 		static::assertFalse(isset($env['TEST2']));
 
-		$env->loadFromEnvFile('test2');
+		$test2EnvFile = $env->getDotEnvFileName(envName: 'test2');
+		$env->loadFromEnvFile($test2EnvFile);
 
 		static::assertSame('test2', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
@@ -45,7 +48,8 @@ class MemoryEnvironmentTest extends TestCase
 	public function testLoadFromEnvFileDoesntOverwriteIfGiven(): void
 	{
 		$env = new MemoryEnvironment(__DIR__ . '/data');
-		$env->loadFromEnvFile(overwriteExisting: false);
+		$envFile = $env->getDotEnvFileName();
+		$env->loadFromEnvFile($envFile, overwriteExisting: false);
 
 		static::assertSame('default', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
@@ -55,7 +59,8 @@ class MemoryEnvironmentTest extends TestCase
 		$env['TEST1'] = 'false';
 		static::assertSame('false', $env['TEST1']);
 
-		$env->loadFromEnvFile('test1', overwriteExisting: false);
+		$test1EnvFile = $env->getDotEnvFileName(envName: 'test1');
+		$env->loadFromEnvFile($test1EnvFile, overwriteExisting: false);
 
 		static::assertSame('default', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
@@ -64,7 +69,8 @@ class MemoryEnvironmentTest extends TestCase
 
 		unset($env['TEST1']);
 
-		$env->loadFromEnvFile('test2', overwriteExisting: false);
+		$test2EnvFile = $env->getDotEnvFileName(envName: 'test2');
+		$env->loadFromEnvFile($test2EnvFile, overwriteExisting: false);
 
 		static::assertSame('default', $env['SOURCE']);
 		static::assertSame('true', $env['DEFAULT']);
