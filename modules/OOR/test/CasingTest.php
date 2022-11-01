@@ -16,9 +16,9 @@ class CasingTest extends TestCase
 	{
 		yield ['foo', 'foo', 'FOO', 'Foo', 'foo', 'foo', 'foo', 'Foo', 'FOO', 'Foo'];
 		yield ['FOO', 'foo', 'FOO', 'Foo', 'foo', 'foo', 'foo', 'Foo', 'FOO', 'Foo'];
-		yield ['FooBar', 'foobar', 'FOOBAR', 'Foobar', 'foobar', 'foobar', 'foobar', 'Foobar', 'FOOBAR', 'Foobar'];
+		yield ['FooBar', 'foobar', 'FOOBAR', 'Foobar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
 		yield ['Foo Bar', 'foo bar', 'FOO BAR', 'Foo Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
-		yield ['FoO BaR', 'foo bar', 'FOO BAR', 'Foo Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
+		yield ['FoO BaR', 'foo bar', 'FOO BAR', 'Foo Bar', 'foOBaR', 'fo_o_ba_r', 'fo-o-ba-r', 'Fo-O-Ba-R', 'FO-O-BA-R', 'FoOBaR'];
 		yield ['Foo-Bar', 'foo-bar', 'FOO-BAR', 'Foo-Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
 		yield ['Foo_Bar', 'foo_bar', 'FOO_BAR', 'Foo_Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
 		yield ['f%a@d_=', 'f%a@d_=', 'F%A@D_=', 'F%A@D_=', 'f%A@D=', 'f%a@d_=', 'f%a@d-=', 'F%A@D-=', 'F%A@D-=', 'F%A@D='];
@@ -40,15 +40,15 @@ class CasingTest extends TestCase
 	 */
 	public function testCasing(string $input, string $lower, string $upper, string $title, string $camel, string $snake, string $kebab, string $httpHeader, string $cobol, string $pascal): void
 	{
-		static::assertSame($lower, Casing::toLower($input));
-		static::assertSame($upper, Casing::toUpper($input));
-		static::assertSame($title, Casing::toTitle($input));
-		static::assertSame($camel, Casing::toCamel($input));
-		static::assertSame($snake, Casing::toSnake($input));
-		static::assertSame($kebab, Casing::toKebab($input));
-		static::assertSame($httpHeader, Casing::toHttpHeader($input));
-		static::assertSame($cobol, Casing::toCobol($input));
-		static::assertSame($pascal, Casing::toPascal($input));
+		static::assertSame($lower, Casing::toLower($input), "Invalid case conversion for: toLower($input)");
+		static::assertSame($upper, Casing::toUpper($input), "Invalid case conversion for: toUpper($input)");
+		static::assertSame($title, Casing::toTitle($input), "Invalid case conversion for: toTitle($input)");
+		static::assertSame($camel, Casing::toCamel($input), "Invalid case conversion for: toCamel($input)");
+		static::assertSame($snake, Casing::toSnake($input), "Invalid case conversion for: toSnake($input)");
+		static::assertSame($kebab, Casing::toKebab($input), "Invalid case conversion for: toKebab($input)");
+		static::assertSame($httpHeader, Casing::toHttpHeader($input), "Invalid case conversion for: toHttpHeader($input)");
+		static::assertSame($cobol, Casing::toCobol($input), "Invalid case conversion for: toCobol($input)");
+		static::assertSame($pascal, Casing::toPascal($input), "Invalid case conversion for: toPascal($input)");
 	}
 
 	public function replaceDelimitersDataProvider(): iterable

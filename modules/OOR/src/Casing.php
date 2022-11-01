@@ -45,6 +45,21 @@ class Casing
 	}
 
 	/**
+	 * Example input: "HelloBeautifulWorld", "-"<br>
+	 * Example output: "Hello-Beautiful-World"
+	 */
+	public static function splitWords(string $string, string $separator): string
+	{
+		$perimeter = match ($separator) {
+			'/' => '#',
+			default => '/'
+		};
+
+		/** @var string */
+		return preg_replace($perimeter . '([a-z])([A-Z])' . $perimeter, '$1' . $separator . '$2', $string);
+	}
+
+	/**
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "helloBeautifulWorld"
 	 */
@@ -54,12 +69,12 @@ class Casing
 	}
 
 	/**
-	 * Example input: "Hello beautiful World"<br>
+	 * Example input: "Hello beautifulWorld"<br>
 	 * Example output: "hello_beautiful_world"
 	 */
 	public static function toSnake(string $string): string
 	{
-		return self::toLower(self::replaceDelimiters(self::toTitle($string), '_'));
+		return self::toLower(self::replaceDelimiters(self::splitWords($string, '_'), '_'));
 	}
 
 	/**
@@ -86,7 +101,7 @@ class Casing
 	 */
 	public static function toHttpHeader(string $string): string
 	{
-		return self::replaceDelimiters(self::toTitle($string), '-');
+		return self::replaceDelimiters(self::toTitle(self::splitWords($string, ' ')), '-');
 	}
 
 	/**
@@ -95,7 +110,7 @@ class Casing
 	 */
 	public static function toPascal(string $string): string
 	{
-		return ucfirst(self::replaceDelimiters(self::toTitle($string), ''));
+		return ucfirst(self::replaceDelimiters(self::toTitle(self::splitWords($string, ' ')), ''));
 	}
 
 	/**
