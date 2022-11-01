@@ -92,6 +92,7 @@
             "Elephox\\Web\\": "modules/Web/src/"
         },
         "files": [
+            "modules/Collection/shortcuts.php",
             "modules/OOR/shortcuts.php"
         ]
     },
