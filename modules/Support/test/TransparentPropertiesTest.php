@@ -35,22 +35,40 @@ class TransparentPropertiesTest extends TestCase
 		$this->expectExceptionMessage('Unknown method Elephox\Support\ExamplePropertiesClass::setNonExistingProperty()');
 		$obj->setNonExistingProperty(456);
 	}
+
+	public function testUnitialized(): void
+	{
+		$obj = new ExamplePropertiesClass();
+		$obj->setUninitialized('test');
+		static::assertSame('test', $obj->getInternalUninitialized());
+	}
 }
 
 /**
  * @method int getValue()
- * @method void setValue(int $value)
+ * @method int setValue(int $value)
+ * @method string getUninitialized()
+ * @method string setUninitialized(string $value)
  */
 class ExamplePropertiesClass {
 	use TransparentProperties;
 
 	private int $value = 0;
+	private string $uninitialized;
 
 	public function getInternalValue(): int {
 		return $this->value;
 	}
 
-	public function setInternalValue(int $value): void {
-		$this->value = $value;
+	public function setInternalValue(int $value): int {
+		return $this->value = $value;
+	}
+
+	public function getInternalUninitialized(): string {
+		return $this->uninitialized;
+	}
+
+	public function setInternalUninitialized(string $value): string {
+		return $this->uninitialized = $value;
 	}
 }

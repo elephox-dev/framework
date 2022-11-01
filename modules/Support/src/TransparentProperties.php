@@ -25,7 +25,7 @@ trait TransparentProperties
 
 			$propertyName = $this->buildPropertyName($prefix, $name);
 
-			if (isset($this->{$propertyName})) {
+			if (property_exists($this, $propertyName)) {
 				return $this->{$propertyName};
 			}
 		}
@@ -41,7 +41,7 @@ trait TransparentProperties
 
 			$propertyName = $this->buildPropertyName($prefix, $name);
 
-			if (isset($this->{$propertyName})) {
+			if (property_exists($this, $propertyName)) {
 				return $this->{$propertyName} = $args[0];
 			}
 		}
