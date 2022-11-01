@@ -94,7 +94,6 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock = M::mock(Stream::class);
 
 		$streamMock->expects('getSize')->andReturns(3);
-		$appendedStreamMock->expects('getSize')->andReturns(3);
 
 		$streamMock->expects('eof')->andReturns(false);
 		$streamMock->expects('tell')->andReturns(0);
@@ -114,13 +113,12 @@ class AppendStreamTest extends MockeryTestCase
 	public function testReadNullSize(): void
 	{
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('AppendStream is only readable if the underlying streams sizes are known');
+		$this->expectExceptionMessage('AppendStream is only readable if the underlying stream size is known');
 
 		$streamMock = M::mock(Stream::class);
 		$appendedStreamMock = M::mock(Stream::class);
 
-		$streamMock->expects('getSize')->andReturns(3);
-		$appendedStreamMock->expects('getSize')->andReturns(null);
+		$streamMock->expects('getSize')->andReturns(null);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
 		$appendStream->read(12);
@@ -132,7 +130,6 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock = M::mock(Stream::class);
 
 		$streamMock->allows('getSize')->twice()->withNoArgs()->andReturns(3);
-		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(3);
 
 		$streamMock->expects('eof')->andReturns(true);
 
@@ -149,8 +146,6 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock = M::mock(Stream::class);
 
 		$streamMock->expects('getSize')->withNoArgs()->andReturns(3);
-		$appendedStreamMock->expects('getSize')->withNoArgs()->andReturns(3);
-
 		$streamMock->expects('eof')->andReturns(false);
 		$streamMock->expects('tell')->andReturns(1);
 		$streamMock->expects('read')->with(2)->andReturns('de');
