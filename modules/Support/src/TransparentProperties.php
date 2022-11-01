@@ -17,7 +17,8 @@ trait TransparentProperties
 		return Casing::toSnake($name);
 	}
 
-	public function __call(string $name, array $args) {
+	public function __call(string $name, array $args)
+	{
 		foreach ($this->buildGetterPrefixes() as $prefix) {
 			if (!str_starts_with($name, $prefix)) {
 				continue;
@@ -31,7 +32,7 @@ trait TransparentProperties
 		}
 
 		if (count($args) === 0) {
-			throw new BadMethodCallException(sprintf("No property for reading could be found using %s::%s. If you intend to set a value, pass at least one argument.", __CLASS__, $name));
+			throw new BadMethodCallException(sprintf('No property for reading could be found using %s::%s. If you intend to set a value, pass at least one argument.', __CLASS__, $name));
 		}
 
 		foreach ($this->buildSetterPrefixes() as $prefix) {
@@ -46,6 +47,6 @@ trait TransparentProperties
 			}
 		}
 
-		throw new BadMethodCallException(sprintf("Unknown method %s::%s()", __CLASS__, $name));
+		throw new BadMethodCallException(sprintf('Unknown method %s::%s()', __CLASS__, $name));
 	}
 }
