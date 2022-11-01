@@ -310,6 +310,6 @@ class ArrayList implements GenericList
 
 	public function slice(int $offset, ?int $length = null): static
 	{
-		return new ArrayList(array_slice($this->items, $offset, $length));
+		return new self(array_slice($this->items, $offset, $length));
 	}
 }

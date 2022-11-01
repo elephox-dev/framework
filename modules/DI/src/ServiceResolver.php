@@ -182,7 +182,6 @@ trait ServiceResolver
 		}
 
 		/** @var list<class-string> $typeNames */
-
 		if ($possibleArgument === null) {
 			foreach ($typeNames as $typeName) {
 				try {

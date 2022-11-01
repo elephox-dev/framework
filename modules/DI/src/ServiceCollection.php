@@ -458,10 +458,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @template TService of object
 	 *
 	 * @param string $id
+	 *
 	 *@return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
-	 *
 	 */
 	public function get(string $id): ?object
 	{
