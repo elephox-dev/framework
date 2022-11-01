@@ -392,21 +392,21 @@
         },
         {
             "name": "ricardoboss/php-console-logger",
-            "version": "v2.3.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ricardoboss/php-console-logger.git",
-                "reference": "8447823ef193900c76871a64ac554f69928f63bc"
+                "reference": "d7186ad33bc3794a938a1a50f362afc95dd1c8c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/8447823ef193900c76871a64ac554f69928f63bc",
-                "reference": "8447823ef193900c76871a64ac554f69928f63bc",
+                "url": "https://api.github.com/repos/ricardoboss/php-console-logger/zipball/d7186ad33bc3794a938a1a50f362afc95dd1c8c2",
+                "reference": "d7186ad33bc3794a938a1a50f362afc95dd1c8c2",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.0"
+                "php": "^8.1"
             },
             "type": "library",
             "autoload": {
@@ -427,9 +427,9 @@
             "description": "A simple console logger for scripts or small applications.",
             "support": {
                 "issues": "https://github.com/ricardoboss/php-console-logger/issues",
-                "source": "https://github.com/ricardoboss/php-console-logger/tree/v2.3.1"
+                "source": "https://github.com/ricardoboss/php-console-logger/tree/v2.4.2"
             },
-            "time": "2022-10-20T19:47:09+00:00"
+            "time": "2022-11-01T16:48:32+00:00"
         },
         {
             "name": "stella-maris/clock",

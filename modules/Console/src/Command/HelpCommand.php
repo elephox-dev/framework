@@ -32,9 +32,7 @@ class HelpCommand implements Contract\CommandHandler
 			$this->logger->info(Console::underscore('Available commands:'));
 
 			/** @var array<int, array<int, string>> $commands */
-			$commands = [
-				[Console::yellow('Command'), 'Description'],
-			];
+			$commands = [];
 
 			/**
 			 * @var CommandTemplate $commandTemplate
@@ -46,7 +44,7 @@ class HelpCommand implements Contract\CommandHandler
 				$commands[] = [$name, $description];
 			}
 
-			foreach (Console::table($commands, compact: true) as $line) {
+			foreach (Console::table($commands, compact: true, headers: [Console::yellow('Command'), 'Description']) as $line) {
 				$this->logger->info($line);
 			}
 
@@ -63,7 +61,7 @@ class HelpCommand implements Contract\CommandHandler
 				[Console::green('Description'), "\t", (empty($commandTemplate->description) ? Console::gray('No description') : $commandTemplate->description)],
 			];
 
-			foreach (Console::table($metaData, noOuterBorder: true, noInnerBorder: true) as $line) {
+			foreach (Console::table($metaData, noOuterBorder: true, noInnerBorder: true, noHeaders: true) as $line) {
 				$this->logger->info($line);
 			}
 
@@ -92,7 +90,7 @@ class HelpCommand implements Contract\CommandHandler
 				$argumentData[] = ["\t", $name, "\t", $description];
 			}
 
-			foreach (Console::table($argumentData, noOuterBorder: true, noInnerBorder: true) as $line) {
+			foreach (Console::table($argumentData, noOuterBorder: true, noInnerBorder: true, noHeaders: true) as $line) {
 				$this->logger->info($line);
 			}
 
@@ -127,7 +125,7 @@ class HelpCommand implements Contract\CommandHandler
 				$optionData[] = ["\t", $name, "\t", $description];
 			}
 
-			foreach (Console::table($optionData, noOuterBorder: true, noInnerBorder: true) as $line) {
+			foreach (Console::table($optionData, noOuterBorder: true, noInnerBorder: true, noHeaders: true) as $line) {
 				$this->logger->info($line);
 			}
 
