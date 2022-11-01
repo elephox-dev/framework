@@ -117,11 +117,11 @@ class AppendStream extends AbstractStream
 
 	public function write(string $string): int
 	{
-		$length = mb_strlen($string);
+		$length = mb_strlen($string, 'UTF-8');
 		$written = $this->stream->write($string);
 
 		if ($written < $length) {
-			$written += $this->appendedStream->write(mb_substr($string, $written));
+			$written += $this->appendedStream->write(mb_substr($string, $written, encoding: 'UTF-8'));
 		}
 
 		return $written;
