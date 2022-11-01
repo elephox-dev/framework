@@ -13,7 +13,7 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param string $clientPath
 	 * @param Stream $stream
 	 * @param null|MimeTypeInterface $clientMimeType
-	 * @param null|positive-int|0 $size
+	 * @param null|int<0, max> $size
 	 * @param UploadError $error
 	 */
 	public function __construct(

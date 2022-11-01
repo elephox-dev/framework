@@ -69,7 +69,7 @@ class AppendStream extends AbstractStream
 		return $this->stream->isSeekable() && $this->appendedStream->isSeekable() && $this->getSize() !== null;
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek(int $offset, int $whence = SEEK_SET): void
 	{
 		$streamSize = $this->stream->getSize();
 		$appendStreamSize = $this->appendedStream->getSize();
@@ -95,7 +95,7 @@ class AppendStream extends AbstractStream
 
 		if ($offset > $streamSize) {
 			$offset -= $streamSize;
-			/** @var positive-int|0 $offset */
+			/** @var int<0, max> $offset */
 			$this->appendedStream->seek($offset);
 		} elseif ($offset >= 0) {
 			$this->stream->seek($offset);

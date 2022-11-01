@@ -18,7 +18,7 @@ interface UploadedFile
 	public function getError(): UploadError;
 
 	/**
-	 * @return null|positive-int|0
+	 * @return null|int<0, max>
 	 */
 	public function getSize(): ?int;
 

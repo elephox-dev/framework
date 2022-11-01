@@ -15,12 +15,12 @@ interface Stream extends Stringable
 	public function close(): void;
 
 	/**
-	 * @return positive-int|null|0
+	 * @return int<0, max>|null
 	 */
 	public function getSize(): ?int;
 
 	/**
-	 * @return positive-int|0
+	 * @return int<0, max>
 	 */
 	public function tell(): int;
 
@@ -29,19 +29,19 @@ interface Stream extends Stringable
 	public function isSeekable(): bool;
 
 	/**
-	 * @param positive-int|0 $offset
-	 * @param positive-int|0 $whence
+	 * @param int<0, max> $offset
+	 * @param int<0, max> $whence
 	 */
-	public function seek($offset, $whence = SEEK_SET): void;
+	public function seek(int $offset, int $whence = SEEK_SET): void;
 
 	public function rewind(): void;
 
 	public function isWriteable(): bool;
 
 	/**
-	 * @return positive-int|0
-	 *
 	 * @param string $string
+	 *
+	 * @return int<0, max>
 	 */
 	public function write(string $string): int;
 

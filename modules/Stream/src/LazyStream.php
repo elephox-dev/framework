@@ -72,7 +72,7 @@ class LazyStream extends AbstractStream
 		return $this->getStream()->eof();
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek(int $offset, int $whence = SEEK_SET): void
 	{
 		$this->getStream()->seek($offset, $whence);
 	}

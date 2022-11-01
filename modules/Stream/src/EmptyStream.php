@@ -49,7 +49,7 @@ final class EmptyStream extends AbstractStream
 		return false;
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek(int $offset, int $whence = SEEK_SET): void
 	{
 		throw new RuntimeException('Empty stream is not seekable.');
 	}

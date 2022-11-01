@@ -14,7 +14,7 @@ class ResourceStream extends AbstractStream
 	 * @param bool $readable
 	 * @param bool $writeable
 	 * @param bool $seekable
-	 * @param null|positive-int|0 $size
+	 * @param null|int<0, max> $size
 	 */
 	public function __construct(
 		private mixed $resource,
@@ -85,7 +85,7 @@ class ResourceStream extends AbstractStream
 
 		$stats = fstat($this->resource);
 		if (is_array($stats)) {
-			/** @var positive-int|0 */
+			/** @var int<0, max> */
 			$this->size = $stats['size'];
 		}
 
@@ -98,7 +98,7 @@ class ResourceStream extends AbstractStream
 			throw new RuntimeException('Resource is not available');
 		}
 
-		/** @var positive-int|false|0 $position */
+		/** @var int<0, max>|false $position */
 		$position = ftell($this->resource);
 		if ($position === false) {
 			throw new RuntimeException('Unable to determine the current position');
@@ -122,7 +122,7 @@ class ResourceStream extends AbstractStream
 		return $this->seekable;
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek(int $offset, int $whence = SEEK_SET): void
 	{
 		if (!is_resource($this->resource)) {
 			throw new RuntimeException('Resource is not available');
@@ -160,7 +160,7 @@ class ResourceStream extends AbstractStream
 
 		$this->size = null;
 
-		/** @var false|positive-int|0 $written */
+		/** @var false|int<0, max> $written */
 		$written = fwrite($this->resource, $string);
 		if ($written === false) {
 			throw new RuntimeException('Unable to write to resource');

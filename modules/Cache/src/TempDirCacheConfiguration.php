@@ -24,7 +24,7 @@ class TempDirCacheConfiguration extends AbstractCacheConfiguration
 	 * @param DateInterval|int|null $ttl
 	 * @param non-empty-string|null $cacheId
 	 * @param Directory|null $tempDir
-	 * @param positive-int|0 $writeBackThreshold
+	 * @param int<0, max> $writeBackThreshold
 	 */
 	#[Pure]
 	public function __construct(

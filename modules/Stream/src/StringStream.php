@@ -25,7 +25,7 @@ class StringStream extends AbstractStream
 	private bool $detached = false;
 
 	/**
-	 * @var positive-int|0 $pointer
+	 * @var int<0, max> $pointer
 	 */
 	private int $pointer = 0;
 
@@ -82,7 +82,7 @@ class StringStream extends AbstractStream
 		return $this->seekable;
 	}
 
-	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
+	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
 	{
 		if (!$this->isSeekable()) {
 			throw new RuntimeException('Stream is not seekable');
