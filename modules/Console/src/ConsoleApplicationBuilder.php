@@ -40,12 +40,12 @@ class ConsoleApplicationBuilder
 		$services ??= new ServiceCollection();
 		$commands ??= new CommandCollection($services->resolver());
 
-		$services->addSingleton(Environment::class, implementation: $environment);
-		$services->addSingleton(ConsoleEnvironment::class, implementation: $environment);
+		$services->addSingleton(Environment::class, instance: $environment);
+		$services->addSingleton(ConsoleEnvironment::class, instance: $environment);
 
-		$services->addSingleton(Configuration::class, implementation: $configuration);
+		$services->addSingleton(Configuration::class, instance: $configuration);
 
-		$services->addSingleton(CommandCollection::class, implementation: $commands);
+		$services->addSingleton(CommandCollection::class, instance: $commands);
 
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 		$services->addSingleton(ErrorHandler::class, DefaultExceptionHandler::class);
@@ -100,7 +100,7 @@ class ConsoleApplicationBuilder
 	public function build(): ConsoleApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
+		$this->services->addSingleton(Configuration::class, instance: $configuration, replace: true);
 
 		if ($this->services->has(ExceptionHandler::class)) {
 			set_exception_handler(function (Throwable $exception): void {

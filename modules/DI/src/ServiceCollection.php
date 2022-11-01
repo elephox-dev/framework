@@ -76,8 +76,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	private function registerSelf(): void
 	{
-		$this->addSingleton(Contract\ServiceCollection::class, implementation: $this);
-		$this->addSingleton(Resolver::class, implementation: $this);
+		$this->addSingleton(Contract\ServiceCollection::class, instance: $this);
+		$this->addSingleton(Resolver::class, instance: $this);
 	}
 
 	protected function getServices(): ServiceCollectionContract
@@ -178,14 +178,14 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		return $this->add(new ServiceDescriptor($service, $concrete, $lifetime, $factory, $implementation), $replace);
 	}
 
-	public function addTransient(string $service, string $concrete, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
+	public function addTransient(string $service, string $concrete, ?Closure $factory = null, ?object $instance = null, bool $replace = false): Contract\ServiceCollection
 	{
-		return $this->describe($service, $concrete, ServiceLifetime::Transient, $factory, $implementation, $replace);
+		return $this->describe($service, $concrete, ServiceLifetime::Transient, $factory, $instance, $replace);
 	}
 
-	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
+	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null, bool $replace = false): Contract\ServiceCollection
 	{
-		if ($concrete === null && $implementation === null) {
+		if ($concrete === null && $instance === null) {
 			if (class_exists($service)) {
 				$concrete = $service;
 			} else {
@@ -193,9 +193,9 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			}
 		}
 
-		$concrete ??= $implementation::class;
+		$concrete ??= $instance::class;
 
-		return $this->describe($service, $concrete, ServiceLifetime::Singleton, $factory, $implementation, $replace);
+		return $this->describe($service, $concrete, ServiceLifetime::Singleton, $factory, $instance, $replace);
 	}
 
 	/**
@@ -457,24 +457,24 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	/**
 	 * @template TService of object
 	 *
-	 * @return TService|null
+	 * @param string $id
+	 *@return TService|null
 	 *
 	 * @throws InvalidArgumentException if the alias is empty
 	 *
-	 * @param string $aliasOrServiceName
 	 */
-	public function get(string $aliasOrServiceName): ?object
+	public function get(string $id): ?object
 	{
-		if (empty($aliasOrServiceName)) {
+		if (empty($id)) {
 			throw new InvalidArgumentException('Alias or service name must not be empty.');
 		}
 
-		if ($this->hasAlias($aliasOrServiceName)) {
-			return $this->getByAlias($aliasOrServiceName);
+		if ($this->hasAlias($id)) {
+			return $this->getByAlias($id);
 		}
 
-		/** @var class-string<TService> $aliasOrServiceName */
-		return $this->getService($aliasOrServiceName);
+		/** @var class-string<TService> $id */
+		return $this->getService($id);
 	}
 
 	/**
@@ -523,14 +523,14 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		return $this;
 	}
 
-	public function has(string $aliasOrServiceName): bool
+	public function has(string $id): bool
 	{
-		if (empty($aliasOrServiceName)) {
+		if (empty($id)) {
 			throw new InvalidArgumentException('Alias or service name must not be empty.');
 		}
 
-		/** @var class-string $aliasOrServiceName */
-		return $this->hasAlias($aliasOrServiceName) || $this->hasService($aliasOrServiceName);
+		/** @var class-string $id */
+		return $this->hasAlias($id) || $this->hasService($id);
 	}
 
 	public function removeService(string $serviceName): Contract\ServiceCollection
@@ -595,5 +595,15 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		$this->removeService($aliasOrServiceName);
 
 		return $this;
+	}
+
+	public function requireServiceLate(string $serviceName): callable
+	{
+		return fn () => $this->requireService($serviceName);
+	}
+
+	public function requireLate(string $aliasOrServiceName): callable
+	{
+		return fn () => $this->require($aliasOrServiceName);
 	}
 }

@@ -6,7 +6,7 @@ namespace Elephox\DI;
 use Closure;
 
 /**
- * Update TImplementation to extend TService once vimeo/psalm#7795 is resolved.
+ * TODO: Update TImplementation to extend TService once vimeo/psalm#7795 is resolved.
  *
  * @psalm-type service-object = object
  *
@@ -25,8 +25,8 @@ class ServiceDescriptor
 	public function __construct(
 		public readonly string $serviceType,
 		public readonly string $implementationType,
-		public ServiceLifetime $lifetime,
-		public ?Closure $implementationFactory,
+		public readonly ServiceLifetime $lifetime,
+		public readonly ?Closure $implementationFactory,
 		public ?object $instance,
 	) {
 		if ($this->implementationFactory === null && $this->instance === null) {

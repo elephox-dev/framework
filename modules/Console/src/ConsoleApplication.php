@@ -28,7 +28,7 @@ class ConsoleApplication
 		public readonly ConsoleEnvironment $environment,
 		public readonly CommandCollection $commands,
 	) {
-		$this->services->addSingleton(__CLASS__, implementation: $this);
+		$this->services->addSingleton(__CLASS__, instance: $this);
 	}
 
 	public function logger(): LoggerInterface

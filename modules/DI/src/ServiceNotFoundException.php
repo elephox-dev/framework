@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
+use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
 
-class ServiceNotFoundException extends ServiceException
+class ServiceNotFoundException extends ServiceException implements NotFoundExceptionInterface
 {
 	public function __construct(string $serviceName, int $code = 0, ?Throwable $previous = null)
 	{

@@ -24,7 +24,7 @@ class WebApplication
 		public readonly WebEnvironment $environment,
 		public readonly RequestPipeline $pipeline,
 	) {
-		$this->services->addSingleton(__CLASS__, implementation: $this);
+		$this->services->addSingleton(__CLASS__, instance: $this);
 	}
 
 	public function exceptionHandler(): ExceptionHandler
@@ -50,7 +50,7 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
-		$this->services->addSingleton(RequestContract::class, implementation: $request, replace: true);
+		$this->services->addSingleton(RequestContract::class, instance: $request, replace: true);
 
 		return $this->pipeline->process($request)->get();
 	}

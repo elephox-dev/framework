@@ -134,7 +134,7 @@ class RouteHandler implements Contract\RouteHandler
 		$request = $services->requireService(Request::class);
 
 		$matchedParametersMap = MatchedUrlParametersMap::fromRegex($this->getNormalizedRequestRoute($request), $this->pathRegex);
-		$services->addSingleton(MatchedUrlParametersMap::class, implementation: $matchedParametersMap, replace: true);
+		$services->addSingleton(MatchedUrlParametersMap::class, instance: $matchedParametersMap, replace: true);
 
 		/** @var ResponseBuilder */
 		return $services->resolver()->callback($this->handler, [

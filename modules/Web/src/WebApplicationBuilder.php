@@ -51,9 +51,9 @@ class WebApplicationBuilder
 		};
 		$pipeline ??= new RequestPipelineBuilder($defaultEndpoint, $services->resolver());
 
-		$services->addSingleton(Environment::class, implementation: $environment);
-		$services->addSingleton(WebEnvironment::class, implementation: $environment);
-		$services->addSingleton(Configuration::class, implementation: $configuration);
+		$services->addSingleton(Environment::class, instance: $environment);
+		$services->addSingleton(WebEnvironment::class, instance: $environment);
+		$services->addSingleton(Configuration::class, instance: $configuration);
 		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 
 		return new static(
@@ -115,10 +115,10 @@ class WebApplicationBuilder
 	public function build(): WebApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->addSingleton(Configuration::class, implementation: $configuration, replace: true);
+		$this->services->addSingleton(Configuration::class, instance: $configuration, replace: true);
 
 		$builtPipeline = $this->pipeline->build();
-		$this->services->addSingleton(RequestPipeline::class, implementation: $builtPipeline, replace: true);
+		$this->services->addSingleton(RequestPipeline::class, instance: $builtPipeline, replace: true);
 
 		if ($this->services->has(ExceptionHandler::class)) {
 			set_exception_handler(function (Throwable $exception): void {
@@ -149,7 +149,7 @@ class WebApplicationBuilder
 	public function setRequestRouterEndpoint(?RequestRouter $router = null): RequestRouter
 	{
 		$router ??= new RequestRouter($this->services);
-		$this->services->addSingleton(RequestRouter::class, implementation: $router, replace: true);
+		$this->services->addSingleton(RequestRouter::class, instance: $router, replace: true);
 		$this->pipeline->endpoint($router);
 
 		return $router;

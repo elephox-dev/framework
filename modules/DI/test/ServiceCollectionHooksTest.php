@@ -118,7 +118,7 @@ class ServiceCollectionHooksTest extends TestCase
 
 		$this->serviceCollection?->registerHooks($storage);
 		$implementation = new stdClass();
-		$this->serviceCollection?->addSingleton(stdClass::class, implementation: $implementation);
+		$this->serviceCollection?->addSingleton(stdClass::class, instance: $implementation);
 		$this->serviceCollection?->get(stdClass::class);
 
 		static::assertNotNull($storage->data);
@@ -133,7 +133,7 @@ class ServiceCollectionHooksTest extends TestCase
 
 		$this->serviceCollection?->registerHooks($storage);
 		$implementation = new stdClass();
-		$this->serviceCollection?->addSingleton(stdClass::class, implementation: $implementation);
+		$this->serviceCollection?->addSingleton(stdClass::class, instance: $implementation);
 		$this->serviceCollection?->get(stdClass::class);
 
 		static::assertNotNull($storage->data);
