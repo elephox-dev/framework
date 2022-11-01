@@ -27,7 +27,7 @@ class ArrTest extends TestCase
 		$arr2 = Arr::wrap('test');
 		static::assertSame(['test'], $arr2->getSource());
 
-		$arr3 = Arr::wrap([1, 3, 4]);
+		$arr3 = arr(1, 3, 4);
 		static::assertSame([1, 3, 4], $arr3->getSource());
 	}
 

@@ -90,7 +90,10 @@
             "Elephox\\Stream\\": "modules/Stream/src/",
             "Elephox\\Support\\": "modules/Support/src/",
             "Elephox\\Web\\": "modules/Web/src/"
-        }
+        },
+        "files": [
+            "modules/OOR/shortcuts.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
