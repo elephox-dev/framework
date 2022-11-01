@@ -8,7 +8,7 @@ use Elephox\Http\RequestMethod;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Attribute\Controller;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_FUNCTION | Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Put extends Controller implements RouteAttribute
 {
 	public function __construct(?string $path = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)

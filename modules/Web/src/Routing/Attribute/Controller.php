@@ -10,7 +10,7 @@ use Elephox\Http\RequestMethod;
 use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use InvalidArgumentException;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_FUNCTION | Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class Controller implements ControllerAttribute
 {
 	public const DEFAULT_PATH = '';
