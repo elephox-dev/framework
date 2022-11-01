@@ -8,6 +8,8 @@ use Elephox\OOR\Casing;
 
 trait TransparentGetterSetter
 {
+	use GetterSetterPrefixBuilder;
+
 	/**
 	 * @return iterable<mixed, string>
 	 *
@@ -17,9 +19,9 @@ trait TransparentGetterSetter
 	{
 		$getterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
 
-		yield 'get' . $getterPropertyName;
-		yield 'is' . $getterPropertyName;
-		yield 'has' . $getterPropertyName;
+		foreach ($this->buildGetterPrefixes() as $prefix) {
+			yield $prefix . $getterPropertyName;
+		}
 	}
 
 	/**
@@ -31,8 +33,9 @@ trait TransparentGetterSetter
 	{
 		$setterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
 
-		yield 'set' . $setterPropertyName;
-		yield 'put' . $setterPropertyName;
+		foreach ($this->buildSetterPrefixes() as $prefix) {
+			yield $prefix . $setterPropertyName;
+		}
 	}
 
 	public function __get(string $name)
