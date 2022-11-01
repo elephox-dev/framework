@@ -399,4 +399,31 @@ class ArrayListTest extends TestCase
 		static::assertTrue($list->contains(3));
 		static::assertFalse($list->contains(4));
 	}
+
+	public function testInsertAt(): void
+	{
+		$list = new ArrayList(['a', 'b', 'c']);
+
+		$list->insertAt(0, 'z');
+		$list->insertAt(2, '-');
+		$list->insertAt(5, 'd');
+
+		static::assertCount(6, $list);
+		static::assertSame(['z', 'a', '-', 'b', 'c', 'd'], $list->toArray());
+	}
+
+	public function testSlice(): void
+	{
+		$list = new ArrayList(range(0, 5));
+
+		$start = $list->slice(0, 2);
+		static::assertCount(2, $start);
+		static::assertSame(0, $start[0]);
+		static::assertSame(1, $start[1]);
+
+		$end = $list->slice(4, 2);
+		static::assertCount(2, $end);
+		static::assertSame(4, $end[0]);
+		static::assertSame(5, $end[1]);
+	}
 }

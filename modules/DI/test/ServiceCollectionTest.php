@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
+use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\Data\TestServiceClass;
 use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
@@ -162,8 +163,9 @@ class ServiceCollectionTest extends MockeryTestCase
 
 	public function testServiceResolverInstantiateWithConstructor(): void
 	{
-		$serviceCollection = M::mock(\Elephox\DI\Contract\ServiceCollection::class);
-		$resolver = M::mock(ServiceResolver::class)->shouldAllowMockingProtectedMethods();
+		$serviceCollection = M::mock(ServiceCollectionContract::class);
+		$resolver = M::mock(ServiceResolver::class);
+		$resolver->shouldAllowMockingProtectedMethods();
 		$resolver
 			->allows('getServices')
 			->twice()
@@ -188,5 +190,22 @@ class ServiceCollectionTest extends MockeryTestCase
 
 		static::assertInstanceOf(TestServiceClassWithConstructor::class, $instance);
 		static::assertSame($testServiceClass, $instance->testService);
+	}
+
+	public function testRequireLate(): void
+	{
+		$serviceCollection = new ServiceCollection();
+		$service = new TestServiceClass();
+		$serviceCollection->addSingleton(TestServiceClass::class, instance: $service);
+
+		$callback = $serviceCollection->requireLate(TestServiceClass::class);
+		$returned = $callback();
+
+		static::assertSame($returned, $service);
+
+		$callbackService = $serviceCollection->requireServiceLate(TestServiceClass::class);
+		$returnedService = $callbackService();
+
+		static::assertSame($returnedService, $service);
 	}
 }

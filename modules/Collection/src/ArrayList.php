@@ -301,11 +301,15 @@ class ArrayList implements GenericList
 	}
 
 	/**
-	 * @param int $index
 	 * @param T $value
 	 */
 	public function insertAt(int $index, mixed $value): void
 	{
 		array_splice($this->items, $index, 0, [$value]);
+	}
+
+	public function slice(int $offset, ?int $length = null): static
+	{
+		return new ArrayList(array_slice($this->items, $offset, $length));
 	}
 }
