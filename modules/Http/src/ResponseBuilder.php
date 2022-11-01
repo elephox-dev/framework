@@ -71,6 +71,17 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->exception;
 	}
 
+	public function textBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static
+	{
+		$this->body(new StringStream($content));
+
+		if ($mimeType) {
+			$this->contentType($mimeType);
+		}
+
+		return $this;
+	}
+
 	/**
 	 * @throws JsonException
 	 *
@@ -80,25 +91,13 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function jsonBody(array $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
-		$jsonStream = new StringStream($json);
-		$this->body($jsonStream);
 
-		if ($mimeType) {
-			$this->contentType($mimeType);
-		}
-
-		return $this;
+		return $this->textBody($json, $mimeType);
 	}
 
 	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static
 	{
-		$this->body(new StringStream($content));
-
-		if ($mimeType) {
-			$this->contentType($mimeType);
-		}
-
-		return $this;
+		return $this->textBody($content, $mimeType);
 	}
 
 	public function fileBody(string $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static
