@@ -177,16 +177,13 @@ trait ServiceResolver
 		if ($type instanceof ReflectionUnionType) {
 			$typeNames = array_map(static fn (ReflectionNamedType $t) => $t->getName(), $type->getTypes());
 		} else {
-			/**
-			 * @psalm-suppress UndefinedMethod
-			 */
+			/** @var ReflectionNamedType $type */
 			$typeNames = [$type->getName()];
 		}
 
+		/** @var list<class-string> $typeNames */
+
 		if ($possibleArgument === null) {
-			/**
-			 * @var list<class-string> $typeNames
-			 */
 			foreach ($typeNames as $typeName) {
 				try {
 					return $this->getServices()->requireService($typeName);

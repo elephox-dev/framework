@@ -249,7 +249,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 					$hook->unknownServiceRequested($requestedData);
 				}
 
-				if ($requestedData->serviceDescriptor === null) {
+				if (!$requestedData->hasServiceDescriptor()) {
 					throw new ServiceNotFoundException($serviceName);
 				}
 
@@ -273,7 +273,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		$factory = $this->getImplementationFactory($descriptor);
 
 		try {
-			/** @var TService */
+			/** @var TService $service */
 			$service = $this->callback($factory);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($serviceName, previous: $e);
