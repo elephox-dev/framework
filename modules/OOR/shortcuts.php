@@ -7,14 +7,16 @@ use JetBrains\PhpStorm\Pure;
 
 if (!function_exists('arr')) {
 	#[Pure]
-	function arr(mixed ...$values): Arr {
+	function arr(mixed ...$values): Arr
+	{
 		return Arr::wrap(...$values);
 	}
 }
 
 if (!function_exists('str')) {
 	#[Pure]
-	function str(string|Stringable|Str $string): Str {
+	function str(string|Stringable|Str $string): Str
+	{
 		return Str::wrap($string);
 	}
 }
