@@ -59,7 +59,6 @@ class EnhancedMessageSink implements Sink, SinkProxy
 	{
 		return match ($level->getLevel()) {
 			LogLevel::DEBUG->getLevel() => 'gray',
-			LogLevel::INFO->getLevel() => 'white',
 			LogLevel::NOTICE->getLevel() => 'cyan',
 			LogLevel::WARNING->getLevel() => 'yellow',
 			LogLevel::ERROR->getLevel() => 'red',
