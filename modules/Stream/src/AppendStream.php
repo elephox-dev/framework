@@ -135,10 +135,9 @@ class AppendStream extends AbstractStream
 	public function read(int $length): string
 	{
 		$streamSize = $this->stream->getSize();
-		$appendedStreamSize = $this->appendedStream->getSize();
 
-		if ($streamSize === null || $appendedStreamSize === null) {
-			throw new RuntimeException('AppendStream is only readable if the underlying streams sizes are known');
+		if ($streamSize === null) {
+			throw new RuntimeException('AppendStream is only readable if the underlying stream size is known');
 		}
 
 		$tell = $this->tell();
