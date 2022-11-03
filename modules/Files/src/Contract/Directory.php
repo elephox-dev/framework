@@ -17,27 +17,52 @@ interface Directory extends FilesystemNode
 {
 	/**
 	 * @return GenericKeyedEnumerable<int, File>
+	 *
+	 * @throws DirectoryNotFoundException
 	 */
 	public function files(): GenericKeyedEnumerable;
 
 	public function file(string $filename): File;
 
 	/**
+	 * @return GenericKeyedEnumerable<int, File>
+	 *
+	 * @throws DirectoryNotFoundException
+	 */
+	public function recurseFiles(): GenericKeyedEnumerable;
+
+	/**
 	 * @return GenericKeyedEnumerable<int, Directory>
+	 *
+	 * @throws DirectoryNotFoundException
 	 */
 	public function directories(): GenericKeyedEnumerable;
 
 	public function directory(string $dirname): self;
 
 	/**
+	 * @return GenericKeyedEnumerable<int, Directory>
+	 *
+	 * @throws DirectoryNotFoundException
+	 */
+	public function recurseDirectories(): GenericKeyedEnumerable;
+
+	/**
 	 * @return GenericKeyedEnumerable<int, FilesystemNode>
+	 *
+	 * @throws DirectoryNotFoundException
 	 */
 	public function children(): GenericKeyedEnumerable;
 
 	/**
-	 * @throws FilesystemNodeNotFoundException
+	 * @return GenericKeyedEnumerable<int, FilesystemNode>
 	 *
-	 * @param string $name
+	 * @throws DirectoryNotFoundException
+	 */
+	public function recurseChildren(bool $ignoreExceptions = false): GenericKeyedEnumerable;
+
+	/**
+	 * @throws FilesystemNodeNotFoundException
 	 */
 	public function child(string $name): FilesystemNode;
 

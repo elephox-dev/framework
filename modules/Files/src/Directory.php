@@ -7,6 +7,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Files\Contract\FilesystemNode;
 use JetBrains\PhpStorm\Pure;
+use Throwable;
 
 class Directory extends AbstractFilesystemNode implements Contract\Directory
 {
@@ -16,10 +17,22 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 		return $this->children()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\File);
 	}
 
+	public function recurseFiles(): GenericKeyedEnumerable
+	{
+		/** @var GenericKeyedEnumerable<int, Contract\File> */
+		return $this->recurseChildren()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\File);
+	}
+
 	public function directories(): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, Contract\Directory> */
 		return $this->children()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\Directory);
+	}
+
+	public function recurseDirectories(): GenericKeyedEnumerable
+	{
+		/** @var GenericKeyedEnumerable<int, Contract\Directory> */
+		return $this->recurseChildren()->where(static fn (Contract\FilesystemNode $node) => $node instanceof Contract\Directory);
 	}
 
 	public function children(): GenericKeyedEnumerable
@@ -28,8 +41,10 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			throw new DirectoryNotFoundException($this->path());
 		}
 
-		/** @var list<string> $nodes */
-		$nodes = scandir($this->path());
+		$nodes = @scandir($this->path());
+		if ($nodes === false) {
+			throw new DirectoryCouldNotBeScannedException($this->path());
+		}
 
 		/** @var GenericKeyedEnumerable<int, FilesystemNode> */
 		return ArrayList::from($nodes)
@@ -43,6 +58,32 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 				return new File($path);
 			})
 		;
+	}
+
+	public function recurseChildren(bool $ignoreExceptions = false): GenericKeyedEnumerable
+	{
+		if (!$this->exists()) {
+			throw new DirectoryNotFoundException($this->path());
+		}
+
+		/** @var GenericKeyedEnumerable<int, Contract\FilesystemNode> */
+		return $this->children()->selectMany(
+			static function (Contract\FilesystemNode $node) use ($ignoreExceptions): iterable {
+				if ($node instanceof Contract\Directory) {
+					try {
+						return [$node, ...$node->recurseChildren()];
+					} catch (Throwable $t) {
+						if ($ignoreExceptions) {
+							return [$node];
+						}
+
+						throw $t;
+					}
+				}
+
+				return [$node];
+			},
+		);
 	}
 
 	#[Pure]

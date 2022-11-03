@@ -18,8 +18,10 @@ use RuntimeException;
  * @covers \Elephox\Files\FileNotFoundException
  * @covers \Elephox\Files\FileException
  * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
  * @covers \Elephox\Collection\KeyedEnumerable
  * @covers \Elephox\Files\FilesystemNodeNotFoundException
+ * @covers \Elephox\Files\DirectoryCouldNotBeScannedException
  * @covers \Elephox\Files\UnknownFilesystemNode
  * @covers \Elephox\Files\AbstractFilesystemNode
  * @covers \Elephox\Collection\IteratorProvider
@@ -40,12 +42,13 @@ class DirectoryTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->fileHandle = tmpfile();
-		if ($this->fileHandle === false) {
+		$handle = tmpfile();
+		if ($handle === false) {
 			throw new RuntimeException('Could not create temporary file.');
 		}
 
-		$this->filePath = stream_get_meta_data($this->fileHandle)['uri'];
+		$this->fileHandle = $handle;
+		$this->filePath = stream_get_meta_data($handle)['uri'];
 		$this->dirPath = dirname($this->filePath);
 
 		$emptyDir = $this->dirPath . DIRECTORY_SEPARATOR . 'test';
@@ -141,6 +144,17 @@ class DirectoryTest extends TestCase
 
 		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
 		static::assertEmpty($testDirectory->children());
+	}
+
+	public function testRecurseChildren(): void
+	{
+		$directory = new Directory($this->dirPath);
+		$children = $directory->recurseChildren(true);
+		static::assertNotEmpty($children);
+		static::assertContainsOnlyInstancesOf(FilesystemNode::class, $children);
+
+		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
+		static::assertEmpty($testDirectory->recurseChildren());
 	}
 
 	public function testNonExistentGetChildren(): void
