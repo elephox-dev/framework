@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Configuration\MemoryEnvironment
  * @covers \Elephox\Files\AbstractFilesystemNode
  * @covers \Elephox\Configuration\DotEnvEnvironment
+ * @covers \Elephox\Files\File
  *
  * @internal
  */
