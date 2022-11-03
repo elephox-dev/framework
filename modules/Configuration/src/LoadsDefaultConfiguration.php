@@ -13,22 +13,29 @@ trait LoadsDefaultConfiguration
 
 	protected function loadDotEnvFile(): void
 	{
-		$envFile = $this->getEnvironment()->getDotEnvFileName();
-		$this->getEnvironment()->loadFromEnvFile($envFile);
+		$environment = $this->getEnvironment();
 
-		$localEnvFile = $this->getEnvironment()->getDotEnvFileName(true);
-		$this->getEnvironment()->loadFromEnvFile($localEnvFile);
+		assert($environment instanceof DotEnvEnvironment);
+
+		$envFile = $environment->getDotEnvFileName();
+		$environment->loadFromEnvFile($envFile);
+
+		$localEnvFile = $environment->getDotEnvFileName(true);
+		$environment->loadFromEnvFile($localEnvFile);
 	}
 
 	protected function loadEnvironmentDotEnvFile(): void
 	{
-		$envName = $this->getEnvironment()->environmentName();
+		$environment = $this->getEnvironment();
+		$envName = $environment->environmentName();
 
-		$envFile = $this->getEnvironment()->getDotEnvFileName(envName: $envName);
-		$this->getEnvironment()->loadFromEnvFile($envFile);
+		assert($environment instanceof DotEnvEnvironment);
 
-		$localEnvFile = $this->getEnvironment()->getDotEnvFileName(true, $envName);
-		$this->getEnvironment()->loadFromEnvFile($localEnvFile);
+		$envFile = $environment->getDotEnvFileName(envName: $envName);
+		$environment->loadFromEnvFile($envFile);
+
+		$localEnvFile = $environment->getDotEnvFileName(true, $envName);
+		$environment->loadFromEnvFile($localEnvFile);
 	}
 
 	protected function loadConfigFile(): void
