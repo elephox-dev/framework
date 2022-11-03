@@ -17,7 +17,7 @@ interface FilesystemNode extends Stringable
 	public function modifiedAt(): DateTimeInterface;
 
 	/**
-	 * @param int<0, max> $levels
+	 * @param int<1, max> $levels
 	 */
 	public function parent(int $levels = 1): Directory;
 
