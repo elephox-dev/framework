@@ -286,6 +286,15 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function select(callable $selector): self;
 
 	/**
+	 * @template TResult
+	 *
+	 * @param callable(TIteratorKey, TSource): TResult $keySelector
+	 *
+	 * @return GenericKeyedEnumerable<TResult, TSource>
+	 */
+	public function selectKeys(callable $keySelector): self;
+
+	/**
 	 * @template TCollection
 	 * @template TCollectionKey
 	 * @template TResult

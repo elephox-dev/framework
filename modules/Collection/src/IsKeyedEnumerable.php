@@ -643,6 +643,18 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @template TResult
+	 *
+	 * @param callable(TIteratorKey, TSource): TResult $keySelector
+	 *
+	 * @return GenericKeyedEnumerable<TResult, TSource>
+	 */
+	public function selectKeys(callable $keySelector): GenericKeyedEnumerable
+	{
+		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $keySelector(...)));
+	}
+
+	/**
 	 * @template TCollection
 	 * @template TCollectionKey
 	 * @template TResult

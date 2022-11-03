@@ -465,6 +465,16 @@ class KeyedEnumerableTest extends TestCase
 		);
 	}
 
+	public function testSelectKeys(): void
+	{
+		static::assertSame(
+			[0 => 1, 2 => 2, 4 => 3, 6 => 4, 8 => 5],
+			KeyedEnumerable::range(1, 5)
+				->selectKeys(static fn (int $k): int => $k * 2)
+				->toArray(),
+		);
+	}
+
 	public function testSelectMany(): void
 	{
 		static::assertSame(
