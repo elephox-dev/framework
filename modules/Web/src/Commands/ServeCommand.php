@@ -86,7 +86,6 @@ class ServeCommand implements CommandHandler
 
 		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 
-		/** @psalm-suppress UnusedClosureParam */
 		$onEnvFileChanged = function (FileChangedEvent $fileChangedEvent) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
 			$this->logger->warning($fileChangedEvent->file()->name() . ' file changed. Restarting server...');
 
