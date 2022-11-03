@@ -67,5 +67,8 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	 */
 	public function lastIndexOf(mixed $value, ?callable $comparer = null): ?int;
 
+	/**
+	 * @return GenericList<T>&static
+	 */
 	public function slice(int $offset, ?int $length = null): static;
 }

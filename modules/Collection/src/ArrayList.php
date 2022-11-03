@@ -308,8 +308,12 @@ class ArrayList implements GenericList
 		array_splice($this->items, $index, 0, [$value]);
 	}
 
+	/**
+	 * @return ArrayList<T>&static
+	 */
 	public function slice(int $offset, ?int $length = null): static
 	{
+		/** @var ArrayList<T>&static */
 		return new self(array_slice($this->items, $offset, $length));
 	}
 }
