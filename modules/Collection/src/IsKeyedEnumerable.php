@@ -647,7 +647,7 @@ trait IsKeyedEnumerable
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource, TIteratorKey): GenericKeyedEnumerable<TCollectionKey, TCollection> $collectionSelector
+	 * @param callable(TSource, TIteratorKey): iterable<TCollectionKey, TCollection> $collectionSelector
 	 * @param null|callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>

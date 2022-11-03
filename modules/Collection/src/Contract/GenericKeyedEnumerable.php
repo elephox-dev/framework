@@ -290,7 +290,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 * @template TCollectionKey
 	 * @template TResult
 	 *
-	 * @param callable(TSource, TIteratorKey): GenericKeyedEnumerable<TCollection, TCollectionKey> $collectionSelector
+	 * @param callable(TSource, TIteratorKey): iterable<TCollection, TCollectionKey> $collectionSelector
 	 * @param null|callable(TSource, TCollection, TIteratorKey, TCollectionKey): TResult $resultSelector
 	 *
 	 * @return GenericKeyedEnumerable<TCollectionKey, TResult>
