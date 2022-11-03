@@ -7,6 +7,7 @@ use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \Elephox\Support\GetterSetterPrefixBuilder
  * @covers \Elephox\Support\TransparentProperties
  * @covers \Elephox\OOR\Casing
  *
