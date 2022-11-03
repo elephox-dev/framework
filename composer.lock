@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02f47ad4fe1bc6744cadbb6a3e0cf000",
+    "content-hash": "b94a3214a81cf067f63b523cda9c6f2e",
     "packages": [
         {
             "name": "elephox/mimey",
-            "version": "4.0.2",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/mimey.git",
-                "reference": "8001940bf233d02a7f7fb264d02aa1b25d7ded71"
+                "reference": "cb82c4ccbd5e3e276aaf21a70413001af29363cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/8001940bf233d02a7f7fb264d02aa1b25d7ded71",
-                "reference": "8001940bf233d02a7f7fb264d02aa1b25d7ded71",
+                "url": "https://api.github.com/repos/elephox-dev/mimey/zipball/cb82c4ccbd5e3e276aaf21a70413001af29363cf",
+                "reference": "cb82c4ccbd5e3e276aaf21a70413001af29363cf",
                 "shasum": ""
             },
             "require": {
@@ -55,9 +55,9 @@
             ],
             "description": "PHP package for converting file extensions to MIME types and vice versa.",
             "support": {
-                "source": "https://github.com/elephox-dev/mimey/tree/4.0.2"
+                "source": "https://github.com/elephox-dev/mimey/tree/4.0.4"
             },
-            "time": "2022-07-19T21:21:41+00:00"
+            "time": "2022-11-03T19:37:44+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -1205,16 +1205,16 @@
         },
         {
             "name": "composer/pcre",
-            "version": "3.0.0",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/pcre.git",
-                "reference": "e300eb6c535192decd27a85bc72a9290f0d6b3bd"
+                "reference": "4482b6409ca6bfc2af043a5711cd21ac3e7a8dfb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/pcre/zipball/e300eb6c535192decd27a85bc72a9290f0d6b3bd",
-                "reference": "e300eb6c535192decd27a85bc72a9290f0d6b3bd",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/4482b6409ca6bfc2af043a5711cd21ac3e7a8dfb",
+                "reference": "4482b6409ca6bfc2af043a5711cd21ac3e7a8dfb",
                 "shasum": ""
             },
             "require": {
@@ -1256,7 +1256,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/pcre/issues",
-                "source": "https://github.com/composer/pcre/tree/3.0.0"
+                "source": "https://github.com/composer/pcre/tree/3.0.2"
             },
             "funding": [
                 {
@@ -1272,7 +1272,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-25T20:21:48+00:00"
+            "time": "2022-11-03T20:24:16+00:00"
         },
         {
             "name": "composer/semver",
@@ -2987,16 +2987,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.14.5",
+            "version": "2.14.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "a63e5e8f26ebbebf8ed3c5c691637325512eb0dc"
+                "reference": "f7948baaa0330277c729714910336383286305da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/a63e5e8f26ebbebf8ed3c5c691637325512eb0dc",
-                "reference": "a63e5e8f26ebbebf8ed3c5c691637325512eb0dc",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/f7948baaa0330277c729714910336383286305da",
+                "reference": "f7948baaa0330277c729714910336383286305da",
                 "shasum": ""
             },
             "require": {
@@ -3046,7 +3046,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.14.5"
+                "source": "https://github.com/filp/whoops/tree/2.14.6"
             },
             "funding": [
                 {
@@ -3054,7 +3054,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-01-07T12:00:00+00:00"
+            "time": "2022-11-02T16:23:29+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -7644,7 +7644,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2022-10-27T08:24:16+00:00"
+            "time": "2022-11-02T17:44:43+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -7760,7 +7760,8 @@
         "elephox/builder-whoops-handler": 20,
         "elephox/builder-whoops-middleware": 20,
         "ergebnis/composer-normalize": 20,
-        "friendsofphp/php-cs-fixer": 20
+        "friendsofphp/php-cs-fixer": 20,
+        "vimeo/psalm": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
