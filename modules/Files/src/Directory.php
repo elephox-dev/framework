@@ -82,6 +82,10 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 			return new File($path);
 		}
 
+		if (is_link($path)) {
+			return new Link($path);
+		}
+
 		if ($throwForNotFound) {
 			throw new FilesystemNodeNotFoundException($path);
 		}

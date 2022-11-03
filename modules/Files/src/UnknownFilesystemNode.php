@@ -27,4 +27,13 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 
 		return new File($this->path());
 	}
+
+	public function asLink(): Contract\Link
+	{
+		if (!is_link($this->path())) {
+			throw new LinkNotFoundException($this->path());
+		}
+
+		return new Link($this->path());
+	}
 }
