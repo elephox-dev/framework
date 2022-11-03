@@ -457,6 +457,11 @@ trait IsKeyedEnumerable
 		return $this->count() === 0;
 	}
 
+	public function isNotEmpty(): bool
+	{
+		return $this->count() > 0;
+	}
+
 	/**
 	 * @template TInner
 	 * @template TInnerIteratorKey

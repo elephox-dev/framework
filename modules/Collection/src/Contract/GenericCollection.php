@@ -27,6 +27,8 @@ interface GenericCollection
 
 	public function isEmpty(): bool;
 
+	public function isNotEmpty(): bool;
+
 	/**
 	 * @return list<TSource>
 	 */
