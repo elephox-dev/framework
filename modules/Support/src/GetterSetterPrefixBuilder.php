@@ -5,6 +5,9 @@ namespace Elephox\Support;
 
 trait GetterSetterPrefixBuilder
 {
+	/**
+	 * @return iterable<int, non-empty-string>
+	 */
 	protected function buildGetterPrefixes(): iterable
 	{
 		yield 'get';
@@ -12,6 +15,9 @@ trait GetterSetterPrefixBuilder
 		yield 'has';
 	}
 
+	/**
+	 * @return iterable<int, non-empty-string>
+	 */
 	protected function buildSetterPrefixes(): iterable
 	{
 		yield 'set';
