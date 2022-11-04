@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Clock;
 
+use DateInterval;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
@@ -33,6 +34,10 @@ class ValuesDuration extends AbstractDuration
 		assert($this->days >= 0, 'Days must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 		assert($this->months >= 0, 'Months must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 		assert($this->years >= 0, 'Years must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
+	}
+
+	public function toDateInterval(): DateInterval {
+		return AbstractDuration::toInterval($this);
 	}
 
 	#[Pure]

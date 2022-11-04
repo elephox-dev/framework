@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Clock\Contract;
 
+use DateInterval;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
@@ -68,6 +69,8 @@ interface Duration
 		int $months = 0,
 		int $years = 0,
 	): self;
+
+	public function toDateInterval(): DateInterval;
 
 	#[Pure]
 	public function isNegative(): bool;
