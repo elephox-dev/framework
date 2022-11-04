@@ -9,7 +9,6 @@ use Elephox\Collection\ObjectMap;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\DI\Contract\Resolver;
 use InvalidArgumentException;
-use Iterator;
 use IteratorAggregate;
 use Traversable;
 

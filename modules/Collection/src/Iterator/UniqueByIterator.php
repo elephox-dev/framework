@@ -92,7 +92,8 @@ class UniqueByIterator implements OuterIterator
 		return false;
 	}
 
-	public function getInnerIterator(): Iterator {
+	public function getInnerIterator(): Iterator
+	{
 		return $this->iterator;
 	}
 }

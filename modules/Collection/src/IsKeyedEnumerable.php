@@ -659,6 +659,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new SelectIterator($iterator, $selector(...)));
 	}
 
@@ -675,6 +676,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new KeySelectIterator($iterator, $keySelector(...)));
 	}
 
@@ -714,7 +716,6 @@ trait IsKeyedEnumerable
 			$otherIterator = new IteratorIterator($otherIterator);
 		}
 		/** @var Iterator<TIteratorKey, TSource> $otherIterator */
-
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
@@ -792,6 +793,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new LimitIterator($iterator, $count));
 	}
 
@@ -868,6 +870,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new LimitIterator($iterator, 0, $count));
 	}
 
@@ -903,6 +906,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new WhileIterator($iterator, $predicate(...)));
 	}
 
@@ -987,6 +991,7 @@ trait IsKeyedEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new Enumerable(new FlipIterator($iterator));
 	}
 

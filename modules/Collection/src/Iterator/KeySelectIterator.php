@@ -52,7 +52,8 @@ class KeySelectIterator implements OuterIterator
 		$this->iterator->rewind();
 	}
 
-	public function getInnerIterator(): Iterator {
+	public function getInnerIterator(): Iterator
+	{
 		return $this->iterator;
 	}
 }

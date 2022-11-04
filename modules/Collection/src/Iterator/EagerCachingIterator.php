@@ -5,7 +5,6 @@ namespace Elephox\Collection\Iterator;
 
 use ArrayAccess;
 use Countable;
-use Iterator;
 use LogicException;
 use SeekableIterator;
 use Traversable;
@@ -76,7 +75,8 @@ class EagerCachingIterator implements SeekableIterator, ArrayAccess, Countable
 		return isset($this->values[$this->pos]);
 	}
 
-	public function seek(int $offset): void {
+	public function seek(int $offset): void
+	{
 		$this->pos = $offset;
 	}
 

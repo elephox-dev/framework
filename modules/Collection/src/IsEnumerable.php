@@ -569,6 +569,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new Enumerable(new SelectIterator($iterator, $selector(...)));
 	}
 
@@ -627,13 +628,11 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 		/** @var callable(TSource, TSource): bool $comparer */
-
 		$otherIterator = $other->getIterator();
 		if (!($otherIterator instanceof Iterator)) {
 			$otherIterator = new IteratorIterator($otherIterator);
 		}
 		/** @var Iterator<mixed, TSource> $otherIterator */
-
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
@@ -703,6 +702,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new Enumerable(new LimitIterator($iterator, $count));
 	}
 
@@ -777,6 +777,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new Enumerable(new LimitIterator($iterator, 0, $count));
 	}
 
@@ -812,6 +813,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new Enumerable(new WhileIterator($iterator, $predicate(...)));
 	}
 
@@ -870,6 +872,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return self::reindex($iterator)->toArray($keySelector);
 	}
 
@@ -886,6 +889,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return self::reindex($iterator)->toNestedArray($keySelector);
 	}
 
@@ -897,6 +901,7 @@ trait IsEnumerable
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
 		}
+
 		return new KeyedEnumerable(new KeySelectIterator($iterator, $valueProxy(...)));
 	}
 

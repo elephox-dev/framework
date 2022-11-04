@@ -7,7 +7,6 @@ use Closure;
 use Elephox\Collection\Contract\GenericSet;
 use Elephox\Collection\Iterator\FlipIterator;
 use Elephox\Collection\Iterator\SplObjectStorageIterator;
-use Iterator;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 use Traversable;
