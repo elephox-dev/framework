@@ -151,7 +151,7 @@ class ArrayList implements GenericList
 		return true;
 	}
 
-	public function remove(mixed $value, ?callable $comparer = null): bool
+	public function removeValue(mixed $value, ?callable $comparer = null): bool
 	{
 		$index = $this->indexOf($value, $comparer);
 
@@ -205,14 +205,15 @@ class ArrayList implements GenericList
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
+		$lastMatchingIndex = -1;
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
 				/** @var int $index */
-				return $index;
+				$lastMatchingIndex = $index;
 			}
 		}
 
-		return -1;
+		return $lastMatchingIndex;
 	}
 
 	/**
@@ -231,15 +232,12 @@ class ArrayList implements GenericList
 			return array_pop($this->items);
 		}
 
-		/** @var T|null $value */
-		$value = $this->reverse()->firstOrDefault(null, $predicate);
-		if ($value === null) {
+		$key = $this->reverse()->firstKeyOrDefault(null, $predicate);
+		if ($key === null) {
 			throw new EmptySequenceException();
 		}
 
-		$this->remove($value);
-
-		return $value;
+		return $this->removeAt($key);
 	}
 
 	/**
@@ -258,14 +256,12 @@ class ArrayList implements GenericList
 			return array_shift($this->items);
 		}
 
-		$value = $this->firstOrDefault(null, $predicate);
-		if ($value === null) {
+		$key = $this->firstKeyOrDefault(null, $predicate);
+		if ($key === null) {
 			throw new EmptySequenceException();
 		}
 
-		$this->remove($value);
-
-		return $value;
+		return $this->removeAt($key);
 	}
 
 	/**

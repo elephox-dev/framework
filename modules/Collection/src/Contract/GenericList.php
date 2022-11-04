@@ -27,7 +27,7 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	 * @param T $value
 	 * @param null|callable(T, T): bool $comparer
 	 */
-	public function remove(mixed $value, ?callable $comparer = null): bool;
+	public function removeValue(mixed $value, ?callable $comparer = null): bool;
 
 	/**
 	 * @param T $value

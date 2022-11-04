@@ -216,7 +216,7 @@ class ArrayListTest extends TestCase
 
 		static::assertCount(5, $list);
 
-		$removed = $list->remove(3);
+		$removed = $list->removeValue(3);
 
 		static::assertTrue($removed);
 		static::assertSame(4, $list->count());
@@ -273,7 +273,7 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertFalse($list->remove(4));
+		static::assertFalse($list->removeValue(4));
 	}
 
 	public function testRemoveAtOffsetNotExists(): void
