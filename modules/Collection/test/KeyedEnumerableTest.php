@@ -79,7 +79,7 @@ class KeyedEnumerableTest extends TestCase
 	public function testGetIteratorThrowsForInvalidClosure(): void
 	{
 		$this->expectException(AssertionError::class);
-		$this->expectExceptionMessage('Given iterator generator does not return an iterator');
+		$this->expectExceptionMessage('Given iterator generator does not return a Traversable, got null instead');
 
 		$enum = new KeyedEnumerable(static fn () => null);
 		$enum->getIterator();
@@ -450,8 +450,12 @@ class KeyedEnumerableTest extends TestCase
 	public function testReverse(): void
 	{
 		static::assertSame(
-			[5, 4, 3, 2, 1],
+			[4 => 5, 3 => 4, 2 => 3, 1 => 2, 0 => 1],
 			KeyedEnumerable::range(1, 5)->reverse()->toArray(),
+		);
+		static::assertSame(
+			[5, 4, 3, 2, 1],
+			KeyedEnumerable::range(1, 5)->reverse(false)->toArray(),
 		);
 	}
 

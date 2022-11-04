@@ -7,15 +7,17 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 use LogicException;
+use SeekableIterator;
+use Traversable;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @template-implements Iterator<TKey, TValue>
+ * @template-implements SeekableIterator<TKey, TValue>
  * @template-implements ArrayAccess<array-key, TValue>
  */
-class EagerCachingIterator implements Iterator, ArrayAccess, Countable
+class EagerCachingIterator implements SeekableIterator, ArrayAccess, Countable
 {
 	private array $values = [];
 	private array $keys = [];
@@ -23,9 +25,9 @@ class EagerCachingIterator implements Iterator, ArrayAccess, Countable
 	private bool $iterated = false;
 
 	/**
-	 * @param Iterator<TKey, TValue> $iterator
+	 * @param Traversable<TKey, TValue> $iterator
 	 */
-	public function __construct(private readonly Iterator $iterator)
+	public function __construct(private readonly Traversable $iterator)
 	{
 	}
 
@@ -72,6 +74,10 @@ class EagerCachingIterator implements Iterator, ArrayAccess, Countable
 		}
 
 		return isset($this->values[$this->pos]);
+	}
+
+	public function seek(int $offset): void {
+		$this->pos = $offset;
 	}
 
 	public function rewind(): void

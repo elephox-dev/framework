@@ -8,6 +8,7 @@ use ArrayIterator;
 use Elephox\Collection\Contract\GenericMap;
 use InvalidArgumentException;
 use Iterator;
+use Traversable;
 
 /**
  * @template TKey of array-key
@@ -68,7 +69,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	) {
 	}
 
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->items);
 	}

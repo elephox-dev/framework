@@ -5,15 +5,15 @@ namespace Elephox\Collection\Iterator;
 
 use Countable;
 use Iterator;
-use OuterIterator;
+use Traversable;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @implements OuterIterator<TKey, TValue>
+ * @implements Iterator<TKey, TValue>
  */
-class ReverseIterator implements OuterIterator, Countable
+class ReverseIterator implements Iterator, Countable
 {
 	private array $elementStack = [];
 	private array $keyQueue = [];
@@ -22,7 +22,8 @@ class ReverseIterator implements OuterIterator, Countable
 	 * @param Iterator<TKey, TValue> $iterator
 	 */
 	public function __construct(
-		private readonly Iterator $iterator,
+		private readonly Traversable $iterator,
+		private readonly bool $preserveKeys,
 	) {
 	}
 
@@ -35,8 +36,11 @@ class ReverseIterator implements OuterIterator, Countable
 	{
 		prev($this->elementStack);
 
-		// MAYBE: only reverse key order if key is numeric
-		next($this->keyQueue);
+		if ($this->preserveKeys) {
+			prev($this->keyQueue);
+		} else {
+			next($this->keyQueue);
+		}
 	}
 
 	public function key(): mixed
@@ -58,11 +62,9 @@ class ReverseIterator implements OuterIterator, Countable
 			$this->keyQueue[] = $key;
 		}
 		end($this->elementStack);
-	}
-
-	public function getInnerIterator(): Iterator
-	{
-		return $this->iterator;
+		if ($this->preserveKeys) {
+			end($this->keyQueue);
+		}
 	}
 
 	public function count(): int

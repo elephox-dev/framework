@@ -11,6 +11,7 @@ use Elephox\DI\Contract\Resolver;
 use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * @implements IteratorAggregate<CommandTemplate, CommandHandler>
@@ -103,7 +104,7 @@ class CommandCollection implements IteratorAggregate
 			?? throw new CommandNotFoundException($name);
 	}
 
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		return $this->templateMap->getIterator();
 	}

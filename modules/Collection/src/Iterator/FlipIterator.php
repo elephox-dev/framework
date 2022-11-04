@@ -4,14 +4,15 @@ declare(strict_types=1);
 namespace Elephox\Collection\Iterator;
 
 use Iterator;
+use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
  *
- * @implements Iterator<TValue, TKey>
+ * @implements OuterIterator<TValue, TKey>
  */
-class FlipIterator implements Iterator
+class FlipIterator implements OuterIterator
 {
 	public function __construct(
 		private readonly Iterator $iterator,
@@ -41,5 +42,9 @@ class FlipIterator implements Iterator
 	public function rewind(): void
 	{
 		$this->iterator->rewind();
+	}
+
+	public function getInnerIterator(): Iterator {
+		return $this->iterator;
 	}
 }

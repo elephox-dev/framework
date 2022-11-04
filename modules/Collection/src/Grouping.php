@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use Elephox\Collection\Contract\Grouping as GroupingContract;
-use Iterator;
+use Traversable;
 
 /**
  * @template TGroupKey
@@ -22,11 +22,11 @@ class Grouping implements GroupingContract
 
 	/**
 	 * @param TGroupKey $groupKey
-	 * @param Iterator<TKey, TValue> $iterator
+	 * @param Traversable<TKey, TValue> $iterator
 	 */
 	public function __construct(
 		private readonly mixed $groupKey,
-		private readonly Iterator $iterator,
+		private readonly Traversable $iterator,
 	) {
 	}
 
@@ -39,9 +39,9 @@ class Grouping implements GroupingContract
 	}
 
 	/**
-	 * @return Iterator<TKey, TValue>
+	 * @return Traversable<TKey, TValue>
 	 */
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		return $this->iterator;
 	}

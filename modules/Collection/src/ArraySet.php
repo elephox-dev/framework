@@ -6,6 +6,7 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
+use Traversable;
 
 /**
  * @template T
@@ -47,7 +48,7 @@ class ArraySet implements GenericSet
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}
 
-	public function getIterator(): ArrayIterator
+	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->items);
 	}

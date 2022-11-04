@@ -8,6 +8,7 @@ use Elephox\Collection\Iterator\EagerCachingIterator;
 use Generator;
 use Iterator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * @template-covariant TIteratorKey
@@ -18,20 +19,20 @@ use IteratorAggregate;
 class IteratorProvider implements IteratorAggregate
 {
 	/**
-	 * @var null|Iterator<TIteratorKey, TSource>
+	 * @var null|Traversable<TIteratorKey, TSource>
 	 */
-	private ?Iterator $iterator;
+	private ?Traversable $iterator;
 
 	/**
-	 * @var null|Closure(): Iterator<TIteratorKey, TSource>
+	 * @var null|Closure(): Traversable<TIteratorKey, TSource>
 	 */
 	private readonly ?Closure $iteratorGenerator;
 
 	/**
-	 * @param Iterator<TIteratorKey, TSource>|Closure(): Iterator<TIteratorKey, TSource> $iterator
+	 * @param Traversable<TIteratorKey, TSource>|Closure(): Traversable<TIteratorKey, TSource> $iterator
 	 */
 	public function __construct(
-		Iterator|Closure $iterator,
+		Traversable|Closure $iterator,
 	) {
 		if ($iterator instanceof Generator) {
 			$this->iterator = new EagerCachingIterator($iterator);
@@ -48,9 +49,9 @@ class IteratorProvider implements IteratorAggregate
 	/**
 	 * @psalm-suppress ImplementedReturnTypeMismatch Psalm seems to have problems with analyzing traits and abstract classes together...
 	 *
-	 * @return Iterator<TIteratorKey, TSource>
+	 * @return Traversable<TIteratorKey, TSource>
 	 */
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		if ($this->iterator !== null) {
 			return $this->iterator;
@@ -60,7 +61,7 @@ class IteratorProvider implements IteratorAggregate
 
 		$result = ($this->iteratorGenerator)();
 
-		assert($result instanceof Iterator, sprintf('Given iterator generator does not return an iterator, got %s instead', get_debug_type($result)));
+		assert($result instanceof Traversable, sprintf('Given iterator generator does not return a Traversable, got %s instead', get_debug_type($result)));
 
 		if ($result instanceof Generator) {
 			return new EagerCachingIterator($result);

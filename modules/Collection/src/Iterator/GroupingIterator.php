@@ -10,6 +10,7 @@ use Elephox\Collection\Contract\Grouping as GroupingContract;
 use Elephox\Collection\Grouping;
 use Iterator;
 use RuntimeException;
+use Traversable;
 
 /**
  * @template TGroupKey
@@ -33,12 +34,12 @@ class GroupingIterator implements Iterator
 	private array $values = [];
 
 	/**
-	 * @param Iterator<mixed, TValue> $iterator
+	 * @param Traversable<mixed, TValue> $iterator
 	 * @param Closure(TValue): TGroupKey $groupingFunction
 	 * @param null|Closure(TGroupKey, TGroupKey): bool $comparer
 	 */
 	public function __construct(
-		private readonly Iterator $iterator,
+		private readonly Traversable $iterator,
 		private readonly Closure $groupingFunction,
 		?Closure $comparer = null,
 	) {

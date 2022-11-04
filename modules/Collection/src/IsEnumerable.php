@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace Elephox\Collection;
@@ -22,9 +23,11 @@ use EmptyIterator;
 use Generator;
 use InvalidArgumentException;
 use Iterator;
+use IteratorIterator;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
+use Traversable;
 
 /**
  * @psalm-type NonNegativeInteger = int<0,max>
@@ -36,9 +39,9 @@ trait IsEnumerable
 	// FIXME: de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
 
 	/**
-	 * @return Iterator<mixed, TSource>
+	 * @return Traversable<mixed, TSource>
 	 */
-	abstract public function getIterator(): Iterator;
+	abstract public function getIterator(): Traversable;
 
 	/**
 	 * @template TAccumulate
@@ -193,6 +196,9 @@ trait IsEnumerable
 	{
 		$iterator = $this->getIterator();
 		if ($predicate !== null) {
+			if (!($iterator instanceof Iterator)) {
+				$iterator = new IteratorIterator($iterator);
+			}
 			$iterator = new CallbackFilterIterator($iterator, $predicate);
 		} elseif ($iterator instanceof Countable) {
 			/** @var NonNegativeInteger */
@@ -231,11 +237,16 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+
 		/**
 		 * @var Closure(TSource, TSource): bool $comparer
 		 * @var Closure(TSource): TSource $keySelector
 		 */
-		return new Enumerable(new UniqueByIterator($this->getIterator(), $keySelector(...), $comparer(...)));
+		return new Enumerable(new UniqueByIterator($iterator, $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -375,7 +386,7 @@ trait IsEnumerable
 
 	public function isNotEmpty(): bool
 	{
-		return $this->count() > 0;
+		return !$this->isEmpty();
 	}
 
 	/**
@@ -451,6 +462,9 @@ trait IsEnumerable
 	public function max(callable $selector): int|float|string
 	{
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
 		$iterator->rewind();
 		if (!$iterator->valid()) {
 			throw new EmptySequenceException();
@@ -476,6 +490,9 @@ trait IsEnumerable
 	public function min(callable $selector): int|float|string
 	{
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
 		$iterator->rewind();
 		if (!$iterator->valid()) {
 			throw new EmptySequenceException();
@@ -534,9 +551,9 @@ trait IsEnumerable
 		});
 	}
 
-	public function reverse(): GenericEnumerable
+	public function reverse(bool $preserveKeys = true): GenericEnumerable
 	{
-		return new Enumerable(new ReverseIterator($this->getIterator()));
+		return new Enumerable(new ReverseIterator($this->getIterator(), $preserveKeys));
 	}
 
 	/**
@@ -548,7 +565,11 @@ trait IsEnumerable
 	 */
 	public function select(callable $selector): GenericEnumerable
 	{
-		return new Enumerable(new SelectIterator($this->getIterator(), $selector(...)));
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return new Enumerable(new SelectIterator($iterator, $selector(...)));
 	}
 
 	/**
@@ -607,11 +628,19 @@ trait IsEnumerable
 		$comparer ??= DefaultEqualityComparer::same(...);
 		/** @var callable(TSource, TSource): bool $comparer */
 
-		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
+		if (!($otherIterator instanceof Iterator)) {
+			$otherIterator = new IteratorIterator($otherIterator);
+		}
+		/** @var Iterator<mixed, TSource> $otherIterator */
+
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
 
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ANY);
-		$mit->attachIterator($this->getIterator());
+		$mit->attachIterator($iterator);
 		$mit->attachIterator($otherIterator);
 
 		foreach ($mit as $values) {
@@ -670,7 +699,11 @@ trait IsEnumerable
 
 	public function skip(int $count): GenericEnumerable
 	{
-		return new Enumerable(new LimitIterator($this->getIterator(), $count));
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return new Enumerable(new LimitIterator($iterator, $count));
 	}
 
 	public function skipLast(int $count): GenericEnumerable
@@ -679,7 +712,11 @@ trait IsEnumerable
 			throw new InvalidArgumentException('Count must be greater than zero');
 		}
 
-		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		$cachedIterator = new CachingIterator($iterator, CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
 		while ($cachedIterator->valid()) {
 			$cachedIterator->next();
@@ -704,6 +741,9 @@ trait IsEnumerable
 	public function skipWhile(callable $predicate): GenericEnumerable
 	{
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
 
 		$whileIterator = new WhileIterator($iterator, $predicate(...));
 		$whileIterator->rewind();
@@ -733,12 +773,20 @@ trait IsEnumerable
 
 	public function take(int $count): GenericEnumerable
 	{
-		return new Enumerable(new LimitIterator($this->getIterator(), 0, $count));
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return new Enumerable(new LimitIterator($iterator, 0, $count));
 	}
 
 	public function takeLast(int $count): GenericEnumerable
 	{
-		$cachedIterator = new CachingIterator($this->getIterator(), CachingIterator::FULL_CACHE);
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		$cachedIterator = new CachingIterator($iterator, CachingIterator::FULL_CACHE);
 		$cachedIterator->rewind();
 		while ($cachedIterator->valid()) {
 			$cachedIterator->next();
@@ -760,7 +808,11 @@ trait IsEnumerable
 	 */
 	public function takeWhile(callable $predicate): GenericEnumerable
 	{
-		return new Enumerable(new WhileIterator($this->getIterator(), $predicate(...)));
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return new Enumerable(new WhileIterator($iterator, $predicate(...)));
 	}
 
 	/**
@@ -814,7 +866,11 @@ trait IsEnumerable
 	 */
 	public function toArray(?callable $keySelector = null): array
 	{
-		return self::reindex($this->getIterator())->toArray($keySelector);
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return self::reindex($iterator)->toArray($keySelector);
 	}
 
 	/**
@@ -826,14 +882,22 @@ trait IsEnumerable
 	 */
 	public function toNestedArray(?callable $keySelector = null): array
 	{
-		return self::reindex($this->getIterator())->toNestedArray($keySelector);
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return self::reindex($iterator)->toNestedArray($keySelector);
 	}
 
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable
 	{
 		$valueProxy = static fn (mixed $key, mixed $value): mixed => $keySelector($value);
 
-		return new KeyedEnumerable(new KeySelectIterator($this->getIterator(), $valueProxy(...)));
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		return new KeyedEnumerable(new KeySelectIterator($iterator, $valueProxy(...)));
 	}
 
 	/**
@@ -870,8 +934,13 @@ trait IsEnumerable
 		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
 
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+
 		$append = new AppendIterator();
-		$append->append($this->getIterator());
+		$append->append($iterator);
 		$append->append($otherIterator);
 
 		/**
@@ -888,9 +957,12 @@ trait IsEnumerable
 	 */
 	public function where(callable $predicate): GenericEnumerable
 	{
-		/** @var Iterator<mixed, TSource> $iterator */
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
 
+		/** @var Iterator<mixed, TSource> $iterator */
 		return new Enumerable(new CallbackFilterIterator($iterator, $predicate(...)));
 	}
 
@@ -910,8 +982,13 @@ trait IsEnumerable
 		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
 
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ALL);
-		$mit->attachIterator($this->getIterator());
+		$mit->attachIterator($iterator);
 		$mit->attachIterator($otherIterator);
 		/** @var ParallelIterator $mit */
 

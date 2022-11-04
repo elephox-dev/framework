@@ -6,6 +6,7 @@ namespace Elephox\Collection;
 use Elephox\Collection\Contract\GenericMap;
 use Iterator;
 use SplObjectStorage;
+use Traversable;
 
 /**
  * @template TKey of object
@@ -78,9 +79,9 @@ class ObjectMap implements GenericMap
 	}
 
 	/**
-	 * @return Iterator<TKey, TValue>
+	 * @return Traversable<TKey, TValue>
 	 */
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		/** @var TKey $key */
 		foreach ($this->map as $key) {

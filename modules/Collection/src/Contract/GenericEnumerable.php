@@ -227,7 +227,7 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	/**
 	 * @return GenericEnumerable<TSource>
 	 */
-	public function reverse(): self;
+	public function reverse(bool $preserveKeys = true): self;
 
 	/**
 	 * @template TResult

@@ -11,6 +11,8 @@ use Elephox\Collection\KeyedEnumerable;
 use Elephox\Collection\ObjectMap;
 use Elephox\Collection\OffsetNotFoundException;
 use Generator;
+use Iterator;
+use IteratorIterator;
 use LogicException;
 use RuntimeException;
 
@@ -118,7 +120,11 @@ class ParameterMap implements Contract\ParameterMap
 
 		foreach ($trySources as $parameterSource) {
 			if ($this->parameters->has($parameterSource)) {
-				$iterator->append($this->parameters->get($parameterSource)->getIterator());
+				$sourceIterator = $this->parameters->get($parameterSource)->getIterator();
+				if (!($sourceIterator instanceof Iterator)) {
+					$sourceIterator = new IteratorIterator($sourceIterator);
+				}
+				$iterator->append($sourceIterator);
 			}
 		}
 

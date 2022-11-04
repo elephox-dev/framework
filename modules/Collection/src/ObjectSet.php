@@ -10,6 +10,7 @@ use Elephox\Collection\Iterator\SplObjectStorageIterator;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
+use Traversable;
 
 /**
  * @template T of object
@@ -47,7 +48,7 @@ class ObjectSet implements GenericSet
 	}
 
 	#[Pure]
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		/** @var FlipIterator<mixed, object> */
 		return new FlipIterator(new SplObjectStorageIterator($this->storage));

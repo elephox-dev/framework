@@ -69,9 +69,9 @@ final class DefaultEqualityComparer
 	}
 
 	/**
-	 * @template TCallable as callable(...mixed): (bool|numeric)
+	 * @template TCallable as
 	 *
-	 * @param TCallable $comparer
+	 * @param callable(...mixed): (bool|numeric) $comparer
 	 *
 	 * @return callable(...mixed): (bool|numeric)
 	 */

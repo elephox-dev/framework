@@ -5,6 +5,7 @@ namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
+use Traversable;
 
 /**
  * @template TKey
@@ -33,12 +34,12 @@ class OrderedIterator implements Iterator
 	protected array $keySelectors = [];
 
 	/**
-	 * @param Iterator $iterator
+	 * @param Traversable $iterator
 	 * @param Closure(TValue, TKey): TCompareKey $keySelector
 	 * @param Closure(TCompareKey, TCompareKey): int $comparator
 	 */
 	public function __construct(
-		protected Iterator $iterator,
+		protected Traversable $iterator,
 		Closure $keySelector,
 		Closure $comparator,
 	) {

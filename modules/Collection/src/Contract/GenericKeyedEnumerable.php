@@ -6,6 +6,7 @@ namespace Elephox\Collection\Contract;
 use Countable;
 use Iterator;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * @psalm-type NonNegativeInteger = int<0,max>
@@ -19,9 +20,9 @@ use IteratorAggregate;
 interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, Countable
 {
 	/**
-	 * @return Iterator<TIteratorKey, TSource>
+	 * @return Traversable<TIteratorKey, TSource>
 	 */
-	public function getIterator(): Iterator;
+	public function getIterator(): Traversable;
 
 	/**
 	 * @template TAccumulate
@@ -274,7 +275,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
-	public function reverse(): self;
+	public function reverse(bool $preserveKeys = true): self;
 
 	/**
 	 * @template TResult

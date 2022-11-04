@@ -5,15 +5,16 @@ namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
+use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
  * @template TCompareKey
  *
- * @implements Iterator<TKey, TValue>
+ * @implements OuterIterator<TKey, TValue>
  */
-class UniqueByIterator implements Iterator
+class UniqueByIterator implements OuterIterator
 {
 	/**
 	 * @var list<TCompareKey>
@@ -89,5 +90,9 @@ class UniqueByIterator implements Iterator
 		}
 
 		return false;
+	}
+
+	public function getInnerIterator(): Iterator {
+		return $this->iterator;
 	}
 }

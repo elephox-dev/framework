@@ -5,15 +5,16 @@ namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
+use OuterIterator;
 
 /**
  * @template TKey
  * @template TValue
  * @template TResultKey
  *
- * @implements Iterator<TResultKey, TValue>
+ * @implements OuterIterator<TResultKey, TValue>
  */
-class KeySelectIterator implements Iterator
+class KeySelectIterator implements OuterIterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
@@ -49,5 +50,9 @@ class KeySelectIterator implements Iterator
 	public function rewind(): void
 	{
 		$this->iterator->rewind();
+	}
+
+	public function getInnerIterator(): Iterator {
+		return $this->iterator;
 	}
 }

@@ -74,7 +74,7 @@ class EnumerableTest extends TestCase
 	public function testGetIteratorThrowsForInvalidClosure(): void
 	{
 		$this->expectException(AssertionError::class);
-		$this->expectExceptionMessage('Given iterator generator does not return an iterator');
+		$this->expectExceptionMessage('Given iterator generator does not return a Traversable, got null instead');
 
 		$enum = new Enumerable(static fn () => null);
 		$enum->getIterator();

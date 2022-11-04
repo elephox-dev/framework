@@ -7,6 +7,7 @@ use ArrayIterator;
 use Elephox\Collection\Contract\GenericList;
 use InvalidArgumentException;
 use Iterator;
+use Traversable;
 
 /**
  * @template T
@@ -71,7 +72,7 @@ class ArrayList implements GenericList
 	) {
 	}
 
-	public function getIterator(): Iterator
+	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->items);
 	}
