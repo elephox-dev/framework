@@ -91,6 +91,12 @@ class FileWatcher implements Contract\FileWatcher
 			return $modifiedAt->getTimestamp() !== $oldChangedAt?->getTimestamp();
 		}
 
-		return $oldChangedAt !== null;
+		if ($oldChangedAt !== null) {
+			$this->timestampCache->remove($file);
+
+			return true;
+		}
+
+		return false;
 	}
 }
