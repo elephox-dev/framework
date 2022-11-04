@@ -130,12 +130,10 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 's';
 					} elseif ($char === '/') {
 						$state = 'o';
-					} elseif ($char === '"') {
-						$quotation = '"';
+					} elseif ($char === '"' || $char === "'") {
+						$quotation = $char;
 						$state = 'qa';
-					} elseif ($char === "'") {
-						$quotation = "'";
-						$state = 'qa';
+						$argument = '';
 					} else {
 						$argument = $char;
 						$state = 'ua';
