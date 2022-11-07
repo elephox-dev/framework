@@ -13,13 +13,13 @@ class Url implements Stringable
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
-	public static function fromString(string $uri): self
+	public static function fromString(string|Stringable $uri): self
 	{
 		$builder = new UrlBuilder();
 
 		preg_match(
 			self::Pattern,
-			$uri,
+			(string) $uri,
 			$matches,
 		);
 		/**

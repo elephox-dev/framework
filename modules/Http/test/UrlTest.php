@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use PHPUnit\Framework\TestCase;
+use Stringable;
 
 /**
  * @covers \Elephox\Http\Url
@@ -38,13 +39,19 @@ class UrlTest extends TestCase
 			['custom://localhost/test', 'custom://localhost/test', 'custom', null, null, 'localhost', null, '/test', '', null],
 			['/get-this?id=123&user_id=23#234', '/get-this?id=123&user_id=23#234', null, null, null, null, null, '/get-this', 'id=123&user_id=23', '234'],
 			['https://user:password@localhost:5000/path/to/script.php?query=true#fragment', 'https://user:password@localhost:5000/path/to/script.php?query=true#fragment', 'https', 'user', 'password', 'localhost', 5000, '/path/to/script.php', 'query=true', 'fragment'],
+			[new class implements Stringable {
+				public function __toString(): string
+				{
+					return '';
+				}
+			}, '/', null, null, null, null, null, '', '', null],
 		];
 	}
 
 	/**
 	 * @dataProvider dataProvider
 	 */
-	public function testFromString(string $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
+	public function testFromString(string|Stringable $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
 	{
 		$uri = Url::fromString($uriString);
 		static::assertSame($scheme, $uri->scheme?->getScheme(), 'Unexpected scheme.');
