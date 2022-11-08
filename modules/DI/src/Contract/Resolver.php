@@ -6,7 +6,10 @@ namespace Elephox\DI\Contract;
 use BadFunctionCallException;
 use BadMethodCallException;
 use Closure;
+use Elephox\Collection\Contract\GenericList;
 use Elephox\DI\ClassNotFoundException;
+use ReflectionFunctionAbstract;
+use ReflectionParameter;
 
 /**
  * @psalm-type argument-list = array<non-empty-string, mixed>
@@ -51,12 +54,20 @@ interface Resolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure $callback
+	 * @param Closure|ReflectionFunctionAbstract $callback
 	 * @param argument-list $overrideArguments
 	 *
 	 * @return T
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure $callback, array $overrideArguments = []): mixed;
+	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = []): mixed;
+
+	/**
+	 * @param ReflectionFunctionAbstract $function
+	 * @param argument-list $overrideArguments
+	 * @param null|Closure(ReflectionParameter $param): mixed $onUnresolved
+	 * @return GenericList<mixed>
+	 */
+	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): GenericList;
 }

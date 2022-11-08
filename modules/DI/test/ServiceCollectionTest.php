@@ -9,6 +9,9 @@ use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as M;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionParameter;
 
 /**
  * @covers \Elephox\DI\ServiceCollection
@@ -21,6 +24,8 @@ use Mockery as M;
  * @covers \Elephox\DI\Hooks\ServiceResolvedHookData
  * @covers \Elephox\DI\Hooks\AliasHookData
  * @covers \Elephox\DI\Hooks\ServiceReplacedHookData
+ * @covers \Elephox\DI\ServiceNotFoundException
+ * @covers \Elephox\DI\UnresolvedParameterException
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable
@@ -207,5 +212,62 @@ class ServiceCollectionTest extends MockeryTestCase
 		$returnedService = $callbackService();
 
 		static::assertSame($returnedService, $service);
+	}
+
+	/**
+	 * @throws ReflectionException
+	 */
+	public function testResolveArguments(): void
+	{
+		$service = new TestServiceClass();
+		$reflectionSimple = new ReflectionMethod($service, 'returnsString');
+		$reflectionService = new ReflectionMethod($service, 'returnsTestServiceInterface');
+
+		$serviceCollection = new ServiceCollection();
+		$simpleArgs = $serviceCollection->resolveArguments($reflectionSimple, ['testString' => 'Hello']);
+
+		static::assertCount(1, $simpleArgs);
+		static::assertSame('Hello', $simpleArgs->pop());
+
+		$serviceCollection->addSingleton(TestServiceInterface::class, instance: $service);
+		$serviceArgs = $serviceCollection->resolveArguments($reflectionService);
+
+		static::assertCount(1, $serviceArgs);
+		static::assertSame($service, $serviceArgs->pop());
+	}
+
+	/**
+	 * @throws ReflectionException
+	 */
+	public function testResolveUnresolvableArguments(): void
+	{
+		$service = new TestServiceClass();
+		$reflectionService = new ReflectionMethod($service, 'returnsTestServiceInterface');
+
+		$serviceCollection = new ServiceCollection();
+
+		$this->expectException(UnresolvedParameterException::class);
+		$this->expectExceptionMessage('Could not resolve parameter $service with type Elephox\DI\Data\TestServiceInterface in TestServiceClass::returnsTestServiceInterface()');
+		$serviceCollection->resolveArguments($reflectionService);
+	}
+
+	/**
+	 * @throws ReflectionException
+	 */
+	public function testResolveUnresolvableArgumentsWithCallback(): void
+	{
+		$service = new TestServiceClass();
+		$reflectionService = new ReflectionMethod($service, 'returnsTestServiceInterface');
+
+		$serviceCollection = new ServiceCollection();
+		$serviceArgs = $serviceCollection->resolveArguments($reflectionService, onUnresolved: function (ReflectionParameter $parameter) use ($service) {
+			static::assertSame('service', $parameter->getName());
+			static::assertSame(TestServiceInterface::class, $parameter->getType()?->getName());
+
+			return $service;
+		});
+
+		static::assertCount(1, $serviceArgs);
+		static::assertSame($service, $serviceArgs->pop());
 	}
 }

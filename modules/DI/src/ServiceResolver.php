@@ -110,17 +110,17 @@ trait ServiceResolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure $callback
+	 * @param Closure|ReflectionFunctionAbstract $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure $callback, array $overrideArguments = []): mixed
+	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = []): mixed
 	{
 		try {
-			$reflectionFunction = new ReflectionFunction($callback);
+			$reflectionFunction = $callback instanceof ReflectionFunctionAbstract ? $callback : new ReflectionFunction($callback);
 			$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments);
 
 			/** @var T */
@@ -130,7 +130,7 @@ trait ServiceResolver
 		}
 	}
 
-	private function resolveArguments(ReflectionFunctionAbstract $method, array $overrides): ArrayList
+	public function resolveArguments(ReflectionFunctionAbstract $method, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList
 	{
 		/** @var ArrayList<mixed> $values */
 		$values = new ArrayList();
@@ -140,23 +140,23 @@ trait ServiceResolver
 		$usedOverrides = 0;
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
-				$values->addAll(array_slice($overrides, $usedOverrides));
+				$values->addAll(array_slice($overrideArguments, $usedOverrides));
 
 				break;
 			}
 
-			if (array_key_exists($parameter->getName(), $overrides)) {
-				$values->add($overrides[$parameter->getName()]);
+			if (array_key_exists($parameter->getName(), $overrideArguments)) {
+				$values->add($overrideArguments[$parameter->getName()]);
 				$usedOverrides++;
 			} else {
-				$values->add($this->resolveArgument($parameter));
+				$values->add($this->resolveArgument($parameter, $onUnresolved));
 			}
 		}
 
 		return $values;
 	}
 
-	private function resolveArgument(ReflectionParameter $parameter): mixed
+	private function resolveArgument(ReflectionParameter $parameter, ?Closure $onUnresolved): mixed
 	{
 		/** @var mixed $possibleArgument */
 		$possibleArgument = $this->getServices()->get($parameter->getName());
@@ -168,6 +168,10 @@ trait ServiceResolver
 
 			if ($parameter->isDefaultValueAvailable()) {
 				return $parameter->getDefaultValue();
+			}
+
+			if ($onUnresolved !== null) {
+				return $this->callback($onUnresolved, ['parameter' => $parameter]);
 			}
 
 			throw new MissingTypeHintException($parameter);
@@ -198,6 +202,10 @@ trait ServiceResolver
 
 		if ($parameter->allowsNull()) {
 			return null;
+		}
+
+		if ($onUnresolved !== null) {
+			return $this->callback($onUnresolved, ['parameter' => $parameter]);
 		}
 
 		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
