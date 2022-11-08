@@ -22,6 +22,8 @@ use JsonException;
  * @covers \Elephox\Files\AbstractFilesystemNode
  * @covers \Elephox\Files\File
  * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\Iterator\FlipIterator
  *
  * @internal
  */

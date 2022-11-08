@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Http\Contract\HeaderMap;
+use Elephox\Mimey\MimeType;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
@@ -25,7 +27,6 @@ class Response extends AbstractMessage implements Contract\Response
 		HeaderMap $headers,
 		Stream $body,
 		public readonly ResponseCode $responseCode,
-		public readonly ?MimeTypeInterface $mimeType,
 		public readonly ?Throwable $exception,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
@@ -39,7 +40,6 @@ class Response extends AbstractMessage implements Contract\Response
 			$this->headers,
 			$this->body,
 			$this->responseCode,
-			$this->mimeType,
 		);
 	}
 
@@ -52,7 +52,16 @@ class Response extends AbstractMessage implements Contract\Response
 	#[Pure]
 	public function getMimeType(): ?MimeTypeInterface
 	{
-		return $this->mimeType;
+		$header = $this->headers->firstOrDefault(null, static fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
+		if ($header === null) {
+			return null;
+		}
+
+		if (is_array($header)) {
+			return MimeType::tryFrom($header[0]);
+		}
+
+		return MimeType::tryFrom($header);
 	}
 
 	#[Pure]

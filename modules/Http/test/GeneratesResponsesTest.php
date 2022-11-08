@@ -20,6 +20,7 @@ use JsonException;
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Files\File
  * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Collection\DefaultEqualityComparer
  *
  * @internal
  */

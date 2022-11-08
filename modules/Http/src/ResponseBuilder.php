@@ -47,11 +47,11 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	{
 		if ($this->headers === null && $mimeType !== null) {
 			$this->addHeader(HeaderName::ContentType->name, $mimeType->getValue());
-		} else if ($this->headers !== null) {
+		} elseif ($this->headers !== null) {
 			$headerSet = $this->headers->containsKey(HeaderName::ContentType->name, DefaultEqualityComparer::equalsIgnoreCase(...));
 			if ($headerSet && $mimeType === null) {
 				$this->headers->remove(HeaderName::ContentType->name);
-			} else if ($mimeType !== null) {
+			} elseif ($mimeType !== null) {
 				$this->headers->put(HeaderName::ContentType->name, $mimeType->getValue());
 			}
 		}
@@ -140,7 +140,6 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 			$this->headers ?? new HeaderMap(),
 			$this->body ?? new EmptyStream(),
 			$this->responseCode ?? throw new LogicException('Response code is not set.'),
-			$this->mimeType,
 			$this->exception,
 		);
 	}
