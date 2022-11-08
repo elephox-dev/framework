@@ -43,14 +43,14 @@ class GeneratesResponsesTest extends TestCase
 	public function testJsonResponse(): void
 	{
 		$response = $this->jsonResponse(['foo' => 'bar'])->get();
-		static::assertSame(MimeType::ApplicationJson, $response->getMimeType());
+		static::assertSame(MimeType::ApplicationJson, $response->getContentType());
 		static::assertSame('{"foo":"bar"}', $response->getBody()->getContents());
 	}
 
 	public function testStringResponse(): void
 	{
 		$response = $this->stringResponse('Hello World')->get();
-		static::assertSame(MimeType::TextPlain, $response->getMimeType());
+		static::assertSame(MimeType::TextPlain, $response->getContentType());
 		static::assertSame('Hello World', $response->getBody()->getContents());
 	}
 
@@ -60,7 +60,7 @@ class GeneratesResponsesTest extends TestCase
 		fwrite($resource, 'Hello World');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(MimeType::ApplicationOctetStream, $response->getMimeType());
+		static::assertSame(MimeType::ApplicationOctetStream, $response->getContentType());
 
 		fclose($resource);
 	}
@@ -70,7 +70,7 @@ class GeneratesResponsesTest extends TestCase
 		$resource = fopen(__FILE__, 'rb');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(MimeType::ApplicationPhp, $response->getMimeType());
+		static::assertSame(MimeType::ApplicationPhp, $response->getContentType());
 
 		fclose($resource);
 	}
@@ -79,7 +79,7 @@ class GeneratesResponsesTest extends TestCase
 	{
 		$response = $this->fileResponse(__FILE__)->get();
 		// TODO: Add test for both cases in which mime_content_type exists and not
-		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getMimeType());
+		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
 		static::assertStringEqualsFile(__FILE__, $response->getBody()->getContents());
 	}
 

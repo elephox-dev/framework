@@ -12,8 +12,6 @@ use Throwable;
 #[Immutable]
 class Response extends AbstractMessage implements Contract\Response
 {
-	use DerivesContentTypeFromHeaderMap;
-
 	#[Pure]
 	public static function build(): ResponseBuilder
 	{

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
@@ -21,6 +22,9 @@ interface Message
 
 	#[Pure]
 	public function getHeaderMap(): HeaderMap;
+
+	#[Pure]
+	public function getContentType(): ?MimeTypeInterface;
 
 	#[Pure]
 	public function getBody(): Stream;

@@ -71,11 +71,11 @@ class ResponseBuilderTest extends TestCase
 		$fileResponse = $builder->get()->with()->fileBody(__FILE__)->get();
 		$jsonResponse = $builder->get()->with()->jsonBody(['foo' => 'bar'])->get();
 
-		static::assertSame(MimeType::TextHtml, $htmlResponse->getMimeType());
+		static::assertSame(MimeType::TextHtml, $htmlResponse->getContentType());
 		static::assertInstanceOf(StringStream::class, $htmlResponse->getBody());
-		static::assertSame(MimeType::ApplicationOctetStream, $fileResponse->getMimeType());
+		static::assertSame(MimeType::ApplicationOctetStream, $fileResponse->getContentType());
 		static::assertInstanceOf(ResourceStream::class, $fileResponse->getBody());
-		static::assertSame(MimeType::ApplicationJson, $jsonResponse->getMimeType());
+		static::assertSame(MimeType::ApplicationJson, $jsonResponse->getContentType());
 		static::assertInstanceOf(StringStream::class, $jsonResponse->getBody());
 	}
 }

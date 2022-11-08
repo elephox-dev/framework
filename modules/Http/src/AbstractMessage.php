@@ -12,6 +12,8 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 abstract class AbstractMessage implements Message
 {
+	use DerivesContentTypeFromHeaderMap;
+
 	#[Pure]
 	public function __construct(
 		public readonly string $protocolVersion,

@@ -31,9 +31,9 @@ trait DerivesContentTypeFromHeaderMap
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
-		 * @psalm-suppress InvalidArgument
+		 * @psalm-suppress UnusedClosureParam
 		 */
-		$headerName = $headerMap->firstKeyOrDefault(null, static fn (string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
+		$headerName = $headerMap->firstKeyOrDefault(null, static fn (string|array $value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
 		if ($headerName === null) {
 			return null;
 		}
