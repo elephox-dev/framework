@@ -26,7 +26,6 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		?Contract\HeaderMap $headers = null,
 		?Stream $body = null,
 		protected ?ResponseCode $responseCode = null,
-		protected ?MimeTypeInterface $mimeType = null,
 		protected ?Throwable $exception = null,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
@@ -46,8 +45,6 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 
 	public function contentType(?MimeTypeInterface $mimeType): static
 	{
-		$this->mimeType = $mimeType;
-
 		if ($this->headers === null && $mimeType !== null) {
 			$this->addHeader(HeaderName::ContentType->name, $mimeType->getValue());
 		} else if ($this->headers !== null) {
@@ -64,7 +61,20 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 
 	public function getContentType(): ?MimeTypeInterface
 	{
-		return $this->mimeType;
+		if ($this->headers === null) {
+			return null;
+		}
+
+		$header = $this->headers->firstOrDefault(null, fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
+		if ($header === null) {
+			return null;
+		}
+
+		if (is_array($header)) {
+			return MimeType::tryFrom($header[0]);
+		}
+
+		return MimeType::tryFrom($header);
 	}
 
 	public function exception(?Throwable $exception, ?ResponseCode $responseCode = ResponseCode::InternalServerError): static
