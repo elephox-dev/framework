@@ -29,6 +29,12 @@ final class DefaultEqualityComparer
 	}
 
 	#[Pure]
+	public static function equalsIgnoreCase(string $a, string $b): bool
+	{
+		return mb_strtolower($a) === mb_strtolower($b);
+	}
+
+	#[Pure]
 	public static function same(mixed $a, mixed $b): bool
 	{
 		if (is_object($a) && is_object($b)) {
