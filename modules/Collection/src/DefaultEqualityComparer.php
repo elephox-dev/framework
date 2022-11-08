@@ -6,6 +6,7 @@ namespace Elephox\Collection;
 use Elephox\Collection\Contract\Comparable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
+use Stringable;
 
 final class DefaultEqualityComparer
 {
@@ -29,9 +30,12 @@ final class DefaultEqualityComparer
 	}
 
 	#[Pure]
-	public static function equalsIgnoreCase(string $a, string $b): bool
+	public static function equalsIgnoreCase(string|Stringable $a, string|Stringable $b): bool
 	{
-		return mb_strtolower($a) === mb_strtolower($b);
+		$aText = (string) $a;
+		$bText = (string) $b;
+
+		return mb_strtolower($aText) === mb_strtolower($bText);
 	}
 
 	#[Pure]
