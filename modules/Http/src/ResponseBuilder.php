@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Files\File;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
@@ -46,6 +47,17 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function contentType(?MimeTypeInterface $mimeType): static
 	{
 		$this->mimeType = $mimeType;
+
+		if ($this->headers === null && $mimeType !== null) {
+			$this->addHeader(HeaderName::ContentType->name, $mimeType->getValue());
+		} else if ($this->headers !== null) {
+			$headerSet = $this->headers->containsKey(HeaderName::ContentType->name, DefaultEqualityComparer::equalsIgnoreCase(...));
+			if ($headerSet && $mimeType === null) {
+				$this->headers->remove(HeaderName::ContentType->name);
+			} else if ($mimeType !== null) {
+				$this->headers->put(HeaderName::ContentType->name, $mimeType->getValue());
+			}
+		}
 
 		return $this;
 	}
