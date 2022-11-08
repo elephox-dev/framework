@@ -158,11 +158,12 @@ enum HeaderName: string
 
 	public static function tryFromIgnoreCase(string $value): ?HeaderName
 	{
+		$value = trim($value);
 		if (empty($value)) {
 			throw new InvalidArgumentException('Header name cannot be empty');
 		}
 
-		$value = mb_strtolower(trim($value));
+		$value = mb_strtolower($value);
 		foreach (self::cases() as $name) {
 			if (strtolower($name->value) === $value) {
 				return $name;
