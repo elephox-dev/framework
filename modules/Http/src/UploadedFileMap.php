@@ -22,9 +22,6 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 
 		$map = new self();
 
-		/**
-		 * @var array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string} $file
-		 */
 		foreach ($files as $id => $file) {
 			$clientFilename = $file['name'];
 			$clientType = $file['type'];

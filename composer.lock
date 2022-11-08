@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b94a3214a81cf067f63b523cda9c6f2e",
+    "content-hash": "496a0c0186671bb3924f92e233a309e6",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -2621,12 +2621,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "7e4655759b627c000b2ffd834144e8a0cb83d39f"
+                "reference": "2c015c056d596267f6240491b1fe0b3292779932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/7e4655759b627c000b2ffd834144e8a0cb83d39f",
-                "reference": "7e4655759b627c000b2ffd834144e8a0cb83d39f",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/2c015c056d596267f6240491b1fe0b3292779932",
+                "reference": "2c015c056d596267f6240491b1fe0b3292779932",
                 "shasum": ""
             },
             "require": {
@@ -2643,7 +2643,7 @@
                 "ergebnis/php-cs-fixer-config": "^4.9.0",
                 "fakerphp/faker": "^1.20.0",
                 "phpunit/phpunit": "^9.5.26",
-                "psalm/plugin-phpunit": "~0.17.0",
+                "psalm/plugin-phpunit": "~0.18.3",
                 "symfony/filesystem": "^5.4.13",
                 "vimeo/psalm": "^4.29.0"
             },
@@ -2683,7 +2683,7 @@
                 "issues": "https://github.com/ergebnis/composer-normalize/issues",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "time": "2022-10-31T22:08:58+00:00"
+            "time": "2022-11-07T22:02:59+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
@@ -3062,12 +3062,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "3969f390a3adbbcdf0acfeadb2e9de7d63efdbba"
+                "reference": "b577444c38b61f2fdc32cd0a4685bd595be391b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3969f390a3adbbcdf0acfeadb2e9de7d63efdbba",
-                "reference": "3969f390a3adbbcdf0acfeadb2e9de7d63efdbba",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/b577444c38b61f2fdc32cd0a4685bd595be391b7",
+                "reference": "b577444c38b61f2fdc32cd0a4685bd595be391b7",
                 "shasum": ""
             },
             "require": {
@@ -3144,7 +3144,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-10-31T22:12:35+00:00"
+            "time": "2022-11-05T09:57:50+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -7547,12 +7547,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "7c83878ae00b21959ba49d084cc1ddbb66e0d730"
+                "reference": "493233776bb2cf1e32381491530e188664e8d2f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/7c83878ae00b21959ba49d084cc1ddbb66e0d730",
-                "reference": "7c83878ae00b21959ba49d084cc1ddbb66e0d730",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/493233776bb2cf1e32381491530e188664e8d2f2",
+                "reference": "493233776bb2cf1e32381491530e188664e8d2f2",
                 "shasum": ""
             },
             "require": {
@@ -7593,7 +7593,7 @@
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpstan/phpdoc-parser": "1.6.4",
                 "phpunit/phpunit": "^9.5",
-                "psalm/plugin-phpunit": "^0.16",
+                "psalm/plugin-phpunit": "^0.18",
                 "slevomat/coding-standard": "^7.0",
                 "squizlabs/php_codesniffer": "^3.6",
                 "symfony/process": "^4.3 || ^5.0 || ^6.0",
@@ -7644,7 +7644,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2022-11-02T17:44:43+00:00"
+            "time": "2022-11-07T19:53:01+00:00"
         },
         {
             "name": "webmozart/assert",

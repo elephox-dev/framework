@@ -43,7 +43,7 @@
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16",
         "roave/no-leaks": "^1.3",
-        "vimeo/psalm": "dev-master#7c83878ae00b21959ba49d084cc1ddbb66e0d730"
+        "vimeo/psalm": "dev-master"
     },
     "replace": {
         "elephox/autoloading": "self.version",
