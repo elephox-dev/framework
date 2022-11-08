@@ -31,7 +31,7 @@ trait ServiceResolver
 	 * @throws ClassNotFoundException
 	 * @throws BadMethodCallException
 	 */
-	public function instantiate(string $className, array $overrideArguments = []): object
+	public function instantiate(string $className, array $overrideArguments = [], ?Closure $onUnresolved = null): object
 	{
 		if (!class_exists($className)) {
 			throw new ClassNotFoundException($className);
@@ -45,7 +45,7 @@ trait ServiceResolver
 				return $reflectionClass->newInstance();
 			}
 
-			$arguments = $this->resolveArguments($constructor, $overrideArguments);
+			$arguments = $this->resolveArguments($constructor, $overrideArguments, $onUnresolved);
 
 			return $reflectionClass->newInstanceArgs($arguments->toList());
 		} catch (ReflectionException $e) {
@@ -65,14 +65,14 @@ trait ServiceResolver
 	 *
 	 * @throws BadMethodCallException
 	 */
-	public function call(string $className, string $method, array $overrideArguments = []): mixed
+	public function call(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
 		$instance = $this->instantiate($className);
 
 		try {
 			$reflectionClass = new ReflectionClass($instance);
 			$reflectionMethod = $reflectionClass->getMethod($method);
-			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments);
+			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
 
 			/** @var TResult */
 			return $reflectionMethod->invokeArgs($instance, $arguments->toList());
@@ -93,12 +93,12 @@ trait ServiceResolver
 	 *
 	 * @throws BadMethodCallException
 	 */
-	public function callStatic(string $className, string $method, array $overrideArguments = []): mixed
+	public function callStatic(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
 		try {
 			$reflectionClass = new ReflectionClass($className);
 			$reflectionMethod = $reflectionClass->getMethod($method);
-			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments);
+			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
 
 			/** @var TResult */
 			return $reflectionMethod->invokeArgs(null, $arguments->toList());
@@ -117,11 +117,11 @@ trait ServiceResolver
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = []): mixed
+	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
 		try {
 			$reflectionFunction = $callback instanceof ReflectionFunctionAbstract ? $callback : new ReflectionFunction($callback);
-			$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments);
+			$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
 
 			/** @var T */
 			return $reflectionFunction->invokeArgs($arguments->toList());
@@ -132,31 +132,35 @@ trait ServiceResolver
 
 	public function resolveArguments(ReflectionFunctionAbstract $method, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList
 	{
-		/** @var ArrayList<mixed> $values */
-		$values = new ArrayList();
+		if (!empty($overrideArguments) && array_is_list($overrideArguments)) {
+			return ArrayList::from($overrideArguments);
+		}
+
+		/** @var ArrayList<mixed> $arguments */
+		$arguments = new ArrayList();
 		$parameters = $method->getParameters();
 
-		// TODO: implement positional overrides with integer keys in $overrides
-		$usedOverrides = 0;
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
-				$values->addAll(array_slice($overrideArguments, $usedOverrides));
+				$arguments->addAll($overrideArguments);
 
 				break;
 			}
 
 			if (array_key_exists($parameter->getName(), $overrideArguments)) {
-				$values->add($overrideArguments[$parameter->getName()]);
-				$usedOverrides++;
+				$argument = $overrideArguments[$parameter->getName()];
+				unset($overrideArguments[$parameter->getName()]);
 			} else {
-				$values->add($this->resolveArgument($parameter, $onUnresolved));
+				$argument = $this->resolveArgument($arguments->count(), $parameter, $onUnresolved);
 			}
+
+			$arguments->add($argument);
 		}
 
-		return $values;
+		return $arguments;
 	}
 
-	private function resolveArgument(ReflectionParameter $parameter, ?Closure $onUnresolved): mixed
+	private function resolveArgument(int $index, ReflectionParameter $parameter, ?Closure $onUnresolved): mixed
 	{
 		/** @var mixed $possibleArgument */
 		$possibleArgument = $this->getServices()->get($parameter->getName());

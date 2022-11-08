@@ -224,14 +224,17 @@ class ServiceCollectionTest extends MockeryTestCase
 		$reflectionService = new ReflectionMethod($service, 'returnsTestServiceInterface');
 
 		$serviceCollection = new ServiceCollection();
-		$simpleArgs = $serviceCollection->resolveArguments($reflectionSimple, ['testString' => 'Hello']);
 
+		$simpleArgs = $serviceCollection->resolveArguments($reflectionSimple, ['testString' => 'Hello']);
 		static::assertCount(1, $simpleArgs);
 		static::assertSame('Hello', $simpleArgs->pop());
 
+		$simpleArgsByIndex = $serviceCollection->resolveArguments($reflectionSimple, ['Hello']);
+		static::assertCount(1, $simpleArgsByIndex);
+		static::assertSame('Hello', $simpleArgsByIndex->pop());
+
 		$serviceCollection->addSingleton(TestServiceInterface::class, instance: $service);
 		$serviceArgs = $serviceCollection->resolveArguments($reflectionService);
-
 		static::assertCount(1, $serviceArgs);
 		static::assertSame($service, $serviceArgs->pop());
 	}
