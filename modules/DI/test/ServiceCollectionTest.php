@@ -263,7 +263,7 @@ class ServiceCollectionTest extends MockeryTestCase
 		$reflectionService = new ReflectionMethod($service, 'returnsTestServiceInterface');
 
 		$serviceCollection = new ServiceCollection();
-		$serviceArgs = $serviceCollection->resolveArguments($reflectionService, onUnresolved: function (ReflectionParameter $parameter) use ($service) {
+		$serviceArgs = $serviceCollection->resolveArguments($reflectionService, onUnresolved: static function (ReflectionParameter $parameter) use ($service) {
 			static::assertSame('service', $parameter->getName());
 			static::assertSame(TestServiceInterface::class, $parameter->getType()?->getName());
 

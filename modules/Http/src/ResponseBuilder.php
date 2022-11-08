@@ -65,7 +65,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 			return null;
 		}
 
-		$header = $this->headers->firstOrDefault(null, fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
+		$header = $this->headers->firstOrDefault(null, static fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
 		if ($header === null) {
 			return null;
 		}

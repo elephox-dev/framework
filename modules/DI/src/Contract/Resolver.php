@@ -71,6 +71,7 @@ interface Resolver
 	 * @param ReflectionFunctionAbstract $function
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
+	 *
 	 * @return GenericList<mixed>
 	 */
 	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): GenericList;
