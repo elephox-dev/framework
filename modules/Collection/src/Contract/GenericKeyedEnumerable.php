@@ -74,6 +74,12 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function concat(self ...$other): self;
 
 	/**
+	 * @param TIteratorKey $key
+	 * @param null|callable(TIteratorKey, TIteratorKey): bool $comparer
+	 */
+	public function containsKey(mixed $key, ?callable $comparer = null): bool;
+
+	/**
 	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return NonNegativeInteger

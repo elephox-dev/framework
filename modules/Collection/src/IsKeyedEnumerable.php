@@ -196,6 +196,19 @@ trait IsKeyedEnumerable
 		return false;
 	}
 
+	public function containsKey(mixed $key, ?callable $comparer = null): bool
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		foreach (new FlipIterator($this->getIterator()) as $elementKey) {
+			if ($comparer($key, $elementKey)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * @param null|callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
