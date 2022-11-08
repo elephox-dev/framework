@@ -12,6 +12,7 @@ use JetBrains\PhpStorm\Pure;
 #[Immutable]
 abstract class AbstractDuration implements Duration
 {
+	#[Pure]
 	public static function toInterval(Duration $duration): DateInterval
 	{
 		try {
@@ -25,11 +26,14 @@ abstract class AbstractDuration implements Duration
 				$duration->getSeconds(),
 			));
 
+			/** @psalm-suppress ImpurePropertyAssignment */
 			$d->invert = $duration->isNegative() ? 1 : 0;
+			/** @psalm-suppress ImpurePropertyAssignment */
 			$d->f = $duration->getMicroseconds() / self::MICROSECONDS_PER_SECOND;
 
 			return $d;
 		} catch (Exception $e) {
+			/** @psalm-suppress ImpureFunctionCall */
 			trigger_error("Failed to create a valid DateInterval. Exception: $e", E_USER_WARNING);
 
 			return new DateInterval('PT0S');

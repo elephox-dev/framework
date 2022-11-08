@@ -35,21 +35,12 @@ class ResponseSender
 
 		http_response_code($response->getResponseCode()->value);
 
-		$contentTypeSent = false;
 		foreach ($response->getHeaderMap() as $headerName => $values) {
 			if (is_array($values)) {
 				header("$headerName: " . implode(',', $values));
 			} else {
 				header("$headerName: $values");
 			}
-
-			if ($headerName === 'Content-Type') {
-				$contentTypeSent = true;
-			}
-		}
-
-		if (!$contentTypeSent && $response->getMimeType() !== null) {
-			header('Content-Type: ' . $response->getMimeType()->getValue());
 		}
 	}
 

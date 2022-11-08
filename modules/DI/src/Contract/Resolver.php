@@ -8,6 +8,7 @@ use BadMethodCallException;
 use Closure;
 use Elephox\Collection\Contract\GenericList;
 use Elephox\DI\ClassNotFoundException;
+use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionParameter;
 
@@ -57,7 +58,7 @@ interface Resolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure|ReflectionFunctionAbstract $callback
+	 * @param Closure|ReflectionFunction $callback
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
@@ -65,7 +66,7 @@ interface Resolver
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+	public function callback(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
 	 * @param ReflectionFunctionAbstract $function

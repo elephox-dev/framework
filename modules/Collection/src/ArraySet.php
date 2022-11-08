@@ -6,6 +6,8 @@ namespace Elephox\Collection;
 use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
+use Iterator;
+use IteratorIterator;
 use Traversable;
 
 /**
@@ -48,6 +50,9 @@ class ArraySet implements GenericSet
 		$this->comparer = $comparer ?? DefaultEqualityComparer::same(...);
 	}
 
+	/**
+	 * @return Traversable<array-key, T>
+	 */
 	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->items);
@@ -67,12 +72,18 @@ class ArraySet implements GenericSet
 	public function remove(mixed $value): bool
 	{
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		/** @var Iterator $iterator */
 		$iterator->rewind();
-
 		while ($iterator->valid()) {
-			if (($this->comparer)($value, $iterator->current())) {
-				/** @psalm-suppress PossiblyNullArrayOffset */
-				unset($this->items[$iterator->key()]);
+			/** @var T $currentValue */
+			$currentValue = $iterator->current();
+			if (($this->comparer)($value, $currentValue)) {
+				/** @var array-key $key */
+				$key = $iterator->key();
+				unset($this->items[$key]);
 
 				return true;
 			}
@@ -86,14 +97,19 @@ class ArraySet implements GenericSet
 	public function removeBy(callable $predicate): bool
 	{
 		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+		/** @var Iterator $iterator */
 		$iterator->rewind();
-
 		$anyRemoved = false;
 		while ($iterator->valid()) {
-			/** @psalm-suppress PossiblyNullArgument */
-			if ($predicate($iterator->current())) {
-				/** @psalm-suppress PossiblyNullArrayOffset */
-				unset($this->items[$iterator->key()]);
+			/** @var T $value */
+			$value = $iterator->current();
+			if ($predicate($value)) {
+				/** @var array-key $key */
+				$key = $iterator->key();
+				unset($this->items[$key]);
 
 				$anyRemoved = true;
 			}

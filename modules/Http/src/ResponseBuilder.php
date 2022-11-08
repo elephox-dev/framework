@@ -5,14 +5,14 @@ namespace Elephox\Http;
 
 use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Files\File;
+use Elephox\Mimey\MimeType;
+use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\StringStream;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use LogicException;
-use Elephox\Mimey\MimeType;
-use Elephox\Mimey\MimeTypeInterface;
 use Throwable;
 
 /**
@@ -20,6 +20,8 @@ use Throwable;
  */
 class ResponseBuilder extends AbstractMessageBuilder implements Contract\ResponseBuilder
 {
+	use DerivesContentTypeFromHeaderMap;
+
 	#[Pure]
 	public function __construct(
 		?string $protocolVersion = null,
@@ -57,24 +59,6 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		}
 
 		return $this;
-	}
-
-	public function getContentType(): ?MimeTypeInterface
-	{
-		if ($this->headers === null) {
-			return null;
-		}
-
-		$header = $this->headers->firstOrDefault(null, static fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
-		if ($header === null) {
-			return null;
-		}
-
-		if (is_array($header)) {
-			return MimeType::tryFrom($header[0]);
-		}
-
-		return MimeType::tryFrom($header);
 	}
 
 	public function exception(?Throwable $exception, ?ResponseCode $responseCode = ResponseCode::InternalServerError): static

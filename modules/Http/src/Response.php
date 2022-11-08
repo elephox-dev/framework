@@ -3,18 +3,17 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Http\Contract\HeaderMap;
-use Elephox\Mimey\MimeType;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
-use Elephox\Mimey\MimeTypeInterface;
 use Throwable;
 
 #[Immutable]
 class Response extends AbstractMessage implements Contract\Response
 {
+	use DerivesContentTypeFromHeaderMap;
+
 	#[Pure]
 	public static function build(): ResponseBuilder
 	{
@@ -47,21 +46,6 @@ class Response extends AbstractMessage implements Contract\Response
 	public function getResponseCode(): ResponseCode
 	{
 		return $this->responseCode;
-	}
-
-	#[Pure]
-	public function getMimeType(): ?MimeTypeInterface
-	{
-		$header = $this->headers->firstOrDefault(null, static fn ($value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->name));
-		if ($header === null) {
-			return null;
-		}
-
-		if (is_array($header)) {
-			return MimeType::tryFrom($header[0]);
-		}
-
-		return MimeType::tryFrom($header);
 	}
 
 	#[Pure]

@@ -41,6 +41,9 @@ class IteratorProvider implements IteratorAggregate
 			$this->iterator = $iterator;
 			$this->iteratorGenerator = null;
 		} else {
+			/** @var Closure(): Traversable<TIteratorKey, TSource> $iterator */
+			assert(is_callable($iterator));
+
 			$this->iterator = null;
 			$this->iteratorGenerator = $iterator;
 		}

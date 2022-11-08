@@ -209,7 +209,6 @@ class ArrayList implements GenericList
 		$lastMatchingIndex = -1;
 		foreach ($this->items as $index => $item) {
 			if ($comparer($item, $value)) {
-				/** @var int $index */
 				$lastMatchingIndex = $index;
 			}
 		}
@@ -233,6 +232,7 @@ class ArrayList implements GenericList
 			return array_pop($this->items);
 		}
 
+		/** @var null|int $key */
 		$key = $this->reverse()->firstKeyOrDefault(null, $predicate);
 		if ($key === null) {
 			throw new EmptySequenceException();

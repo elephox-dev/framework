@@ -36,6 +36,7 @@ class ValuesDuration extends AbstractDuration
 		assert($this->years >= 0, 'Years must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 	}
 
+	#[Pure]
 	public function toDateInterval(): DateInterval
 	{
 		return AbstractDuration::toInterval($this);

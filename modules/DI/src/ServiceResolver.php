@@ -110,17 +110,17 @@ trait ServiceResolver
 	/**
 	 * @template T
 	 *
-	 * @param Closure|ReflectionFunctionAbstract $callback
+	 * @param Closure|ReflectionFunction $callback
 	 * @param array $overrideArguments
 	 *
 	 * @return T
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure|ReflectionFunctionAbstract $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
+	public function callback(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
 		try {
-			$reflectionFunction = $callback instanceof ReflectionFunctionAbstract ? $callback : new ReflectionFunction($callback);
+			$reflectionFunction = $callback instanceof ReflectionFunction ? $callback : new ReflectionFunction($callback);
 			$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
 
 			/** @var T */
@@ -130,7 +130,7 @@ trait ServiceResolver
 		}
 	}
 
-	public function resolveArguments(ReflectionFunctionAbstract $method, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList
+	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList
 	{
 		if (!empty($overrideArguments) && array_is_list($overrideArguments)) {
 			return ArrayList::from($overrideArguments);
@@ -138,7 +138,7 @@ trait ServiceResolver
 
 		/** @var ArrayList<mixed> $arguments */
 		$arguments = new ArrayList();
-		$parameters = $method->getParameters();
+		$parameters = $function->getParameters();
 
 		foreach ($parameters as $parameter) {
 			if ($parameter->isVariadic()) {
@@ -148,9 +148,11 @@ trait ServiceResolver
 			}
 
 			if (array_key_exists($parameter->getName(), $overrideArguments)) {
+				/** @var mixed $argument */
 				$argument = $overrideArguments[$parameter->getName()];
 				unset($overrideArguments[$parameter->getName()]);
 			} else {
+				/** @var mixed $argument */
 				$argument = $this->resolveArgument($arguments->count(), $parameter, $onUnresolved);
 			}
 
@@ -175,7 +177,8 @@ trait ServiceResolver
 			}
 
 			if ($onUnresolved !== null) {
-				return $this->callback($onUnresolved, ['parameter' => $parameter]);
+				/** @var mixed */
+				return $this->callback($onUnresolved, ['parameter' => $parameter, 'index' => $index]);
 			}
 
 			throw new MissingTypeHintException($parameter);
@@ -209,7 +212,8 @@ trait ServiceResolver
 		}
 
 		if ($onUnresolved !== null) {
-			return $this->callback($onUnresolved, ['parameter' => $parameter]);
+			/** @var mixed */
+			return $this->callback($onUnresolved, ['parameter' => $parameter, 'index' => $index]);
 		}
 
 		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);

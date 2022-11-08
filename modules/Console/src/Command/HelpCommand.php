@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Collection\Iterator\FlipIterator;
+use Iterator;
+use IteratorIterator;
 use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
 use Stringable;
@@ -34,10 +36,13 @@ class HelpCommand implements Contract\CommandHandler
 			/** @var array<int, array<int, string>> $commands */
 			$commands = [];
 
-			/**
-			 * @var CommandTemplate $commandTemplate
-			 */
-			foreach (new FlipIterator($this->commands->getIterator()) as $commandTemplate) {
+			$commandsIterator = $this->commands->getIterator();
+			if (!($commandsIterator instanceof Iterator)) {
+				$commandsIterator = new IteratorIterator($commandsIterator);
+			}
+
+			/** @var CommandTemplate $commandTemplate */
+			foreach (new FlipIterator($commandsIterator) as $commandTemplate) {
 				$description = empty($commandTemplate->description) ? Console::gray('No description') : $commandTemplate->description;
 				$name = Console::yellow($commandTemplate->name);
 
