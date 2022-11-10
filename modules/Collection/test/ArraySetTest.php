@@ -34,6 +34,17 @@ class ArraySetTest extends TestCase
 		static::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
 	}
 
+	public function testAddAll(): void
+	{
+		$set = new ArraySet(['a', 'b', 'c']);
+		$set->addAll(['d', 'e']);
+
+		static::assertSame(['a', 'b', 'c', 'd', 'e'], $set->toArray());
+
+		$set->addAll(['b', 'a', 'f']);
+		static::assertSame(['a', 'b', 'c', 'd', 'e', 'f'], $set->toArray());
+	}
+
 	public function testRemove(): void
 	{
 		$set = new ArraySet(['a', 'b', 'c']);

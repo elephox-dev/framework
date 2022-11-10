@@ -69,6 +69,17 @@ class ArraySet implements GenericSet
 		return true;
 	}
 
+	public function addAll(iterable $values): bool
+	{
+		$allAdded = true;
+
+		foreach ($values as $value) {
+			$allAdded = $this->add($value) && $allAdded;
+		}
+
+		return $allAdded;
+	}
+
 	public function remove(mixed $value): bool
 	{
 		$iterator = $this->getIterator();

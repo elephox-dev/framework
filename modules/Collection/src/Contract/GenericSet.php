@@ -16,6 +16,11 @@ interface GenericSet extends GenericEnumerable
 	public function add(mixed $value): bool;
 
 	/**
+	 * @param iterable<mixed, T> $values
+	 */
+	public function addAll(iterable $values): bool;
+
+	/**
 	 * @param T $value
 	 */
 	public function remove(mixed $value): bool;

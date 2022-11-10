@@ -22,8 +22,27 @@ class ObjectSetTest extends TestCase
 	public function testAdd(): void
 	{
 		$set = new ObjectSet();
-		static::assertTrue($set->add(new stdClass()));
+		$obj = new stdClass();
+
+		static::assertTrue($set->add($obj));
 		static::assertCount(1, $set);
+
+		static::assertFalse($set->add($obj));
+		static::assertCount(1, $set);
+	}
+
+	public function testAddAll(): void
+	{
+		$set = new ObjectSet();
+		$obj = new stdClass();
+		$obj2 = new stdClass();
+		$obj3 = new stdClass();
+
+		static::assertTrue($set->addAll([$obj, $obj2]));
+		static::assertCount(2, $set);
+
+		static::assertFalse($set->addAll([$obj2, $obj3]));
+		static::assertCount(3, $set);
 	}
 
 	public function testAddInvalid(): void

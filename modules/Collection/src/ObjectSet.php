@@ -21,9 +21,7 @@ class ObjectSet implements GenericSet
 	/**
 	 * @use IsEnumerable<T>
 	 */
-	use IsEnumerable {
-		IsEnumerable::contains as enumerableContains;
-	}
+	use IsEnumerable;
 
 	/**
 	 * @var SplObjectStorage<T, mixed>
@@ -65,6 +63,17 @@ class ObjectSet implements GenericSet
 		return !$existed;
 	}
 
+	public function addAll(iterable $values): bool
+	{
+		$allAdded = true;
+
+		foreach ($values as $value) {
+			$allAdded = $this->add($value) && $allAdded;
+		}
+
+		return $allAdded;
+	}
+
 	public function remove(mixed $value): bool
 	{
 		assert(is_object($value), sprintf('Argument 1 passed to %s() must be an object, %s given', __METHOD__, get_debug_type($value)));
@@ -90,10 +99,5 @@ class ObjectSet implements GenericSet
 		}
 
 		return count($remove) > 0;
-	}
-
-	public function contains(mixed $value, ?callable $comparer = null): bool
-	{
-		return $this->enumerableContains($value, $comparer ?? $this->comparer);
 	}
 }
