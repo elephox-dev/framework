@@ -968,7 +968,7 @@ trait IsKeyedEnumerable
 		return $array;
 	}
 
-	public function toNestedArray(?callable $keySelector = null): array
+	public function groupByKey(?callable $keySelector = null): array
 	{
 		$keySelector ??= static fn (mixed $key, mixed $value): mixed => $key;
 

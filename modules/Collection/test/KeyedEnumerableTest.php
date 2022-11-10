@@ -683,7 +683,7 @@ class KeyedEnumerableTest extends TestCase
 				'c',
 				'd',
 				'e',
-			])->toNestedArray(static fn (int $k): int => $k % 2 + 2),
+			])->groupByKey(static fn (int $k): int => $k % 2 + 2),
 		);
 
 		static::assertSame(
@@ -695,13 +695,13 @@ class KeyedEnumerableTest extends TestCase
 				{
 					return 'stringable';
 				}
-			} => 'a'))->toNestedArray(),
+			} => 'a'))->groupByKey(),
 		);
 
 		$this->expectException(OutOfBoundsException::class);
 		$this->expectExceptionMessage('Invalid array key: stdClass');
 
-		(new KeyedEnumerable(static fn () => yield new stdClass() => 'a'))->toNestedArray();
+		(new KeyedEnumerable(static fn () => yield new stdClass() => 'a'))->groupByKey();
 	}
 
 	public function testUnion(): void

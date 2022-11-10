@@ -399,7 +399,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 *
 	 * @return array<TArrayKey, list<TSource>>
 	 */
-	public function toNestedArray(?callable $keySelector = null): array;
+	public function groupByKey(?callable $keySelector = null): array;
 
 	/**
 	 * @return GenericEnumerable<TIteratorKey>

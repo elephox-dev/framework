@@ -890,7 +890,7 @@ trait IsEnumerable
 			$iterator = new IteratorIterator($iterator);
 		}
 
-		return self::reindex($iterator)->toNestedArray($keySelector);
+		return self::reindex($iterator)->groupByKey($keySelector);
 	}
 
 	public function toKeyed(callable $keySelector): GenericKeyedEnumerable
