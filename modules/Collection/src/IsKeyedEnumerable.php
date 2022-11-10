@@ -1066,6 +1066,47 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function unique(?callable $comparer = null): GenericKeyedEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+		$identity = static fn (mixed $o): mixed => $o;
+
+		/**
+		 * @var callable(TSource, TSource): bool $comparer
+		 * @var callable(TSource): TSource $identity
+		 */
+		return $this->uniqueBy($identity, $comparer);
+	}
+
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function uniqueBy(callable $keySelector, ?callable $comparer = null): GenericKeyedEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+
+		/**
+		 * @var Closure(TSource): TCompareKey $keySelector
+		 * @var Closure(TCompareKey, TCompareKey): bool $comparer
+		 */
+		return new KeyedEnumerable(new UniqueByIterator($iterator, $keySelector(...), $comparer(...)));
+	}
+
+	/**
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>

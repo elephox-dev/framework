@@ -380,6 +380,23 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function unionBy(self $other, callable $keySelector, ?callable $comparer = null): self;
 
 	/**
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function unique(?callable $comparer = null): self;
+
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function uniqueBy(callable $keySelector, ?callable $comparer = null): self;
+
+	/**
 	 * @param callable(TSource): bool $predicate
 	 *
 	 * @return GenericEnumerable<TSource>

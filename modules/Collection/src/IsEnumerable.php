@@ -936,8 +936,10 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
+		if (!($otherIterator instanceof Iterator)) {
+			$otherIterator = new IteratorIterator($otherIterator);
+		}
 
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {
@@ -953,6 +955,47 @@ trait IsEnumerable
 		 * @var Closure(TCompareKey, TCompareKey): bool $comparer
 		 */
 		return new Enumerable(new UniqueByIterator($append, $keySelector(...), $comparer(...)));
+	}
+
+	/**
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function unique(?callable $comparer = null): GenericEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+		$identity = static fn (mixed $o): mixed => $o;
+
+		/**
+		 * @var callable(TSource, TSource): bool $comparer
+		 * @var callable(TSource): TSource $identity
+		 */
+		return $this->uniqueBy($identity, $comparer);
+	}
+
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function uniqueBy(callable $keySelector, ?callable $comparer = null): GenericEnumerable
+	{
+		$comparer ??= DefaultEqualityComparer::same(...);
+
+		$iterator = $this->getIterator();
+		if (!($iterator instanceof Iterator)) {
+			$iterator = new IteratorIterator($iterator);
+		}
+
+		/**
+		 * @var Closure(TSource): TCompareKey $keySelector
+		 * @var Closure(TCompareKey, TCompareKey): bool $comparer
+		 */
+		return new Enumerable(new UniqueByIterator($iterator, $keySelector(...), $comparer(...)));
 	}
 
 	/**
@@ -984,8 +1027,10 @@ trait IsEnumerable
 	{
 		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
 
-		/** @var Iterator<mixed, TSource> $otherIterator */
 		$otherIterator = $other->getIterator();
+		if (!($otherIterator instanceof Iterator)) {
+			$otherIterator = new IteratorIterator($otherIterator);
+		}
 
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {

@@ -431,6 +431,23 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function unionBy(self $other, callable $keySelector, ?callable $comparer = null): self;
 
 	/**
+	 * @param null|callable(TSource, TSource): bool $comparer
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function unique(?callable $comparer = null): self;
+
+	/**
+	 * @template TCompareKey
+	 *
+	 * @param callable(TSource): TCompareKey $keySelector
+	 * @param null|callable(TCompareKey, TCompareKey): bool $comparer
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function uniqueBy(callable $keySelector, ?callable $comparer = null): self;
+
+	/**
 	 * @param callable(TSource, TIteratorKey, Iterator<TIteratorKey, TSource>): bool $predicate
 	 *
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
