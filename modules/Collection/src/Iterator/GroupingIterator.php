@@ -29,13 +29,13 @@ class GroupingIterator implements Iterator
 	private array $groupKeys = [];
 
 	/**
-	 * @var array<int, list<TValue>>
+	 * @var array<int, list<array{TKey, TValue}>>
 	 */
-	private array $values = [];
+	private array $groupPairs = [];
 
 	/**
-	 * @param Traversable<mixed, TValue> $iterator
-	 * @param Closure(TValue): TGroupKey $groupingFunction
+	 * @param Traversable<TKey, TValue> $iterator
+	 * @param Closure(TValue, TKey): TGroupKey $groupingFunction
 	 * @param null|Closure(TGroupKey, TGroupKey): bool $comparer
 	 */
 	public function __construct(
@@ -53,7 +53,19 @@ class GroupingIterator implements Iterator
 			throw new RuntimeException('No current group key');
 		}
 
-		return new Grouping($this->groupKeys[$idx], new ArrayIterator($this->values[$idx]));
+		$groupKey = $this->groupKeys[$idx];
+		$pairs = $this->groupPairs[$idx];
+
+		/** @psalm-suppress UnusedClosureParam */
+		$iterator = new SelectIterator(
+			new KeySelectIterator(
+				new ArrayIterator($pairs),
+				static fn (int $idx, array $pair): mixed => $pair[0],
+			),
+			static fn (array $pair, mixed $key): mixed => $pair[1],
+		);
+
+		return new Grouping($groupKey, $iterator);
 	}
 
 	public function next(): void
@@ -80,36 +92,24 @@ class GroupingIterator implements Iterator
 	{
 		$this->groupKeys = [];
 
-		/**
-		 * @param list<mixed> $xs
-		 * @param callable(mixed): bool $f
-		 *
-		 * @return int|null
-		 */
-		$findIdx = static function (array $xs, callable $f): ?int {
-			/**
-			 * @var int $k
-			 * @var mixed $x
-			 */
-			foreach ($xs as $k => $x) {
-				if ($f($x) === true) {
-					return $k;
+		foreach ($this->iterator as $key => $value) {
+			$groupingKey = ($this->groupingFunction)($value, $key);
+			$idx = null;
+			foreach (array_keys($this->groupKeys) as $k) {
+				if (($this->comparer)($k, $groupingKey)) {
+					$idx = $k;
+
+					break;
 				}
 			}
 
-			return null;
-		};
-
-		foreach ($this->iterator as $value) {
-			$groupingKey = ($this->groupingFunction)($value);
-			$idx = $findIdx($this->groupKeys, fn (mixed $k): bool => (bool) ($this->comparer)($k, $groupingKey));
 			if ($idx === null) {
 				$this->groupKeys[] = $groupingKey;
 				end($this->groupKeys);
 				$idx = key($this->groupKeys) ?? throw new RuntimeException('Unexpected null key');
 			}
 
-			$this->values[$idx][] = $value;
+			$this->groupPairs[$idx][] = [$key, $value];
 		}
 
 		reset($this->groupKeys);
