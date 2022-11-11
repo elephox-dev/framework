@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\OOR\Casing;
+
 class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 {
 	public function __construct(
@@ -26,7 +28,7 @@ class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 
 	public function host(?string $host): Contract\UrlBuilder
 	{
-		$this->host = $host;
+		$this->host = $host !== null ? Casing::toLower($host) : null;
 
 		return $this;
 	}
