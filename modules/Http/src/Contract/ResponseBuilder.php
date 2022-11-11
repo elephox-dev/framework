@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Files\Contract\File;
 use Elephox\Http\ResponseCode;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
@@ -27,7 +28,7 @@ interface ResponseBuilder extends MessageBuilder
 
 	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static;
 
-	public function fileBody(string $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static;
+	public function fileBody(string|File $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static;
 
 	public function getException(): ?Throwable;
 
