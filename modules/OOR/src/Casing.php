@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\OOR;
 
 use Exception;
+use JetBrains\PhpStorm\Pure;
 
 class Casing
 {
@@ -11,6 +12,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "hello beautiful world"
 	 */
+	#[Pure]
 	public static function toLower(string $string): string
 	{
 		return mb_strtolower($string, 'UTF-8');
@@ -20,6 +22,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HELLO BEAUTIFUL WORLD"
 	 */
+	#[Pure]
 	public static function toUpper(string $string): string
 	{
 		return mb_strtoupper($string, 'UTF-8');
@@ -29,6 +32,7 @@ class Casing
 	 * Example input: "Hello beautiful WoRld"<br>
 	 * Example output: "Hello Beautiful World"
 	 */
+	#[Pure]
 	public static function toTitle(string $string): string
 	{
 		return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
@@ -38,6 +42,7 @@ class Casing
 	 * Example input: "Hello beautiful World", "-"<br>
 	 * Example output: "Hello-beautiful-World"
 	 */
+	#[Pure]
 	public static function replaceDelimiters(string $string, string $replacement, string $delimitersPattern = '/([\s\-_]+)/'): string
 	{
 		/** @var string */
@@ -48,6 +53,7 @@ class Casing
 	 * Example input: "HelloBeautifulWorld", "-"<br>
 	 * Example output: "Hello-Beautiful-World"
 	 */
+	#[Pure]
 	public static function splitWords(string $string, string $separator): string
 	{
 		$perimeter = match ($separator) {
@@ -63,6 +69,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "helloBeautifulWorld"
 	 */
+	#[Pure]
 	public static function toCamel(string $string): string
 	{
 		return lcfirst(self::toPascal($string));
@@ -72,6 +79,7 @@ class Casing
 	 * Example input: "Hello beautifulWorld"<br>
 	 * Example output: "hello_beautiful_world"
 	 */
+	#[Pure]
 	public static function toSnake(string $string): string
 	{
 		return self::toLower(self::replaceDelimiters(self::splitWords($string, '_'), '_'));
@@ -81,6 +89,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "hello-beautiful-world"
 	 */
+	#[Pure]
 	public static function toKebab(string $string): string
 	{
 		return self::toLower(self::toHttpHeader($string));
@@ -90,6 +99,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HELLO-BEAUTIFUL-WORLD"
 	 */
+	#[Pure]
 	public static function toCobol(string $string): string
 	{
 		return self::toUpper(self::toHttpHeader($string));
@@ -99,6 +109,7 @@ class Casing
 	 * Example input: "Hello beautiful World"<br>
 	 * Example output: "HelloBeautifulWorld"
 	 */
+	#[Pure]
 	public static function toHttpHeader(string $string): string
 	{
 		return self::replaceDelimiters(self::toTitle(self::splitWords($string, ' ')), '-');
@@ -108,6 +119,7 @@ class Casing
 	 * Example input: "Hello beautiful WoRld"<br>
 	 * Example output: "HelloBeautifulWorld"
 	 */
+	#[Pure]
 	public static function toPascal(string $string): string
 	{
 		return ucfirst(self::replaceDelimiters(self::toTitle(self::splitWords($string, ' ')), ''));
