@@ -6,8 +6,9 @@ namespace Elephox\Http\Contract;
 use Elephox\Http\UploadError;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Mimey\MimeTypeInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
-interface UploadedFile
+interface UploadedFile extends UploadedFileInterface
 {
 	public function getClientFilename(): string;
 

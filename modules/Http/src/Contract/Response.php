@@ -5,9 +5,10 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Http\ResponseCode;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-interface Response extends Message
+interface Response extends Message, ResponseInterface
 {
 	#[Pure]
 	public static function build(): ResponseBuilder;

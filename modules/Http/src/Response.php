@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Http\Contract\HeaderMap;
+use AssertionError;
 use Elephox\Stream\Contract\Stream;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Throwable;
+use ValueError;
 
 #[Immutable]
 class Response extends AbstractMessage implements Contract\Response
@@ -21,7 +23,7 @@ class Response extends AbstractMessage implements Contract\Response
 	#[Pure]
 	public function __construct(
 		string $protocolVersion,
-		HeaderMap $headers,
+		Contract\HeaderMap $headers,
 		Stream $body,
 		public readonly ResponseCode $responseCode,
 		public readonly ?Throwable $exception,
@@ -32,9 +34,10 @@ class Response extends AbstractMessage implements Contract\Response
 	#[Pure]
 	public function with(): ResponseBuilder
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		return new ResponseBuilder(
 			$this->protocolVersion,
-			$this->headers,
+			new HeaderMap($this->headers->toArray()),
 			$this->body,
 			$this->responseCode,
 		);
@@ -50,5 +53,36 @@ class Response extends AbstractMessage implements Contract\Response
 	public function getException(): ?Throwable
 	{
 		return $this->exception;
+	}
+
+	public function getStatusCode(): int
+	{
+		return $this->getResponseCode()->value;
+	}
+
+	public function withStatus($code, $reasonPhrase = ''): static
+	{
+		try {
+			assert(is_int($code) && $code >= 100 && $code <= 599);
+			assert(is_string($reasonPhrase));
+
+			if ($reasonPhrase !== '') {
+				/** @psalm-suppress ImpureFunctionCall */
+				trigger_error("non-standard \$reasonPhrase values are not stored in the response");
+			}
+
+			/**
+			 * @psalm-suppress ImpureMethodCall
+			 * @var static
+			 */
+			return $this->with()->responseCode(ResponseCode::from($code))->get();
+		} catch (ValueError|AssertionError $e) {
+			throw new InvalidArgumentException("Error settings status code: " . $e->getMessage(), previous: $e);
+		}
+	}
+
+	public function getReasonPhrase(): string
+	{
+		return $this->getResponseCode()->getReasonPhrase();
 	}
 }

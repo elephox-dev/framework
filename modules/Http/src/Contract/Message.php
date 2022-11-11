@@ -7,9 +7,10 @@ use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\MessageInterface;
 
 #[Immutable]
-interface Message
+interface Message extends MessageInterface
 {
 	#[Pure]
 	public static function build(): MessageBuilder;

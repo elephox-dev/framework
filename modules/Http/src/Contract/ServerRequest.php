@@ -5,9 +5,10 @@ namespace Elephox\Http\Contract;
 
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\ServerRequestInterface;
 
 #[Immutable]
-interface ServerRequest extends Request
+interface ServerRequest extends Request, ServerRequestInterface
 {
 	#[Pure]
 	public static function build(): ServerRequestBuilder;
@@ -16,14 +17,14 @@ interface ServerRequest extends Request
 	public function with(): ServerRequestBuilder;
 
 	#[Pure]
-	public function getParameters(): ParameterMap;
+	public function getParameterMap(): ParameterMap;
 
 	#[Pure]
-	public function getCookies(): CookieMap;
+	public function getCookieMap(): CookieMap;
 
 	#[Pure]
-	public function getUploadedFiles(): UploadedFileMap;
+	public function getUploadedFileMap(): UploadedFileMap;
 
 	#[Pure]
-	public function getSession(): ?SessionMap;
+	public function getSessionMap(): ?SessionMap;
 }

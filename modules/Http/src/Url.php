@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\OOR\Casing;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\UriInterface;
 use Stringable;
 
 #[Immutable]
-class Url implements Stringable
+class Url implements Stringable, UriInterface
 {
 	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
 
@@ -170,15 +172,129 @@ class Url implements Stringable
 	#[Pure]
 	public function with(): Contract\UrlBuilder
 	{
+		/** @psalm-suppress ImpureMethodCall */
 		return new UrlBuilder(
 			$this->scheme,
 			$this->host,
 			$this->port,
 			$this->path,
-			$this->queryMap,
+			$this->queryMap === null ? null : new QueryMap($this->queryMap->toArray()),
 			$this->fragment,
 			$this->username,
 			$this->password,
 		);
+	}
+
+	public function getScheme(): string
+	{
+		return $this->scheme?->getScheme() ?? '';
+	}
+
+	public function getHost(): string
+	{
+		return $this->host ?? '';
+	}
+
+	public function getPort(): ?int
+	{
+		return $this->port ?? $this->scheme?->getDefaultPort();
+	}
+
+	public function getPath(): string
+	{
+		return $this->path;
+	}
+
+	public function getQuery(): string
+	{
+		return (string)$this->queryMap;
+	}
+
+	public function getFragment(): string
+	{
+		return $this->fragment ?? '';
+	}
+
+	public function withScheme($scheme): static
+	{
+		assert(is_string($scheme));
+
+		$urlScheme = UrlScheme::tryFrom(Casing::toLower($scheme)) ?? new CustomUrlScheme($scheme);
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->scheme($urlScheme);
+	}
+
+	public function withUserInfo($user, $password = null): static
+	{
+		assert(is_string($user));
+		assert(is_string($password) || $password === null);
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->userInfo($user, $password)->get();
+	}
+
+	public function withHost($host): static
+	{
+		assert(is_string($host));
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->host($host)->get();
+	}
+
+	public function withPort($port): static
+	{
+		assert(is_int($port) || $port === null);
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->port($port)->get();
+	}
+
+	public function withPath($path): static
+	{
+		assert(is_string($path));
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->path($path)->get();
+	}
+
+	public function withQuery($query): static
+	{
+		assert(is_string($query));
+
+		/** @psalm-suppress ImpureMethodCall */
+		$map = QueryMap::fromString($query);
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->queryMap($map)->get();
+	}
+
+	public function withFragment($fragment): static
+	{
+		assert(is_string($fragment));
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 * @var static
+		 */
+		return $this->with()->fragment($fragment)->get();
 	}
 }

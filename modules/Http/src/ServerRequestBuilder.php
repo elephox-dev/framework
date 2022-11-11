@@ -219,7 +219,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			$request->getProtocolVersion(),
 			$request->getHeaderMap(),
 			$request->getBody(),
-			$request->getMethod(),
+			$request->getRequestMethod(),
 			$request->getUrl(),
 		);
 	}

@@ -7,9 +7,10 @@ use Elephox\Http\RequestMethod;
 use Elephox\Http\Url;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\RequestInterface;
 
 #[Immutable]
-interface Request extends Message
+interface Request extends Message, RequestInterface
 {
 	#[Pure]
 	public static function build(): RequestBuilder;
@@ -18,7 +19,7 @@ interface Request extends Message
 	public function with(): RequestBuilder;
 
 	#[Pure]
-	public function getMethod(): RequestMethod;
+	public function getRequestMethod(): RequestMethod;
 
 	#[Pure]
 	public function getUrl(): Url;

@@ -104,8 +104,6 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 
 		if ($this->headers->has($name)) {
 			$previous = $this->headers->get($name);
-
-			$previous = is_array($previous) ? $previous : [$previous];
 		} else {
 			$previous = [];
 		}
