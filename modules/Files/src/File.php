@@ -112,6 +112,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 			throw new FileNotFoundException($this->path());
 		}
 
+		/** @var false|int<0, max> $size */
 		$size = filesize($this->path());
 		if ($size === false) {
 			throw new RuntimeException("Unable to get the size of file ({$this->path()})");
@@ -221,8 +222,21 @@ class File extends AbstractFilesystemNode implements Contract\File
 	{
 		if ($node instanceof Contract\Directory) {
 			$destination = new self(Path::join($node->path(), $this->name()));
-		} elseif ($node instanceof Contract\File) {
+		} else if ($node instanceof Contract\File) {
 			$destination = $node;
+		} else if ($node instanceof Contract\Link) {
+			$target = $node->target();
+			if ($target instanceof Contract\Link) {
+				$nextTarget = $target->target();
+
+				if ($nextTarget->path() === $this->path()) {
+					throw new LinkLoopDetectedException($node, $target);
+				}
+
+				// MIND: it's still possible for $nextTarget to point to another link and so on
+			}
+
+			$destination = $this->getDestination($target, $overwrite);
 		} else {
 			throw new FilesystemNodeNotImplementedException($node, 'Given filesystem node is not a file or directory');
 		}

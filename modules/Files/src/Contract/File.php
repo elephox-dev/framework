@@ -18,6 +18,9 @@ interface File extends FilesystemNode, HasHash
 
 	public function extension(): string;
 
+	/**
+	 * @return int<0, max>
+	 */
 	public function size(): int;
 
 	public function mimeType(): ?MimeTypeInterface;
