@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\DefaultEqualityComparer;
+use Elephox\Files\Contract\File as FileContract;
 use Elephox\Files\File;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
@@ -91,7 +92,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	/**
 	 * @throws JsonException
 	 *
-	 * @param ?MimeTypeInterface $mimeType
+	 * @param null|MimeTypeInterface $mimeType
 	 * @param array $data
 	 */
 	public function jsonBody(array $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
@@ -106,7 +107,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->textBody($content, $mimeType);
 	}
 
-	public function fileBody(string $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static
+	public function fileBody(string|FileContract $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static
 	{
 		$this->body(File::openStream($path));
 
