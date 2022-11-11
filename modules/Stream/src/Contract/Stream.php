@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Stream\Contract;
 
+use Psr\Http\Message\StreamInterface;
 use Stringable;
 
-interface Stream extends Stringable
+interface Stream extends Stringable, StreamInterface
 {
 	/**
-	 * @return closed-resource|resource|null
+	 * @return resource|null
 	 */
 	public function detach();
 
@@ -26,36 +27,48 @@ interface Stream extends Stringable
 
 	public function eof(): bool;
 
-	public function isSeekable(): bool;
-
-	/**
-	 * @param int<0, max> $offset
-	 * @param int<0, max> $whence
-	 */
-	public function seek(int $offset, int $whence = SEEK_SET): void;
+	public function seek($offset, $whence = SEEK_SET): void;
 
 	public function rewind(): void;
-
-	public function isWriteable(): bool;
 
 	/**
 	 * @param string $string
 	 *
 	 * @return int<0, max>
 	 */
-	public function write(string $string): int;
-
-	public function isReadable(): bool;
-
-	public function read(int $length): string;
+	public function write($string): int;
 
 	public function getContents(): string;
 
-	public function getMetadata(?string $key = null): mixed;
+	/**
+	 * @param string $key
+	 */
+	public function getMetadata($key = null): mixed;
 
-	public function readLine(string $eol = "\r\n"): string;
+	/**
+	 * @param int $length
+	 */
+	public function read($length): string;
 
-	public function readAllLines(string $eol = "\r\n"): iterable;
+	/**
+	 * @return string A possibly multibyte character
+	 */
+	public function readChar(string $encoding = 'UTF-8'): string;
 
+	public function readLine(string $eol = "\r\n", string $encoding = 'UTF-8'): string;
+
+	/**
+	 * @return iterable<int, string>
+	 */
+	public function readAllLines(string $eol = "\r\n", string $encoding = 'UTF-8'): iterable;
+
+	/**
+	 * @return int<0, 255>
+	 */
 	public function readByte(): int;
+
+	/**
+	 * @return iterable<int, int<0, 255>>
+	 */
+	public function readBytes(int $length, int $chunkSize = 1024): iterable;
 }

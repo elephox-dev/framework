@@ -9,7 +9,7 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\StringStream
- * @covers \Elephox\Stream\AbstractStream
+ * @covers \Elephox\Stream\StreamReader
  *
  * @internal
  */
@@ -21,7 +21,7 @@ class StringStreamTest extends TestCase
 
 		static::assertSame('foo', $stream->getContents());
 		static::assertTrue($stream->isReadable());
-		static::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWritable());
 		static::assertTrue($stream->isSeekable());
 	}
 
@@ -32,7 +32,7 @@ class StringStreamTest extends TestCase
 		static::assertSame('foo', $stream->getContents());
 		static::assertTrue($stream->isReadable());
 		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWritable());
 	}
 
 	public function testToString(): void
@@ -160,7 +160,7 @@ class StringStreamTest extends TestCase
 
 	public function testWrite(): void
 	{
-		$stream = new StringStream('foo', writeable: true);
+		$stream = new StringStream('foo', writable: true);
 
 		$stream->write('bar');
 
@@ -216,20 +216,46 @@ class StringStreamTest extends TestCase
 		static::assertSame('foo', $stream->readLine());
 		static::assertSame('bar', $stream->readLine());
 		static::assertSame('baz', $stream->readLine());
+		$stream->rewind();
+		static::assertSame('foo', $stream->readLine());
 	}
 
 	public function testReadAllLines(): void
 	{
 		$stream = new StringStream("foo\r\nbar\r\nbaz");
 
-		static::assertSame(['foo', 'bar', 'baz'], iterator_to_array($stream->readAllLines()));
+		static::assertSame(['foo', 'bar', 'baz'], [...$stream->readAllLines()]);
 	}
 
-	public function testReadByte(): void
+	public function testReadBytes(): void
 	{
 		$stream = new StringStream('foo');
 
 		static::assertSame(102, $stream->readByte());
 		static::assertSame(1, $stream->tell());
+
+		static::assertSame([111, 111], [...$stream->readBytes(2)]);
+		static::assertTrue($stream->eof());
+	}
+
+	public function testReadChar(): void
+	{
+		$simpleStream = new StringStream('hello');
+
+		static::assertSame('h', $simpleStream->readChar());
+		static::assertSame('e', $simpleStream->readChar());
+		static::assertSame('l', $simpleStream->readChar());
+		static::assertSame('l', $simpleStream->readChar());
+		static::assertSame('o', $simpleStream->readChar());
+		static::assertTrue($simpleStream->eof());
+
+		$multiByteStream = new StringStream("🧔+👩🏿=❤");
+		static::assertSame('🧔', $multiByteStream->readChar());
+		static::assertSame('+', $multiByteStream->readChar());
+		static::assertSame('👩', $multiByteStream->readChar());
+		static::assertSame('🏿', $multiByteStream->readChar());
+		static::assertSame('=', $multiByteStream->readChar());
+		static::assertSame('❤', $multiByteStream->readChar());
+		static::assertTrue($multiByteStream->eof());
 	}
 }

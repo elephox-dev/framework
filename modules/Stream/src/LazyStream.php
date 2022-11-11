@@ -5,9 +5,12 @@ namespace Elephox\Stream;
 
 use Closure;
 use Elephox\Stream\Contract\Stream;
+use JetBrains\PhpStorm\ExpectedValues;
 
-class LazyStream extends AbstractStream
+class LazyStream implements Stream
 {
+	use StreamReader;
+
 	protected ?Stream $stream = null;
 
 	/**
@@ -32,9 +35,9 @@ class LazyStream extends AbstractStream
 		return $this->getStream()->isSeekable();
 	}
 
-	public function isWriteable(): bool
+	public function isWritable(): bool
 	{
-		return $this->getStream()->isWriteable();
+		return $this->getStream()->isWritable();
 	}
 
 	public function isReadable(): bool
@@ -72,8 +75,11 @@ class LazyStream extends AbstractStream
 		return $this->getStream()->eof();
 	}
 
-	public function seek(int $offset, int $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
+		assert(is_int($offset));
+		assert(is_int($whence));
+
 		$this->getStream()->seek($offset, $whence);
 	}
 
@@ -82,13 +88,17 @@ class LazyStream extends AbstractStream
 		$this->getStream()->rewind();
 	}
 
-	public function write(string $string): int
+	public function write($string): int
 	{
+		assert(is_string($string));
+
 		return $this->getStream()->write($string);
 	}
 
-	public function read(int $length): string
+	public function read($length): string
 	{
+		assert(is_int($length));
+
 		return $this->getStream()->read($length);
 	}
 
@@ -97,8 +107,10 @@ class LazyStream extends AbstractStream
 		return $this->getStream()->getContents();
 	}
 
-	public function getMetadata(?string $key = null): mixed
+	public function getMetadata($key = null): mixed
 	{
+		assert(is_string($key) || $key === null);
+
 		return $this->getStream()->getMetadata($key);
 	}
 }

@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
+use Elephox\Stream\Contract\Stream;
+use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-final class EmptyStream extends AbstractStream
+final class EmptyStream implements Stream
 {
+	use StreamReader;
+
 	#[Pure]
 	public function __toString(): string
 	{
@@ -49,7 +53,7 @@ final class EmptyStream extends AbstractStream
 		return false;
 	}
 
-	public function seek(int $offset, int $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
 		throw new RuntimeException('Empty stream is not seekable.');
 	}
@@ -60,12 +64,12 @@ final class EmptyStream extends AbstractStream
 	}
 
 	#[Pure]
-	public function isWriteable(): bool
+	public function isWritable(): bool
 	{
 		return false;
 	}
 
-	public function write(string $string): int
+	public function write($string): int
 	{
 		throw new RuntimeException('Empty stream is not writable.');
 	}
@@ -76,7 +80,7 @@ final class EmptyStream extends AbstractStream
 		return false;
 	}
 
-	public function read(int $length): string
+	public function read($length): string
 	{
 		throw new RuntimeException('Empty stream is not readable.');
 	}
@@ -88,7 +92,7 @@ final class EmptyStream extends AbstractStream
 	}
 
 	#[Pure]
-	public function getMetadata(?string $key = null): mixed
+	public function getMetadata($key = null): mixed
 	{
 		return null;
 	}

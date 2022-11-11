@@ -5,10 +5,13 @@ namespace Elephox\Stream;
 
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ExpectedValues;
 use RuntimeException;
 
-class AppendStream extends AbstractStream
+class AppendStream implements Stream
 {
+	use StreamReader;
+
 	public function __construct(
 		private readonly Stream $stream,
 		private readonly Stream $appendedStream,
@@ -69,8 +72,11 @@ class AppendStream extends AbstractStream
 		return $this->stream->isSeekable() && $this->appendedStream->isSeekable() && $this->getSize() !== null;
 	}
 
-	public function seek(int $offset, int $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
+		assert(is_int($offset));
+		assert(is_int($whence));
+
 		$streamSize = $this->stream->getSize();
 		$appendStreamSize = $this->appendedStream->getSize();
 
@@ -95,7 +101,6 @@ class AppendStream extends AbstractStream
 
 		if ($offset > $streamSize) {
 			$offset -= $streamSize;
-			/** @var int<0, max> $offset */
 			$this->appendedStream->seek($offset);
 		} elseif ($offset >= 0) {
 			$this->stream->seek($offset);
@@ -110,13 +115,15 @@ class AppendStream extends AbstractStream
 		$this->appendedStream->rewind();
 	}
 
-	public function isWriteable(): bool
+	public function isWritable(): bool
 	{
-		return $this->stream->isWriteable() && $this->appendedStream->isWriteable();
+		return $this->stream->isWritable() && $this->appendedStream->isWritable();
 	}
 
-	public function write(string $string): int
+	public function write($string): int
 	{
+		assert(is_string($string));
+
 		$length = mb_strlen($string, 'UTF-8');
 		$written = $this->stream->write($string);
 
@@ -132,8 +139,10 @@ class AppendStream extends AbstractStream
 		return $this->stream->isReadable() && $this->appendedStream->isReadable();
 	}
 
-	public function read(int $length): string
+	public function read($length): string
 	{
+		assert(is_int($length));
+
 		$streamSize = $this->stream->getSize();
 
 		if ($streamSize === null) {
@@ -160,8 +169,10 @@ class AppendStream extends AbstractStream
 		return $this->stream->getContents() . $this->appendedStream->getContents();
 	}
 
-	public function getMetadata(?string $key = null): array
+	public function getMetadata($key = null): array
 	{
+		assert(is_string($key) || $key === null);
+
 		return [$this->stream->getMetadata($key), $this->appendedStream->getMetadata($key)];
 	}
 }

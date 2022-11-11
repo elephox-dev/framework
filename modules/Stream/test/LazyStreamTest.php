@@ -26,7 +26,7 @@ class LazyStreamTest extends MockeryTestCase
 		;
 
 		$streamMock
-			->expects('isWriteable')
+			->expects('isWritable')
 			->withNoArgs()
 			->andReturn(true)
 		;
@@ -43,7 +43,7 @@ class LazyStreamTest extends MockeryTestCase
 		static::assertTrue($stream->isReadable());
 
 		$stream = new LazyStream(static fn () => $streamMock);
-		static::assertTrue($stream->isWriteable());
+		static::assertTrue($stream->isWritable());
 
 		$stream = new LazyStream(static fn () => $streamMock);
 		static::assertTrue($stream->isSeekable());

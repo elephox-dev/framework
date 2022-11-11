@@ -28,7 +28,7 @@ class ResourceStreamTest extends TestCase
 
 		static::assertTrue($stream->isReadable());
 		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWritable());
 		static::assertSame(0, $stream->getSize());
 	}
 
@@ -42,7 +42,7 @@ class ResourceStreamTest extends TestCase
 	public function testGetSizeFromFstat(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writeable: true);
+		$stream = new ResourceStream($fh, writable: true);
 
 		static::assertSame(0, $stream->getSize());
 
@@ -93,7 +93,7 @@ class ResourceStreamTest extends TestCase
 	public function testToString(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writeable: true);
+		$stream = new ResourceStream($fh, writable: true);
 
 		static::assertSame('', (string) $stream);
 
@@ -235,7 +235,7 @@ class ResourceStreamTest extends TestCase
 	public function testTell(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writeable: true);
+		$stream = new ResourceStream($fh, writable: true);
 
 		static::assertSame(0, $stream->tell());
 
@@ -247,7 +247,7 @@ class ResourceStreamTest extends TestCase
 	public function testEof(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writeable: true);
+		$stream = new ResourceStream($fh, writable: true);
 
 		static::assertEmpty($stream->getContents());
 		static::assertTrue($stream->eof());
@@ -284,7 +284,7 @@ class ResourceStreamTest extends TestCase
 	public function testWriteThrowsIfNotWriteable(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writeable: false);
+		$stream = new ResourceStream($fh, writable: false);
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Cannot write to a non-writable resource');

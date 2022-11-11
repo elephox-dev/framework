@@ -10,8 +10,10 @@ use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 use Stringable;
 
-class StringStream extends AbstractStream
+class StringStream implements Stream
 {
+	use StreamReader;
+
 	#[Pure]
 	public static function from(
 		string|Stringable $string,
@@ -31,10 +33,10 @@ class StringStream extends AbstractStream
 
 	#[Pure]
 	public function __construct(
-		private string $string,
+		private string        $string,
 		private readonly bool $readable = true,
 		private readonly bool $seekable = true,
-		private readonly bool $writeable = false,
+		private readonly bool $writable = false,
 	) {
 	}
 
@@ -82,8 +84,11 @@ class StringStream extends AbstractStream
 		return $this->seekable;
 	}
 
-	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
+		assert(is_int($offset));
+		assert(is_int($whence));
+
 		if (!$this->isSeekable()) {
 			throw new RuntimeException('Stream is not seekable');
 		}
@@ -105,14 +110,16 @@ class StringStream extends AbstractStream
 	}
 
 	#[Pure]
-	public function isWriteable(): bool
+	public function isWritable(): bool
 	{
-		return $this->writeable;
+		return $this->writable;
 	}
 
-	public function write(string $string): int
+	public function write($string): int
 	{
-		if (!$this->isWriteable()) {
+		assert(is_string($string));
+
+		if (!$this->isWritable()) {
 			throw new RuntimeException('Stream is not writable');
 		}
 
@@ -127,8 +134,10 @@ class StringStream extends AbstractStream
 		return $this->readable;
 	}
 
-	public function read(int $length): string
+	public function read($length): string
 	{
+		assert(is_int($length));
+
 		if (!$this->isReadable()) {
 			throw new RuntimeException('Stream is not readable');
 		}
@@ -147,8 +156,10 @@ class StringStream extends AbstractStream
 	}
 
 	#[Pure]
-	public function getMetadata(?string $key = null): array
+	public function getMetadata($key = null): array
 	{
+		assert(is_string($key) || $key === null);
+
 		return [];
 	}
 }

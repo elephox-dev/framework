@@ -3,25 +3,29 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
+use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
-class ResourceStream extends AbstractStream
+class ResourceStream implements Stream
 {
+	use StreamReader;
+
 	/**
 	 * @param closed-resource|resource|null $resource
 	 * @param bool $readable
-	 * @param bool $writeable
+	 * @param bool $writable
 	 * @param bool $seekable
 	 * @param null|int<0, max> $size
 	 */
 	public function __construct(
-		private mixed $resource,
+		private mixed         $resource,
 		private readonly bool $readable = true,
-		private readonly bool $writeable = false,
+		private readonly bool $writable = false,
 		private readonly bool $seekable = true,
-		private ?int $size = null,
+		private ?int          $size = null,
 	) {
 		if (!is_resource($this->resource)) {
 			throw new InvalidArgumentException('ResourceStream expects a resource');
@@ -55,6 +59,7 @@ class ResourceStream extends AbstractStream
 			return null;
 		}
 
+		/** @var resource $resource */
 		$resource = $this->resource;
 
 		$this->resource = null;
@@ -122,8 +127,11 @@ class ResourceStream extends AbstractStream
 		return $this->seekable;
 	}
 
-	public function seek(int $offset, int $whence = SEEK_SET): void
+	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
 	{
+		assert(is_int($offset));
+		assert(is_int($whence));
+
 		if (!is_resource($this->resource)) {
 			throw new RuntimeException('Resource is not available');
 		}
@@ -143,18 +151,20 @@ class ResourceStream extends AbstractStream
 	}
 
 	#[Pure]
-	public function isWriteable(): bool
+	public function isWritable(): bool
 	{
-		return $this->writeable;
+		return $this->writable;
 	}
 
-	public function write(string $string): int
+	public function write($string): int
 	{
+		assert(is_string($string));
+
 		if (!is_resource($this->resource)) {
 			throw new RuntimeException('Resource is not available');
 		}
 
-		if (!$this->writeable) {
+		if (!$this->isWritable()) {
 			throw new RuntimeException('Cannot write to a non-writable resource');
 		}
 
@@ -175,8 +185,10 @@ class ResourceStream extends AbstractStream
 		return $this->readable;
 	}
 
-	public function read(int $length): string
+	public function read($length): string
 	{
+		assert(is_int($length));
+
 		if ($length < 0) {
 			throw new InvalidArgumentException('Length parameter cannot be negative');
 		}
@@ -215,8 +227,10 @@ class ResourceStream extends AbstractStream
 		return $contents;
 	}
 
-	public function getMetadata(?string $key = null): mixed
+	public function getMetadata($key = null): mixed
 	{
+		assert(is_string($key) || $key === null);
+
 		if (!is_resource($this->resource)) {
 			return $key ? null : [];
 		}

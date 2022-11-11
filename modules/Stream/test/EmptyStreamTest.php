@@ -8,7 +8,7 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\EmptyStream
- * @covers \Elephox\Stream\AbstractStream
+ * @covers \Elephox\Stream\StreamReader
  *
  * @internal
  */
@@ -85,7 +85,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		static::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWritable());
 	}
 
 	public function testWrite(): void

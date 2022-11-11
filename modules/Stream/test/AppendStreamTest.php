@@ -183,17 +183,17 @@ class AppendStreamTest extends MockeryTestCase
 
 		$streamMock->expects('getSize')->andReturns(1);
 		$streamMock->expects('isSeekable')->andReturns(true);
-		$streamMock->expects('isWriteable')->andReturns(true);
+		$streamMock->expects('isWritable')->andReturns(true);
 		$streamMock->expects('isReadable')->andReturns(true);
 
 		$appendedStreamMock->expects('getSize')->andReturns(1);
 		$appendedStreamMock->expects('isSeekable')->andReturns(true);
-		$appendedStreamMock->expects('isWriteable')->andReturns(true);
+		$appendedStreamMock->expects('isWritable')->andReturns(true);
 		$appendedStreamMock->expects('isReadable')->andReturns(true);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
 		static::assertTrue($appendStream->isSeekable());
-		static::assertTrue($appendStream->isWriteable());
+		static::assertTrue($appendStream->isWritable());
 		static::assertTrue($appendStream->isReadable());
 	}
 
