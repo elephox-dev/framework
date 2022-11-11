@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Files\Contract\File as FileContract;
 use Elephox\Files\File;
 use Elephox\Http\Contract\MessageBuilder;
 use Elephox\Stream\Contract\Stream;
@@ -77,7 +78,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body(new StringStream($content));
 	}
 
-	public function fileBody(string $path): static
+	public function fileBody(string|FileContract $path): static
 	{
 		return $this->body(File::openStream($path));
 	}
@@ -110,6 +111,21 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		}
 
 		$this->headers->put($name, array_merge($previous, $value));
+
+		return $this;
+	}
+
+	public function removeHeader(string $name): static
+	{
+		if ($this->headers === null) {
+			return $this;
+		}
+
+		if (!$this->headers->has($name)) {
+			return $this;
+		}
+
+		$this->headers->remove($name);
 
 		return $this;
 	}

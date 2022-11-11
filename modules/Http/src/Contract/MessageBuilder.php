@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http\Contract;
 
+use Elephox\Files\Contract\File;
 use Elephox\Stream\Contract\Stream;
 use JsonException;
 
@@ -30,7 +31,7 @@ interface MessageBuilder
 
 	public function htmlBody(string $content): static;
 
-	public function fileBody(string $path): static;
+	public function fileBody(string|File $path): static;
 
 	/**
 	 * @param string|list<string> $value
@@ -43,6 +44,8 @@ interface MessageBuilder
 	 * @param string $name
 	 */
 	public function addHeader(string $name, string|array $value): static;
+
+	public function removeHeader(string $name): static;
 
 	public function headerMap(HeaderMap $headers): static;
 
