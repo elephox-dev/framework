@@ -35,9 +35,15 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		return $this->method;
 	}
 
-	public function requestUrl(Url $url): static
+	public function requestUrl(Url $url, bool $preserveHostHeader = false): static
 	{
 		$this->url = $url;
+
+		if (!$preserveHostHeader) {
+			$host = $url->getHost();
+
+			$this->header(HeaderName::Host->value, $host);
+		}
 
 		return $this;
 	}

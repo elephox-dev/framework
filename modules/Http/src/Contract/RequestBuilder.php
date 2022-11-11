@@ -15,7 +15,7 @@ interface RequestBuilder extends MessageBuilder
 
 	public function getRequestMethod(): ?RequestMethod;
 
-	public function requestUrl(Url $url): static;
+	public function requestUrl(Url $url, bool $preserveHostHeader = false): static;
 
 	public function getRequestUrl(): ?Url;
 
