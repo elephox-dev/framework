@@ -20,12 +20,12 @@ interface MessageBuilder
 
 	public function getBody(): ?Stream;
 
+	public function textBody(string $content): static;
+
 	/**
 	 * @throws JsonException
-	 *
-	 * @param array $data
 	 */
-	public function jsonBody(array $data): static;
+	public function jsonBody(array|object $data): static;
 
 	public function resourceBody(mixed $resource): static;
 
@@ -35,17 +35,15 @@ interface MessageBuilder
 
 	/**
 	 * @param string|list<string> $value
-	 * @param string $name
 	 */
 	public function header(string $name, string|array $value): static;
 
 	/**
 	 * @param string|list<string> $value
-	 * @param string $name
 	 */
-	public function addHeader(string $name, string|array $value): static;
+	public function addedHeader(string $name, string|array $value): static;
 
-	public function removeHeader(string $name): static;
+	public function removedHeader(string $name): static;
 
 	public function headerMap(HeaderMap $headers): static;
 

@@ -40,6 +40,17 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this;
 	}
 
+	public function removedParameter(string $key, ?ParameterSource $source = null): static
+	{
+		if ($this->parameters === null) {
+			return $this;
+		}
+
+		$this->parameters->remove($key, $source);
+
+		return $this;
+	}
+
 	public function parameters(Contract\ParameterMap $parameters): static
 	{
 		$this->parameters = $parameters;

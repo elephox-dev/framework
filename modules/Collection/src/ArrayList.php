@@ -217,7 +217,7 @@ class ArrayList implements GenericList
 	}
 
 	/**
-	 * @param null|callable(T): bool $predicate
+	 * @param null|callable(T, int): bool $predicate
 	 *
 	 * @return T
 	 */
@@ -242,7 +242,7 @@ class ArrayList implements GenericList
 	}
 
 	/**
-	 * @param null|callable(T): bool $predicate
+	 * @param null|callable(T, int): bool $predicate
 	 *
 	 * @return T
 	 */

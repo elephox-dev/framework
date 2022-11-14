@@ -75,11 +75,6 @@ class GroupingIterator implements Iterator
 
 	public function key(): mixed
 	{
-		$idx = key($this->groupKeys);
-		if ($idx === null) {
-			throw new RuntimeException('No current group key');
-		}
-
 		return current($this->groupKeys);
 	}
 
@@ -106,7 +101,7 @@ class GroupingIterator implements Iterator
 			if ($idx === null) {
 				$this->groupKeys[] = $groupingKey;
 				end($this->groupKeys);
-				$idx = key($this->groupKeys) ?? throw new RuntimeException('Unexpected null key');
+				$idx = key($this->groupKeys);
 			}
 
 			$this->groupPairs[$idx][] = [$key, $value];

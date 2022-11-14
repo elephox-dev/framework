@@ -93,7 +93,7 @@ class ServerRequestBuilderTest extends TestCase
 		$request = Request::build()
 			->protocolVersion('2.0')
 			->header('header', 'value')
-			->addHeader('header', 'another')
+			->addedHeader('header', 'another')
 			->htmlBody('html')
 			->requestMethod(RequestMethod::GET)
 			->requestUrl(Url::fromString('http://example.com/foo'))

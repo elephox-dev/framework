@@ -29,7 +29,7 @@ class ResponseTest extends TestCase
 		static::assertInstanceOf(ResponseBuilder::class, $builder);
 
 		$builder->responseCode(ResponseCode::OK);
-		$builder->addHeader('X-Foo', 'bar');
+		$builder->addedHeader('X-Foo', 'bar');
 
 		$newResponse = $builder->get();
 

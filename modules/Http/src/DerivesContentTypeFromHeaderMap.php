@@ -38,12 +38,13 @@ trait DerivesContentTypeFromHeaderMap
 			return null;
 		}
 
-		/** @psalm-suppress ImpureMethodCall */
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 *
+		 * @var list<string> $header
+		 */
 		$header = $headerMap->get($headerName);
-		if (is_array($header)) {
-			return MimeType::tryFrom($header[0]);
-		}
 
-		return MimeType::tryFrom($header);
+		return MimeType::tryFrom($header[0]);
 	}
 }

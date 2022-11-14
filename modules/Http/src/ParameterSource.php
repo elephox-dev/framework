@@ -12,4 +12,5 @@ enum ParameterSource
 	case Get;
 	case Server;
 	case Env;
+	case Attribute;
 }

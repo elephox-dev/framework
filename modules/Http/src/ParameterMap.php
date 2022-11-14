@@ -132,12 +132,13 @@ class ParameterMap implements Contract\ParameterMap
 		return new KeyedEnumerable($iterator);
 	}
 
-	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null): Contract\ParameterMap
+	public static function fromGlobals(?array $post = null, ?array $get = null, ?array $server = null, ?array $env = null, ?array $attributes = null): Contract\ParameterMap
 	{
 		$post ??= $_POST;
 		$get ??= $_GET;
 		$server ??= $_SERVER;
 		$env ??= $_ENV;
+		$attributes ??= [];
 
 		$map = new self();
 
@@ -203,6 +204,13 @@ class ParameterMap implements Contract\ParameterMap
 		 */
 		foreach ($env as $name => $value) {
 			$map->put($name, ParameterSource::Env, $value);
+		}
+
+		/**
+		 * @var mixed $value
+		 */
+		foreach ($attributes as $name => $value) {
+			$map->put($name, ParameterSource::Attribute, $value);
 		}
 
 		return $map;

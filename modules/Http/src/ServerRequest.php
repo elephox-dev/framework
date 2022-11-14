@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use Elephox\Mimey\MimeType;
 use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use JsonException;
 use Psr\Http\Message\UploadedFileInterface;
 use InvalidArgumentException;
 
@@ -96,7 +98,6 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function withCookieParams(array $cookies): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		$builder = $this->with();
 
 		/**
@@ -126,7 +127,6 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function withQueryParams(array $query): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		$builder = $this->with();
 
 		foreach ($query as $key => $value) {
@@ -155,13 +155,14 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function withUploadedFiles(array $uploadedFiles): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		$builder = $this->with();
 
 		/**
 		 * @var UploadedFileInterface $uploadedFile
 		 */
 		foreach ($uploadedFiles as $name => $uploadedFile) {
+			assert(is_string($name));
+
 			if (!($uploadedFile instanceof Contract\UploadedFile)) {
 				throw new InvalidArgumentException("Only Contract\UploadedFile instances are supported");
 			}
@@ -179,44 +180,99 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function getParsedBody(): void
+	public function getParsedBody(): null|array|object
 	{
 		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement getParsedBody() method.
+		return match ($this->getContentType()?->getValue()) {
+			MimeType::ApplicationJson->value => $this->getBodyAsJson(),
+//			MimeType::ApplicationXml->value => $this->getBodyAsXml(),
+			default => null,
+		};
+	}
+
+	#[Pure]
+	protected function getBodyAsJson(): ?array
+	{
+		try {
+			/** @psalm-suppress ImpureMethodCall */
+			$body = $this->getBody()->getContents();
+
+			/**
+			 * @psalm-suppress ImpureFunctionCall
+			 *
+			 * @var array<array-key, mixed>
+			 */
+			return json_decode($body, true, flags: JSON_THROW_ON_ERROR);
+		} catch (JsonException) {
+			return null;
+		}
 	}
 
 	#[Pure]
 	public function withParsedBody($data): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement withParsedBody() method.
+		try {
+			assert($data === null || is_array($data) || is_object($data));
+
+			$builder = $this->with();
+
+			if (is_array($data) || is_object($data)) {
+				/** @psalm-suppress ImpureMethodCall */
+				$builder->jsonBody($data);
+			} else {
+				/** @psalm-suppress ImpureMethodCall */
+				$builder->textBody('');
+			}
+
+			/**
+			 * @psalm-suppress ImpureMethodCall
+			 *
+			 * @var static
+			 */
+			return $builder->get();
+		} catch (JsonException $e) {
+			throw new InvalidArgumentException('Failed to encode parsed body', previous: $e);
+		}
 	}
 
 	#[Pure]
-	public function getAttributes(): static
+	public function getAttributes(): array
 	{
 		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement getAttributes() method.
+		return $this->parameters->allFrom(ParameterSource::Attribute)->toArray();
 	}
 
 	#[Pure]
-	public function getAttribute($name, $default = null): void
+	public function getAttribute($name, $default = null): mixed
 	{
 		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement getAttribute() method.
+		return $this->parameters->get($name, ParameterSource::Attribute) ?? $default;
 	}
 
 	#[Pure]
 	public function withAttribute($name, $value): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement withAttribute() method.
+		assert(is_string($name));
+		assert(is_string($value) || is_int($value) || is_array($value));
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 *
+		 * @var static
+		 */
+		return $this->with()->parameter($name, $value, ParameterSource::Attribute)->get();
 	}
 
 	#[Pure]
-	public function withoutAttribute($name): void
+	public function withoutAttribute($name): static
 	{
-		/** @psalm-suppress ImpureMethodCall */
-		// TODO: Implement withoutAttribute() method.
+		assert(is_string($name));
+
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 *
+		 * @var static
+		 */
+		return $this->with()->removedParameter($name, ParameterSource::Attribute)->get();
 	}
 }

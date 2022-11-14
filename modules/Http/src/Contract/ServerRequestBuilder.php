@@ -16,6 +16,8 @@ interface ServerRequestBuilder extends RequestBuilder
 
 	public function parameter(string $key, int|string|array $value, ParameterSource $source): static;
 
+	public function removedParameter(string $key, ?ParameterSource $source = null): static;
+
 	public function parameters(ParameterMap $parameters): static;
 
 	public function getParameters(): ?ParameterMap;

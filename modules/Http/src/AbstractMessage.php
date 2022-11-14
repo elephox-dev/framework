@@ -109,7 +109,7 @@ abstract class AbstractMessage implements Message
 		 *
 		 * @var static
 		 */
-		return $this->with()->addHeader($name, $value)->get();
+		return $this->with()->addedHeader($name, $value)->get();
 	}
 
 	#[Pure]
@@ -122,7 +122,7 @@ abstract class AbstractMessage implements Message
 		 *
 		 * @var static
 		 */
-		return $this->with()->removeHeader($name)->get();
+		return $this->with()->removedHeader($name)->get();
 	}
 
 	#[Pure]

@@ -52,12 +52,17 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body;
 	}
 
+	public function textBody(string $content): static
+	{
+		return $this->body(new StringStream($content));
+	}
+
 	/**
 	 * @throws JsonException
 	 *
 	 * @param array $data
 	 */
-	public function jsonBody(array $data): static
+	public function jsonBody(array|object $data): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
 
@@ -94,7 +99,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
-	public function addHeader(string $name, array|string $value): static
+	public function addedHeader(string $name, array|string $value): static
 	{
 		if ($this->headers === null) {
 			$this->headers = new HeaderMap();
@@ -113,7 +118,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
-	public function removeHeader(string $name): static
+	public function removedHeader(string $name): static
 	{
 		if ($this->headers === null) {
 			return $this;

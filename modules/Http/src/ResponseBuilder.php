@@ -49,13 +49,13 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function contentType(?MimeTypeInterface $mimeType): static
 	{
 		if ($this->headers === null && $mimeType !== null) {
-			$this->addHeader(HeaderName::ContentType->value, $mimeType->getValue());
+			$this->addedHeader(HeaderName::ContentType->value, $mimeType->getValue());
 		} elseif ($this->headers !== null) {
 			$headerSet = $this->headers->containsKey(HeaderName::ContentType->value, DefaultEqualityComparer::equalsIgnoreCase(...));
 			if ($headerSet && $mimeType === null) {
 				$this->headers->remove(HeaderName::ContentType->value);
 			} elseif ($mimeType !== null) {
-				$this->headers->put(HeaderName::ContentType->value, $mimeType->getValue());
+				$this->headers->put(HeaderName::ContentType->value, [$mimeType->getValue()]);
 			}
 		}
 
@@ -93,9 +93,9 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	 * @throws JsonException
 	 *
 	 * @param null|MimeTypeInterface $mimeType
-	 * @param array $data
+	 * @param array|object $data
 	 */
-	public function jsonBody(array $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
+	public function jsonBody(array|object $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static
 	{
 		$json = json_encode($data, JSON_THROW_ON_ERROR);
 
