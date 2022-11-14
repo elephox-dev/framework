@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
-use Generator;
-
 trait StreamReader
 {
 	abstract public function eof(): bool;

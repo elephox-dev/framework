@@ -21,11 +21,11 @@ class ResourceStream implements Stream
 	 * @param null|int<0, max> $size
 	 */
 	public function __construct(
-		private mixed         $resource,
+		private mixed $resource,
 		private readonly bool $readable = true,
 		private readonly bool $writable = false,
 		private readonly bool $seekable = true,
-		private ?int          $size = null,
+		private ?int $size = null,
 	) {
 		if (!is_resource($this->resource)) {
 			throw new InvalidArgumentException('ResourceStream expects a resource');

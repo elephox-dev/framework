@@ -7,6 +7,7 @@ use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\UploadedFileInterface;
+use InvalidArgumentException;
 
 #[Immutable]
 class ServerRequest extends Request implements Contract\ServerRequest
@@ -48,7 +49,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 				$this->parameters->allFrom(ParameterSource::Server)->toArray(),
 				$this->parameters->allFrom(ParameterSource::Env)->toArray(),
 			),
-			new CookieMap($this->cookies->select(fn (Contract\Cookie $c) => new Cookie($c->getName(), $c->getValue(), $c->getExpires(), $c->getPath(), $c->getDomain(), $c->isSecure(), $c->isHttpOnly(), $c->getSameSite(), $c->getMaxAge()))->toArray()),
+			new CookieMap($this->cookies->select(static fn (Contract\Cookie $c) => new Cookie($c->getName(), $c->getValue(), $c->getExpires(), $c->getPath(), $c->getDomain(), $c->isSecure(), $c->isHttpOnly(), $c->getSameSite(), $c->getMaxAge()))->toArray()),
 			$this->session !== null ? SessionMap::fromGlobals($this->session->toArray()) : null,
 			new UploadedFileMap($this->uploadedFiles->toArray()),
 		);
@@ -89,7 +90,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	public function getCookieParams(): array
 	{
 		/** @psalm-suppress ImpureMethodCall */
-		return $this->getCookieMap()->select(fn (Contract\Cookie $c) => $c->getValue())->toArray();
+		return $this->getCookieMap()->select(static fn (Contract\Cookie $c) => $c->getValue())->toArray();
 	}
 
 	#[Pure]
@@ -109,6 +110,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $builder->get();
@@ -137,6 +139,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $builder->get();
@@ -160,7 +163,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		 */
 		foreach ($uploadedFiles as $name => $uploadedFile) {
 			if (!($uploadedFile instanceof Contract\UploadedFile)) {
-				throw new \InvalidArgumentException("Only Contract\UploadedFile instances are supported");
+				throw new InvalidArgumentException("Only Contract\UploadedFile instances are supported");
 			}
 
 			/** @psalm-suppress ImpureMethodCall */
@@ -169,13 +172,14 @@ class ServerRequest extends Request implements Contract\ServerRequest
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $builder->get();
 	}
 
 	#[Pure]
-	public function getParsedBody()
+	public function getParsedBody(): void
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		// TODO: Implement getParsedBody() method.
@@ -196,7 +200,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function getAttribute($name, $default = null)
+	public function getAttribute($name, $default = null): void
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		// TODO: Implement getAttribute() method.
@@ -210,7 +214,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function withoutAttribute($name)
+	public function withoutAttribute($name): void
 	{
 		/** @psalm-suppress ImpureMethodCall */
 		// TODO: Implement withoutAttribute() method.

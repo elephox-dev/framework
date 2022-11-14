@@ -50,7 +50,7 @@ class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 
 				/** @var int<0, max>|null $size */
 				$uploadedFile = new UploadedFile($clientFilename, $fullPath, $tmpFile, $mimeType, $size, $uploadError);
-			} else if ($file instanceof Contract\UploadedFile) {
+			} elseif ($file instanceof Contract\UploadedFile) {
 				$uploadedFile = $file;
 			} else {
 				throw new InvalidArgumentException("File values must be array or Contract\UploadedFile");

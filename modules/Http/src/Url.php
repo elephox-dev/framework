@@ -207,7 +207,7 @@ class Url implements Stringable, UriInterface
 
 	public function getQuery(): string
 	{
-		return (string)$this->queryMap;
+		return (string) $this->queryMap;
 	}
 
 	public function getFragment(): string
@@ -223,6 +223,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->scheme($urlScheme);
@@ -235,6 +236,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->userInfo($user, $password)->get();
@@ -246,6 +248,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->host($host)->get();
@@ -257,6 +260,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->port($port)->get();
@@ -268,6 +272,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->path($path)->get();
@@ -282,6 +287,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->queryMap($map)->get();
@@ -293,6 +299,7 @@ class Url implements Stringable, UriInterface
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->fragment($fragment)->get();

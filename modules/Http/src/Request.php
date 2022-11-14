@@ -63,7 +63,7 @@ class Request extends AbstractMessage implements Contract\Request
 	#[Pure]
 	public function withRequestTarget($requestTarget): never
 	{
-		throw new RuntimeException(__METHOD__ . " is not implemented");
+		throw new RuntimeException(__METHOD__ . ' is not implemented');
 	}
 
 	#[Pure]
@@ -73,6 +73,7 @@ class Request extends AbstractMessage implements Contract\Request
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->requestMethod(RequestMethod::from($method))->get();
@@ -89,9 +90,10 @@ class Request extends AbstractMessage implements Contract\Request
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
-		return $this->with()->requestUrl(Url::fromString((string)$uri), $preserveHost)->get();
+		return $this->with()->requestUrl(Url::fromString((string) $uri), $preserveHost)->get();
 	}
 
 	#[Pure]

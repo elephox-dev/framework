@@ -222,9 +222,9 @@ class File extends AbstractFilesystemNode implements Contract\File
 	{
 		if ($node instanceof Contract\Directory) {
 			$destination = new self(Path::join($node->path(), $this->name()));
-		} else if ($node instanceof Contract\File) {
+		} elseif ($node instanceof Contract\File) {
 			$destination = $node;
-		} else if ($node instanceof Contract\Link) {
+		} elseif ($node instanceof Contract\Link) {
 			$target = $node->target();
 			if ($target instanceof Contract\Link) {
 				$nextTarget = $target->target();

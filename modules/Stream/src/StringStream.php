@@ -33,7 +33,7 @@ class StringStream implements Stream
 
 	#[Pure]
 	public function __construct(
-		private string        $string,
+		private string $string,
 		private readonly bool $readable = true,
 		private readonly bool $seekable = true,
 		private readonly bool $writable = false,

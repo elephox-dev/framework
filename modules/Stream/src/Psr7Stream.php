@@ -12,8 +12,7 @@ class Psr7Stream implements Stream
 
 	public function __construct(
 		private readonly StreamInterface $stream,
-	)
-	{
+	) {
 	}
 
 	public function __toString(): string

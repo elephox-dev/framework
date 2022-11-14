@@ -249,7 +249,7 @@ class StringStreamTest extends TestCase
 		static::assertSame('o', $simpleStream->readChar());
 		static::assertTrue($simpleStream->eof());
 
-		$multiByteStream = new StringStream("🧔+👩🏿=❤");
+		$multiByteStream = new StringStream('🧔+👩🏿=❤');
 		static::assertSame('🧔', $multiByteStream->readChar());
 		static::assertSame('+', $multiByteStream->readChar());
 		static::assertSame('👩', $multiByteStream->readChar());

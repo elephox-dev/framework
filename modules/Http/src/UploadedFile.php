@@ -19,12 +19,12 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param UploadError $error
 	 */
 	public function __construct(
-		private readonly string             $clientName,
-		private readonly string             $clientPath,
-		private readonly FileContract       $tmpFile,
+		private readonly string $clientName,
+		private readonly string $clientPath,
+		private readonly FileContract $tmpFile,
 		private readonly ?MimeTypeInterface $clientMimeType = null,
-		private readonly ?int               $size = null,
-		private readonly UploadError        $error = UploadError::Ok,
+		private readonly ?int $size = null,
+		private readonly UploadError $error = UploadError::Ok,
 	) {
 	}
 

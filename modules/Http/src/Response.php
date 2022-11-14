@@ -68,16 +68,17 @@ class Response extends AbstractMessage implements Contract\Response
 
 			if ($reasonPhrase !== '') {
 				/** @psalm-suppress ImpureFunctionCall */
-				trigger_error("non-standard \$reasonPhrase values are not stored in the response");
+				trigger_error('non-standard $reasonPhrase values are not stored in the response');
 			}
 
 			/**
 			 * @psalm-suppress ImpureMethodCall
+			 *
 			 * @var static
 			 */
 			return $this->with()->responseCode(ResponseCode::from($code))->get();
 		} catch (ValueError|AssertionError $e) {
-			throw new InvalidArgumentException("Error settings status code: " . $e->getMessage(), previous: $e);
+			throw new InvalidArgumentException('Error settings status code: ' . $e->getMessage(), previous: $e);
 		}
 	}
 

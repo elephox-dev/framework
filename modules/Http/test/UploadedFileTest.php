@@ -25,7 +25,9 @@ class UploadedFileTest extends TestCase
 	public function testConstructor(): void
 	{
 		$tmp = tempnam(sys_get_temp_dir(), 'php');
-		if (!$tmp) throw new Exception("Failed to create tmp file");
+		if (!$tmp) {
+			throw new Exception('Failed to create tmp file');
+		}
 		$tmpFile = new File($tmp);
 		$tmpFile->writeContents('test');
 

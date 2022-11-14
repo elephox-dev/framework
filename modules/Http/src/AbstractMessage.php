@@ -37,6 +37,7 @@ abstract class AbstractMessage implements Message
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->protocolVersion($version)->get();
@@ -91,6 +92,7 @@ abstract class AbstractMessage implements Message
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->header($name, $value)->get();
@@ -104,6 +106,7 @@ abstract class AbstractMessage implements Message
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->addHeader($name, $value)->get();
@@ -116,6 +119,7 @@ abstract class AbstractMessage implements Message
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->removeHeader($name)->get();
@@ -132,6 +136,7 @@ abstract class AbstractMessage implements Message
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall
+		 *
 		 * @var static
 		 */
 		return $this->with()->body(new Psr7Stream($body))->get();
