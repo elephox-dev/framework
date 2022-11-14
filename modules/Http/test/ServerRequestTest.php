@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Stream\StringStream;
+use Elephox\Files\File;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,6 +21,12 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Http\Cookie
  * @covers \Elephox\Http\UploadedFile
+ * @covers \Elephox\Collection\IteratorProvider
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Files\File
+ * @covers \Elephox\Http\SessionMap
+ * @covers \Elephox\OOR\Casing
  *
  * @internal
  */
@@ -35,7 +41,7 @@ class ServerRequestTest extends TestCase
 		$builder = $request->with();
 		$builder->parameter('foo', 'bar', ParameterSource::Post);
 		$builder->cookie(new Cookie('cookie', 'value'));
-		$builder->uploadedFile('file', new UploadedFile('/tmp/file', 'file', new StringStream('contents')));
+		$builder->uploadedFile('file', new UploadedFile('/tmp/file', 'file', new File('path')));
 		$builder->sessionParam('session', 'value');
 
 		$builderCookies = $builder->getCookies();
@@ -45,10 +51,10 @@ class ServerRequestTest extends TestCase
 
 		$newRequest = $builder->get();
 
-		$cookies = $newRequest->getCookies();
-		$parameters = $newRequest->getParameters();
-		$files = $newRequest->getUploadedFiles();
-		$session = $newRequest->getSession();
+		$cookies = $newRequest->getCookieMap();
+		$parameters = $newRequest->getParameterMap();
+		$files = $newRequest->getUploadedFileMap();
+		$session = $newRequest->getSessionMap();
 
 		static::assertSame($builderCookies, $cookies);
 		static::assertSame($builderParameters, $parameters);

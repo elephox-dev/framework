@@ -39,7 +39,7 @@ class SessionMap implements Contract\SessionMap
 
 	public static function start(): Contract\SessionMap
 	{
-		if (session_status() === PHP_SESSION_NONE) {
+		if (!headers_sent() && session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 

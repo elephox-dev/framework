@@ -19,6 +19,7 @@ use JsonException;
  * @covers \Elephox\Http\RequestMethod
  * @covers \Elephox\Http\UrlScheme
  * @covers \Elephox\Stream\StringStream
+ * @covers \Elephox\OOR\Casing
  *
  * @uses \Elephox\Http\Contract\Request
  *
@@ -41,7 +42,7 @@ class RequestBuilderTest extends TestCase
 
 		$request = $builder->get();
 		static::assertInstanceOf(RequestContract::class, $request);
-		static::assertSame(RequestMethod::GET, $request->getMethod());
+		static::assertSame(RequestMethod::GET, $request->getRequestMethod());
 		static::assertSame('https://example.com/', (string) $request->getUrl());
 		static::assertSame('2.0', $request->getProtocolVersion());
 		static::assertSame('{"foo":"bar"}', $request->getBody()->getContents());
@@ -49,7 +50,7 @@ class RequestBuilderTest extends TestCase
 		static::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
 
 		$newRequest = $request->with()->jsonBody(['foo2' => 'bar2'])->get();
-		static::assertSame(RequestMethod::GET, $request->getMethod());
+		static::assertSame(RequestMethod::GET, $request->getRequestMethod());
 		static::assertSame('https://example.com/', (string) $request->getUrl());
 		static::assertSame('2.0', $request->getProtocolVersion());
 		static::assertSame('{"foo2":"bar2"}', $newRequest->getBody()->getContents());

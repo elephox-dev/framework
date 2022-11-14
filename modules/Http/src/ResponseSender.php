@@ -36,11 +36,7 @@ class ResponseSender
 		http_response_code($response->getResponseCode()->value);
 
 		foreach ($response->getHeaderMap() as $headerName => $values) {
-			if (is_array($values)) {
-				header("$headerName: " . implode(',', $values));
-			} else {
-				header("$headerName: $values");
-			}
+			header("$headerName: " . implode(',', $values));
 		}
 	}
 

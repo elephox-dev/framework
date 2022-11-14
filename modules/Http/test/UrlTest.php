@@ -13,6 +13,7 @@ use Stringable;
  * @covers \Elephox\Http\UrlBuilder
  * @covers \Elephox\Http\QueryMap
  * @covers \Elephox\Http\CustomUrlScheme
+ * @covers \Elephox\OOR\Casing
  *
  * @internal
  */

@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Http\SessionMap
+ * @covers \Elephox\OOR\Casing
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest
@@ -66,7 +67,7 @@ class ServerRequestBuilderTest extends TestCase
 		static::assertSame($requestUri, $request->getUrl()->path);
 		static::assertSame($bodyStreamLength, $request->getBody()->getSize());
 		static::assertSame($expectedProtocolVersion, $request->getProtocolVersion());
-		static::assertSame($expectedRequestMethod, $request->getMethod());
+		static::assertSame($expectedRequestMethod, $request->getRequestMethod());
 	}
 
 	public function testMissingParameterIsThrown(): void

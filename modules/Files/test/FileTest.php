@@ -174,7 +174,7 @@ class FileTest extends MockeryTestCase
 		static::assertInstanceOf(ResourceStream::class, $stream);
 		static::assertTrue($stream->isReadable());
 		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWriteable());
+		static::assertFalse($stream->isWritable());
 
 		$stream->close();
 	}
