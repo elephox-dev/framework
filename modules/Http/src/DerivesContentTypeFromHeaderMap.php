@@ -38,11 +38,7 @@ trait DerivesContentTypeFromHeaderMap
 			return null;
 		}
 
-		/**
-		 * @psalm-suppress ImpureMethodCall
-		 *
-		 * @var list<string> $header
-		 */
+		/** @psalm-suppress ImpureMethodCall */
 		$header = $headerMap->get($headerName);
 
 		return MimeType::tryFrom($header[0]);

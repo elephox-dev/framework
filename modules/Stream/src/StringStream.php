@@ -61,7 +61,7 @@ class StringStream implements Stream
 	}
 
 	#[Pure]
-	public function getSize(): ?int
+	public function getSize(): int
 	{
 		return strlen($this->string);
 	}
@@ -93,12 +93,27 @@ class StringStream implements Stream
 			throw new RuntimeException('Stream is not seekable');
 		}
 
+		$size = $this->getSize();
 		if ($whence === SEEK_SET) {
+			if ($offset < 0) {
+				throw new InvalidArgumentException('$offset must be greater than or equal to 0 when using SEEK_SET');
+			}
+
 			$this->pointer = $offset;
 		} elseif ($whence === SEEK_CUR) {
+			if ($this->pointer + $offset < 0) {
+				throw new InvalidArgumentException('$offset would move the pointer below 0 when using SEEK_CUR');
+			}
+
+			/** @var int<0, max> */
 			$this->pointer += $offset;
 		} elseif ($whence === SEEK_END) {
-			$this->pointer = strlen($this->string) + $offset;
+			if ($size + $offset < 0) {
+				throw new InvalidArgumentException('Offset would move pointer below 0 when using SEEK_END');
+			}
+
+			/** @var int<0, max> */
+			$this->pointer = $size + $offset;
 		} else {
 			throw new InvalidArgumentException('Invalid whence: ' . $whence);
 		}

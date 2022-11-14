@@ -59,8 +59,6 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 
 	/**
 	 * @throws JsonException
-	 *
-	 * @param array $data
 	 */
 	public function jsonBody(array|object $data): static
 	{

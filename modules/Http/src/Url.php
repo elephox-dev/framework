@@ -282,7 +282,6 @@ class Url implements Stringable, UriInterface
 	{
 		assert(is_string($query));
 
-		/** @psalm-suppress ImpureMethodCall */
 		$map = QueryMap::fromString($query);
 
 		/**

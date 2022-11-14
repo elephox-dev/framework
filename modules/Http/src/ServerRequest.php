@@ -197,11 +197,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 			/** @psalm-suppress ImpureMethodCall */
 			$body = $this->getBody()->getContents();
 
-			/**
-			 * @psalm-suppress ImpureFunctionCall
-			 *
-			 * @var array<array-key, mixed>
-			 */
+			/** @var array<array-key, mixed> */
 			return json_decode($body, true, flags: JSON_THROW_ON_ERROR);
 		} catch (JsonException) {
 			return null;

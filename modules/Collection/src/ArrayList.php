@@ -232,7 +232,11 @@ class ArrayList implements GenericList
 			return array_pop($this->items);
 		}
 
-		/** @var null|int $key */
+		/**
+		 * @psalm-suppress MixedArgumentTypeCoercion
+		 *
+		 * @var null|int $key
+		 */
 		$key = $this->reverse()->firstKeyOrDefault(null, $predicate);
 		if ($key === null) {
 			throw new EmptySequenceException();
