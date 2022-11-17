@@ -23,8 +23,11 @@
         "elephox/stream": "dev-develop",
         "elephox/support": "dev-develop",
         "jetbrains/phpstorm-attributes": "^1.0",
-        "psr/http-message": "^1.0",
-        "nyholm/psr7": "^1.5"
+        "nyholm/psr7": "^1.5",
+        "psr/http-message": "^1.0"
+    },
+    "provide": {
+        "psr/http-message-implementation": "1.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,9 +38,6 @@
         "psr-4": {
             "Elephox\\Http\\": "test/"
         }
-    },
-    "provide": {
-        "psr/http-message-implementation": "1.0"
     },
     "config": {
         "allow-plugins": {

@@ -3,30 +3,46 @@ declare(strict_types=1);
 
 namespace Elephox\Logging;
 
-use Elephox\Logging\Contract\LogLevel as LogLevelContract;
-use Elephox\Logging\Contract\Sink;
+use Elephox\Stream\ResourceStream;
+
 use const STDERR;
 use const STDOUT;
 
-class StandardSink implements Sink
+class StandardSink extends StreamSink
 {
+	/**
+	 * @var resource $stdout
+	 */
+	private mixed $stdout;
+
+	/**
+	 * @var resource $stderr
+	 */
+	private mixed $stderr;
+
 	public function __construct()
 	{
-		assert(defined("STDOUT"), sprintf("Cannot use %s because STDOUT is not defined", __CLASS__));
-		assert(defined("STDERR"), sprintf("Cannot use %s because STDERR is not defined", __CLASS__));
-	}
+		$stdout = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'wb');
+		$stderr = defined('STDERR') ? STDERR : fopen('php://stderr', 'wb');
 
-	public function write(LogLevelContract $level, string $message, array $context): void
-	{
-		if ($level->getLevel() >= LogLevel::WARNING->getLevel()) {
-			fwrite(STDERR, $message . PHP_EOL);
-		} else {
-			fwrite(STDOUT, $message . PHP_EOL);
-		}
+		assert($stdout !== false, 'Unable to open STDOUT stream');
+		assert($stderr !== false, 'Unable to open STDERR stream');
+
+		$this->stdout = $stdout;
+		$this->stderr = $stderr;
+
+		$stdoutStream = new ResourceStream($this->stdout, readable: false, writable: true, seekable: false);
+		$stderrStream = new ResourceStream($this->stderr, readable: false, writable: true, seekable: false);
+
+		parent::__construct($stdoutStream, $stderrStream);
 	}
 
 	public function hasCapability(SinkCapability $capability): bool
 	{
-		return stream_isatty(STDOUT) && stream_isatty(STDERR) && $capability === SinkCapability::AnsiFormatting;
+		return
+			stream_isatty($this->stdout) &&
+			stream_isatty($this->stderr) &&
+			$capability === SinkCapability::AnsiFormatting
+		;
 	}
 }
