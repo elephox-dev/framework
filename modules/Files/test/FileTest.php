@@ -291,7 +291,7 @@ class FileTest extends MockeryTestCase
 
 		$this->expectException(ReadOnlyFileException::class);
 
-		File::openStream($fileMock, writeable: true);
+		File::openStream($fileMock, writable: true);
 	}
 
 	public function testNonWriteableFileAppend(): void

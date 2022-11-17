@@ -8,16 +8,20 @@ use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use RuntimeException;
 
 class File extends AbstractFilesystemNode implements Contract\File
 {
+	public static function from(string $path): self
+	{
+		return new self($path);
+	}
+
 	public static function openStream(
 		string|Contract\File $file,
 		bool $readable = true,
-		bool $writeable = false,
+		bool $writable = false,
 		bool $create = false,
 		bool $append = false,
 		bool $truncate = false,
@@ -30,7 +34,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 			throw new UnreadableFileException($file->path());
 		}
 
-		if (($writeable || $append) && $file->exists() && !$file->isWritable()) {
+		if (($writable || $append) && $file->exists() && !$file->isWritable()) {
 			throw new ReadOnlyFileException($file->path());
 		}
 
@@ -38,52 +42,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 			throw new ReadonlyParentException($file->path());
 		}
 
-		$flags = match (true) {
-			$readable && $writeable && $create && $append && !$truncate => 'ab+',
-			!$readable && $writeable && $create && $append && !$truncate => 'ab',
-			$readable && $writeable && $create && !$append && $truncate => 'wb+',
-			!$readable && $writeable && $create && !$append && $truncate => 'wb',
-			$readable && $writeable && $create && !$append && !$truncate => 'cb+',
-			!$readable && $writeable && $create && !$append && !$truncate => 'cb',
-			$readable && $writeable && !$create && !$append && !$truncate => 'rb+',
-			$readable && !$writeable && !$create && !$append && !$truncate => 'rb',
-			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writeable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
-		};
-
-		$exception = null;
-
-		// handle any warnings emitted by fopen()
-		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = '<unknown>', int $line = 0) use (&$exception): bool {
-			$exception = new RuntimeException(sprintf('[%d] %s in %s:%d', $errorCode, $errorMessage, $filename, $line));
-
-			return true;
-		});
-
-		$resource = fopen($file->path(), $flags);
-
-		restore_error_handler();
-		if ($exception !== null) {
-			if (is_resource($resource)) {
-				fclose($resource);
-			}
-
-			throw $exception;
-		}
-
-		if ($resource === false) {
-			$exception = new RuntimeException('Unable to open file stream: ' . $file->path());
-		}
-
-		if ($exception !== null) {
-			if (is_resource($resource)) {
-				fclose($resource);
-			}
-
-			throw $exception;
-		}
-
-		/** @var resource $resource */
-		return new ResourceStream($resource, $readable, $writeable, $readable);
+		return ResourceStream::open($file->path(), $readable, $writable, $create, $append, $truncate);
 	}
 
 	#[Pure]

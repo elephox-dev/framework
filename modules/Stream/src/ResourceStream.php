@@ -13,6 +13,62 @@ class ResourceStream implements Stream
 {
 	use StreamReader;
 
+	public static function open(
+		string $url,
+		bool $readable = true,
+		bool $writable = false,
+		bool $create = false,
+		bool $append = false,
+		bool $truncate = false,
+	): self {
+		$flags = match (true) {
+			$readable && $writable && $create && $append && !$truncate => 'ab+',
+			!$readable && $writable && $create && $append && !$truncate => 'ab',
+			$readable && $writable && $create && !$append && $truncate => 'wb+',
+			!$readable && $writable && $create && !$append && $truncate => 'wb',
+			$readable && $writable && $create && !$append && !$truncate => 'cb+',
+			!$readable && $writable && $create && !$append && !$truncate => 'cb',
+			$readable && $writable && !$create && !$append && !$truncate => 'rb+',
+			$readable && !$writable && !$create && !$append && !$truncate => 'rb',
+			default => throw new InvalidArgumentException('Invalid combination of flags: readable=' . ($readable ?: '0') . ', writeable=' . ($writable ?: '0') . ', create=' . ($create ?: '0') . ', append=' . ($append ?: '0') . ', truncate=' . ($truncate ?: '0')),
+		};
+
+		$exception = null;
+
+		// handle any warnings emitted by fopen()
+		set_error_handler(static function (int $errorCode, string $errorMessage, string $filename = '<unknown>', int $line = 0) use (&$exception): bool {
+			$exception = new RuntimeException(sprintf('[%d] %s in %s:%d', $errorCode, $errorMessage, $filename, $line));
+
+			return true;
+		});
+
+		$resource = fopen($url, $flags);
+
+		restore_error_handler();
+		if ($exception !== null) {
+			if (is_resource($resource)) {
+				fclose($resource);
+			}
+
+			throw $exception;
+		}
+
+		if ($resource === false) {
+			$exception = new RuntimeException('Unable to open resource stream: ' . $url);
+		}
+
+		if ($exception !== null) {
+			if (is_resource($resource)) {
+				fclose($resource);
+			}
+
+			throw $exception;
+		}
+
+		/** @var resource $resource */
+		return new self($resource, $readable, $writable, $readable);
+	}
+
 	/**
 	 * @param closed-resource|resource|null $resource
 	 * @param bool $readable
