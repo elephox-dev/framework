@@ -226,11 +226,13 @@ class DirectoryTest extends TestCase
 	{
 		$directory = new Directory(Path::join(sys_get_temp_dir(), 'testdir'));
 
-		static::assertFalse($directory->exists());
-		$directory->ensureExists();
-		static::assertTrue($directory->exists());
-
-		$directory->delete();
+		try {
+			static::assertFalse($directory->exists());
+			$directory->ensureExists();
+			static::assertTrue($directory->exists());
+		} finally {
+			$directory->delete();
+		}
 	}
 
 	public function testDelete(): void

@@ -49,15 +49,15 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 
 	public function write(LogLevel $level, string $message, array $context): void
 	{
-		$foregroundOpener = $foregroundCloser = $backgroundOpener = $backgroundCloser = $optionOpener = $optionCloser = static fn(): string => '';
+		$foregroundOpener = $foregroundCloser = $backgroundOpener = $backgroundCloser = $optionOpener = $optionCloser = static fn (): string => '';
 
 		if ($this->getInnerSink()->hasCapability(SinkCapability::AnsiFormatting)) {
-			$foregroundOpener = static fn(int $code): string => "\033[{$code}m";
-			$foregroundCloser = static fn(int $previous): string => "\033[{$previous}m";
-			$backgroundOpener = static fn(int $code): string => "\033[{$code}m";
-			$backgroundCloser = static fn(int $previous): string => "\033[{$previous}m";
-			$optionOpener = static fn(array $codes): string => "\033[$codes[0]m";
-			$optionCloser = static fn(array $codes): string => "\033[$codes[1]m";
+			$foregroundOpener = static fn (int $code): string => "\033[{$code}m";
+			$foregroundCloser = static fn (int $previous): string => "\033[{$previous}m";
+			$backgroundOpener = static fn (int $code): string => "\033[{$code}m";
+			$backgroundCloser = static fn (int $previous): string => "\033[{$previous}m";
+			$optionOpener = static fn (array $codes): string => "\033[$codes[0]m";
+			$optionCloser = static fn (array $codes): string => "\033[$codes[1]m";
 		}
 
 		$message = $this->replaceSingleCodes(self::FOREGROUND_MAP['default'], self::FOREGROUND_MAP, $message, $foregroundOpener, $foregroundCloser);
@@ -133,7 +133,7 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 
 			$opener = $openerGenerator($codes);
 			$closer = $closerGenerator($codes);
-			$message = (string)preg_replace(
+			$message = (string) preg_replace(
 				"/<$option>(.*?)<\/$option>/",
 				"$opener$1$closer",
 				$message,
