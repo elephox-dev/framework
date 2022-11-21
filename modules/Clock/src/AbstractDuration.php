@@ -3,43 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Clock;
 
-use DateInterval;
-use Elephox\Clock\Contract\Duration;
-use Exception;
+use Elephox\Clock\Contract\Duration as DurationContract;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-abstract class AbstractDuration implements Duration
+abstract class AbstractDuration implements DurationContract
 {
-	#[Pure]
-	public static function toInterval(Duration $duration): DateInterval
-	{
-		try {
-			$d = new DateInterval(sprintf(
-				'P%dY%dM%dDT%dH%dM%dS',
-				$duration->getYears(),
-				$duration->getMonths(),
-				$duration->getDays(),
-				$duration->getHours(),
-				$duration->getMinutes(),
-				$duration->getSeconds(),
-			));
-
-			/** @psalm-suppress ImpurePropertyAssignment */
-			$d->invert = $duration->isNegative() ? 1 : 0;
-			/** @psalm-suppress ImpurePropertyAssignment */
-			$d->f = $duration->getMicroseconds() / self::MICROSECONDS_PER_SECOND;
-
-			return $d;
-		} catch (Exception $e) {
-			/** @psalm-suppress ImpureFunctionCall */
-			trigger_error("Failed to create a valid DateInterval. Exception: $e", E_USER_WARNING);
-
-			return new DateInterval('PT0S');
-		}
-	}
-
 	#[Pure]
 	public function getTotalMicroseconds(): float
 	{
@@ -132,9 +102,9 @@ abstract class AbstractDuration implements Duration
 	}
 
 	#[Pure]
-	public function add(Duration $duration): Duration
+	public function add(DurationContract $duration): DurationContract
 	{
-		return new ValuesDuration(
+		return new Duration(
 			$this->getTotalYears() + $duration->getTotalYears() < 0,
 			$this->getMicroseconds() + $duration->getMicroseconds(),
 			$this->getSeconds() + $duration->getSeconds(),
@@ -147,9 +117,9 @@ abstract class AbstractDuration implements Duration
 	}
 
 	#[Pure]
-	public function subtract(Duration $duration): Duration
+	public function subtract(DurationContract $duration): DurationContract
 	{
-		return new ValuesDuration(
+		return new Duration(
 			$this->getTotalMicroseconds() - $duration->getTotalMicroseconds() < 0,
 			abs($this->getMicroseconds() - $duration->getMicroseconds()),
 			abs($this->getSeconds() - $duration->getSeconds()),
@@ -162,7 +132,7 @@ abstract class AbstractDuration implements Duration
 	}
 
 	#[Pure]
-	public function equals(Duration $duration): bool
+	public function equals(DurationContract $duration): bool
 	{
 		return
 			$this->isNegative() === $duration->isNegative() &&
@@ -176,7 +146,7 @@ abstract class AbstractDuration implements Duration
 	}
 
 	#[Pure]
-	public function compare(Duration $duration): int
+	public function compare(DurationContract $duration): int
 	{
 		if ($this->isNegative() !== $duration->isNegative()) {
 			return $this->isNegative() ? -1 : 1;

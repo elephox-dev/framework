@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Clock\AbstractDuration
  * @covers \Elephox\Clock\FrozenClock
  * @covers \Elephox\Clock\LazyClock
- * @covers \Elephox\Clock\ValuesDuration
+ * @covers \Elephox\Clock\Duration
  *
  * @internal
  */
@@ -22,17 +22,17 @@ class PeriodIteratorTest extends TestCase
 	{
 		$start = new FrozenClock(new DateTimeImmutable('2018-01-01'));
 		$end = new FrozenClock(new DateTimeImmutable('2018-01-02'));
-		$iterator = new PeriodIterator($start, new ValuesDuration(days: 1), $end);
+		$iterator = new PeriodIterator($start, new Duration(days: 1), $end);
 
 		static::assertSame($start, $iterator->getStart());
 		static::assertSame($end, $iterator->getEnd());
-		static::assertSame((new ValuesDuration(days: 1))->getTotalMicroseconds(), $iterator->getTotalDuration()->getTotalMicroseconds());
+		static::assertSame((new Duration(days: 1))->getTotalMicroseconds(), $iterator->getTotalDuration()->getTotalMicroseconds());
 
 		$iterator->rewind();
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
-		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 0)));
+		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 0)));
 		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
@@ -40,7 +40,7 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($end));
-		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 1)));
+		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 1)));
 		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
@@ -51,7 +51,7 @@ class PeriodIteratorTest extends TestCase
 	public function testInfiniteIterator(): void
 	{
 		$start = new FrozenClock(new DateTimeImmutable('2018-01-01'));
-		$iterator = new PeriodIterator($start, new ValuesDuration(days: 1));
+		$iterator = new PeriodIterator($start, new Duration(days: 1));
 
 		static::assertSame($start, $iterator->getStart());
 		static::assertNull($iterator->getEnd());
@@ -61,22 +61,22 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
-		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 0)));
+		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 0)));
 		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertTrue($iterator->current()->equals($start->add(new ValuesDuration(days: 1))));
-		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 1)));
+		static::assertTrue($iterator->current()->equals($start->add(new Duration(days: 1))));
+		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 1)));
 		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
-		static::assertTrue($iterator->current()->equals($start->add(new ValuesDuration(days: 2))));
-		static::assertTrue($iterator->currentOffset()->equals(new ValuesDuration(days: 2)));
+		static::assertTrue($iterator->current()->equals($start->add(new Duration(days: 2))));
+		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 2)));
 		static::assertSame(2, $iterator->key());
 
 		$iterator->next();

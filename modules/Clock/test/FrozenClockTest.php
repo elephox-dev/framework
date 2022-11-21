@@ -12,7 +12,7 @@ use StellaMaris\Clock\ClockInterface;
  * @covers \Elephox\Clock\AbstractClock
  * @covers \Elephox\Clock\AbstractDuration
  * @covers \Elephox\Clock\FrozenClock
- * @covers \Elephox\Clock\ValuesDuration
+ * @covers \Elephox\Clock\Duration
  * @covers \Elephox\Clock\LazyClock
  *
  * @internal
@@ -80,7 +80,7 @@ class FrozenClockTest extends TestCase
 		$b = new FrozenClock(new DateTimeImmutable('+1 day'));
 
 		static::assertNotSame($b->now()->format(DateTimeInterface::ATOM), $a->now()->format(DateTimeInterface::ATOM));
-		static::assertSame($b->now()->format(DateTimeInterface::ATOM), $a->add(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
-		static::assertSame($a->now()->format(DateTimeInterface::ATOM), $b->sub(new ValuesDuration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		static::assertSame($b->now()->format(DateTimeInterface::ATOM), $a->add(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		static::assertSame($a->now()->format(DateTimeInterface::ATOM), $b->sub(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
 	}
 }

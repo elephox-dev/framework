@@ -4,12 +4,18 @@ declare(strict_types=1);
 namespace Elephox\Clock;
 
 use DateInterval;
+use Exception;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-class ValuesDuration extends AbstractDuration
+class Duration extends AbstractDuration
 {
+	public static function fromDateInterval(): self
+	{
+
+	}
+
 	#[Pure]
 	public static function from(bool $negative = false, float $microseconds = 0, int $seconds = 0, int $minutes = 0, int $hours = 0, int $days = 0, int $months = 0, int $years = 0): Contract\Duration
 	{
@@ -39,7 +45,31 @@ class ValuesDuration extends AbstractDuration
 	#[Pure]
 	public function toDateInterval(): DateInterval
 	{
-		return AbstractDuration::toInterval($this);
+		try {
+			$d = new DateInterval(sprintf(
+				'P%dY%dM%dDT%dH%dM%dS',
+				$this->years,
+				$this->months,
+				$this->days,
+				$this->hours,
+				$this->minutes,
+				$this->seconds,
+			));
+
+			/** @psalm-suppress ImpurePropertyAssignment */
+			$d->invert = $this->negative ? 1 : 0;
+
+			// f = Number of microseconds, as a fraction of a second.
+			/** @psalm-suppress ImpurePropertyAssignment */
+			$d->f = $this->microseconds / self::MICROSECONDS_PER_SECOND;
+
+			return $d;
+		} catch (Exception $e) {
+			/** @psalm-suppress ImpureFunctionCall */
+			trigger_error("Failed to create a valid DateInterval. Exception: $e", E_USER_WARNING);
+
+			return new DateInterval('PT0S');
+		}
 	}
 
 	#[Pure]

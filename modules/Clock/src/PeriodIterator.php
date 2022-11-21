@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Clock;
 
 use Elephox\Clock\Contract\Clock;
-use Elephox\Clock\Contract\Duration;
+use Elephox\Clock\Contract\Duration as DurationContract;
 use Iterator;
 use JetBrains\PhpStorm\Pure;
 
@@ -19,10 +19,10 @@ class PeriodIterator implements Iterator
 	#[Pure]
 	public function __construct(
 		private readonly Clock $start,
-		private readonly Duration $period,
+		private readonly DurationContract $period,
 		private readonly ?Clock $end = null,
 	) {
-		$this->offset = new ValuesDuration();
+		$this->offset = new Duration();
 	}
 
 	#[Pure]
@@ -37,7 +37,7 @@ class PeriodIterator implements Iterator
 		return $this->end;
 	}
 
-	public function getTotalDuration(): ?Duration
+	public function getTotalDuration(): ?DurationContract
 	{
 		if ($this->end === null) {
 			return null;
@@ -52,7 +52,7 @@ class PeriodIterator implements Iterator
 	}
 
 	#[Pure]
-	public function currentOffset(): Duration
+	public function currentOffset(): DurationContract
 	{
 		return $this->offset;
 	}
@@ -80,7 +80,7 @@ class PeriodIterator implements Iterator
 
 	public function rewind(): void
 	{
-		$this->offset = new ValuesDuration();
+		$this->offset = new Duration();
 		$this->periodCount = 0;
 	}
 }

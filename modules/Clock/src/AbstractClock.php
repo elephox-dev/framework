@@ -5,16 +5,16 @@ namespace Elephox\Clock;
 
 use DateTimeImmutable;
 use Elephox\Clock\Contract\Clock;
-use Elephox\Clock\Contract\Duration;
+use Elephox\Clock\Contract\Duration as DurationContract;
 use StellaMaris\Clock\ClockInterface;
 
 abstract class AbstractClock implements Clock
 {
-	public function diff(ClockInterface $clock): Duration
+	public function diff(ClockInterface $clock): DurationContract
 	{
 		$diff = $this->now()->diff($clock->now());
 
-		return ValuesDuration::from(
+		return Duration::from(
 			$diff->invert === 1,
 			$diff->f,
 			$diff->s,
@@ -33,24 +33,28 @@ abstract class AbstractClock implements Clock
 
 	public function compare(ClockInterface $clock): int
 	{
-		$diff = $this->now()->diff($clock->now());
+		$diff = $this->diff($clock);
 
-		if ($diff->invert === 1) {
-			return 1;
-		}
+		return Duration::from()->compare($diff);
 
-		return $diff->f === 0.0 && $diff->s === 0 && $diff->i === 0 && $diff->h === 0 && $diff->d === 0 && $diff->m === 0 && $diff->y === 0
-			? 0
-			: -1;
+//		if ($diff->isNegative()) {
+//			return 1;
+//		}
+//
+//		if ($diff->getTotalMicroseconds() === 0.0) {
+//			return 0;
+//		}
+//
+//		return -1;
 	}
 
-	public function add(Duration $duration): Clock
+	public function add(DurationContract $duration): Clock
 	{
-		return new LazyClock(fn (): DateTimeImmutable => $this->now()->add(AbstractDuration::toInterval($duration)));
+		return new LazyClock(fn (): DateTimeImmutable => $this->now()->add($duration->toDateInterval()));
 	}
 
-	public function sub(Duration $duration): Clock
+	public function sub(DurationContract $duration): Clock
 	{
-		return new LazyClock(fn (): DateTimeImmutable => $this->now()->sub(AbstractDuration::toInterval($duration)));
+		return new LazyClock(fn (): DateTimeImmutable => $this->now()->sub($duration->toDateInterval()));
 	}
 }
