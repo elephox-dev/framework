@@ -32,7 +32,7 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
-		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 0)));
+		static::assertTrue($iterator->getOffset()->equals(new Duration(days: 0)));
 		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
@@ -40,7 +40,7 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($end));
-		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 1)));
+		static::assertTrue($iterator->getOffset()->equals(new Duration(days: 1)));
 		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
@@ -61,7 +61,7 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start));
-		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 0)));
+		static::assertTrue($iterator->getOffset()->equals(new Duration(days: 0)));
 		static::assertSame(0, $iterator->key());
 		static::assertTrue($iterator->valid());
 
@@ -69,14 +69,14 @@ class PeriodIteratorTest extends TestCase
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start->add(new Duration(days: 1))));
-		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 1)));
+		static::assertTrue($iterator->getOffset()->equals(new Duration(days: 1)));
 		static::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
 		static::assertTrue($iterator->valid());
 		static::assertTrue($iterator->current()->equals($start->add(new Duration(days: 2))));
-		static::assertTrue($iterator->currentOffset()->equals(new Duration(days: 2)));
+		static::assertTrue($iterator->getOffset()->equals(new Duration(days: 2)));
 		static::assertSame(2, $iterator->key());
 
 		$iterator->next();
