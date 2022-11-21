@@ -36,16 +36,6 @@ abstract class AbstractClock implements Clock
 		$diff = $this->diff($clock);
 
 		return Duration::from()->compare($diff);
-
-//		if ($diff->isNegative()) {
-//			return 1;
-//		}
-//
-//		if ($diff->getTotalMicroseconds() === 0.0) {
-//			return 0;
-//		}
-//
-//		return -1;
 	}
 
 	public function add(DurationContract $duration): Clock
