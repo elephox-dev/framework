@@ -241,11 +241,12 @@ class ConfigurationRootTest extends TestCase
 		static::assertSame('this is an env value: this is a stringable object', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new class implements IteratorAggregate {
-			public function getIterator(): Traversable {
-				yield "this";
-				yield "is";
-				yield "an";
-				yield "iterable";
+			public function getIterator(): Traversable
+			{
+				yield 'this';
+				yield 'is';
+				yield 'an';
+				yield 'iterable';
 			}
 		};
 		static::assertSame('this is an env value: ["this","is","an","iterable"]', $root->getSection('test')->getValue());
