@@ -39,10 +39,9 @@ class StandardSink extends StreamSink
 
 	public function hasCapability(SinkCapability $capability): bool
 	{
-		return
-			stream_isatty($this->stdout) &&
-			stream_isatty($this->stderr) &&
-			$capability === SinkCapability::AnsiFormatting
-		;
+		return match ($capability) {
+			SinkCapability::AnsiFormatting => stream_isatty($this->stdout) && stream_isatty($this->stderr),
+			default => false,
+		};
 	}
 }
