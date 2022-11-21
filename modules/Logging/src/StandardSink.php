@@ -41,7 +41,7 @@ class StandardSink extends StreamSink
 	{
 		return match ($capability) {
 			SinkCapability::AnsiFormatting => stream_isatty($this->stdout) && stream_isatty($this->stderr),
-			default => false,
+			default => parent::hasCapability($capability),
 		};
 	}
 }
