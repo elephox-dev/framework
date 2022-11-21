@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Clock;
 
 use AssertionError;
+use DateInterval;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -129,5 +130,45 @@ class DurationTest extends TestCase
 		$this->expectExceptionMessage('Microseconds must be greater than or equal to 0. To represent negative durations, pass "negative: true"');
 
 		Duration::from(microseconds: -1);
+	}
+
+	public function testZero(): void
+	{
+		$zeroA = Duration::zero();
+		$zeroB = Duration::zero();
+
+		static::assertSame($zeroA, $zeroB);
+		static::assertSame(0.0, $zeroA->getTotalMicroseconds());
+		static::assertFalse($zeroA->isNegative());
+
+		$modified = $zeroA->add(Duration::from(seconds: 1));
+		static::assertSame(0.0, $zeroA->getTotalMicroseconds());
+		static::assertSame(1.0, $modified->getTotalSeconds());
+	}
+
+	public function testToFromDateInterval(): void
+	{
+		$i = new DateInterval('P1DT1S');
+		$a = Duration::fromDateInterval($i);
+
+		static::assertFalse($a->isNegative());
+		static::assertSame(0.0, $a->getMicroseconds());
+		static::assertSame(1, $a->getSeconds());
+		static::assertSame(0, $a->getMinutes());
+		static::assertSame(0, $a->getHours());
+		static::assertSame(1, $a->getDays());
+		static::assertSame(0, $a->getMonths());
+		static::assertSame(0, $a->getYears());
+
+		$b = $a->toDateInterval();
+
+		static::assertSame(0, $b->invert);
+		static::assertSame(0.0, $b->f);
+		static::assertSame(1, $b->s);
+		static::assertSame(0, $b->i);
+		static::assertSame(0, $b->h);
+		static::assertSame(1, $b->d);
+		static::assertSame(0, $b->m);
+		static::assertSame(0, $b->y);
 	}
 }
