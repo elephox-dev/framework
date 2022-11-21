@@ -18,6 +18,8 @@ trait SubstitutesEnvironmentVariables
 			return match (true) {
 				$type === 'null' => 'null',
 				$type === 'bool' => $value ? 'true' : 'false',
+				$type === 'array',
+				is_iterable($value) => /** @var array $value */ json_encode([...$this->substituteEnvironmentVariablesRecursive($value)]),
 				$type === 'int',
 				$type === 'float',
 				$type === 'string',
@@ -32,13 +34,13 @@ trait SubstitutesEnvironmentVariables
 	protected function substituteEnvironmentVariables(string|Stringable $value): string
 	{
 		// Replace unescaped environment variables with their values (${ENV_VAR} => value)
-		/** @var string $value */
+		$value = (string) $value;
 		$value = preg_replace_callback('/(?<!\$)\${([^}]+)}/m', function (array $match) {
 			$substitute = $this->getEnvSubstitute($match[1]);
 
 			// Replaced nested substitutions
 			return $substitute !== null ? $this->substituteEnvironmentVariables($substitute) : $match[0];
-		}, (string) $value);
+		}, $value);
 
 		// Replace escaped variables with unescaped ones ($${ENV_VAR} => ${ENV_VAR})
 		/** @var string */

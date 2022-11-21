@@ -5,10 +5,12 @@ namespace Elephox\Configuration;
 
 use Elephox\Configuration\Memory\MemoryConfigurationSource;
 use InvalidArgumentException;
+use IteratorAggregate;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 use Stringable;
+use Traversable;
 
 /**
  * @covers \Elephox\Configuration\ConfigurationBuilder
@@ -220,8 +222,8 @@ class ConfigurationRootTest extends TestCase
 		$_ENV['TEST_VAR'] = '${NOT_A_VAR}';
 		static::assertSame('this is an env value: now has a value!', $root->getSection('test')->getValue());
 
-		$_ENV['TEST_VAR'] = ['a' => 'b'];
-		static::assertSame('this is an env value: array', $root->getSection('test')->getValue());
+		$_ENV['TEST_VAR'] = ['a' => 'b', 'c' => [1, 2, 3], 'nested' => '${NOT_A_VAR}'];
+		static::assertSame('this is an env value: {"a":"b","c":[1,2,3],"nested":"now has a value!"}', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new stdClass();
 		static::assertSame('this is an env value: stdClass', $root->getSection('test')->getValue());
@@ -237,6 +239,16 @@ class ConfigurationRootTest extends TestCase
 			}
 		};
 		static::assertSame('this is an env value: this is a stringable object', $root->getSection('test')->getValue());
+
+		$_ENV['TEST_VAR'] = new class implements IteratorAggregate {
+			public function getIterator(): Traversable {
+				yield "this";
+				yield "is";
+				yield "an";
+				yield "iterable";
+			}
+		};
+		static::assertSame('this is an env value: ["this","is","an","iterable"]', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = fopen('php://memory', 'rb');
 		static::assertSame('this is an env value: resource (stream)', $root->getSection('test')->getValue());
