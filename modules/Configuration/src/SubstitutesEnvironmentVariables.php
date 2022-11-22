@@ -17,7 +17,9 @@ trait SubstitutesEnvironmentVariables
 			$value = $_ENV[$name];
 			$type = get_debug_type($value);
 
-			$stringifyIterable = function (iterable $v): string {
+			$stringifyIterable = function (mixed $v): string {
+				assert(is_iterable($v));
+
 				try {
 					return KeyedEnumerable::from($this->substituteEnvironmentVariablesRecursive($v))
 						->toJson()
@@ -35,7 +37,7 @@ trait SubstitutesEnvironmentVariables
 				$type === 'int',
 				$type === 'float',
 				$type === 'string',
-				$value instanceof Stringable => /** @var (int|float|string|Stringable) $value */ (string) $value,
+				$value instanceof Stringable => (string) $value,
 				default => $type,
 			};
 		}
@@ -45,8 +47,10 @@ trait SubstitutesEnvironmentVariables
 
 	protected function substituteEnvironmentVariables(string|Stringable $value): string
 	{
-		// Replace unescaped environment variables with their values (${ENV_VAR} => value)
 		$value = (string) $value;
+
+		// Replace unescaped environment variables with their values (${ENV_VAR} => value)
+		/** @var string $value */
 		$value = preg_replace_callback('/(?<!\$)\${([^}]+)}/m', function (array $match) {
 			$substitute = $this->getEnvSubstitute($match[1]);
 
