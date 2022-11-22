@@ -28,6 +28,11 @@ use const APP_ROOT;
  * @covers \Elephox\Files\Path
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Stream\StringStream
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Collection\IsEnumerable
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Collection\Iterator\UniqueByIterator
  *
  * @internal
  */

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Cache;
 
 use DateTime;
+use Elephox\Collection\ArrayList;
+use Elephox\Collection\ArrayMap;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use JetBrains\PhpStorm\Pure;
 use Psr\Cache\CacheItemInterface;
@@ -11,19 +13,22 @@ use Psr\Cache\CacheItemInterface;
 class TempDirCache extends AbstractCache
 {
 	/**
-	 * @var array<string, CacheItemInterface>
+	 * @var ArrayMap<string, CacheItemInterface>
 	 */
-	private array $floatingItems = [];
+	private ArrayMap $floatingItems;
 
 	/**
-	 * @var list<string>
+	 * @var ArrayList<string>
 	 */
-	private array $persistedItemKeys = [];
+	private ArrayList $persistedItemKeys;
 
 	private int $changes = 0;
 
 	public function __construct(private readonly TempDirCacheConfiguration $configuration)
 	{
+		$this->floatingItems = new ArrayMap();
+		$this->persistedItemKeys = new ArrayList();
+
 		$this->load();
 	}
 
@@ -53,7 +58,7 @@ class TempDirCache extends AbstractCache
 	public function getItem(string $key): CacheItemInterface
 	{
 		if ($this->hasItem($key)) {
-			return $this->floatingItems[$key];
+			return $this->floatingItems->get($key);
 		}
 
 		$expiresAt = $this->calculateExpiresAt(new DateTime());
@@ -63,12 +68,12 @@ class TempDirCache extends AbstractCache
 
 	public function hasItem(string $key): bool
 	{
-		return in_array($key, $this->persistedItemKeys, true);
+		return $this->persistedItemKeys->contains($key);
 	}
 
 	public function clear(): bool
 	{
-		$this->floatingItems = [];
+		$this->floatingItems->clear();
 
 		$this->persist();
 
@@ -134,12 +139,14 @@ class TempDirCache extends AbstractCache
 	{
 		$this->getCacheDir()->ensureExists();
 
-		$file = $this->getCacheDir()->file($this->getCacheId());
-		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes');
+		$itemsFile = $this->getCacheDir()->file($this->getCacheId() . '.phpo');
+		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes.phpo');
 
-		if (empty($this->floatingItems)) {
-			if ($file->exists()) {
-				$file->delete();
+		if ($this->floatingItems->isEmpty()) {
+			// cache is empty, delete persisted contents
+
+			if ($itemsFile->exists()) {
+				$itemsFile->delete();
 			}
 
 			if ($classesFile->exists()) {
@@ -147,44 +154,39 @@ class TempDirCache extends AbstractCache
 			}
 
 			$this->changes = 0;
-			$this->persistedItemKeys = [];
+			$this->persistedItemKeys->clear();
 
 			return;
 		}
 
-		$file->writeContents(serialize($this->floatingItems));
+		$itemsFile->writeContents(serialize($this->floatingItems->toArray()));
 
-		$classes = array_unique(
-			array_merge(
-				array_values(
-					array_map(
-						static fn (CacheItemInterface $item): string => $item::class,
-						$this->floatingItems,
-					),
-				),
-				array_values(
-					array_filter(
-						array_map(
-							static function (CacheItemInterface $item): ?string {
-								$value = $item->get();
+		/** @psalm-suppress InvalidArgument */
+		$classes = $this->floatingItems
+			->selectMany(static function (CacheItemInterface $item): array {
+				$classes = [];
+				$classes[] = $item::class;
 
-								if ($value !== null) {
-									return $value::class;
-								}
+				/** @var mixed $value */
+				$value = $item->get();
 
-								return null;
-							},
-							$this->floatingItems,
-						),
-					),
-				),
-				[CacheItemInterface::class],
-			),
-		);
+				if ($value !== null) {
+					$classes[] = $value::class;
+				}
+
+				return $classes;
+			})
+			->values()
+			->append(CacheItemInterface::class)
+			->unique()
+			->toList()
+		;
 		$classesFile->writeContents(serialize($classes));
 
 		$this->changes = 0;
-		$this->persistedItemKeys = array_keys($this->floatingItems);
+
+		/** @var ArrayList<string> */
+		$this->persistedItemKeys = $this->floatingItems->keys()->toArrayList();
 	}
 
 	protected function load(): void
@@ -193,7 +195,7 @@ class TempDirCache extends AbstractCache
 			return;
 		}
 
-		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes');
+		$classesFile = $this->getCacheDir()->file($this->getCacheId() . '.classes.phpo');
 		if (!$classesFile->exists()) {
 			return;
 		}
@@ -201,12 +203,17 @@ class TempDirCache extends AbstractCache
 		/** @var list<class-string> */
 		$classes = unserialize($classesFile->contents(), ['allowed_classes' => false]);
 
-		$file = $this->getCacheDir()->file($this->getCacheId());
-		$contents = $file->contents();
+		$itemsFile = $this->getCacheDir()->file($this->getCacheId() . '.phpo');
+		if (!$itemsFile->exists()) {
+			return;
+		}
 
-		/** @var array<string, CacheItemInterface> */
-		$this->floatingItems = unserialize($contents, ['allowed_classes' => $classes]);
-		$this->persistedItemKeys = array_keys($this->floatingItems);
+		/** @var array<string, CacheItemInterface> $deserialized */
+		$deserialized = unserialize($itemsFile->contents(), ['allowed_classes' => $classes]);
+		$this->floatingItems = ArrayMap::from($deserialized);
+
+		/** @var ArrayList<string> */
+		$this->persistedItemKeys = $this->floatingItems->keys()->toArrayList();
 
 		$this->changes = 0;
 	}
