@@ -91,6 +91,11 @@ class SessionMap implements Contract\SessionMap
 		return true;
 	}
 
+	public function clear(): void
+	{
+		self::destroy();
+	}
+
 	public function getIterator(): ArrayIterator
 	{
 		return new ArrayIterator($_SESSION ?? []);

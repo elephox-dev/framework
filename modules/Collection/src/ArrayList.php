@@ -188,6 +188,11 @@ class ArrayList implements GenericList
 		return $removed;
 	}
 
+	public function clear(): void
+	{
+		$this->items = [];
+	}
+
 	public function indexOf(mixed $value, ?callable $comparer = null): int
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);

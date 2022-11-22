@@ -55,6 +55,8 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	 */
 	public function removeAt(int $index): mixed;
 
+	public function clear(): void;
+
 	/**
 	 * @param T $value
 	 * @param null|callable(T, T): bool $comparer

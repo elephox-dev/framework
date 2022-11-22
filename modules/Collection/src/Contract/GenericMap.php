@@ -37,4 +37,6 @@ interface GenericMap extends GenericKeyedEnumerable
 	 * @param TKey $key
 	 */
 	public function remove(mixed $key): bool;
+
+	public function clear(): void;
 }

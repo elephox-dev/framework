@@ -123,8 +123,13 @@ class ArrayMap implements GenericMap, ArrayAccess
 		return true;
 	}
 
+	public function clear(): void
+	{
+		$this->items = [];
+	}
+
 	/**
-	 * @template T
+	 * @template T of string|int
 	 *
 	 * @param T $key
 	 *
@@ -132,6 +137,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 */
 	private function validateKey(mixed $key): string|int
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {
 			throw new OffsetNotAllowedException($key);
 		}

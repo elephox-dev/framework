@@ -101,4 +101,9 @@ class ObjectMap implements GenericMap
 
 		return true;
 	}
+
+	public function clear(): void
+	{
+		$this->map->removeAll($this->map);
+	}
 }
