@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Elephox\Configuration;
 
 use Elephox\Collection\KeyedEnumerable;
+use JsonException;
 use Stringable;
+use Traversable;
 
 trait SubstitutesEnvironmentVariables
 {
@@ -15,11 +17,21 @@ trait SubstitutesEnvironmentVariables
 			$value = $_ENV[$name];
 			$type = get_debug_type($value);
 
+			$stringifyIterable = function (iterable $v): string {
+				try {
+					return KeyedEnumerable::from($this->substituteEnvironmentVariablesRecursive($v))
+						->toJson()
+					;
+				} catch (JsonException $e) {
+					return "JsonException: {$e->getMessage()}";
+				}
+			};
+
 			return match (true) {
 				$type === 'null' => 'null',
 				$type === 'bool' => $value ? 'true' : 'false',
 				$type === 'array',
-				is_iterable($value) => /** @var array $value */ json_encode([...$this->substituteEnvironmentVariablesRecursive($value)]),
+				$value instanceof Traversable => $stringifyIterable($value),
 				$type === 'int',
 				$type === 'float',
 				$type === 'string',
