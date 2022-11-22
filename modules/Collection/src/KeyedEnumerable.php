@@ -8,7 +8,7 @@ use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Iterator\RangeIterator;
 use EmptyIterator;
 use InvalidArgumentException;
-use Iterator;
+use Traversable;
 
 /**
  * @template TIteratorKey
@@ -43,12 +43,12 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 		}
 
 		if (is_object($value)) {
-			if ($value instanceof Iterator) {
-				return new self($value);
-			}
-
 			if ($value instanceof GenericKeyedEnumerable) {
 				return $value;
+			}
+
+			if ($value instanceof Traversable) {
+				return new self($value);
 			}
 		}
 

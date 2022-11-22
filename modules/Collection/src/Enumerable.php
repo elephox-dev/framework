@@ -8,7 +8,7 @@ use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Iterator\RangeIterator;
 use EmptyIterator;
 use InvalidArgumentException;
-use Iterator;
+use Traversable;
 
 /**
  * @template TSource
@@ -41,13 +41,13 @@ class Enumerable extends IteratorProvider implements GenericEnumerable
 		}
 
 		if (is_object($value)) {
-			if ($value instanceof Iterator) {
-				/** @var Iterator<mixed, mixed> $value */
-				return new self($value);
-			}
-
 			if ($value instanceof GenericEnumerable) {
 				return $value;
+			}
+
+			if ($value instanceof Traversable) {
+				/** @var Traversable<mixed, mixed> $value */
+				return new self($value);
 			}
 		}
 
