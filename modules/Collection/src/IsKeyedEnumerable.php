@@ -24,6 +24,8 @@ use EmptyIterator;
 use InvalidArgumentException;
 use Iterator;
 use IteratorIterator;
+use JetBrains\PhpStorm\ExpectedValues;
+use JsonException;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
@@ -966,6 +968,32 @@ trait IsKeyedEnumerable
 		}
 
 		return $array;
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public function toJson(
+		#[ExpectedValues(flags: [
+			JSON_FORCE_OBJECT,
+			JSON_HEX_QUOT,
+			JSON_HEX_TAG,
+			JSON_HEX_AMP,
+			JSON_HEX_APOS,
+			JSON_INVALID_UTF8_IGNORE,
+			JSON_INVALID_UTF8_SUBSTITUTE,
+			JSON_NUMERIC_CHECK,
+			JSON_PARTIAL_OUTPUT_ON_ERROR,
+			JSON_PRESERVE_ZERO_FRACTION,
+			JSON_PRETTY_PRINT,
+			JSON_UNESCAPED_LINE_TERMINATORS,
+			JSON_UNESCAPED_SLASHES,
+			JSON_UNESCAPED_UNICODE,
+			JSON_THROW_ON_ERROR,
+		])] int $flags = 0,
+		int $depth = 512,
+	): string {
+		return json_encode($this->toArray(), $flags | JSON_THROW_ON_ERROR, $depth);
 	}
 
 	public function groupByKey(?callable $keySelector = null): array
