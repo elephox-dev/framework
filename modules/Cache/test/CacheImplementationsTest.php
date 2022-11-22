@@ -9,6 +9,8 @@ use Elephox\Files\Directory;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 
+use const APP_ROOT;
+
 /**
  * @covers \Elephox\Cache\InMemoryCache
  * @covers \Elephox\Cache\InMemoryCacheConfiguration
@@ -31,16 +33,13 @@ use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
  */
 class CacheImplementationsTest extends TestCase
 {
-	private static function getCacheDir(): Directory
-	{
-		return new Directory(APP_ROOT . '/tmp/cache');
-	}
-
 	public function cacheImplementationProvider(): iterable
 	{
+		$cacheDir = new Directory(APP_ROOT . '/tmp/cache');
+
 		$argGroups = [
 			['cache' => new InMemoryCache(new InMemoryCacheConfiguration())],
-			['cache' => new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: self::getCacheDir()))],
+			['cache' => new TempDirCache(new TempDirCacheConfiguration(cacheId: 'test', tempDir: $cacheDir))],
 		];
 
 		foreach ($argGroups as $args) {
