@@ -60,7 +60,7 @@ class GeneratesResponsesTest extends TestCase
 		fwrite($resource, 'Hello World');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(MimeType::ApplicationOctetStream, $response->getContentType());
+		static::assertSame(function_exists('mime_content_type') ? MimeType::TextPlain : MimeType::ApplicationOctetStream, $response->getContentType());
 
 		fclose($resource);
 	}
@@ -70,7 +70,7 @@ class GeneratesResponsesTest extends TestCase
 		$resource = fopen(__FILE__, 'rb');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(MimeType::ApplicationPhp, $response->getContentType());
+		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
 
 		fclose($resource);
 	}
