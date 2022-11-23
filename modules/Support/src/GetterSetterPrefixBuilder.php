@@ -8,7 +8,7 @@ trait GetterSetterPrefixBuilder
 	/**
 	 * @return iterable<int, non-empty-string>
 	 */
-	protected function buildGetterPrefixes(): iterable
+	protected function _buildGetterPrefixes(): iterable
 	{
 		yield 'get';
 		yield 'is';
@@ -18,7 +18,7 @@ trait GetterSetterPrefixBuilder
 	/**
 	 * @return iterable<int, non-empty-string>
 	 */
-	protected function buildSetterPrefixes(): iterable
+	protected function _buildSetterPrefixes(): iterable
 	{
 		yield 'set';
 		yield 'put';

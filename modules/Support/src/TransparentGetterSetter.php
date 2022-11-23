@@ -19,7 +19,7 @@ trait TransparentGetterSetter
 	{
 		$getterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
 
-		foreach ($this->buildGetterPrefixes() as $prefix) {
+		foreach ($this->_buildGetterPrefixes() as $prefix) {
 			yield $prefix . $getterPropertyName;
 		}
 	}
@@ -33,7 +33,7 @@ trait TransparentGetterSetter
 	{
 		$setterPropertyName = str_contains($propertyName, '_') ? Casing::toPascal($propertyName) : ucfirst($propertyName);
 
-		foreach ($this->buildSetterPrefixes() as $prefix) {
+		foreach ($this->_buildSetterPrefixes() as $prefix) {
 			yield $prefix . $setterPropertyName;
 		}
 	}
