@@ -14,4 +14,14 @@ class TestServiceClass implements TestServiceInterface
 	{
 		return $service;
 	}
+
+	private function privateReturnsString(string $testString): string
+	{
+		return $testString;
+	}
+
+	public static function returnsStringStatic(string $testString): string
+	{
+		return $testString;
+	}
 }

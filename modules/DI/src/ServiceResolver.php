@@ -21,12 +21,10 @@ trait ServiceResolver
 	abstract protected function getServices(): ServiceCollectionContract;
 
 	/**
-	 * @template T
-	 *
-	 * @param class-string<T> $className
+	 * @param class-string $className
 	 * @param array $overrideArguments
 	 *
-	 * @return T
+	 * @return mixed
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws BadMethodCallException
@@ -54,14 +52,11 @@ trait ServiceResolver
 	}
 
 	/**
-	 * @template T as object
-	 * @template TResult
-	 *
-	 * @param class-string<T> $className
+	 * @param class-string $className
 	 * @param non-empty-string $method
 	 * @param array $overrideArguments
 	 *
-	 * @return TResult
+	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -69,27 +64,41 @@ trait ServiceResolver
 	{
 		$instance = $this->instantiate($className);
 
+		return $this->callOn($instance, $method, $overrideArguments, $onUnresolved);
+	}
+
+	/**
+	 * @param object $instance
+	 * @param non-empty-string $method
+	 * @param array $overrideArguments
+	 *
+	 * @return mixed
+	 *
+	 * @throws BadMethodCallException
+	 */
+	public function callOn(object $instance, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
+	{
 		try {
 			$reflectionClass = new ReflectionClass($instance);
 			$reflectionMethod = $reflectionClass->getMethod($method);
 			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
 
-			/** @var TResult */
 			return $reflectionMethod->invokeArgs($instance, $arguments->toList());
 		} catch (ReflectionException $e) {
-			throw new BadMethodCallException("Failed to call method '$method' on class '$className'", previous: $e);
+			throw new BadMethodCallException(sprintf(
+				"Failed to call method '%s' on class '%s'",
+				$method,
+				$instance::class,
+			), previous: $e);
 		}
 	}
 
 	/**
-	 * @template T as object
-	 * @template TResult
-	 *
-	 * @param class-string<T> $className
+	 * @param class-string $className
 	 * @param non-empty-string $method
 	 * @param array $overrideArguments
 	 *
-	 * @return TResult
+	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -100,7 +109,6 @@ trait ServiceResolver
 			$reflectionMethod = $reflectionClass->getMethod($method);
 			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
 
-			/** @var TResult */
 			return $reflectionMethod->invokeArgs(null, $arguments->toList());
 		} catch (ReflectionException $e) {
 			throw new BadMethodCallException("Failed to call method '$method' on class '$className'", previous: $e);
@@ -108,26 +116,20 @@ trait ServiceResolver
 	}
 
 	/**
-	 * @template T
-	 *
 	 * @param Closure|ReflectionFunction $callback
 	 * @param array $overrideArguments
 	 *
-	 * @return T
+	 * @return mixed
 	 *
 	 * @throws BadFunctionCallException
 	 */
 	public function callback(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
-		try {
-			$reflectionFunction = $callback instanceof ReflectionFunction ? $callback : new ReflectionFunction($callback);
-			$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
+		/** @noinspection PhpUnhandledExceptionInspection $callback is never a string */
+		$reflectionFunction = $callback instanceof ReflectionFunction ? $callback : new ReflectionFunction($callback);
+		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
 
-			/** @var T */
-			return $reflectionFunction->invokeArgs($arguments->toList());
-		} catch (ReflectionException $e) {
-			throw new BadFunctionCallException('Failed to invoke callback', previous: $e);
-		}
+		return $reflectionFunction->invokeArgs($arguments->toList());
 	}
 
 	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList

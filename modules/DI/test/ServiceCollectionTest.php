@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use BadMethodCallException;
 use Elephox\DI\Data\TestServiceClass;
+use Elephox\DI\Data\TestServiceClassUninstantiable;
 use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as M;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -26,6 +26,7 @@ use ReflectionParameter;
  * @covers \Elephox\DI\Hooks\ServiceReplacedHookData
  * @covers \Elephox\DI\ServiceNotFoundException
  * @covers \Elephox\DI\UnresolvedParameterException
+ * @covers \Elephox\DI\ClassNotFoundException
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable
@@ -157,9 +158,29 @@ class ServiceCollectionTest extends MockeryTestCase
 		static::assertFalse($container->has(TestServiceClass::class));
 	}
 
+	public function testServiceResolverInstantiateThrowsForUnknownClass(): void
+	{
+		$resolver = new ServiceCollection();
+
+		$this->expectException(ClassNotFoundException::class);
+		$this->expectExceptionMessage('Class not found: IDontExistClass');
+
+		$resolver->instantiate('IDontExistClass');
+	}
+
+	public function testServiceResolverInstantiateThrowsForReflectionException(): void
+	{
+		$resolver = new ServiceCollection();
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage("Failed to instantiate class 'Elephox\DI\Data\TestServiceClassUninstantiable'");
+
+		$resolver->instantiate(TestServiceClassUninstantiable::class);
+	}
+
 	public function testServiceResolverInstantiateNoConstructor(): void
 	{
-		$resolver = M::mock(ServiceResolver::class);
+		$resolver = new ServiceCollection();
 
 		$instance = $resolver->instantiate(TestServiceClass::class);
 
@@ -168,33 +189,89 @@ class ServiceCollectionTest extends MockeryTestCase
 
 	public function testServiceResolverInstantiateWithConstructor(): void
 	{
-		$serviceCollection = M::mock(ServiceCollectionContract::class);
-		$resolver = M::mock(ServiceResolver::class);
-		$resolver->shouldAllowMockingProtectedMethods();
-		$resolver
-			->allows('getServices')
-			->twice()
-			->withNoArgs()
-			->andReturn($serviceCollection)
-		;
-
-		$serviceCollection
-			->expects('get')
-			->with('testService')
-			->andReturn(null)
-		;
-
+		$resolver = new ServiceCollection();
 		$testServiceClass = new TestServiceClass();
-		$serviceCollection
-			->expects('requireService')
-			->with(TestServiceInterface::class)
-			->andReturn($testServiceClass)
-		;
+		$resolver->addSingleton(TestServiceInterface::class, instance: $testServiceClass);
 
 		$instance = $resolver->instantiate(TestServiceClassWithConstructor::class);
 
 		static::assertInstanceOf(TestServiceClassWithConstructor::class, $instance);
 		static::assertSame($testServiceClass, $instance->testService);
+	}
+
+	public function testServiceResolverCall(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClass::class, TestServiceClass::class);
+
+		$result = $resolver->call(TestServiceClass::class, 'returnsString', ['testString' => 'This is a test string']);
+
+		static::assertSame('This is a test string', $result);
+	}
+
+	public function testServiceResolverCallThrowsForNonExistentMethod(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClass::class, TestServiceClass::class);
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage("Failed to call method 'doesntExist' on class 'Elephox\DI\Data\TestServiceClass'");
+
+		$resolver->call(TestServiceClass::class, 'doesntExist');
+	}
+
+	public function testServiceResolverCallOn(): void
+	{
+		$resolver = new ServiceCollection();
+		$inst = new TestServiceClass();
+
+		$result = $resolver->callOn($inst, 'returnsString', ['testString' => 'This is a test string']);
+
+		static::assertSame('This is a test string', $result);
+	}
+
+	public function testServiceResolverCallThrowsForReflectionException(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClassUninstantiable::class, TestServiceClassUninstantiable::class);
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage("Failed to instantiate class 'Elephox\DI\Data\TestServiceClassUninstantiable'");
+
+		$resolver->call(TestServiceClassUninstantiable::class, 'returnsString', ['testString' => 'This is a test string']);
+	}
+
+	public function testServiceResolverCallStatic(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClass::class, TestServiceClass::class);
+
+		$result = $resolver->callStatic(TestServiceClass::class, 'returnsStringStatic', ['testString' => 'This is a test string']);
+
+		static::assertSame('This is a test string', $result);
+	}
+
+	public function testServiceResolverCallStaticThrowsForNonExistentMethod(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClass::class, TestServiceClass::class);
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage("Failed to call method 'doesntExist' on class 'Elephox\DI\Data\TestServiceClass'");
+
+		$resolver->callStatic(TestServiceClass::class, 'doesntExist');
+	}
+
+	public function testServiceResolverCallbackStaticClosure(): void
+	{
+		$resolver = new ServiceCollection();
+		$resolver->addTransient(TestServiceClass::class, TestServiceClass::class);
+
+		$closure = static fn (TestServiceClass $t) => $t->returnsString('test');
+
+		$result = $resolver->callback($closure);
+
+		static::assertSame('test', $result);
 	}
 
 	public function testRequireLate(): void

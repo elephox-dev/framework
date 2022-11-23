@@ -18,13 +18,11 @@ use ReflectionParameter;
 interface Resolver
 {
 	/**
-	 * @template T
-	 *
-	 * @param class-string<T> $className
+	 * @param class-string $className
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
-	 * @return T
+	 * @return mixed
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws BadMethodCallException
@@ -32,9 +30,7 @@ interface Resolver
 	public function instantiate(string $className, array $overrideArguments = [], ?Closure $onUnresolved = null): object;
 
 	/**
-	 * @template T as object
-	 *
-	 * @param class-string<T> $className
+	 * @param class-string $className
 	 * @param non-empty-string $method
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
@@ -44,25 +40,35 @@ interface Resolver
 	public function call(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
-	 * @template T as object
+	 * @param object $instance
+	 * @param string $method
+	 * @param array $overrideArguments
+	 * @param Closure|null $onUnresolved
 	 *
-	 * @param class-string<T> $className
+	 * @return mixed
+	 *
+	 * @throws BadMethodCallException
+	 */
+	public function callOn(object $instance, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+
+	/**
+	 * @param class-string $className
 	 * @param non-empty-string $method
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
+	 *
+	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
 	public function callStatic(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
-	 * @template T
-	 *
 	 * @param Closure|ReflectionFunction $callback
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
-	 * @return T
+	 * @return mixed
 	 *
 	 * @throws BadFunctionCallException
 	 */
