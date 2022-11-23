@@ -30,7 +30,8 @@ class FluidTransparentPropertiesTest extends TestCase
  * @method self setValue(int $value)
  * @method int getValue()
  */
-class ExampleFluidPropertiesTest {
+class ExampleFluidPropertiesTest
+{
 	use FluidSetterTransparentGetterProperties;
 
 	private int $value = 0;

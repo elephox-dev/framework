@@ -29,23 +29,24 @@ class CustomMimeTypeTest extends TestCase
 	 */
 	public function testFromFileString(): void
 	{
-		$result = CustomMimeType::fromFile("test.dat");
+		$result = CustomMimeType::fromFile('test.dat');
 		$builtIn = MimeType::ApplicationOctetStream;
 
 		static::assertInstanceOf(CustomMimeType::class, $result);
 		static::assertSame($builtIn->getValue(), $result->getValue());
-		static::assertSame("dat", $result->getExtension());
+		static::assertSame('dat', $result->getExtension());
 	}
 
 	public function testFromFileResource(): void
 	{
-		$f = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-mime-test.txt";
+		$f = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'elephox-mime-test.txt';
 		$res = false;
+
 		try {
-			file_put_contents($f, "Test data");
-			$res = fopen($f, "rb");
+			file_put_contents($f, 'Test data');
+			$res = fopen($f, 'rb');
 			if ($res === false) {
-				$this->markTestSkipped("Failed to create file resource");
+				static::markTestSkipped('Failed to create file resource');
 			}
 
 			$mimeType = CustomMimeType::fromFile($res);
@@ -82,7 +83,7 @@ class CustomMimeTypeTest extends TestCase
 
 	public function testFromEmptyFilename(): void
 	{
-		$empty = CustomMimeType::fromFilename("no-ext");
+		$empty = CustomMimeType::fromFilename('no-ext');
 		$builtIn = MimeType::ApplicationOctetStream;
 
 		static::assertInstanceOf(CustomMimeType::class, $empty);
