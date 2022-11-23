@@ -24,6 +24,47 @@ class CustomMimeTypeTest extends TestCase
 		static::assertSame($builtIn->getExtension(), $mimeType->getExtension());
 	}
 
+	/**
+	 * @
+	 */
+	public function testFromFileString(): void
+	{
+		$result = CustomMimeType::fromFile("test.dat");
+		$builtIn = MimeType::ApplicationOctetStream;
+
+		static::assertInstanceOf(CustomMimeType::class, $result);
+		static::assertSame($builtIn->getValue(), $result->getValue());
+		static::assertSame("dat", $result->getExtension());
+	}
+
+	public function testFromFileResource(): void
+	{
+		$f = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "elephox-mime-test.txt";
+		$res = false;
+		try {
+			file_put_contents($f, "Test data");
+			$res = fopen($f, "rb");
+			if ($res === false) {
+				$this->markTestSkipped("Failed to create file resource");
+			}
+
+			$mimeType = CustomMimeType::fromFile($res);
+			$builtIn = MimeType::TextPlain;
+
+			static::assertInstanceOf(MimeType::class, $mimeType);
+			static::assertSame($builtIn->getValue(), $mimeType->getValue());
+			static::assertSame($builtIn->getExtension(), $mimeType->getExtension());
+		} finally {
+			if (is_resource($res)) {
+				fclose($res);
+			}
+
+			if (file_exists($f)) {
+				unlink($f);
+			}
+		}
+	}
+
 	public function testFromFilename(): void
 	{
 		$pngMimeType = CustomMimeType::fromFilename('test.png');
@@ -37,6 +78,16 @@ class CustomMimeTypeTest extends TestCase
 		static::assertInstanceOf(CustomMimeType::class, $unknownMimeType);
 		static::assertSame('application/octet-stream', $unknownMimeType->getValue());
 		static::assertSame('unknown', $unknownMimeType->getExtension());
+	}
+
+	public function testFromEmptyFilename(): void
+	{
+		$empty = CustomMimeType::fromFilename("no-ext");
+		$builtIn = MimeType::ApplicationOctetStream;
+
+		static::assertInstanceOf(CustomMimeType::class, $empty);
+		static::assertSame($builtIn->getValue(), $empty->getValue());
+		static::assertSame('', $empty->getExtension());
 	}
 
 	public function testFromFileInvalidType(): void

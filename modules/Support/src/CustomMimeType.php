@@ -32,7 +32,7 @@ class CustomMimeType implements MimeTypeInterface
 	public static function fromFile(mixed $file): MimeTypeInterface
 	{
 		$mime = null;
-		if (is_string($file) && function_exists('mime_content_type')) {
+		if ((is_string($file) || is_resource($file)) && function_exists('mime_content_type')) {
 			try {
 				$mime = mime_content_type($file);
 			} catch (Throwable) {
@@ -64,9 +64,6 @@ class CustomMimeType implements MimeTypeInterface
 	public static function fromFilename(string $filename): MimeTypeInterface
 	{
 		$extension = pathinfo($filename, PATHINFO_EXTENSION);
-		if (empty($extension)) {
-			return MimeType::ApplicationOctetStream;
-		}
 
 		try {
 			return MimeType::fromExtension($extension);
