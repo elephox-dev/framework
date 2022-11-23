@@ -30,7 +30,6 @@ trait DeepCloneable
 
 	/**
 	 * @param array<string, object> $cloneStorage
-	 * @param mixed $value
 	 *
 	 * @throws ReflectionException
 	 */
@@ -57,7 +56,6 @@ trait DeepCloneable
 
 	/**
 	 * @param array<string, object> $cloneStorage
-	 * @param array $array
 	 *
 	 * @throws ReflectionException
 	 *
@@ -85,7 +83,6 @@ trait DeepCloneable
 
 	/**
 	 * @param array<string, object> $cloneStorage
-	 * @param object $object
 	 *
 	 * @throws ReflectionException
 	 * @throws Exception
