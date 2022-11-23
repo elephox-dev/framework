@@ -6,18 +6,18 @@ namespace Elephox\Support;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Elephox\Support\FluidSetterTransparentGetterProperties
+ * @covers \Elephox\Support\FluentSetterTransparentGetterProperties
  * @covers \Elephox\Support\GetterSetterPrefixBuilder
  * @covers \Elephox\Support\TransparentProperties
  * @covers \Elephox\OOR\Casing
  *
  * @internal
  */
-class FluidTransparentPropertiesTest extends TestCase
+class FluentTransparentPropertiesTest extends TestCase
 {
-	public function testIsFluid(): void
+	public function testFluentSetter(): void
 	{
-		$obj = new ExampleFluidPropertiesTest();
+		$obj = new ExampleFluentPropertiesTest();
 
 		static::assertSame(0, $obj->getValue());
 		$result = $obj->setValue(42);
@@ -30,9 +30,9 @@ class FluidTransparentPropertiesTest extends TestCase
  * @method self setValue(int $value)
  * @method int getValue()
  */
-class ExampleFluidPropertiesTest
+class ExampleFluentPropertiesTest
 {
-	use FluidSetterTransparentGetterProperties;
+	use FluentSetterTransparentGetterProperties;
 
 	private int $value = 0;
 }

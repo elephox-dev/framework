@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Support;
 
-trait FluidSetterTransparentGetterProperties
+trait FluentSetterTransparentGetterProperties
 {
 	use TransparentProperties {
 		TransparentProperties::_transparentSet as private _traitTransparentSet;
