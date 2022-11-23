@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing\Attribute\Http;
 
 use Attribute;
+use Elephox\Http\RequestMethod;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Attribute\Controller;
 
@@ -12,6 +13,6 @@ class Any extends Controller implements RouteAttribute
 {
 	public function __construct(?string $path = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)
 	{
-		parent::__construct($path, $weight);
+		parent::__construct($path, $weight, RequestMethod::cases());
 	}
 }
