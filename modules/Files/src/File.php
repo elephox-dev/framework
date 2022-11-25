@@ -18,6 +18,18 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return new self($path);
 	}
 
+	public static function temp(null|Contract\Directory|string $parent = null, ?string $prefix = null): self
+	{
+		$parent ??= sys_get_temp_dir();
+		if ($parent instanceof Contract\Directory) {
+			$parent = $parent->path();
+		}
+
+		$path = Path::join($parent, uniqid($prefix ?? 'php', true));
+
+		return new self($path);
+	}
+
 	public static function openStream(
 		string|Contract\File $file,
 		bool $readable = true,

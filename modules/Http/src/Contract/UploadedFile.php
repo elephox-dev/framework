@@ -16,7 +16,7 @@ interface UploadedFile extends UploadedFileInterface
 
 	public function getClientMimeType(): ?MimeTypeInterface;
 
-	public function getError(): UploadError;
+	public function getUploadError(): UploadError;
 
 	/**
 	 * @return null|int<0, max>

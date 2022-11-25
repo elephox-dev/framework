@@ -38,7 +38,7 @@ class UploadedFileTest extends TestCase
 			static::assertSame('test', $file->getStream()->getContents());
 			static::assertSame(123, $file->getSize());
 			static::assertSame(MimeType::TextPlain, $file->getClientMimeType());
-			static::assertSame(UploadError::Ok, $file->getError());
+			static::assertSame(UploadError::Ok, $file->getUploadError());
 		} finally {
 			$tmpFile->delete();
 		}

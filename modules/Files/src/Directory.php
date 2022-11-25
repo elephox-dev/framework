@@ -11,6 +11,11 @@ use Throwable;
 
 class Directory extends AbstractFilesystemNode implements Contract\Directory
 {
+	public static function from(string $path): self
+	{
+		return new self($path);
+	}
+
 	public function files(): GenericKeyedEnumerable
 	{
 		/** @var GenericKeyedEnumerable<int, Contract\File> */
@@ -165,7 +170,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 		}
 
 		foreach ($children as $node) {
-			if ($node instanceof Contract\Directory || $node instanceof Contract\File) {
+			if ($node instanceof Contract\Directory || $node instanceof Contract\File || $node instanceof Contract\Link) {
 				$node->delete();
 			} else {
 				throw new FilesystemNodeNotImplementedException($node, 'Cannot delete filesystem node for unimplemented type ' . get_debug_type($node));

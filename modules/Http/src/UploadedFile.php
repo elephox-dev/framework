@@ -38,7 +38,12 @@ class UploadedFile implements Contract\UploadedFile
 		return $this->clientPath;
 	}
 
-	public function getError(): UploadError
+	public function getError(): int
+	{
+		return $this->error->value;
+	}
+
+	public function getUploadError(): UploadError
 	{
 		return $this->error;
 	}
