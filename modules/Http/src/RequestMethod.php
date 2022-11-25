@@ -7,7 +7,7 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-enum RequestMethod: string
+enum RequestMethod: string implements Contract\RequestMethod
 {
 	case GET = 'GET';
 	case HEAD = 'HEAD';
@@ -16,6 +16,7 @@ enum RequestMethod: string
 	case DELETE = 'DELETE';
 	case OPTIONS = 'OPTIONS';
 	case PATCH = 'PATCH';
+
 	#[Pure]
 	public function canHaveBody(): bool
 	{
@@ -26,5 +27,11 @@ enum RequestMethod: string
 			self::PATCH => true,
 			default => false
 		};
+	}
+
+	#[Pure]
+	public function getValue(): string
+	{
+		return $this->value;
 	}
 }

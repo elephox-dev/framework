@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Mimey\MimeTypeInterface;
-use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 
 #[Immutable]
 interface Message extends MessageInterface
@@ -28,5 +28,5 @@ interface Message extends MessageInterface
 	public function getContentType(): ?MimeTypeInterface;
 
 	#[Pure]
-	public function getBody(): Stream;
+	public function getBody(): StreamInterface;
 }

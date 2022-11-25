@@ -24,6 +24,8 @@ use JsonException;
  * @covers \Elephox\Stream\ResourceStream
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\OOR\Casing
  *
  * @internal
  */

@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Stream\EmptyStream
  * @covers \Elephox\Http\SessionMap
  * @covers \Elephox\OOR\Casing
+ * @covers \Elephox\Collection\Iterator\FlipIterator
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest

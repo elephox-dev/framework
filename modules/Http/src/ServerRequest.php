@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Mimey\MimeType;
-use Elephox\Stream\Contract\Stream;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use InvalidArgumentException;
 
@@ -24,8 +24,8 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	public function __construct(
 		string $protocolVersion,
 		Contract\HeaderMap $headers,
-		Stream $body,
-		RequestMethod $method,
+		StreamInterface $body,
+		Contract\RequestMethod $method,
 		Url $url,
 		public readonly Contract\ParameterMap $parameters,
 		public readonly Contract\CookieMap $cookies,
@@ -208,7 +208,10 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	public function withParsedBody($data): static
 	{
 		try {
-			assert($data === null || is_array($data) || is_object($data));
+			/** @psalm-suppress DocblockTypeContradiction */
+			if ($data !== null && !is_array($data) && !is_object($data)) {
+				throw new InvalidArgumentException("Expected 'null' or type 'array' or 'string', but got " . get_debug_type($data));
+			}
 
 			$builder = $this->with();
 
@@ -241,6 +244,11 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function getAttribute($name, $default = null): mixed
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
 		/** @psalm-suppress ImpureMethodCall */
 		return $this->parameters->get($name, ParameterSource::Attribute) ?? $default;
 	}
@@ -248,8 +256,15 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function withAttribute($name, $value): static
 	{
-		assert(is_string($name));
-		assert(is_string($value) || is_int($value) || is_array($value));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($value) && !is_int($value) && !is_array($value)) {
+			throw new InvalidArgumentException("Expected type 'string', 'int' or 'array', but got " . get_debug_type($value));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -262,7 +277,10 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	#[Pure]
 	public function withoutAttribute($name): static
 	{
-		assert(is_string($name));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall

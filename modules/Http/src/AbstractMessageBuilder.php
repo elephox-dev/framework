@@ -6,12 +6,12 @@ namespace Elephox\Http;
 use Elephox\Files\Contract\File as FileContract;
 use Elephox\Files\File;
 use Elephox\Http\Contract\MessageBuilder;
-use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @psalm-consistent-constructor
@@ -24,7 +24,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 	public function __construct(
 		protected ?string $protocolVersion = null,
 		protected ?Contract\HeaderMap $headers = null,
-		protected ?Stream $body = null,
+		protected ?StreamInterface $body = null,
 	) {
 	}
 
@@ -40,14 +40,14 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->protocolVersion;
 	}
 
-	public function body(Stream $body): static
+	public function body(StreamInterface $body): static
 	{
 		$this->body = $body;
 
 		return $this;
 	}
 
-	public function getBody(): ?Stream
+	public function getBody(): ?StreamInterface
 	{
 		return $this->body;
 	}
@@ -92,7 +92,12 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 			$this->headers = new HeaderMap();
 		}
 
-		$this->headers->put($name, is_array($value) ? $value : [$value]);
+		$value = is_array($value) ? array_values($value) : [$value];
+		if (empty($value)) {
+			throw new InvalidArgumentException('Cannot set an empty array as header value. To remove headers, use with()->removedHeader()');
+		}
+
+		$this->headers->put($name, $value);
 
 		return $this;
 	}
@@ -103,7 +108,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 			$this->headers = new HeaderMap();
 		}
 
-		$value = is_array($value) ? $value : [$value];
+		$value = is_array($value) ? array_values($value) : [$value];
 
 		if ($this->headers->has($name)) {
 			$previous = $this->headers->get($name);
@@ -111,7 +116,12 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 			$previous = [];
 		}
 
-		$this->headers->put($name, array_merge($previous, $value));
+		$result = array_merge($previous, $value);
+		if (empty($result)) {
+			throw new InvalidArgumentException('Cannot set an empty array as header value. To remove headers, use with()->removedHeader()');
+		}
+
+		$this->headers->put($name, $result);
 
 		return $this;
 	}

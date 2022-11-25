@@ -112,7 +112,7 @@ class Casing
 	#[Pure]
 	public static function toHttpHeader(string $string): string
 	{
-		return self::replaceDelimiters(self::toTitle(self::splitWords($string, ' ')), '-');
+		return self::replaceDelimiters(self::toTitle(self::splitWords(self::toLower($string), ' ')), '-');
 	}
 
 	/**

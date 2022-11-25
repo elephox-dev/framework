@@ -17,20 +17,20 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 		?string $protocolVersion = null,
 		?Contract\HeaderMap $headers = null,
 		?Stream $body = null,
-		protected ?RequestMethod $method = null,
+		protected ?Contract\RequestMethod $method = null,
 		protected ?Url $url = null,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
 	}
 
-	public function requestMethod(RequestMethod $requestMethod): static
+	public function requestMethod(Contract\RequestMethod $requestMethod): static
 	{
 		$this->method = $requestMethod;
 
 		return $this;
 	}
 
-	public function getRequestMethod(): ?RequestMethod
+	public function getRequestMethod(): ?Contract\RequestMethod
 	{
 		return $this->method;
 	}
@@ -39,10 +39,12 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 	{
 		$this->url = $url;
 
-		if (!$preserveHostHeader) {
+		if (!$preserveHostHeader || !($this->getHeaderMap()?->has(HeaderName::Host->value) ?? false)) {
 			$host = $url->getHost();
 
-			$this->header(HeaderName::Host->value, $host);
+			if (!empty($host)) {
+				$this->header(HeaderName::Host->value, $host);
+			}
 		}
 
 		return $this;

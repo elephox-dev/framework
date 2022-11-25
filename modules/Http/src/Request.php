@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Stream\Contract\Stream;
+use Elephox\OOR\Casing;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
@@ -22,8 +24,8 @@ class Request extends AbstractMessage implements Contract\Request
 	public function __construct(
 		string $protocolVersion,
 		Contract\HeaderMap $headers,
-		Stream $body,
-		public readonly RequestMethod $method,
+		StreamInterface $body,
+		public readonly Contract\RequestMethod $method,
 		public readonly Url $url,
 	) {
 		parent::__construct($protocolVersion, $headers, $body);
@@ -43,7 +45,7 @@ class Request extends AbstractMessage implements Contract\Request
 	}
 
 	#[Pure]
-	public function getRequestMethod(): RequestMethod
+	public function getRequestMethod(): Contract\RequestMethod
 	{
 		return $this->method;
 	}
@@ -69,14 +71,23 @@ class Request extends AbstractMessage implements Contract\Request
 	#[Pure]
 	public function withMethod($method): static
 	{
-		assert(is_string($method));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($method)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($method));
+		}
+
+		if (Casing::toUpper($method) === $method) {
+			$requestMethod = RequestMethod::tryFrom(Casing::toUpper($method));
+		}
+
+		$requestMethod ??= new CustomRequestMethod($method);
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
 		 *
 		 * @var static
 		 */
-		return $this->with()->requestMethod(RequestMethod::from($method))->get();
+		return $this->with()->requestMethod($requestMethod)->get();
 	}
 
 	#[Pure]
@@ -99,6 +110,6 @@ class Request extends AbstractMessage implements Contract\Request
 	#[Pure]
 	public function getMethod(): string
 	{
-		return $this->getRequestMethod()->value;
+		return $this->getRequestMethod()->getValue();
 	}
 }

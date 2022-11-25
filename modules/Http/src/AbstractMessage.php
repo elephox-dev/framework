@@ -5,8 +5,7 @@ namespace Elephox\Http;
 
 use Elephox\Http\Contract\HeaderMap;
 use Elephox\Http\Contract\Message;
-use Elephox\Stream\Contract\Stream;
-use Elephox\Stream\Psr7Stream;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
@@ -20,7 +19,7 @@ abstract class AbstractMessage implements Message
 	public function __construct(
 		public readonly string $protocolVersion,
 		public readonly HeaderMap $headers,
-		public readonly Stream $body,
+		public readonly StreamInterface $body,
 	) {
 	}
 
@@ -33,7 +32,10 @@ abstract class AbstractMessage implements Message
 	#[Pure]
 	public function withProtocolVersion($version): static
 	{
-		assert(is_string($version));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($version)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($version));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -57,9 +59,16 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function hasHeader($name)
+	public function hasHeader($name): bool
 	{
-		assert(is_string($name));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		if (empty($name)) {
+			throw new InvalidArgumentException('Cannot use the empty string as a header name');
+		}
 
 		/** @psalm-suppress ImpureMethodCall */
 		return $this->headers->containsKey($name);
@@ -68,7 +77,14 @@ abstract class AbstractMessage implements Message
 	#[Pure]
 	public function getHeader($name): array
 	{
-		assert(is_string($name));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		if (empty($name)) {
+			throw new InvalidArgumentException('Cannot use the empty string as a header name');
+		}
 
 		if (!$this->hasHeader($name)) {
 			return [];
@@ -81,14 +97,30 @@ abstract class AbstractMessage implements Message
 	#[Pure]
 	public function getHeaderLine($name): string
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
 		return implode(',', $this->getHeader($name));
 	}
 
 	#[Pure]
 	public function withHeader($name, $value): static
 	{
-		assert(is_string($name));
-		assert(is_string($value) || array_is_list($value));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		if (empty($name)) {
+			throw new InvalidArgumentException('Cannot use the empty string as a header name');
+		}
+
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($value) && !is_array($value)) {
+			throw new InvalidArgumentException("Expected type 'string' or 'array', but got " . get_debug_type($value));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -101,8 +133,19 @@ abstract class AbstractMessage implements Message
 	#[Pure]
 	public function withAddedHeader($name, $value): static
 	{
-		assert(is_string($name));
-		assert(is_string($value) || array_is_list($value));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		if (empty($name)) {
+			throw new InvalidArgumentException('Cannot use the empty string as a header name');
+		}
+
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($value) && !is_array($value)) {
+			throw new InvalidArgumentException("Expected type 'string' or 'array', but got " . get_debug_type($value));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -113,9 +156,16 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function withoutHeader($name)
+	public function withoutHeader($name): static
 	{
-		assert(is_string($name));
+		/** @psalm-suppress DocblockTypeContradiction */
+		if (!is_string($name)) {
+			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
+		}
+
+		if (empty($name)) {
+			throw new InvalidArgumentException('Cannot use the empty string as a header name');
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -126,7 +176,7 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function getBody(): Stream
+	public function getBody(): StreamInterface
 	{
 		return $this->body;
 	}
@@ -139,6 +189,6 @@ abstract class AbstractMessage implements Message
 		 *
 		 * @var static
 		 */
-		return $this->with()->body(new Psr7Stream($body))->get();
+		return $this->with()->body($body)->get();
 	}
 }

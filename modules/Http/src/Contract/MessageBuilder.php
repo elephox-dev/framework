@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Files\Contract\File;
-use Elephox\Stream\Contract\Stream;
 use JsonException;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @psalm-consistent-constructor
@@ -16,9 +16,9 @@ interface MessageBuilder
 
 	public function getProtocolVersion(): ?string;
 
-	public function body(Stream $body): static;
+	public function body(StreamInterface $body): static;
 
-	public function getBody(): ?Stream;
+	public function getBody(): ?StreamInterface;
 
 	public function textBody(string $content): static;
 
@@ -34,12 +34,12 @@ interface MessageBuilder
 	public function fileBody(string|File $path): static;
 
 	/**
-	 * @param string|list<string> $value
+	 * @param string|array<mixed, string> $value
 	 */
 	public function header(string $name, string|array $value): static;
 
 	/**
-	 * @param string|list<string> $value
+	 * @param string|array<mixed, string> $value
 	 */
 	public function addedHeader(string $name, string|array $value): static;
 

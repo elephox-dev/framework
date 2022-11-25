@@ -7,6 +7,7 @@ use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\ResourceStream;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 /**
@@ -18,8 +19,8 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 	public function __construct(
 		?string $protocolVersion = null,
 		?Contract\HeaderMap $headers = null,
-		?Stream $body = null,
-		?RequestMethod $method = null,
+		?StreamInterface $body = null,
+		?Contract\RequestMethod $method = null,
 		?Url $url = null,
 		protected ?Contract\ParameterMap $parameters = null,
 		protected ?Contract\CookieMap $cookies = null,

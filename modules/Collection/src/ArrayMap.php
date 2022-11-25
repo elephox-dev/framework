@@ -135,7 +135,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 *
 	 * @return T
 	 */
-	private function validateKey(mixed $key): string|int
+	protected function validateKey(mixed $key): string|int
 	{
 		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {

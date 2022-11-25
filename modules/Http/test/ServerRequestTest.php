@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Files\File
  * @covers \Elephox\Http\SessionMap
  * @covers \Elephox\OOR\Casing
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Http\HeaderMap
  *
  * @internal
  */

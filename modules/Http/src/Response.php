@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use AssertionError;
-use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use OutOfRangeException;
+use Psr\Http\Message\StreamInterface;
 use Throwable;
 use ValueError;
 
@@ -24,7 +25,7 @@ class Response extends AbstractMessage implements Contract\Response
 	public function __construct(
 		string $protocolVersion,
 		Contract\HeaderMap $headers,
-		Stream $body,
+		StreamInterface $body,
 		public readonly ResponseCode $responseCode,
 		public readonly ?Throwable $exception,
 	) {
@@ -63,8 +64,19 @@ class Response extends AbstractMessage implements Contract\Response
 	public function withStatus($code, $reasonPhrase = ''): static
 	{
 		try {
-			assert(is_int($code) && $code >= 100 && $code <= 599);
-			assert(is_string($reasonPhrase));
+			/** @psalm-suppress DocblockTypeContradiction */
+			if (!is_int($code)) {
+				throw new InvalidArgumentException("Expected type 'int', but got " . get_debug_type($code));
+			}
+
+			if ($code < 100 || $code > 599) {
+				throw new OutOfRangeException('Expected code to be in range 100-599 (inclusive), but got ' . $code);
+			}
+
+			/** @psalm-suppress DocblockTypeContradiction */
+			if (!is_string($reasonPhrase)) {
+				throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($reasonPhrase));
+			}
 
 			if ($reasonPhrase !== '') {
 				/** @psalm-suppress ImpureFunctionCall */

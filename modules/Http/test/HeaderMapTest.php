@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\OOR\Casing
  * @covers \Elephox\Http\HeaderName
+ * @covers \Elephox\Collection\Iterator\FlipIterator
  *
  * @internal
  */

@@ -8,12 +8,12 @@ use Elephox\Files\Contract\File as FileContract;
 use Elephox\Files\File;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
-use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\StringStream;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use LogicException;
+use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 /**
@@ -27,7 +27,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function __construct(
 		?string $protocolVersion = null,
 		?Contract\HeaderMap $headers = null,
-		?Stream $body = null,
+		?StreamInterface $body = null,
 		protected ?ResponseCode $responseCode = null,
 		protected ?Throwable $exception = null,
 	) {

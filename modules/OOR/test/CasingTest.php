@@ -16,12 +16,13 @@ class CasingTest extends TestCase
 	{
 		yield ['foo', 'foo', 'FOO', 'Foo', 'foo', 'foo', 'foo', 'Foo', 'FOO', 'Foo'];
 		yield ['FOO', 'foo', 'FOO', 'Foo', 'foo', 'foo', 'foo', 'Foo', 'FOO', 'Foo'];
-		yield ['FooBar', 'foobar', 'FOOBAR', 'Foobar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
+		yield ['FooBar', 'foobar', 'FOOBAR', 'Foobar', 'fooBar', 'foo_bar', 'foobar', 'Foobar', 'FOOBAR', 'FooBar'];
 		yield ['Foo Bar', 'foo bar', 'FOO BAR', 'Foo Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
-		yield ['FoO BaR', 'foo bar', 'FOO BAR', 'Foo Bar', 'foOBaR', 'fo_o_ba_r', 'fo-o-ba-r', 'Fo-O-Ba-R', 'FO-O-BA-R', 'FoOBaR'];
+		yield ['FoO BaR', 'foo bar', 'FOO BAR', 'Foo Bar', 'foOBaR', 'fo_o_ba_r', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FoOBaR'];
 		yield ['Foo-Bar', 'foo-bar', 'FOO-BAR', 'Foo-Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
 		yield ['Foo_Bar', 'foo_bar', 'FOO_BAR', 'Foo_Bar', 'fooBar', 'foo_bar', 'foo-bar', 'Foo-Bar', 'FOO-BAR', 'FooBar'];
 		yield ['f%a@d_=', 'f%a@d_=', 'F%A@D_=', 'F%A@D_=', 'f%A@D=', 'f%a@d_=', 'f%a@d-=', 'F%A@D-=', 'F%A@D-=', 'F%A@D='];
+		yield ['ConTent-Type', 'content-type', 'CONTENT-TYPE', 'Content-Type', 'conTentType', 'con_tent_type', 'content-type', 'Content-Type', 'CONTENT-TYPE', 'ConTentType'];
 	}
 
 	/**

@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\AbstractMessage
  * @covers \Elephox\Http\AbstractMessageBuilder
  * @covers \Elephox\Http\ResponseBuilder
+ * @covers \Elephox\Collection\Iterator\FlipIterator
  *
  * @internal
  */

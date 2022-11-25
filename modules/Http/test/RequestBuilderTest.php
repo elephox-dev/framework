@@ -20,6 +20,8 @@ use JsonException;
  * @covers \Elephox\Http\UrlScheme
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\OOR\Casing
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Http\HeaderMap
  *
  * @uses \Elephox\Http\Contract\Request
  *
