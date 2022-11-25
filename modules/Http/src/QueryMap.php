@@ -24,7 +24,11 @@ class QueryMap extends ArrayMap implements Contract\QueryMap
 	#[Pure]
 	public function __toString(): string
 	{
-		/** @psalm-suppress ImpureMethodCall */
-		return http_build_query($this->toArray());
+		/**
+		 * @psalm-suppress ImpureMethodCall
+		 *
+		 * Cut trailing '=' from last query key without value
+		 */
+		return rtrim(http_build_query($this->toArray()), '=');
 	}
 }

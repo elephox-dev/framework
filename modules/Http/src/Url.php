@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\OOR\Casing;
+use InvalidArgumentException;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
@@ -74,7 +75,7 @@ class Url implements Stringable, UriInterface
 	public function getAuthority(): string
 	{
 		$authority = $this->host;
-		if (empty($authority)) {
+		if ($authority === null) {
 			return '';
 		}
 
@@ -84,7 +85,7 @@ class Url implements Stringable, UriInterface
 		}
 
 		$userInfo = $this->getUserInfo();
-		if (!empty($userInfo)) {
+		if ($userInfo !== '') {
 			$authority = "$userInfo@$authority";
 		}
 
@@ -117,7 +118,7 @@ class Url implements Stringable, UriInterface
 		}
 
 		$authority = $this->getAuthority();
-		if (!empty($authority)) {
+		if ($authority !== '') {
 			$uri .= '//' . $authority;
 
 			if (!str_starts_with($this->path, '/')) {
@@ -197,7 +198,8 @@ class Url implements Stringable, UriInterface
 
 	public function getPort(): ?int
 	{
-		return $this->port ?? $this->scheme?->getDefaultPort();
+		return $this->port === null || $this->port === $this->scheme?->getDefaultPort() ? null
+			: $this->port;
 	}
 
 	public function getPath(): string
@@ -217,7 +219,9 @@ class Url implements Stringable, UriInterface
 
 	public function withScheme($scheme): static
 	{
-		assert(is_string($scheme));
+		if (!is_string($scheme)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($scheme));
+		}
 
 		$urlScheme = UrlScheme::tryFrom(Casing::toLower($scheme)) ?? new CustomUrlScheme($scheme);
 
@@ -226,13 +230,18 @@ class Url implements Stringable, UriInterface
 		 *
 		 * @var static
 		 */
-		return $this->with()->scheme($urlScheme);
+		return $this->with()->scheme($urlScheme)->get();
 	}
 
 	public function withUserInfo($user, $password = null): static
 	{
-		assert(is_string($user));
-		assert(is_string($password) || $password === null);
+		if (!is_string($user)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($user));
+		}
+
+		if (!is_string($password) && $password !== null) {
+			throw new InvalidArgumentException("Expected type 'string' or 'null', got " . get_debug_type($password));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -244,7 +253,9 @@ class Url implements Stringable, UriInterface
 
 	public function withHost($host): static
 	{
-		assert(is_string($host));
+		if (!is_string($host)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($host));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -256,7 +267,9 @@ class Url implements Stringable, UriInterface
 
 	public function withPort($port): static
 	{
-		assert(is_int($port) || $port === null);
+		if (!is_int($port) && $port !== null) {
+			throw new InvalidArgumentException("Expected type 'int' or 'null', got " . get_debug_type($port));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -268,7 +281,9 @@ class Url implements Stringable, UriInterface
 
 	public function withPath($path): static
 	{
-		assert(is_string($path));
+		if (!is_string($path)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($path));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
@@ -280,7 +295,9 @@ class Url implements Stringable, UriInterface
 
 	public function withQuery($query): static
 	{
-		assert(is_string($query));
+		if (!is_string($query)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($query));
+		}
 
 		$map = QueryMap::fromString($query);
 
@@ -294,7 +311,9 @@ class Url implements Stringable, UriInterface
 
 	public function withFragment($fragment): static
 	{
-		assert(is_string($fragment));
+		if (!is_string($fragment)) {
+			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($fragment));
+		}
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
