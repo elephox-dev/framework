@@ -7,7 +7,6 @@ use AssertionError;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
-use OutOfRangeException;
 use Psr\Http\Message\StreamInterface;
 use Throwable;
 use ValueError;
@@ -70,7 +69,7 @@ class Response extends AbstractMessage implements Contract\Response
 			}
 
 			if ($code < 100 || $code > 599) {
-				throw new OutOfRangeException('Expected code to be in range 100-599 (inclusive), but got ' . $code);
+				throw new InvalidArgumentException('Expected code to be in range 100-599 (inclusive), but got ' . $code);
 			}
 
 			/** @psalm-suppress DocblockTypeContradiction */

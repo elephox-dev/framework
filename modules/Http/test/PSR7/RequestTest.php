@@ -10,7 +10,7 @@ use Http\Psr7Test\RequestIntegrationTest;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * @covers
+ * @covers \Elephox\Http\Request
  *
  * @internal
  */
@@ -26,10 +26,5 @@ class RequestTest extends RequestIntegrationTest
 			->requestUrl(Url::fromString('/'))
 			->get()
 		;
-	}
-
-	public function getInvalidHeaderArguments()
-	{
-		return parent::getInvalidHeaderArguments();
 	}
 }
