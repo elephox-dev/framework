@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Http\ParameterSource;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * @psalm-consistent-constructor
@@ -28,7 +29,7 @@ interface ServerRequestBuilder extends RequestBuilder
 
 	public function getCookies(): ?CookieMap;
 
-	public function uploadedFile(string $name, UploadedFile $uploadedFile): static;
+	public function uploadedFile(string|int $name, UploadedFileInterface $uploadedFile): static;
 
 	public function uploadedFiles(UploadedFileMap $uploadedFiles): static;
 

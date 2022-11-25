@@ -9,7 +9,6 @@ use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericMap;
 use Elephox\Collection\KeyedEnumerable;
 use Elephox\Collection\ObjectMap;
-use Elephox\Collection\OffsetNotFoundException;
 use Generator;
 use Iterator;
 use IteratorIterator;
@@ -28,7 +27,7 @@ class ParameterMap implements Contract\ParameterMap
 		$this->parameters = new ObjectMap();
 	}
 
-	public function get(string|int $key, ?ParameterSource $source = null): mixed
+	public function get(string|int $key, ?ParameterSource $source = null, mixed $default = null): mixed
 	{
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
@@ -57,7 +56,7 @@ class ParameterMap implements Contract\ParameterMap
 			return $candidate;
 		}
 
-		throw new OffsetNotFoundException("Key '$key' not found in parameter map.");
+		return $default;
 	}
 
 	public function has(string|int $key, ?ParameterSource $source = null): bool

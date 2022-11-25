@@ -8,14 +8,15 @@ use Elephox\Files\File;
 use Elephox\Support\CustomMimeType;
 use Elephox\Mimey\MimeType;
 use InvalidArgumentException;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
- * @extends ArrayMap<string, Contract\UploadedFile>
+ * @extends ArrayMap<array-key, UploadedFileInterface>
  */
 class UploadedFileMap extends ArrayMap implements Contract\UploadedFileMap
 {
 	/**
-	 * @param null|array<string, Contract\UploadedFile|array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string}> $files
+	 * @param null|array<array-key, UploadedFileInterface|array{name: string, type: string, size: int, error: int, tmp_name: string, full_path: string}> $files
 	 */
 	public static function fromGlobals(?array $files = null): Contract\UploadedFileMap
 	{

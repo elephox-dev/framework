@@ -8,6 +8,7 @@ use Elephox\Stream\EmptyStream;
 use Elephox\Stream\ResourceStream;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
 /**
@@ -110,7 +111,7 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 		return $this->session;
 	}
 
-	public function uploadedFile(string $name, Contract\UploadedFile $uploadedFile): static
+	public function uploadedFile(string|int $name, UploadedFileInterface $uploadedFile): static
 	{
 		if ($this->uploadedFiles === null) {
 			$this->uploadedFiles = new UploadedFileMap();

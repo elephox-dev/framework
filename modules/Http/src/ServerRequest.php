@@ -50,6 +50,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 				$this->parameters->allFrom(ParameterSource::Get)->toArray(),
 				$this->parameters->allFrom(ParameterSource::Server)->toArray(),
 				$this->parameters->allFrom(ParameterSource::Env)->toArray(),
+				$this->parameters->allFrom(ParameterSource::Attribute)->toArray(),
 			),
 			new CookieMap($this->cookies->select(static fn (Contract\Cookie $c) => new Cookie($c->getName(), $c->getValue(), $c->getExpires(), $c->getPath(), $c->getDomain(), $c->isSecure(), $c->isHttpOnly(), $c->getSameSite(), $c->getMaxAge()))->toArray()),
 			$this->session !== null ? SessionMap::fromGlobals($this->session->toArray()) : null,
@@ -161,10 +162,8 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		 * @var UploadedFileInterface $uploadedFile
 		 */
 		foreach ($uploadedFiles as $name => $uploadedFile) {
-			assert(is_string($name));
-
-			if (!($uploadedFile instanceof Contract\UploadedFile)) {
-				throw new InvalidArgumentException("Only Contract\UploadedFile instances are supported");
+			if (!($uploadedFile instanceof UploadedFileInterface)) {
+				throw new InvalidArgumentException("Only Psr\Http\Message\UploadedFileInterface instances are supported, got: " . get_debug_type($uploadedFile));
 			}
 
 			/** @psalm-suppress ImpureMethodCall */
@@ -217,7 +216,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 
 			if (is_array($data) || is_object($data)) {
 				/** @psalm-suppress ImpureMethodCall */
-				$builder->jsonBody($data);
+				$builder->jsonBody($data)->header(HeaderName::ContentType->value, MimeType::ApplicationJson->value);
 			} else {
 				/** @psalm-suppress ImpureMethodCall */
 				$builder->textBody('');

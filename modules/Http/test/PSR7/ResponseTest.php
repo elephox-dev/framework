@@ -11,6 +11,15 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @covers \Elephox\Http\Response
+ * @covers \Elephox\Collection\ArrayMap
+ * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\Http\AbstractMessage
+ * @covers \Elephox\Http\AbstractMessageBuilder
+ * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\Http\ResponseBuilder
+ * @covers \Elephox\OOR\Casing
+ *
+ * @uses \Elephox\Collection\IsKeyedEnumerable
  *
  * @internal
  */

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use AssertionError;
-use Elephox\Collection\OffsetNotFoundException;
 use Elephox\Http\Contract\ParameterMap as ParameterMapContract;
 use LogicException;
 use PHPUnit\Framework\TestCase;
@@ -122,14 +121,13 @@ class ParameterMapTest extends TestCase
 		$map->offsetUnset(0);
 	}
 
-	public function testOffsetNotFoundException(): void
+	public function testOffsetNotFoundReturnsNull(): void
 	{
 		$map = new ParameterMap();
 
 		static::assertFalse($map->has('foo'));
 
-		$this->expectException(OffsetNotFoundException::class);
-		$map->offsetGet('foo');
+		static::assertNull($map->offsetGet('foo'));
 	}
 
 	public function testAmbiguousKeyException(): void
