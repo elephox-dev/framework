@@ -73,7 +73,7 @@ class ResourceStream implements Stream
 	/**
 	 * @param resource $resource
 	 */
-	public static function wrap($resource): self
+	public static function wrap($resource, ?bool $readable = null, ?bool $writable = null, ?bool $seekable = null, ?int $size = null): self
 	{
 		if (!is_resource($resource)) {
 			throw new InvalidArgumentException('Resource expected, got ' . get_debug_type($resource));
@@ -82,11 +82,11 @@ class ResourceStream implements Stream
 		$data = stream_get_meta_data($resource);
 		$mode = Str::wrap($data['mode']);
 
-		$readable = $mode->contains_any('r', '+');
-		$writable = $mode->contains_any('w', 'a', 'x', 'c', '+');
-		$seekable = $data['seekable'];
+		$readable ??= $mode->contains_any('r', '+');
+		$writable ??= $mode->contains_any('w', 'a', 'x', 'c', '+');
+		$seekable ??= $data['seekable'];
 
-		return new self($resource, $readable, $writable, $seekable);
+		return new self($resource, $readable, $writable, $seekable, $size);
 	}
 
 	/**
@@ -96,7 +96,7 @@ class ResourceStream implements Stream
 	 * @param bool $seekable
 	 * @param null|int<0, max> $size
 	 */
-	public function __construct(
+	protected function __construct(
 		private mixed $resource,
 		private readonly bool $readable = true,
 		private readonly bool $writable = false,

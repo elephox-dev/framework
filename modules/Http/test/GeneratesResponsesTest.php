@@ -23,6 +23,7 @@ use JsonException;
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\OOR\Str
  *
  * @internal
  */

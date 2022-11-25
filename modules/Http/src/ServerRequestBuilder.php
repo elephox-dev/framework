@@ -182,10 +182,10 @@ class ServerRequestBuilder extends RequestBuilder implements Contract\ServerRequ
 			if ($parameters->has('CONTENT_LENGTH', ParameterSource::Server)) {
 				$contentLength = (int) $parameters->get('CONTENT_LENGTH', ParameterSource::Server);
 				if ($contentLength > 0) {
-					$builder->body(new ResourceStream($readonlyInput, size: $contentLength));
+					$builder->body(ResourceStream::wrap($readonlyInput, size: $contentLength));
 				}
 			} else {
-				$builder->body(new ResourceStream($readonlyInput));
+				$builder->body(ResourceStream::wrap($readonlyInput));
 			}
 		} else {
 			$builder->body($body);

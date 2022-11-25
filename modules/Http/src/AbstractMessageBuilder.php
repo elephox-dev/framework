@@ -69,11 +69,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 
 	public function resourceBody(mixed $resource): static
 	{
-		if (!is_resource($resource)) {
-			throw new InvalidArgumentException('$resource must be a resource');
-		}
-
-		return $this->body(new ResourceStream($resource));
+		return $this->body(ResourceStream::wrap($resource));
 	}
 
 	public function htmlBody(string $content): static

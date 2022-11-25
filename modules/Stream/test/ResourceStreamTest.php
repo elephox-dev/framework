@@ -9,6 +9,7 @@ use RuntimeException;
 
 /**
  * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\OOR\Str
  *
  * @internal
  */
@@ -24,7 +25,7 @@ class ResourceStreamTest extends TestCase
 	public function testConstructor(): void
 	{
 		$fh = fopen($this->tmpName, 'rb');
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		static::assertTrue($stream->isReadable());
 		static::assertTrue($stream->isSeekable());
@@ -36,13 +37,13 @@ class ResourceStreamTest extends TestCase
 	{
 		$this->expectException(InvalidArgumentException::class);
 
-		new ResourceStream(null);
+		ResourceStream::wrap(null);
 	}
 
 	public function testGetSizeFromFstat(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writable: true);
+		$stream = ResourceStream::wrap($fh, writable: true);
 
 		static::assertSame(0, $stream->getSize());
 
@@ -58,7 +59,7 @@ class ResourceStreamTest extends TestCase
 	public function testGetInvalidSizeFromFstat(): void
 	{
 		$fh = fopen('php://output', 'rb');
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		static::assertNull($stream->getSize());
 	}
@@ -66,10 +67,10 @@ class ResourceStreamTest extends TestCase
 	public function testReadFromInvalidStream(): void
 	{
 		$fh = fopen('php://output', 'rb');
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$this->expectException(RuntimeException::class);
-		$this->expectExceptionMessage('Unable to read from resource');
+		$this->expectExceptionMessage('Cannot read from a non-readable resource');
 
 		$stream->read(1);
 	}
@@ -77,7 +78,7 @@ class ResourceStreamTest extends TestCase
 	public function testStreamGetsDetachedOnceClosed(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		static::assertIsResource($stream->getResource());
 
@@ -93,7 +94,7 @@ class ResourceStreamTest extends TestCase
 	public function testToString(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writable: true);
+		$stream = ResourceStream::wrap($fh, writable: true);
 
 		static::assertSame('', (string) $stream);
 
@@ -109,7 +110,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedGetSizeThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -122,7 +123,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedTellThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -135,7 +136,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedEofThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -148,7 +149,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedSeekThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -161,7 +162,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedRewindThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -174,7 +175,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedWriteThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -187,7 +188,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedReadThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -200,7 +201,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedGetContentsThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -213,7 +214,7 @@ class ResourceStreamTest extends TestCase
 	public function testClosedGetMetadataIsEmpty(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$stream->close();
 
@@ -224,7 +225,7 @@ class ResourceStreamTest extends TestCase
 	public function testInvalidLengthReadThrows(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh);
+		$stream = ResourceStream::wrap($fh);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Length parameter cannot be negative');
@@ -235,7 +236,7 @@ class ResourceStreamTest extends TestCase
 	public function testTell(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writable: true);
+		$stream = ResourceStream::wrap($fh, writable: true);
 
 		static::assertSame(0, $stream->tell());
 
@@ -247,7 +248,7 @@ class ResourceStreamTest extends TestCase
 	public function testEof(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writable: true);
+		$stream = ResourceStream::wrap($fh, writable: true);
 
 		static::assertEmpty($stream->getContents());
 		static::assertTrue($stream->eof());
@@ -262,7 +263,7 @@ class ResourceStreamTest extends TestCase
 	public function testSeekThrowsIfNotSeekable(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, seekable: false);
+		$stream = ResourceStream::wrap($fh, seekable: false);
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Resource is not seekable');
@@ -273,7 +274,7 @@ class ResourceStreamTest extends TestCase
 	public function testSeekThrowsForInvalidOffset(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, seekable: true);
+		$stream = ResourceStream::wrap($fh, seekable: true);
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Unable to seek to resource position -1 with whence 0');
@@ -284,7 +285,7 @@ class ResourceStreamTest extends TestCase
 	public function testWriteThrowsIfNotWriteable(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, writable: false);
+		$stream = ResourceStream::wrap($fh, writable: false);
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Cannot write to a non-writable resource');
@@ -295,7 +296,7 @@ class ResourceStreamTest extends TestCase
 	public function testReadThrowsIfNotReadable(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, readable: false);
+		$stream = ResourceStream::wrap($fh, readable: false);
 
 		$this->expectException(RuntimeException::class);
 		$this->expectExceptionMessage('Cannot read from a non-readable resource');
@@ -306,7 +307,7 @@ class ResourceStreamTest extends TestCase
 	public function testReadReturnsEmptyStringForZeroLength(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, readable: true);
+		$stream = ResourceStream::wrap($fh, readable: true);
 
 		static::assertSame('', $stream->read(0));
 	}
@@ -314,7 +315,7 @@ class ResourceStreamTest extends TestCase
 	public function testGetMetadata(): void
 	{
 		$fh = tmpfile();
-		$stream = new ResourceStream($fh, readable: true);
+		$stream = ResourceStream::wrap($fh, readable: true);
 
 		$data = $stream->getMetadata();
 		static::assertIsArray($data);

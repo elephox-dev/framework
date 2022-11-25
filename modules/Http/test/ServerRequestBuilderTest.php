@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Http\SessionMap
  * @covers \Elephox\OOR\Casing
  * @covers \Elephox\Collection\Iterator\FlipIterator
+ * @covers \Elephox\OOR\Str
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest

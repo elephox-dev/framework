@@ -31,8 +31,8 @@ class StandardSink extends StreamSink
 		$this->stdout = $stdout;
 		$this->stderr = $stderr;
 
-		$stdoutStream = new ResourceStream($this->stdout, readable: false, writable: true, seekable: false);
-		$stderrStream = new ResourceStream($this->stderr, readable: false, writable: true, seekable: false);
+		$stdoutStream = ResourceStream::wrap($this->stdout);
+		$stderrStream = ResourceStream::wrap($this->stderr);
 
 		parent::__construct($stdoutStream, $stderrStream);
 	}
