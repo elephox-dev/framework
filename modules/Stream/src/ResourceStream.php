@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Stream;
 
+use Elephox\OOR\Str;
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\ExpectedValues;
@@ -70,6 +71,25 @@ class ResourceStream implements Stream
 	}
 
 	/**
+	 * @param resource $resource
+	 */
+	public static function wrap($resource): self
+	{
+		if (!is_resource($resource)) {
+			throw new InvalidArgumentException('Resource expected, got ' . get_debug_type($resource));
+		}
+
+		$data = stream_get_meta_data($resource);
+		$mode = Str::wrap($data['mode']);
+
+		$readable = $mode->contains_any('r', '+');
+		$writable = $mode->contains_any('w', 'a', 'x', 'c', '+');
+		$seekable = $data['seekable'];
+
+		return new self($resource, $readable, $writable, $seekable);
+	}
+
+	/**
 	 * @param closed-resource|resource|null $resource
 	 * @param bool $readable
 	 * @param bool $writable
@@ -84,7 +104,7 @@ class ResourceStream implements Stream
 		private ?int $size = null,
 	) {
 		if (!is_resource($this->resource)) {
-			throw new InvalidArgumentException('ResourceStream expects a resource');
+			throw new InvalidArgumentException('ResourceStream expects a resource, got ' . get_debug_type($resource));
 		}
 	}
 

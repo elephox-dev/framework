@@ -68,17 +68,17 @@ class Psr7Stream implements Stream
 		return $this->stream->getMetadata($key);
 	}
 
-	public function isSeekable()
+	public function isSeekable(): bool
 	{
 		return $this->stream->isSeekable();
 	}
 
-	public function isWritable()
+	public function isWritable(): bool
 	{
 		return $this->stream->isWritable();
 	}
 
-	public function isReadable()
+	public function isReadable(): bool
 	{
 		return $this->stream->isReadable();
 	}

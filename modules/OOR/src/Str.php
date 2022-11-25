@@ -98,4 +98,15 @@ class Str implements Stringable
 	{
 		return str_starts_with($this->source, (string) $value);
 	}
+
+	public function contains_any(string ...$needles): bool
+	{
+		foreach ($needles as $needle) {
+			if (str_contains($this->source, $needle)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
