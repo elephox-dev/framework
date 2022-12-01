@@ -32,8 +32,7 @@ abstract class AbstractClock implements Clock
 	#[Pure]
 	public function equals(ClockInterface $clock): bool
 	{
-		/** @psalm-suppress ImpureMethodCall */
-		return $this->now()->getTimestamp() === $clock->now()->getTimestamp();
+		return $this->compare($clock) === 0;
 	}
 
 	#[Pure]
