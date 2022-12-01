@@ -124,6 +124,12 @@ interface Duration
 	public function subtract(self $duration): self;
 
 	#[Pure]
+	public function iterate(Clock $start, int $divisions): PeriodIterator;
+
+	#[Pure]
+	public function abs(): self;
+
+	#[Pure]
 	public function equals(self $duration): bool;
 
 	#[Pure]

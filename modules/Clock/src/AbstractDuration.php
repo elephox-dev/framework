@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\Clock;
 
+use Elephox\Clock\Contract\Clock;
 use Elephox\Clock\Contract\Duration as DurationContract;
+use Elephox\Clock\Contract\PeriodIterator as PeriodIteratorContract;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
@@ -128,6 +130,31 @@ abstract class AbstractDuration implements DurationContract
 			abs($this->getDays() - $duration->getDays()),
 			abs($this->getMonths() - $duration->getMonths()),
 			abs($this->getYears() - $duration->getYears()),
+		);
+	}
+
+	#[Pure]
+	public function iterate(Clock $start, int $divisions): PeriodIteratorContract
+	{
+		$end = $start->add($this);
+		$periodSeconds = $this->getTotalSeconds() / $divisions;
+		$period = Duration::from($periodSeconds < 0, seconds: abs($periodSeconds));
+
+		return new PeriodIterator($start, $period, $end);
+	}
+
+	#[Pure]
+	public function abs(): self
+	{
+		return new Duration(
+			false,
+			$this->getMicroseconds(),
+			$this->getSeconds(),
+			$this->getMinutes(),
+			$this->getHours(),
+			$this->getDays(),
+			$this->getMonths(),
+			$this->getYears(),
 		);
 	}
 
