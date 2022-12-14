@@ -19,7 +19,8 @@ use Psr\Http\Message\UriInterface;
  */
 class UriTest extends UriIntegrationTest
 {
-	public function createUri($uri): UriInterface|Url {
+	public function createUri($uri): UriInterface|Url
+	{
 		return Url::fromString($uri);
 	}
 }
