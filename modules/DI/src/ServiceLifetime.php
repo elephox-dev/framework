@@ -6,5 +6,6 @@ namespace Elephox\DI;
 enum ServiceLifetime
 {
 	case Transient;
+	case Scoped;
 	case Singleton;
 }

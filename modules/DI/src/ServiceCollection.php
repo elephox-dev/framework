@@ -183,6 +183,21 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		return $this->describe($service, $concrete, ServiceLifetime::Transient, $factory, $instance, $replace);
 	}
 
+	public function addScoped(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null, bool $replace = false): Contract\ServiceCollection
+	{
+		if ($concrete === null && $instance === null) {
+			if (class_exists($service)) {
+				$concrete = $service;
+			} else {
+				throw new InvalidArgumentException('Either implementation name and factory or an implementation must be provided.');
+			}
+		}
+
+		$concrete ??= $instance::class;
+
+		return $this->describe($service, $concrete, ServiceLifetime::Scoped, $factory, $instance, $replace);
+	}
+
 	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null, bool $replace = false): Contract\ServiceCollection
 	{
 		if ($concrete === null && $instance === null) {
@@ -196,6 +211,19 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		$concrete ??= $instance::class;
 
 		return $this->describe($service, $concrete, ServiceLifetime::Singleton, $factory, $instance, $replace);
+	}
+
+	public function endScope(): void
+	{
+		$this->services
+			->where(static fn (ServiceDescriptor $sd) => $sd->implementationFactory !== null)
+			->forEach(static fn (ServiceDescriptor $sd) => $sd->instance = null)
+		;
+
+		$this->services
+			->where(static fn (ServiceDescriptor $sd) => $sd->implementationFactory === null)
+			->forEach(fn (ServiceDescriptor $sd) => $this->removeService($sd->serviceType))
+		;
 	}
 
 	/**
@@ -269,14 +297,18 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			return $descriptor->instance;
 		}
 
-		/** @var Closure(mixed): TService $factory */
+		/** @var Closure(mixed): (null|TService) $factory */
 		$factory = $this->getImplementationFactory($descriptor);
 
 		try {
-			/** @var TService $service */
+			/** @var null|TService $service */
 			$service = $this->callback($factory);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($serviceName, previous: $e);
+		}
+
+		if ($service === null) {
+			throw new ServiceInstantiationException($serviceName);
 		}
 
 		$resolvedData = new ServiceResolvedHookData($serviceName, $descriptor, $service);
@@ -331,7 +363,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		/** @var Closure(mixed): TService $factory */
 		$factory = match ($descriptor->lifetime) {
 			ServiceLifetime::Transient => $this->getTransientFactory($descriptor),
-			ServiceLifetime::Singleton => $this->getSingletonFactory($descriptor),
+			ServiceLifetime::Scoped => $this->getSingletonFactory($descriptor, true),
+			ServiceLifetime::Singleton => $this->getSingletonFactory($descriptor, false),
 		};
 
 		$this->factoryCache[$descriptor->serviceType] = $factory;
@@ -348,15 +381,15 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		return $descriptor->implementationFactory;
 	}
 
-	private function getSingletonFactory(ServiceDescriptor $descriptor): callable
+	private function getSingletonFactory(ServiceDescriptor $descriptor, bool $scoped): callable
 	{
-		return function () use ($descriptor): object {
+		return function () use ($descriptor, $scoped): ?object {
 			if ($descriptor->instance === null) {
 				if ($descriptor->implementationFactory === null) {
-					throw new InvalidServiceDescriptorException("Singleton service '$descriptor->implementationType' has no factory and no instance.");
+					throw new InvalidServiceDescriptorException($scoped ? 'Scoped' : 'Singleton' . " service '$descriptor->implementationType' has no factory and no instance.");
 				}
 
-				/** @var object */
+				/** @var null|object */
 				$descriptor->instance = $this->callback($descriptor->implementationFactory);
 			}
 

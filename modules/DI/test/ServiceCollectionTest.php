@@ -350,4 +350,35 @@ class ServiceCollectionTest extends MockeryTestCase
 		static::assertCount(1, $serviceArgs);
 		static::assertSame($service, $serviceArgs->pop());
 	}
+
+	public function testScoped(): void
+	{
+		$collection = new ServiceCollection();
+
+		$collection->addScoped(TestServiceClass::class, TestServiceClass::class, static fn () => new TestServiceClass());
+
+		$inst1 = $collection->requireService(TestServiceClass::class);
+		$inst2 = $collection->requireService(TestServiceClass::class);
+
+		static::assertSame($inst1, $inst2);
+
+		$outside = new TestServiceClassWithConstructor(new TestServiceClass());
+		$collection->addScoped(TestServiceClassWithConstructor::class, instance: $outside);
+
+		$inst3 = $collection->requireService(TestServiceClassWithConstructor::class);
+		$inst4 = $collection->requireService(TestServiceClassWithConstructor::class);
+
+		static::assertSame($inst3, $inst4);
+
+		$collection->endScope();
+
+		static::assertTrue($collection->hasService(TestServiceClass::class));
+		static::assertFalse($collection->hasService(TestServiceClassWithConstructor::class));
+
+		$inst5 = $collection->requireService(TestServiceClass::class);
+		$inst6 = $collection->requireService(TestServiceClass::class);
+
+		static::assertNotSame($inst1, $inst5);
+		static::assertSame($inst5, $inst6);
+	}
 }
