@@ -39,4 +39,11 @@ interface GenericMap extends GenericKeyedEnumerable
 	public function remove(mixed $key): bool;
 
 	public function clear(): void;
+
+	/**
+	 * @param callable(TValue, TKey): void $callback
+	 *
+	 * @return void
+	 */
+	public function forEach(callable $callback): void;
 }

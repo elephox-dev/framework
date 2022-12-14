@@ -337,6 +337,18 @@ trait IsEnumerable
 	}
 
 	/**
+	 * @param callable(TSource): void $callback
+	 *
+	 * @return void
+	 */
+	public function forEach(callable $callback): void
+	{
+		foreach ($this->getIterator() as $element) {
+			$callback($element);
+		}
+	}
+
+	/**
 	 * @template TGroupKey
 	 *
 	 * @param callable(TSource): TGroupKey $keySelector

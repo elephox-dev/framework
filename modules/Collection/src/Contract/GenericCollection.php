@@ -48,6 +48,13 @@ interface GenericCollection
 	public function isNotEmpty(): bool;
 
 	/**
+	 * @param callable(TSource): void $callback
+	 *
+	 * @return void
+	 */
+	public function forEach(callable $callback): void;
+
+	/**
 	 * @return list<TSource>
 	 */
 	public function toList(): array;

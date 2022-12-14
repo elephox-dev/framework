@@ -419,6 +419,18 @@ trait IsKeyedEnumerable
 	}
 
 	/**
+	 * @param callable(TSource, TIteratorKey): void $callback
+	 *
+	 * @return void
+	 */
+	public function forEach(callable $callback): void
+	{
+		foreach ($this->getIterator() as $key => $element) {
+			$callback($element, $key);
+		}
+	}
+
+	/**
 	 * @template TGroupKey
 	 *
 	 * @param callable(TSource): TGroupKey $keySelector
