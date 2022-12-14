@@ -55,14 +55,14 @@ class UrlTest extends TestCase
 	public function testFromString(string|Stringable $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
 	{
 		$uri = Url::fromString($uriString);
-		static::assertSame($scheme, $uri->scheme?->getScheme(), 'Unexpected scheme.');
-		static::assertSame($username, $uri->username, 'Unexpected username.');
-		static::assertSame($password, $uri->password, 'Unexpected password.');
-		static::assertSame($host, $uri->host, 'Unexpected host.');
-		static::assertSame($port, $uri->port, 'Unexpected port.');
-		static::assertSame($path, $uri->path, 'Unexpected path.');
-		static::assertSame($query, (string) $uri->queryMap, 'Unexpected query.');
-		static::assertSame($fragment, $uri->fragment, 'Unexpected fragment.');
+		static::assertSame($scheme, $uri->scheme?->getScheme(), "Unexpected scheme in $uriString.");
+		static::assertSame($username, $uri->username, "Unexpected username in $uriString.");
+		static::assertSame($password, $uri->password, "Unexpected password in $uriString.");
+		static::assertSame($host, $uri->host, "Unexpected host in $uriString.");
+		static::assertSame($port, $uri->port, "Unexpected port in $uriString.");
+		static::assertSame($path, $uri->path, "Unexpected path in $uriString.");
+		static::assertSame($query, (string) $uri->queryMap, "Unexpected query in $uriString.");
+		static::assertSame($fragment, $uri->fragment, "Unexpected fragment in $uriString.");
 		static::assertSame($toString, (string) $uri);
 
 		if (empty($query)) {
