@@ -14,32 +14,52 @@ use Stringable;
 #[Immutable]
 class Url implements Stringable, UriInterface
 {
-	public const Pattern = /** @lang RegExp */ '/^(?<scheme>[^:]*:\/\/|\/\/)?(?:(?:(?<username>[^:@]+)(?::(?<password>[^@]+))?@)?(?<host>[^:\/?#*]+)(?::(?<port>\d+))?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/';
+	/**
+	 * @see https://regex101.com/r/bsN8uj/5
+	 */
+	public const Pattern = /** @lang RegExp */ '/^(?:(?<scheme>[^:\/?#]+):(?=\D))?(?:(?:\/\/)?(?:(?:(?<user>[^:]*)(?::(?<pass>[^@]*))?@)?(?:(?<=.)(?<host>[^[\/:?#]+|\[[^]]+])(?::(?<port>[^\/:?#]+)?)?|(?<host2>(?&host)):(?<port2>(?&port)))|(?<=\/\/)\/)?)?(?<path>[^?#]*)(?<query>\?[^#]*)?(?<fragment>#.*)?$/i';
 
-	public static function fromString(string|Stringable $uri): self
+	public static function fromString(string|Stringable $url): self
 	{
 		$builder = new UrlBuilder();
 
 		preg_match(
 			self::Pattern,
-			(string) $uri,
+			(string) $url,
 			$matches,
 		);
 		/**
-		 * @var array{scheme: string, username: string, password: string, host: string, port: string, path: string, query: string, fragment: string} $matches
+		 * @var array{scheme: string, user: string, pass: string, host: string, port: string, path: string, query: string, fragment: string} $matches
 		 */
-		if (str_ends_with($matches['scheme'], '://')) {
-			$scheme = substr($matches['scheme'], 0, -3);
+		if ($matches['scheme'] !== '') {
+			$scheme = $matches['scheme'];
 
-			$builder->scheme(UrlScheme::tryFrom($scheme) ?? new CustomUrlScheme($scheme));
+			/** @var null|Contract\UrlScheme $urlScheme */
+			$urlScheme = UrlScheme::tryFrom(strtolower($scheme));
+			$urlScheme ??= new CustomUrlScheme($scheme);
+
+			$builder->scheme($urlScheme);
 		}
 
-		$username = empty($matches['username']) ? null : $matches['username'];
-		$password = empty($matches['password']) ? null : $matches['password'];
+		$username = $matches['user'] === '' ? null : $matches['user'];
+		$password = $matches['pass'] === '' ? null : $matches['pass'];
 		$builder->userInfo($username, $password);
 
-		$builder->host(empty($matches['host']) ? null : $matches['host']);
-		$builder->port(ctype_digit($matches['port']) ? (int) $matches['port'] : null);
+		if ($matches['host'] !== '') {
+			$builder->host($matches['host']);
+		} elseif ($matches['host2'] !== '') {
+			$builder->host($matches['host2']);
+		} else {
+			$builder->host(null);
+		}
+
+		if ($matches['port'] !== '' && ctype_digit($matches['port'])) {
+			$builder->port((int) $matches['port']);
+		} elseif ($matches['port2'] !== '' && ctype_digit($matches['port2'])) {
+			$builder->port((int) $matches['port2']);
+		} else {
+			$builder->port(null);
+		}
 
 		$path = $matches['path'];
 		if (str_contains($path, ' ')) {
@@ -51,7 +71,7 @@ class Url implements Stringable, UriInterface
 			$builder->queryMap(QueryMap::fromString(substr($matches['query'], 1)));
 		}
 
-		if (array_key_exists('fragment', $matches) && str_starts_with($matches['fragment'], '#')) {
+		if (array_key_exists('fragment', $matches) && strlen($matches['fragment']) > 1 && str_starts_with($matches['fragment'], '#')) {
 			$builder->fragment(substr($matches['fragment'], 1));
 		}
 
@@ -151,7 +171,7 @@ class Url implements Stringable, UriInterface
 		'userInfo' => 'null|string',
 		'path' => 'string',
 		'query' => Contract\QueryMap::class . '|null',
-		'fragment' => 'string',
+		'fragment' => 'null|string',
 	])]
 	#[Pure]
 	public function toArray(): array
