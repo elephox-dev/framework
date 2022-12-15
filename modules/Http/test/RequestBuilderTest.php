@@ -23,6 +23,7 @@ use JsonException;
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Http\HeaderName
  *
  * @uses \Elephox\Http\Contract\Request
  *

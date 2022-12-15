@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Casing
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Http\HeaderMap
+ * @covers \Elephox\Http\HeaderName
  *
  * @internal
  */
