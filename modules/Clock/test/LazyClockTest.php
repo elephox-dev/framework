@@ -6,7 +6,7 @@ namespace Elephox\Clock;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
-use StellaMaris\Clock\ClockInterface;
+use Psr\Clock\ClockInterface;
 
 /**
  * @covers \Elephox\Clock\LazyClock

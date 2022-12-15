@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Clock\Contract;
 
 use JetBrains\PhpStorm\Pure;
-use StellaMaris\Clock\ClockInterface;
+use Psr\Clock\ClockInterface;
 
 interface Clock extends ClockInterface
 {

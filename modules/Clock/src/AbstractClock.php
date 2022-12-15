@@ -7,7 +7,7 @@ use DateTimeImmutable;
 use Elephox\Clock\Contract\Clock;
 use Elephox\Clock\Contract\Duration as DurationContract;
 use JetBrains\PhpStorm\Pure;
-use StellaMaris\Clock\ClockInterface;
+use Psr\Clock\ClockInterface;
 
 abstract class AbstractClock implements Clock
 {

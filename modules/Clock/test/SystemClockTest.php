@@ -5,7 +5,7 @@ namespace Elephox\Clock;
 
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
-use StellaMaris\Clock\ClockInterface;
+use Psr\Clock\ClockInterface;
 
 /**
  * @covers \Elephox\Clock\AbstractClock
