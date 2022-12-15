@@ -28,6 +28,9 @@ interface MessageBuilder
 	 */
 	public function jsonBody(array|object $data): static;
 
+	/**
+	 * @param resource $resource
+	 */
 	public function resourceBody(mixed $resource): static;
 
 	public function htmlBody(string $content): static;

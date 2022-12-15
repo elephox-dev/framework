@@ -129,15 +129,10 @@ class ArrayMap implements GenericMap, ArrayAccess
 	}
 
 	/**
-	 * @template T of string|int
-	 *
-	 * @param T $key
-	 *
-	 * @return T
+	 * @return array-key
 	 */
 	protected function validateKey(mixed $key): string|int
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($key) && !is_int($key)) {
 			throw new OffsetNotAllowedException($key);
 		}

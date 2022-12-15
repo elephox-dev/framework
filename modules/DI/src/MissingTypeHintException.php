@@ -12,9 +12,7 @@ class MissingTypeHintException extends ServiceException
 	#[Pure]
 	public function __construct(ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)
 	{
-		/** @psalm-suppress ImpureMethodCall */
 		$class = $parameter->getDeclaringClass()?->getName() ?? 'global';
-		/** @psalm-suppress ImpureMethodCall */
 		$method = $parameter->getDeclaringFunction()->getName();
 		$parameterName = $parameter->getName();
 

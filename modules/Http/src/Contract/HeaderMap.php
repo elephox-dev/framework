@@ -25,6 +25,7 @@ interface HeaderMap extends GenericMap
 
 	/**
 	 * @param string|HeaderName $key
+	 *
 	 * @return bool
 	 */
 	public function has(mixed $key): bool;

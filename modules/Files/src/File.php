@@ -18,7 +18,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 		return new self($path);
 	}
 
-	public static function temp(null|Contract\Directory|string $parent = null, ?string $prefix = null): self
+	public static function temp(null|Contract\Directory|string $parent = null, ?string $prefix = null): Contract\File
 	{
 		$parent ??= sys_get_temp_dir();
 		if (is_string($parent)) {
