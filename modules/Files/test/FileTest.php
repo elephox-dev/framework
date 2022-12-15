@@ -431,7 +431,7 @@ class FileTest extends MockeryTestCase
 		$file->touch();
 		static::assertTrue($file->exists());
 
-		$invalidFile = new File('/does/not/exist');
+		$invalidFile = new File('');
 		static::assertFalse($invalidFile->exists());
 
 		$this->expectException(FileNotCreatedException::class);
