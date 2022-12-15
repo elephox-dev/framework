@@ -108,4 +108,16 @@ class ObjectMapTest extends TestCase
 
 		static::assertFalse($removedAgain);
 	}
+
+	public function testClear(): void
+	{
+		$inst = new stdClass();
+		$map = new ObjectMap([$inst], [123]);
+
+		static::assertTrue($map->has($inst));
+
+		$map->clear();
+
+		static::assertFalse($map->has($inst));
+	}
 }
