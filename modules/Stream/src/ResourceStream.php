@@ -46,6 +46,7 @@ class ResourceStream implements Stream
 		$resource = fopen($url, $flags);
 
 		restore_error_handler();
+
 		if ($exception !== null) {
 			if (is_resource($resource)) {
 				fclose($resource);
