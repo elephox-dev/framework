@@ -50,8 +50,12 @@ class File extends AbstractFilesystemNode implements Contract\File
 			throw new ReadOnlyFileException($file->path());
 		}
 
-		if ($create && $file->parent()->isReadonly()) {
-			throw new ReadonlyParentException($file->path());
+		if ($create) {
+			$parent = $file->parent();
+			$parent->ensureExists();
+			if ($parent->isReadonly()) {
+				throw new ReadonlyParentException($file->path());
+			}
 		}
 
 		return ResourceStream::open($file->path(), $readable, $writable, $create, $append, $truncate);
