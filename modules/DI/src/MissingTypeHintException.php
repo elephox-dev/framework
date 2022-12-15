@@ -10,7 +10,7 @@ use Throwable;
 class MissingTypeHintException extends ServiceException
 {
 	#[Pure]
-	public function __construct(ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)
+	public function __construct(public readonly ReflectionParameter $parameter, int $code = 0, ?Throwable $previous = null)
 	{
 		$class = $parameter->getDeclaringClass()?->getName() ?? 'global';
 		$method = $parameter->getDeclaringFunction()->getName();

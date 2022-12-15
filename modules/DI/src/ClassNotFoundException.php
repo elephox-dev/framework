@@ -8,7 +8,7 @@ use Throwable;
 
 class ClassNotFoundException extends RuntimeException
 {
-	public function __construct(string $className, int $code = 0, ?Throwable $previous = null)
+	public function __construct(public readonly string $className, int $code = 0, ?Throwable $previous = null)
 	{
 		parent::__construct("Class not found: $className", $code, $previous);
 	}
