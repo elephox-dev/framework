@@ -58,7 +58,24 @@ interface ServiceCollection extends ContainerInterface
 	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
 	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
 	 */
+	public function addScoped(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null, bool $replace = false): self;
+
+	/**
+	 * @template TService of object
+	 * @template TImplementation of object
+	 *
+	 * @param class-string<TService> $service
+	 * @param null|class-string<TImplementation> $concrete
+	 * @param null|Closure(mixed): TImplementation $factory
+	 * @param TImplementation|null $instance
+	 * @param bool $replace
+	 *
+	 * @throws InvalidArgumentException if the service name is empty or no implementation and not name is provided
+	 * @throws InvalidServiceDescriptorException if neither the implementation factory nor the implementation is provided
+	 */
 	public function addSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null, bool $replace = false): self;
+
+	public function endScope(): void;
 
 	/**
 	 * @template TService of object
