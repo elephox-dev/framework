@@ -49,8 +49,6 @@ interface GenericCollection
 
 	/**
 	 * @param callable(TSource): void $callback
-	 *
-	 * @return void
 	 */
 	public function forEach(callable $callback): void;
 

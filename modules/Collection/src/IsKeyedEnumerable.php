@@ -420,8 +420,6 @@ trait IsKeyedEnumerable
 
 	/**
 	 * @param callable(TSource, TIteratorKey): void $callback
-	 *
-	 * @return void
 	 */
 	public function forEach(callable $callback): void
 	{

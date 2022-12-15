@@ -73,11 +73,4 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	 * @return GenericList<T>&static
 	 */
 	public function slice(int $offset, ?int $length = null): static;
-
-	/**
-	 * @param callable(T, int): void $callback
-	 *
-	 * @return void
-	 */
-	public function forEach(callable $callback): void;
 }
