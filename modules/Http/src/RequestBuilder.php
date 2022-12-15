@@ -43,7 +43,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 			$host = $url->getHost();
 
 			if (!empty($host)) {
-				$this->header(HeaderName::Host->value, $host);
+				$this->header(HeaderName::Host, $host);
 			}
 		}
 

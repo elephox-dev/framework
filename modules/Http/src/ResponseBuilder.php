@@ -49,13 +49,13 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 	public function contentType(?MimeTypeInterface $mimeType): static
 	{
 		if ($this->headers === null && $mimeType !== null) {
-			$this->addedHeader(HeaderName::ContentType->value, $mimeType->getValue());
+			$this->addedHeader(HeaderName::ContentType, $mimeType->getValue());
 		} elseif ($this->headers !== null) {
-			$headerSet = $this->headers->containsKey(HeaderName::ContentType->value, DefaultEqualityComparer::equalsIgnoreCase(...));
+			$headerSet = $this->headers->containsKey(HeaderName::ContentType, DefaultEqualityComparer::equalsIgnoreCase(...));
 			if ($headerSet && $mimeType === null) {
-				$this->headers->remove(HeaderName::ContentType->value);
+				$this->headers->remove(HeaderName::ContentType);
 			} elseif ($mimeType !== null) {
-				$this->headers->put(HeaderName::ContentType->value, [$mimeType->getValue()]);
+				$this->headers->put(HeaderName::ContentType, [$mimeType->getValue()]);
 			}
 		}
 

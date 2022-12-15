@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Files\Contract\File;
+use Elephox\Http\HeaderName;
 use JsonException;
 use Psr\Http\Message\StreamInterface;
 
@@ -36,14 +37,14 @@ interface MessageBuilder
 	/**
 	 * @param string|array<mixed, string> $value
 	 */
-	public function header(string $name, string|array $value): static;
+	public function header(string|HeaderName $name, string|array $value): static;
 
 	/**
 	 * @param string|array<mixed, string> $value
 	 */
-	public function addedHeader(string $name, string|array $value): static;
+	public function addedHeader(string|HeaderName $name, string|array $value): static;
 
-	public function removedHeader(string $name): static;
+	public function removedHeader(string|HeaderName $name): static;
 
 	public function headerMap(HeaderMap $headers): static;
 

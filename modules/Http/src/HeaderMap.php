@@ -31,7 +31,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 			$name = Casing::toHttpHeader(substr($name, 5));
 
-			$map->put($name, $value);
+			$map->put($name, is_array($value) ? $value : [$value]);
 		}
 
 		return $map;
@@ -44,16 +44,23 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
-		return parent::containsKey($key, $comparer ?? self::compareHeaderNames(...));
-	}
-
-	public function get(mixed $key): mixed
-	{
 		$validKey = $this->validateKey($key);
 
-		if (!$this->has($validKey)) {
-			throw new OffsetNotFoundException($key);
+		return parent::containsKey($validKey, $comparer ?? self::compareHeaderNames(...));
+	}
+
+	protected function validateKey(mixed $key): string|int
+	{
+		if ($key instanceof HeaderName) {
+			return $key->value;
 		}
+
+		return parent::validateKey($key);
+	}
+
+	public function get(mixed $key): array
+	{
+		$validKey = $this->validateKey($key);
 
 		foreach ($this->items as $k => $v) {
 			if (self::compareHeaderNames($k, $validKey)) {
@@ -61,7 +68,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 			}
 		}
 
-		return null;
+		throw new OffsetNotFoundException($key);
 	}
 
 	public function put(mixed $key, mixed $value): bool
@@ -76,7 +83,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 				}
 			}
 		} else {
-			$this->items[$key] = $value;
+			$this->items[$validKey] = $value;
 		}
 
 		return $existed;
@@ -84,11 +91,13 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	public function has(mixed $key): bool
 	{
-		if (parent::has($key)) {
+		$validKey = $this->validateKey($key);
+
+		if (parent::has($validKey)) {
 			return true;
 		}
 
-		return $this->containsKey($key);
+		return $this->containsKey($validKey);
 	}
 
 	public function remove(mixed $key): bool

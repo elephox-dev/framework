@@ -82,7 +82,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body(File::openStream($path));
 	}
 
-	public function header(string $name, string|array $value): static
+	public function header(string|HeaderName $name, string|array $value): static
 	{
 		if ($this->headers === null) {
 			$this->headers = new HeaderMap();
@@ -98,7 +98,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
-	public function addedHeader(string $name, array|string $value): static
+	public function addedHeader(string|HeaderName $name, array|string $value): static
 	{
 		if ($this->headers === null) {
 			$this->headers = new HeaderMap();
@@ -122,7 +122,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this;
 	}
 
-	public function removedHeader(string $name): static
+	public function removedHeader(string|HeaderName $name): static
 	{
 		if ($this->headers === null) {
 			return $this;
