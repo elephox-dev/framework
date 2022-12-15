@@ -18,9 +18,9 @@ class Path
 	}
 
 	#[Pure]
-	public static function canonicalize(string $path): string
+	public static function canonicalize(string $path, string $separator = DIRECTORY_SEPARATOR): string
 	{
-		return (string) preg_replace('#[/\\\\]#', DIRECTORY_SEPARATOR, $path);
+		return (string) preg_replace('#[/\\\\]#', $separator, $path);
 	}
 
 	#[Pure]
