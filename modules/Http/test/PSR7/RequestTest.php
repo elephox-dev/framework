@@ -32,6 +32,7 @@ class RequestTest extends RequestIntegrationTest
 {
 	protected $skippedTests = [
 		'testRequestTarget' => 'RequestTarget is not supported',
+		'testGetRequestTargetInOriginFormNormalizesUriWithMultipleLeadingSlashesInPath' => 'RequestTarget is not supported',
 	];
 
 	public function createSubject(): RequestInterface|ElephoxRequest
