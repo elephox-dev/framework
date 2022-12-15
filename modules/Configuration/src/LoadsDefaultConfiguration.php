@@ -43,16 +43,14 @@ trait LoadsDefaultConfiguration
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
 				->config()
-				->file('config.json')
-				->path(),
+				->file('config.json'),
 			true,
 		));
 
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
 				->config()
-				->file('config.local.json')
-				->path(),
+				->file('config.local.json'),
 			true,
 		));
 	}
@@ -62,16 +60,14 @@ trait LoadsDefaultConfiguration
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
 				->root()
-				->file("config.{$this->getEnvironment()->environmentName()}.json")
-				->path(),
+				->file("config.{$this->getEnvironment()->environmentName()}.json"),
 			true,
 		));
 
 		$this->getConfigurationBuilder()->add(new JsonFileConfigurationSource(
 			$this->getEnvironment()
 				->root()
-				->file("config.{$this->getEnvironment()->environmentName()}.local.json")
-				->path(),
+				->file("config.{$this->getEnvironment()->environmentName()}.local.json"),
 			true,
 		));
 	}

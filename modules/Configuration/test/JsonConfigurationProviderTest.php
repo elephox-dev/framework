@@ -5,6 +5,7 @@ namespace Elephox\Configuration;
 
 use Elephox\Configuration\Json\JsonConfigurationProvider;
 use Elephox\Configuration\Json\JsonFileConfigurationSource;
+use Elephox\Files\File;
 use PHPUnit\Framework\TestCase;
 use JsonException;
 
@@ -20,12 +21,12 @@ use JsonException;
  */
 class JsonConfigurationProviderTest extends TestCase
 {
-	private ?string $tmpFile = null;
+	private ?File $tmpFile = null;
 
 	public function setUp(): void
 	{
-		$this->tmpFile = tempnam(sys_get_temp_dir(), 'ele') . '.json';
-		file_put_contents($this->tmpFile, <<<JSON
+		$this->tmpFile = File::temp();
+		$this->tmpFile->writeContents(<<<JSON
 {
 	"foo": "bar",
 	"baz": {
@@ -41,7 +42,7 @@ JSON);
 
 	public function tearDown(): void
 	{
-		unlink($this->tmpFile);
+		$this->tmpFile->delete();
 	}
 
 	/**
@@ -61,7 +62,7 @@ JSON);
 	 */
 	public function testLoadOptionalFile(): void
 	{
-		$source = new JsonFileConfigurationSource('/does/not/exist', true);
+		$source = new JsonFileConfigurationSource(new File(''), true);
 
 		static::assertSame([], $source->getData());
 	}
