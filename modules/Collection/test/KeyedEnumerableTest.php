@@ -35,6 +35,8 @@ use Stringable;
  * @covers \Elephox\Collection\Iterator\GroupingIterator
  * @covers \Elephox\Collection\Grouping
  * @covers \Elephox\Collection\GroupedKeyedEnumerable
+ * @covers \Elephox\Collection\KeyValuePair
+ * @covers \Elephox\Collection\ArrayList
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *
@@ -259,6 +261,21 @@ class KeyedEnumerableTest extends TestCase
 		KeyedEnumerable::empty()->firstKey();
 	}
 
+	public function testFirstPair(): void
+	{
+		$first = KeyedEnumerable::range(1, 10)->firstPair();
+		static::assertSame(0, $first->getKey());
+		static::assertSame(1, $first->getValue());
+
+		$second = KeyedEnumerable::range(1, 10)->firstPair(static fn (int $x): bool => $x % 2 === 0);
+		static::assertSame(1, $second->getKey());
+		static::assertSame(2, $second->getValue());
+
+		$this->expectException(EmptySequenceException::class);
+		$this->expectExceptionMessage('The sequence contains no elements');
+		KeyedEnumerable::empty()->firstPair();
+	}
+
 	public function testFirstOrDefault(): void
 	{
 		static::assertSame(1, KeyedEnumerable::range(1, 10)->firstOrDefault(null));
@@ -271,6 +288,19 @@ class KeyedEnumerableTest extends TestCase
 		static::assertSame(0, KeyedEnumerable::range(1, 10)->firstKeyOrDefault(null));
 		static::assertSame(1, KeyedEnumerable::range(1, 10)->firstKeyOrDefault(null, static fn (int $x): bool => $x % 2 === 0));
 		static::assertNull(KeyedEnumerable::empty()->firstKeyOrDefault(null));
+	}
+
+	public function testFirstPairOrDefault(): void
+	{
+		$first = KeyedEnumerable::range(1, 10)->firstPairOrDefault(null);
+		static::assertSame(0, $first->getKey());
+		static::assertSame(1, $first->getValue());
+
+		$second = KeyedEnumerable::range(1, 10)->firstPairOrDefault(null, static fn (int $x): bool => $x % 2 === 0);
+		static::assertSame(1, $second->getKey());
+		static::assertSame(2, $second->getValue());
+
+		static::assertNull(KeyedEnumerable::empty()->firstPairOrDefault(null));
 	}
 
 	public function testGroupBy(): void
@@ -310,6 +340,13 @@ class KeyedEnumerableTest extends TestCase
 		);
 	}
 
+	public function testForEach(): void
+	{
+		KeyedEnumerable::range(2, 6, 2)
+			->forEach(static fn (int $x) => static::assertSame($x % 2, 0))
+		;
+	}
+
 	public function testIntersect(): void
 	{
 		static::assertSame(
@@ -342,6 +379,13 @@ class KeyedEnumerableTest extends TestCase
 	public function testIsEmpty(): void
 	{
 		static::assertTrue(KeyedEnumerable::empty()->isEmpty());
+		static::assertFalse(KeyedEnumerable::range(0, 1)->isEmpty());
+	}
+
+	public function testIsNotEmpty(): void
+	{
+		static::assertFalse(KeyedEnumerable::empty()->isNotEmpty());
+		static::assertTrue(KeyedEnumerable::range(0, 1)->isNotEmpty());
 	}
 
 	public function testJoin(): void
@@ -670,6 +714,14 @@ class KeyedEnumerableTest extends TestCase
 		(new KeyedEnumerable(static fn () => yield new stdClass() => 1))->toArray();
 	}
 
+	public function testToArrayList(): void
+	{
+		$list = KeyedEnumerable::range(1, 5)->toArrayList();
+
+		static::assertInstanceOf(ArrayList::class, $list);
+		static::assertSame([1, 2, 3, 4, 5], $list->toArray());
+	}
+
 	public function testToNestedArray(): void
 	{
 		static::assertSame(
@@ -724,6 +776,13 @@ class KeyedEnumerableTest extends TestCase
 			[5, 3, 9, 7, 6],
 			$a->unionBy($b, static fn (int $a) => $a % 5)->toList(),
 		);
+	}
+
+	public function testUnique(): void
+	{
+		$enum = KeyedEnumerable::from([1, 2, 3, 2, 1]);
+
+		static::assertSame([1, 2, 3], $enum->unique()->toArray());
 	}
 
 	public function testWhereKey(): void

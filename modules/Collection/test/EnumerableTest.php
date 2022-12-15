@@ -307,6 +307,13 @@ class EnumerableTest extends TestCase
 	public function testIsEmpty(): void
 	{
 		static::assertTrue(Enumerable::empty()->isEmpty());
+		static::assertFalse(Enumerable::range(0, 1)->isEmpty());
+	}
+
+	public function testIsNotEmpty(): void
+	{
+		static::assertFalse(Enumerable::empty()->isNotEmpty());
+		static::assertTrue(Enumerable::range(0, 1)->isNotEmpty());
 	}
 
 	public function testJoin(): void
