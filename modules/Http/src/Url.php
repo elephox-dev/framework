@@ -65,6 +65,7 @@ class Url implements Stringable, UriInterface
 		if (str_contains($path, ' ')) {
 			$path = str_replace(' ', '%20', $path);
 		}
+
 		$builder->path($path);
 
 		if (array_key_exists('query', $matches) && strlen($matches['query']) > 1 && str_starts_with($matches['query'], '?')) {
@@ -224,6 +225,10 @@ class Url implements Stringable, UriInterface
 
 	public function getPath(): string
 	{
+		if (str_starts_with($this->path, '//') && !empty($this->getHost())) {
+			return '/' . ltrim($this->path, '/');
+		}
+
 		return $this->path;
 	}
 
