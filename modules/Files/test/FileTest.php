@@ -345,6 +345,12 @@ class FileTest extends MockeryTestCase
 		;
 
 		$directoryMock
+			->expects('ensureExists')
+			->withNoArgs()
+			->andReturns()
+		;
+
+		$directoryMock
 			->expects('isReadonly')
 			->withNoArgs()
 			->andReturn(true)
