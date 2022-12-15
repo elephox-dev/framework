@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\KeyedEnumerable
  * @covers \Elephox\OOR\KeyCase
  * @covers \Elephox\Collection\IteratorProvider
+ * @covers \Elephox\OOR\Diff
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable

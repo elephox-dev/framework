@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Casing
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\OOR\Str
+ * @covers \Elephox\Http\HeaderName
  *
  * @uses \Elephox\Http\Contract\Request
  * @uses \Elephox\Http\Contract\ServerRequest

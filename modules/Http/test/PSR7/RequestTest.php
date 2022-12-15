@@ -23,6 +23,7 @@ use Psr\Http\Message\RequestInterface;
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\CustomRequestMethod
  * @covers \Elephox\Http\UrlScheme
+ * @covers \Elephox\Http\HeaderName
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

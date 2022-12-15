@@ -10,6 +10,7 @@ use Mockery as M;
 /**
  * @covers \Elephox\Logging\SimpleFormatColorSink
  * @covers \Elephox\Logging\LogLevel
+ * @covers \Elephox\Logging\SinkCapability
  *
  * @internal
  */

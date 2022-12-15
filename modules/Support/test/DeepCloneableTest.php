@@ -12,6 +12,7 @@ use WeakMap;
 /**
  * @covers \Elephox\Support\DeepCloneable
  * @covers \Elephox\Support\CloneBehaviour
+ * @covers \Elephox\Support\CloneAction
  *
  * @internal
  */

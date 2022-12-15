@@ -11,6 +11,7 @@ use stdClass;
 /**
  * @covers \Elephox\DI\ServiceDescriptor
  * @covers \Elephox\DI\InvalidServiceDescriptorException
+ * @covers \Elephox\DI\ServiceLifetime
  *
  * @internal
  */

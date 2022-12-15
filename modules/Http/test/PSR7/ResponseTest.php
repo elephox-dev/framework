@@ -18,6 +18,7 @@ use Psr\Http\Message\ResponseInterface;
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\ResponseBuilder
  * @covers \Elephox\OOR\Casing
+ * @covers \Elephox\Http\ResponseCode
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *

@@ -16,6 +16,12 @@ use JsonException;
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\OOR\Filter
  * @covers \Elephox\Configuration\ConfigurationPath
+ * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Files\Directory
+ * @covers \Elephox\Files\File
+ * @covers \Elephox\Files\Path
+ * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Stream\StringStream
  *
  * @internal
  */

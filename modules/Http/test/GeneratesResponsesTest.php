@@ -24,6 +24,7 @@ use JsonException;
  * @covers \Elephox\Collection\Iterator\FlipIterator
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\OOR\Str
+ * @covers \Elephox\Http\HeaderName
  *
  * @internal
  */

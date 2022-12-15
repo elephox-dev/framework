@@ -34,6 +34,7 @@ use stdClass;
  * @covers \Elephox\DI\ServiceNotFoundException
  * @covers \Elephox\Collection\InvalidOffsetException
  * @covers \Elephox\Collection\OffsetNotFoundException
+ * @covers \Elephox\DI\ServiceLifetime
  *
  * @internal
  */

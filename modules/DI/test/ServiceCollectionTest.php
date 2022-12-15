@@ -27,6 +27,8 @@ use ReflectionParameter;
  * @covers \Elephox\DI\ServiceNotFoundException
  * @covers \Elephox\DI\UnresolvedParameterException
  * @covers \Elephox\DI\ClassNotFoundException
+ * @covers \Elephox\Collection\IteratorProvider
+ * @covers \Elephox\DI\ServiceLifetime
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable

@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @covers \Elephox\Stream\StringStream
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\Cookie
+ * @covers \Elephox\Http\HeaderName
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *
