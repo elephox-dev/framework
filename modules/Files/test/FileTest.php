@@ -418,7 +418,7 @@ class FileTest extends MockeryTestCase
 
 	public function testTouch(): void
 	{
-		$file = new File(Path::join(sys_get_temp_dir(), uniqid('ele', true) . '.tmp'));
+		$file = File::temp();
 		static::assertFalse($file->exists());
 
 		$file->touch();
