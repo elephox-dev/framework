@@ -37,6 +37,9 @@ class PathTest extends TestCase
 		yield ['/', true];
 		yield ['C:\\Windows\\System32', false];
 		yield ['C:\\', true];
+		yield ['\\\\nas', true];
+		yield ['\\\\nas\\', true];
+		yield ['\\\\nas\\file.txt', false];
 	}
 
 	/**
@@ -60,6 +63,7 @@ class PathTest extends TestCase
 		yield ['in/this/folder', false];
 		yield ['..\\test\\relative', false];
 		yield ['in\\this\\folder', false];
+		yield ['\\\\nas\\file.txt', true];
 	}
 
 	/**

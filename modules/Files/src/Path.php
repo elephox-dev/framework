@@ -56,12 +56,15 @@ class Path
 		return $path === '\\' ||
 			$path === '/' ||
 			$path === dirname($path) ||
-			preg_match("/^\w:\\\\$/", $path) === 1;
+			preg_match("/^\w:\\\\$/", $path) === 1 ||
+			preg_match("/^\\\\\\\\\w+\\\\?$/", $path) === 1;
 	}
 
 	#[Pure]
 	public static function isRooted(string $path): bool
 	{
-		return $path[0] === '/' || preg_match("/^\w:\\\\/", $path) === 1;
+		return $path[0] === '/' ||
+			preg_match("/^\w:\\\\/", $path) === 1 ||
+			preg_match("/^\\\\\\\\\w+/", $path) === 1;
 	}
 }
