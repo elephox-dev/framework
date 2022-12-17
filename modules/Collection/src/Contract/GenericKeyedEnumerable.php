@@ -279,6 +279,13 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function prepend(mixed $key, mixed $value): self;
 
 	/**
+	 * @param iterable<TIteratorKey, TSource> $values
+	 *
+	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
+	 */
+	public function prependAll(iterable $values): self;
+
+	/**
 	 * @return GenericKeyedEnumerable<TIteratorKey, TSource>
 	 */
 	public function reverse(bool $preserveKeys = true): self;

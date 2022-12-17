@@ -581,6 +581,15 @@ trait IsEnumerable
 		});
 	}
 
+	public function prependAll(iterable $values): GenericEnumerable
+	{
+		return new Enumerable(function () use ($values) {
+			yield from $values;
+
+			yield from $this->getIterator();
+		});
+	}
+
 	public function reverse(bool $preserveKeys = true): GenericEnumerable
 	{
 		return new Enumerable(new ReverseIterator($this->getIterator(), $preserveKeys));

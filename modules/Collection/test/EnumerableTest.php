@@ -419,6 +419,14 @@ class EnumerableTest extends TestCase
 		);
 	}
 
+	public function testPrependAll(): void
+	{
+		static::assertSame(
+			[5, 4, 1, 2, 3],
+			Enumerable::range(1, 3)->prependAll([5, 4])->toList(),
+		);
+	}
+
 	public function testReverse(): void
 	{
 		static::assertSame(

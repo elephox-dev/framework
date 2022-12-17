@@ -225,6 +225,13 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function prepend(mixed $value): self;
 
 	/**
+	 * @param iterable<TSource> $values
+	 *
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function prependAll(iterable $values): self;
+
+	/**
 	 * @return GenericEnumerable<TSource>
 	 */
 	public function reverse(bool $preserveKeys = true): self;

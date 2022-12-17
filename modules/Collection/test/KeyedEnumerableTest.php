@@ -491,6 +491,14 @@ class KeyedEnumerableTest extends TestCase
 		);
 	}
 
+	public function testPrependAllKeyed(): void
+	{
+		static::assertSame(
+			['d' => 4, 'e' => 5, 'a' => 1, 'b' => 2, 'c' => 3],
+			KeyedEnumerable::from(['a' => 1, 'b' => 2, 'c' => 3])->prependAll(['d' => 4, 'e' => 5])->toArray(),
+		);
+	}
+
 	public function testReverse(): void
 	{
 		static::assertSame(
