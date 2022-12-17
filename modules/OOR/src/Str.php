@@ -58,6 +58,43 @@ class Str implements Stringable
 		}
 	}
 
+	/**
+	 * @see https://github.com/laravel/framework/blob/9.x/src/Illuminate/Support/Str.php#L361
+	 * @return bool
+	 */
+	public static function is(string|Stringable|iterable $patterns, null|int|float|bool|string|Stringable $value): bool
+	{
+		$value = (string) $value;
+
+		if (!is_iterable($patterns)) {
+			$patterns = [$patterns];
+		}
+
+		foreach ($patterns as $pattern) {
+			$pattern = (string) $pattern;
+
+			// If the given value is an exact match we can of course return true right
+			// from the beginning. Otherwise, we will translate asterisks and do an
+			// actual pattern match against the two strings to see if they match.
+			if ($pattern === $value) {
+				return true;
+			}
+
+			$pattern = preg_quote($pattern, '#');
+
+			// Asterisks are translated into zero-or-more regular expression wildcards
+			// to make it convenient to check if the strings starts with the given
+			// pattern such as "library/*", making any string check convenient.
+			$pattern = str_replace('\*', '.*', $pattern);
+
+			if (preg_match('#^'.$pattern.'\z#u', $value) === 1) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	#[Pure]
 	public function __construct(
 		private readonly string $source,
