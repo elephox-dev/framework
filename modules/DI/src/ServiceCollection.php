@@ -216,12 +216,12 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	public function endScope(): void
 	{
 		$this->services
-			->where(static fn (ServiceDescriptor $sd) => $sd->implementationFactory !== null)
+			->where(static fn (ServiceDescriptor $sd) => $sd->lifetime === ServiceLifetime::Scoped && $sd->implementationFactory !== null)
 			->forEach(static fn (ServiceDescriptor $sd) => $sd->instance = null)
 		;
 
 		$this->services
-			->where(static fn (ServiceDescriptor $sd) => $sd->implementationFactory === null)
+			->where(static fn (ServiceDescriptor $sd) => $sd->lifetime === ServiceLifetime::Scoped && $sd->implementationFactory === null)
 			->forEach(fn (ServiceDescriptor $sd) => $this->removeService($sd->serviceType))
 		;
 	}

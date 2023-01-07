@@ -5,6 +5,8 @@ namespace Elephox\DI;
 
 use BadMethodCallException;
 use Elephox\DI\Data\TestServiceClass;
+use Elephox\DI\Data\TestServiceClass2;
+use Elephox\DI\Data\TestServiceClass3;
 use Elephox\DI\Data\TestServiceClassUninstantiable;
 use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
@@ -358,29 +360,30 @@ class ServiceCollectionTest extends MockeryTestCase
 		$collection = new ServiceCollection();
 
 		$collection->addScoped(TestServiceClass::class, TestServiceClass::class, static fn () => new TestServiceClass());
+		$collection->addSingleton(TestServiceClass2::class, TestServiceClass2::class, static fn () => new TestServiceClass2());
+		$collection->addTransient(TestServiceClass3::class, TestServiceClass3::class, static fn () => new TestServiceClass3());
+
+		static::assertTrue($collection->hasService(TestServiceClass::class));
+		static::assertTrue($collection->hasService(TestServiceClass2::class));
+		static::assertTrue($collection->hasService(TestServiceClass3::class));
 
 		$inst1 = $collection->requireService(TestServiceClass::class);
 		$inst2 = $collection->requireService(TestServiceClass::class);
 
 		static::assertSame($inst1, $inst2);
 
-		$outside = new TestServiceClassWithConstructor(new TestServiceClass());
-		$collection->addScoped(TestServiceClassWithConstructor::class, instance: $outside);
-
-		$inst3 = $collection->requireService(TestServiceClassWithConstructor::class);
-		$inst4 = $collection->requireService(TestServiceClassWithConstructor::class);
-
-		static::assertSame($inst3, $inst4);
+		$inst3 = $collection->requireService(TestServiceClass2::class);
 
 		$collection->endScope();
 
 		static::assertTrue($collection->hasService(TestServiceClass::class));
-		static::assertFalse($collection->hasService(TestServiceClassWithConstructor::class));
+		static::assertTrue($collection->hasService(TestServiceClass2::class));
+		static::assertTrue($collection->hasService(TestServiceClass3::class));
 
 		$inst5 = $collection->requireService(TestServiceClass::class);
-		$inst6 = $collection->requireService(TestServiceClass::class);
+		$inst6 = $collection->requireService(TestServiceClass2::class);
 
 		static::assertNotSame($inst1, $inst5);
-		static::assertSame($inst5, $inst6);
+		static::assertSame($inst3, $inst6);
 	}
 }
