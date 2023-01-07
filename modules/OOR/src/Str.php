@@ -60,6 +60,7 @@ class Str implements Stringable
 
 	/**
 	 * @see https://github.com/laravel/framework/blob/9.x/src/Illuminate/Support/Str.php#L361
+	 *
 	 * @return bool
 	 */
 	public static function is(string|Stringable|iterable $patterns, null|int|float|bool|string|Stringable $value): bool
@@ -87,7 +88,7 @@ class Str implements Stringable
 			// pattern such as "library/*", making any string check convenient.
 			$pattern = str_replace('\*', '.*', $pattern);
 
-			if (preg_match('#^'.$pattern.'\z#u', $value) === 1) {
+			if (preg_match('#^' . $pattern . '\z#u', $value) === 1) {
 				return true;
 			}
 		}
