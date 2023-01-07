@@ -12,6 +12,7 @@ interface Clock extends ClockInterface
 	 * Calculates the exact difference between this clock and the given one.
 	 *
 	 * @param ClockInterface $clock The clock to compare this clock to.
+	 *
 	 * @return Duration The difference as a duration between the two clocks.
 	 */
 	#[Pure]
@@ -21,6 +22,7 @@ interface Clock extends ClockInterface
 	 * Adds the given duration to this clock.
 	 *
 	 * @param Duration $duration The duration to add to this clock.
+	 *
 	 * @return $this Fluent setter.
 	 */
 	#[Pure]
@@ -30,6 +32,7 @@ interface Clock extends ClockInterface
 	 * Subtracts the given duration from this clock.
 	 *
 	 * @param Duration $duration The duration to remove from this clock.
+	 *
 	 * @return $this Fluent setter.
 	 */
 	#[Pure]
@@ -39,6 +42,7 @@ interface Clock extends ClockInterface
 	 * Compares this clock and the given one and checks if they are equal. <code>true</code> if they are, <code>false</code> if not.
 	 *
 	 * @param ClockInterface $clock
+	 *
 	 * @return bool
 	 */
 	#[Pure]
@@ -48,6 +52,7 @@ interface Clock extends ClockInterface
 	 * Compares the given clock to this clock and returns an integer indicating if one is greater, equal, or smaller than the other.
 	 *
 	 * @param ClockInterface $clock The clock to compare this clock to.
+	 *
 	 * @return int Returns a positive integer if this clock is considered greater, a negative integer if smaller, and 0 if they are the same.
 	 */
 	#[Pure]

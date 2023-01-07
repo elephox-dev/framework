@@ -66,19 +66,21 @@ class Duration extends AbstractDuration
 	{
 		$negative = $total < 0;
 
-		$secondsPart = (int)($total / self::MICROSECONDS_PER_SECOND);
-		$minutesPart = (int)($secondsPart / self::SECONDS_PER_MINUTE);
-		$hoursPart = (int)($minutesPart / self::MINUTES_PER_HOUR);
-		$daysPart = (int)($hoursPart / self::HOURS_PER_DAY);
-		$monthsPart = (int)($daysPart / self::DAYS_PER_MONTH);
-		$years = (int)($monthsPart / self::MONTHS_PER_YEAR);
+		$total = abs($total);
+
+		$secondsPart = (int) ($total / self::MICROSECONDS_PER_SECOND);
+		$minutesPart = (int) ($secondsPart / self::SECONDS_PER_MINUTE);
+		$hoursPart = (int) ($minutesPart / self::MINUTES_PER_HOUR);
+		$daysPart = (int) ($hoursPart / self::HOURS_PER_DAY);
+		$monthsPart = (int) ($daysPart / self::DAYS_PER_MONTH);
+		$years = (int) ($monthsPart / self::MONTHS_PER_YEAR);
 
 		$microseconds = fmod($total, self::MICROSECONDS_PER_SECOND);
-		$seconds = (int)fmod($secondsPart, self::SECONDS_PER_MINUTE);
-		$minutes = (int)fmod($minutesPart, self::MINUTES_PER_HOUR);
-		$hours = (int)fmod($hoursPart, self::HOURS_PER_DAY);
-		$days = (int)fmod($monthsPart, self::DAYS_PER_MONTH);
-		$months = (int)fmod($years, self::MONTHS_PER_YEAR);
+		$seconds = (int) fmod($secondsPart, self::SECONDS_PER_MINUTE);
+		$minutes = (int) fmod($minutesPart, self::MINUTES_PER_HOUR);
+		$hours = (int) fmod($hoursPart, self::HOURS_PER_DAY);
+		$days = (int) fmod($monthsPart, self::DAYS_PER_MONTH);
+		$months = (int) fmod($years, self::MONTHS_PER_YEAR);
 
 		return new self(
 			$negative,

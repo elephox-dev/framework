@@ -8,9 +8,10 @@ use Elephox\Clock\Contract\Duration as DurationContract;
 use Elephox\Clock\Contract\PeriodIterator as PeriodIteratorContract;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
+use Stringable;
 
 #[Immutable]
-abstract class AbstractDuration implements DurationContract
+abstract class AbstractDuration implements DurationContract, Stringable
 {
 	#[Pure]
 	public function getTotalMicroseconds(): float
@@ -121,16 +122,7 @@ abstract class AbstractDuration implements DurationContract
 	#[Pure]
 	public function subtract(DurationContract $duration): DurationContract
 	{
-		return new Duration(
-			$this->getTotalMicroseconds() - $duration->getTotalMicroseconds() < 0,
-			abs($this->getMicroseconds() - $duration->getMicroseconds()),
-			abs($this->getSeconds() - $duration->getSeconds()),
-			abs($this->getMinutes() - $duration->getMinutes()),
-			abs($this->getHours() - $duration->getHours()),
-			abs($this->getDays() - $duration->getDays()),
-			abs($this->getMonths() - $duration->getMonths()),
-			abs($this->getYears() - $duration->getYears()),
-		);
+		return Duration::fromTotalMicroseconds($this->getTotalMicroseconds() - $duration->getTotalMicroseconds());
 	}
 
 	#[Pure]
@@ -185,5 +177,20 @@ abstract class AbstractDuration implements DurationContract
 		}
 
 		return 0;
+	}
+
+	public function __toString(): string
+	{
+		return sprintf(
+			'Duration(%s%d.%d.%d %d:%d:%d:%.3f)',
+			$this->isNegative() ? 'neg ' : '',
+			$this->getDays(),
+			$this->getMonths(),
+			$this->getYears(),
+			$this->getHours(),
+			$this->getMinutes(),
+			$this->getSeconds(),
+			$this->getMicroseconds(),
+		);
 	}
 }

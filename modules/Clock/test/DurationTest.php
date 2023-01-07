@@ -114,10 +114,11 @@ class DurationTest extends TestCase
 
 	public function testSubtract(): void
 	{
-		$a = Duration::from(microseconds: 1234, seconds: 1);
-		$b = Duration::from(microseconds: 1000, seconds: 12);
+		$a = Duration::from(microseconds: 1000, seconds: 1);
+		$b = Duration::from(microseconds: 1123, seconds: 1);
+		$c = $a->subtract($b);
 
-		static::assertSame(Duration::from(negative: true, microseconds: 234, seconds: 11)->getTotalMicroseconds(), $a->subtract($b)->getTotalMicroseconds());
+		static::assertSame(123.0, $c->getTotalMicroseconds());
 	}
 
 	public function testEquals(): void
@@ -221,29 +222,34 @@ class DurationTest extends TestCase
 
 	public function testAbs(): void
 	{
-		$a = Duration::from(seconds: 50);
-		$b = Duration::from(minutes: 2);
-
-		$c = $a->subtract($b);
-
-		static::assertTrue($c->isNegative());
-		static::assertSame(0.0, $c->getMicroseconds());
-		static::assertSame(50, $c->getSeconds());
-		static::assertSame(1, $c->getMinutes());
-		static::assertSame(0, $c->getHours());
-		static::assertSame(0, $c->getDays());
-		static::assertSame(0, $c->getMonths());
-		static::assertSame(0, $c->getYears());
-
-		$d = $c->abs();
+		$d = Duration::from(negative: true, seconds: 30, minutes: 1)->abs();
 
 		static::assertFalse($d->isNegative());
 		static::assertSame(0.0, $d->getMicroseconds());
-		static::assertSame(50, $d->getSeconds());
+		static::assertSame(30, $d->getSeconds());
 		static::assertSame(1, $d->getMinutes());
 		static::assertSame(0, $d->getHours());
 		static::assertSame(0, $d->getDays());
 		static::assertSame(0, $d->getMonths());
 		static::assertSame(0, $d->getYears());
+	}
+
+	public function testToString(): void
+	{
+		$d1 = Duration::from(
+			microseconds: 1.234,
+			seconds: 5,
+			minutes: 6,
+			hours: 7,
+			days: 8,
+			months: 9,
+			years: 10,
+		);
+
+		static::assertSame("Duration(8.9.10 7:6:5:1.234)", (string)$d1);
+
+		$d2 = Duration::from(negative: true, microseconds: 0.001);
+
+		static::assertSame("Duration(neg 0.0.0 0:0:0:0.001)", (string)$d2);
 	}
 }
