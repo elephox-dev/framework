@@ -246,10 +246,10 @@ class DurationTest extends TestCase
 			years: 10,
 		);
 
-		static::assertSame("Duration(8.9.10 7:6:5:1.234)", (string)$d1);
+		static::assertSame('Duration(8.9.10 7:6:5:1.234)', (string) $d1);
 
 		$d2 = Duration::from(negative: true, microseconds: 0.001);
 
-		static::assertSame("Duration(neg 0.0.0 0:0:0:0.001)", (string)$d2);
+		static::assertSame('Duration(neg 0.0.0 0:0:0:0.001)', (string) $d2);
 	}
 }
