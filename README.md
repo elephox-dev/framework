@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/elephox-dev/framework/ci.yml?branch=main&label=CI&logo=github&style=for-the-badge"></a>
+  <a href="https://github.com/elephox-dev/framework/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/elephox-dev/framework/ci.yml?branch=develop&label=CI&logo=github&style=for-the-badge"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/l/elephox/framework?style=for-the-badge" alt="License"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/v/elephox/framework?label=version&style=for-the-badge" alt="Current Version"></a>
   <a href="https://packagist.org/packages/elephox/framework"><img src="https://img.shields.io/packagist/php-v/elephox/framework?style=for-the-badge&logo=php" alt="PHP Version Require"></a>
