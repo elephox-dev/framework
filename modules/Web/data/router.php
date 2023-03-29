@@ -5,18 +5,20 @@ declare(strict_types=1);
 
 // $_SERVER['DOCUMENT_ROOT'] is the absolute path to the public directory in your filesystem, e.g. /var/www/html/public
 // $_SERVER['REQUEST_URI'] is the URI of the HTTP request, e.g. /assets/css/bulma.css
-$path = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI'];
+$path = realpath($_SERVER['DOCUMENT_ROOT'] . $_SERVER['REQUEST_URI']);
 
-// If $path is a direct file hit let the cli server handle this simple case.
-// Also prevent access to files outside $_SERVER['DOCUMENT_ROOT'] (e.g. /../../../etc/passwd)
-if (is_file($path) && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($path))) {
-	return false;
-}
+// Prevent direct access to files outside $_SERVER['DOCUMENT_ROOT'] (e.g. /../../../etc/passwd)
+if ($path !== false && str_starts_with($_SERVER['DOCUMENT_ROOT'], $path)) {
+	// If $path is a direct file hit let the cli server handle this simple case.
+	if (is_file($path)) {
+		return false;
+	}
 
-// If $path is a directory and contains an index.html file let the
-// cli server handle it, because we know it _will_ serve that index.html
-if (is_dir($path) && is_file("$path/index.html") && str_starts_with($_SERVER['DOCUMENT_ROOT'], realpath($path))) {
-	return false;
+	// If $path is a directory and contains an index.html file let the
+	// cli server handle it, because we know it _will_ serve that index.html
+	if (is_dir($path) && is_file("$path/index.html")) {
+		return false;
+	}
 }
 
 // provide STDERR as the built-in webserver only provides it for CLI scripts
