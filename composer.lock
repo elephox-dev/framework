@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8333a6818299c366503367c03bc7b75d",
+    "content-hash": "04d37d364e8bb14df082a6ddf9ad83c1",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -3598,12 +3598,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "5b20cfd4aea041f18344ce1b7ff72abe9b303fd7"
+                "reference": "49a317bdff2a2ef92638797a6d23ff921961165f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/5b20cfd4aea041f18344ce1b7ff72abe9b303fd7",
-                "reference": "5b20cfd4aea041f18344ce1b7ff72abe9b303fd7",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/49a317bdff2a2ef92638797a6d23ff921961165f",
+                "reference": "49a317bdff2a2ef92638797a6d23ff921961165f",
                 "shasum": ""
             },
             "require": {
@@ -3687,7 +3687,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-01T19:04:49+00:00"
+            "time": "2023-04-02T19:30:48+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -8270,12 +8270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "fd4f7b701ced91376de53b423537167bdbc974d8"
+                "reference": "87d0854a97e1367d43cfb4694249939277220b49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/fd4f7b701ced91376de53b423537167bdbc974d8",
-                "reference": "fd4f7b701ced91376de53b423537167bdbc974d8",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/87d0854a97e1367d43cfb4694249939277220b49",
+                "reference": "87d0854a97e1367d43cfb4694249939277220b49",
                 "shasum": ""
             },
             "require": {
@@ -8369,7 +8369,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2023-03-31T17:44:09+00:00"
+            "time": "2023-04-02T16:51:25+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -8491,7 +8491,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1 <8.3",
+        "php": "^8.2 <8.4",
         "ext-ctype": "*",
         "ext-json": "*",
         "ext-mbstring": "*"
