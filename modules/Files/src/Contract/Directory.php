@@ -75,23 +75,15 @@ interface Directory extends FilesystemNode
 	/**
 	 * @throws DirectoryNotFoundException
 	 * @throws DirectoryNotEmptyException
-	 *
-	 * @param bool $recursive
 	 */
 	public function delete(bool $recursive = true): void;
 
 	/**
 	 * @throws DirectoryNotCreatedException
-	 *
-	 * @param bool $recursive
-	 * @param int $permissions
 	 */
 	public function ensureExists(bool $recursive = true, int $permissions = 0o0777): void;
 
 	/**
-	 * @param Directory $directory
-	 * @param bool $overwrite
-	 *
 	 * @throws FileMoveException
 	 * @throws FileAlreadyExistsException
 	 * @throws FilesystemNodeNotImplementedException
@@ -99,9 +91,6 @@ interface Directory extends FilesystemNode
 	public function moveTo(self $directory, bool $overwrite = true): void;
 
 	/**
-	 * @param Directory $directory
-	 * @param bool $overwrite
-	 *
 	 * @throws FileCopyException
 	 * @throws FileAlreadyExistsException
 	 * @throws FilesystemNodeNotImplementedException

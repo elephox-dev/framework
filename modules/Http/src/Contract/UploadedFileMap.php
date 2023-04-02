@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Elephox\Http\Contract;
 
 use Elephox\Collection\Contract\GenericMap;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
- * @extends GenericMap<array-key, UploadedFile>
+ * @extends GenericMap<array-key, UploadedFileInterface>
  */
 interface UploadedFileMap extends GenericMap
 {

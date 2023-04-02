@@ -51,7 +51,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		if ($this->headers === null && $mimeType !== null) {
 			$this->addedHeader(HeaderName::ContentType, $mimeType->getValue());
 		} elseif ($this->headers !== null) {
-			$headerSet = $this->headers->containsKey(HeaderName::ContentType, DefaultEqualityComparer::equalsIgnoreCase(...));
+			$headerSet = $this->headers->containsKey(HeaderName::ContentType);
 			if ($headerSet && $mimeType === null) {
 				$this->headers->remove(HeaderName::ContentType);
 			} elseif ($mimeType !== null) {

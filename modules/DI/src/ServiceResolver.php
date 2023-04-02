@@ -20,15 +20,6 @@ trait ServiceResolver
 {
 	abstract protected function getServices(): ServiceCollectionContract;
 
-	/**
-	 * @param class-string $className
-	 * @param array $overrideArguments
-	 *
-	 * @return mixed
-	 *
-	 * @throws ClassNotFoundException
-	 * @throws BadMethodCallException
-	 */
 	public function instantiate(string $className, array $overrideArguments = [], ?Closure $onUnresolved = null): object
 	{
 		if (!class_exists($className)) {
@@ -45,6 +36,7 @@ trait ServiceResolver
 
 			$arguments = $this->resolveArguments($constructor, $overrideArguments, $onUnresolved);
 
+			/** @var object */
 			return $reflectionClass->newInstanceArgs($arguments->toList());
 		} catch (ReflectionException $e) {
 			throw new BadMethodCallException("Failed to instantiate class '$className'", previous: $e);
@@ -54,7 +46,6 @@ trait ServiceResolver
 	/**
 	 * @param class-string $className
 	 * @param non-empty-string $method
-	 * @param array $overrideArguments
 	 *
 	 * @return mixed
 	 *
@@ -68,11 +59,7 @@ trait ServiceResolver
 	}
 
 	/**
-	 * @param object $instance
 	 * @param non-empty-string $method
-	 * @param array $overrideArguments
-	 *
-	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -96,9 +83,6 @@ trait ServiceResolver
 	/**
 	 * @param class-string $className
 	 * @param non-empty-string $method
-	 * @param array $overrideArguments
-	 *
-	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
@@ -117,9 +101,6 @@ trait ServiceResolver
 
 	/**
 	 * @param Closure|ReflectionFunction $callback
-	 * @param array $overrideArguments
-	 *
-	 * @return mixed
 	 *
 	 * @throws BadFunctionCallException
 	 */
@@ -132,6 +113,9 @@ trait ServiceResolver
 		return $reflectionFunction->invokeArgs($arguments->toList());
 	}
 
+	/**
+	 * @return ArrayList<mixed>
+	 */
 	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): ArrayList
 	{
 		if (!empty($overrideArguments) && array_is_list($overrideArguments)) {

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Files;
 
+use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Contract\FilesystemNode;
 
 class Link extends AbstractFilesystemNode implements Contract\Link
@@ -33,5 +34,21 @@ class Link extends AbstractFilesystemNode implements Contract\Link
 		}
 
 		return new UnknownFilesystemNode($target);
+	}
+
+	public function delete(): void
+	{
+		if (!$this->exists()) {
+			throw new LinkNotFoundException($this->path());
+		}
+
+		// From the docs: On Windows, to delete a symlink to a directory, rmdir() has to be used instead.
+		if (DIRECTORY_SEPARATOR === '\\' && $this->target() instanceof DirectoryContract) {
+			if (!rmdir($this->path())) {
+				throw new LinkDeleteException($this->path());
+			}
+		} else if (!unlink($this->path())) {
+			throw new LinkDeleteException($this->path());
+		}
 	}
 }

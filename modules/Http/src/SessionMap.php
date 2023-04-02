@@ -71,7 +71,6 @@ class SessionMap implements Contract\SessionMap
 			throw new InvalidArgumentException('SessionMap key must be a string');
 		}
 
-		/** @psalm-suppress MixedReturnStatement */
 		return $_SESSION[$key] ?? null;
 	}
 

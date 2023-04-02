@@ -130,7 +130,7 @@ abstract class AbstractDuration implements DurationContract, Stringable
 	{
 		$end = $start->add($this);
 		$periodSeconds = $this->getTotalSeconds() / $divisions;
-		$period = Duration::from($periodSeconds < 0, seconds: abs($periodSeconds));
+		$period = Duration::from($periodSeconds < 0, seconds: (int)abs($periodSeconds));
 
 		return new PeriodIterator($start, $period, $end);
 	}

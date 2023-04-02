@@ -26,6 +26,7 @@ class CommandInvocationParametersMap extends ArrayMap
 		foreach ($args as $arg) {
 			if (str_starts_with($arg, '--')) {
 				if (str_contains($arg, '=')) {
+					/** @psalm-suppress PossiblyUndefinedArrayOffset already checked the string contains '=' */
 					[$key, $value] = explode('=', $arg, 2);
 
 					$key = trim($key, '-');

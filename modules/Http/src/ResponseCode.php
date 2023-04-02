@@ -150,7 +150,7 @@ enum ResponseCode: int
 	#[Pure]
 	public function isInformational(): bool
 	{
-		return $this->value >= 100 && $this->value < 200;
+		return $this->value < 200;
 	}
 
 	#[Pure]

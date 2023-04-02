@@ -22,7 +22,7 @@ interface Resolver
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
-	 * @return mixed
+	 * @return object
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws BadMethodCallException
@@ -41,8 +41,8 @@ interface Resolver
 
 	/**
 	 * @param object $instance
-	 * @param string $method
-	 * @param array $overrideArguments
+	 * @param non-empty-string $method
+	 * @param argument-list $overrideArguments
 	 * @param Closure|null $onUnresolved
 	 *
 	 * @return mixed

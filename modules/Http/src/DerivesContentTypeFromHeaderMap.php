@@ -21,8 +21,6 @@ trait DerivesContentTypeFromHeaderMap
 		$headerMap = $this->getHeaderMap();
 
 		/**
-		 * @psalm-suppress UnnecessaryVarAnnotation
-		 *
 		 * @var null|Contract\HeaderMap $headerMap
 		 */
 		if ($headerMap === null) {
@@ -31,7 +29,6 @@ trait DerivesContentTypeFromHeaderMap
 
 		/**
 		 * @psalm-suppress ImpureMethodCall
-		 * @psalm-suppress UnusedClosureParam
 		 */
 		$headerName = $headerMap->firstKeyOrDefault(null, static fn (string|array $value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->value));
 		if ($headerName === null) {

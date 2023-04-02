@@ -29,7 +29,7 @@ class Url implements Stringable, UriInterface
 			$matches,
 		);
 		/**
-		 * @var array{scheme: string, user: string, pass: string, host: string, port: string, path: string, query: string, fragment: string} $matches
+		 * @var array{scheme: string, user: string, pass: string, host?: string, host2?: string, port?: string, port2?: string, path: string, query: string, fragment: string} $matches
 		 */
 		if ($matches['scheme'] !== '') {
 			$scheme = $matches['scheme'];
@@ -45,17 +45,17 @@ class Url implements Stringable, UriInterface
 		$password = $matches['pass'] === '' ? null : $matches['pass'];
 		$builder->userInfo($username, $password);
 
-		if ($matches['host'] !== '') {
+		if (isset($matches['host'])) {
 			$builder->host($matches['host']);
-		} elseif ($matches['host2'] !== '') {
+		} elseif (isset($matches['host2'])) {
 			$builder->host($matches['host2']);
 		} else {
 			$builder->host(null);
 		}
 
-		if ($matches['port'] !== '' && ctype_digit($matches['port'])) {
+		if (isset($matches['port']) && ctype_digit($matches['port'])) {
 			$builder->port((int) $matches['port']);
-		} elseif ($matches['port2'] !== '' && ctype_digit($matches['port2'])) {
+		} elseif (isset($matches['port2']) && ctype_digit($matches['port2'])) {
 			$builder->port((int) $matches['port2']);
 		} else {
 			$builder->port(null);
@@ -244,6 +244,7 @@ class Url implements Stringable, UriInterface
 
 	public function withScheme($scheme): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($scheme)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($scheme));
 		}
@@ -260,10 +261,12 @@ class Url implements Stringable, UriInterface
 
 	public function withUserInfo($user, $password = null): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($user)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($user));
 		}
 
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($password) && $password !== null) {
 			throw new InvalidArgumentException("Expected type 'string' or 'null', got " . get_debug_type($password));
 		}
@@ -278,6 +281,7 @@ class Url implements Stringable, UriInterface
 
 	public function withHost($host): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($host)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($host));
 		}
@@ -292,6 +296,7 @@ class Url implements Stringable, UriInterface
 
 	public function withPort($port): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_int($port) && $port !== null) {
 			throw new InvalidArgumentException("Expected type 'int' or 'null', got " . get_debug_type($port));
 		}
@@ -306,6 +311,7 @@ class Url implements Stringable, UriInterface
 
 	public function withPath($path): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($path)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($path));
 		}
@@ -320,6 +326,7 @@ class Url implements Stringable, UriInterface
 
 	public function withQuery($query): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($query)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($query));
 		}
@@ -336,6 +343,7 @@ class Url implements Stringable, UriInterface
 
 	public function withFragment($fragment): static
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($fragment)) {
 			throw new InvalidArgumentException("Expected type 'string', got " . get_debug_type($fragment));
 		}

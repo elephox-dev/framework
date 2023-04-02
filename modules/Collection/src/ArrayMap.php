@@ -85,6 +85,13 @@ class ArrayMap implements GenericMap, ArrayAccess
 		return !$existed;
 	}
 
+	/**
+	 * @param TKey $key
+	 *
+	 * @return TValue
+	 *
+	 * @throws OffsetNotFoundException
+	 */
 	public function get(mixed $key): mixed
 	{
 		$validKey = $this->validateKey($key);

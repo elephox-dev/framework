@@ -16,7 +16,6 @@ class OptionList extends ArrayMap
 		$options = new self();
 
 		foreach ($template->optionTemplates as $optionTemplate) {
-			/** @psalm-suppress UnusedClosureParam */
 			$matchedPair = $argumentsMap->firstPairOrDefault(null, static fn (mixed $value, string|int $key) => $key === $optionTemplate->name || $key === $optionTemplate->short);
 			if ($matchedPair === null) {
 				if (!$optionTemplate->hasValue) {

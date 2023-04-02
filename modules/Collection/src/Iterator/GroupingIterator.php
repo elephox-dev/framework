@@ -56,7 +56,6 @@ class GroupingIterator implements Iterator
 		$groupKey = $this->groupKeys[$idx];
 		$pairs = $this->groupPairs[$idx];
 
-		/** @psalm-suppress UnusedClosureParam */
 		$iterator = new SelectIterator(
 			new KeySelectIterator(
 				new ArrayIterator($pairs),

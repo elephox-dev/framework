@@ -33,6 +33,13 @@ interface HeaderMap extends GenericMap
 	/**
 	 * @param string|HeaderName $key
 	 *
+	 * @return bool
+	 */
+	public function containsKey(mixed $key, ?callable $comparer = null): bool;
+
+	/**
+	 * @param string|HeaderName $key
+	 *
 	 * @return list<string>
 	 *
 	 * @throws OffsetNotFoundException

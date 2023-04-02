@@ -131,7 +131,6 @@ class ServeCommand implements CommandHandler
 			$environment->asEnumerable()->toArray(),
 		);
 
-		/** @psalm-suppress UnusedClosureParam */
 		$process->start(function (string $type, string $buffer) use ($verbose): void {
 			$buffer = trim($buffer);
 			foreach (explode("\n", $buffer) as $line) {

@@ -50,8 +50,6 @@ class IteratorProvider implements IteratorAggregate
 	}
 
 	/**
-	 * @psalm-suppress ImplementedReturnTypeMismatch Psalm seems to have problems with analyzing traits and abstract classes together...
-	 *
 	 * @return Traversable<TIteratorKey, TSource>
 	 */
 	public function getIterator(): Traversable

@@ -175,6 +175,11 @@ class ArrayList implements GenericList
 		return $this->items[$index];
 	}
 
+	/**
+	 * @return T
+	 *
+	 * @param int $index
+	 */
 	public function removeAt(int $index): mixed
 	{
 		if ($index < 0 || $index >= $this->count()) {

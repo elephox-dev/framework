@@ -226,9 +226,6 @@ class ParameterMap implements Contract\ParameterMap
 	{
 		assert(is_string($offset), 'Parameter map keys must be strings.');
 
-		/**
-		 * @psalm-suppress MixedReturnStatement
-		 */
 		return $this->get($offset);
 	}
 

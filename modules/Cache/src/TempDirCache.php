@@ -58,6 +58,7 @@ class TempDirCache extends AbstractCache
 	public function getItem(string $key): CacheItemInterface
 	{
 		if ($this->hasItem($key)) {
+			/** @var CacheItemInterface */
 			return $this->floatingItems->get($key);
 		}
 

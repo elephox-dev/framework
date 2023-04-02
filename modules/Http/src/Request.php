@@ -76,7 +76,13 @@ class Request extends AbstractMessage implements Contract\Request
 			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($method));
 		}
 
+		if ($method === '') {
+			throw new InvalidArgumentException("Expected non-empty-string, but got an empty string instead.");
+		}
+
+		$requestMethod = null;
 		if (Casing::toUpper($method) === $method) {
+			/** @var \Elephox\Http\Contract\RequestMethod $requestMethod */
 			$requestMethod = RequestMethod::tryFrom(Casing::toUpper($method));
 		}
 

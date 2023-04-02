@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
+use JetBrains\PhpStorm\Pure;
+
 class CustomRequestMethod implements Contract\RequestMethod
 {
 	/**
@@ -17,11 +19,13 @@ class CustomRequestMethod implements Contract\RequestMethod
 	/**
 	 * @return non-empty-string
 	 */
+	#[Pure]
 	public function getValue(): string
 	{
 		return $this->value;
 	}
 
+	#[Pure]
 	public function canHaveBody(): bool
 	{
 		return $this->canHaveBody;

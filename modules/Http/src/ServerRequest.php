@@ -260,7 +260,6 @@ class ServerRequest extends Request implements Contract\ServerRequest
 			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
 		}
 
-		/** @psalm-suppress DocblockTypeContradiction */
 		if (!is_string($value) && !is_int($value) && !is_array($value)) {
 			throw new InvalidArgumentException("Expected type 'string', 'int' or 'array', but got " . get_debug_type($value));
 		}

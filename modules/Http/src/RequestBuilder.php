@@ -6,6 +6,7 @@ namespace Elephox\Http;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @psalm-consistent-constructor
@@ -16,7 +17,7 @@ class RequestBuilder extends AbstractMessageBuilder implements Contract\RequestB
 	public function __construct(
 		?string $protocolVersion = null,
 		?Contract\HeaderMap $headers = null,
-		?Stream $body = null,
+		?StreamInterface $body = null,
 		protected ?Contract\RequestMethod $method = null,
 		protected ?Url $url = null,
 	) {

@@ -9,6 +9,7 @@ use Elephox\DI\Contract\Resolver;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
+use InvalidArgumentException;
 
 class RequestPipelineBuilder
 {
@@ -32,6 +33,9 @@ class RequestPipelineBuilder
 	{
 		if (is_string($middleware)) {
 			$concreteMiddleware = $this->resolver->instantiate($middleware);
+			if (!($concreteMiddleware instanceof WebMiddleware)) {
+				throw new InvalidArgumentException("Given middleware '$middleware' does not implement " . WebMiddleware::class);
+			}
 		} else {
 			$concreteMiddleware = $middleware;
 		}

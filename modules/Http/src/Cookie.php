@@ -214,7 +214,6 @@ class Cookie implements Contract\Cookie
 		#[ExpectedValues(['name', 'value', 'expires', 'path', 'domain', 'secure', 'httpOnly', 'sameSite', 'maxAge'])]
 		mixed $offset,
 	): int|string|bool|null|DateTime|CookieSameSite {
-		/** @psalm-suppress InvalidReturnStatement */
 		return match ($offset) {
 			'name' => $this->name,
 			'value' => $this->value,

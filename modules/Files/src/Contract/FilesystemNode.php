@@ -22,4 +22,6 @@ interface FilesystemNode extends Stringable
 	public function parent(int $levels = 1): Directory;
 
 	public function exists(): bool;
+
+	public function delete(): void;
 }

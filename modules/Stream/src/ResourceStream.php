@@ -72,9 +72,9 @@ class ResourceStream implements Stream
 	}
 
 	/**
-	 * @param resource $resource
+	 * @param int<0, max>|null $size
 	 */
-	public static function wrap($resource, ?bool $readable = null, ?bool $writable = null, ?bool $seekable = null, ?int $size = null): self
+	public static function wrap(mixed $resource, ?bool $readable = null, ?bool $writable = null, ?bool $seekable = null, ?int $size = null): self
 	{
 		if (!is_resource($resource)) {
 			throw new InvalidArgumentException('Resource expected, got ' . get_debug_type($resource));

@@ -21,6 +21,7 @@ use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Contract\RouteHandler as RouteHandlerContract;
 use Elephox\Web\Routing\Contract\Router;
+use InvalidArgumentException;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
@@ -151,19 +152,21 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	{
 		try {
 			$classReflection = new ReflectionClass($className);
-			$classMiddleware = self::getMiddlewares($classReflection)->toList();
+
+			/** @var object $classInstance */
 			$classInstance = $this->services->getService($className) ?? $this->services->resolver()->instantiate($className);
+
+			$classMiddleware = self::getMiddlewares($classReflection)->toList();
 			$classControllers = self::getControllers($classReflection)->toList();
 
-			if ($classReflection->hasMethod('__invoke')) {
-				$methodReflection = $classReflection->getMethod('__invoke');
-				$returnType = $methodReflection->getReturnType();
+			if (is_callable($classInstance)) {
+				$returnType = $classReflection->getMethod('__invoke')->getReturnType();
 				if (!$returnType instanceof ReflectionNamedType || $returnType->getName() !== ResponseBuilder::class) {
 					throw new InvalidRequestController($className);
 				}
 
+				$callback = $classInstance(...);
 				foreach ($classControllers as $controllerAttribute) {
-					$callback = Closure::fromCallable($classInstance);
 					$routeHandler = new RouteHandler($controllerAttribute, null, $className, '__invoke', $classMiddleware, $callback);
 					$this->add($routeHandler);
 				}
@@ -181,7 +184,8 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 
 				$methodMiddleware = [...$classMiddleware, ...self::getMiddlewares($methodReflection)->toList()];
 				foreach (self::getRoutes($methodReflection) as $routeAttribute) {
-					$callback = $methodReflection->getClosure($classInstance) ?? throw new InvalidRequestHandler($className, $methodReflection->getName());
+					$callback = $methodReflection->getClosure($classInstance);
+
 					if (empty($classControllers)) {
 						$routeHandler = new RouteHandler($routeAttribute, null, $className, $methodReflection->getName(), $methodMiddleware, $callback);
 						$this->add($routeHandler);

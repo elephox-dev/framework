@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
+use Elephox\Collection\OffsetNotAllowedException;
 use Elephox\Collection\OffsetNotFoundException;
 use Elephox\OOR\Casing;
 
@@ -49,13 +50,17 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		return parent::containsKey($validKey, $comparer ?? self::compareHeaderNames(...));
 	}
 
-	protected function validateKey(mixed $key): string|int
+	protected function validateKey(mixed $key): string
 	{
 		if ($key instanceof HeaderName) {
 			return $key->value;
 		}
 
-		return parent::validateKey($key);
+		if (is_string($key)) {
+			return $key;
+		}
+
+		throw new OffsetNotAllowedException($key);
 	}
 
 	public function get(mixed $key): array

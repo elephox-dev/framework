@@ -110,7 +110,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 				$this->descriptorCache[$descriptor->serviceType],
 				$this->factoryCache[$descriptor->serviceType],
 				$this->descriptorCache[$descriptor->implementationType],
-				$this->factoryCache[$descriptor->implementationType],
 			);
 
 			/** @var ServiceDescriptor<TService, object> $oldDescriptor */
@@ -167,15 +166,27 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	public function describe(string $service, string $concrete, ServiceLifetime $lifetime, ?Closure $factory = null, ?object $implementation = null, bool $replace = false): Contract\ServiceCollection
 	{
 		/** @psalm-suppress DocblockTypeContradiction */
-		if (empty($service) || empty($concrete)) {
+		if ($service === '' || $concrete === '') {
 			throw new InvalidArgumentException('Service name and implementation name must not be empty.');
 		}
 
-		if (empty($implementation) && empty($factory)) {
-			$factory = fn (): object => $this->resolver()->instantiate($concrete);
+		/**
+		 * @var class-string $service
+		 * @var class-string $concrete
+		 */
+
+		if ($implementation === null && $factory === null) {
+			$factory = function () use ($concrete): object {
+				/**
+				 * @var object
+				 */
+				return $this->resolver()->instantiate($concrete);
+			};
 		}
 
-		return $this->add(new ServiceDescriptor($service, $concrete, $lifetime, $factory, $implementation), $replace);
+		$descriptor = new ServiceDescriptor($service, $concrete, $lifetime, $factory, $implementation);
+
+		return $this->add($descriptor, $replace);
 	}
 
 	public function addTransient(string $service, string $concrete, ?Closure $factory = null, ?object $instance = null, bool $replace = false): Contract\ServiceCollection
@@ -352,11 +363,12 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 *
 	 * @param ServiceDescriptor<TService, TService> $descriptor
 	 *
-	 * @return callable(mixed): TService
+	 * @return Closure(mixed): TService
 	 */
 	private function getImplementationFactory(ServiceDescriptor $descriptor): callable
 	{
-		if (array_key_exists($descriptor->implementationType, $this->factoryCache)) {
+		if (array_key_exists($descriptor->serviceType, $this->factoryCache)) {
+			/** @var Closure(mixed): TService */
 			return $this->factoryCache[$descriptor->serviceType];
 		}
 
@@ -580,7 +592,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			unset(
 				$this->descriptorCache[$d->serviceType],
 				$this->descriptorCache[$d->implementationType],
-				$this->factoryCache[$d->implementationType],
+				$this->factoryCache[$d->serviceType],
 			);
 
 			$data = new ServiceDescriptorHookData($d);

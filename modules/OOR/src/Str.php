@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\OOR;
 
+use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
@@ -61,6 +62,8 @@ class Str implements Stringable
 	/**
 	 * @see https://github.com/laravel/framework/blob/9.x/src/Illuminate/Support/Str.php#L361
 	 *
+	 * @param string|Stringable|iterable<string|Stringable> $patterns
+	 *
 	 * @return bool
 	 */
 	public static function is(string|Stringable|iterable $patterns, null|int|float|bool|string|Stringable $value): bool
@@ -111,7 +114,12 @@ class Str implements Stringable
 	#[Pure]
 	public function explode(string|Stringable $separator, int $limit = PHP_INT_MAX): Arr
 	{
-		return Arr::wrap(explode((string) $separator, $this->source, $limit));
+		$separatorStr = (string) $separator;
+		if (empty($separatorStr)) {
+			return Arr::wrap(str_split($this->source));
+		}
+
+		return Arr::wrap(explode($separatorStr, $this->source, $limit));
 	}
 
 	public function sprintf(float|int|string|Stringable|self ...$values): self

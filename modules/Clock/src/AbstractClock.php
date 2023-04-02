@@ -44,13 +44,13 @@ abstract class AbstractClock implements Clock
 	}
 
 	#[Pure]
-	public function add(DurationContract $duration): Clock
+	public function add(DurationContract $duration): LazyClock
 	{
 		return new LazyClock(fn (): DateTimeImmutable => $this->now()->add($duration->toDateInterval()));
 	}
 
 	#[Pure]
-	public function sub(DurationContract $duration): Clock
+	public function sub(DurationContract $duration): LazyClock
 	{
 		return new LazyClock(fn (): DateTimeImmutable => $this->now()->sub($duration->toDateInterval()));
 	}

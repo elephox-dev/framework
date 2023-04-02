@@ -118,7 +118,6 @@ class Arr implements ArrayAccess, IteratorAggregate
 	#[Pure]
 	public function offsetGet(mixed $offset): mixed
 	{
-		/** @psalm-suppress MixedReturnStatement */
 		return $this->source[$offset];
 	}
 
