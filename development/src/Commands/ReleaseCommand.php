@@ -278,7 +278,7 @@ class ReleaseCommand implements CommandHandler
 
 			$this->logger->info('Committing changes to composer.json files');
 
-			if ($this->executeRequireSuccess(
+			if (!$this->executeRequireSuccess(
 				'Failed to add changed files to commit',
 				'git add **/composer.json',
 			)) {
