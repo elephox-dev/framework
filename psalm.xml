@@ -9,6 +9,8 @@
         ignoreInternalFunctionFalseReturn="false"
         ignoreInternalFunctionNullReturn="false"
         findUnusedPsalmSuppress="true"
+        findUnusedBaselineEntry="true"
+        findUnusedCode="false"
         sealAllMethods="true"
 
         errorBaseline="development/psalm.baseline.xml"
