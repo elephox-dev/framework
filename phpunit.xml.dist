@@ -26,6 +26,10 @@
         <testsuite name="full">
             <directory>modules/*/test</directory>
         </testsuite>
+        <testsuite name="memory-leak">
+            <directory>modules/*/test</directory>
+            <exclude>modules/Http/test/PSR7</exclude>
+        </testsuite>
         <testsuite name="without-files">
             <directory>modules/*/test</directory>
             <exclude>modules/Files/test</exclude>

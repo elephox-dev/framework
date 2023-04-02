@@ -157,7 +157,7 @@
         ],
         "ci:memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
+            "roave-no-leaks --configuration=phpunit.xml.dist --testsuite=memory-leak --no-interaction"
         ],
         "ci:mutation-test": [
             "Composer\\Config::disableProcessTimeout",
@@ -211,7 +211,7 @@
         ],
         "memory-leak-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "roave-no-leaks --configuration=phpunit.xml.dist --no-interaction"
+            "roave-no-leaks --configuration=phpunit.xml.dist --testsuite=memory-leak --no-interaction"
         ],
         "mutation-test": [
             "Composer\\Config::disableProcessTimeout",
