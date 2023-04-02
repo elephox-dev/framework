@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\OOR;
 
-use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 

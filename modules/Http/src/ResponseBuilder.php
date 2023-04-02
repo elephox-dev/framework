@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Files\Contract\File as FileContract;
 use Elephox\Files\File;
 use Elephox\Mimey\MimeType;

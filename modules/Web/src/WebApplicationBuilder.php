@@ -161,6 +161,7 @@ class WebApplicationBuilder
 	 * @param class-string<T>|string $name
 	 *
 	 * @psalm-suppress InvalidReturnType psalm is unable to verify T as the return type
+	 *
 	 * @return T
 	 */
 	public function service(string $name): object

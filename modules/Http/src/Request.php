@@ -77,7 +77,7 @@ class Request extends AbstractMessage implements Contract\Request
 		}
 
 		if ($method === '') {
-			throw new InvalidArgumentException("Expected non-empty-string, but got an empty string instead.");
+			throw new InvalidArgumentException('Expected non-empty-string, but got an empty string instead.');
 		}
 
 		$requestMethod = null;

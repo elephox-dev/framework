@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing;
 
-use Closure;
 use Elephox\Autoloading\Composer\NamespaceLoader;
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
@@ -21,7 +20,6 @@ use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Contract\RouteHandler as RouteHandlerContract;
 use Elephox\Web\Routing\Contract\Router;
-use InvalidArgumentException;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;

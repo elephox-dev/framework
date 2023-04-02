@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Stream\Contract\Stream;
 use Elephox\Stream\EmptyStream;
 use JetBrains\PhpStorm\Pure;
 use Psr\Http\Message\StreamInterface;

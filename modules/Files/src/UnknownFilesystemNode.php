@@ -10,15 +10,18 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 		return file_exists($this->path()) || is_dir($this->path());
 	}
 
-	public function isDirectory(): bool {
+	public function isDirectory(): bool
+	{
 		return is_dir($this->path());
 	}
 
-	public function isFile(): bool {
+	public function isFile(): bool
+	{
 		return is_file($this->path());
 	}
 
-	public function isLink(): bool {
+	public function isLink(): bool
+	{
 		return is_link($this->path());
 	}
 
@@ -49,15 +52,16 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 		return new Link($this->path());
 	}
 
-	public function delete(): void {
+	public function delete(): void
+	{
 		if ($this->isDirectory()) {
 			$this->asDirectory()->delete();
-		} else if ($this->isFile()) {
+		} elseif ($this->isFile()) {
 			$this->asFile()->delete();
-		} else if ($this->isLink()) {
+		} elseif ($this->isLink()) {
 			$this->asLink()->delete();
 		} else {
-			throw new FilesystemNodeNotImplementedException($this, "Unable to delete unknown filesystem node.");
+			throw new FilesystemNodeNotImplementedException($this, 'Unable to delete unknown filesystem node.');
 		}
 	}
 }

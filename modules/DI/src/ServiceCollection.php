@@ -174,7 +174,6 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		 * @var class-string $service
 		 * @var class-string $concrete
 		 */
-
 		if ($implementation === null && $factory === null) {
 			$factory = function () use ($concrete): object {
 				/**

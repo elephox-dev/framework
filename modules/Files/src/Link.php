@@ -47,7 +47,7 @@ class Link extends AbstractFilesystemNode implements Contract\Link
 			if (!rmdir($this->path())) {
 				throw new LinkDeleteException($this->path());
 			}
-		} else if (!unlink($this->path())) {
+		} elseif (!unlink($this->path())) {
 			throw new LinkDeleteException($this->path());
 		}
 	}

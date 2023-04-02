@@ -5,10 +5,8 @@ namespace Elephox\Files\Contract;
 
 use Elephox\Files\FileAlreadyExistsException;
 use Elephox\Files\FileCopyException;
-use Elephox\Files\FileDeleteException;
 use Elephox\Files\FileMoveException;
 use Elephox\Files\FileNotCreatedException;
-use Elephox\Files\FileNotFoundException;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
 use Elephox\Mimey\MimeTypeInterface;
