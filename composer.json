@@ -187,7 +187,7 @@
         ],
         "ci:unit-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist --testsuite=full --no-interaction --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
+            "paratest --configuration=phpunit.xml.dist --testsuite=full --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml --coverage-clover=build/coverage/clover.xml --coverage-html=build/coverage/html"
         ],
         "fix-cs": [
             "@putenv XDEBUG_MODE=off",
@@ -224,7 +224,7 @@
         ],
         "unit-test": [
             "@putenv XDEBUG_MODE=coverage",
-            "phpunit --configuration=phpunit.xml.dist --testsuite=full"
+            "paratest --configuration=phpunit.xml.dist --testsuite=full"
         ],
         "update-benchmark-baseline": [
             "@putenv XDEBUG_MODE=off",
