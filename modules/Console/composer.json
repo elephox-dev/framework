@@ -17,12 +17,12 @@
         "php": "^8.1 <8.3",
         "ext-ctype": "*",
         "ext-mbstring": "*",
-        "elephox/autoloading": "dev-develop",
-        "elephox/collection": "dev-develop",
-        "elephox/configuration": "dev-develop",
-        "elephox/di": "dev-develop",
-        "elephox/logging": "dev-develop",
-        "elephox/support": "dev-develop",
+        "elephox/autoloading": "^0.9",
+        "elephox/collection": "^0.9",
+        "elephox/configuration": "^0.9",
+        "elephox/di": "^0.9",
+        "elephox/logging": "^0.9",
+        "elephox/support": "^0.9",
         "jetbrains/phpstorm-attributes": "^1.0"
     },
     "autoload": {
