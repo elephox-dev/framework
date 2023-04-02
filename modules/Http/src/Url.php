@@ -45,9 +45,9 @@ class Url implements Stringable, UriInterface
 		$password = $matches['pass'] === '' ? null : $matches['pass'];
 		$builder->userInfo($username, $password);
 
-		if (isset($matches['host'])) {
+		if (isset($matches['host']) && $matches['host'] !== '') {
 			$builder->host($matches['host']);
-		} elseif (isset($matches['host2'])) {
+		} elseif (isset($matches['host2']) && $matches['host2'] !== '') {
 			$builder->host($matches['host2']);
 		} else {
 			$builder->host(null);
