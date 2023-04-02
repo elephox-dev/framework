@@ -24,7 +24,7 @@ class ResponseTest extends TestCase
 {
 	public function testWith(): void
 	{
-		$response = new Response('2.0', new HeaderMap(), new StringStream('body'), ResponseCode::OK, null, null);
+		$response = new Response('2.0', new HeaderMap(), new StringStream('body'), ResponseCode::OK, null);
 		$builder = $response->with();
 
 		static::assertInstanceOf(ResponseBuilder::class, $builder);
