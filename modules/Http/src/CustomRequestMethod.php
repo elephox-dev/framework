@@ -5,14 +5,14 @@ namespace Elephox\Http;
 
 use JetBrains\PhpStorm\Pure;
 
-class CustomRequestMethod implements Contract\RequestMethod
+readonly class CustomRequestMethod implements Contract\RequestMethod
 {
 	/**
 	 * @param non-empty-string $value
 	 */
 	public function __construct(
-		private readonly string $value,
-		private readonly bool $canHaveBody = true,
+		private string $value,
+		private bool $canHaveBody = true,
 	) {
 	}
 

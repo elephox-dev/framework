@@ -7,13 +7,13 @@ use Elephox\Configuration\Contract\ConfigurationProvider;
 use Elephox\Configuration\Contract\ConfigurationSource;
 use JetBrains\PhpStorm\Pure;
 
-class MemoryConfigurationSource implements ConfigurationSource
+readonly class MemoryConfigurationSource implements ConfigurationSource
 {
 	/**
 	 * @param array<string, mixed> $data
 	 */
 	public function __construct(
-		public readonly array $data,
+		public array $data,
 	) {
 	}
 

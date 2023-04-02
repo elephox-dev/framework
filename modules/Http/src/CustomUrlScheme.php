@@ -7,12 +7,12 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-class CustomUrlScheme implements Contract\UrlScheme
+readonly class CustomUrlScheme implements Contract\UrlScheme
 {
 	#[Pure]
 	public function __construct(
-		private readonly string $scheme,
-		private readonly ?int $defaultPort = null,
+		private string $scheme,
+		private ?int $defaultPort = null,
 	) {
 	}
 

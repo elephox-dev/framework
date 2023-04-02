@@ -11,10 +11,10 @@ use Elephox\Http\ResponseCode;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Contract\WebMiddleware;
 
-class StaticContentHandler implements WebMiddleware
+readonly class StaticContentHandler implements WebMiddleware
 {
 	public function __construct(
-		protected readonly WebEnvironment $environment,
+		protected WebEnvironment $environment,
 	) {
 	}
 

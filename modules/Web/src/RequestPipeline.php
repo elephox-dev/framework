@@ -12,15 +12,15 @@ use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
 use Throwable;
 
-class RequestPipeline
+readonly class RequestPipeline
 {
 	/**
 	 * @param RequestPipelineEndpoint $endpoint
 	 * @param ArrayList<WebMiddleware> $middlewares
 	 */
 	public function __construct(
-		private readonly RequestPipelineEndpoint $endpoint,
-		private readonly ArrayList $middlewares,
+		private RequestPipelineEndpoint $endpoint,
+		private ArrayList $middlewares,
 	) {
 	}
 

@@ -16,11 +16,11 @@ use Elephox\Logging\SingleSinkLogger;
 use Elephox\Logging\StandardSink;
 use Psr\Log\LoggerInterface;
 
-class LoggerCommand implements CommandHandler
+readonly class LoggerCommand implements CommandHandler
 {
 	public function __construct(
-		private readonly LoggerInterface $logger,
-		private readonly ServiceCollection $services,
+		private LoggerInterface $logger,
+		private ServiceCollection $services,
 	) {
 	}
 

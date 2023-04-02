@@ -15,14 +15,14 @@ use Traversable;
 /**
  * @implements IteratorAggregate<CommandTemplate, CommandHandler>
  */
-class CommandCollection implements IteratorAggregate
+readonly class CommandCollection implements IteratorAggregate
 {
 	/**
 	 * @var ObjectMap<CommandTemplate, CommandHandler> $templateMap
 	 */
-	private readonly ObjectMap $templateMap;
+	private ObjectMap $templateMap;
 
-	public function __construct(private readonly Resolver $resolver)
+	public function __construct(private Resolver $resolver)
 	{
 		$this->templateMap = new ObjectMap();
 	}

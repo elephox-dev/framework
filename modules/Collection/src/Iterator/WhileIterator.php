@@ -13,15 +13,15 @@ use OuterIterator;
  *
  * @implements OuterIterator<TKey, TValue>
  */
-class WhileIterator implements OuterIterator
+readonly class WhileIterator implements OuterIterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
 	 * @param Closure(TValue, TKey): bool $predicate
 	 */
 	public function __construct(
-		private readonly Iterator $iterator,
-		private readonly Closure $predicate,
+		private Iterator $iterator,
+		private Closure $predicate,
 	) {
 	}
 

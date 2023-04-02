@@ -14,14 +14,14 @@ use Psr\Cache\CacheItemInterface;
  * @psalm-consistent-constructor
  */
 #[Immutable]
-class ImmutableCacheItem implements CacheItemInterface
+readonly class ImmutableCacheItem implements CacheItemInterface
 {
 	#[Pure]
 	public function __construct(
-		private readonly string $key,
-		private readonly mixed $value,
-		private readonly bool $isHit,
-		private readonly ?DateTimeInterface $expiresAt,
+		private string $key,
+		private mixed $value,
+		private bool $isHit,
+		private ?DateTimeInterface $expiresAt,
 	) {
 	}
 

@@ -26,7 +26,7 @@ use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
 
-class RequestRouter implements RequestPipelineEndpoint, Router
+readonly class RequestRouter implements RequestPipelineEndpoint, Router
 {
 	/**
 	 * @return GenericKeyedEnumerable<int, ControllerAttribute>
@@ -70,10 +70,10 @@ class RequestRouter implements RequestPipelineEndpoint, Router
 	/**
 	 * @var ObjectSet<RouteHandlerContract> $handlers
 	 */
-	private readonly ObjectSet $handlers;
+	private ObjectSet $handlers;
 
 	public function __construct(
-		private readonly ServiceCollection $services,
+		private ServiceCollection $services,
 	) {
 		/** @var ObjectSet<RouteHandlerContract> */
 		$this->handlers = new ObjectSet();

@@ -9,15 +9,15 @@ namespace Elephox\Collection;
  *
  * @implements Contract\GenericKeyValuePair<TKey, TValue>
  */
-class KeyValuePair implements Contract\GenericKeyValuePair
+readonly class KeyValuePair implements Contract\GenericKeyValuePair
 {
 	/**
 	 * @param TKey $key
 	 * @param TValue $value
 	 */
 	public function __construct(
-		private readonly mixed $key,
-		private readonly mixed $value,
+		private mixed $key,
+		private mixed $value,
 	) {
 	}
 

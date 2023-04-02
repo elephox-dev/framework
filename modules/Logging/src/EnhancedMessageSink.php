@@ -8,12 +8,12 @@ use Elephox\Logging\Contract\LogLevel as LogLevelContract;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\Contract\SinkProxy;
 
-class EnhancedMessageSink implements Sink, SinkProxy
+readonly class EnhancedMessageSink implements Sink, SinkProxy
 {
-	private readonly bool $useFormatting;
+	private bool $useFormatting;
 
 	public function __construct(
-		private readonly Sink $innerSink,
+		private Sink $innerSink,
 	) {
 		$this->useFormatting = $this->getInnerSink()->hasCapability(SinkCapability::ElephoxFormatting);
 	}

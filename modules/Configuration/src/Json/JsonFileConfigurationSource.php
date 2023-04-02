@@ -10,11 +10,11 @@ use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 
-class JsonFileConfigurationSource implements JsonDataConfigurationSource
+readonly class JsonFileConfigurationSource implements JsonDataConfigurationSource
 {
 	public function __construct(
-		public readonly File $jsonFile,
-		public readonly bool $optional = false,
+		public File $jsonFile,
+		public bool $optional = false,
 	) {
 	}
 

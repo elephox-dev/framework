@@ -8,13 +8,13 @@ use Elephox\DI\ServiceDescriptor;
 /**
  * @template TService of object
  */
-class ServiceDescriptorHookData
+readonly class ServiceDescriptorHookData
 {
 	/**
 	 * @param ServiceDescriptor<TService, object> $serviceDescriptor
 	 */
 	public function __construct(
-		public readonly ServiceDescriptor $serviceDescriptor,
+		public ServiceDescriptor $serviceDescriptor,
 	) {
 	}
 }

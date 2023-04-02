@@ -8,12 +8,12 @@ use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
 
 #[Immutable]
-class Subscription implements Contract\Subscription
+readonly class Subscription implements Contract\Subscription
 {
 	/**
 	 * @var non-empty-string $id
 	 */
-	private readonly string $id;
+	private string $id;
 
 	/**
 	 * @param non-empty-string $eventName
@@ -21,9 +21,9 @@ class Subscription implements Contract\Subscription
 	 * @param int $priority
 	 */
 	public function __construct(
-		private readonly string $eventName,
-		private readonly Closure $callback,
-		private readonly int $priority = 0,
+		private string $eventName,
+		private Closure $callback,
+		private int $priority = 0,
 	) {
 		/** @var non-empty-string */
 		$this->id = spl_object_hash($this);

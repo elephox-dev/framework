@@ -12,10 +12,10 @@ use SplObjectStorage;
  *
  * @implements Iterator<TKey, TValue>
  */
-class SplObjectStorageIterator implements Iterator
+readonly class SplObjectStorageIterator implements Iterator
 {
 	public function __construct(
-		private readonly SplObjectStorage $storage,
+		private SplObjectStorage $storage,
 	) {
 	}
 

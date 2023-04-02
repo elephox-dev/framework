@@ -17,11 +17,11 @@ use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class ServeCommand implements CommandHandler
+readonly class ServeCommand implements CommandHandler
 {
 	public function __construct(
-		private readonly LoggerInterface $logger,
-		private readonly Environment $environment,
+		private LoggerInterface $logger,
+		private Environment $environment,
 	) {
 	}
 

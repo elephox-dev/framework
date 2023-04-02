@@ -13,15 +13,15 @@ use Iterator;
  *
  * @implements Iterator<TKey, TResult>
  */
-class SelectIterator implements Iterator
+readonly class SelectIterator implements Iterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator
 	 * @param Closure(TValue, TKey): TResult $elementSelector
 	 */
 	public function __construct(
-		private readonly Iterator $iterator,
-		private readonly Closure $elementSelector,
+		private Iterator $iterator,
+		private Closure $elementSelector,
 	) {
 	}
 

@@ -8,17 +8,17 @@ use Elephox\Collection\ArraySet;
 use Elephox\Collection\Contract\GenericEnumerable;
 use JetBrains\PhpStorm\Pure;
 
-class EventBus implements Contract\EventBus
+readonly class EventBus implements Contract\EventBus
 {
 	/**
 	 * @var ArrayMap<non-empty-string, ArraySet<Contract\Subscription>> $eventSubscriptionsMapping
 	 */
-	private readonly ArrayMap $eventSubscriptionsMapping;
+	private ArrayMap $eventSubscriptionsMapping;
 
 	/**
 	 * @var ArrayMap<non-empty-string, Contract\Subscription> $subscriptionSubscriberMapping
 	 */
-	private readonly ArrayMap $subscriptionSubscriberMapping;
+	private ArrayMap $subscriptionSubscriberMapping;
 
 	#[Pure]
 	public function __construct()

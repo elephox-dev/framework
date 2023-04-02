@@ -8,7 +8,7 @@ use Elephox\DI\ServiceDescriptor;
 /**
  * @template TService of object
  */
-class ServiceResolvedHookData
+readonly class ServiceResolvedHookData
 {
 	/**
 	 * @param class-string<TService> $serviceName
@@ -16,9 +16,9 @@ class ServiceResolvedHookData
 	 * @param TService $service
 	 */
 	public function __construct(
-		public readonly string $serviceName,
-		public readonly ServiceDescriptor $serviceDescriptor,
-		public readonly object $service,
+		public string $serviceName,
+		public ServiceDescriptor $serviceDescriptor,
+		public object $service,
 	) {
 	}
 }

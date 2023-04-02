@@ -8,7 +8,7 @@ use Elephox\Files\File;
 use Elephox\Stream\Contract\Stream;
 use Elephox\Mimey\MimeTypeInterface;
 
-class UploadedFile implements Contract\UploadedFile
+readonly class UploadedFile implements Contract\UploadedFile
 {
 	/**
 	 * @param string $clientName
@@ -19,12 +19,12 @@ class UploadedFile implements Contract\UploadedFile
 	 * @param UploadError $error
 	 */
 	public function __construct(
-		private readonly string $clientName,
-		private readonly string $clientPath,
-		private readonly FileContract $tmpFile,
-		private readonly ?MimeTypeInterface $clientMimeType = null,
-		private readonly ?int $size = null,
-		private readonly UploadError $error = UploadError::Ok,
+		private string $clientName,
+		private string $clientPath,
+		private FileContract $tmpFile,
+		private ?MimeTypeInterface $clientMimeType = null,
+		private ?int $size = null,
+		private UploadError $error = UploadError::Ok,
 	) {
 	}
 

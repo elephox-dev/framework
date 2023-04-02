@@ -5,7 +5,7 @@ namespace Elephox\Console\Command;
 
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 
-class CommandTemplate
+readonly class CommandTemplate
 {
 	/**
 	 * @param string $name
@@ -14,10 +14,10 @@ class CommandTemplate
 	 * @param GenericKeyedEnumerable<int, OptionTemplate> $optionTemplates
 	 */
 	public function __construct(
-		public readonly string $name,
-		public readonly string $description,
-		public readonly GenericKeyedEnumerable $argumentTemplates,
-		public readonly GenericKeyedEnumerable $optionTemplates,
+		public string $name,
+		public string $description,
+		public GenericKeyedEnumerable $argumentTemplates,
+		public GenericKeyedEnumerable $optionTemplates,
 	) {
 	}
 }

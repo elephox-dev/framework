@@ -8,10 +8,10 @@ use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
 use Elephox\Web\Contract\WebMiddleware;
 
-class ServerTimingHeaderMiddleware implements WebMiddleware
+readonly class ServerTimingHeaderMiddleware implements WebMiddleware
 {
 	public function __construct(
-		private readonly string $name,
+		private string $name,
 	) {
 	}
 

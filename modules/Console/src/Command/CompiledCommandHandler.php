@@ -5,12 +5,12 @@ namespace Elephox\Console\Command;
 
 use Elephox\Console\Command\Contract\CommandHandler;
 
-class CompiledCommandHandler
+readonly class CompiledCommandHandler
 {
 	public function __construct(
-		public readonly RawCommandInvocation $invocation,
-		public readonly CommandTemplate $template,
-		public readonly CommandHandler $handler,
+		public RawCommandInvocation $invocation,
+		public CommandTemplate $template,
+		public CommandHandler $handler,
 	) {
 	}
 }

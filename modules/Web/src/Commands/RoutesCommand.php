@@ -11,11 +11,11 @@ use Elephox\Web\Routing\Contract\RouteHandler;
 use Elephox\Web\Routing\Contract\Router;
 use Psr\Log\LoggerInterface;
 
-class RoutesCommand implements CommandHandler
+readonly class RoutesCommand implements CommandHandler
 {
 	public function __construct(
-		private readonly LoggerInterface $logger,
-		private readonly Router $router,
+		private LoggerInterface $logger,
+		private Router $router,
 	) {
 	}
 

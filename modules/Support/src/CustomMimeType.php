@@ -12,7 +12,7 @@ use RuntimeException;
 use Throwable;
 
 #[Immutable]
-class CustomMimeType implements MimeTypeInterface
+readonly class CustomMimeType implements MimeTypeInterface
 {
 	/**
 	 * @param non-empty-string $mimeType
@@ -78,8 +78,8 @@ class CustomMimeType implements MimeTypeInterface
 	 */
 	#[Pure]
 	protected function __construct(
-		private readonly string $value,
-		private readonly string $extension = '',
+		private string $value,
+		private string $extension = '',
 	) {
 	}
 

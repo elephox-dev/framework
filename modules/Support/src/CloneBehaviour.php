@@ -6,9 +6,9 @@ namespace Elephox\Support;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class CloneBehaviour
+readonly class CloneBehaviour
 {
-	public function __construct(public readonly CloneAction $action)
+	public function __construct(public CloneAction $action)
 	{
 	}
 }

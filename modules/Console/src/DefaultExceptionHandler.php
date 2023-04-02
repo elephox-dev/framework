@@ -8,10 +8,10 @@ use Elephox\Support\Contract\ExceptionHandler;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class DefaultExceptionHandler implements ExceptionHandler, ErrorHandler
+readonly class DefaultExceptionHandler implements ExceptionHandler, ErrorHandler
 {
 	public function __construct(
-		private readonly LoggerInterface $logger,
+		private LoggerInterface $logger,
 	) {
 	}
 

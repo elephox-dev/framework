@@ -5,7 +5,7 @@ namespace Elephox\Logging;
 
 use Psr\Log\InvalidArgumentException;
 
-class CustomLogLevel implements Contract\LogLevel
+readonly class CustomLogLevel implements Contract\LogLevel
 {
 	public static function fromMixed(mixed $level): Contract\LogLevel
 	{
@@ -43,8 +43,8 @@ class CustomLogLevel implements Contract\LogLevel
 	 * @param int $level
 	 */
 	public function __construct(
-		private readonly string $name,
-		private readonly int $level,
+		private string $name,
+		private int $level,
 	) {
 	}
 

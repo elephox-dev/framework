@@ -6,7 +6,7 @@ namespace Elephox\OOR;
 use JetBrains\PhpStorm\Pure;
 use Stringable;
 
-class Str implements Stringable
+readonly class Str implements Stringable
 {
 	#[Pure]
 	public static function wrap(string|Stringable|self $string): self
@@ -100,7 +100,7 @@ class Str implements Stringable
 
 	#[Pure]
 	public function __construct(
-		private readonly string $source,
+		private string $source,
 	) {
 	}
 

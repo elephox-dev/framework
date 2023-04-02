@@ -15,7 +15,7 @@ use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
 use Elephox\Web\Routing\Attribute\Controller;
 
-class RouteHandler implements Contract\RouteHandler
+readonly class RouteHandler implements Contract\RouteHandler
 {
 	/**
 	 * @param Closure(): ResponseBuilder $callback
@@ -36,7 +36,7 @@ class RouteHandler implements Contract\RouteHandler
 		);
 	}
 
-	private readonly string $pathRegex;
+	private string $pathRegex;
 
 	/**
 	 * @param ControllerAttribute $controllerAttribute
@@ -47,12 +47,12 @@ class RouteHandler implements Contract\RouteHandler
 	 * @param Closure $handler
 	 */
 	public function __construct(
-		private readonly ControllerAttribute $controllerAttribute,
-		private readonly ?RouteAttribute $routeAttribute,
-		private readonly string $attributeClass,
-		private readonly string $attributeMethod,
-		private readonly iterable $middlewares,
-		private readonly Closure $handler,
+		private ControllerAttribute $controllerAttribute,
+		private ?RouteAttribute $routeAttribute,
+		private string $attributeClass,
+		private string $attributeMethod,
+		private iterable $middlewares,
+		private Closure $handler,
 	) {
 		$controllerPath = $this->controllerAttribute->getPath() ?? array_slice(explode('\\', $this->attributeClass), -1, 1)[0];
 		$routePath = $this->routeAttribute?->getPath() ?? $this->attributeMethod;

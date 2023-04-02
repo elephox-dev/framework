@@ -5,7 +5,7 @@ namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayList;
 
-class RawCommandInvocation
+readonly class RawCommandInvocation
 {
 	/**
 	 * @param array<int, string> $commandLineArgs
@@ -40,10 +40,10 @@ class RawCommandInvocation
 	}
 
 	public function __construct(
-		public readonly string $name,
-		public readonly CommandInvocationParametersMap $parameters,
-		public readonly string $invokedBinary,
-		public readonly string $commandLine,
+		public string $name,
+		public CommandInvocationParametersMap $parameters,
+		public string $invokedBinary,
+		public string $commandLine,
 	) {
 	}
 

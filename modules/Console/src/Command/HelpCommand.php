@@ -10,11 +10,11 @@ use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
 use Stringable;
 
-class HelpCommand implements Contract\CommandHandler
+readonly class HelpCommand implements Contract\CommandHandler
 {
 	public function __construct(
-		private readonly CommandCollection $commands,
-		private readonly LoggerInterface $logger,
+		private CommandCollection $commands,
+		private LoggerInterface $logger,
 	) {
 	}
 

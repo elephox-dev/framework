@@ -12,10 +12,10 @@ use OuterIterator;
  *
  * @implements OuterIterator<TValue, TKey>
  */
-class FlipIterator implements OuterIterator
+readonly class FlipIterator implements OuterIterator
 {
 	public function __construct(
-		private readonly Iterator $iterator,
+		private Iterator $iterator,
 	) {
 	}
 
