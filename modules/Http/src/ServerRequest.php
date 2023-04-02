@@ -184,7 +184,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		/** @psalm-suppress ImpureMethodCall */
 		return match ($this->getContentType()?->getValue()) {
 			MimeType::ApplicationJson->value => $this->getBodyAsJson(),
-//			MimeType::ApplicationXml->value => $this->getBodyAsXml(),
+			//			MimeType::ApplicationXml->value => $this->getBodyAsXml(),
 			default => null,
 		};
 	}

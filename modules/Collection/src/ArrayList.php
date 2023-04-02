@@ -21,7 +21,7 @@ class ArrayList implements GenericList
 	 * @use IsKeyedEnumerable<int, T>
 	 */
 	use IsKeyedEnumerable {
-//		IsKeyedEnumerable::contains as genericContains;
+		//		IsKeyedEnumerable::contains as genericContains;
 		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
 	}
 
@@ -30,7 +30,7 @@ class ArrayList implements GenericList
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
-//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**

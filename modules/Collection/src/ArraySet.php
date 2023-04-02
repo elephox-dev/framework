@@ -22,7 +22,7 @@ class ArraySet implements GenericSet
 	 * @use IsEnumerable<T>
 	 */
 	use IsEnumerable {
-//		IsEnumerable::contains as genericContains;
+		//		IsEnumerable::contains as genericContains;
 		IsEnumerable::firstOrDefault as genericFirstOrDefault;
 	}
 
@@ -31,7 +31,7 @@ class ArraySet implements GenericSet
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
-//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
+		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**
