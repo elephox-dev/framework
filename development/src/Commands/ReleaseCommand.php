@@ -75,19 +75,19 @@ class ReleaseCommand implements CommandHandler
 			return null;
 		}
 
-		if ($type === ReleaseType::Preview && !array_key_exists('flag', $versionParts)) {
+		if ($type === ReleaseType::Preview && (!array_key_exists('flag', $versionParts) || $versionParts['flag'] === '')) {
 			$this->logger->error("The <green>preview</green> release type can only be used on preview releases. <yellow>$version</yellow> is missing a flag (e.g. 1.0<yellowBack>-alpha1</yellowBack>).");
 
 			return null;
 		}
 
-		if ($type === ReleaseType::Patch && !array_key_exists('patch', $versionParts)) {
+		if ($type === ReleaseType::Patch && (!array_key_exists('patch', $versionParts) || $versionParts['patch'] === '')) {
 			$this->logger->error("The <green>patch</green> release type can only be used on patch releases. <yellow>$version</yellow> is missing a patch number (e.g. 1.0<yellowBack>.2</yellowBack>).");
 
 			return null;
 		}
 
-		if ($type === ReleaseType::Minor && !array_key_exists('minor', $versionParts)) {
+		if ($type === ReleaseType::Minor && (!array_key_exists('minor', $versionParts) || $versionParts['minor'] === '')) {
 			$this->logger->error("The <green>minor</green> release type can only be used on minor releases. <yellow>$version</yellow> is missing a minor number (e.g. 1.<yellowBack>2</yellowBack>).");
 
 			return null;
@@ -95,8 +95,8 @@ class ReleaseCommand implements CommandHandler
 
 		return new Version(
 			(int) $versionParts['major'],
-			(int) $versionParts['minor'],
-			(int) $versionParts['patch'],
+			(int) ($versionParts['minor'] ?? 0),
+			(int) ($versionParts['patch'] ?? 0),
 			$versionParts['flag'] ?? '',
 		);
 	}
