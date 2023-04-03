@@ -16,8 +16,9 @@ use Elephox\DI\Contract\Resolver;
  */
 class ServiceDescriptor
 {
-
-	/** @var null|Closure(Resolver): TImplementation $implementationFactory */
+	/**
+	 * @var null|Closure(Resolver): TImplementation $implementationFactory
+	 */
 	public readonly ?Closure $implementationFactory;
 
 	/**
@@ -46,7 +47,7 @@ class ServiceDescriptor
 			$this->implementationFactory = null;
 			self::checkInstanceImplementsType($this->instance);
 		} else {
-			$this->implementationFactory = function (Resolver $resolver) use ($factory): object {
+			$this->implementationFactory = static function (Resolver $resolver) use ($factory): object {
 				/** @var TImplementation $instance */
 				$instance = $resolver->callback($factory);
 
@@ -57,7 +58,8 @@ class ServiceDescriptor
 		}
 	}
 
-	private function checkInstanceImplementsType(object $instance): void {
+	private function checkInstanceImplementsType(object $instance): void
+	{
 		if (!($instance instanceof $this->implementationType)) {
 			throw new InvalidServiceDescriptorException(sprintf(
 				'Instance must be of given implementation type (%s). Given instance is of type %s.',
@@ -78,7 +80,7 @@ class ServiceDescriptor
 					));
 				}
 			}
-		} else if (!$instance instanceof $this->serviceType) {
+		} elseif (!$instance instanceof $this->serviceType) {
 			throw new InvalidServiceDescriptorException(sprintf(
 				'Instance must be of given service type (%s). Given instance is of type %s.',
 				$this->serviceType,

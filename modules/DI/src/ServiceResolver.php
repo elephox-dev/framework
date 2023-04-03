@@ -173,22 +173,24 @@ trait ServiceResolver
 		}
 
 		if ($type instanceof ReflectionUnionType) {
-			$extractTypeNames = function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self) {
+			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self) {
 				return collect(...$refType->getTypes())
 					->select(static function (ReflectionType $t) use ($self): array {
 						if ($t instanceof ReflectionUnionType) {
 							return $self($t, $self)->toList();
-						} else if ($t instanceof ReflectionIntersectionType) {
-							return [$self($t, $self)->toList()];
-						} else if ($t instanceof ReflectionNamedType) {
-							return [$t->getName()];
-						} else {
-							throw new ReflectionException("Unsupported ReflectionType: " . get_debug_type($t));
 						}
+						if ($t instanceof ReflectionIntersectionType) {
+							return [$self($t, $self)->toList()];
+						}
+						if ($t instanceof ReflectionNamedType) {
+							return [$t->getName()];
+						}
+
+						throw new ReflectionException('Unsupported ReflectionType: ' . get_debug_type($t));
 					});
 			};
 
-			$typeNames = $extractTypeNames($type, $extractTypeNames)->select(fn (string|array $t) => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
+			$typeNames = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t) => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
 		} else {
 			/** @var ReflectionNamedType $type */
 			$typeNames = [$type->getName()];
@@ -200,7 +202,8 @@ trait ServiceResolver
 				try {
 					if (is_string($typeName)) {
 						return $this->getServices()->requireService($typeName);
-					} else if (is_array($typeName)) {
+					}
+					if (is_array($typeName)) {
 						return $this->getServices()->requireService(implode('&', $typeName));
 					}
 				} catch (ServiceNotFoundException) {
@@ -222,6 +225,6 @@ trait ServiceResolver
 			return $this->callback($onUnresolved, ['parameter' => $parameter, 'index' => $index]);
 		}
 
-		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string)$type, $parameter->name);
+		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
 	}
 }

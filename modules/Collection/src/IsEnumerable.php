@@ -341,10 +341,11 @@ trait IsEnumerable
 	/**
 	 * @return GenericEnumerable<TSource>
 	 */
-	public function flatten(): GenericEnumerable {
-		return new Enumerable(function() {
+	public function flatten(): GenericEnumerable
+	{
+		return new Enumerable(function () {
 			$it = new RecursiveIteratorIterator(new RecursiveArrayIterator($this->getIterator()));
-			foreach($it as $v) {
+			foreach ($it as $v) {
 				yield $v;
 			}
 		});

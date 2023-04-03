@@ -388,7 +388,8 @@ class ServiceCollectionTest extends MockeryTestCase
 		static::assertSame($inst3, $inst6);
 	}
 
-	public function testResolveDNFType(): void {
+	public function testResolveDNFType(): void
+	{
 		$collection = new ServiceCollection();
 
 		$instance1 = new TestServiceClass2();
@@ -396,13 +397,13 @@ class ServiceCollectionTest extends MockeryTestCase
 		$collection->addSingleton(TestServiceInterface::class, instance: $instance1);
 		$collection->addSingleton(TestServiceInterface2::class, instance: $instance1);
 
-		$result = $collection->callStatic(TestServiceClass3::class, "takesDnfType");
+		$result = $collection->callStatic(TestServiceClass3::class, 'takesDnfType');
 
 		static::assertNull($result);
 
-		$collection->addSingleton(TestServiceInterface::class . "&" . TestServiceInterface2::class, instance: $instance1);
+		$collection->addSingleton(TestServiceInterface::class . '&' . TestServiceInterface2::class, instance: $instance1);
 
-		$result2 = $collection->callStatic(TestServiceClass3::class, "takesDnfType");
+		$result2 = $collection->callStatic(TestServiceClass3::class, 'takesDnfType');
 
 		static::assertSame($result2, $instance1);
 	}

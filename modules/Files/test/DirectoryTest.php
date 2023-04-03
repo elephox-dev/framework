@@ -40,18 +40,20 @@ class DirectoryTest extends TestCase
 	private string $nonEmptyDirPath;
 	private const FileContents = 'This is a generated test file. You are free to delete it.';
 
-	function rrmdir(string $dir): void {
+	public function rrmdir(string $dir): void
+	{
 		if (!is_dir($dir)) {
 			return;
 		}
 
-		$objects = scandir($dir) or throw new RuntimeException("Unable to scan dir $dir");
+		$objects = scandir($dir) || throw new RuntimeException("Unable to scan dir $dir");
 		foreach ($objects as $object) {
-			if ($object != "." && $object != "..") {
-				if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
+			if ($object != '.' && $object != '..') {
+				if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . '/' . $object)) {
 					$this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
-				else
-					unlink($dir. DIRECTORY_SEPARATOR .$object);
+				} else {
+					unlink($dir . DIRECTORY_SEPARATOR . $object);
+				}
 			}
 		}
 
@@ -78,11 +80,11 @@ class DirectoryTest extends TestCase
 
 		mkdir($this->nonEmptyDirPath);
 
-		$this->filePath = $this->nonEmptyDirPath . DIRECTORY_SEPARATOR. 'testfile';
+		$this->filePath = $this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfile';
 		$this->fileHandle = fopen($this->filePath, 'wb+');
 
 		mkdir($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder');
-		touch($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder' . DIRECTORY_SEPARATOR. 'testfile2');
+		touch($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder' . DIRECTORY_SEPARATOR . 'testfile2');
 
 		fwrite($this->fileHandle, self::FileContents);
 	}
