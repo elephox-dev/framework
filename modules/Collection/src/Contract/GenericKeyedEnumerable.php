@@ -27,8 +27,8 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @template TAccumulate
 	 *
-	 * @param callable(TAccumulate, TSource, TIteratorKey): TAccumulate $accumulator
-	 * @param TAccumulate $seed
+	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
+	 * @param TAccumulate|null $seed
 	 *
 	 * @return TAccumulate
 	 */
