@@ -46,9 +46,13 @@ class DirectoryTest extends TestCase
 			return;
 		}
 
-		$objects = scandir($dir) || throw new RuntimeException("Unable to scan dir $dir");
+		$objects = scandir($dir);
+		if ($objects === false) {
+			throw new RuntimeException("Unable to scan dir $dir");
+		}
+
 		foreach ($objects as $object) {
-			if ($object != '.' && $object != '..') {
+			if ($object !== '.' && $object !== '..') {
 				if (is_dir($dir . DIRECTORY_SEPARATOR . $object) && !is_link($dir . '/' . $object)) {
 					$this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
 				} else {
