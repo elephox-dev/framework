@@ -27,7 +27,7 @@ class ServiceDescriptorTest extends TestCase
 	public function testEitherFactoryOrInstanceMustBeSet(): void
 	{
 		$this->expectException(InvalidServiceDescriptorException::class);
-		$this->expectExceptionMessage('Either implementationFactory or instance must be set.');
+		$this->expectExceptionMessage('Either factory or instance must be set.');
 
 		new ServiceDescriptor(
 			TestServiceClass::class,
@@ -41,7 +41,7 @@ class ServiceDescriptorTest extends TestCase
 	public function testTransientServiceRequiresFactory(): void
 	{
 		$this->expectException(InvalidServiceDescriptorException::class);
-		$this->expectExceptionMessage('Transient service must have implementationFactory set.');
+		$this->expectExceptionMessage('Transient service must have a factory set.');
 
 		new ServiceDescriptor(
 			stdClass::class,

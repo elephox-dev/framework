@@ -24,4 +24,8 @@ class TestServiceClass3 implements TestServiceInterface
 	{
 		return $testString;
 	}
+
+	public static function takesDnfType((TestServiceInterface&TestServiceInterface2)|null $testService): (TestServiceInterface&TestServiceInterface2)|null {
+		return $testService;
+	}
 }

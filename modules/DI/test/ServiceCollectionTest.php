@@ -10,6 +10,7 @@ use Elephox\DI\Data\TestServiceClass3;
 use Elephox\DI\Data\TestServiceClassUninstantiable;
 use Elephox\DI\Data\TestServiceClassWithConstructor;
 use Elephox\DI\Data\TestServiceInterface;
+use Elephox\DI\Data\TestServiceInterface2;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use ReflectionException;
 use ReflectionMethod;
@@ -385,5 +386,24 @@ class ServiceCollectionTest extends MockeryTestCase
 
 		static::assertNotSame($inst1, $inst5);
 		static::assertSame($inst3, $inst6);
+	}
+
+	public function testResolveDNFType(): void {
+		$collection = new ServiceCollection();
+
+		$instance1 = new TestServiceClass2();
+
+		$collection->addSingleton(TestServiceInterface::class, instance: $instance1);
+		$collection->addSingleton(TestServiceInterface2::class, instance: $instance1);
+
+		$result = $collection->callStatic(TestServiceClass3::class, "takesDnfType");
+
+		static::assertNull($result);
+
+		$collection->addSingleton(TestServiceInterface::class . "&" . TestServiceInterface2::class, instance: $instance1);
+
+		$result2 = $collection->callStatic(TestServiceClass3::class, "takesDnfType");
+
+		static::assertSame($result2, $instance1);
 	}
 }
