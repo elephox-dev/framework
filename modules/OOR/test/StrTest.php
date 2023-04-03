@@ -41,14 +41,12 @@ class StrTest extends TestCase
 		static::assertTrue(Str::is('*/foo', 'blah/baz/foo'));
 
 		$valueObject = new class implements Stringable {
-			public function __toString()
-			{
+			public function __toString(): string {
 				return 'foo/bar/baz';
 			}
 		};
 		$patternObject = new class implements Stringable {
-			public function __toString()
-			{
+			public function __toString(): string {
 				return 'foo/*';
 			}
 		};
