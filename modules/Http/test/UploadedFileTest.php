@@ -5,8 +5,8 @@ namespace Elephox\Http;
 
 use Elephox\Files\File;
 use Elephox\Mimey\MimeType;
-use Exception;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * @covers \Elephox\Http\UploadedFile
@@ -22,11 +22,14 @@ use PHPUnit\Framework\TestCase;
  */
 class UploadedFileTest extends TestCase
 {
+	/**
+	 * @throws RuntimeException
+	 */
 	public function testConstructor(): void
 	{
 		$tmp = tempnam(sys_get_temp_dir(), 'php');
 		if (!$tmp) {
-			throw new Exception('Failed to create tmp file');
+			throw new RuntimeException('Failed to create tmp file');
 		}
 		$tmpFile = new File($tmp);
 		$tmpFile->writeContents('test');
