@@ -36,27 +36,54 @@ class DirectoryTest extends TestCase
 	private $fileHandle;
 	private string $filePath;
 	private string $dirPath;
+	private string $emptyDirPath;
+	private string $nonEmptyDirPath;
 	private const FileContents = 'This is a generated test file. You are free to delete it.';
+
+	function rrmdir(string $dir): void {
+		if (!is_dir($dir)) {
+			return;
+		}
+
+		$objects = scandir($dir) or throw new RuntimeException("Unable to scan dir $dir");
+		foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+				if (is_dir($dir. DIRECTORY_SEPARATOR .$object) && !is_link($dir."/".$object))
+					$this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+				else
+					unlink($dir. DIRECTORY_SEPARATOR .$object);
+			}
+		}
+
+		rmdir($dir);
+	}
 
 	public function setUp(): void
 	{
 		parent::setUp();
 
-		$handle = tmpfile();
-		if ($handle === false) {
-			throw new RuntimeException('Could not create temporary file.');
+		$this->dirPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'elephox-test';
+
+		$this->emptyDirPath = $this->dirPath . DIRECTORY_SEPARATOR . 'empty';
+		if (is_dir($this->emptyDirPath)) {
+			$this->rrmdir($this->emptyDirPath);
 		}
 
-		$this->fileHandle = $handle;
-		$this->filePath = stream_get_meta_data($handle)['uri'];
-		$this->dirPath = dirname($this->filePath);
+		mkdir($this->emptyDirPath, recursive: true);
 
-		$emptyDir = $this->dirPath . DIRECTORY_SEPARATOR . 'test';
-		if (is_dir($emptyDir)) {
-			rmdir($emptyDir);
+		$this->nonEmptyDirPath = $this->dirPath . DIRECTORY_SEPARATOR . 'nonEmpty';
+		if (is_dir($this->nonEmptyDirPath)) {
+			$this->rrmdir($this->nonEmptyDirPath);
 		}
 
-		mkdir($emptyDir);
+		mkdir($this->nonEmptyDirPath);
+
+		$this->filePath = $this->nonEmptyDirPath . DIRECTORY_SEPARATOR. 'testfile';
+		$this->fileHandle = fopen($this->filePath, 'wb+');
+
+		mkdir($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder');
+		touch($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder' . DIRECTORY_SEPARATOR. 'testfile2');
+
 		fwrite($this->fileHandle, self::FileContents);
 	}
 
@@ -65,7 +92,7 @@ class DirectoryTest extends TestCase
 		parent::tearDown();
 
 		fclose($this->fileHandle);
-		rmdir($this->dirPath . DIRECTORY_SEPARATOR . 'test');
+		$this->rrmdir($this->dirPath);
 	}
 
 	public function testGetPath(): void
@@ -88,20 +115,22 @@ class DirectoryTest extends TestCase
 
 	public function testGetChild(): void
 	{
-		$directory = new Directory($this->dirPath);
+		$directory = new Directory($this->nonEmptyDirPath);
 
 		$fileChild = $directory->child(pathinfo($this->filePath, PATHINFO_BASENAME));
 		static::assertInstanceOf(File::class, $fileChild);
 		static::assertSame($this->filePath, $fileChild->path());
 
-		$dirChild = $directory->child('test');
+		$dirChild = $directory->child('testfolder');
 		static::assertInstanceOf(Directory::class, $dirChild);
-		static::assertSame($this->dirPath . DIRECTORY_SEPARATOR . 'test', $dirChild->path());
+		static::assertSame($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder', $dirChild->path());
 
 		$emptyDir = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
 		$nonExistentChild = $emptyDir->child('test123');
 		static::assertFalse($nonExistentChild->exists());
 		static::assertInstanceOf(UnknownFilesystemNode::class, $nonExistentChild);
+
+		// TODO: add test for symlink
 
 		$this->expectException(FilesystemNodeNotFoundException::class);
 		$directory->child('test123', true);
@@ -109,7 +138,7 @@ class DirectoryTest extends TestCase
 
 	public function testIsEmpty(): void
 	{
-		$directory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
+		$directory = new Directory($this->emptyDirPath);
 		static::assertTrue($directory->isEmpty());
 	}
 
@@ -121,7 +150,7 @@ class DirectoryTest extends TestCase
 
 	public function testGetModifiedTime(): void
 	{
-		$directory = new Directory($this->dirPath);
+		$directory = new Directory($this->nonEmptyDirPath);
 		static::assertSame(filemtime($this->filePath), $directory->modifiedAt()->getTimestamp());
 	}
 
@@ -137,23 +166,23 @@ class DirectoryTest extends TestCase
 
 	public function testGetChildren(): void
 	{
-		$directory = new Directory($this->dirPath);
-		$children = $directory->children();
+		$nonEmptyDirectory = new Directory($this->nonEmptyDirPath);
+		$children = $nonEmptyDirectory->children();
 		static::assertNotEmpty($children);
 		static::assertContainsOnlyInstancesOf(FilesystemNode::class, $children);
 
-		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
-		static::assertEmpty($testDirectory->children());
+		$emptyDirectory = new Directory($this->emptyDirPath);
+		static::assertEmpty($emptyDirectory->children());
 	}
 
 	public function testRecurseChildren(): void
 	{
-		$directory = new Directory($this->dirPath);
+		$directory = new Directory($this->nonEmptyDirPath);
 		$children = $directory->recurseChildren(true);
 		static::assertNotEmpty($children);
 		static::assertContainsOnlyInstancesOf(FilesystemNode::class, $children);
 
-		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
+		$testDirectory = new Directory($this->emptyDirPath);
 		static::assertEmpty($testDirectory->recurseChildren());
 	}
 
@@ -176,36 +205,36 @@ class DirectoryTest extends TestCase
 
 	public function testGetFiles(): void
 	{
-		$directory = new Directory($this->dirPath);
-		$files = $directory->files();
+		$nonEmptyDirectory = new Directory($this->nonEmptyDirPath);
+		$files = $nonEmptyDirectory->files();
 		static::assertNotEmpty($files);
 		static::assertContainsOnlyInstancesOf(File::class, $files);
 
-		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
-		static::assertEmpty($testDirectory->files());
+		$emptyDirectory = new Directory($this->emptyDirPath);
+		static::assertEmpty($emptyDirectory->files());
 	}
 
 	public function testGetFile(): void
 	{
-		$directory = new Directory($this->dirPath);
+		$directory = new Directory($this->nonEmptyDirPath);
 		static::assertSame($this->filePath, $directory->file(pathinfo($this->filePath, PATHINFO_BASENAME))->path());
 	}
 
 	public function testGetDirectory(): void
 	{
-		$directory = new Directory($this->dirPath);
-		static::assertSame($this->dirPath . DIRECTORY_SEPARATOR . 'test', $directory->directory('test')->path());
+		$directory = new Directory($this->nonEmptyDirPath);
+		static::assertSame($this->nonEmptyDirPath . DIRECTORY_SEPARATOR . 'testfolder', $directory->directory('testfolder')->path());
 	}
 
 	public function testGetDirectories(): void
 	{
-		$directory = new Directory($this->dirPath);
-		$dirs = $directory->directories();
+		$nonEmptyDirectory = new Directory($this->nonEmptyDirPath);
+		$dirs = $nonEmptyDirectory->directories();
 		static::assertNotEmpty($dirs);
 		static::assertContainsOnlyInstancesOf(Directory::class, $dirs);
 
-		$testDirectory = new Directory($this->dirPath . DIRECTORY_SEPARATOR . 'test');
-		static::assertEmpty($testDirectory->directories());
+		$emptyDirectory = new Directory($this->emptyDirPath);
+		static::assertEmpty($emptyDirectory->directories());
 	}
 
 	public function testGetName(): void
@@ -239,7 +268,7 @@ class DirectoryTest extends TestCase
 	{
 		$testDir1 = Path::join(sys_get_temp_dir(), 'testdir1');
 		$testDir2 = Path::join(sys_get_temp_dir(), 'testdir2');
-		$testDir3 = Path::join(sys_get_temp_dir(), 'testdir2', 'testdir3');
+		$testDir3 = Path::join($testDir2, 'testdir3');
 		@mkdir($testDir1, recursive: true);
 		@mkdir($testDir3, recursive: true);
 
