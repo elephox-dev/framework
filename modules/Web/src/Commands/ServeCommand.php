@@ -139,7 +139,7 @@ readonly class ServeCommand implements CommandHandler
 				}
 
 				if (preg_match('/^(?<ip>.+):(?<port>\d{1,5}) (?:(?<action>Accepted|Closing)|\[(?<status>\d{3})]: (?<verb>\S+) (?<path>.*))$/i', $line, $matches)) {
-					if (isset($matches['action']) && !empty($matches['action'])) {
+					if (!empty($matches['action'])) {
 						if ($verbose) {
 							$this->logger->debug(sprintf('%s connection at %s:%d', $matches['action'], $matches['ip'], $matches['port']));
 						}
