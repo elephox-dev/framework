@@ -250,6 +250,13 @@ class EnumerableTest extends TestCase
 		static::assertNull(Enumerable::empty()->firstOrDefault(null));
 	}
 
+	public function testFlatten(): void
+	{
+		static::assertSame([1, 2, 3], Enumerable::from([1, [2, 3]])->flatten()->toArray());
+		static::assertSame([1, 2, 3], Enumerable::from([[1, 2], 3])->flatten()->toArray());
+		static::assertSame([1, 2, 3, 4, 5], Enumerable::from([1, [2, 3, [4, 5]]])->flatten()->toArray());
+	}
+
 	public function testGroupBy(): void
 	{
 		static::assertSame(

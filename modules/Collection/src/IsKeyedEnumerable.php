@@ -30,6 +30,8 @@ use LimitIterator;
 use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
 use OutOfBoundsException;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 use Stringable;
 use Traversable;
 
@@ -416,6 +418,18 @@ trait IsKeyedEnumerable
 		}
 
 		return new KeyedEnumerable(new FlipIterator($iterator));
+	}
+
+	/**
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function flatten(): GenericEnumerable {
+		return new Enumerable(function() {
+			$it = new RecursiveIteratorIterator(new RecursiveArrayIterator($this->getIterator()));
+			foreach($it as $v) {
+				yield $v;
+			}
+		});
 	}
 
 	/**

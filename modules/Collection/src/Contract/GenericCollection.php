@@ -48,6 +48,11 @@ interface GenericCollection
 	public function isNotEmpty(): bool;
 
 	/**
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function flatten(): GenericEnumerable;
+
+	/**
 	 * @param callable(TSource): void $callback
 	 */
 	public function forEach(callable $callback): void;

@@ -303,6 +303,13 @@ class KeyedEnumerableTest extends TestCase
 		static::assertNull(KeyedEnumerable::empty()->firstPairOrDefault(null));
 	}
 
+	public function testFlatten(): void
+	{
+		static::assertSame([1, 2, 3], KeyedEnumerable::from([1, [2, 3]])->flatten()->toArray());
+		static::assertSame([1, 2, 3], KeyedEnumerable::from([[1, 2], 3])->flatten()->toArray());
+		static::assertSame([1, 2, 3, 4, 5], KeyedEnumerable::from([1, [2, 3, [4, 5]]])->flatten()->toArray());
+	}
+
 	public function testGroupBy(): void
 	{
 		static::assertSame(

@@ -29,6 +29,8 @@ use JsonException;
 use LimitIterator;
 use MultipleIterator as ParallelIterator;
 use NoRewindIterator;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 use Traversable;
 
 use const JSON_FORCE_OBJECT;
@@ -334,6 +336,18 @@ trait IsEnumerable
 		}
 
 		return $defaultValue;
+	}
+
+	/**
+	 * @return GenericEnumerable<TSource>
+	 */
+	public function flatten(): GenericEnumerable {
+		return new Enumerable(function() {
+			$it = new RecursiveIteratorIterator(new RecursiveArrayIterator($this->getIterator()));
+			foreach($it as $v) {
+				yield $v;
+			}
+		});
 	}
 
 	/**
