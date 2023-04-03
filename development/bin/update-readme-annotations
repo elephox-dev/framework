@@ -38,7 +38,7 @@ $sourceFiles = array_merge(
 	gatherSourceFiles($src),
 	gatherSourceFiles($developmentSrc)
 );
-$todoPattern = /** @lang RegExp */ '/[^\n]\b(TODO|FIXME|MAYBE|IDEA)\b([^\n]*)/';
+$todoPattern = /** @lang RegExp */ '/[^\n]\b(TODO|FIXME|MAYBE|IDEA):\s([^\n]*)/';
 $issuePattern = /** @lang RegExp */ '/\s(?<repo>[A-Za-z0-9\-_]+?\/[A-Za-z0-9\-_]+?)#(?<issue>\d+)/';
 
 echo "Processing " . count($sourceFiles) . " files...\n";
