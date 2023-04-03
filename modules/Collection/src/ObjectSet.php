@@ -56,7 +56,7 @@ class ObjectSet implements GenericSet
 		// TODO: use this style of assertion error messages for all assertions
 		assert(is_object($value), sprintf('Argument 1 passed to %s() must be an object, %s given', __METHOD__, get_debug_type($value)));
 
-		$existed = $this->contains($value);
+		$existed = $this->contains($value, $this->comparer);
 
 		$this->storage->attach($value);
 
@@ -78,7 +78,7 @@ class ObjectSet implements GenericSet
 	{
 		assert(is_object($value), sprintf('Argument 1 passed to %s() must be an object, %s given', __METHOD__, get_debug_type($value)));
 
-		$existed = $this->contains($value);
+		$existed = $this->contains($value, $this->comparer);
 
 		$this->storage->detach($value);
 
