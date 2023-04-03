@@ -45,13 +45,13 @@ class ServiceDescriptor
 
 		if ($this->instance !== null) {
 			$this->implementationFactory = null;
-			self::checkInstanceImplementsType($this->instance);
+			$this->checkInstanceImplementsType($this->instance);
 		} else {
-			$this->implementationFactory = static function (Resolver $resolver) use ($factory): object {
+			$this->implementationFactory = function (Resolver $resolver) use ($factory): object {
 				/** @var TImplementation $instance */
 				$instance = $resolver->callback($factory);
 
-				self::checkInstanceImplementsType($instance);
+				$this->checkInstanceImplementsType($instance);
 
 				return $instance;
 			};
