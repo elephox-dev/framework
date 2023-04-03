@@ -9,8 +9,8 @@ use Throwable;
 class LinkLoopDetectedException extends FileException
 {
 	#[Pure]
-	public function __construct(Contract\Link $a, Contract\Link $b, int $code = 0, ?Throwable $previous = null)
+	public function __construct(string $aPath, string $bPath, int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct(sprintf('Symlink loop detected between (%s) and (%s)', $a->path(), $b->path()), $code, $previous);
+		parent::__construct(sprintf('Symlink loop detected between (%s) and (%s)', $aPath, $bPath), $code, $previous);
 	}
 }

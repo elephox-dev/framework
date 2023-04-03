@@ -207,7 +207,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 				$nextTarget = $target->target();
 
 				if ($nextTarget->path() === $this->path()) {
-					throw new LinkLoopDetectedException($node, $target);
+					throw new LinkLoopDetectedException($node->path(), $target->path());
 				}
 
 				// MIND: it's still possible for $nextTarget to point to another link and so on
