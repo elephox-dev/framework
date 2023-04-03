@@ -65,9 +65,10 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] cache keys so they won't have to be re-calculated
 - [ ] [modules/Collection/src/ObjectSet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ObjectSet.php)
   - [ ] use this style of assertion error messages for all assertions
-- [ ] [modules/DI/src/ServiceResolver.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceResolver.php)
-  - [ ] implement positional overrides with integer keys in $overrides
-  - [ ] add support for disjunctive normal form types (https://wiki.php.net/rfc/dnf_types)
+- [ ] [modules/DI/src/ServiceDescriptor.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceDescriptor.php)
+  - [ ] Update TImplementation to extend TService once vimeo/psalm#7795 is resolved.
+- [ ] [modules/Files/test/DirectoryTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Files/test/DirectoryTest.php)
+  - [ ] add test for symlink
 - [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/test/GeneratesResponsesTest.php)
   - [ ] Add test for both cases in which mime_content_type exists and not
 - [ ] [modules/Logging/test/SimpleFormatColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/SimpleFormatColorSinkTest.php)
@@ -81,11 +82,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
 - [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsEnumerable.php)
   - [ ] de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
-
-### 🤔 Maybe
-
-- [ ] [modules/Collection/src/Iterator/ReverseIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/ReverseIterator.php)
-  - [ ] only reverse key order if key is numeric
 
 
 ### 🚧 Related issues
