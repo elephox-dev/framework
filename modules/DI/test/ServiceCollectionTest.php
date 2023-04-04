@@ -22,11 +22,6 @@ use ReflectionParameter;
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Collection\ArraySet
  * @covers \Elephox\DI\ServiceDescriptor
- * @covers \Elephox\DI\Hooks\ServiceDescriptorHookData
- * @covers \Elephox\DI\Hooks\ServiceHookData
- * @covers \Elephox\DI\Hooks\ServiceResolvedHookData
- * @covers \Elephox\DI\Hooks\AliasHookData
- * @covers \Elephox\DI\Hooks\ServiceReplacedHookData
  * @covers \Elephox\DI\ServiceNotFoundException
  * @covers \Elephox\DI\UnresolvedParameterException
  * @covers \Elephox\DI\ClassNotFoundException
