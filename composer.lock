@@ -2877,18 +2877,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-middleware.git",
-                "reference": "55baa6317bcf92464f044c61b044664d309c92d6"
+                "reference": "0dee3dc1493ecc1f268465295387525a6055aa3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/55baa6317bcf92464f044c61b044664d309c92d6",
-                "reference": "55baa6317bcf92464f044c61b044664d309c92d6",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/0dee3dc1493ecc1f268465295387525a6055aa3b",
+                "reference": "0dee3dc1493ecc1f268465295387525a6055aa3b",
                 "shasum": ""
             },
             "require": {
                 "elephox/web": "*",
-                "filp/whoops": "^2.14",
-                "php": "^8.1 <8.3"
+                "filp/whoops": "^2.15",
+                "php": "^8.2 <8.4"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "dev-master"
@@ -2915,7 +2915,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-middleware/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-middleware/tree/develop"
             },
-            "time": "2022-10-21T23:19:36+00:00"
+            "time": "2023-04-04T17:30:17+00:00"
         },
         {
             "name": "elephox/composer-module-sync",
@@ -5170,16 +5170,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.17.0",
+            "version": "1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "bfec8729f7e23c40670f98e27e694cfdb13fc12a"
+                "reference": "d3753fcb3abc6f78f5de6f72153d4b9c99c72dee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/bfec8729f7e23c40670f98e27e694cfdb13fc12a",
-                "reference": "bfec8729f7e23c40670f98e27e694cfdb13fc12a",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/d3753fcb3abc6f78f5de6f72153d4b9c99c72dee",
+                "reference": "d3753fcb3abc6f78f5de6f72153d4b9c99c72dee",
                 "shasum": ""
             },
             "require": {
@@ -5209,9 +5209,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.17.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.17.1"
             },
-            "time": "2023-04-04T08:27:19+00:00"
+            "time": "2023-04-04T11:11:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -8270,12 +8270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "1f72597760d717bd4f5da7883498293c4c88af55"
+                "reference": "bf0740a58c77359d021a05085c1ac4e58a610a6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/1f72597760d717bd4f5da7883498293c4c88af55",
-                "reference": "1f72597760d717bd4f5da7883498293c4c88af55",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/bf0740a58c77359d021a05085c1ac4e58a610a6f",
+                "reference": "bf0740a58c77359d021a05085c1ac4e58a610a6f",
                 "shasum": ""
             },
             "require": {
@@ -8369,7 +8369,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2023-04-03T12:35:35+00:00"
+            "time": "2023-04-04T10:59:55+00:00"
         },
         {
             "name": "webmozart/assert",
