@@ -22,7 +22,7 @@ interface MessageBuilder
 
 	public function getBody(): ?StreamInterface;
 
-	public function textBody(string $content): static;
+	public function textBody(#[Language("TEXT")] string $content): static;
 
 	/**
 	 * @throws JsonException

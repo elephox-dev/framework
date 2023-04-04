@@ -108,7 +108,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->exception;
 	}
 
-	public function textBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static
+	public function textBody(#[Language("TEXT")] string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static
 	{
 		$this->body(new StringStream($content));
 

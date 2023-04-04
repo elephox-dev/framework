@@ -25,7 +25,7 @@ interface ResponseBuilder extends MessageBuilder
 
 	public function exception(?Throwable $exception, ?ResponseCode $responseCode = ResponseCode::InternalServerError): static;
 
-	public function textBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static;
+	public function textBody(#[Language("TEXT")] string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static;
 
 	public function jsonBody(array|object $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static;
 
