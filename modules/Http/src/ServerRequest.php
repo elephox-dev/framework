@@ -209,7 +209,7 @@ class ServerRequest extends Request implements Contract\ServerRequest
 		try {
 			/** @psalm-suppress DocblockTypeContradiction */
 			if ($data !== null && !is_array($data) && !is_object($data)) {
-				throw new InvalidArgumentException("Expected 'null' or type 'array' or 'string', but got " . get_debug_type($data));
+				throw new InvalidArgumentException("Expected 'null' or type 'array' or 'object', but got " . get_debug_type($data));
 			}
 
 			$builder = $this->with();
