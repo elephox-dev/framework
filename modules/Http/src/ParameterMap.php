@@ -147,47 +147,11 @@ class ParameterMap implements Contract\ParameterMap
 
 		$map = new self();
 
-		foreach (
-			[
-				'PHP_SELF',
-				'argv',
-				'argc',
-				'GATEWAY_INTERFACE',
-				'SERVER_ADDR',
-				'SERVER_NAME',
-				'SERVER_SOFTWARE',
-				'SERVER_PROTOCOL',
-				'REQUEST_METHOD',
-				'REQUEST_TIME',
-				'REQUEST_TIME_FLOAT',
-				'QUERY_STRING',
-				'DOCUMENT_ROOT',
-				'HTTPS',
-				'REMOTE_ADDR',
-				'REMOTE_HOST',
-				'REMOTE_PORT',
-				'REDIRECT_REMOTE_USER',
-				'SCRIPT_FILENAME',
-				'SERVER_ADMIN',
-				'SERVER_PORT',
-				'SERVER_SIGNATURE',
-				'PATH_TRANSLATED',
-				'SCRIPT_NAME',
-				'REQUEST_URI',
-				'PHP_AUTH_DIGEST',
-				'PHP_AUTH_USER',
-				'PHP_AUTH_PW',
-				'AUTH_TYPE',
-				'PATH_INFO',
-				'ORIG_PATH_INFO',
-				'CONTENT_LENGTH',
-			] as $serverKey
-		) {
-			if (!array_key_exists($serverKey, $server)) {
-				continue;
-			}
-
-			$map->put($serverKey, ParameterSource::Server, $server[$serverKey]);
+		/**
+		 * @var mixed $value
+		 */
+		foreach ($server as $name => $value) {
+			$map->put($name, ParameterSource::Server, $value);
 		}
 
 		/**

@@ -64,7 +64,8 @@ class ParameterMapTest extends TestCase
 		static::assertArrayHasKey('faa', $map);
 		static::assertSame('bor', $map['faa']);
 
-		static::assertFalse($map->has('invalid'));
+		static::assertArrayHasKey('invalid', $map);
+		static::assertSame('invalid', $map['invalid']);
 
 		$allGet = $map->allFrom(ParameterSource::Get)->toArray();
 		static::assertSame($get, $allGet);
