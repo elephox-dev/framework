@@ -109,7 +109,7 @@ class WebApplicationBuilder
 	{
 		$this->pipeline->push(new ServerTimingHeaderMiddleware('pipeline'));
 		$this->pipeline->push(new FileExtensionToContentType());
-		$this->pipeline->push(new StaticContentHandler($this->getEnvironment()));
+		$this->pipeline->push(new StaticContentHandler($this->getEnvironment()->getWebRoot()));
 	}
 
 	public function build(): WebApplication
