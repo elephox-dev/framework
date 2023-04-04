@@ -50,7 +50,8 @@ class NamespaceLoader
 		$prefixDirMap = ArrayMap::from(self::getClassLoader()->getPrefixesPsr4())
 			->select(
 				static fn (array $dirs): GenericKeyedEnumerable => ArrayList::from($dirs)
-					->select(static fn (string $dir): DirectoryContract => new Directory($dir)),
+					->select(static fn (string $dir): DirectoryContract => new Directory($dir))
+					->where(static fn (DirectoryContract $d) => $d->exists()),
 			)
 		;
 		foreach ($prefixDirMap as $nsPrefix => $dirs) {
