@@ -86,7 +86,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function size(): int
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		/** @var false|int<0, max> $size */
@@ -107,7 +107,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function getHash(): string
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		$hash = md5_file($this->path());
@@ -128,7 +128,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function isWritable(): bool
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		return is_writable($this->path());
@@ -150,7 +150,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function copyTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		$destination = $this->getDestination($node, $overwrite);
@@ -166,7 +166,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function delete(): void
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		if (!unlink($this->path())) {
@@ -177,7 +177,7 @@ class File extends AbstractFilesystemNode implements Contract\File
 	public function moveTo(FilesystemNode $node, bool $overwrite = true): Contract\File
 	{
 		if (!$this->exists()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException($this, $this->path());
 		}
 
 		$destination = $this->getDestination($node, $overwrite);

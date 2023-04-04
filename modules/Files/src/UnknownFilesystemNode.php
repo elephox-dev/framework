@@ -28,7 +28,7 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 	public function asDirectory(): Contract\Directory
 	{
 		if (!$this->isDirectory()) {
-			throw new DirectoryNotFoundException($this->path());
+			throw new DirectoryNotFoundException(null, $this->path());
 		}
 
 		return new Directory($this->path());
@@ -37,7 +37,7 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 	public function asFile(): Contract\File
 	{
 		if (!$this->isFile()) {
-			throw new FileNotFoundException($this->path());
+			throw new FileNotFoundException(null, $this->path());
 		}
 
 		return new File($this->path());
@@ -46,7 +46,7 @@ class UnknownFilesystemNode extends AbstractFilesystemNode
 	public function asLink(): Contract\Link
 	{
 		if (!$this->isLink()) {
-			throw new LinkNotFoundException($this->path());
+			throw new LinkNotFoundException(null, $this->path());
 		}
 
 		return new Link($this->path());

@@ -43,7 +43,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function children(): GenericKeyedEnumerable
 	{
 		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path());
+			throw new DirectoryNotFoundException($this, $this->path());
 		}
 
 		$nodes = @scandir($this->path());
@@ -68,7 +68,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function recurseChildren(bool $ignoreExceptions = false): GenericKeyedEnumerable
 	{
 		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path());
+			throw new DirectoryNotFoundException($this, $this->path());
 		}
 
 		/** @var GenericKeyedEnumerable<int, Contract\FilesystemNode> */
@@ -155,7 +155,7 @@ class Directory extends AbstractFilesystemNode implements Contract\Directory
 	public function delete(bool $recursive = true): void
 	{
 		if (!$this->exists()) {
-			throw new DirectoryNotFoundException($this->path());
+			throw new DirectoryNotFoundException($this, $this->path());
 		}
 
 		$children = $this->children();

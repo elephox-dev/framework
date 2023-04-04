@@ -18,7 +18,7 @@ class Link extends AbstractFilesystemNode implements Contract\Link
 		$target = readlink($this->path());
 
 		if ($target === false) {
-			throw new LinkNotFoundException($this->path());
+			throw new LinkNotFoundException($this, $this->path());
 		}
 
 		if (is_dir($target)) {
@@ -39,7 +39,7 @@ class Link extends AbstractFilesystemNode implements Contract\Link
 	public function delete(): void
 	{
 		if (!$this->exists()) {
-			throw new LinkNotFoundException($this->path());
+			throw new LinkNotFoundException($this, $this->path());
 		}
 
 		// From the docs: On Windows, to delete a symlink to a directory, rmdir() has to be used instead.
