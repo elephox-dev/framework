@@ -204,7 +204,7 @@ trait IsKeyedEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		foreach (new FlipIterator($this->getIterator()) as $elementKey) {
+		foreach ($this->getIterator() as $elementKey => $value) {
 			if ($comparer($key, $elementKey)) {
 				return true;
 			}
