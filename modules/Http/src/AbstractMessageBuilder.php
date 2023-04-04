@@ -9,6 +9,7 @@ use Elephox\Http\Contract\MessageBuilder;
 use Elephox\Stream\ResourceStream;
 use Elephox\Stream\StringStream;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Language;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use Psr\Http\Message\StreamInterface;
@@ -72,7 +73,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body(ResourceStream::wrap($resource));
 	}
 
-	public function htmlBody(string $content): static
+	public function htmlBody(#[Language("HTML")] string $content): static
 	{
 		return $this->body(new StringStream($content));
 	}

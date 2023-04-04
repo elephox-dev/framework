@@ -9,6 +9,7 @@ use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
 use Elephox\Stream\EmptyStream;
 use Elephox\Stream\StringStream;
+use JetBrains\PhpStorm\Language;
 use JetBrains\PhpStorm\Pure;
 use JsonException;
 use LogicException;
@@ -131,7 +132,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->textBody($json, $mimeType);
 	}
 
-	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static
+	public function htmlBody(#[Language('HTML')] string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static
 	{
 		return $this->textBody($content, $mimeType);
 	}

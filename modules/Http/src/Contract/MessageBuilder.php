@@ -5,6 +5,7 @@ namespace Elephox\Http\Contract;
 
 use Elephox\Files\Contract\File;
 use Elephox\Http\HeaderName;
+use JetBrains\PhpStorm\Language;
 use JsonException;
 use Psr\Http\Message\StreamInterface;
 
@@ -33,7 +34,7 @@ interface MessageBuilder
 	 */
 	public function resourceBody(mixed $resource): static;
 
-	public function htmlBody(string $content): static;
+	public function htmlBody(#[Language('HTML')] string $content): static;
 
 	public function fileBody(string|File $path): static;
 

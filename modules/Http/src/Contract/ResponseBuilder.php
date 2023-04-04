@@ -7,6 +7,7 @@ use Elephox\Files\Contract\File;
 use Elephox\Http\ResponseCode;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
+use JetBrains\PhpStorm\Language;
 use Throwable;
 
 /**
@@ -28,7 +29,7 @@ interface ResponseBuilder extends MessageBuilder
 
 	public function jsonBody(array|object $data, ?MimeTypeInterface $mimeType = MimeType::ApplicationJson): static;
 
-	public function htmlBody(string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static;
+	public function htmlBody(#[Language('HTML')] string $content, ?MimeTypeInterface $mimeType = MimeType::TextHtml): static;
 
 	public function fileBody(string|File $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static;
 
