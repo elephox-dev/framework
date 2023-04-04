@@ -7,6 +7,7 @@ use BadFunctionCallException;
 use BadMethodCallException;
 use Closure;
 use Elephox\Collection\ArrayList;
+use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use ReflectionClass;
 use ReflectionException;
@@ -173,15 +174,18 @@ trait ServiceResolver
 		}
 
 		if ($type instanceof ReflectionUnionType) {
-			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self) {
+			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): GenericEnumerable {
+				/** @var callable(ReflectionUnionType|ReflectionIntersectionType $refType, callable): GenericEnumerable<class-string> $self */
 				return collect(...$refType->getTypes())
 					->select(static function (ReflectionType $t) use ($self): array {
 						if ($t instanceof ReflectionUnionType) {
 							return $self($t, $self)->toList();
 						}
+
 						if ($t instanceof ReflectionIntersectionType) {
 							return [$self($t, $self)->toList()];
 						}
+
 						if ($t instanceof ReflectionNamedType) {
 							return [$t->getName()];
 						}
@@ -190,7 +194,8 @@ trait ServiceResolver
 					});
 			};
 
-			$typeNames = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t) => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
+			/** @var GenericEnumerable<class-string|list<class-string>> $typeNames */
+			$typeNames = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t): string|array => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
 		} else {
 			/** @var ReflectionNamedType $type */
 			$typeNames = [$type->getName()];
