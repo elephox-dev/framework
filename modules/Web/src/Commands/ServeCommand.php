@@ -8,12 +8,14 @@ use Elephox\Configuration\MemoryEnvironment;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
+use Elephox\Files\Contract\Directory;
 use Elephox\Files\Contract\FileChangedEvent;
+use Elephox\Files\File;
 use Elephox\Files\FileWatcher;
+use Elephox\OOR\Arr;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use ricardoboss\Console;
-use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -52,37 +54,30 @@ readonly class ServeCommand implements CommandHandler
 	{
 		$host = $command->arguments->get('host')->string();
 		$port = $command->arguments->get('port')->int();
-		$root = $command->options->get('root')->nullableString() ?? ($this->environment->root()->directory('public')->path());
-		$router = $command->options->get('router')->nullableString() ?? (dirname(__DIR__, 2) . '/data/router.php');
+		$root = $command->options->get('root')->nullableDirectory() ?? $this->environment->root()->directory('public');
+		$router = $command->options->get('router')->nullableFile() ?? new File(dirname(__DIR__, 2) . '/data/router.php');
 		$noReload = $command->options->get('no-reload')->bool();
 		$verbose = $command->options->get('verbose')->bool();
 
-		if (!is_dir($root)) {
+		if (!$root->exists()) {
 			throw new InvalidArgumentException("Root directory ($root) does not exist");
 		}
 
-		$documentRoot = realpath($root);
-		if (!is_string($documentRoot)) {
-			throw new RuntimeException('Unable to resolve document root');
+		if (!$router->exists()) {
+			if ($router->path() === 'null') $router = null;
+			else throw new InvalidArgumentException('Given router file does not exist');
 		}
 
-		if ($router === 'null') {
-			$router = null;
-		} else {
-			$router = realpath($router);
-			if ($router === false) {
-				throw new InvalidArgumentException('Given router file does not exist');
-			}
-		}
+		$documentRoot = $root->parent();
+		$environment = $this->getEnvironment($documentRoot, $command);
 
-		$environment = $this->getEnvironment(dirname($documentRoot), $command);
-
-		$serverCommand = [(new PhpExecutableFinder())->find(false), '-S', "$host:$port", '-t', $documentRoot];
-		if ($router) {
+		$phpExe = (new PhpExecutableFinder())->find(false);
+		$serverCommand = Arr::wrap($phpExe, '-S', "$host:$port", '-t', $documentRoot->path());
+		if ($router !== null) {
 			$serverCommand[] = $router;
 		}
 
-		$this->logger->info('Starting PHP built-in webserver on ' . Console::link('http://' . $host . ':' . $port), ['command' => implode(' ', $serverCommand)]);
+		$this->logger->info('Starting PHP built-in webserver on ' . Console::link('http://' . $host . ':' . $port), ['command' => $serverCommand->implode(' ')]);
 
 		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 
@@ -94,7 +89,7 @@ readonly class ServeCommand implements CommandHandler
 			/** @var Process $process */
 			$process->stop();
 
-			usleep(1000 * 1000);
+			usleep(1_000_000);
 
 			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
 		};
@@ -115,7 +110,7 @@ readonly class ServeCommand implements CommandHandler
 				$fileWatcher->poll();
 			}
 
-			usleep(500 * 1000);
+			usleep(500_000);
 		}
 
 		$this->logger->warning(sprintf('Server process exited with code %s', $process->getExitCode() ?? '<unknown>'));
@@ -123,27 +118,30 @@ readonly class ServeCommand implements CommandHandler
 		return 0;
 	}
 
-	private function startServerProcess(array $serverCommand, string $documentRoot, Environment $environment, bool $verbose): Process
+	private function startServerProcess(Arr $serverCommand, Directory $documentRoot, Environment $environment, bool $verbose): Process
 	{
 		$process = new Process(
-			$serverCommand,
-			$documentRoot,
+			$serverCommand->getSource(),
+			$documentRoot->path(),
 			$environment->asEnumerable()->toArray(),
 		);
 
 		$process->start(function (string $type, string $buffer) use ($verbose): void {
 			$buffer = trim($buffer);
 			foreach (explode("\n", $buffer) as $line) {
-				if ($closingBracketPos = strpos($line, ']')) {
-					$line = substr($line, $closingBracketPos + 2);
-				}
+				$line = preg_replace('/^(?:\[.+?] )?\[.+?] /i', '', $line);
 
-				if (preg_match('/^(?<ip>.+):(?<port>\d{1,5}) (?:(?<action>Accepted|Closing)|\[(?<status>\d{3})]: (?<verb>\S+) (?<path>.*))$/i', $line, $matches)) {
-					if (!empty($matches['action'])) {
+				if (preg_match('/^(?:(?<ip>.+):(?<port>\d{1,5}) (?:(?<action>Accepted|Closing)|\[(?<status>\d{3})]: (?<verb>\S+) (?<path>\S*)(?<message>.*)?)|(?<log>.+))$/i', $line, $matches)) {
+					if (isset($matches['log']) && $matches['log'] !== '') {
+						// log message
+						$this->logger->info($matches['log']);
+					} else if (isset($matches['action']) && $matches['action'] !== '') {
 						if ($verbose) {
+							// log connection
 							$this->logger->debug(sprintf('%s connection at %s:%d', $matches['action'], $matches['ip'], $matches['port']));
 						}
 					} else {
+						// log request
 						$this->logger->info(sprintf('%s %s -> %d', $matches['verb'], $matches['path'], $matches['status']), ['ip' => $matches['ip'], 'port' => $matches['port']]);
 					}
 				} else {
@@ -157,12 +155,12 @@ readonly class ServeCommand implements CommandHandler
 		return $process;
 	}
 
-	private function getEnvironment(string $documentRoot, CommandInvocation $command): MemoryEnvironment
+	private function getEnvironment(Directory $documentRoot, CommandInvocation $command): MemoryEnvironment
 	{
 		$envName = $command->options->get('env')->string();
 		$workers = $command->options->get('workers')->value;
 
-		$environment = new MemoryEnvironment($documentRoot);
+		$environment = new MemoryEnvironment($documentRoot->path());
 		$envFile = $environment->getDotEnvFileName();
 		$environment->loadFromEnvFile($envFile);
 		$localEnvFile = $environment->getDotEnvFileName();
@@ -181,26 +179,45 @@ readonly class ServeCommand implements CommandHandler
 			if (ctype_digit($workers)) {
 				$environment['PHP_CLI_SERVER_WORKERS'] = (int) $workers;
 			} elseif ($workers === 'auto') {
-				if (PHP_OS_FAMILY === 'Windows') {
-					$procCountCommand = 'echo %NUMBER_OF_PROCESSORS%';
-
-					$this->logger->warning('PHP_CLI_SERVER_WORKERS is not supported by PHP on Windows but will be set anyway.');
-				} else {
-					$procCountCommand = 'nproc';
-				}
-
-				exec($procCountCommand, $cores, $code);
-
-				if ($code === 0 && isset($cores[0]) && ctype_digit((string) $cores[0])) {
-					$environment['PHP_CLI_SERVER_WORKERS'] = (int) $cores[0];
-				} else {
-					throw new RuntimeException("Unable to determine number of cores available (used: $procCountCommand)");
-				}
+				$environment['PHP_CLI_SERVER_WORKERS'] = $this->getNumberOfCores();
 			} elseif ($workers !== 'null') {
 				throw new InvalidArgumentException('Workers must be a number, "auto" or "null"');
 			}
 		}
 
 		return $environment;
+	}
+
+	private function getNumberOfCores(): int
+	{
+		switch (PHP_OS_FAMILY) {
+			case 'Windows':
+				$procCountCommand = 'echo %NUMBER_OF_PROCESSORS%';
+
+				$this->logger->warning('PHP_CLI_SERVER_WORKERS is not supported by PHP on Windows but will be set to the number of available CPU cores anyway.');
+				break;
+			case 'Linux':
+				$procCountCommand = 'nproc';
+				break;
+			case 'Solaris':
+				$procCountCommand = 'psrinfo -p';
+				break;
+			case 'BSD':
+			case 'Darwin':
+				$procCountCommand = 'sysctl -n hw.ncpu';
+				break;
+			default:
+				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . PHP_OS_FAMILY . "'). Defaulting to 2");
+				return 2;
+		}
+
+		exec($procCountCommand, $cores, $code);
+
+		if ($code === 0 && isset($cores[0]) && ctype_digit((string) $cores[0])) {
+			return (int) $cores[0];
+		}
+
+		$this->logger->error("Unable to determine the number of available processor cores (tried '$procCountCommand'). Defaulting to 2");
+		return 2;
 	}
 }
