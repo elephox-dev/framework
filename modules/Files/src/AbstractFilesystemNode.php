@@ -23,6 +23,7 @@ abstract class AbstractFilesystemNode implements FilesystemNode
 		return $this->path;
 	}
 
+	#[Pure]
 	public function relativePathTo(FilesystemNode $node): string
 	{
 		return Path::relativeTo($this->path(), $node->path());
