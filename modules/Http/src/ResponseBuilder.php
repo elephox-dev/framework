@@ -13,6 +13,7 @@ use JetBrains\PhpStorm\Pure;
 use JsonException;
 use LogicException;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use Throwable;
 
 /**
@@ -38,6 +39,35 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		$this->responseCode = $responseCode;
 
 		return $this;
+	}
+
+	public function ok(): static
+	{
+		return $this->responseCode(ResponseCode::OK);
+	}
+
+	public function notFound(): static
+	{
+		return $this->responseCode(ResponseCode::NotFound);
+	}
+
+	public function redirect(string|UriInterface $location, bool $permanent = false, bool $preserveMethod = true): static
+	{
+		$this->header(HeaderName::Location, (string) $location);
+
+		if ($permanent) {
+			if ($preserveMethod) {
+				return $this->responseCode(ResponseCode::PermanentRedirect);
+			} else {
+				return $this->responseCode(ResponseCode::MovedPermanently);
+			}
+		} else {
+			if ($preserveMethod) {
+				return $this->responseCode(ResponseCode::TemporaryRedirect);
+			} else {
+				return $this->responseCode(ResponseCode::Found);
+			}
+		}
 	}
 
 	public function getResponseCode(): ?ResponseCode
