@@ -6,6 +6,7 @@ use Elephox\Builder\Whoops\AddsWhoopsHandler;
 use Elephox\Console\ConsoleApplicationBuilder;
 use Elephox\Console\DefaultExceptionHandler;
 use Elephox\Support\Contract\ErrorHandler;
+use Elephox\Web\Commands\ServeCommand;
 
 require_once 'bootstrap.php';
 
@@ -22,6 +23,7 @@ $builder->addWhoops();
 $builder->services->addSingleton(ErrorHandler::class, DefaultExceptionHandler::class);
 
 $builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
+$builder->commands->loadFromClass(ServeCommand::class);
 
 $app = $builder->build();
 $app->run();
