@@ -177,10 +177,9 @@ trait ServiceResolver
 			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): GenericEnumerable {
 				return collect(...$refType->getTypes())
 					->select(static function (mixed $t) use ($self): array {
-						assert($t instanceof ReflectionType, "\$t must be an instance of ReflectionType");
+						assert($t instanceof ReflectionType, '$t must be an instance of ReflectionType');
 
 						/** @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self */
-
 						if ($t instanceof ReflectionUnionType) {
 							return $self($t, $self)->toList();
 						}
@@ -215,6 +214,7 @@ trait ServiceResolver
 					if (is_array($typeName)) {
 						/** @var class-string $combinedTypeName */
 						$combinedTypeName = implode('&', $typeName);
+
 						return $this->getServices()->requireService($combinedTypeName);
 					}
 				} catch (ServiceNotFoundException) {
