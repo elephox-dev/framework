@@ -175,9 +175,12 @@ trait ServiceResolver
 
 		if ($type instanceof ReflectionUnionType) {
 			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): GenericEnumerable {
-				/** @var callable(ReflectionUnionType|ReflectionIntersectionType $refType, callable): GenericEnumerable<class-string> $self */
 				return collect(...$refType->getTypes())
-					->select(static function (ReflectionType $t) use ($self): array {
+					->select(static function (mixed $t) use ($self): array {
+						assert($t instanceof ReflectionType, "\$t must be an instance of ReflectionType");
+
+						/** @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self */
+
 						if ($t instanceof ReflectionUnionType) {
 							return $self($t, $self)->toList();
 						}
@@ -194,7 +197,7 @@ trait ServiceResolver
 					});
 			};
 
-			/** @var GenericEnumerable<class-string|list<class-string>> $typeNames */
+			/** @psalm-suppress DocblockTypeContradiction */
 			$typeNames = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t): string|array => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
 		} else {
 			/** @var ReflectionNamedType $type */
@@ -208,8 +211,11 @@ trait ServiceResolver
 					if (is_string($typeName)) {
 						return $this->getServices()->requireService($typeName);
 					}
+
 					if (is_array($typeName)) {
-						return $this->getServices()->requireService(implode('&', $typeName));
+						/** @var class-string $combinedTypeName */
+						$combinedTypeName = implode('&', $typeName);
+						return $this->getServices()->requireService($combinedTypeName);
 					}
 				} catch (ServiceNotFoundException) {
 					continue;
