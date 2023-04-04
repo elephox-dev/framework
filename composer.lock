@@ -577,25 +577,25 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0.1",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.2 || ^8.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -624,9 +624,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2023-04-04T09:50:52+00:00"
         },
         {
             "name": "psr/log",
@@ -2974,12 +2974,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "d98752053ba5bd1c7b4a229e0b518b3f98a9ea4f"
+                "reference": "212e834217645e3e53f4389c5472fbd08a6837ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/d98752053ba5bd1c7b4a229e0b518b3f98a9ea4f",
-                "reference": "d98752053ba5bd1c7b4a229e0b518b3f98a9ea4f",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/212e834217645e3e53f4389c5472fbd08a6837ac",
+                "reference": "212e834217645e3e53f4389c5472fbd08a6837ac",
                 "shasum": ""
             },
             "require": {
@@ -2995,7 +2995,7 @@
             "require-dev": {
                 "composer/composer": "^2.5.1",
                 "ergebnis/license": "^2.1.0",
-                "ergebnis/php-cs-fixer-config": "^5.3.3",
+                "ergebnis/php-cs-fixer-config": "^5.4.0",
                 "fakerphp/faker": "^1.21.0",
                 "infection/infection": "~0.26.19",
                 "phpunit/phpunit": "^9.6.6",
@@ -3040,7 +3040,7 @@
                 "issues": "https://github.com/ergebnis/composer-normalize/issues",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "time": "2023-03-30T22:59:16+00:00"
+            "time": "2023-04-03T23:00:06+00:00"
         },
         {
             "name": "ergebnis/json",
@@ -3598,12 +3598,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "49a317bdff2a2ef92638797a6d23ff921961165f"
+                "reference": "fb7f3523d563406554a3e739ecc98c25b7943867"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/49a317bdff2a2ef92638797a6d23ff921961165f",
-                "reference": "49a317bdff2a2ef92638797a6d23ff921961165f",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/fb7f3523d563406554a3e739ecc98c25b7943867",
+                "reference": "fb7f3523d563406554a3e739ecc98c25b7943867",
                 "shasum": ""
             },
             "require": {
@@ -3687,7 +3687,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-02T19:30:48+00:00"
+            "time": "2023-04-03T19:59:41+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -5170,16 +5170,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.16.1",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "e27e92d939e2e3636f0a1f0afaba59692c0bf571"
+                "reference": "bfec8729f7e23c40670f98e27e694cfdb13fc12a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/e27e92d939e2e3636f0a1f0afaba59692c0bf571",
-                "reference": "e27e92d939e2e3636f0a1f0afaba59692c0bf571",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/bfec8729f7e23c40670f98e27e694cfdb13fc12a",
+                "reference": "bfec8729f7e23c40670f98e27e694cfdb13fc12a",
                 "shasum": ""
             },
             "require": {
@@ -5209,9 +5209,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.16.1"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.17.0"
             },
-            "time": "2023-02-07T18:11:17+00:00"
+            "time": "2023-04-04T08:27:19+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -8270,12 +8270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "87d0854a97e1367d43cfb4694249939277220b49"
+                "reference": "1f72597760d717bd4f5da7883498293c4c88af55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/87d0854a97e1367d43cfb4694249939277220b49",
-                "reference": "87d0854a97e1367d43cfb4694249939277220b49",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/1f72597760d717bd4f5da7883498293c4c88af55",
+                "reference": "1f72597760d717bd4f5da7883498293c4c88af55",
                 "shasum": ""
             },
             "require": {
@@ -8369,7 +8369,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2023-04-02T16:51:25+00:00"
+            "time": "2023-04-03T12:35:35+00:00"
         },
         {
             "name": "webmozart/assert",
