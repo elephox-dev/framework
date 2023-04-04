@@ -27,28 +27,23 @@ interface Stream extends Stringable, StreamInterface
 
 	public function eof(): bool;
 
-	public function seek($offset, $whence = SEEK_SET): void;
+	public function seek(int $offset, int $whence = SEEK_SET): void;
 
 	public function rewind(): void;
 
 	/**
-	 * @param string $string
-	 *
 	 * @return int<0, max>
 	 */
-	public function write($string): int;
+	public function write(string $string): int;
 
 	public function getContents(): string;
 
-	/**
-	 * @param string $key
-	 */
-	public function getMetadata($key = null): mixed;
+	public function getMetadata(?string $key = null): mixed;
 
 	/**
 	 * @param int $length
 	 */
-	public function read($length): string;
+	public function read(int $length): string;
 
 	/**
 	 * @return string A possibly multibyte character

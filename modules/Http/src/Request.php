@@ -63,19 +63,14 @@ class Request extends AbstractMessage implements Contract\Request
 	}
 
 	#[Pure]
-	public function withRequestTarget($requestTarget): never
+	public function withRequestTarget(string $requestTarget): never
 	{
 		throw new RuntimeException(__METHOD__ . ' is not implemented');
 	}
 
 	#[Pure]
-	public function withMethod($method): static
+	public function withMethod(string $method): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($method)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($method));
-		}
-
 		if ($method === '') {
 			throw new InvalidArgumentException('Expected non-empty-string, but got an empty string instead.');
 		}
@@ -103,7 +98,7 @@ class Request extends AbstractMessage implements Contract\Request
 	}
 
 	#[Pure]
-	public function withUri(UriInterface $uri, $preserveHost = false): static
+	public function withUri(UriInterface $uri, bool $preserveHost = false): static
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall

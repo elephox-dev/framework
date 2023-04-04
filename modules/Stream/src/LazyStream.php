@@ -75,11 +75,8 @@ class LazyStream implements Stream
 		return $this->getStream()->eof();
 	}
 
-	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
+	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
 	{
-		assert(is_int($offset));
-		assert(is_int($whence));
-
 		$this->getStream()->seek($offset, $whence);
 	}
 
@@ -88,17 +85,13 @@ class LazyStream implements Stream
 		$this->getStream()->rewind();
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
-		assert(is_string($string));
-
 		return $this->getStream()->write($string);
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
-		assert(is_int($length));
-
 		return $this->getStream()->read($length);
 	}
 
@@ -107,10 +100,8 @@ class LazyStream implements Stream
 		return $this->getStream()->getContents();
 	}
 
-	public function getMetadata($key = null): mixed
+	public function getMetadata(?string $key = null): mixed
 	{
-		assert(is_string($key) || $key === null);
-
 		return $this->getStream()->getMetadata($key);
 	}
 }

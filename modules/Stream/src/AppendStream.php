@@ -72,11 +72,8 @@ class AppendStream implements Stream
 		return $this->stream->isSeekable() && $this->appendedStream->isSeekable() && $this->getSize() !== null;
 	}
 
-	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
+	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
 	{
-		assert(is_int($offset));
-		assert(is_int($whence));
-
 		$streamSize = $this->stream->getSize();
 		$appendStreamSize = $this->appendedStream->getSize();
 
@@ -120,10 +117,8 @@ class AppendStream implements Stream
 		return $this->stream->isWritable() && $this->appendedStream->isWritable();
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
-		assert(is_string($string));
-
 		$length = mb_strlen($string, 'UTF-8');
 		$written = $this->stream->write($string);
 
@@ -139,10 +134,8 @@ class AppendStream implements Stream
 		return $this->stream->isReadable() && $this->appendedStream->isReadable();
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
-		assert(is_int($length));
-
 		$streamSize = $this->stream->getSize();
 
 		if ($streamSize === null) {
@@ -169,10 +162,8 @@ class AppendStream implements Stream
 		return $this->stream->getContents() . $this->appendedStream->getContents();
 	}
 
-	public function getMetadata($key = null): array
+	public function getMetadata(?string $key = null): array
 	{
-		assert(is_string($key) || $key === null);
-
 		return [$this->stream->getMetadata($key), $this->appendedStream->getMetadata($key)];
 	}
 }

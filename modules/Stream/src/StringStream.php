@@ -84,11 +84,8 @@ class StringStream implements Stream
 		return $this->seekable;
 	}
 
-	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
+	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
 	{
-		assert(is_int($offset));
-		assert(is_int($whence));
-
 		if (!$this->isSeekable()) {
 			throw new RuntimeException('Stream is not seekable');
 		}
@@ -130,10 +127,8 @@ class StringStream implements Stream
 		return $this->writable;
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
-		assert(is_string($string));
-
 		if (!$this->isWritable()) {
 			throw new RuntimeException('Stream is not writable');
 		}
@@ -149,10 +144,8 @@ class StringStream implements Stream
 		return $this->readable;
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
-		assert(is_int($length));
-
 		if (!$this->isReadable()) {
 			throw new RuntimeException('Stream is not readable');
 		}
@@ -171,10 +164,8 @@ class StringStream implements Stream
 	}
 
 	#[Pure]
-	public function getMetadata($key = null): array
+	public function getMetadata(?string $key = null): array
 	{
-		assert(is_string($key) || $key === null);
-
 		return [];
 	}
 }

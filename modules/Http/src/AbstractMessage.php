@@ -30,13 +30,8 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function withProtocolVersion($version): static
+	public function withProtocolVersion(string $version): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($version)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($version));
-		}
-
 		/**
 		 * @psalm-suppress ImpureMethodCall
 		 *
@@ -59,13 +54,8 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function hasHeader($name): bool
+	public function hasHeader(string $name): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (empty($name)) {
 			throw new InvalidArgumentException('Cannot use the empty string as a header name');
 		}
@@ -75,13 +65,8 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function getHeader($name): array
+	public function getHeader(string $name): array
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (empty($name)) {
 			throw new InvalidArgumentException('Cannot use the empty string as a header name');
 		}
@@ -95,24 +80,14 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function getHeaderLine($name): string
+	public function getHeaderLine(string $name): string
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		return implode(',', $this->getHeader($name));
 	}
 
 	#[Pure]
-	public function withHeader($name, $value): static
+	public function withHeader(string $name, $value): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (empty($name)) {
 			throw new InvalidArgumentException('Cannot use the empty string as a header name');
 		}
@@ -131,13 +106,8 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function withAddedHeader($name, $value): static
+	public function withAddedHeader(string $name, $value): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (empty($name)) {
 			throw new InvalidArgumentException('Cannot use the empty string as a header name');
 		}
@@ -156,13 +126,8 @@ abstract class AbstractMessage implements Message
 	}
 
 	#[Pure]
-	public function withoutHeader($name): static
+	public function withoutHeader(string $name): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (empty($name)) {
 			throw new InvalidArgumentException('Cannot use the empty string as a header name');
 		}

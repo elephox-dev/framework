@@ -42,7 +42,7 @@ class Psr7Stream implements Stream
 		return $this->stream->tell();
 	}
 
-	public function seek($offset, $whence = SEEK_SET): void
+	public function seek(int $offset, int $whence = SEEK_SET): void
 	{
 		$this->stream->seek($offset, $whence);
 	}
@@ -52,7 +52,7 @@ class Psr7Stream implements Stream
 		$this->stream->rewind();
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		/** @var int<0, max> */
 		return $this->stream->write($string);
@@ -63,7 +63,7 @@ class Psr7Stream implements Stream
 		return $this->stream->getContents();
 	}
 
-	public function getMetadata($key = null): mixed
+	public function getMetadata(?string $key = null): mixed
 	{
 		return $this->stream->getMetadata($key);
 	}
@@ -88,7 +88,7 @@ class Psr7Stream implements Stream
 		return $this->stream->eof();
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		return $this->stream->read($length);
 	}

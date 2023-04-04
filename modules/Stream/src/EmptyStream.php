@@ -53,7 +53,7 @@ final class EmptyStream implements Stream
 		return false;
 	}
 
-	public function seek($offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] $whence = SEEK_SET): void
+	public function seek(int $offset, #[ExpectedValues([SEEK_SET, SEEK_CUR, SEEK_END])] int $whence = SEEK_SET): void
 	{
 		throw new RuntimeException('Empty stream is not seekable.');
 	}
@@ -69,7 +69,7 @@ final class EmptyStream implements Stream
 		return false;
 	}
 
-	public function write($string): int
+	public function write(string $string): int
 	{
 		throw new RuntimeException('Empty stream is not writable.');
 	}
@@ -80,7 +80,7 @@ final class EmptyStream implements Stream
 		return false;
 	}
 
-	public function read($length): string
+	public function read(int $length): string
 	{
 		throw new RuntimeException('Empty stream is not readable.');
 	}
@@ -92,7 +92,7 @@ final class EmptyStream implements Stream
 	}
 
 	#[Pure]
-	public function getMetadata($key = null): mixed
+	public function getMetadata(?string $key = null): null
 	{
 		return null;
 	}

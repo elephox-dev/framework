@@ -60,21 +60,11 @@ class Response extends AbstractMessage implements Contract\Response
 		return $this->getResponseCode()->value;
 	}
 
-	public function withStatus($code, $reasonPhrase = ''): static
+	public function withStatus(int $code, string $reasonPhrase = ''): static
 	{
 		try {
-			/** @psalm-suppress DocblockTypeContradiction */
-			if (!is_int($code)) {
-				throw new InvalidArgumentException("Expected type 'int', but got " . get_debug_type($code));
-			}
-
 			if ($code < 100 || $code > 599) {
 				throw new InvalidArgumentException('Expected code to be in range 100-599 (inclusive), but got ' . $code);
-			}
-
-			/** @psalm-suppress DocblockTypeContradiction */
-			if (!is_string($reasonPhrase)) {
-				throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($reasonPhrase));
 			}
 
 			if ($reasonPhrase !== '') {

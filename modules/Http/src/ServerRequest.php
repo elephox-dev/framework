@@ -241,25 +241,15 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function getAttribute($name, $default = null): mixed
+	public function getAttribute(string $name, $default = null): mixed
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		/** @psalm-suppress ImpureMethodCall */
 		return $this->parameters->get($name, ParameterSource::Attribute) ?? $default;
 	}
 
 	#[Pure]
-	public function withAttribute($name, $value): static
+	public function withAttribute(string $name, $value): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		if (!is_string($value) && !is_int($value) && !is_array($value)) {
 			throw new InvalidArgumentException("Expected type 'string', 'int' or 'array', but got " . get_debug_type($value));
 		}
@@ -273,13 +263,8 @@ class ServerRequest extends Request implements Contract\ServerRequest
 	}
 
 	#[Pure]
-	public function withoutAttribute($name): static
+	public function withoutAttribute(string $name): static
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($name)) {
-			throw new InvalidArgumentException("Expected type 'string', but got " . get_debug_type($name));
-		}
-
 		/**
 		 * @psalm-suppress ImpureMethodCall
 		 *
