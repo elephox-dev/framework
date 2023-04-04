@@ -40,6 +40,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	public static function compareHeaderNames(string $a, string $b): bool
 	{
+		// FIXME: this needs to be cached/optimized somehow
 		return $a === $b || Casing::toHttpHeader($a) === Casing::toHttpHeader($b);
 	}
 
