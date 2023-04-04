@@ -78,7 +78,7 @@ class Request extends AbstractMessage implements Contract\Request
 		$requestMethod = null;
 		if (Casing::toUpper($method) === $method) {
 			/** @var \Elephox\Http\Contract\RequestMethod $requestMethod */
-			$requestMethod = RequestMethod::tryFrom(Casing::toUpper($method));
+			$requestMethod = RequestMethod::tryFrom($method);
 		}
 
 		$requestMethod ??= new CustomRequestMethod($method);
