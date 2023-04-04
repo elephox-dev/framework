@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
+use Elephox\Files\Contract\Directory as DirectoryContract;
+use Elephox\Files\Contract\File as FileContract;
+use Elephox\Files\Directory;
+use Elephox\Files\File;
 use LogicException;
 
 /**
@@ -117,6 +121,20 @@ class Option
 		return [$this->value];
 	}
 
+	public function file(): FileContract
+	{
+		$path = $this->string();
+
+		return new File($path);
+	}
+
+	public function directory(): DirectoryContract
+	{
+		$path = $this->string();
+
+		return new Directory($path);
+	}
+
 	public function nullableInt(): ?int
 	{
 		if ($this->value === null) {
@@ -160,5 +178,23 @@ class Option
 		}
 
 		return $this->array();
+	}
+
+	public function nullableFile(): ?FileContract
+	{
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->file();
+	}
+
+	public function nullableDirectory(): ?DirectoryContract
+	{
+		if ($this->value === null) {
+			return null;
+		}
+
+		return $this->directory();
 	}
 }
