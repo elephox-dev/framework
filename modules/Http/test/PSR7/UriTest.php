@@ -19,6 +19,10 @@ use Psr\Http\Message\UriInterface;
  */
 class UriTest extends UriIntegrationTest
 {
+	protected $skippedTests = [
+		'testWithSchemeInvalidArguments' => 'Tests are not compatible with new type hints yet.',
+	];
+
 	public function createUri($uri): UriInterface|Url
 	{
 		return Url::fromString($uri);
