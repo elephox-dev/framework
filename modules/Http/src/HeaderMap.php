@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
+use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Collection\OffsetNotAllowedException;
 use Elephox\Collection\OffsetNotFoundException;
 use Elephox\OOR\Casing;
@@ -41,7 +42,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 	public static function compareHeaderNames(string $a, string $b): bool
 	{
 		// FIXME: this needs to be cached/optimized somehow
-		return $a === $b || Casing::toHttpHeader($a) === Casing::toHttpHeader($b);
+		return DefaultEqualityComparer::equalsIgnoreCase($a, $b);
 	}
 
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
