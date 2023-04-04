@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Http\PSR7;
 
 use Elephox\Http\Contract\ServerRequest as ElephoxServerRequest;
-use Elephox\Http\ServerRequest;
+use Elephox\Http\ServerRequestBuilder;
 use Elephox\Http\Url;
 use Http\Psr7Test\ServerRequestIntegrationTest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,16 +37,9 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ServerRequestTest extends ServerRequestIntegrationTest
 {
-	protected $skippedTests = [
-		'testGetServerParams' => "Elephox doesn't load the environment server params",
-	];
-
 	public function createSubject(): ElephoxServerRequest|ServerRequestInterface
 	{
-		return ServerRequest::build()
-			->requestUrl(Url::fromString('/'))
-			->get()
-		;
+		return ServerRequestBuilder::fromGlobals(requestUrl: Url::fromString('/'));
 	}
 
 	public function validParsedBodyParams(): array
