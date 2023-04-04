@@ -36,20 +36,24 @@ class ParameterMap implements Contract\ParameterMap
 		$candidateSource = null;
 
 		foreach ($trySources as $parameterSource) {
-			if ($this->parameters->has($parameterSource)) {
-				$parameterList = $this->parameters->get($parameterSource);
-				if ($parameterList->has($key)) {
-					if ($candidateFound) {
-						/** @var ParameterSource $candidateSource */
-						throw new RuntimeException("Ambiguous parameter key: '$key'. Found in both '$parameterSource->name' and '$candidateSource->name'.");
-					}
-
-					/** @var mixed $candidate */
-					$candidate = $parameterList->get($key);
-					$candidateSource = $parameterSource;
-					$candidateFound = true;
-				}
+			if (!$this->parameters->has($parameterSource)) {
+				continue;
 			}
+
+			$parameterList = $this->parameters->get($parameterSource);
+			if (!$parameterList->has($key)) {
+				continue;
+			}
+
+			if ($candidateFound) {
+				/** @var ParameterSource $candidateSource */
+				throw new RuntimeException("Ambiguous parameter key: '$key'. Found in both '$parameterSource->name' and '$candidateSource->name'.");
+			}
+
+			/** @var mixed $candidate */
+			$candidate = $parameterList->get($key);
+			$candidateSource = $parameterSource;
+			$candidateFound = true;
 		}
 
 		if ($candidateFound) {
@@ -64,11 +68,13 @@ class ParameterMap implements Contract\ParameterMap
 		$trySources = $source ? [$source] : ParameterSource::cases();
 
 		foreach ($trySources as $parameterSource) {
-			if ($this->parameters->has($parameterSource)) {
-				$parameterList = $this->parameters->get($parameterSource);
-				if ($parameterList->has($key)) {
-					return true;
-				}
+			if (!$this->parameters->has($parameterSource)) {
+				continue;
+			}
+
+			$parameterList = $this->parameters->get($parameterSource);
+			if ($parameterList->has($key)) {
+				return true;
 			}
 		}
 
