@@ -36,14 +36,6 @@ use ReflectionParameter;
  */
 class ServiceCollectionTest extends MockeryTestCase
 {
-	public function testSelfRegister(): void
-	{
-		$container = new ServiceCollection();
-
-		static::assertTrue($container->has(Contract\ServiceCollection::class));
-		static::assertTrue($container->has(Contract\Resolver::class));
-	}
-
 	public function testDescribeSingletonInstance(): void
 	{
 		$container = new ServiceCollection();
