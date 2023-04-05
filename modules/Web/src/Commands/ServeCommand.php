@@ -54,13 +54,13 @@ readonly class ServeCommand implements CommandHandler
 	{
 		$host = $command->arguments->get('host')->string();
 		$port = $command->arguments->get('port')->int();
-		$root = $command->options->get('root')->nullableDirectory() ?? $this->environment->root()->directory('public');
+		$documentRoot = $command->options->get('root')->nullableDirectory() ?? $this->environment->root()->directory('public');
 		$router = $command->options->get('router')->nullableFile() ?? new File(dirname(__DIR__, 2) . '/data/router.php');
 		$noReload = $command->options->get('no-reload')->bool();
 		$verbose = $command->options->get('verbose')->bool();
 
-		if (!$root->exists()) {
-			throw new InvalidArgumentException("Root directory ($root) does not exist");
+		if (!$documentRoot->exists()) {
+			throw new InvalidArgumentException("Root directory ($documentRoot) does not exist");
 		}
 
 		if (!$router->exists()) {
@@ -71,8 +71,8 @@ readonly class ServeCommand implements CommandHandler
 			$router = null;
 		}
 
-		$documentRoot = $root->parent();
-		$environment = $this->getEnvironment($documentRoot, $command);
+		$appRoot = $documentRoot->parent();
+		$environment = $this->getEnvironment($appRoot, $command);
 
 		$phpExe = (new PhpExecutableFinder())->find(false);
 		$serverCommand = Arr::wrap($phpExe, '-S', "$host:$port", '-t', $documentRoot->path());
@@ -82,9 +82,9 @@ readonly class ServeCommand implements CommandHandler
 
 		$this->logger->info('Starting PHP built-in webserver on ' . Console::link('http://' . $host . ':' . $port), ['command' => $serverCommand->implode(' ')]);
 
-		$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
+		$process = $this->startServerProcess($serverCommand, $appRoot, $environment, $verbose);
 
-		$onEnvFileChanged = function (FileChangedEvent $fileChangedEvent) use (&$process, $serverCommand, $documentRoot, $environment, $verbose): void {
+		$onEnvFileChanged = function (FileChangedEvent $fileChangedEvent) use (&$process, $serverCommand, $appRoot, $environment, $verbose): void {
 			$this->logger->warning($fileChangedEvent->file()->name() . ' file changed. Restarting server...');
 
 			$environment->loadFromEnvFile($fileChangedEvent->file());
@@ -94,7 +94,7 @@ readonly class ServeCommand implements CommandHandler
 
 			usleep(1_000_000);
 
-			$process = $this->startServerProcess($serverCommand, $documentRoot, $environment, $verbose);
+			$process = $this->startServerProcess($serverCommand, $appRoot, $environment, $verbose);
 		};
 
 		$fileWatcher = new FileWatcher();
@@ -121,11 +121,11 @@ readonly class ServeCommand implements CommandHandler
 		return 0;
 	}
 
-	private function startServerProcess(Arr $serverCommand, Directory $documentRoot, Environment $environment, bool $verbose): Process
+	private function startServerProcess(Arr $serverCommand, Directory $appRoot, Environment $environment, bool $verbose): Process
 	{
 		$process = new Process(
 			$serverCommand->getSource(),
-			$documentRoot->path(),
+			$appRoot->path(),
 			$environment->asEnumerable()->toArray(),
 		);
 
@@ -159,12 +159,12 @@ readonly class ServeCommand implements CommandHandler
 		return $process;
 	}
 
-	private function getEnvironment(Directory $documentRoot, CommandInvocation $command): MemoryEnvironment
+	private function getEnvironment(Directory $appRoot, CommandInvocation $command): MemoryEnvironment
 	{
 		$envName = $command->options->get('env')->string();
 		$workers = $command->options->get('workers')->value;
 
-		$environment = new MemoryEnvironment($documentRoot->path());
+		$environment = new MemoryEnvironment($appRoot->path());
 		$envFile = $environment->getDotEnvFileName();
 		$environment->loadFromEnvFile($envFile);
 		$localEnvFile = $environment->getDotEnvFileName();
