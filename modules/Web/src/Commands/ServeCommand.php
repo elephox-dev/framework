@@ -132,6 +132,7 @@ readonly class ServeCommand implements CommandHandler
 		$process->start(function (string $type, string $buffer) use ($verbose): void {
 			$buffer = trim($buffer);
 			foreach (explode("\n", $buffer) as $line) {
+				/** @var string $line */
 				$line = preg_replace('/^(?:\[.+?] )?\[.+?] /i', '', $line);
 
 				if (preg_match('/^(?:(?<ip>.+):(?<port>\d{1,5}) (?:(?<action>Accepted|Closing)|\[(?<status>\d{3})]: (?<verb>\S+) (?<path>\S*)(?<message>.*)?)|(?<log>.+))$/i', $line, $matches)) {
@@ -214,7 +215,7 @@ readonly class ServeCommand implements CommandHandler
 
 				break;
 			default:
-				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . PHP_OS_FAMILY . "'). Defaulting to 2");
+				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . (string) PHP_OS_FAMILY . "'). Defaulting to 2");
 
 				return 2;
 		}

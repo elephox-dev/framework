@@ -64,10 +64,13 @@ trait IsArrayEnumerable
 	 */
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
+		assert(is_string($key) || is_int($key));
+
 		if ($comparer === null) {
 			return array_key_exists($key, $this->items);
 		}
 
+		/** @var TKey $k */
 		foreach ($this->items as $k => $v) {
 			if ($comparer($key, $k)) {
 				return true;
