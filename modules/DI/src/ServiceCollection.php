@@ -42,16 +42,8 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			comparer: static fn (?ServiceDescriptor $a, ?ServiceDescriptor $b): bool => $a?->serviceType === $b?->serviceType,
 		);
 
-		/** @var ArrayMap<non-empty-string, class-string> aliases */
+		/** @var ArrayMap<non-empty-string, class-string> */
 		$this->aliases = new ArrayMap();
-
-		$this->registerSelf();
-	}
-
-	private function registerSelf(): void
-	{
-		$this->addSingleton(Contract\ServiceCollection::class, instance: $this);
-		$this->addSingleton(Resolver::class, instance: $this);
 	}
 
 	protected function getServices(): ServiceCollectionContract
@@ -61,7 +53,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	public function resolver(): Resolver
 	{
-		return $this->requireService(Resolver::class);
+		return $this;
 	}
 
 	/**
