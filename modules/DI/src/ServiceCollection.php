@@ -196,6 +196,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			$serviceName === Resolver::class ||
 			$serviceName === self::class
 		) {
+			/** @var TService */
 			return $this;
 		}
 
