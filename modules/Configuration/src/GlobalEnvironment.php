@@ -20,7 +20,9 @@ class GlobalEnvironment extends DotEnvEnvironment
 
 	public function loadFromEnvFile(File $envFile, bool $overwriteExisting = true): void
 	{
-		if (!$envFile->exists()) return;
+		if (!$envFile->exists()) {
+			return;
+		}
 
 		if ($overwriteExisting) {
 			$dotenv = Dotenv::createMutable($envFile->parent()->path(), $envFile->name());

@@ -64,8 +64,11 @@ readonly class ServeCommand implements CommandHandler
 		}
 
 		if (!$router->exists()) {
-			if ($router->path() === 'null') $router = null;
-			else throw new InvalidArgumentException('Given router file does not exist');
+			if ($router->path() !== 'null') {
+				throw new InvalidArgumentException('Given router file does not exist');
+			}
+
+			$router = null;
 		}
 
 		$documentRoot = $root->parent();
@@ -135,7 +138,7 @@ readonly class ServeCommand implements CommandHandler
 					if (isset($matches['log']) && $matches['log'] !== '') {
 						// log message
 						$this->logger->info($matches['log']);
-					} else if (isset($matches['action']) && $matches['action'] !== '') {
+					} elseif (isset($matches['action']) && $matches['action'] !== '') {
 						if ($verbose) {
 							// log connection
 							$this->logger->debug(sprintf('%s connection at %s:%d', $matches['action'], $matches['ip'], $matches['port']));
@@ -195,19 +198,24 @@ readonly class ServeCommand implements CommandHandler
 				$procCountCommand = 'echo %NUMBER_OF_PROCESSORS%';
 
 				$this->logger->warning('PHP_CLI_SERVER_WORKERS is not supported by PHP on Windows but will be set to the number of available CPU cores anyway.');
+
 				break;
 			case 'Linux':
 				$procCountCommand = 'nproc';
+
 				break;
 			case 'Solaris':
 				$procCountCommand = 'psrinfo -p';
+
 				break;
 			case 'BSD':
 			case 'Darwin':
 				$procCountCommand = 'sysctl -n hw.ncpu';
+
 				break;
 			default:
 				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . PHP_OS_FAMILY . "'). Defaulting to 2");
+
 				return 2;
 		}
 
@@ -218,6 +226,7 @@ readonly class ServeCommand implements CommandHandler
 		}
 
 		$this->logger->error("Unable to determine the number of available processor cores (tried '$procCountCommand'). Defaulting to 2");
+
 		return 2;
 	}
 }

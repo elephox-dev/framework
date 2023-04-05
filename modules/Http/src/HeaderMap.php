@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Http;
 
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Collection\OffsetNotAllowedException;
 use Elephox\Collection\OffsetNotFoundException;
 use Elephox\OOR\Casing;

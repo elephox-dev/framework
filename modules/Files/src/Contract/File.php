@@ -8,7 +8,6 @@ use Elephox\Files\FileCopyException;
 use Elephox\Files\FileMoveException;
 use Elephox\Files\FileNotCreatedException;
 use Elephox\Stream\Contract\Stream;
-use Elephox\Support\Contract\HasHash;
 use Elephox\Mimey\MimeTypeInterface;
 
 interface File extends FilesystemNode

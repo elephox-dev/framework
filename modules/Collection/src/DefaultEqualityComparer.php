@@ -6,7 +6,6 @@ namespace Elephox\Collection;
 use Elephox\Collection\Contract\Comparable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
-use Stringable;
 
 final class DefaultEqualityComparer
 {

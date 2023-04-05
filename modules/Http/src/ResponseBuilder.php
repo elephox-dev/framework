@@ -59,16 +59,16 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		if ($permanent) {
 			if ($preserveMethod) {
 				return $this->responseCode(ResponseCode::PermanentRedirect);
-			} else {
-				return $this->responseCode(ResponseCode::MovedPermanently);
 			}
-		} else {
-			if ($preserveMethod) {
-				return $this->responseCode(ResponseCode::TemporaryRedirect);
-			} else {
-				return $this->responseCode(ResponseCode::Found);
-			}
+
+			return $this->responseCode(ResponseCode::MovedPermanently);
 		}
+
+		if ($preserveMethod) {
+			return $this->responseCode(ResponseCode::TemporaryRedirect);
+		}
+
+		return $this->responseCode(ResponseCode::Found);
 	}
 
 	public function getResponseCode(): ?ResponseCode
@@ -108,7 +108,7 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->exception;
 	}
 
-	public function textBody(#[Language("TEXT")] string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static
+	public function textBody(#[Language('TEXT')] string $content, ?MimeTypeInterface $mimeType = MimeType::TextPlain): static
 	{
 		$this->body(new StringStream($content));
 

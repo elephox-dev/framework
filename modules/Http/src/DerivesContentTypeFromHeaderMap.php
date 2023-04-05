@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Http;
 
-use Elephox\Collection\DefaultEqualityComparer;
 use Elephox\Mimey\MimeType;
 use Elephox\Mimey\MimeTypeInterface;
 use JetBrains\PhpStorm\Immutable;

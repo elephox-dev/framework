@@ -75,7 +75,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			);
 
 			/** @var ServiceDescriptor<TService, object> $oldDescriptor */
-			$oldDescriptor = $this->services->first(static fn(ServiceDescriptor $d) => $d->serviceType === $descriptor->serviceType);
+			$oldDescriptor = $this->services->first(static fn (ServiceDescriptor $d) => $d->serviceType === $descriptor->serviceType);
 
 			$this->services->remove($oldDescriptor);
 			$this->services->add($descriptor);
@@ -272,7 +272,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 	private function getSingletonFactory(ServiceDescriptor $descriptor): callable
 	{
-		return function (Resolver $resolver) use ($descriptor): object {
+		return static function (Resolver $resolver) use ($descriptor): object {
 			if ($descriptor->instance === null) {
 				assert($descriptor->implementationFactory !== null, "Service '$descriptor->implementationType' has no factory and no instance.");
 

@@ -53,7 +53,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body;
 	}
 
-	public function textBody(#[Language("TEXT")] string $content): static
+	public function textBody(#[Language('TEXT')] string $content): static
 	{
 		return $this->body(new StringStream($content));
 	}
@@ -73,7 +73,7 @@ abstract class AbstractMessageBuilder extends AbstractBuilder implements Message
 		return $this->body(ResourceStream::wrap($resource));
 	}
 
-	public function htmlBody(#[Language("HTML")] string $content): static
+	public function htmlBody(#[Language('HTML')] string $content): static
 	{
 		return $this->body(new StringStream($content));
 	}

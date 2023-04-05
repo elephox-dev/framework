@@ -9,7 +9,6 @@ use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Http\Response;
 use Elephox\Http\ResponseCode;
-use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Contract\WebMiddleware;
 
 readonly class StaticContentHandler implements WebMiddleware
