@@ -236,6 +236,16 @@ trait ServiceResolver
 			return $this->callback($onUnresolved, ['parameter' => $parameter, 'index' => $index]);
 		}
 
-		throw new UnresolvedParameterException($parameter->getDeclaringClass()?->getShortName() ?? '<unknown class>', $parameter->getDeclaringFunction()->getShortName(), (string) $type, $parameter->name);
+		throw new UnresolvedParameterException(
+			$parameter->getDeclaringClass()?->getShortName() ??
+				$parameter->getDeclaringFunction()->getClosureScopeClass()?->getShortName() ??
+				'<unknown class>',
+			$parameter->getDeclaringFunction()->getShortName(),
+			(string) $type,
+			$parameter->name,
+			$parameter->getDeclaringFunction()->getFileName(),
+			$parameter->getDeclaringFunction()->getStartLine(),
+			$parameter->getDeclaringFunction()->getEndLine(),
+		);
 	}
 }

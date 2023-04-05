@@ -13,6 +13,7 @@ use Elephox\DI\Data\TestServiceInterface;
 use Elephox\DI\Data\TestServiceInterface2;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use ReflectionException;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -332,6 +333,21 @@ class ServiceCollectionTest extends MockeryTestCase
 		$this->expectException(UnresolvedParameterException::class);
 		$this->expectExceptionMessage('Could not resolve parameter $service with type Elephox\DI\Data\TestServiceInterface in TestServiceClass::returnsTestServiceInterface()');
 		$serviceCollection->resolveArguments($reflectionService);
+	}
+
+	/**
+	 * @throws ReflectionException
+	 */
+	public function testResolveUnresolvableArgumentsInClosure(): void
+	{
+		$closure = static fn (TestServiceInterface $service): TestServiceInterface => $service;
+		$reflection = new ReflectionFunction($closure);
+
+		$serviceCollection = new ServiceCollection();
+
+		$this->expectException(UnresolvedParameterException::class);
+		$this->expectExceptionMessageMatches('/Could not resolve parameter \\$service with type Elephox\\\\DI\\\\Data\\\\TestServiceInterface in ServiceCollectionTest::{closure}\(\) at .+? in line \d+/');
+		$serviceCollection->resolveArguments($reflection);
 	}
 
 	/**
