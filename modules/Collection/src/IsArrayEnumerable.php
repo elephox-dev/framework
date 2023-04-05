@@ -57,4 +57,23 @@ trait IsArrayEnumerable
 
 		return false;
 	}
+
+	/**
+	 * @param TKey $key
+	 * @param null|callable(TKey, TKey): bool $comparer
+	 */
+	public function containsKey(mixed $key, ?callable $comparer = null): bool
+	{
+		if ($comparer === null) {
+			return array_key_exists($key, $this->items);
+		}
+
+		foreach ($this->items as $k => $v) {
+			if ($comparer($key, $k)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

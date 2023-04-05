@@ -30,6 +30,7 @@ class ArrayList implements GenericList
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::containsKey as arrayContainsKey;
 		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
@@ -295,6 +296,11 @@ class ArrayList implements GenericList
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->arrayContains($value, $comparer);
+	}
+
+	public function containsKey(mixed $key, ?callable $comparer = null): bool
+	{
+		return $this->arrayContainsKey($key, $comparer);
 	}
 
 	/**

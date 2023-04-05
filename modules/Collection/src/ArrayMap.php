@@ -33,6 +33,7 @@ class ArrayMap implements GenericMap, ArrayAccess
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::containsKey as arrayContainsKey;
 		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
@@ -105,11 +106,6 @@ class ArrayMap implements GenericMap, ArrayAccess
 
 	public function has(mixed $key): bool
 	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (!is_string($key) && !is_int($key)) {
-			return false;
-		}
-
 		return array_key_exists($key, $this->items);
 	}
 
@@ -174,6 +170,11 @@ class ArrayMap implements GenericMap, ArrayAccess
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->arrayContains($value, $comparer);
+	}
+
+	public function containsKey(mixed $key, ?callable $comparer = null): bool
+	{
+		return $this->arrayContainsKey($key, $comparer);
 	}
 
 	/**
