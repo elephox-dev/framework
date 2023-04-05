@@ -41,8 +41,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 	public static function compareHeaderNames(string $a, string $b): bool
 	{
-		// FIXME: this needs to be cached/optimized somehow
-		return DefaultEqualityComparer::equalsIgnoreCase($a, $b);
+		return strcasecmp($a, $b) === 0;
 	}
 
 	public function containsKey(mixed $key, ?callable $comparer = null): bool

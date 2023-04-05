@@ -30,7 +30,7 @@ trait DerivesContentTypeFromHeaderMap
 		/**
 		 * @psalm-suppress ImpureMethodCall
 		 */
-		$headerName = $headerMap->firstKeyOrDefault(null, static fn (string|array $value, string $key) => DefaultEqualityComparer::equalsIgnoreCase($key, HeaderName::ContentType->value));
+		$headerName = $headerMap->firstKeyOrDefault(null, static fn (string|array $value, string $key) => strcasecmp($key, HeaderName::ContentType->value) === 0);
 		if ($headerName === null) {
 			return null;
 		}
