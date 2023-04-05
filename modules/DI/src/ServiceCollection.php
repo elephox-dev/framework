@@ -300,7 +300,10 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
-		return $this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
+		return $serviceName === ServiceCollectionContract::class ||
+			$serviceName === Resolver::class ||
+			$serviceName === ServiceCollection::class ||
+			$this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
 	}
 
 	/**
