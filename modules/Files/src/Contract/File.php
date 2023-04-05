@@ -11,7 +11,7 @@ use Elephox\Stream\Contract\Stream;
 use Elephox\Support\Contract\HasHash;
 use Elephox\Mimey\MimeTypeInterface;
 
-interface File extends FilesystemNode, HasHash
+interface File extends FilesystemNode
 {
 	public const DEFAULT_STREAM_CHUNK_SIZE = 4096;
 
@@ -60,4 +60,6 @@ interface File extends FilesystemNode, HasHash
 	public function writeContents(string $contents): void;
 
 	public function contents(): string;
+
+	public function getHash(): string;
 }
