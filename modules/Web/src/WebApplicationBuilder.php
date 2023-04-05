@@ -54,7 +54,6 @@ class WebApplicationBuilder
 		$services->addSingleton(Environment::class, instance: $environment);
 		$services->addSingleton(WebEnvironment::class, instance: $environment);
 		$services->addSingleton(Configuration::class, instance: $configuration);
-		$services->addSingleton(ExceptionHandler::class, DefaultExceptionHandler::class);
 
 		return new static(
 			$configuration,
@@ -83,6 +82,8 @@ class WebApplicationBuilder
 		$this->loadEnvironmentConfigFile();
 
 		$this->addDefaultMiddleware();
+
+		$this->addDefaultExceptionHandler();
 	}
 
 	protected function getEnvironment(): WebEnvironment
@@ -110,6 +111,14 @@ class WebApplicationBuilder
 		$this->pipeline->push(new ServerTimingHeaderMiddleware('pipeline'));
 		$this->pipeline->push(new FileExtensionToContentType());
 		$this->pipeline->push(new StaticContentHandler($this->getEnvironment()->getWebRoot()));
+	}
+
+	public function addDefaultExceptionHandler(): void
+	{
+		$handler = new DefaultExceptionHandler();
+
+		$this->getServices()->addSingleton(ExceptionHandler::class, instance: $handler);
+		$this->pipeline->exceptionHandler($handler);
 	}
 
 	public function build(): WebApplication
