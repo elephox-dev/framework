@@ -27,6 +27,9 @@ use ReflectionParameter;
  * @covers \Elephox\DI\ClassNotFoundException
  * @covers \Elephox\Collection\IteratorProvider
  * @covers \Elephox\DI\ServiceLifetime
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Collection\Enumerable
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable

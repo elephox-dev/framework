@@ -30,6 +30,11 @@ use Psr\Http\Message\ServerRequestInterface;
  * @covers \Elephox\Http\HeaderMap
  * @covers \Elephox\Http\Cookie
  * @covers \Elephox\Http\HeaderName
+ * @covers \Elephox\Http\SessionMap
+ * @covers \Elephox\Http\CookieMap
+ * @covers \Elephox\Http\UploadedFileMap
+ * @covers \Elephox\OOR\Str
+ * @covers \Elephox\Stream\ResourceStream
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *
