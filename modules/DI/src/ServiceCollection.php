@@ -191,6 +191,14 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
+		if (
+			$serviceName === ServiceCollectionContract::class ||
+			$serviceName === Resolver::class ||
+			$serviceName === ServiceCollection::class
+		) {
+			return $this;
+		}
+
 		$descriptor = $this->tryFindDescriptor($serviceName);
 		if ($descriptor === null) {
 			throw new ServiceNotFoundException($serviceName);
