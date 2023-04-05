@@ -2877,12 +2877,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elephox-dev/builder-whoops-middleware.git",
-                "reference": "0dee3dc1493ecc1f268465295387525a6055aa3b"
+                "reference": "8f95dabf641e526e5309f95181a382cb44e23f41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/0dee3dc1493ecc1f268465295387525a6055aa3b",
-                "reference": "0dee3dc1493ecc1f268465295387525a6055aa3b",
+                "url": "https://api.github.com/repos/elephox-dev/builder-whoops-middleware/zipball/8f95dabf641e526e5309f95181a382cb44e23f41",
+                "reference": "8f95dabf641e526e5309f95181a382cb44e23f41",
                 "shasum": ""
             },
             "require": {
@@ -2915,7 +2915,7 @@
                 "issues": "https://github.com/elephox-dev/builder-whoops-middleware/issues",
                 "source": "https://github.com/elephox-dev/builder-whoops-middleware/tree/develop"
             },
-            "time": "2023-04-04T17:30:17+00:00"
+            "time": "2023-04-04T20:32:09+00:00"
         },
         {
             "name": "elephox/composer-module-sync",
@@ -8270,12 +8270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "bf0740a58c77359d021a05085c1ac4e58a610a6f"
+                "reference": "82b3a7c3d32af22566876d7b8d607cf736c05357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/bf0740a58c77359d021a05085c1ac4e58a610a6f",
-                "reference": "bf0740a58c77359d021a05085c1ac4e58a610a6f",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/82b3a7c3d32af22566876d7b8d607cf736c05357",
+                "reference": "82b3a7c3d32af22566876d7b8d607cf736c05357",
                 "shasum": ""
             },
             "require": {
@@ -8369,7 +8369,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2023-04-04T10:59:55+00:00"
+            "time": "2023-04-04T18:36:21+00:00"
         },
         {
             "name": "webmozart/assert",
