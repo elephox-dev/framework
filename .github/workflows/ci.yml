@@ -173,7 +173,7 @@ jobs:
       - name: 🐘 Setup PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           extensions: ${{ env.php-extensions }}
           tools: php-coveralls/php-coveralls:^2.5.2
         env:
