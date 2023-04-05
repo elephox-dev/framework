@@ -194,7 +194,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		if (
 			$serviceName === ServiceCollectionContract::class ||
 			$serviceName === Resolver::class ||
-			$serviceName === ServiceCollection::class
+			$serviceName === self::class
 		) {
 			return $this;
 		}
@@ -302,7 +302,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 		return $serviceName === ServiceCollectionContract::class ||
 			$serviceName === Resolver::class ||
-			$serviceName === ServiceCollection::class ||
+			$serviceName === self::class ||
 			$this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
 	}
 
