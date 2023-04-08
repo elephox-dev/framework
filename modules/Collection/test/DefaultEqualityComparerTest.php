@@ -17,7 +17,7 @@ use stdClass;
  */
 class DefaultEqualityComparerTest extends TestCase
 {
-	public function equalsDataProvider(): iterable
+	public static function equalsDataProvider(): iterable
 	{
 		yield [1, 1, true];
 		yield [0, 0, true];
@@ -65,7 +65,7 @@ class DefaultEqualityComparerTest extends TestCase
 		static::assertSame($result, DefaultEqualityComparer::equals($a, $b));
 	}
 
-	public function sameDataProvider(): iterable
+	public static function sameDataProvider(): iterable
 	{
 		yield [1, 1, true];
 		yield [1, 2, false];
@@ -99,7 +99,7 @@ class DefaultEqualityComparerTest extends TestCase
 		static::assertSame(!$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::same(...))($a, $b));
 	}
 
-	public function compareDataProvider(): iterable
+	public static function compareDataProvider(): iterable
 	{
 		yield [1, 1, 0];
 		yield [1, 2, -1];
@@ -133,7 +133,7 @@ class DefaultEqualityComparerTest extends TestCase
 		static::assertSame(-$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::compare(...))($a, $b));
 	}
 
-	public function invalidCompareDataProvider(): iterable
+	public static function invalidCompareDataProvider(): iterable
 	{
 		$test1 = new TestComparable();
 
