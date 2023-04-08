@@ -181,7 +181,7 @@ jobs:
       - name: 📥 Download coverage data
         uses: actions/download-artifact@v2
         with:
-          name: ${{ runner.os }}-8.1-coverage
+          name: ${{ runner.os }}-8.2-coverage
           path: build/coverage/
       - name: 📊 Publish coverage data to coveralls.io
         env:
