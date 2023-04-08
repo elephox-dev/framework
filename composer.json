@@ -229,7 +229,7 @@
         ],
         "update-benchmark-baseline": [
             "@putenv XDEBUG_MODE=off",
-            "phpbench run --tag=baseline --retry-threshold=5 --iterations=10 --dump-file=baselines/benchmark.baseline.xml"
+            "phpbench run --tag=baseline --retry-threshold=5 --iterations=10 --dump-file=tmp/benchmark.baseline.xml"
         ],
         "update-readme": [
             "@putenv XDEBUG_MODE=off",
