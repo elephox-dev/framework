@@ -40,6 +40,9 @@ class RegexTest extends TestCase
 			'hello' => 'hello',
 			1 => 'hello',
 		], $simple->toArray());
+
+		$noMatch = Regex::match('/(hello)/', 'world');
+		static::assertNull($noMatch);
 	}
 
 	public function testMatches(): void

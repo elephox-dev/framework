@@ -28,16 +28,22 @@ class Regex
 	}
 
 	/**
-	 * @return ArrayMap<int|string, string>
+	 * @return null|ArrayMap<int|string, string>
 	 *
 	 * @param string $pattern
 	 * @param string $subject
 	 */
-	public static function match(string $pattern, string $subject): ArrayMap
+	public static function match(string $pattern, string $subject): ?ArrayMap
 	{
 		$matches = [];
-		if (preg_match($pattern, $subject, $matches) === false) {
+		$result = preg_match($pattern, $subject, $matches);
+
+		if ($result === false) {
 			throw new InvalidArgumentException('An error occurred while matching: ' . preg_last_error_msg());
+		}
+
+		if ($result === 0) {
+			return null;
 		}
 
 		/** @var ArrayMap<array-key, string> */
