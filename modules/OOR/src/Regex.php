@@ -67,9 +67,4 @@ class Regex
 
 		return 1.0 - ($score / ($maxScore + 1.0));
 	}
-
-	public static function escape(string $pattern): string
-	{
-		return preg_quote($pattern, '/');
-	}
 }
