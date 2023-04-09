@@ -70,7 +70,17 @@ class OrderedIterator implements Iterator
 
 	public function key(): string|int|null
 	{
-		return key($this->cache);
+		$currentRow = current($this->cache);
+		if ($currentRow === false) {
+			return null;
+		}
+
+		$currentKey = $currentRow['key'];
+		if (is_numeric($currentKey)) {
+			return key($this->cache); // re-index enumerables with numeric keys
+		}
+
+		return $currentKey;
 	}
 
 	public function valid(): bool
