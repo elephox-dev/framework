@@ -21,17 +21,12 @@ class ArraySet implements GenericSet
 	/**
 	 * @use IsEnumerable<T>
 	 */
-	use IsEnumerable {
-		//		IsEnumerable::contains as genericContains;
-		IsEnumerable::firstOrDefault as genericFirstOrDefault;
-	}
-
+	use IsEnumerable;
 	/**
 	 * @use IsArrayEnumerable<mixed, T>
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
-		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**
@@ -134,19 +129,5 @@ class ArraySet implements GenericSet
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->arrayContains($value, $comparer ?? $this->comparer);
-	}
-
-	/**
-	 * @template TDefault
-	 *
-	 * @param TDefault $defaultValue
-	 * @param null|callable(T): bool $predicate
-	 *
-	 * @return TDefault|T
-	 */
-	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
-	{
-		/** @var T|TDefault */
-		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 }
