@@ -20,18 +20,13 @@ class ArrayList implements GenericList
 	/**
 	 * @use IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable {
-		//		IsKeyedEnumerable::contains as genericContains;
-		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
-	}
-
+	use IsKeyedEnumerable;
 	/**
 	 * @use IsArrayEnumerable<int, T>
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
 		IsArrayEnumerable::containsKey as arrayContainsKey;
-		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
 	/**
@@ -301,20 +296,6 @@ class ArrayList implements GenericList
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
 		return $this->arrayContainsKey($key, $comparer);
-	}
-
-	/**
-	 * @template TDefault
-	 *
-	 * @param TDefault $defaultValue
-	 * @param null|callable(T, int): bool $predicate
-	 *
-	 * @return TDefault|T
-	 */
-	public function firstOrDefault(mixed $defaultValue, ?callable $predicate = null): mixed
-	{
-		/** @var T|TDefault */
-		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 
 	/**
