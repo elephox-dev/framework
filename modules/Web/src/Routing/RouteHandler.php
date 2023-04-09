@@ -64,7 +64,8 @@ readonly class RouteHandler implements Contract\RouteHandler
 				$controllerPath = substr($controllerPath, 0, -10);
 			}
 
-			$controllerPath = Regex::escape(trim($controllerPath, $patternWrapper));
+			$controllerPath = '/' . ltrim($controllerPath, '/');
+			$controllerPath = preg_quote($controllerPath, $patternWrapper);
 		} else {
 			$controllerPath = substr($controllerPath, 6);
 		}
@@ -72,15 +73,13 @@ readonly class RouteHandler implements Contract\RouteHandler
 		if (!str_starts_with($routePath, 'regex:')) {
 			if ($this->attributeMethod === 'index' || $this->attributeMethod === '__invoke') {
 				$routePath = '';
-			} else {
-				$routePath = trim($routePath, $patternWrapper);
 			}
 
 			if ($controllerPath !== '' && $routePath !== '') {
 				$routePath = "/$routePath";
 			}
 
-			$routePath = Regex::escape($routePath);
+			$routePath = preg_quote($routePath, $patternWrapper);
 		} else {
 			$routePath = substr($routePath, 6);
 		}
@@ -126,7 +125,7 @@ readonly class RouteHandler implements Contract\RouteHandler
 
 	private function getNormalizedRequestRoute(Request $request): string
 	{
-		return ltrim($request->getUrl()->path, '/');
+		return $request->getUrl()->getPath();
 	}
 
 	public function handle(ServiceCollection $services): ResponseBuilder
