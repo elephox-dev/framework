@@ -37,7 +37,7 @@ trait IsArrayEnumerable
 	 */
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
-		assert(is_string($key) || is_int($key));
+		assert(is_scalar($key), 'Only scalar keys are supported');
 
 		if ($comparer === null) {
 			return array_key_exists($key, $this->items);
