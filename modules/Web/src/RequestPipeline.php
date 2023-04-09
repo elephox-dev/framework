@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericReadonlyList;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
 use Elephox\Http\Response;
@@ -24,7 +24,7 @@ readonly class RequestPipeline
 	) {
 	}
 
-	public function getMiddlewares(): GenericList
+	public function getMiddlewares(): GenericReadonlyList
 	{
 		return $this->middlewares;
 	}

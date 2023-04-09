@@ -8,10 +8,10 @@ use ArrayAccess;
 /**
  * @template T
  *
- * @extends GenericKeyedEnumerable<int, T>
+ * @extends GenericReadonlyList<T>
  * @extends ArrayAccess<int, T>
  */
-interface GenericList extends GenericKeyedEnumerable, ArrayAccess
+interface GenericList extends GenericReadonlyList, ArrayAccess
 {
 	/**
 	 * @param T $value
@@ -46,31 +46,7 @@ interface GenericList extends GenericKeyedEnumerable, ArrayAccess
 	 *
 	 * @param int $index
 	 */
-	public function elementAt(int $index): mixed;
-
-	/**
-	 * @return T
-	 *
-	 * @param int $index
-	 */
 	public function removeAt(int $index): mixed;
 
 	public function clear(): void;
-
-	/**
-	 * @param T $value
-	 * @param null|callable(T, T): bool $comparer
-	 */
-	public function indexOf(mixed $value, ?callable $comparer = null): ?int;
-
-	/**
-	 * @param T $value
-	 * @param null|callable(T, T): bool $comparer
-	 */
-	public function lastIndexOf(mixed $value, ?callable $comparer = null): ?int;
-
-	/**
-	 * @return GenericList<T>&static
-	 */
-	public function slice(int $offset, ?int $length = null): static;
 }
