@@ -189,7 +189,8 @@ class ArrayListTest extends TestCase
 			'a' => '1',
 		]);
 
-		foreach ($map as $value) {
+		foreach ($map as $key => $value) {
+			static::assertSame('a', $key);
 			static::assertSame('1', $value);
 		}
 	}
@@ -398,6 +399,20 @@ class ArrayListTest extends TestCase
 		static::assertTrue($list->contains(2));
 		static::assertTrue($list->contains(3));
 		static::assertFalse($list->contains(4));
+	}
+
+	public function testContainsKey(): void
+	{
+		$list = new ArrayList(['a' => 1, true => 2, 0 => 3]);
+
+		static::assertTrue($list->containsKey('a'));
+		static::assertTrue($list->containsKey(true));
+		static::assertFalse($list->containsKey(4));
+		static::assertFalse($list->containsKey('b'));
+
+		// falsy keys
+		static::assertTrue($list->containsKey(0));
+		static::assertTrue($list->containsKey(false));
 	}
 
 	public function testInsertAt(): void
