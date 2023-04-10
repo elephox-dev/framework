@@ -78,8 +78,6 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ⚠️ Fixes
 
-- [ ] [modules/Collection/src/IsArrayEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsArrayEnumerable.php)
-  - [ ] this seems to be worse than the generic implementation in IsEnumerable (according to phpbench). This can be improved.
 - [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsEnumerable.php)
   - [ ] de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
 
