@@ -77,6 +77,10 @@ class EagerCachingIterator implements SeekableIterator, ArrayAccess, Countable
 
 	public function seek(int $offset): void
 	{
+		if (!$this->iterated) {
+			$this->rewind();
+		}
+
 		$this->pos = $offset;
 	}
 
