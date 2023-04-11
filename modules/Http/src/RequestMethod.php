@@ -10,12 +10,12 @@ use JetBrains\PhpStorm\Pure;
 enum RequestMethod: string implements Contract\RequestMethod
 {
 	case GET = 'GET';
-	case HEAD = 'HEAD';
 	case POST = 'POST';
 	case PUT = 'PUT';
-	case DELETE = 'DELETE';
-	case OPTIONS = 'OPTIONS';
 	case PATCH = 'PATCH';
+	case DELETE = 'DELETE';
+	case HEAD = 'HEAD';
+	case OPTIONS = 'OPTIONS';
 
 	#[Pure]
 	public function canHaveBody(): bool
