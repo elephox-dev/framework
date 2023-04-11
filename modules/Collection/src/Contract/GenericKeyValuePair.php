@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use ArrayAccess;
+
 /**
  * @template TKey
  * @template TValue
  */
-interface GenericKeyValuePair
+interface GenericKeyValuePair extends ArrayAccess
 {
 	/**
 	 * @return TKey
