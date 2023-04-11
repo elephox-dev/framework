@@ -3,24 +3,25 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing\Contract;
 
-use Elephox\Http\Contract\Request;
-use ReflectionException;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Collection\Contract\GenericReadonlyList;
+use Elephox\Web\Routing\RouteParametersMap;
 
 interface Router
 {
-	public function getRouteHandler(Request $request): RouteHandler;
+	public function addLoader(RouteLoader $loader): void;
+
+	public function clearRoutes(): void;
+
+	public function loadRoutes(): void;
 
 	/**
-	 * @return iterable<mixed, RouteHandler>
+	 * @return GenericReadonlyList<RouteData>
 	 */
-	public function getRouteHandlers(): iterable;
+	public function getLoadedRoutes(): GenericReadonlyList;
 
 	/**
-	 * @param class-string $className
-	 *
-	 * @throws ReflectionException
+	 * @return GenericKeyedEnumerable<RouteData, RouteParametersMap>
 	 */
-	public function loadFromClass(string $className): static;
-
-	public function loadFromNamespace(string $namespace): static;
+	public function getMatching(string $method, string $path): GenericKeyedEnumerable;
 }

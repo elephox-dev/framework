@@ -8,18 +8,18 @@ use Elephox\Collection\Contract\GenericReadonlyList;
 use Elephox\Http\Contract\Request;
 use Elephox\Http\Contract\ResponseBuilder as ResponseBuilderContract;
 use Elephox\Http\Response;
-use Elephox\Web\Contract\RequestPipelineEndpoint;
+use Elephox\Web\Contract\PipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
 use Throwable;
 
 readonly class RequestPipeline
 {
 	/**
-	 * @param RequestPipelineEndpoint $endpoint
+	 * @param PipelineEndpoint $endpoint
 	 * @param ArrayList<WebMiddleware> $middlewares
 	 */
 	public function __construct(
-		private RequestPipelineEndpoint $endpoint,
+		private PipelineEndpoint $endpoint,
 		private ArrayList $middlewares,
 	) {
 	}

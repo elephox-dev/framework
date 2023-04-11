@@ -7,23 +7,25 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\EmptySequenceException;
 use Elephox\DI\Contract\Resolver;
 use Elephox\Support\Contract\ExceptionHandler;
-use Elephox\Web\Contract\RequestPipelineEndpoint;
+use Elephox\Web\Contract\PipelineEndpoint;
 use Elephox\Web\Contract\WebMiddleware;
 use InvalidArgumentException;
+use LogicException;
 
 class RequestPipelineBuilder
 {
 	/**
-	 * @var ArrayList<WebMiddleware> $pipeline
+	 * @var ArrayList<WebMiddleware|class-string<WebMiddleware>> $middlewares
 	 */
-	private ArrayList $pipeline;
+	private ArrayList $middlewares;
 
 	public function __construct(
-		private RequestPipelineEndpoint $endpoint,
+		private ?PipelineEndpoint $endpoint,
+		private ?string $endpointClass,
 		private readonly Resolver $resolver,
 	) {
-		/** @var ArrayList<WebMiddleware> */
-		$this->pipeline = new ArrayList();
+		/** @var ArrayList<WebMiddleware|class-string<WebMiddleware>> */
+		$this->middlewares = new ArrayList();
 	}
 
 	/**
@@ -31,16 +33,7 @@ class RequestPipelineBuilder
 	 */
 	public function push(WebMiddleware|string $middleware): self
 	{
-		if (is_string($middleware)) {
-			$concreteMiddleware = $this->resolver->instantiate($middleware);
-			if (!($concreteMiddleware instanceof WebMiddleware)) {
-				throw new InvalidArgumentException("Given middleware '$middleware' does not implement " . WebMiddleware::class);
-			}
-		} else {
-			$concreteMiddleware = $middleware;
-		}
-
-		$this->pipeline->add($concreteMiddleware);
+		$this->middlewares->add($middleware);
 
 		return $this;
 	}
@@ -52,12 +45,18 @@ class RequestPipelineBuilder
 	{
 		$predicate = $className === null ? null : static fn (WebMiddleware $middleware): bool => $middleware instanceof $className;
 
-		return $this->pipeline->pop($predicate);
+		return $this->middlewares->pop($predicate);
 	}
 
-	public function endpoint(RequestPipelineEndpoint $endpoint): self
+	public function endpoint(PipelineEndpoint|string $endpoint): self
 	{
-		$this->endpoint = $endpoint;
+		if (is_string($endpoint)) {
+			$this->endpoint = null;
+			$this->endpointClass = $endpoint;
+		} else {
+			$this->endpoint = $endpoint;
+			$this->endpointClass = null;
+		}
 
 		return $this;
 	}
@@ -66,11 +65,11 @@ class RequestPipelineBuilder
 	{
 		try {
 			/** @var int $key */
-			$key = $this->pipeline->firstKey(static fn (WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
+			$key = $this->middlewares->firstKey(static fn (string|WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
 
-			$this->pipeline->put($key, $exceptionHandler);
+			$this->middlewares->put($key, $exceptionHandler);
 		} catch (EmptySequenceException) {
-			$this->pipeline->add($exceptionHandler);
+			$this->middlewares->insertAt(0, $exceptionHandler);
 		}
 
 		return $this;
@@ -78,6 +77,30 @@ class RequestPipelineBuilder
 
 	public function build(): RequestPipeline
 	{
-		return new RequestPipeline($this->endpoint, $this->pipeline);
+		if ($this->endpoint === null && $this->endpointClass === null) {
+			throw new LogicException('Either an endpoint or the class name for an endpoint needs to be set');
+		}
+
+		$this->endpoint ??= $this->resolver->instantiate($this->endpointClass);
+
+		assert($this->endpoint instanceof PipelineEndpoint);
+
+		/** @var ArrayList<WebMiddleware> $concreteMiddlewares */
+		$concreteMiddlewares = new ArrayList();
+
+		foreach ($this->middlewares as $middleware) {
+			if (is_string($middleware)) {
+				$concreteMiddleware = $this->resolver->instantiate($middleware);
+				if (!($concreteMiddleware instanceof WebMiddleware)) {
+					throw new InvalidArgumentException("Given middleware '$middleware' does not implement " . WebMiddleware::class);
+				}
+
+				$concreteMiddlewares->add($concreteMiddleware);
+			} else {
+				$concreteMiddlewares->add($middleware);
+			}
+		}
+
+		return new RequestPipeline($this->endpoint, $concreteMiddlewares);
 	}
 }

@@ -5,14 +5,13 @@ namespace Elephox\Web\Routing\Attribute\Http;
 
 use Attribute;
 use Elephox\Http\RequestMethod;
-use Elephox\Web\Routing\Attribute\Contract\RouteAttribute;
-use Elephox\Web\Routing\Attribute\Controller;
+use Elephox\Web\Routing\Attribute\AbstractActionAttribute;
 
 #[Attribute(Attribute::TARGET_FUNCTION | Attribute::TARGET_METHOD | Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class Options extends Controller implements RouteAttribute
+class Options extends AbstractActionAttribute
 {
-	public function __construct(?string $path = self::DEFAULT_PATH, int $weight = self::DEFAULT_WEIGHT)
+	public function __construct(?string $path = self::DEFAULT_PATH)
 	{
-		parent::__construct($path, $weight, RequestMethod::OPTIONS);
+		parent::__construct($path, RequestMethod::OPTIONS);
 	}
 }

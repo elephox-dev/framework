@@ -12,7 +12,6 @@ class InvalidRequestController extends LogicException
 	#[Pure]
 	public function __construct(string $className, int $code = 0, ?Throwable $previous = null)
 	{
-		// TODO: change message to be more general and/or create more specific exceptions
-		parent::__construct('Class ' . $className . ' implements __invoke() either with no or the wrong return type. It must return a \Elephox\Http\Contract\ResponseBuilder', $code, $previous);
+		parent::__construct('Class ' . $className . ' defines an invalid request controller', $code, $previous);
 	}
 }

@@ -18,11 +18,16 @@ class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 	{
 		$response = $next($request);
 
-		if ($response->getException()) {
+		if ($this->shouldHandle($response)) {
 			$this->setResponseBody($response);
 		}
 
 		return $response;
+	}
+
+	protected function shouldHandle(ResponseBuilder $response): bool
+	{
+		return $response->getException() !== null && $response->getBody() === null;
 	}
 
 	public function handleException(Throwable $exception): void
@@ -43,16 +48,25 @@ class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 			return $response;
 		}
 
+		$exceptionClass = $exception::class;
+
 		return $response->htmlBody(<<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Error</title>
+	<title>Unhandled Exception: {$exception->getMessage()}</title>
 	<style rel="stylesheet">
 		html, body {
 			margin: 1rem;
 			text-align: center;
 			font-family: sans-serif;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			body {
+				background: #202124;
+				color: #fff;
+			}
 		}
 
 		hr {
@@ -63,14 +77,16 @@ class DefaultExceptionHandler implements WebMiddleware, ExceptionHandler
 		pre {
 			overflow: auto;
 			text-align: left;
+			padding: 1rem;
 		}
 	</style>
 </head>
 <body>
 	<h1>Error</h1>
 	<p>
-		{$exception->getMessage()}<br>
-		<small><code>{$exception->getFile()}:{$exception->getLine()}</code></small>
+		<small><code>{$exceptionClass}</code></small><br>
+		<strong>{$exception->getMessage()}</strong><br>
+		<small>thrown at: <code>{$exception->getFile()}:{$exception->getLine()}</code></small>
 	</p>
 	<hr>
 	<pre>{$exception->getTraceAsString()}</pre>

@@ -9,21 +9,23 @@ use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderC
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\LoadsDefaultConfiguration;
+use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
-use Elephox\Http\Contract\Request as RequestContract;
-use Elephox\Http\Contract\ResponseBuilder;
-use Elephox\Http\Response;
-use Elephox\Http\ResponseCode;
+use Elephox\Http\Contract\RequestMethod;
 use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
-use Elephox\Web\Contract\RequestPipelineEndpoint;
 use Elephox\Web\Contract\WebEnvironment;
 use Elephox\Web\Middleware\DefaultExceptionHandler;
+use Elephox\Web\Middleware\DefaultNotFoundHandler;
 use Elephox\Web\Middleware\FileExtensionToContentType;
-use Elephox\Web\Middleware\ServerTimingHeaderMiddleware;
 use Elephox\Web\Middleware\StaticContentHandler;
-use Elephox\Web\Routing\RequestRouter;
+use Elephox\Web\Routing\ClassRouteLoader;
+use Elephox\Web\Routing\ClosureRouteLoader;
+use Elephox\Web\Routing\Contract\Router;
+use Elephox\Web\Routing\NamespaceRouteLoader;
+use Elephox\Web\Routing\RegexRouter;
+use Elephox\Web\Routing\RouterEndpoint;
 use Throwable;
 
 /**
@@ -43,13 +45,7 @@ class WebApplicationBuilder
 		$environment ??= new GlobalWebEnvironment();
 		$services ??= new ServiceCollection();
 
-		$defaultEndpoint = new class implements RequestPipelineEndpoint {
-			public function handle(RequestContract $request): ResponseBuilder
-			{
-				return Response::build()->responseCode(ResponseCode::BadRequest);
-			}
-		};
-		$pipeline ??= new RequestPipelineBuilder($defaultEndpoint, $services->resolver());
+		$pipeline ??= new RequestPipelineBuilder(null, null, $services->resolver());
 
 		$services->addSingleton(Environment::class, instance: $environment);
 		$services->addSingleton(WebEnvironment::class, instance: $environment);
@@ -69,19 +65,9 @@ class WebApplicationBuilder
 		public readonly ServiceCollectionContract $services,
 		public readonly RequestPipelineBuilder $pipeline,
 	) {
-		// Load .env, .env.local
-		$this->loadDotEnvFile();
+		$this->loadConfiguration();
 
-		// Load config.json, config.local.json
-		$this->loadConfigFile();
-
-		// Load .env.{$ENVIRONMENT}, .env.{$ENVIRONMENT}.local
-		$this->loadEnvironmentDotEnvFile();
-
-		// Load config.{$ENVIRONMENT}.json, config.{$ENVIRONMENT}.local.json
-		$this->loadEnvironmentConfigFile();
-
-		$this->addDefaultMiddleware();
+		$this->addGlobalMiddleware();
 
 		$this->addDefaultExceptionHandler();
 	}
@@ -106,9 +92,24 @@ class WebApplicationBuilder
 		return $this->configuration;
 	}
 
-	protected function addDefaultMiddleware(): void
+	protected function loadConfiguration(): void
 	{
-		$this->pipeline->push(new ServerTimingHeaderMiddleware('pipeline'));
+		// Load .env, .env.local
+		$this->loadDotEnvFile();
+
+		// Load config.json, config.local.json
+		$this->loadConfigFile();
+
+		// Load .env.{$ENVIRONMENT}, .env.{$ENVIRONMENT}.local
+		$this->loadEnvironmentDotEnvFile();
+
+		// Load config.{$ENVIRONMENT}.json, config.{$ENVIRONMENT}.local.json
+		$this->loadEnvironmentConfigFile();
+	}
+
+	protected function addGlobalMiddleware(): void
+	{
+		$this->pipeline->push(new DefaultNotFoundHandler());
 		$this->pipeline->push(new FileExtensionToContentType());
 		$this->pipeline->push(new StaticContentHandler($this->getEnvironment()->getWebRoot()));
 	}
@@ -155,13 +156,34 @@ class WebApplicationBuilder
 		);
 	}
 
-	public function setRequestRouterEndpoint(?RequestRouter $router = null): RequestRouter
+	public function addRouting(): void
 	{
-		$router ??= new RequestRouter($this->services);
-		$this->services->addSingleton(RequestRouter::class, instance: $router, replace: true);
-		$this->pipeline->endpoint($router);
+		$this->services->addSingleton(Router::class, RegexRouter::class);
+		$this->pipeline->endpoint(RouterEndpoint::class);
+	}
 
-		return $router;
+	/**
+	 * @var class-string $className
+	 */
+	public function addRoutesFromClass(string $className): void
+	{
+		$loader = $this->resolver()->instantiate(ClassRouteLoader::class, ['className' => $className]);
+		$router = $this->service(Router::class);
+		$router->addLoader($loader);
+	}
+
+	public function addRoutesFromNamespace(string $namespace): void
+	{
+		$loader = $this->resolver()->instantiate(NamespaceRouteLoader::class, ['namespace' => $namespace]);
+		$router = $this->service(Router::class);
+		$router->addLoader($loader);
+	}
+
+	public function addRoute(RequestMethod|string|iterable $method, string $template, callable $handler): void
+	{
+		$loader = new ClosureRouteLoader($method, $template, $handler(...));
+		$router = $this->service(Router::class);
+		$router->addLoader($loader);
 	}
 
 	/**
@@ -177,5 +199,10 @@ class WebApplicationBuilder
 	{
 		/** @var T */
 		return $this->services->require($name);
+	}
+
+	public function resolver(): Resolver
+	{
+		return $this->services->resolver();
 	}
 }
