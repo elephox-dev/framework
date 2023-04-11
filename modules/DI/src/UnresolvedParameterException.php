@@ -12,12 +12,12 @@ class UnresolvedParameterException extends LogicException
 	#[Pure]
 	public function __construct(public readonly string $className, public readonly string $methodName, public readonly string $type, public readonly ?string $paramName = null, public readonly ?string $paramFilename = null, public readonly ?int $paramStartLine = null, public readonly ?int $paramEndLine = null, int $code = 0, ?Throwable $previous = null)
 	{
-		$msg = 'Could not resolve';
+		$msg = "Could not resolve '$type";
 		if ($paramName !== null) {
-			$msg .= " parameter $$paramName with";
+			$msg .= " $$paramName";
 		}
 
-		$msg .= " type $type in $className::$methodName()";
+		$msg .= "' in $className::$methodName()";
 
 		if ($paramFilename !== null) {
 			$msg .= " at $paramFilename";
