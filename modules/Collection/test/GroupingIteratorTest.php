@@ -53,4 +53,18 @@ class GroupingIteratorTest extends TestCase
 		$groupIterator->next();
 		static::assertFalse($groupIterator->valid());
 	}
+
+	public function testNonNumericGroupingKey(): void
+	{
+		$groupIterator = new GroupingIterator(Enumerable::range(0, 5), static fn (int $v): string => (string) ($v % 2));
+
+		$groupIterator->rewind();
+		static::assertSame('0', $groupIterator->current()->groupKey());
+
+		$groupIterator->next();
+		static::assertSame('1', $groupIterator->current()->groupKey());
+
+		$groupIterator->next();
+		static::assertFalse($groupIterator->valid());
+	}
 }

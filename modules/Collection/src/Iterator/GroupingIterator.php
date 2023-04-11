@@ -89,9 +89,9 @@ class GroupingIterator implements Iterator
 		foreach ($this->iterator as $key => $value) {
 			$groupingKey = ($this->groupingFunction)($value, $key);
 			$idx = null;
-			foreach (array_keys($this->groupKeys) as $k) {
+			foreach ($this->groupKeys as $i => $k) {
 				if (($this->comparer)($k, $groupingKey)) {
-					$idx = $k;
+					$idx = $i;
 
 					break;
 				}
