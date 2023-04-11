@@ -10,15 +10,15 @@ abstract class DotEnvEnvironment extends AbstractEnvironment
 {
 	public function getDotEnvFileName(bool $local = false, ?string $envName = null): FileContract
 	{
-		$envFile = '.env';
+		$envFileName = '.env';
 		if ($envName !== null) {
-			$envFile .= '.' . $envName;
+			$envFileName .= '.' . $envName;
 		}
 
 		if ($local) {
-			$envFile .= '.local';
+			$envFileName .= '.local';
 		}
 
-		return new File($envFile);
+		return new File($envFileName);
 	}
 }
