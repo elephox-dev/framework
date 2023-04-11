@@ -34,6 +34,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 			$c = $normalizedCombinedTemplate[$i];
 			if ($state === 'segment' || $state === 'end') {
 				if ($c === '[') {
+					$name = '';
 					$state = 'dynamic';
 					$start = $i;
 					$i++;
@@ -42,6 +43,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 				}
 
 				if ($c === '{') {
+					$name = '';
 					$state = 'variable';
 					$start = $i;
 					$i++;
