@@ -45,7 +45,6 @@
             <file>**/*Exception.php</file>
             <directory>modules/Autoloading/src/*</directory>
             <directory>modules/Console/src/*</directory>
-            <directory>modules/Web/src/*</directory>
         </exclude>
     </coverage>
 </phpunit>
