@@ -13,5 +13,9 @@ interface RouteTemplate
 
 	public function getDynamicNames(): GenericEnumerable;
 
+	/**
+	 * @param array<string, string> $dynamics
+	 * @return string
+	 */
 	public function renderRegExp(array $dynamics): string;
 }
