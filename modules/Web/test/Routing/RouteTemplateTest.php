@@ -21,6 +21,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\OrderedEnumerable
  * @covers \Elephox\OOR\Regex
  * @covers \Elephox\Collection\DefaultEqualityComparer
+ * @covers \Elephox\Web\Routing\InvalidRouteTemplateException
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable
@@ -37,8 +38,11 @@ class RouteTemplateTest extends TestCase
 		yield ['///', '/', '#^/$#i', [], []];
 		yield ['abc', '/abc', '#^/abc$#i', [], []];
 		yield ['/abc', '/abc', '#^/abc$#i', [], []];
-		yield ['abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i', ['user'], []];
+		yield ['abc/', '/abc', '#^/abc$#i', [], []];
+		yield ['/abc/', '/abc', '#^/abc$#i', [], []];
 		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i', ['user'], []];
+		yield ['/a{user}b/', '/a{user}b', '#^/a(?<user>[^}/]+)b$#i', ['user'], []];
+		yield ['/abc/{version:int}', '/abc/{version:int}', '#^/abc/(?<version>\d+)$#i', ['version:int'], []];
 		yield ['/[controller]/poke', '/[controller]/poke', '#^/myController/poke$#i', [], ['controller']];
 		yield ['[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
 		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
