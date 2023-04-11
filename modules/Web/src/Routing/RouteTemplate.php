@@ -153,7 +153,18 @@ readonly class RouteTemplate implements RouteTemplateContract
 
 	public function renderRegExp(array $dynamics): string
 	{
-		$variableRegexes = $this->variables->selectKeys(static fn (string $name) => "(?<$name>[^}/]+)");
+		$variableRegexes = $this->variables->selectKeys(static function (string $name) {
+			$type = null;
+			if (str_contains($name, ':')) {
+				/** @psalm-suppress PossiblyUndefinedArrayOffset */
+				[$name, $type] = explode(':', $name, 2);
+			}
+
+			return match ($type) {
+				'int' => "(?<$name>\d+)",
+				default => "(?<$name>[^}/]+)",
+			};
+		});
 
 		$dynamicsRegexes = $this->dynamics->selectKeys(function (string $name) use ($dynamics): string {
 			if (array_key_exists($name, $dynamics)) {
