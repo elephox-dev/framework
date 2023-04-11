@@ -188,4 +188,40 @@ class RouteTemplateTest extends TestCase
 
 		static::assertSame($shouldMatch, Regex::matches($parsed->renderRegExp(['controller' => 'articles']), $route));
 	}
+
+	public static function routeTemplateWthParentProvider(): iterable
+	{
+		yield ['', '', '/'];
+		yield ['', '/', '/'];
+		yield ['/', '', '/'];
+		yield ['/', '/', '/'];
+		yield ['controller', '', '/controller'];
+		yield ['/controller', '', '/controller'];
+		yield ['controller/', '', '/controller'];
+		yield ['/controller/', '', '/controller'];
+		yield ['', 'action', '/action'];
+		yield ['', '/action', '/action'];
+		yield ['', 'action/', '/action'];
+		yield ['', '/action/', '/action'];
+		yield ['controller', 'action', '/controller/action'];
+		yield ['controller/', 'action', '/controller/action'];
+		yield ['/controller', 'action', '/controller/action'];
+		yield ['/controller/', 'action', '/controller/action'];
+		yield ['controller', '/action', '/controller/action'];
+		yield ['controller', 'action/', '/controller/action'];
+		yield ['controller', '/action/', '/controller/action'];
+		yield ['/controller/', '/action/', '/controller/action'];
+		yield ['controller/', '/action', '/controller/action'];
+	}
+
+	/**
+	 * @dataProvider routeTemplateWthParentProvider
+	 */
+	public function testRouteTemplateWithParentNormalizesTemplate(string $parent, string $route, string $expectedRoute): void
+	{
+		$parentTemplate = RouteTemplate::parse($parent);
+		$routeTemplate = RouteTemplate::parse($route, $parentTemplate);
+
+		static::assertSame($expectedRoute, $routeTemplate->getSource());
+	}
 }
