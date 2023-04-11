@@ -37,12 +37,12 @@ class RouteTemplateTest extends TestCase
 		yield ['///', '/', '#^/$#i', [], []];
 		yield ['abc', '/abc', '#^/abc$#i', [], []];
 		yield ['/abc', '/abc', '#^/abc$#i', [], []];
-		yield ['abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]*)$#i', ['user'], []];
-		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]*)$#i', ['user'], []];
-		yield ['/[controller]/poke', '/[controller]/poke', '#^/(?<controller>[^\]/]*)/poke$#i', [], ['controller']];
-		yield ['[controller]/[action]', '/[controller]/[action]', '#^/(?<controller>[^\]/]*)/(?<action>[^\]/]*)$#i', [], ['controller', 'action']];
-		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/(?<controller>[^\]/]*)/(?<action>[^\]/]*)$#i', [], ['controller', 'action']];
-		yield ['/[controller]/{slug}/draft/title', '/[controller]/{slug}/draft/title', '#^/(?<controller>[^\]/]*)/(?<slug>[^}/]*)/draft/title$#i', ['slug'], ['controller']];
+		yield ['abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i', ['user'], []];
+		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i', ['user'], []];
+		yield ['/[controller]/poke', '/[controller]/poke', '#^/myController/poke$#i', [], ['controller']];
+		yield ['[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
+		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
+		yield ['/[controller]/{slug}/draft/title', '/[controller]/{slug}/draft/title', '#^/myController/(?<slug>[^}/]+)/draft/title$#i', ['slug'], ['controller']];
 	}
 
 	/**
@@ -55,7 +55,7 @@ class RouteTemplateTest extends TestCase
 		$route = RouteTemplate::parse($template);
 
 		static::assertSame($normalized, $route->getSource());
-		static::assertSame($regex, $route->getRegex());
+		static::assertSame($regex, $route->renderRegExp(['controller' => 'myController', 'action' => 'myAction']));
 
 		$variables = $route->getVariableNames()->toList();
 		$dynamics = $route->getDynamicNames()->toList();
@@ -168,7 +168,7 @@ class RouteTemplateTest extends TestCase
 		yield ['/abc', '/ABC', true];
 		yield ['/abc', '/abcd', false];
 		yield ['/abc', '/', false];
-		yield ['/[controller]', '/users', true];
+		yield ['/[controller]', '/articles', true];
 		yield ['/[controller]/{slug}/draft/title', '/articles/2023-12-01-wip/draft/title', true];
 		yield ['/[controller]/{slug}/draft/title', '/articles/2023-12-01-wip/draft/', false];
 		yield ['/[controller]/{slug}/draft/title', '/articles/2023-12-01-wip/draft', false];
@@ -182,6 +182,6 @@ class RouteTemplateTest extends TestCase
 	{
 		$parsed = RouteTemplate::parse($template);
 
-		static::assertSame($shouldMatch, Regex::matches($parsed->getRegex(), $route));
+		static::assertSame($shouldMatch, Regex::matches($parsed->renderRegExp(['controller' => 'articles']), $route));
 	}
 }

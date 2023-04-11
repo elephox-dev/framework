@@ -331,7 +331,7 @@ class ServiceCollectionTest extends MockeryTestCase
 		$serviceCollection = new ServiceCollection();
 
 		$this->expectException(UnresolvedParameterException::class);
-		$this->expectExceptionMessage('Could not resolve parameter $service with type Elephox\DI\Data\TestServiceInterface in TestServiceClass::returnsTestServiceInterface()');
+		$this->expectExceptionMessage('Could not resolve \'Elephox\DI\Data\TestServiceInterface $service\' in TestServiceClass::returnsTestServiceInterface()');
 		$serviceCollection->resolveArguments($reflectionService);
 	}
 
@@ -346,7 +346,7 @@ class ServiceCollectionTest extends MockeryTestCase
 		$serviceCollection = new ServiceCollection();
 
 		$this->expectException(UnresolvedParameterException::class);
-		$this->expectExceptionMessageMatches('/Could not resolve parameter \\$service with type Elephox\\\\DI\\\\Data\\\\TestServiceInterface in ServiceCollectionTest::{closure}\(\) at .+? in line \d+/');
+		$this->expectExceptionMessageMatches('/Could not resolve \'Elephox\\\\DI\\\\Data\\\\TestServiceInterface \\$service\' in ServiceCollectionTest::{closure}\(\) at .+? in line \d+/');
 		$serviceCollection->resolveArguments($reflection);
 	}
 
