@@ -984,6 +984,28 @@ trait IsKeyedEnumerable
 		return new ArrayList($this->toList());
 	}
 
+	/**
+	 * @return ArrayMap<TIteratorKey, TSource>
+	 */
+	public function toArrayMap(): ArrayMap
+	{
+		return new ArrayMap($this->toArray());
+	}
+
+	/**
+	 * @return ObjectMap<TIteratorKey, TSource>
+	 */
+	public function toObjectMap(): ObjectMap
+	{
+		$map = new ObjectMap();
+
+		foreach ($this->getIterator() as $key => $value) {
+			$map->put($key, $value);
+		}
+
+		return $map;
+	}
+
 	public function toArray(?callable $keySelector = null): array
 	{
 		$keySelector ??= static fn (mixed $key, mixed $value): mixed => $key;

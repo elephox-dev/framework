@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\Collection\Contract;
 
 use Countable;
+use Elephox\Collection\ArrayMap;
+use Elephox\Collection\ObjectMap;
 use Iterator;
 use IteratorAggregate;
 use Traversable;
@@ -398,6 +400,16 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	 * @return array<TArrayKey, TSource>
 	 */
 	public function toArray(?callable $keySelector = null): array;
+
+	/**
+	 * @return ArrayMap<TIteratorKey, TSource>
+	 */
+	public function toArrayMap(): ArrayMap;
+
+	/**
+	 * @return ObjectMap<TIteratorKey, TSource>
+	 */
+	public function toObjectMap(): ObjectMap;
 
 	/**
 	 * @template TArrayKey as array-key
