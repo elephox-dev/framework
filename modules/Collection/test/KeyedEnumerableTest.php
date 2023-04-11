@@ -569,10 +569,10 @@ class KeyedEnumerableTest extends TestCase
 
 	public function testSingle(): void
 	{
-		static::assertSame(
-			2,
-			KeyedEnumerable::from([2])->single(),
-		);
+		$result = KeyedEnumerable::from([2])->single();
+
+		static::assertSame(0, $result->getKey());
+		static::assertSame(2, $result->getValue());
 	}
 
 	public function testSingleMultipleElements(): void
