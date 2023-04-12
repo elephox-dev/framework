@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "251dfdc3156f9d47e5d5df75472fbd1b",
+    "content-hash": "bf9010263a7d5cf156dda2e01f853dc4",
     "packages": [
         {
             "name": "elephox/mimey",
@@ -2634,6 +2634,28 @@
                 }
             ],
             "time": "2023-02-03T11:13:07+00:00"
+        },
+        {
+            "name": "elephox/builder-swagger",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../builder-swagger",
+                "reference": "8bce6bb6c968245bc40f6b5884eb652daf49bb2f"
+            },
+            "require": {
+                "elephox/web": "dev-develop",
+                "php": "^8.2 <8.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Elephox\\Builder\\Swagger\\": "src/"
+                }
+            },
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "elephox/builder-whoops-handler",
@@ -8482,7 +8504,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "elephox/builder-whoops-handler": 20,
-        "elephox/builder-whoops-middleware": 20
+        "elephox/builder-whoops-middleware": 20,
+        "elephox/builder-swagger": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

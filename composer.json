@@ -47,7 +47,8 @@
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16",
         "roave/no-leaks": "^1.3",
-        "vimeo/psalm": "^5.9"
+        "vimeo/psalm": "^5.9",
+        "elephox/builder-swagger": "dev-main"
     },
     "replace": {
         "elephox/autoloading": "self.version",
@@ -239,5 +240,11 @@
             "@putenv XDEBUG_MODE=off",
             "psalm --no-cache --long-progress --set-baseline=development/psalm.baseline.xml"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../builder-swagger"
+        }
+    ]
 }

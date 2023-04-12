@@ -32,21 +32,22 @@ class RouteTemplateTest extends TestCase
 {
 	public static function validRouteTemplatesNoParentProvider(): iterable
 	{
-		yield ['', '/', '#^/$#i', [], []];
-		yield ['/', '/', '#^/$#i', [], []];
-		yield ['//', '/', '#^/$#i', [], []];
-		yield ['///', '/', '#^/$#i', [], []];
-		yield ['abc', '/abc', '#^/abc$#i', [], []];
-		yield ['/abc', '/abc', '#^/abc$#i', [], []];
-		yield ['abc/', '/abc', '#^/abc$#i', [], []];
-		yield ['/abc/', '/abc', '#^/abc$#i', [], []];
-		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i', ['user'], []];
-		yield ['/a{user}b/', '/a{user}b', '#^/a(?<user>[^}/]+)b$#i', ['user'], []];
-		yield ['/abc/{version:int}', '/abc/{version:int}', '#^/abc/(?<version>\d+)$#i', ['version:int'], []];
-		yield ['/[controller]/poke', '/[controller]/poke', '#^/myController/poke$#i', [], ['controller']];
-		yield ['[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
-		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i', [], ['controller', 'action']];
-		yield ['/[controller]/{slug}/draft/title', '/[controller]/{slug}/draft/title', '#^/myController/(?<slug>[^}/]+)/draft/title$#i', ['slug'], ['controller']];
+		yield ['', '/', '#^/$#i'];
+		yield ['/', '/', '#^/$#i'];
+		yield ['//', '/', '#^/$#i'];
+		yield ['///', '/', '#^/$#i'];
+		yield ['abc', '/abc', '#^/abc$#i'];
+		yield ['/abc', '/abc', '#^/abc$#i'];
+		yield ['abc/', '/abc', '#^/abc$#i'];
+		yield ['/abc/', '/abc', '#^/abc$#i'];
+		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i'];
+		yield ['/a{user}b/', '/a{user}b', '#^/a(?<user>[^}/]+)b$#i'];
+		yield ['/abc/{version:int}', '/abc/{version:int}', '#^/abc/(?<version>\d+)$#i'];
+		yield ['/abc/{path:*}', '/abc/{path:*}', '#^/abc/(?<path>.*)$#i'];
+		yield ['/[controller]/poke', '/[controller]/poke', '#^/myController/poke$#i'];
+		yield ['[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i'];
+		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i'];
+		yield ['/[controller]/{slug}/draft/title', '/[controller]/{slug}/draft/title', '#^/myController/(?<slug>[^}/]+)/draft/title$#i'];
 	}
 
 	/**
@@ -54,18 +55,13 @@ class RouteTemplateTest extends TestCase
 	 *
 	 * @throws Exception
 	 */
-	public function testParseNoParent(string $template, string $normalized, string $regex, array $expectedVariables, array $expectedDynamics): void
+	public function testParseAndRenderNoParent(string $template, string $normalized, string $expectedRegex): void
 	{
 		$route = RouteTemplate::parse($template);
+		$regex = $route->renderRegExp(['controller' => 'myController', 'action' => 'myAction']);
 
 		static::assertSame($normalized, $route->getSource());
-		static::assertSame($regex, $route->renderRegExp(['controller' => 'myController', 'action' => 'myAction']));
-
-		$variables = $route->getVariableNames()->toList();
-		$dynamics = $route->getDynamicNames()->toList();
-
-		static::assertSame($expectedVariables, $variables);
-		static::assertSame($expectedDynamics, $dynamics);
+		static::assertSame($expectedRegex, $regex);
 	}
 
 	public static function strayClosingBracketRouteTemplatesProvider(): iterable
@@ -86,16 +82,60 @@ class RouteTemplateTest extends TestCase
 	public function testParseThrowsForStrayClosingBracket(string $template): void
 	{
 		$this->expectException(InvalidRouteTemplateException::class);
-		$this->expectExceptionMessage('Invalid route template: stray closing bracket');
+		$this->expectExceptionMessage("Invalid route template: '$template' (stray closing bracket)");
+
+		RouteTemplate::parse($template);
+	}
+
+	public static function missingClosingBracketRouteTemplatesProvider(): iterable
+	{
+		yield ['['];
+		yield ['/['];
+		yield ['/[/'];
+		yield ['[/'];
+		yield ['[abc/'];
+	}
+
+	/**
+	 * @dataProvider missingClosingBracketRouteTemplatesProvider
+	 */
+	public function testParseThrowsForMissingClosingBracket(string $template): void
+	{
+		$this->expectException(InvalidRouteTemplateException::class);
+		$this->expectExceptionMessage("Invalid route template: '$template' (missing closing bracket ']')");
+
+		RouteTemplate::parse($template);
+	}
+
+	public static function missingClosingCurlyBraceRouteTemplatesProvider(): iterable
+	{
+		yield ['{'];
+		yield ['/{'];
+		yield ['/{/'];
+		yield ['{/'];
+		yield ['{abc/'];
+	}
+
+	/**
+	 * @dataProvider missingClosingCurlyBraceRouteTemplatesProvider
+	 */
+	public function testParseThrowsForMissingClosingCurlyBrace(string $template): void
+	{
+		$this->expectException(InvalidRouteTemplateException::class);
+		$this->expectExceptionMessage("Invalid route template: '$template' (missing closing curly brace '}')");
 
 		RouteTemplate::parse($template);
 	}
 
 	public static function invalidVariableNameProvider(): iterable
 	{
-		yield ['{/}'];
-		yield ['{]}'];
-		yield ['{[}'];
+		foreach (RouteTemplate::INVALID_NAME_CHARACTERS as $char) {
+			if ($char === '}') {
+				continue;
+			}
+
+			yield ["{{$char}}"];
+		}
 	}
 
 	/**
@@ -104,7 +144,7 @@ class RouteTemplateTest extends TestCase
 	public function testParseThrowsForInvalidVariableName(string $template): void
 	{
 		$this->expectException(InvalidRouteTemplateException::class);
-		$this->expectExceptionMessage('Invalid route template: invalid character in variable name');
+		$this->expectExceptionMessage("Invalid route template: '$template' (invalid character in variable name)");
 
 		RouteTemplate::parse($template);
 	}
@@ -123,16 +163,20 @@ class RouteTemplateTest extends TestCase
 	public function testParseThrowsForEmptyVariableName(string $template): void
 	{
 		$this->expectException(InvalidRouteTemplateException::class);
-		$this->expectExceptionMessage('Invalid route template: empty variable name');
+		$this->expectExceptionMessage("Invalid route template: '$template' (empty variable name)");
 
 		RouteTemplate::parse($template);
 	}
 
 	public static function invalidDynamicsNameProvider(): iterable
 	{
-		yield ['[/]'];
-		yield ['[}]'];
-		yield ['[{]'];
+		foreach (RouteTemplate::INVALID_NAME_CHARACTERS as $char) {
+			if ($char === ']') {
+				continue;
+			}
+
+			yield ["[$char]"];
+		}
 	}
 
 	/**
@@ -141,7 +185,7 @@ class RouteTemplateTest extends TestCase
 	public function testParseThrowsForInvalidDynamicsName(string $template): void
 	{
 		$this->expectException(InvalidRouteTemplateException::class);
-		$this->expectExceptionMessage('Invalid route template: invalid character in dynamics name');
+		$this->expectExceptionMessage("Invalid route template: '$template' (invalid character in dynamics name)");
 
 		RouteTemplate::parse($template);
 	}
@@ -160,7 +204,7 @@ class RouteTemplateTest extends TestCase
 	public function testParseThrowsForEmptyDynamicsName(string $template): void
 	{
 		$this->expectException(InvalidRouteTemplateException::class);
-		$this->expectExceptionMessage('Invalid route template: empty dynamics name');
+		$this->expectExceptionMessage("Invalid route template: '$template' (empty dynamics name)");
 
 		RouteTemplate::parse($template);
 	}

@@ -12,6 +12,6 @@ class InvalidRouteTemplateException extends InvalidArgumentException
 	#[Pure]
 	public function __construct(public readonly string $template, string $message = '', int $code = 0, ?Throwable $previous = null)
 	{
-		parent::__construct('Invalid route template: ' . $message, $code, $previous);
+		parent::__construct("Invalid route template: '$template' ($message)", $code, $previous);
 	}
 }

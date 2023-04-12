@@ -3,18 +3,21 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing\Contract;
 
-use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericReadonlyList;
+use Elephox\Web\Routing\RouteTemplateVariable;
 
 interface RouteTemplate
 {
 	public function getSource(): string;
 
-	public function getVariableNames(): GenericEnumerable;
-
-	public function getDynamicNames(): GenericEnumerable;
+	/**
+	 * @return GenericReadonlyList<RouteTemplateVariable>
+	 */
+	public function getVariables(): GenericReadonlyList;
 
 	/**
 	 * @param array<string, string> $dynamics
+	 *
 	 * @return string
 	 */
 	public function renderRegExp(array $dynamics): string;

@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing;
 
+use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericReadonlyList;
 use Elephox\OOR\Range;
 use Elephox\Web\Routing\Contract\RouteTemplate as RouteTemplateContract;
 
 readonly class RouteTemplate implements RouteTemplateContract
 {
-	private const INVALID_NAME_CHARACTERS = ['[', ']', '{', '}', '<', '>', '#', '/', '\\'];
+	public const INVALID_NAME_CHARACTERS = ['[', ']', '{', '}', '<', '>', '#', '/', '\\', '\'', '"'];
 
 	public static function parse(string $template, ?self $parent = null): self
 	{
-		/** @var ArrayMap<string, Range> $variables */
-		$variables = new ArrayMap($parent?->variables->toArray() ?? []);
+		/** @var ArrayList<RouteTemplateVariable> $variables */
+		$variables = new ArrayList($parent?->variables->toArray() ?? []);
 
 		/** @var ArrayMap<string, Range> $dynamics */
 		$dynamics = new ArrayMap($parent?->dynamics->toArray() ?? []);
@@ -29,6 +30,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 		$i = mb_strlen($parentTemplate) + 1;
 		$start = mb_strlen($normalizedCombinedTemplate) + 1;
 		$name = '';
+		$type = null;
 		$iMax = mb_strlen($normalizedCombinedTemplate);
 		while ($i < $iMax) {
 			$c = $normalizedCombinedTemplate[$i];
@@ -44,6 +46,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 
 				if ($c === '{') {
 					$name = '';
+					$type = null;
 					$state = 'variable';
 					$start = $i;
 					$i++;
@@ -79,11 +82,23 @@ readonly class RouteTemplate implements RouteTemplateContract
 						throw new InvalidRouteTemplateException($template, 'empty variable name');
 					}
 
-					$variables->put($name, new Range($start, $i));
+					if ($type === '') {
+						throw new InvalidRouteTemplateException($template, 'empty variable type');
+					}
+
+					$variables->add(new RouteTemplateVariable($name, $type ?? 'string', new Range($start, $i)));
 					$name = '';
+					$type = null;
 					$state = 'end';
 					$i++;
 					$start = $i;
+
+					continue;
+				}
+
+				if ($c === ':') {
+					$type = '';
+					$i++;
 
 					continue;
 				}
@@ -92,7 +107,11 @@ readonly class RouteTemplate implements RouteTemplateContract
 					throw new InvalidRouteTemplateException($template, 'invalid character in variable name');
 				}
 
-				$name .= $c;
+				if ($type !== null) {
+					$type .= $c;
+				} else {
+					$name .= $c;
+				}
 			} elseif ($state === 'dynamic') {
 				if ($c === ']') {
 					if ($name === '') {
@@ -122,16 +141,24 @@ readonly class RouteTemplate implements RouteTemplateContract
 			return new self($normalizedCombinedTemplate, $variables, $dynamics);
 		}
 
+		if ($state === 'variable') {
+			throw new InvalidRouteTemplateException($template, 'missing closing curly brace \'}\'');
+		}
+
+		if ($state === 'dynamic') {
+			throw new InvalidRouteTemplateException($template, 'missing closing bracket \']\'');
+		}
+
 		throw new InvalidRouteTemplateException($template, 'unexpected parser state');
 	}
 
 	/**
-	 * @param ArrayMap<string, Range> $variables
+	 * @param ArrayList<RouteTemplateVariable> $variables
 	 * @param ArrayMap<string, Range> $dynamics
 	 */
 	public function __construct(
 		private string $source,
-		private ArrayMap $variables,
+		private ArrayList $variables,
 		private ArrayMap $dynamics,
 	) {
 	}
@@ -141,30 +168,22 @@ readonly class RouteTemplate implements RouteTemplateContract
 		return $this->source;
 	}
 
-	public function getVariableNames(): GenericEnumerable
+	public function getVariables(): GenericReadonlyList
 	{
-		return $this->variables->keys();
-	}
-
-	public function getDynamicNames(): GenericEnumerable
-	{
-		return $this->dynamics->keys();
+		return $this->variables;
 	}
 
 	public function renderRegExp(array $dynamics): string
 	{
-		$variableRegexes = $this->variables->selectKeys(static function (string $name) {
-			$type = null;
-			if (str_contains($name, ':')) {
-				/** @psalm-suppress PossiblyUndefinedArrayOffset */
-				[$name, $type] = explode(':', $name, 2);
-			}
+		$variableRegexes = $this->variables
+			->selectKeys(static function (int $index, RouteTemplateVariable $variable) {
+				$name = $variable->name;
+				$pattern = $variable->getTypePattern();
 
-			return match ($type) {
-				'int' => "(?<$name>\d+)",
-				default => "(?<$name>[^}/]+)",
-			};
-		});
+				return "(?<$name>$pattern)";
+			})
+			->select(static fn (RouteTemplateVariable $variable) => $variable->position)
+		;
 
 		$dynamicsRegexes = $this->dynamics->selectKeys(function (string $name) use ($dynamics): string {
 			if (array_key_exists($name, $dynamics)) {
