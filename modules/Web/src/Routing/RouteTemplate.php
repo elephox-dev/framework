@@ -21,19 +21,33 @@ readonly class RouteTemplate implements RouteTemplateContract
 		/** @var ArrayMap<string, Range> $dynamics */
 		$dynamics = new ArrayMap($parent?->dynamics->toArray() ?? []);
 
+		$parentTemplate = $parent?->source;
 		$normalizedTemplate = '/' . trim($template, '/');
-		$parentTemplate = $parent?->source ?? '';
-		$combinedTemplate = $parentTemplate . $normalizedTemplate;
-		$normalizedCombinedTemplate = '/' . trim($combinedTemplate, '/');
+		if ($parentTemplate === null) {
+			$parentOffset = 0;
+
+			$combinedTemplate = $normalizedTemplate;
+		} else {
+			$parentOffset = mb_strlen($parentTemplate);
+			if ($template === '') {
+				$combinedTemplate = $parentTemplate;
+			} elseif ($parentTemplate !== '/') {
+				$combinedTemplate = $parentTemplate . $normalizedTemplate;
+			} else {
+				$parentOffset = 0;
+
+				$combinedTemplate = $normalizedTemplate;
+			}
+		}
 
 		$state = 'segment';
-		$i = mb_strlen($parentTemplate) + 1;
-		$start = mb_strlen($normalizedCombinedTemplate) + 1;
+		$i = $parentOffset;
+		$start = $i;
 		$name = '';
 		$type = null;
-		$iMax = mb_strlen($normalizedCombinedTemplate);
+		$iMax = mb_strlen($combinedTemplate);
 		while ($i < $iMax) {
-			$c = $normalizedCombinedTemplate[$i];
+			$c = $combinedTemplate[$i];
 			if ($state === 'segment' || $state === 'end') {
 				if ($c === '[') {
 					$name = '';
@@ -60,10 +74,6 @@ readonly class RouteTemplate implements RouteTemplateContract
 
 				if ($c === '/') {
 					if ($state === 'segment') {
-						if ($name === '') {
-							throw new InvalidRouteTemplateException($template, 'empty segment name');
-						}
-
 						$name = '';
 					} else {
 						$state = 'segment';
@@ -138,7 +148,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 		}
 
 		if ($state === 'segment' || $state === 'end') {
-			return new self($normalizedCombinedTemplate, $variables, $dynamics);
+			return new self($combinedTemplate, $variables, $dynamics);
 		}
 
 		if ($state === 'variable') {
