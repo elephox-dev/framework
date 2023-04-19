@@ -92,6 +92,15 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this;
 	}
 
+	public function getContentType(): ?MimeTypeInterface
+	{
+		if ($this->headers === null) {
+			return null;
+		}
+
+		return $this->getContentTypeFromHeaders($this->headers);
+	}
+
 	public function exception(?Throwable $exception, ?ResponseCode $responseCode = ResponseCode::InternalServerError): static
 	{
 		$this->exception = $exception;

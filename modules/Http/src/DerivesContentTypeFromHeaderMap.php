@@ -12,20 +12,8 @@ use JetBrains\PhpStorm\Pure;
 trait DerivesContentTypeFromHeaderMap
 {
 	#[Pure]
-	abstract public function getHeaderMap(): ?Contract\HeaderMap;
-
-	#[Pure]
-	public function getContentType(): ?MimeTypeInterface
+	protected function getContentTypeFromHeaders(\Elephox\Http\Contract\HeaderMap $headerMap): ?MimeTypeInterface
 	{
-		$headerMap = $this->getHeaderMap();
-
-		/**
-		 * @var null|Contract\HeaderMap $headerMap
-		 */
-		if ($headerMap === null) {
-			return null;
-		}
-
 		/**
 		 * @psalm-suppress ImpureMethodCall
 		 */

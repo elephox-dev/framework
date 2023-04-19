@@ -5,6 +5,7 @@ namespace Elephox\Http;
 
 use Elephox\Http\Contract\HeaderMap;
 use Elephox\Http\Contract\Message;
+use Elephox\Mimey\MimeTypeInterface;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Immutable;
 use JetBrains\PhpStorm\Pure;
@@ -138,6 +139,12 @@ abstract class AbstractMessage implements Message
 		 * @var static
 		 */
 		return $this->with()->removedHeader($name)->get();
+	}
+
+	#[Pure]
+	public function getContentType(): ?MimeTypeInterface
+	{
+		return $this->getContentTypeFromHeaders($this->headers);
 	}
 
 	#[Pure]
