@@ -34,7 +34,7 @@ class ConsoleApplication
 	public function logger(): LoggerInterface
 	{
 		if ($this->logger === null) {
-			$this->logger = $this->services->requireService(LoggerInterface::class);
+			$this->logger = $this->services->require(LoggerInterface::class);
 		}
 
 		return $this->logger;
@@ -43,7 +43,7 @@ class ConsoleApplication
 	public function exceptionHandler(): ExceptionHandler
 	{
 		if ($this->exceptionHandler === null) {
-			$this->exceptionHandler = $this->services->requireService(ExceptionHandler::class);
+			$this->exceptionHandler = $this->services->require(ExceptionHandler::class);
 		}
 
 		return $this->exceptionHandler;

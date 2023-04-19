@@ -9,6 +9,7 @@ use Elephox\DI\ServiceInstantiationException;
 use Elephox\DI\ServiceLifetime;
 use Elephox\DI\ServiceNotFoundException;
 use InvalidArgumentException;
+use JetBrains\PhpStorm\Deprecated;
 use Psr\Container\ContainerInterface;
 
 interface ServiceCollection extends ContainerInterface
@@ -80,16 +81,25 @@ interface ServiceCollection extends ContainerInterface
 	/**
 	 * @template TService of object
 	 *
-	 * @param class-string<TService> $serviceName
+	 * @param class-string<TService> $id
 	 *
-	 * @return TService|null
+	 * @throws InvalidArgumentException if the service name is empty
 	 */
-	public function getService(string $serviceName): ?object;
+	public function has(string $id): bool;
 
 	/**
 	 * @template TService of object
 	 *
-	 * @param class-string<TService> $serviceName
+	 * @param class-string<TService> $id
+	 *
+	 * @return TService|null
+	 */
+	public function get(string $id): ?object;
+
+	/**
+	 * @template TService of object
+	 *
+	 * @param class-string<TService> $service
 	 *
 	 * @return TService
 	 *
@@ -97,127 +107,14 @@ interface ServiceCollection extends ContainerInterface
 	 * @throws ServiceInstantiationException if the service cannot be instantiated
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
-	public function requireService(string $serviceName): object;
+	public function require(string $service): object;
 
 	/**
 	 * @template TService of object
 	 *
-	 * @param class-string<TService> $serviceName
-	 *
-	 * @return callable(): TService
+	 * @param class-string<TService> $service
 	 *
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
-	public function requireServiceLate(string $serviceName): callable;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param class-string<TService> $serviceName
-	 *
-	 * @throws InvalidArgumentException if the service name is empty
-	 */
-	public function hasService(string $serviceName): bool;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param class-string<TService> $serviceName
-	 * @param string $alias
-	 *
-	 * @throws InvalidArgumentException if the alias or the service name is empty
-	 */
-	public function setAlias(string $alias, string $serviceName): self;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $alias
-	 *
-	 * @return TService|null
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function getByAlias(string $alias): ?object;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $alias
-	 *
-	 * @return TService
-	 *
-	 * @throws ServiceNotFoundException if no service with the given alias exists
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function requireByAlias(string $alias): object;
-
-	/**
-	 * @param string $alias
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function hasAlias(string $alias): bool;
-
-	/**
-	 * @param string $id
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function has(string $id): bool;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $id
-	 *
-	 * @return TService|null
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function get(string $id): ?object;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $aliasOrServiceName
-	 *
-	 * @return TService
-	 *
-	 * @throws ServiceNotFoundException if no service with the given alias exists
-	 * @throws InvalidArgumentException if the alias or service name is empty
-	 */
-	public function require(string $aliasOrServiceName): object;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $aliasOrServiceName
-	 *
-	 * @return callable(): TService
-	 *
-	 * @throws InvalidArgumentException if the alias or service name is empty
-	 */
-	public function requireLate(string $aliasOrServiceName): callable;
-
-	/**
-	 * @param string $serviceName
-	 *
-	 * @throws InvalidArgumentException if the service name is empty
-	 */
-	public function removeService(string $serviceName): self;
-
-	/**
-	 * @param string $alias
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function removeAlias(string $alias): self;
-
-	/**
-	 * @param string $aliasOrServiceName
-	 *
-	 * @throws InvalidArgumentException if the alias or service name is empty
-	 */
-	public function remove(string $aliasOrServiceName): self;
+	public function remove(string $service): self;
 }

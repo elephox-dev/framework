@@ -208,14 +208,14 @@ trait ServiceResolver
 			foreach ($typeNames as $typeName) {
 				try {
 					if (is_string($typeName)) {
-						return $this->getServices()->requireService($typeName);
+						return $this->getServices()->require($typeName);
 					}
 
 					if (is_array($typeName)) {
 						/** @var class-string $combinedTypeName */
 						$combinedTypeName = implode('&', $typeName);
 
-						return $this->getServices()->requireService($combinedTypeName);
+						return $this->getServices()->require($combinedTypeName);
 					}
 				} catch (ServiceNotFoundException) {
 					continue;

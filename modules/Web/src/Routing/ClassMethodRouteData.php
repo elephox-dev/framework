@@ -47,8 +47,8 @@ readonly class ClassMethodRouteData extends AbstractRouteData
 	public function getHandler(): Closure
 	{
 		return function (ServiceCollection $services, Resolver $resolver, RouteParametersMap $params): ResponseBuilder {
-			if ($services->hasService($this->className)) {
-				$controller = $services->requireService($this->className);
+			if ($services->has($this->className)) {
+				$controller = $services->require($this->className);
 			} else {
 				$controller = $resolver->instantiate($this->className);
 			}

@@ -89,19 +89,6 @@ class ServiceCollectionTest extends MockeryTestCase
 		static::assertNotSame($b, $c);
 	}
 
-	public function testAlias(): void
-	{
-		$container = new ServiceCollection();
-		$container->describe(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, static fn () => new TestServiceClass());
-		$container->setAlias('test', TestServiceClass::class);
-
-		static::assertTrue($container->has(TestServiceInterface::class));
-		static::assertTrue($container->has(TestServiceClass::class));
-		static::assertTrue($container->has('test'));
-		static::assertSame($container->get('test'), $container->get(TestServiceClass::class));
-		static::assertSame($container->get('test'), $container->get(TestServiceInterface::class));
-	}
-
 	public function testDescribeServiceAgain(): void
 	{
 		$container = new ServiceCollection();
@@ -278,23 +265,6 @@ class ServiceCollectionTest extends MockeryTestCase
 		static::assertSame('test', $result);
 	}
 
-	public function testRequireLate(): void
-	{
-		$serviceCollection = new ServiceCollection();
-		$service = new TestServiceClass();
-		$serviceCollection->addSingleton(TestServiceClass::class, instance: $service);
-
-		$callback = $serviceCollection->requireLate(TestServiceClass::class);
-		$returned = $callback();
-
-		static::assertSame($returned, $service);
-
-		$callbackService = $serviceCollection->requireServiceLate(TestServiceClass::class);
-		$returnedService = $callbackService();
-
-		static::assertSame($returnedService, $service);
-	}
-
 	/**
 	 * @throws ReflectionException
 	 */
@@ -378,25 +348,25 @@ class ServiceCollectionTest extends MockeryTestCase
 		$collection->addSingleton(TestServiceClass2::class, TestServiceClass2::class, static fn () => new TestServiceClass2());
 		$collection->addTransient(TestServiceClass3::class, TestServiceClass3::class, static fn () => new TestServiceClass3());
 
-		static::assertTrue($collection->hasService(TestServiceClass::class));
-		static::assertTrue($collection->hasService(TestServiceClass2::class));
-		static::assertTrue($collection->hasService(TestServiceClass3::class));
+		static::assertTrue($collection->has(TestServiceClass::class));
+		static::assertTrue($collection->has(TestServiceClass2::class));
+		static::assertTrue($collection->has(TestServiceClass3::class));
 
-		$inst1 = $collection->requireService(TestServiceClass::class);
-		$inst2 = $collection->requireService(TestServiceClass::class);
+		$inst1 = $collection->require(TestServiceClass::class);
+		$inst2 = $collection->require(TestServiceClass::class);
 
 		static::assertSame($inst1, $inst2);
 
-		$inst3 = $collection->requireService(TestServiceClass2::class);
+		$inst3 = $collection->require(TestServiceClass2::class);
 
 		$collection->endScope();
 
-		static::assertTrue($collection->hasService(TestServiceClass::class));
-		static::assertTrue($collection->hasService(TestServiceClass2::class));
-		static::assertTrue($collection->hasService(TestServiceClass3::class));
+		static::assertTrue($collection->has(TestServiceClass::class));
+		static::assertTrue($collection->has(TestServiceClass2::class));
+		static::assertTrue($collection->has(TestServiceClass3::class));
 
-		$inst5 = $collection->requireService(TestServiceClass::class);
-		$inst6 = $collection->requireService(TestServiceClass2::class);
+		$inst5 = $collection->require(TestServiceClass::class);
+		$inst6 = $collection->require(TestServiceClass2::class);
 
 		static::assertNotSame($inst1, $inst5);
 		static::assertSame($inst3, $inst6);

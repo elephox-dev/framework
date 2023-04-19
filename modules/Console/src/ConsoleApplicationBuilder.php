@@ -104,12 +104,12 @@ class ConsoleApplicationBuilder
 
 		if ($this->services->has(ExceptionHandler::class)) {
 			set_exception_handler(function (Throwable $exception): void {
-				$this->services->requireService(ExceptionHandler::class)->handleException($exception);
+				$this->services->require(ExceptionHandler::class)->handleException($exception);
 			});
 		}
 
 		if ($this->services->has(ErrorHandler::class)) {
-			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->requireService(ErrorHandler::class)->handleError($severity, $message, $file, $line));
+			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->require(ErrorHandler::class)->handleError($severity, $message, $file, $line));
 		}
 
 		return new ConsoleApplication(

@@ -7,7 +7,6 @@ use BadFunctionCallException;
 use Closure;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\ArraySet;
-use Elephox\Collection\OffsetNotFoundException;
 use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use InvalidArgumentException;
@@ -153,21 +152,21 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 
 		$this->services
 			->where(static fn (ServiceDescriptor $sd) => $sd->lifetime === ServiceLifetime::Scoped && $sd->implementationFactory === null)
-			->forEach(fn (ServiceDescriptor $sd) => $this->removeService($sd->serviceType))
+			->forEach(fn (ServiceDescriptor $sd) => $this->remove($sd->serviceType))
 		;
 	}
 
 	/**
 	 * @template TService of object
 	 *
-	 * @param class-string<TService> $serviceName
+	 * @param class-string<TService> $id
 	 *
 	 * @return TService|null
 	 */
-	public function getService(string $serviceName): ?object
+	public function get(string $id): ?object
 	{
 		try {
-			return $this->requireService($serviceName);
+			return $this->require($id);
 		} catch (ServiceException) {
 			return null;
 		}
@@ -176,7 +175,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	/**
 	 * @template TService of object
 	 *
-	 * @param class-string<TService> $serviceName
+	 * @param class-string<TService> $service
 	 *
 	 * @return TService
 	 *
@@ -184,25 +183,25 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 	 * @throws ServiceInstantiationException if the service cannot be instantiated
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
-	public function requireService(string $serviceName): object
+	public function require(string $service): object
 	{
 		/** @psalm-suppress DocblockTypeContradiction */
-		if (empty($serviceName)) {
+		if (empty($service)) {
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
 		if (
-			$serviceName === ServiceCollectionContract::class ||
-			$serviceName === Resolver::class ||
-			$serviceName === self::class
+			$service === ServiceCollectionContract::class ||
+			$service === Resolver::class ||
+			$service === self::class
 		) {
 			/** @var TService */
 			return $this;
 		}
 
-		$descriptor = $this->tryFindDescriptor($serviceName);
+		$descriptor = $this->tryFindDescriptor($service);
 		if ($descriptor === null) {
-			throw new ServiceNotFoundException($serviceName);
+			throw new ServiceNotFoundException($service);
 		}
 
 		if ($descriptor->lifetime === ServiceLifetime::Singleton && $descriptor->instance !== null) {
@@ -216,7 +215,7 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 			/** @var TService */
 			return $factory($this);
 		} catch (BadFunctionCallException $e) {
-			throw new ServiceInstantiationException($serviceName, previous: $e);
+			throw new ServiceInstantiationException($service, previous: $e);
 		}
 	}
 
@@ -294,158 +293,27 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		};
 	}
 
-	public function hasService(string $serviceName): bool
-	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (empty($serviceName)) {
-			throw new InvalidArgumentException('Service name must not be empty.');
-		}
-
-		return $serviceName === ServiceCollectionContract::class ||
-			$serviceName === Resolver::class ||
-			$serviceName === self::class ||
-			$this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $serviceName || $d->implementationType === $serviceName);
-	}
-
-	/**
-	 * @template TService of object
-	 *
-	 * @return TService|null
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 *
-	 * @param string $alias
-	 */
-	public function getByAlias(string $alias): ?object
-	{
-		if (empty($alias)) {
-			throw new InvalidArgumentException('Alias must not be empty.');
-		}
-
-		try {
-			/** @var class-string<TService> $serviceName */
-			$serviceName = $this->aliases->get($alias);
-		} catch (OffsetNotFoundException) {
-			$serviceName = null;
-		}
-
-		if ($serviceName === null) {
-			return null;
-		}
-
-		return $this->getService($serviceName);
-	}
-
-	/**
-	 * @template TService of object
-	 *
-	 * @return TService
-	 *
-	 * @throws ServiceNotFoundException if no service with the given alias exists
-	 * @throws InvalidArgumentException if the alias is empty
-	 *
-	 * @param string $alias
-	 */
-	public function requireByAlias(string $alias): object
-	{
-		if (empty($alias)) {
-			throw new InvalidArgumentException('Alias must not be empty.');
-		}
-
-		if ($this->hasAlias($alias)) {
-			$serviceName = $this->aliases->get($alias);
-		}
-
-		/** @var class-string<TService> $serviceName */
-		return $this->requireService($serviceName);
-	}
-
-	public function hasAlias(string $alias): bool
-	{
-		if (empty($alias)) {
-			throw new InvalidArgumentException('Alias must not be empty.');
-		}
-
-		return $this->aliases->has($alias);
-	}
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string $id
-	 *
-	 *@return TService|null
-	 *
-	 * @throws InvalidArgumentException if the alias is empty
-	 */
-	public function get(string $id): ?object
-	{
-		if (empty($id)) {
-			throw new InvalidArgumentException('Alias or service name must not be empty.');
-		}
-
-		if ($this->hasAlias($id)) {
-			return $this->getByAlias($id);
-		}
-
-		/** @var class-string<TService> $id */
-		return $this->getService($id);
-	}
-
-	/**
-	 * @template TService of object
-	 *
-	 * @return TService
-	 *
-	 * @throws ServiceNotFoundException if no service with the given alias exists
-	 * @throws InvalidArgumentException if the alias is empty
-	 *
-	 * @param string $aliasOrServiceName
-	 */
-	public function require(string $aliasOrServiceName): object
-	{
-		if (empty($aliasOrServiceName)) {
-			throw new InvalidArgumentException('Alias or service name must not be empty.');
-		}
-
-		if ($this->hasAlias($aliasOrServiceName)) {
-			$aliasOrServiceName = $this->aliases->get($aliasOrServiceName);
-		}
-
-		/** @var class-string<TService> $aliasOrServiceName */
-		return $this->requireService($aliasOrServiceName);
-	}
-
-	public function setAlias(string $alias, string $serviceName): Contract\ServiceCollection
-	{
-		/** @psalm-suppress DocblockTypeContradiction */
-		if (empty($alias) || empty($serviceName)) {
-			throw new InvalidArgumentException('Alias and service name must not be empty.');
-		}
-
-		$this->aliases->put($alias, $serviceName);
-
-		return $this;
-	}
-
 	public function has(string $id): bool
 	{
+		/** @psalm-suppress DocblockTypeContradiction */
 		if (empty($id)) {
-			throw new InvalidArgumentException('Alias or service name must not be empty.');
-		}
-
-		/** @var class-string $id */
-		return $this->hasAlias($id) || $this->hasService($id);
-	}
-
-	public function removeService(string $serviceName): Contract\ServiceCollection
-	{
-		if (empty($serviceName)) {
 			throw new InvalidArgumentException('Service name must not be empty.');
 		}
 
-		$this->services->removeBy(function (ServiceDescriptor $d) use ($serviceName) {
-			if ($d->serviceType !== $serviceName && $d->implementationType !== $serviceName) {
+		return $id === ServiceCollectionContract::class ||
+			$id === Resolver::class ||
+			$id === self::class ||
+			$this->services->any(static fn (ServiceDescriptor $d) => $d->serviceType === $id || $d->implementationType === $id);
+	}
+
+	public function remove(string $service): Contract\ServiceCollection
+	{
+		if (empty($service)) {
+			throw new InvalidArgumentException('Service name must not be empty.');
+		}
+
+		$this->services->removeBy(function (ServiceDescriptor $d) use ($service) {
+			if ($d->serviceType !== $service && $d->implementationType !== $service) {
 				return false;
 			}
 
@@ -459,42 +327,5 @@ class ServiceCollection implements Contract\ServiceCollection, Contract\Resolver
 		});
 
 		return $this;
-	}
-
-	public function removeAlias(string $alias): Contract\ServiceCollection
-	{
-		if (empty($alias)) {
-			throw new InvalidArgumentException('Alias must not be empty.');
-		}
-
-		if (!$this->hasAlias($alias)) {
-			return $this;
-		}
-
-		$this->aliases->remove($alias);
-
-		return $this;
-	}
-
-	public function remove(string $aliasOrServiceName): Contract\ServiceCollection
-	{
-		if (empty($aliasOrServiceName)) {
-			throw new InvalidArgumentException('Alias or service name must not be empty.');
-		}
-
-		$this->removeAlias($aliasOrServiceName);
-		$this->removeService($aliasOrServiceName);
-
-		return $this;
-	}
-
-	public function requireServiceLate(string $serviceName): callable
-	{
-		return fn () => $this->requireService($serviceName);
-	}
-
-	public function requireLate(string $aliasOrServiceName): callable
-	{
-		return fn () => $this->require($aliasOrServiceName);
 	}
 }
