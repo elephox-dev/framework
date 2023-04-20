@@ -100,4 +100,15 @@ class ObjectSet implements GenericSet
 
 		return count($remove) > 0;
 	}
+
+	public function removeAll(): bool
+	{
+		$anyRemoved = false;
+		foreach ($this->getIterator() as $object) {
+			$this->storage->detach($object);
+			$anyRemoved = true;
+		}
+
+		return $anyRemoved;
+	}
 }

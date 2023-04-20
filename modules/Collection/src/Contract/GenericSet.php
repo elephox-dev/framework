@@ -29,4 +29,6 @@ interface GenericSet extends GenericEnumerable
 	 * @param callable(T): bool $predicate
 	 */
 	public function removeBy(callable $predicate): bool;
+
+	public function removeAll(): bool;
 }

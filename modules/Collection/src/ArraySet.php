@@ -126,6 +126,15 @@ class ArraySet implements GenericSet
 		return $anyRemoved;
 	}
 
+	public function removeAll(): bool
+	{
+		$anyRemoved = count($this->items) > 0;
+
+		$this->items = [];
+
+		return $anyRemoved;
+	}
+
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->arrayContains($value, $comparer ?? $this->comparer);
