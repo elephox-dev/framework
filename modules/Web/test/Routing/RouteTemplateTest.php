@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\OOR\Regex
  * @covers \Elephox\Collection\DefaultEqualityComparer
  * @covers \Elephox\Web\Routing\InvalidRouteTemplateException
+ * @covers \Elephox\Web\Routing\RouteTemplateVariable
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable

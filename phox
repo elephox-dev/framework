@@ -14,16 +14,16 @@ require_once 'bootstrap.php';
  * @internal
  */
 class ConsoleAppBuilder extends ConsoleApplicationBuilder {
-	use AddsWhoopsHandler;
+//	use AddsWhoopsHandler;
 }
 
 $builder = ConsoleAppBuilder::create();
 $builder->addLogging();
-$builder->addWhoops();
+//$builder->addWhoops();
 $builder->services->addSingleton(ErrorHandler::class, DefaultExceptionHandler::class);
 
-$builder->commands->loadFromNamespace("Elephox\\Development\\Commands");
-$builder->commands->loadFromClass(ServeCommand::class);
+$builder->commands->addNamespace("Elephox\\Development\\Commands");
+$builder->commands->add(ServeCommand::class);
 
 $app = $builder->build();
 $app->run();

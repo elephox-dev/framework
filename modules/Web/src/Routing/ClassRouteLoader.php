@@ -7,11 +7,12 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Enumerable;
-use Elephox\DI\Contract\Resolver;
 use Elephox\Http\Contract\ResponseBuilder;
+use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Contract\WebMiddlewareAttribute;
-use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
 use Elephox\Web\Routing\Attribute\Contract\ActionAttribute;
+use Elephox\Web\Routing\Attribute\Contract\ControllerAttribute;
+use Elephox\Web\Routing\Contract\RouteData;
 use Elephox\Web\Routing\Contract\RouteLoader;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -89,11 +90,12 @@ readonly class ClassRouteLoader implements RouteLoader
 	}
 
 	/**
+	 * @param class-string $className
+	 *
 	 * @throws ReflectionException
 	 */
 	public function __construct(
 		public string $className,
-		public Resolver $resolver,
 	) {
 		$this->classReflection = new ReflectionClass($this->className);
 		$this->classMiddlewares = self::getMiddlewareAttributes($this->classReflection)->toArrayList();
@@ -103,13 +105,19 @@ readonly class ClassRouteLoader implements RouteLoader
 	}
 
 	private ReflectionClass $classReflection;
+
+	/**
+	 * @var ArrayList<WebMiddlewareAttribute> $classMiddlewares
+	 */
 	private ArrayList $classMiddlewares;
+
 	private ArrayList $classControllers;
 	private ArrayList $classActions;
 	private bool $hasClassControllers;
 
 	public function getRoutes(): GenericEnumerable
 	{
+		/** @var Enumerable<RouteData> */
 		return new Enumerable(function () {
 			$publicMethods = $this->classReflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
@@ -141,6 +149,7 @@ readonly class ClassRouteLoader implements RouteLoader
 			return;
 		}
 
+		/** @var ArrayList<WebMiddleware> $methodMiddlewares */
 		$methodMiddlewares = $this->classMiddlewares
 			->concat(self::getMiddlewareAttributes($methodReflection))
 			->toArrayList()
@@ -157,6 +166,9 @@ readonly class ClassRouteLoader implements RouteLoader
 		}
 	}
 
+	/**
+	 * @param ArrayList<WebMiddleware> $methodMiddlewares
+	 */
 	private function getRouteFromAttribute(ActionAttribute $methodAction, ArrayList $methodMiddlewares, ReflectionMethod $methodReflection): ClassMethodRouteData
 	{
 		$routePath = $methodAction->getPath() ?? '';
@@ -171,6 +183,9 @@ readonly class ClassRouteLoader implements RouteLoader
 		);
 	}
 
+	/**
+	 * @param ArrayList<WebMiddleware> $methodMiddlewares
+	 */
 	private function getRoutesFromControllerAndAttribute(ActionAttribute $methodAction, ArrayList $methodMiddlewares, ReflectionMethod $methodReflection): iterable
 	{
 		$routePath = $methodAction->getPath() ?? '';

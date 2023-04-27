@@ -6,7 +6,6 @@ namespace Elephox\DI\Contract;
 use BadFunctionCallException;
 use BadMethodCallException;
 use Closure;
-use Elephox\Collection\Contract\GenericList;
 use Elephox\DI\ClassNotFoundException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
@@ -18,11 +17,13 @@ use ReflectionParameter;
 interface Resolver
 {
 	/**
-	 * @param class-string $className
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
+	 * @template TClass of object
 	 *
-	 * @return object
+	 * @param class-string<TClass> $className
+	 * @param argument-list $overrideArguments
+	 * @param null|Closure(ReflectionParameter $param, int $index): (TClass|null) $onUnresolved
+	 *
+	 * @return TClass
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws BadMethodCallException
@@ -37,19 +38,19 @@ interface Resolver
 	 *
 	 * @throws BadMethodCallException
 	 */
-	public function call(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+	public function callMethod(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
 	 * @param object $instance
 	 * @param non-empty-string $method
 	 * @param argument-list $overrideArguments
-	 * @param Closure|null $onUnresolved
+	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
 	 * @return mixed
 	 *
 	 * @throws BadMethodCallException
 	 */
-	public function callOn(object $instance, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+	public function callMethodOn(object $instance, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
 	 * @param class-string $className
@@ -61,25 +62,27 @@ interface Resolver
 	 *
 	 * @throws BadMethodCallException
 	 */
-	public function callStatic(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+	public function callStaticMethod(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
-	 * @param Closure|ReflectionFunction $callback
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
+	 * @template TResult
 	 *
-	 * @return mixed
+	 * @param ReflectionFunction|Closure|Closure(mixed): TResult $callback
+	 * @param argument-list $overrideArguments
+	 * @param null|Closure(ReflectionParameter $param, int $index): (null|TResult) $onUnresolved
+	 *
+	 * @return TResult
 	 *
 	 * @throws BadFunctionCallException
 	 */
-	public function callback(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
+	public function call(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed;
 
 	/**
 	 * @param ReflectionFunctionAbstract $function
 	 * @param argument-list $overrideArguments
 	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
 	 *
-	 * @return GenericList<mixed>
+	 * @return iterable<int, mixed>
 	 */
-	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): GenericList;
+	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): iterable;
 }

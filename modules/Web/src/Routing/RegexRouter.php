@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\Contract\GenericKeyedEnumerable;
+use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Contract\GenericKeyValuePair;
 use Elephox\Collection\Contract\GenericReadonlyList;
-use Elephox\Collection\KeyedEnumerable;
+use Elephox\Collection\Enumerable;
+use Elephox\Collection\KeyValuePair;
 use Elephox\Collection\ObjectSet;
 use Elephox\OOR\Regex;
 use Elephox\Web\Routing\Contract\RouteData;
@@ -57,13 +59,14 @@ readonly class RegexRouter implements Router
 		return $this->routes;
 	}
 
-	public function getMatching(string $method, string $path): GenericKeyedEnumerable
+	public function getMatching(string $method, string $path): GenericEnumerable
 	{
 		if ($this->routes->isEmpty()) {
 			$this->loadRoutes();
 		}
 
-		return new KeyedEnumerable(function () use ($method, $path) {
+		/** @var Enumerable<GenericKeyValuePair<RouteData, RouteParametersMap>> */
+		return new Enumerable(function () use ($method, $path) {
 			/** @var RouteData $routeData */
 			foreach ($this->routes as $routeData) {
 				if (!$routeData->getMethods()->contains($method)) {
@@ -80,7 +83,7 @@ readonly class RegexRouter implements Router
 							->toArray(),
 					);
 
-					yield $routeData => $namedParams;
+					yield new KeyValuePair($routeData, $namedParams);
 				}
 			}
 		});

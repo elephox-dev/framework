@@ -42,7 +42,6 @@ class SimpleFormatColorSinkTest extends MockeryTestCase
 
 		$sink
 			->allows('hasCapability')
-			->twice()
 			->with(SinkCapability::AnsiFormatting)
 			->andReturns(true)
 		;
@@ -72,7 +71,6 @@ class SimpleFormatColorSinkTest extends MockeryTestCase
 
 		$sink
 			->allows('hasCapability')
-			->twice()
 			->with(SinkCapability::AnsiFormatting)
 			->andReturns(false)
 		;

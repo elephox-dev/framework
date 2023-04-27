@@ -181,7 +181,7 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @template TGroupKey
 	 *
-	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource, TIteratorKey, TIteratorKey): bool $comparer
 	 *
 	 * @return GenericGroupedKeyedEnumerable<TGroupKey, TIteratorKey, TSource>
@@ -402,12 +402,12 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function toArray(?callable $keySelector = null): array;
 
 	/**
-	 * @return ArrayMap<TIteratorKey, TSource>
+	 * @return ArrayMap<array-key, TSource>
 	 */
 	public function toArrayMap(): ArrayMap;
 
 	/**
-	 * @return ObjectMap<TIteratorKey, TSource>
+	 * @return ObjectMap<object, TSource>
 	 */
 	public function toObjectMap(): ObjectMap;
 

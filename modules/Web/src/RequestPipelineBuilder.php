@@ -19,10 +19,13 @@ class RequestPipelineBuilder
 	 */
 	private ArrayList $middlewares;
 
+	/**
+	 * @param PipelineEndpoint|null $endpoint
+	 * @param class-string<PipelineEndpoint>|null $endpointClass
+	 */
 	public function __construct(
 		private ?PipelineEndpoint $endpoint,
 		private ?string $endpointClass,
-		private readonly Resolver $resolver,
 	) {
 		/** @var ArrayList<WebMiddleware|class-string<WebMiddleware>> */
 		$this->middlewares = new ArrayList();
@@ -40,17 +43,26 @@ class RequestPipelineBuilder
 
 	/**
 	 * @param class-string<WebMiddleware>|null $className
+	 *
+	 * @return WebMiddleware|class-string<WebMiddleware>
 	 */
-	public function pop(?string $className = null): WebMiddleware
+	public function pop(?string $className = null): WebMiddleware|string
 	{
-		$predicate = $className === null ? null : static fn (WebMiddleware $middleware): bool => $middleware instanceof $className;
+		$predicate = $className === null ? null : static fn (WebMiddleware|string $middleware): bool => $middleware === $className || $middleware instanceof $className;
 
+		/** @psalm-suppress InvalidArgument */
 		return $this->middlewares->pop($predicate);
 	}
 
 	public function endpoint(PipelineEndpoint|string $endpoint): self
 	{
 		if (is_string($endpoint)) {
+			$interfaces = class_implements($endpoint);
+			if ($interfaces === false || !in_array(PipelineEndpoint::class, $interfaces, true)) {
+				throw new InvalidArgumentException('Given class name must implement ' . PipelineEndpoint::class);
+			}
+
+			/** @var class-string<PipelineEndpoint> $endpoint */
 			$this->endpoint = null;
 			$this->endpointClass = $endpoint;
 		} else {
@@ -75,22 +87,22 @@ class RequestPipelineBuilder
 		return $this;
 	}
 
-	public function build(): RequestPipeline
+	public function build(Resolver $resolver): RequestPipeline
 	{
-		if ($this->endpoint === null && $this->endpointClass === null) {
+		if ($this->endpoint === null && $this->endpointClass !== null) {
+			$this->endpoint = $resolver->instantiate($this->endpointClass);
+		} elseif ($this->endpoint === null) {
 			throw new LogicException('Either an endpoint or the class name for an endpoint needs to be set');
 		}
 
-		$this->endpoint ??= $this->resolver->instantiate($this->endpointClass);
-
-		assert($this->endpoint instanceof PipelineEndpoint);
+		assert($this->endpoint instanceof PipelineEndpoint, 'Invalid endpoint type, expected class implementing ' . PipelineEndpoint::class);
 
 		/** @var ArrayList<WebMiddleware> $concreteMiddlewares */
 		$concreteMiddlewares = new ArrayList();
 
 		foreach ($this->middlewares as $middleware) {
 			if (is_string($middleware)) {
-				$concreteMiddleware = $this->resolver->instantiate($middleware);
+				$concreteMiddleware = $resolver->instantiate($middleware);
 				if (!($concreteMiddleware instanceof WebMiddleware)) {
 					throw new InvalidArgumentException("Given middleware '$middleware' does not implement " . WebMiddleware::class);
 				}

@@ -25,6 +25,10 @@ abstract readonly class AbstractRouteData implements RouteData
 	 */
 	private ArrayList $methods;
 
+	/**
+	 * @param ArrayList<WebMiddleware>|iterable<WebMiddleware> $middlewares
+	 * @param RequestMethodContract|string|iterable<mixed, RequestMethodContract|non-empty-string> $methods
+	 */
 	public function __construct(
 		private RouteLoader $loader,
 		RouteTemplateContract|string $template,
@@ -52,6 +56,7 @@ abstract readonly class AbstractRouteData implements RouteData
 			$methods = [$methods];
 		}
 
+		/** @psalm-suppress RedundantCondition */
 		assert(is_iterable($methods));
 
 		$this->methods = new ArrayList();

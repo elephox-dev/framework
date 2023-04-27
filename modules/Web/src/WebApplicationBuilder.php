@@ -9,7 +9,6 @@ use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderC
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\LoadsDefaultConfiguration;
-use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Http\Contract\RequestMethod;
@@ -26,6 +25,7 @@ use Elephox\Web\Routing\Contract\Router;
 use Elephox\Web\Routing\NamespaceRouteLoader;
 use Elephox\Web\Routing\RegexRouter;
 use Elephox\Web\Routing\RouterEndpoint;
+use ReflectionException;
 use Throwable;
 
 /**
@@ -45,7 +45,7 @@ class WebApplicationBuilder
 		$environment ??= new GlobalWebEnvironment();
 		$services ??= new ServiceCollection();
 
-		$pipeline ??= new RequestPipelineBuilder(null, null, $services->resolver());
+		$pipeline ??= new RequestPipelineBuilder(null, null);
 
 		$services->addSingleton(Environment::class, instance: $environment);
 		$services->addSingleton(WebEnvironment::class, instance: $environment);
@@ -125,23 +125,25 @@ class WebApplicationBuilder
 	public function build(): WebApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->addSingleton(Configuration::class, instance: $configuration, replace: true);
+		$this->services->addSingleton(Configuration::class, instance: $configuration);
 
-		$builtPipeline = $this->pipeline->build();
-		$this->services->addSingleton(RequestPipeline::class, instance: $builtPipeline, replace: true);
+		$provider = $this->services->buildProvider();
 
-		if ($this->services->has(ExceptionHandler::class)) {
-			set_exception_handler(function (Throwable $exception): void {
-				$this->services->requireService(ExceptionHandler::class)
+		$builtPipeline = $this->pipeline->build($provider);
+		$this->services->addSingleton(RequestPipeline::class, instance: $builtPipeline);
+
+		if ($provider->has(ExceptionHandler::class)) {
+			set_exception_handler(static function (Throwable $exception) use ($provider): void {
+				$provider->require(ExceptionHandler::class)
 					->handleException($exception)
 				;
 			});
 		}
 
-		if ($this->services->has(ErrorHandler::class)) {
+		if ($provider->has(ErrorHandler::class)) {
 			set_error_handler(
-				function (int $severity, string $message, string $file, int $line): bool {
-					return $this->services->requireService(ErrorHandler::class)
+				static function (int $severity, string $message, string $file, int $line) use ($provider): bool {
+					return $provider->require(ErrorHandler::class)
 						->handleError($severity, $message, $file, $line)
 					;
 				},
@@ -149,7 +151,7 @@ class WebApplicationBuilder
 		}
 
 		return new WebApplication(
-			$this->services,
+			$provider,
 			$configuration,
 			$this->environment,
 			$builtPipeline,
@@ -163,27 +165,32 @@ class WebApplicationBuilder
 	}
 
 	/**
-	 * @var class-string $className
+	 * @param class-string $className
+	 *
+	 * @throws ReflectionException
 	 */
 	public function addRoutesFromClass(string $className): void
 	{
-		$loader = $this->resolver()->instantiate(ClassRouteLoader::class, ['className' => $className]);
-		$router = $this->service(Router::class);
-		$router->addLoader($loader);
+		$loader = new ClassRouteLoader($className);
+
+		$this->service(Router::class)->addLoader($loader);
 	}
 
 	public function addRoutesFromNamespace(string $namespace): void
 	{
-		$loader = $this->resolver()->instantiate(NamespaceRouteLoader::class, ['namespace' => $namespace]);
-		$router = $this->service(Router::class);
-		$router->addLoader($loader);
+		$loader = new NamespaceRouteLoader($namespace);
+
+		$this->service(Router::class)->addLoader($loader);
 	}
 
+	/**
+	 * @param RequestMethod|non-empty-string|iterable<mixed, RequestMethod|non-empty-string> $method
+	 */
 	public function addRoute(RequestMethod|string|iterable $method, string $template, callable $handler): void
 	{
 		$loader = new ClosureRouteLoader($method, $template, $handler(...));
-		$router = $this->service(Router::class);
-		$router->addLoader($loader);
+
+		$this->service(Router::class)->addLoader($loader);
 	}
 
 	/**
@@ -191,18 +198,11 @@ class WebApplicationBuilder
 	 *
 	 * @param class-string<T>|string $name
 	 *
-	 * @psalm-suppress InvalidReturnType psalm is unable to verify T as the return type
-	 *
 	 * @return T
 	 */
 	public function service(string $name): object
 	{
 		/** @var T */
 		return $this->services->require($name);
-	}
-
-	public function resolver(): Resolver
-	{
-		return $this->services->resolver();
 	}
 }

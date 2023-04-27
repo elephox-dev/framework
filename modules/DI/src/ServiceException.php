@@ -6,6 +6,6 @@ namespace Elephox\DI;
 use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 
-abstract class ServiceException extends LogicException implements ContainerExceptionInterface
+class ServiceException extends LogicException implements ContainerExceptionInterface
 {
 }

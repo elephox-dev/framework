@@ -14,53 +14,55 @@ use Elephox\DI\Contract\Resolver;
  * @template TService of service-object
  * @template TImplementation of service-object
  */
-class ServiceDescriptor
+readonly class ServiceDescriptor
 {
 	/**
-	 * @var null|Closure(Resolver): TImplementation $implementationFactory
-	 */
-	public readonly ?Closure $implementationFactory;
-
-	/**
 	 * @param class-string<TService> $serviceType
-	 * @param class-string<TImplementation> $implementationType
-	 * @param ServiceLifetime $lifetime
+	 * @param null|class-string<TImplementation> $implementationType
 	 * @param null|Closure(mixed): TImplementation $factory
-	 * @param TImplementation|null $instance
+	 * @param null|TImplementation $instance
 	 */
 	public function __construct(
-		public readonly string $serviceType,
-		public readonly string $implementationType,
-		public readonly ServiceLifetime $lifetime,
-		?Closure $factory,
-		public ?object $instance,
+		public string $serviceType,
+		public ?string $implementationType,
+		public ServiceLifetime $lifetime,
+		private ?Closure $factory,
+		private ?object $instance,
 	) {
-		if ($factory === null && $this->instance === null) {
+		if ($this->factory === null && $this->instance === null) {
 			throw new InvalidServiceDescriptorException('Either factory or instance must be set.');
 		}
 
-		if ($this->lifetime === ServiceLifetime::Transient && $factory === null) {
-			throw new InvalidServiceDescriptorException('Transient service must have a factory set.');
+		if ($this->lifetime !== ServiceLifetime::Singleton && $this->factory === null) {
+			throw new InvalidServiceDescriptorException('Transient/scoped services must have a factory set.');
 		}
+	}
 
-		if ($this->instance !== null) {
-			$this->implementationFactory = null;
-			$this->checkInstanceImplementsType($this->instance);
+	/**
+	 * @param Resolver $resolver
+	 *
+	 * @return TImplementation
+	 */
+	public function createInstance(Resolver $resolver): object
+	{
+		if ($this->factory !== null) {
+			/** @var TImplementation $instance */
+			$instance = $resolver->call($this->factory);
+		} elseif ($this->instance !== null) {
+			$instance = $this->instance;
 		} else {
-			$this->implementationFactory = function (Resolver $resolver) use ($factory): object {
-				/** @var TImplementation $instance */
-				$instance = $resolver->callback($factory);
-
-				$this->checkInstanceImplementsType($instance);
-
-				return $instance;
-			};
+			throw new InvalidServiceDescriptorException('Either factory or instance must be set.');
 		}
+
+		$this->checkInstanceImplementsType($instance);
+
+		/** @var TImplementation $instance */
+		return $instance;
 	}
 
 	private function checkInstanceImplementsType(object $instance): void
 	{
-		if (!($instance instanceof $this->implementationType)) {
+		if ($this->implementationType !== null && !($instance instanceof $this->implementationType)) {
 			throw new InvalidServiceDescriptorException(sprintf(
 				'Instance must be of given implementation type (%s). Given instance is of type %s.',
 				$this->implementationType,

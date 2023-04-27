@@ -23,7 +23,8 @@ class DefaultNotFoundHandler implements WebMiddleware
 		if ($this->shouldHandle($response)) {
 			$response->responseCode(ResponseCode::NotFound);
 
-			if ($response->getHeaderMap()?->has(HeaderName::ContentType)) {
+			if ($response->getHeaderMap()?->has(HeaderName::ContentType) === true) {
+				/** @psalm-suppress PossiblyNullReference */
 				switch ($response->getHeaderMap()->get(HeaderName::ContentType)[0]) {
 					case MimeType::TextHtml->value:
 						$this->setHtmlNotFound($response);

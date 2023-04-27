@@ -68,7 +68,7 @@ class OrderedIterator implements Iterator
 		next($this->cache);
 	}
 
-	public function key(): string|int|null
+	public function key(): mixed
 	{
 		$currentRow = current($this->cache);
 		if ($currentRow === false) {

@@ -4,41 +4,77 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Autoloading\Composer\NamespaceLoader;
-use Elephox\Collection\Contract\GenericKeyValuePair;
-use Elephox\Collection\ObjectMap;
+use Elephox\Collection\ArraySet;
+use Elephox\Collection\ObjectSet;
 use Elephox\Console\Command\Contract\CommandHandler;
 use Elephox\DI\Contract\Resolver;
 use InvalidArgumentException;
-use IteratorAggregate;
-use Traversable;
+use LogicException;
 
-/**
- * @implements IteratorAggregate<CommandTemplate, CommandHandler>
- */
-readonly class CommandCollection implements IteratorAggregate
+readonly class CommandCollection
 {
 	/**
-	 * @var ObjectMap<CommandTemplate, CommandHandler> $templateMap
+	 * @var ArraySet<class-string<CommandHandler>> $templates
 	 */
-	private ObjectMap $templateMap;
+	private ArraySet $templates;
 
-	public function __construct(private Resolver $resolver)
+	public function __construct()
 	{
-		$this->templateMap = new ObjectMap();
+		$this->templates = new ArraySet();
 	}
 
-	public function add(CommandTemplate $template, CommandHandler $handler): void
+	public function add(string $className): void
 	{
-		$this->templateMap->put($template, $handler);
+		$interfaces = class_implements($className);
+		if (!$interfaces || !in_array(CommandHandler::class, $interfaces, true)) {
+			throw new LogicException(sprintf('%s must implement %s', $className, CommandHandler::class));
+		}
+
+		/** @var class-string<CommandHandler> $className */
+		$this->templates->add($className);
 	}
 
-	public function loadFromNamespace(string $namespace): static
+	public function addNamespace(string $namespace): static
 	{
-		NamespaceLoader::iterateNamespace($namespace, function (string $className): void {
-			$this->loadFromClass($className);
-		});
+		/** @var class-string $className */
+		foreach (NamespaceLoader::iterateNamespace($namespace) as $className) {
+			$this->add($className);
+		}
 
 		return $this;
+	}
+
+	public function build(Resolver $resolver): CommandProvider
+	{
+		/** @var ObjectSet<CommandMetadata> $metadataSet */
+		$metadataSet = new ObjectSet();
+
+		foreach ($this->templates as $className) {
+			$metadata = $this->getMetadataFromClassName($className, $resolver);
+
+			$metadataSet->add($metadata);
+		}
+
+		return new CommandProvider($metadataSet);
+	}
+
+	/**
+	 * @param class-string $className
+	 */
+	protected function getMetadataFromClassName(string $className, Resolver $resolver): CommandMetadata
+	{
+		/** @var CommandHandler $handler */
+		$handler = $resolver->instantiate($className);
+
+		$templateBuilder = new CommandTemplateBuilder();
+
+		$this->preProcessCommandTemplate($templateBuilder);
+		$handler->configure($templateBuilder);
+		$this->postProcessCommandTemplate($templateBuilder);
+
+		$template = $templateBuilder->build();
+
+		return new CommandMetadata($template, $handler);
 	}
 
 	protected function preProcessCommandTemplate(CommandTemplateBuilder $builder): void
@@ -52,59 +88,5 @@ readonly class CommandCollection implements IteratorAggregate
 		if ($commandName === null) {
 			throw new InvalidArgumentException('Command name is not set');
 		}
-	}
-
-	/**
-	 * @param class-string $className
-	 */
-	public function loadFromClass(string $className): void
-	{
-		$interfaces = class_implements($className);
-		if (!$interfaces || !in_array(CommandHandler::class, $interfaces, true)) {
-			return;
-		}
-
-		/** @var CommandHandler $instance */
-		$instance = $this->resolver->instantiate($className);
-
-		$templateBuilder = new CommandTemplateBuilder();
-		$this->preProcessCommandTemplate($templateBuilder);
-		$instance->configure($templateBuilder);
-		$this->postProcessCommandTemplate($templateBuilder);
-		$template = $templateBuilder->build();
-
-		$this->add($template, $instance);
-	}
-
-	public function findCompiled(RawCommandInvocation $invocation): CompiledCommandHandler
-	{
-		$pair = $this->findPairByName($invocation->name);
-
-		return new CompiledCommandHandler($invocation, $pair->getKey(), $pair->getValue());
-	}
-
-	public function getTemplateByName(string $name): CommandTemplate
-	{
-		return $this->findPairByName($name)->getKey();
-	}
-
-	/**
-	 * @param string $name
-	 *
-	 * @return GenericKeyValuePair<CommandTemplate, CommandHandler>
-	 *
-	 * @throws CommandNotFoundException
-	 */
-	protected function findPairByName(string $name): GenericKeyValuePair
-	{
-		return $this->templateMap
-			->whereKey(static fn (CommandTemplate $template): bool => $template->name === $name)
-			->firstPairOrDefault(null)
-			?? throw new CommandNotFoundException($name);
-	}
-
-	public function getIterator(): Traversable
-	{
-		return $this->templateMap->getIterator();
 	}
 }

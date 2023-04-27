@@ -8,6 +8,8 @@ use ArrayAccess;
 /**
  * @template TKey
  * @template TValue
+ *
+ * @extends ArrayAccess<0|1, TKey|TValue>
  */
 interface GenericKeyValuePair extends ArrayAccess
 {

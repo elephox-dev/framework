@@ -22,7 +22,7 @@ abstract class AbstractActionAttribute extends AbstractRoutingAttribute implemen
 
 	/**
 	 * @param null|string $path
-	 * @param non-empty-string|RequestMethodContract|iterable<non-empty-string|RequestMethodContract> $methods
+	 * @param non-empty-string|RequestMethodContract|iterable<mixed, non-empty-string|RequestMethodContract> $methods
 	 */
 	public function __construct(
 		?string $path = self::DEFAULT_PATH,
@@ -55,14 +55,15 @@ abstract class AbstractActionAttribute extends AbstractRoutingAttribute implemen
 
 		foreach ($methods as $method) {
 			if (is_string($method)) {
-				$method = RequestMethod::tryFrom($method);
-				$method ??= new CustomRequestMethod($method);
-			} elseif (!$method instanceof RequestMethod) {
-				throw new InvalidArgumentException('Invalid request method type: ' .
-					get_debug_type($method));
+				$requestMethod = RequestMethod::tryFrom($method);
+				$requestMethod ??= new CustomRequestMethod($method);
+			} elseif ($method instanceof RequestMethod) {
+				$requestMethod = $method;
+			} else {
+				throw new InvalidArgumentException('Invalid request method type: ' . get_debug_type($method));
 			}
 
-			$this->methods->add($method);
+			$this->methods->add($requestMethod);
 		}
 
 		if ($this->methods->isEmpty()) {

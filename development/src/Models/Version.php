@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\Development\Commands;
+namespace Elephox\Development\Models;
 
 readonly class Version
 {

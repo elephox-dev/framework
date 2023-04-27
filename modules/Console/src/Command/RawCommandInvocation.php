@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayList;
+use JsonException;
 
 readonly class RawCommandInvocation
 {
@@ -13,6 +14,7 @@ readonly class RawCommandInvocation
 	 * @throws EmptyCommandLineException
 	 * @throws NoCommandInCommandLineException
 	 * @throws IncompleteCommandLineException
+	 * @throws JsonException
 	 */
 	public static function fromCommandLine(array $commandLineArgs): self
 	{
@@ -47,7 +49,7 @@ readonly class RawCommandInvocation
 	) {
 	}
 
-	public function build(CommandTemplate $template): CommandInvocation
+	public function apply(CommandTemplate $template): CommandInvocation
 	{
 		return new CommandInvocation(
 			$this,

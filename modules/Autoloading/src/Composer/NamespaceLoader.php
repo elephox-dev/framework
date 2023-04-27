@@ -42,10 +42,13 @@ class NamespaceLoader
 	}
 
 	/**
-	 * @param callable(class-string): void $callback
 	 * @param string $namespace
+	 *
+	 * @psalm-suppress MixedReturnTypeCoercion
+	 *
+	 * @return iterable<int, class-string>
 	 */
-	public static function iterateNamespace(string $namespace, callable $callback): void
+	public static function iterateNamespace(string $namespace): iterable
 	{
 		$prefixDirMap = ArrayMap::from(self::getClassLoader()->getPrefixesPsr4())
 			->select(
@@ -54,6 +57,7 @@ class NamespaceLoader
 					->where(static fn (DirectoryContract $d) => $d->exists()),
 			)
 		;
+
 		foreach ($prefixDirMap as $nsPrefix => $dirs) {
 			if (!str_starts_with($namespace, $nsPrefix) && !str_starts_with($nsPrefix, $namespace)) {
 				continue;
@@ -69,7 +73,7 @@ class NamespaceLoader
 			foreach ($dirs as $dir) {
 				/** @var ArrayList<string> $partsUsed */
 				$partsUsed = new ArrayList();
-				self::iterateClassesRecursive($root, $parts, $partsUsed, $dir, $callback);
+				yield from self::iterateClassesRecursive($root, $parts, $partsUsed, $dir);
 				assert($partsUsed->isEmpty());
 			}
 		}
@@ -78,12 +82,11 @@ class NamespaceLoader
 	/**
 	 * @param ArrayList<string> $nsParts
 	 * @param ArrayList<string> $nsPartsUsed
-	 * @param callable(class-string): void $callback
 	 * @param string $rootNs
 	 * @param DirectoryContract $directory
 	 * @param int $depth
 	 */
-	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, callable $callback, int $depth = 0): void
+	private static function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, int $depth = 0): iterable
 	{
 		if ($depth > 10) {
 			throw new RuntimeException('Recursion limit exceeded. Please choose a more specific namespace.');
@@ -96,7 +99,7 @@ class NamespaceLoader
 				continue;
 			}
 
-			self::iterateClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $callback, $depth + 1);
+			yield from self::iterateClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $depth + 1);
 		}
 
 		if ($lastPart === '') {
@@ -117,7 +120,7 @@ class NamespaceLoader
 					self::getClassLoader()->loadClass($fqcn);
 				}
 
-				$callback($fqcn);
+				yield $fqcn;
 			}
 		}
 

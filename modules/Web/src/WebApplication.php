@@ -5,7 +5,8 @@ namespace Elephox\Web;
 
 use Elephox\Configuration\Contract\Configuration;
 use Elephox\DI\Contract\Resolver;
-use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
+use Elephox\DI\Contract\ServiceProvider;
+use Elephox\DI\Contract\ServiceScopeFactory;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
@@ -19,18 +20,17 @@ class WebApplication
 	protected ?ExceptionHandler $exceptionHandler = null;
 
 	public function __construct(
-		public readonly ServiceCollectionContract $services,
+		public readonly ServiceProvider $services,
 		public readonly Configuration $configuration,
 		public readonly WebEnvironment $environment,
 		public readonly RequestPipeline $pipeline,
 	) {
-		$this->services->addSingleton(__CLASS__, instance: $this);
 	}
 
 	public function exceptionHandler(): ExceptionHandler
 	{
 		if ($this->exceptionHandler === null) {
-			$this->exceptionHandler = $this->services->requireService(ExceptionHandler::class);
+			$this->exceptionHandler = $this->services->require(ExceptionHandler::class);
 		}
 
 		return $this->exceptionHandler;
@@ -40,8 +40,8 @@ class WebApplication
 	{
 		/** @var ServerRequestContract $request */
 		$request = $this->services
-			->requireService(Resolver::class)
-			->call(ServerRequestBuilder::class, 'fromGlobals')
+			->require(Resolver::class)
+			->callStaticMethod(ServerRequestBuilder::class, 'fromGlobals')
 		;
 
 		$response = $this->handle($request);
@@ -50,8 +50,13 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
-		$this->services->addSingleton(RequestContract::class, instance: $request, replace: true);
+		$requestScope = $this->services->require(ServiceScopeFactory::class)->createScope();
 
-		return $this->pipeline->process($request)->get();
+		// TODO: use services from scoped service provider
+		$response = $this->pipeline->process($request)->get();
+
+		$requestScope->endScope();
+
+		return $response;
 	}
 }

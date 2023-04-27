@@ -8,14 +8,14 @@ use Elephox\Logging\Contract\Sink;
 use Elephox\Stream\Contract\Stream;
 use InvalidArgumentException;
 
-class StreamSink implements Sink
+readonly class StreamSink implements Sink
 {
-	private readonly Stream $stream;
-	private readonly Stream $errorStream;
+	private Stream $errorStream;
 
 	public function __construct(
-		Stream $stream,
+		private Stream $stream,
 		?Stream $errorStream = null,
+		private string $eol = PHP_EOL,
 	) {
 		if (!$stream->isWritable()) {
 			throw new InvalidArgumentException('Given stream is not writable');
@@ -25,16 +25,15 @@ class StreamSink implements Sink
 			throw new InvalidArgumentException('Given error stream is not writable');
 		}
 
-		$this->stream = $stream;
 		$this->errorStream = $errorStream ?? $stream;
 	}
 
 	public function write(LogLevelContract $level, string $message, array $context): void
 	{
 		if ($level->getLevel() >= LogLevel::WARNING->getLevel()) {
-			$this->errorStream->write($message . PHP_EOL);
+			$this->errorStream->write($message . $this->eol);
 		} else {
-			$this->stream->write($message . PHP_EOL);
+			$this->stream->write($message . $this->eol);
 		}
 	}
 

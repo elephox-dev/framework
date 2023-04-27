@@ -103,6 +103,8 @@ class GroupingIterator implements Iterator
 				$idx = key($this->groupKeys);
 			}
 
+			assert(is_int($idx));
+
 			$this->groupPairs[$idx][] = [$key, $value];
 		}
 

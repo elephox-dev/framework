@@ -446,7 +446,7 @@ trait IsKeyedEnumerable
 	/**
 	 * @template TGroupKey
 	 *
-	 * @param callable(TSource): TGroupKey $keySelector
+	 * @param callable(TSource, TIteratorKey): TGroupKey $keySelector
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *
 	 * @return GenericGroupedKeyedEnumerable<TGroupKey, TIteratorKey, TSource>
@@ -993,7 +993,9 @@ trait IsKeyedEnumerable
 	}
 
 	/**
-	 * @return ObjectMap<TIteratorKey, TSource>
+	 * @template TObjectKey of object
+	 *
+	 * @return ObjectMap<TObjectKey, TSource>
 	 */
 	public function toObjectMap(): ObjectMap
 	{
@@ -1016,7 +1018,7 @@ trait IsKeyedEnumerable
 			$key = $keySelector($elementKey, $element);
 
 			if ($key instanceof Stringable) {
-				$key = (string) $key;
+				$key = $key->__toString();
 			} elseif (!is_scalar($key)) {
 				throw new OutOfBoundsException('Invalid array key: ' . get_debug_type($key));
 			}

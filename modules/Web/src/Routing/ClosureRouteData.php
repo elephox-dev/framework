@@ -6,7 +6,9 @@ namespace Elephox\Web\Routing;
 use Closure;
 use Elephox\Collection\ArrayList;
 use Elephox\DI\Contract\Resolver;
-use Elephox\Http\Contract\RequestMethod;
+use Elephox\Http\Contract\RequestMethod as RequestMethodContract;
+use Elephox\Http\Contract\ResponseBuilder;
+use Elephox\Web\Contract\WebMiddleware;
 use Elephox\Web\Routing\Contract\RouteLoader;
 use Elephox\Web\Routing\Contract\RouteTemplate;
 use ReflectionException;
@@ -16,11 +18,15 @@ readonly class ClosureRouteData extends AbstractRouteData
 {
 	private string $regExp;
 
+	/**
+	 * @param ArrayList<WebMiddleware>|iterable<WebMiddleware> $middlewares
+	 * @param RequestMethodContract|string|iterable<mixed, RequestMethodContract|non-empty-string> $methods
+	 */
 	public function __construct(
 		RouteLoader $loader,
 		RouteTemplate|string $template,
 		ArrayList|iterable $middlewares,
-		RequestMethod|string|iterable $methods,
+		RequestMethodContract|string|iterable $methods,
 		protected Closure $closure,
 	) {
 		parent::__construct($loader, $template, $middlewares, $methods);
@@ -41,7 +47,16 @@ readonly class ClosureRouteData extends AbstractRouteData
 
 	public function getHandler(): Closure
 	{
-		return fn (Resolver $resolver, RouteParametersMap $params) => $resolver->callback($this->closure, $params->toArray());
+		return $this->__invoke(...);
+	}
+
+	public function __invoke(Resolver $resolver, RouteParametersMap $params): ResponseBuilder
+	{
+		/** @var array<non-empty-string, mixed> $args */
+		$args = $params->toArray();
+
+		/** @var ResponseBuilder */
+		return $resolver->call($this->closure, $args);
 	}
 
 	public function getRegExp(): string

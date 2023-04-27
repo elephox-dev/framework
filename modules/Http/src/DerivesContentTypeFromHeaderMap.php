@@ -12,7 +12,7 @@ use JetBrains\PhpStorm\Pure;
 trait DerivesContentTypeFromHeaderMap
 {
 	#[Pure]
-	protected function getContentTypeFromHeaders(\Elephox\Http\Contract\HeaderMap $headerMap): ?MimeTypeInterface
+	protected function getContentTypeFromHeaders(Contract\HeaderMap $headerMap): ?MimeTypeInterface
 	{
 		/**
 		 * @psalm-suppress ImpureMethodCall

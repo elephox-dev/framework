@@ -5,6 +5,7 @@ namespace Elephox\Web\Routing;
 
 use Elephox\Collection\ArrayList;
 use Elephox\Collection\ArrayMap;
+use Elephox\Collection\Contract\GenericKeyedEnumerable;
 use Elephox\Collection\Contract\GenericReadonlyList;
 use Elephox\OOR\Range;
 use Elephox\Web\Routing\Contract\RouteTemplate as RouteTemplateContract;
@@ -15,11 +16,23 @@ readonly class RouteTemplate implements RouteTemplateContract
 
 	public static function parse(string $template, ?self $parent = null): self
 	{
+		/**
+		 * @psalm-suppress RedundantCondition
+		 * @psalm-suppress TypeDoesNotContainNull
+		 */
+		$parentVariables = $parent?->variables->toList() ?? [];
+
 		/** @var ArrayList<RouteTemplateVariable> $variables */
-		$variables = new ArrayList($parent?->variables->toArray() ?? []);
+		$variables = new ArrayList($parentVariables);
+
+		/**
+		 * @psalm-suppress RedundantCondition
+		 * @psalm-suppress TypeDoesNotContainNull
+		 */
+		$parentDynamics = $parent?->dynamics->toList() ?? [];
 
 		/** @var ArrayMap<string, Range> $dynamics */
-		$dynamics = new ArrayMap($parent?->dynamics->toArray() ?? []);
+		$dynamics = new ArrayMap($parentDynamics);
 
 		$parentTemplate = $parent?->source;
 		$normalizedTemplate = '/' . trim($template, '/');
@@ -113,6 +126,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 					continue;
 				}
 
+				/** @psalm-suppress ParadoxicalCondition */
 				if (in_array($c, self::INVALID_NAME_CHARACTERS, true)) {
 					throw new InvalidRouteTemplateException($template, 'invalid character in variable name');
 				}
@@ -122,7 +136,10 @@ readonly class RouteTemplate implements RouteTemplateContract
 				} else {
 					$name .= $c;
 				}
-			} elseif ($state === 'dynamic') {
+			} else {
+				/** @psalm-suppress RedundantCondition */
+				assert($state === 'dynamic', 'Unexpected parser state');
+
 				if ($c === ']') {
 					if ($name === '') {
 						throw new InvalidRouteTemplateException($template, 'empty dynamics name');
@@ -137,6 +154,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 					continue;
 				}
 
+				/** @psalm-suppress ParadoxicalCondition */
 				if (in_array($c, self::INVALID_NAME_CHARACTERS, true)) {
 					throw new InvalidRouteTemplateException($template, 'invalid character in dynamics name');
 				}
@@ -155,11 +173,9 @@ readonly class RouteTemplate implements RouteTemplateContract
 			throw new InvalidRouteTemplateException($template, 'missing closing curly brace \'}\'');
 		}
 
-		if ($state === 'dynamic') {
-			throw new InvalidRouteTemplateException($template, 'missing closing bracket \']\'');
-		}
+		assert($state === 'dynamic', 'Unexpected parser state');
 
-		throw new InvalidRouteTemplateException($template, 'unexpected parser state');
+		throw new InvalidRouteTemplateException($template, 'missing closing bracket \']\'');
 	}
 
 	/**
@@ -185,6 +201,7 @@ readonly class RouteTemplate implements RouteTemplateContract
 
 	public function renderRegExp(array $dynamics): string
 	{
+		/** @var GenericKeyedEnumerable<string, Range> $variableRegexes */
 		$variableRegexes = $this->variables
 			->selectKeys(static function (int $index, RouteTemplateVariable $variable) {
 				$name = $variable->name;

@@ -8,7 +8,7 @@ use Elephox\Stream\ResourceStream;
 use const STDERR;
 use const STDOUT;
 
-class StandardSink extends StreamSink
+readonly class StandardSink extends StreamSink
 {
 	/**
 	 * @var resource $stdout

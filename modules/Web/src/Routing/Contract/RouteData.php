@@ -5,7 +5,6 @@ namespace Elephox\Web\Routing\Contract;
 
 use Closure;
 use Elephox\Collection\Contract\GenericReadonlyList;
-use Elephox\Http\Contract\ResponseBuilder;
 use Elephox\Web\Contract\WebMiddleware;
 
 interface RouteData
@@ -21,9 +20,6 @@ interface RouteData
 
 	public function getHandlerName(): string;
 
-	/**
-	 * @return Closure(mixed): ResponseBuilder
-	 */
 	public function getHandler(): Closure;
 
 	/**

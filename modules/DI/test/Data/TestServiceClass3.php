@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Data;
 
-class TestServiceClass3 implements TestServiceInterface
+class TestServiceClass3 implements TestServiceInterface, TestServiceInterface3
 {
 	public function returnsString(string $testString): string
 	{

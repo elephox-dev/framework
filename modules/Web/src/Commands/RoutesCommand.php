@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Commands;
 
-use Elephox\Collection\Grouping;
+use Elephox\Collection\Contract\Grouping;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
@@ -48,6 +48,7 @@ readonly class RoutesCommand implements CommandHandler
 				$handlers = $g->select(static fn (RouteData $r) => $r->getHandlerName())->unique()->toList();
 
 				if (count($handlers) > 1) {
+					/** @var list<string> $warnings */
 					$warnings[] = "Path '$path' has ambiguous handlers: " . implode(', ', $handlers);
 				}
 
@@ -63,12 +64,14 @@ readonly class RoutesCommand implements CommandHandler
 
 				return $row;
 			})
+			->toList()
 		;
 
 		foreach (Console::table($routes, compact: true) as $line) {
 			$this->logger->info($line);
 		}
 
+		/** @var list<string> $warnings */
 		if (count($warnings) > 0) {
 			foreach ($warnings as $warning) {
 				trigger_error($warning, E_USER_WARNING);

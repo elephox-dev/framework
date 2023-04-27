@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use LogicException;
+
 /**
  * @template TKey
  * @template TValue
@@ -37,9 +39,12 @@ trait IsArrayEnumerable
 	 */
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
-		assert(is_scalar($key), 'Only scalar keys are supported');
+		if (!is_scalar($key)) {
+			throw new LogicException('Only scalar keys are supported');
+		}
 
 		if ($comparer === null) {
+			/** @var array-key $key */
 			return array_key_exists($key, $this->items);
 		}
 

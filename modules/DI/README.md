@@ -8,16 +8,16 @@ It also has mechanisms to resolve arguments for functions and callbacks.
 ```php
 <?php
 
-use Elephox\DI\ServiceCollection;
+use Elephox\DI\ServiceCollectionOld;
 
-$container = new ServiceCollection();
+$container = new ServiceCollectionOld();
 $container->addSingleton(stdClass::class, stdClass::class, fn () => new stdClass());
 
 $foo = function (stdClass $object) {
     return $object;
 }
 
-$instance = $container->resolver()->callback($foo);
+$instance = $container->resolver()->call($foo);
 // $instance is an instance of stdClass
 // multiple calls to $container->resolver()->callback($foo) will return the same instance, since it was added as a singleton
 ```

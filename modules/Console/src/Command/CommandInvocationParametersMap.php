@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayMap;
+use JsonException;
 use RuntimeException;
 
 /**
@@ -69,6 +70,7 @@ class CommandInvocationParametersMap extends ArrayMap
 	 * @return self
 	 *
 	 * @throws IncompleteCommandLineException
+	 * @throws JsonException
 	 */
 	public static function fromCommandLine(string $commandLine): self
 	{

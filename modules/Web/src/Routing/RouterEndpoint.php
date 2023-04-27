@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Elephox\Collection\AmbiguousMatchException;
+use Elephox\Collection\Contract\GenericKeyValuePair;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\EmptySequenceException;
 use Elephox\DI\Contract\Resolver;
@@ -26,7 +27,7 @@ readonly class RouterEndpoint implements PipelineEndpoint
 	{
 		$method = $request->getMethod();
 		$path = $request->getUrl()->getPath();
-		$matching = $this->router->getMatching($method, $path)->toObjectMap();
+		$matching = $this->router->getMatching($method, $path)->toArrayList();
 
 		try {
 			/**
@@ -37,7 +38,7 @@ readonly class RouterEndpoint implements PipelineEndpoint
 		} catch (AmbiguousMatchException) {
 			/** @var Grouping<float, RouteData, RouteParametersMap> $orderedBySpecificity */
 			$orderedBySpecificity = $matching
-				->groupBy(static fn (RouteParametersMap $p, RouteData $r) => Regex::specificity($r->getRegExp(), $path))
+				->groupBy(static fn (GenericKeyValuePair $kvp) => Regex::specificity($kvp->getKey()->getRegExp(), $path))
 				->orderByDescending(static fn (Grouping $g) => $g->groupKey())
 				->first()
 			;
@@ -58,6 +59,7 @@ readonly class RouterEndpoint implements PipelineEndpoint
 		/** @var Closure(mixed): ResponseBuilder $handler */
 		$handler = $route->getHandler();
 
-		return $this->resolver->callback($handler, overrideArguments: ['params' => $params]);
+		/** @var ResponseBuilder */
+		return $this->resolver->call($handler, overrideArguments: ['params' => $params]);
 	}
 }

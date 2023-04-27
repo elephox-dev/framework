@@ -7,6 +7,8 @@ use Elephox\Collection\Enumerable;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
+use Elephox\Development\Models\ReleaseType;
+use Elephox\Development\Models\Version;
 use Elephox\Files\Contract\Directory as DirectoryContract;
 use Elephox\Files\Contract\File;
 use Elephox\Files\Directory;

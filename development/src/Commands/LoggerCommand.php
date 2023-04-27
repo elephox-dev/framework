@@ -6,10 +6,10 @@ namespace Elephox\Development\Commands;
 use Elephox\Console\Command\CommandInvocation;
 use Elephox\Console\Command\CommandTemplateBuilder;
 use Elephox\Console\Command\Contract\CommandHandler;
-use Elephox\DI\Contract\ServiceCollection;
-use Elephox\Logging\EnhancedMessageSink;
+use Elephox\DI\Contract\Resolver;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\Contract\SinkProxy;
+use Elephox\Logging\EnhancedMessageSink;
 use Elephox\Logging\LogLevel;
 use Elephox\Logging\SimpleFormatColorSink;
 use Elephox\Logging\SingleSinkLogger;
@@ -20,7 +20,7 @@ readonly class LoggerCommand implements CommandHandler
 {
 	public function __construct(
 		private LoggerInterface $logger,
-		private ServiceCollection $services,
+		private Resolver $resolver,
 	) {
 	}
 
@@ -54,7 +54,7 @@ readonly class LoggerCommand implements CommandHandler
 		}
 
 		/** @var Sink $sink */
-		$sink = $this->services->resolver()->instantiate($sinkClass, $args);
+		$sink = $this->resolver->instantiate($sinkClass, $args);
 
 		$logger = new SingleSinkLogger($sink);
 		foreach (LogLevel::cases() as $level) {

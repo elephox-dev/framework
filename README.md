@@ -73,13 +73,18 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
   - [ ] Add test for both cases in which mime_content_type exists and not
 - [ ] [modules/Logging/test/SimpleFormatColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/SimpleFormatColorSinkTest.php)
   - [ ] write tests for background and options
-- [ ] [modules/Web/src/Routing/InvalidRequestController.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Routing/InvalidRequestController.php)
-  - [ ] change message to be more general and/or create more specific exceptions
+- [ ] [modules/Web/src/WebApplication.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/WebApplication.php)
+  - [ ] use services from scoped service provider
 
 ### ⚠️ Fixes
 
 - [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsEnumerable.php)
   - [ ] de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
+
+### 🤔 Maybe
+
+- [ ] [modules/Web/src/Middleware/DefaultNotFoundHandler.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Middleware/DefaultNotFoundHandler.php)
+  - [ ] use a standardized schema for errors in json
 
 
 ### 🚧 Related issues

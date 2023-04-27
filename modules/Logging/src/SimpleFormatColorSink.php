@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Logging;
 
+use Closure;
 use Elephox\Logging\Contract\LogLevel;
 use Elephox\Logging\Contract\Sink;
 use Elephox\Logging\Contract\SinkProxy;
@@ -43,26 +44,55 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 		'hidden' => [8, 28],
 	];
 
+	/**
+	 * @var Closure(int): string
+	 */
+	private readonly Closure $foregroundOpener;
+
+	/**
+	 * @var Closure(int): string
+	 */
+	private readonly Closure $foregroundCloser;
+
+	/**
+	 * @var Closure(int): string
+	 */
+	private readonly Closure $backgroundOpener;
+
+	/**
+	 * @var Closure(int): string
+	 */
+	private readonly Closure $backgroundCloser;
+
+	/**
+	 * @var Closure(array{0: int, 1: int}): string
+	 */
+	private readonly Closure $optionOpener;
+
+	/**
+	 * @var Closure(array{0: int, 1: int}): string
+	 */
+	private readonly Closure $optionCloser;
+
 	public function __construct(private readonly Sink $innerSink)
 	{
+		if ($this->getInnerSink()->hasCapability(SinkCapability::AnsiFormatting)) {
+			$this->foregroundOpener = static fn (int $code): string => "\033[{$code}m";
+			$this->foregroundCloser = static fn (int $previous): string => "\033[{$previous}m";
+			$this->backgroundOpener = static fn (int $code): string => "\033[{$code}m";
+			$this->backgroundCloser = static fn (int $previous): string => "\033[{$previous}m";
+			$this->optionOpener = static fn (array $codes): string => "\033[$codes[0]m";
+			$this->optionCloser = static fn (array $codes): string => "\033[$codes[1]m";
+		} else {
+			$this->foregroundOpener = $this->foregroundCloser = $this->backgroundOpener = $this->backgroundCloser = $this->optionOpener = $this->optionCloser = static fn (): string => '';
+		}
 	}
 
 	public function write(LogLevel $level, string $message, array $context): void
 	{
-		$foregroundOpener = $foregroundCloser = $backgroundOpener = $backgroundCloser = $optionOpener = $optionCloser = static fn (): string => '';
-
-		if ($this->getInnerSink()->hasCapability(SinkCapability::AnsiFormatting)) {
-			$foregroundOpener = static fn (int $code): string => "\033[{$code}m";
-			$foregroundCloser = static fn (int $previous): string => "\033[{$previous}m";
-			$backgroundOpener = static fn (int $code): string => "\033[{$code}m";
-			$backgroundCloser = static fn (int $previous): string => "\033[{$previous}m";
-			$optionOpener = static fn (array $codes): string => "\033[$codes[0]m";
-			$optionCloser = static fn (array $codes): string => "\033[$codes[1]m";
-		}
-
-		$message = $this->replaceSingleCodes(self::FOREGROUND_MAP['default'], self::FOREGROUND_MAP, $message, $foregroundOpener, $foregroundCloser);
-		$message = $this->replaceSingleCodes(self::BACKGROUND_MAP['defaultBack'], self::BACKGROUND_MAP, $message, $backgroundOpener, $backgroundCloser);
-		$message = $this->replaceDoubleCodes($message, $optionOpener, $optionCloser);
+		$message = $this->replaceSingleCodes(self::FOREGROUND_MAP['default'], self::FOREGROUND_MAP, $message, $this->foregroundOpener, $this->foregroundCloser);
+		$message = $this->replaceSingleCodes(self::BACKGROUND_MAP['defaultBack'], self::BACKGROUND_MAP, $message, $this->backgroundOpener, $this->backgroundCloser);
+		$message = $this->replaceDoubleCodes($message, $this->optionOpener, $this->optionCloser);
 
 		$this->getInnerSink()->write($level, $message, $context);
 	}
@@ -71,12 +101,12 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 	 * @param int $default
 	 * @param array<string, int> $map
 	 * @param string $message
-	 * @param callable(int): string $openerGenerator
-	 * @param callable(int): string $closerGenerator
+	 * @param Closure(int): string $openerGenerator
+	 * @param Closure(int): string $closerGenerator
 	 *
 	 * @return string
 	 */
-	protected function replaceSingleCodes(int $default, array $map, string $message, callable $openerGenerator, callable $closerGenerator): string
+	protected function replaceSingleCodes(int $default, array $map, string $message, Closure $openerGenerator, Closure $closerGenerator): string
 	{
 		$stack = [];
 
@@ -119,12 +149,12 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 
 	/**
 	 * @param string $message
-	 * @param callable(array{0: int, 1: int}): string $openerGenerator
-	 * @param callable(array{0: int, 1: int}): string $closerGenerator
+	 * @param Closure(array{0: int, 1: int}): string $openerGenerator
+	 * @param Closure(array{0: int, 1: int}): string $closerGenerator
 	 *
 	 * @return string
 	 */
-	protected function replaceDoubleCodes(string $message, callable $openerGenerator, callable $closerGenerator): string
+	protected function replaceDoubleCodes(string $message, Closure $openerGenerator, Closure $closerGenerator): string
 	{
 		foreach (self::OPTIONS_MAP as $option => $codes) {
 			if (!str_contains($message, "<$option>")) {

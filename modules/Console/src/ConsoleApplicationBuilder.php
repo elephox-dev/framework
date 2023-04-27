@@ -10,7 +10,10 @@ use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerC
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\LoadsDefaultConfiguration;
 use Elephox\Console\Command\CommandCollection;
+use Elephox\Console\Command\CommandProvider;
+use Elephox\Console\Command\HelpCommand;
 use Elephox\Console\Contract\ConsoleEnvironment;
+use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Logging\EnhancedMessageSink;
@@ -38,7 +41,7 @@ class ConsoleApplicationBuilder
 		$configuration ??= new ConfigurationManager();
 		$environment ??= new GlobalConsoleEnvironment();
 		$services ??= new ServiceCollection();
-		$commands ??= new CommandCollection($services->resolver());
+		$commands ??= new CommandCollection();
 
 		$services->addSingleton(Environment::class, instance: $environment);
 		$services->addSingleton(ConsoleEnvironment::class, instance: $environment);
@@ -100,39 +103,28 @@ class ConsoleApplicationBuilder
 	public function build(): ConsoleApplication
 	{
 		$configuration = $this->configuration->build();
-		$this->services->addSingleton(Configuration::class, instance: $configuration, replace: true);
+		$this->services->addSingleton(Configuration::class, instance: $configuration);
 
-		if ($this->services->has(ExceptionHandler::class)) {
-			set_exception_handler(function (Throwable $exception): void {
-				$this->services->require(ExceptionHandler::class)->handleException($exception);
+		$this->commands->add(HelpCommand::class);
+		$this->services->addSingleton(CommandProvider::class, factory: fn (Resolver $resolver) => $this->commands->build($resolver));
+
+		$provider = $this->services->buildProvider();
+
+		if ($provider->has(ExceptionHandler::class)) {
+			set_exception_handler(static function (Throwable $exception) use ($provider): void {
+				$provider->require(ExceptionHandler::class)->handleException($exception);
 			});
 		}
 
-		if ($this->services->has(ErrorHandler::class)) {
-			set_error_handler(fn (int $severity, string $message, string $file, int $line): bool => $this->services->require(ErrorHandler::class)->handleError($severity, $message, $file, $line));
+		if ($provider->has(ErrorHandler::class)) {
+			set_error_handler(static fn (int $severity, string $message, string $file, int $line): bool => $provider->require(ErrorHandler::class)->handleError($severity, $message, $file, $line));
 		}
 
 		return new ConsoleApplication(
-			$this->services,
+			$provider,
 			$configuration,
 			$this->environment,
-			$this->commands,
 		);
-	}
-
-	/**
-	 * @template T of object
-	 *
-	 * @param class-string<T>|string $name
-	 *
-	 * @psalm-suppress InvalidReturnType psalm is unable to verify T as the return type
-	 *
-	 * @return T
-	 */
-	public function service(string $name): object
-	{
-		/** @var T */
-		return $this->services->require($name);
 	}
 
 	public function addLogging(): void
