@@ -9,7 +9,6 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Container\ContainerInterface;
 
 /**
- * @covers \Elephox\DI\ServiceCollectionOld
  * @covers \Elephox\Collection\ArrayList
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\Collection\ArraySet
@@ -22,10 +21,13 @@ use Psr\Container\ContainerInterface;
  * @covers \Elephox\Collection\Iterator\EagerCachingIterator
  * @covers \Elephox\Collection\Iterator\SelectIterator
  * @covers \Elephox\Collection\Enumerable
+ * @covers \Elephox\DI\ServiceProvider
+ * @covers \Elephox\DI\ResolverStack
+ * @covers \Elephox\DI\ServiceCollection
+ * @covers \Elephox\DI\ServiceProvider
  *
  * @uses \Elephox\Collection\IsEnumerable
  * @uses \Elephox\Collection\IsKeyedEnumerable
- * @uses \Elephox\DI\ServiceResolver
  *
  * @internal
  */

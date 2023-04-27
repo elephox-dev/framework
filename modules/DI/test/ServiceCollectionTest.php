@@ -17,8 +17,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\DI\ServiceDescriptor
  * @covers \Elephox\DI\ServiceProvider
  *
- * @uses \Elephox\DI\ServiceResolver
- *
  * @internal
  */
 class ServiceCollectionTest extends TestCase

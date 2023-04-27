@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\IteratorProvider
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
- * @uses \Elephox\DI\ServiceResolver
  *
  * @internal
  */
