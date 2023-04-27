@@ -150,11 +150,17 @@ class Duration extends AbstractDuration
 			$this->seconds,
 		));
 
-		/** @psalm-suppress ImpurePropertyAssignment */
+		/**
+		 * @psalm-suppress ImpurePropertyAssignment
+		 * @psalm-suppress InaccessibleProperty
+		 */
 		$d->invert = $this->negative ? 1 : 0;
 
 		// f = Number of microseconds, as a fraction of a second.
-		/** @psalm-suppress ImpurePropertyAssignment */
+		/**
+		 * @psalm-suppress ImpurePropertyAssignment
+		 * @psalm-suppress InaccessibleProperty
+		 */
 		$d->f = $this->microseconds / self::MICROSECONDS_PER_SECOND;
 
 		return $d;

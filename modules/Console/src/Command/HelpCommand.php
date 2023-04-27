@@ -91,12 +91,16 @@ readonly class HelpCommand implements Contract\CommandHandler
 			$closeBracket = $argumentTemplate->hasDefault ? ']' : '>';
 			$name = $openBracket . $argumentTemplate->name;
 			if ($argumentTemplate->hasDefault) {
-				/** @psalm-suppress PossiblyInvalidCast */
+				/**
+				 * @psalm-suppress PossiblyInvalidCast
+				 * @psalm-suppress TypeDoesNotContainType
+				 */
 				$name .= '=' . match (get_debug_type($argumentTemplate->default)) {
 					'null' => 'null',
 					'bool' => $argumentTemplate->default ? 'true' : 'false',
 					'array' => implode(', ', (array) $argumentTemplate->default),
-					'int', 'float', 'string', Stringable::class => (string) $argumentTemplate->default,
+					'int', 'float' => "$argumentTemplate->default",
+					'string', Stringable::class => (string) $argumentTemplate->default,
 					default => get_debug_type($argumentTemplate->default),
 				};
 			}

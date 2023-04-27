@@ -215,7 +215,7 @@ readonly class ServeCommand implements CommandHandler
 
 				break;
 			default:
-				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . (string) PHP_OS_FAMILY . "'). Defaulting to 2");
+				$this->logger->error("Unable to determine the number of available processor cores (unsupported OS '" . PHP_OS_FAMILY . "'). Defaulting to 2");
 
 				return 2;
 		}

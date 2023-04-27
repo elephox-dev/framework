@@ -238,11 +238,7 @@ class ArrayList implements GenericList
 			return array_pop($this->items);
 		}
 
-		/**
-		 * @psalm-suppress MixedArgumentTypeCoercion
-		 *
-		 * @var null|int $key
-		 */
+		/** @var null|int $key */
 		$key = $this->reverse()->firstKeyOrDefault(null, $predicate);
 		if ($key === null) {
 			throw new EmptySequenceException();
