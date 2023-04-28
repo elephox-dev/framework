@@ -37,7 +37,12 @@ readonly class ClosureRouteData extends AbstractRouteData
 	public function getHandlerName(): string
 	{
 		try {
-			return (new ReflectionFunction($this->closure))->getName();
+			$reflection = new ReflectionFunction($this->closure);
+			if ($reflection->isClosure()) {
+				return sprintf('%s @ %s:%d-%d', $reflection->getName(), $reflection->getFileName(), $reflection->getStartLine(), $reflection->getEndLine());
+			}
+
+			return sprintf('%s::%s', $reflection->getClosureScopeClass()?->getName() ?? '<unknown>', $reflection->getName());
 		} catch (ReflectionException $e) {
 			$class = $e::class;
 

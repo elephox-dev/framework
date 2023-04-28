@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Web\Routing;
 
 use Elephox\Collection\AmbiguousMatchException;
+use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericKeyValuePair;
 use Elephox\Collection\Contract\Grouping;
 use Elephox\Collection\EmptySequenceException;
@@ -27,10 +28,15 @@ readonly class RouterEndpoint implements PipelineEndpoint
 	{
 		$method = $request->getMethod();
 		$path = $request->getUrl()->getPath();
+
+		/** @var ArrayList<GenericKeyValuePair<RouteData, RouteParametersMap>> $matching */
 		$matching = $this->router->getMatching($method, $path)->toArrayList();
 
 		try {
 			/**
+			 * @psalm-suppress MixedAssignment
+			 * @psalm-suppress MixedArrayAccess
+			 *
 			 * @var RouteData $route
 			 * @var RouteParametersMap $params
 			 */

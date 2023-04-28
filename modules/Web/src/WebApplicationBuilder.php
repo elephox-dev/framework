@@ -11,7 +11,6 @@ use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\LoadsDefaultConfiguration;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
-use Elephox\Http\Contract\RequestMethod;
 use Elephox\Support\Contract\ErrorHandler;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\WebEnvironment;
@@ -19,13 +18,10 @@ use Elephox\Web\Middleware\DefaultExceptionHandler;
 use Elephox\Web\Middleware\DefaultNotFoundHandler;
 use Elephox\Web\Middleware\FileExtensionToContentType;
 use Elephox\Web\Middleware\StaticContentHandler;
-use Elephox\Web\Routing\ClassRouteLoader;
-use Elephox\Web\Routing\ClosureRouteLoader;
 use Elephox\Web\Routing\Contract\Router;
-use Elephox\Web\Routing\NamespaceRouteLoader;
-use Elephox\Web\Routing\RegexRouter;
+use Elephox\Web\Routing\Contract\RouterBuilder as RouterBuilderContract;
+use Elephox\Web\Routing\RouterBuilder;
 use Elephox\Web\Routing\RouterEndpoint;
-use ReflectionException;
 use Throwable;
 
 /**
@@ -90,6 +86,11 @@ class WebApplicationBuilder
 	protected function getConfigurationBuilder(): ConfigurationBuilderContract
 	{
 		return $this->configuration;
+	}
+
+	public function getRouter(): RouterBuilderContract
+	{
+		return $this->service(RouterBuilderContract::class);
 	}
 
 	protected function loadConfiguration(): void
@@ -160,37 +161,9 @@ class WebApplicationBuilder
 
 	public function addRouting(): void
 	{
-		$this->services->addSingleton(Router::class, RegexRouter::class);
+		$this->services->addSingleton(RouterBuilderContract::class, RouterBuilder::class);
+		$this->services->addSingleton(Router::class, factory: static fn (RouterBuilderContract $routerBuilder): Router => $routerBuilder->build());
 		$this->pipeline->endpoint(RouterEndpoint::class);
-	}
-
-	/**
-	 * @param class-string $className
-	 *
-	 * @throws ReflectionException
-	 */
-	public function addRoutesFromClass(string $className): void
-	{
-		$loader = new ClassRouteLoader($className);
-
-		$this->service(Router::class)->addLoader($loader);
-	}
-
-	public function addRoutesFromNamespace(string $namespace): void
-	{
-		$loader = new NamespaceRouteLoader($namespace);
-
-		$this->service(Router::class)->addLoader($loader);
-	}
-
-	/**
-	 * @param RequestMethod|non-empty-string|iterable<mixed, RequestMethod|non-empty-string> $method
-	 */
-	public function addRoute(RequestMethod|string|iterable $method, string $template, callable $handler): void
-	{
-		$loader = new ClosureRouteLoader($method, $template, $handler(...));
-
-		$this->service(Router::class)->addLoader($loader);
 	}
 
 	/**

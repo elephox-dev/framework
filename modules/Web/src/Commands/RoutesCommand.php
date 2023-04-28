@@ -32,14 +32,12 @@ readonly class RoutesCommand implements CommandHandler
 
 	public function handle(CommandInvocation $command): ?int
 	{
-		$this->router->loadRoutes();
-
 		$warnings = [];
 
 		$showRegex = $command->options->get('regex')->bool();
 
 		$routes = $this->router
-			->getLoadedRoutes()
+			->getRoutes()
 			->orderBy(static fn (RouteData $r) => mb_strlen($r->getTemplate()->getSource()))
 			->groupBy(static fn (RouteData $r) => $r->getTemplate()->getSource())
 			->select(static function (Grouping $g) use (&$warnings, $showRegex): array {
