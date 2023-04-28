@@ -22,7 +22,9 @@ trait IsArrayEnumerable
 	 */
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
-		$comparer ??= DefaultEqualityComparer::same(...);
+		if ($comparer === null) {
+			return in_array($value, $this->items, true);
+		}
 
 		foreach ($this->items as $v) {
 			if ($comparer($v, $value)) {
