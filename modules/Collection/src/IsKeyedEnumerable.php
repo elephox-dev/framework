@@ -788,7 +788,30 @@ trait IsKeyedEnumerable
 		return true;
 	}
 
-	public function single(?callable $predicate = null): GenericKeyValuePair
+	public function single(?callable $predicate = null): mixed
+	{
+		$matched = false;
+		$returnElement = null;
+
+		foreach ($this->getIterator() as $elementKey => $element) {
+			if ($predicate === null || $predicate($element, $elementKey)) {
+				if ($matched) {
+					throw new AmbiguousMatchException();
+				}
+
+				$matched = true;
+				$returnElement = $element;
+			}
+		}
+
+		if (!$matched) {
+			throw new EmptySequenceException();
+		}
+
+		return $returnElement;
+	}
+
+	public function singlePair(?callable $predicate = null): GenericKeyValuePair
 	{
 		$matched = false;
 		$returnKey = null;

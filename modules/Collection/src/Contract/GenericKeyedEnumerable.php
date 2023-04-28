@@ -331,9 +331,16 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	/**
 	 * @param null|callable(TSource, TIteratorKey): bool $predicate
 	 *
+	 * @return TSource
+	 */
+	public function single(?callable $predicate = null): mixed;
+
+	/**
+	 * @param null|callable(TSource, TIteratorKey): bool $predicate
+	 *
 	 * @return GenericKeyValuePair<TIteratorKey, TSource>
 	 */
-	public function single(?callable $predicate = null): GenericKeyValuePair;
+	public function singlePair(?callable $predicate = null): GenericKeyValuePair;
 
 	/**
 	 * @param TSource $default

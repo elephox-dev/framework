@@ -571,6 +571,13 @@ class KeyedEnumerableTest extends TestCase
 	{
 		$result = KeyedEnumerable::from([2])->single();
 
+		static::assertSame(2, $result);
+	}
+
+	public function testSinglePair(): void
+	{
+		$result = KeyedEnumerable::from([2])->singlePair();
+
 		static::assertSame(0, $result->getKey());
 		static::assertSame(2, $result->getValue());
 	}
