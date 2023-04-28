@@ -27,10 +27,11 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 
 	/**
 	 * @template TValue
+	 * @template TKey
 	 *
-	 * @param TValue $value
+	 * @param TValue|iterable<TKey, TValue> $value
 	 *
-	 * @return GenericKeyedEnumerable<mixed, TValue>
+	 * @return GenericKeyedEnumerable<TKey, TValue>
 	 */
 	public static function from(mixed $value): GenericKeyedEnumerable
 	{
@@ -44,6 +45,7 @@ class KeyedEnumerable extends IteratorProvider implements GenericKeyedEnumerable
 
 		if (is_object($value)) {
 			if ($value instanceof GenericKeyedEnumerable) {
+				/** @var GenericKeyedEnumerable<TKey, TValue> */
 				return $value;
 			}
 
