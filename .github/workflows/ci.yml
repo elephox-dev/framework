@@ -12,7 +12,7 @@ on:
       - 'psalm.xml'
 
 env:
-  php-extensions: mysqli,mbstring,json
+  php-extensions: mbstring,json
 
 jobs:
   composer-setup:
