@@ -119,4 +119,31 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 			),
 		);
 	}
+
+	public function tryAddSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
+	{
+		if ($this->has($service)) {
+			return $this;
+		}
+
+		return $this->addSingleton($service, $concrete, $factory, $instance);
+	}
+
+	public function tryAddTransient(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
+	{
+		if ($this->has($service)) {
+			return $this;
+		}
+
+		return $this->addTransient($service, $concrete, $factory, $instance);
+	}
+
+	public function tryAddScoped(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
+	{
+		if ($this->has($service)) {
+			return $this;
+		}
+
+		return $this->addScoped($service, $concrete, $factory, $instance);
+	}
 }
