@@ -104,7 +104,7 @@ jobs:
       - name: 🧪 Run PHPUnit
         run: composer run ci:unit-test
       - name: 📤 Upload coverage data
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
           path: build/coverage/
@@ -130,7 +130,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts --ignore-platform-req=php+
       - name: 📥 Download coverage data
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ runner.os }}-${{ matrix.php-version }}-coverage
           path: build/coverage/
@@ -179,7 +179,7 @@ jobs:
         env:
           fail-fast: true
       - name: 📥 Download coverage data
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ runner.os }}-8.2-coverage
           path: build/coverage/
