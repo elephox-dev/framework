@@ -165,12 +165,12 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	protected function getOrCreateInstance(ServiceDescriptor $descriptor): object
 	{
 		if ($this->instances->has($descriptor->serviceType)) {
-			return $this->instances->get($descriptor->serviceType);
+			$service = $this->instances->get($descriptor->serviceType);
+		} else {
+			$service = $this->createInstance($descriptor);
+
+			$this->instances->put($descriptor->serviceType, $service);
 		}
-
-		$service = $this->createInstance($descriptor);
-
-		$this->instances->put($descriptor->serviceType, $service);
 
 		return $service;
 	}
