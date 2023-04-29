@@ -63,8 +63,25 @@ class UrlBuilder extends AbstractBuilder implements Contract\UrlBuilder
 
 	public function userInfo(?string $username, ?string $password = null): Contract\UrlBuilder
 	{
-		$this->username = $username;
-		$this->password = $password;
+		if ($username === null) {
+			$this->username = null;
+		} else {
+			if (urldecode($username) === $username) {
+				$this->username = urlencode($username);
+			} else {
+				$this->username = $username;
+			}
+		}
+
+		if ($password === null) {
+			$this->password = null;
+		} else {
+			if (urldecode($password) === $password) {
+				$this->password = urlencode($password);
+			} else {
+				$this->password = $password;
+			}
+		}
 
 		return $this;
 	}

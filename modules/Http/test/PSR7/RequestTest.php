@@ -34,9 +34,6 @@ class RequestTest extends RequestIntegrationTest
 	protected $skippedTests = [
 		'testRequestTarget' => 'RequestTarget is not supported',
 		'testGetRequestTargetInOriginFormNormalizesUriWithMultipleLeadingSlashesInPath' => 'RequestTarget is not supported',
-		'testWithHeaderInvalidArguments' => 'Tests are not compatible with new type hints yet.',
-		'testMethodWithInvalidArguments' => 'Tests are not compatible with new type hints yet.',
-		'testWithAddedHeaderInvalidArguments' => 'Tests are not compatible with new type hints yet.',
 	];
 
 	public function createSubject(): RequestInterface|ElephoxRequest

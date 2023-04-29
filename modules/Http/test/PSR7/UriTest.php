@@ -20,7 +20,7 @@ use Psr\Http\Message\UriInterface;
 class UriTest extends UriIntegrationTest
 {
 	protected $skippedTests = [
-		'testWithSchemeInvalidArguments' => 'Tests are not compatible with new type hints yet.',
+		'testWithSchemeInvalidArguments' => 'Type coercion prevents tests from failing',
 	];
 
 	public function createUri($uri): UriInterface|Url

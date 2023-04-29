@@ -35,6 +35,10 @@ use Psr\Http\Message\ServerRequestInterface;
  * @covers \Elephox\Http\UploadedFileMap
  * @covers \Elephox\OOR\Str
  * @covers \Elephox\Stream\ResourceStream
+ * @covers \Elephox\Http\CustomRequestMethod
+ * @covers \Elephox\OOR\Casing
+ * @covers \Elephox\Http\UrlScheme
+ * @covers \Elephox\Http\RequestMethod
  *
  * @uses \Elephox\Collection\IsKeyedEnumerable
  *
@@ -42,6 +46,10 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ServerRequestTest extends ServerRequestIntegrationTest
 {
+	protected $skippedTests = [
+		'testRequestTarget' => 'withRequestTarget is not supported',
+	];
+
 	public function createSubject(): ElephoxServerRequest|ServerRequestInterface
 	{
 		return ServerRequestBuilder::fromGlobals(requestUrl: Url::fromString('/'));

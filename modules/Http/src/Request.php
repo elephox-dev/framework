@@ -59,7 +59,17 @@ class Request extends AbstractMessage implements Contract\Request
 	#[Pure]
 	public function getRequestTarget(): string
 	{
-		return (string) $this->getUrl();
+		$target = $this->getUrl()->getPath();
+		if ($target === '') {
+			$target = '/';
+		}
+
+		$query = $this->getUrl()->getQuery();
+		if ($query !== '') {
+			$target .= '?' . $query;
+		}
+
+		return $target;
 	}
 
 	#[Pure]
