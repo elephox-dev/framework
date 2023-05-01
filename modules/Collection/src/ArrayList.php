@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Elephox\Collection;
 
 use ArrayIterator;
-use Elephox\Collection\Contract\GenericList;
+use Elephox\Collection\Contract\GenericArrayList;
 use InvalidArgumentException;
 use Iterator;
 use Traversable;
@@ -12,9 +12,9 @@ use Traversable;
 /**
  * @template T
  *
- * @implements GenericList<T>
+ * @implements GenericArrayList<T>
  */
-class ArrayList implements GenericList
+class ArrayList implements GenericArrayList
 {
 	// TODO: replace generic enumerable function with array-specific functions where possible
 	/**

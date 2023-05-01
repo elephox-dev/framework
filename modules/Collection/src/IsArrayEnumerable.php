@@ -59,4 +59,29 @@ trait IsArrayEnumerable
 
 		return false;
 	}
+
+	public function current(): mixed
+	{
+		return current($this->items);
+	}
+
+	public function next(): mixed
+	{
+		return next($this->items);
+	}
+
+	public function prev(): mixed
+	{
+		return prev($this->items);
+	}
+
+	public function key(): ?int
+	{
+		return key($this->items);
+	}
+
+	public function reset(): mixed
+	{
+		return reset($this->items);
+	}
 }
