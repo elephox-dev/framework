@@ -16,7 +16,7 @@ use WeakMap;
  *
  * @internal
  */
-class DeepCloneableTest extends TestCase
+final class DeepCloneableTest extends TestCase
 {
 	public function testThrowsRuntimeException(): void
 	{
@@ -36,7 +36,7 @@ class DeepCloneableTest extends TestCase
 		$object->resource = $resource;
 		$object->deepClone();
 
-		static::assertSame($resource, $object->resource);
+		self::assertSame($resource, $object->resource);
 
 		fclose($object->resource);
 	}
@@ -48,7 +48,7 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertSame(TestEnum::A, $clone->enumValue);
+		self::assertSame(TestEnum::A, $clone->enumValue);
 	}
 
 	public function testStaticPropertyDoesntChange(): void
@@ -61,8 +61,8 @@ class DeepCloneableTest extends TestCase
 
 		$object->deepClone();
 
-		static::assertSame($o1, Cloneable::$staticProperty);
-		static::assertSame($o2, Cloneable::$anotherStaticProperty);
+		self::assertSame($o1, Cloneable::$staticProperty);
+		self::assertSame($o2, Cloneable::$anotherStaticProperty);
 	}
 
 	public function testWeakMapKeysAreKept(): void
@@ -75,8 +75,8 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertTrue($clone->weakMap->offsetExists($o1));
-		static::assertNotSame($o2, $clone->weakMap->offsetGet($o1));
+		self::assertTrue($clone->weakMap->offsetExists($o1));
+		self::assertNotSame($o2, $clone->weakMap->offsetGet($o1));
 	}
 
 	public function testObjectStorageIsDeepCloned(): void
@@ -92,18 +92,18 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertFalse($clone->objectStorage->contains($o1));
-		static::assertFalse($clone->objectStorage->contains($o2));
+		self::assertFalse($clone->objectStorage->contains($o1));
+		self::assertFalse($clone->objectStorage->contains($o2));
 
 		$clone->objectStorage->rewind();
 		$o3 = $clone->objectStorage->current();
 		$clone->objectStorage->next();
 		$o4 = $clone->objectStorage->current();
 
-		static::assertNotSame($o1, $o3);
-		static::assertNotSame($o2, $o4);
-		static::assertTrue($o3->test);
-		static::assertTrue($o4->prop['test']);
+		self::assertNotSame($o1, $o3);
+		self::assertNotSame($o2, $o4);
+		self::assertTrue($o3->test);
+		self::assertTrue($o4->prop['test']);
 	}
 
 	public function testArraysAreDeepCloned(): void
@@ -113,7 +113,7 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertNotSame($object->testArray[0], $clone->testArray[0]);
+		self::assertNotSame($object->testArray[0], $clone->testArray[0]);
 	}
 
 	public function testReferencesDontGetClonedAgain(): void
@@ -123,8 +123,8 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertNotSame($object, $clone->testArray[0]);
-		static::assertSame($clone, $clone->testArray[0]);
+		self::assertNotSame($object, $clone->testArray[0]);
+		self::assertSame($clone, $clone->testArray[0]);
 	}
 
 	public function testCloneBehaviour(): void
@@ -141,12 +141,12 @@ class DeepCloneableTest extends TestCase
 
 		$clone = $object->deepClone();
 
-		static::assertSame($object->sameOnClone, $clone->sameOnClone);
-		static::assertNull($clone->leaveDefaultValue);
-		static::assertNotSame($object->normalDeepClone, $clone->normalDeepClone);
-		static::assertSame($object->normalDeepClone->c, $clone->normalDeepClone->c);
-		static::assertSame($object->defaultValue, $clone->defaultValue);
-		static::assertNotSame($object->skippedDefaultValue, $clone->skippedDefaultValue);
+		self::assertSame($object->sameOnClone, $clone->sameOnClone);
+		self::assertNull($clone->leaveDefaultValue);
+		self::assertNotSame($object->normalDeepClone, $clone->normalDeepClone);
+		self::assertSame($object->normalDeepClone->c, $clone->normalDeepClone->c);
+		self::assertSame($object->defaultValue, $clone->defaultValue);
+		self::assertNotSame($object->skippedDefaultValue, $clone->skippedDefaultValue);
 	}
 }
 

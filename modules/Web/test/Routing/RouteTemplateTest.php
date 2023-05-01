@@ -29,7 +29,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class RouteTemplateTest extends TestCase
+final class RouteTemplateTest extends TestCase
 {
 	public static function validRouteTemplatesNoParentProvider(): iterable
 	{
@@ -62,8 +62,8 @@ class RouteTemplateTest extends TestCase
 		$route = RouteTemplate::parse($template);
 		$regex = $route->renderRegExp(['controller' => 'myController', 'action' => 'myAction']);
 
-		static::assertSame($normalized, $route->getSource());
-		static::assertSame($expectedRegex, $regex);
+		self::assertSame($normalized, $route->getSource());
+		self::assertSame($expectedRegex, $regex);
 	}
 
 	public static function strayClosingBracketRouteTemplatesProvider(): iterable
@@ -232,7 +232,7 @@ class RouteTemplateTest extends TestCase
 	{
 		$parsed = RouteTemplate::parse($template);
 
-		static::assertSame($shouldMatch, Regex::matches($parsed->renderRegExp(['controller' => 'articles']), $route));
+		self::assertSame($shouldMatch, Regex::matches($parsed->renderRegExp(['controller' => 'articles']), $route));
 	}
 
 	public static function routeTemplateWthParentProvider(): iterable
@@ -269,6 +269,6 @@ class RouteTemplateTest extends TestCase
 		$parentTemplate = RouteTemplate::parse($parent);
 		$routeTemplate = RouteTemplate::parse($route, $parentTemplate);
 
-		static::assertSame($expectedRoute, $routeTemplate->getSource());
+		self::assertSame($expectedRoute, $routeTemplate->getSource());
 	}
 }

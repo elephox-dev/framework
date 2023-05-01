@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class CookieTest extends TestCase
+final class CookieTest extends TestCase
 {
 	public function testFullToString(): void
 	{
@@ -33,7 +33,7 @@ class CookieTest extends TestCase
 			1234,
 		);
 
-		static::assertSame(
+		self::assertSame(
 			'name=value; Expires=' . $timestamp->format(Cookie::ExpiresFormat) . '; Path=/; Domain=example.com; Secure; HttpOnly; SameSite=None; Max-Age=1234',
 			(string) $cookie,
 		);
@@ -78,8 +78,8 @@ class CookieTest extends TestCase
 
 		$cookie->{$setter}($value);
 
-		static::assertSame($value, $cookie->{$getter}());
-		static::assertSame($cookieString, $cookie->__toString());
+		self::assertSame($value, $cookie->{$getter}());
+		self::assertSame($cookieString, $cookie->__toString());
 	}
 
 	public function arrayKeyProvider(): iterable
@@ -107,45 +107,45 @@ class CookieTest extends TestCase
 
 		$cookie[$key] = $value;
 
-		static::assertSame($value, $cookie[$key]);
+		self::assertSame($value, $cookie[$key]);
 	}
 
 	public function testOffsetExists(): void
 	{
 		$cookie = new Cookie('name1');
 
-		static::assertTrue(isset($cookie['name']));
-		static::assertTrue(isset($cookie['value']));
-		static::assertTrue(isset($cookie['secure']));
-		static::assertTrue(isset($cookie['httpOnly']));
-		static::assertFalse(isset($cookie['expires']));
-		static::assertFalse(isset($cookie['path']));
-		static::assertFalse(isset($cookie['domain']));
-		static::assertFalse(isset($cookie['sameSite']));
-		static::assertFalse(isset($cookie['maxAge']));
-		static::assertFalse(isset($cookie['test']));
+		self::assertTrue(isset($cookie['name']));
+		self::assertTrue(isset($cookie['value']));
+		self::assertTrue(isset($cookie['secure']));
+		self::assertTrue(isset($cookie['httpOnly']));
+		self::assertFalse(isset($cookie['expires']));
+		self::assertFalse(isset($cookie['path']));
+		self::assertFalse(isset($cookie['domain']));
+		self::assertFalse(isset($cookie['sameSite']));
+		self::assertFalse(isset($cookie['maxAge']));
+		self::assertFalse(isset($cookie['test']));
 
 		$cookie['expires'] = new DateTime('+1 day');
-		static::assertTrue(isset($cookie['expires']));
+		self::assertTrue(isset($cookie['expires']));
 
 		$cookie['path'] = '/';
-		static::assertTrue(isset($cookie['path']));
+		self::assertTrue(isset($cookie['path']));
 
 		$cookie['domain'] = 'example.com';
-		static::assertTrue(isset($cookie['domain']));
+		self::assertTrue(isset($cookie['domain']));
 
 		$cookie['sameSite'] = CookieSameSite::None;
-		static::assertTrue(isset($cookie['sameSite']));
+		self::assertTrue(isset($cookie['sameSite']));
 
 		$cookie['maxAge'] = 1234;
-		static::assertTrue(isset($cookie['maxAge']));
+		self::assertTrue(isset($cookie['maxAge']));
 	}
 
 	public function testInvalidOffsetGet(): void
 	{
 		$cookie = new Cookie('name1');
 
-		static::assertFalse(isset($cookie['test']));
+		self::assertFalse(isset($cookie['test']));
 
 		$this->expectException(InvalidArgumentException::class);
 		$cookie['test'];
@@ -171,23 +171,23 @@ class CookieTest extends TestCase
 	{
 		$cookie = new Cookie('name1', 'value1', new DateTime('+1 day'), '/', 'example.com', true, true, CookieSameSite::None, 1234);
 
-		static::assertTrue(isset($cookie['name']));
-		static::assertTrue(isset($cookie['value']));
-		static::assertTrue(isset($cookie['secure']));
-		static::assertTrue(isset($cookie['httpOnly']));
-		static::assertTrue(isset($cookie['expires']));
-		static::assertTrue(isset($cookie['path']));
-		static::assertTrue(isset($cookie['domain']));
-		static::assertTrue(isset($cookie['sameSite']));
-		static::assertTrue(isset($cookie['maxAge']));
+		self::assertTrue(isset($cookie['name']));
+		self::assertTrue(isset($cookie['value']));
+		self::assertTrue(isset($cookie['secure']));
+		self::assertTrue(isset($cookie['httpOnly']));
+		self::assertTrue(isset($cookie['expires']));
+		self::assertTrue(isset($cookie['path']));
+		self::assertTrue(isset($cookie['domain']));
+		self::assertTrue(isset($cookie['sameSite']));
+		self::assertTrue(isset($cookie['maxAge']));
 
 		unset($cookie['value'], $cookie['secure'], $cookie['httpOnly'], $cookie['expires'], $cookie['path'], $cookie['domain'], $cookie['sameSite'], $cookie['maxAge']);
 
-		static::assertFalse(isset($cookie['expires']));
-		static::assertFalse(isset($cookie['path']));
-		static::assertFalse(isset($cookie['domain']));
-		static::assertFalse(isset($cookie['sameSite']));
-		static::assertFalse(isset($cookie['maxAge']));
+		self::assertFalse(isset($cookie['expires']));
+		self::assertFalse(isset($cookie['path']));
+		self::assertFalse(isset($cookie['domain']));
+		self::assertFalse(isset($cookie['sameSite']));
+		self::assertFalse(isset($cookie['maxAge']));
 	}
 
 	public function testOffsetUnsetInvalidType(): void
@@ -213,7 +213,7 @@ class CookieTest extends TestCase
 		$timestamp = new DateTime('+1 day');
 		$cookie = new Cookie('name1', 'value1', $timestamp, '/', 'example.com', true, true, CookieSameSite::None, 1234);
 
-		static::assertSame(
+		self::assertSame(
 			[
 				'name' => 'name1',
 				'value' => 'value1',

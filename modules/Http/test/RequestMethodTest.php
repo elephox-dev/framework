@@ -10,15 +10,15 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class RequestMethodTest extends TestCase
+final class RequestMethodTest extends TestCase
 {
 	public function testCanHaveBody(): void
 	{
 		foreach (RequestMethod::cases() as $method) {
 			if ($method === RequestMethod::GET || $method === RequestMethod::HEAD || $method === RequestMethod::OPTIONS) {
-				static::assertFalse($method->canHaveBody());
+				self::assertFalse($method->canHaveBody());
 			} else {
-				static::assertTrue($method->canHaveBody());
+				self::assertTrue($method->canHaveBody());
 			}
 		}
 	}

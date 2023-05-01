@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ReadmeTest extends TestCase
+final class ReadmeTest extends TestCase
 {
 	public function testReadme(): void
 	{
@@ -26,12 +26,12 @@ class ReadmeTest extends TestCase
 		$identity = static fn (int $item): int => $item;
 
 		$sum = $pie->sum($identity);
-		static::assertSame(15, $sum);
+		self::assertSame(15, $sum);
 
 		$evenSum = $pie->where(static fn (int $item) => $item % 2 === 0)->sum($identity);
-		static::assertSame(6, $evenSum);
+		self::assertSame(6, $evenSum);
 
 		$ordered = $pie->orderBy($identity)->toArray();
-		static::assertSame([1, 2, 3, 4, 5], $ordered);
+		self::assertSame([1, 2, 3, 4, 5], $ordered);
 	}
 }

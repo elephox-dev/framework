@@ -20,27 +20,27 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ResponseTest extends TestCase
+final class ResponseTest extends TestCase
 {
 	public function testWith(): void
 	{
 		$response = new Response('2.0', new HeaderMap(), new StringStream('body'), ResponseCode::OK, null);
 		$builder = $response->with();
 
-		static::assertInstanceOf(ResponseBuilder::class, $builder);
+		self::assertInstanceOf(ResponseBuilder::class, $builder);
 
 		$builder->responseCode(ResponseCode::OK);
 		$builder->addedHeader('X-Foo', 'bar');
 
 		$newResponse = $builder->get();
 
-		static::assertSame(ResponseCode::OK, $newResponse->getResponseCode());
-		static::assertSame(['bar'], $newResponse->getHeaderMap()->get('X-Foo'));
+		self::assertSame(ResponseCode::OK, $newResponse->getResponseCode());
+		self::assertSame(['bar'], $newResponse->getHeaderMap()->get('X-Foo'));
 
 		$newNewResponse = $newResponse->with()->exception(new Exception('test'))->get();
 
-		static::assertSame(ResponseCode::InternalServerError, $newNewResponse->getResponseCode());
-		static::assertSame(['bar'], $newNewResponse->getHeaderMap()->get('X-Foo'));
-		static::assertSame('test', $newNewResponse->getException()?->getMessage());
+		self::assertSame(ResponseCode::InternalServerError, $newNewResponse->getResponseCode());
+		self::assertSame(['bar'], $newNewResponse->getHeaderMap()->get('X-Foo'));
+		self::assertSame('test', $newNewResponse->getException()?->getMessage());
 	}
 }

@@ -14,7 +14,7 @@ use Mockery as M;
  *
  * @internal
  */
-class SimpleFormatColorSinkTest extends MockeryTestCase
+final class SimpleFormatColorSinkTest extends MockeryTestCase
 {
 	public function testSimpleWrite(): void
 	{
@@ -60,9 +60,9 @@ class SimpleFormatColorSinkTest extends MockeryTestCase
 
 		$messageFormatterSink = new SimpleFormatColorSink($sink);
 		$messageFormatterSink->write(LogLevel::INFO, 'Hello <green>World</green>', []);
-		static::assertSame(LogLevel::INFO, $firstLogLevel);
+		self::assertSame(LogLevel::INFO, $firstLogLevel);
 		$messageFormatterSink->write(LogLevel::WARNING, 'This <green>is</green> a <red>warning</red>', []);
-		static::assertSame(LogLevel::WARNING, $secondLogLevel);
+		self::assertSame(LogLevel::WARNING, $secondLogLevel);
 	}
 
 	public function testFormatRemovedWithNoAnsiSupport(): void
@@ -89,9 +89,9 @@ class SimpleFormatColorSinkTest extends MockeryTestCase
 
 		$messageFormatterSink = new SimpleFormatColorSink($sink);
 		$messageFormatterSink->write(LogLevel::INFO, 'Hello <green>World</green>', []);
-		static::assertSame(LogLevel::INFO, $firstLogLevel);
+		self::assertSame(LogLevel::INFO, $firstLogLevel);
 		$messageFormatterSink->write(LogLevel::WARNING, 'This <green>is</green> a <red>warning</red>', []);
-		static::assertSame(LogLevel::WARNING, $secondLogLevel);
+		self::assertSame(LogLevel::WARNING, $secondLogLevel);
 	}
 
 	// TODO: write tests for background and options

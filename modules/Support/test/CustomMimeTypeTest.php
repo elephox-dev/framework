@@ -12,16 +12,16 @@ use RuntimeException;
  *
  * @internal
  */
-class CustomMimeTypeTest extends TestCase
+final class CustomMimeTypeTest extends TestCase
 {
 	public function testInstantiate(): void
 	{
 		$mimeType = CustomMimeType::from('image/png', 'png');
 		$builtIn = MimeType::ImagePng;
 
-		static::assertInstanceOf(CustomMimeType::class, $mimeType);
-		static::assertSame($builtIn->getValue(), $mimeType->getValue());
-		static::assertSame($builtIn->getExtension(), $mimeType->getExtension());
+		self::assertInstanceOf(CustomMimeType::class, $mimeType);
+		self::assertSame($builtIn->getValue(), $mimeType->getValue());
+		self::assertSame($builtIn->getExtension(), $mimeType->getExtension());
 	}
 
 	/**
@@ -32,9 +32,9 @@ class CustomMimeTypeTest extends TestCase
 		$result = CustomMimeType::fromFile('test.dat');
 		$builtIn = MimeType::ApplicationOctetStream;
 
-		static::assertInstanceOf(CustomMimeType::class, $result);
-		static::assertSame($builtIn->getValue(), $result->getValue());
-		static::assertSame('dat', $result->getExtension());
+		self::assertInstanceOf(CustomMimeType::class, $result);
+		self::assertSame($builtIn->getValue(), $result->getValue());
+		self::assertSame('dat', $result->getExtension());
 	}
 
 	public function testFromFileResource(): void
@@ -46,15 +46,15 @@ class CustomMimeTypeTest extends TestCase
 			file_put_contents($f, 'Test data');
 			$res = fopen($f, 'rb');
 			if ($res === false) {
-				static::markTestSkipped('Failed to create file resource');
+				self::markTestSkipped('Failed to create file resource');
 			}
 
 			$mimeType = CustomMimeType::fromFile($res);
 			$builtIn = MimeType::TextPlain;
 
-			static::assertInstanceOf(MimeType::class, $mimeType);
-			static::assertSame($builtIn->getValue(), $mimeType->getValue());
-			static::assertSame($builtIn->getExtension(), $mimeType->getExtension());
+			self::assertInstanceOf(MimeType::class, $mimeType);
+			self::assertSame($builtIn->getValue(), $mimeType->getValue());
+			self::assertSame($builtIn->getExtension(), $mimeType->getExtension());
 		} finally {
 			if (is_resource($res)) {
 				fclose($res);
@@ -70,15 +70,15 @@ class CustomMimeTypeTest extends TestCase
 	{
 		$pngMimeType = CustomMimeType::fromFilename('test.png');
 
-		static::assertSame(MimeType::ImagePng, $pngMimeType);
-		static::assertSame('image/png', $pngMimeType->getValue());
-		static::assertSame('png', $pngMimeType->getExtension());
+		self::assertSame(MimeType::ImagePng, $pngMimeType);
+		self::assertSame('image/png', $pngMimeType->getValue());
+		self::assertSame('png', $pngMimeType->getExtension());
 
 		$unknownMimeType = CustomMimeType::fromFilename('test.unknown');
 
-		static::assertInstanceOf(CustomMimeType::class, $unknownMimeType);
-		static::assertSame('application/octet-stream', $unknownMimeType->getValue());
-		static::assertSame('unknown', $unknownMimeType->getExtension());
+		self::assertInstanceOf(CustomMimeType::class, $unknownMimeType);
+		self::assertSame('application/octet-stream', $unknownMimeType->getValue());
+		self::assertSame('unknown', $unknownMimeType->getExtension());
 	}
 
 	public function testFromEmptyFilename(): void
@@ -86,9 +86,9 @@ class CustomMimeTypeTest extends TestCase
 		$empty = CustomMimeType::fromFilename('no-ext');
 		$builtIn = MimeType::ApplicationOctetStream;
 
-		static::assertInstanceOf(CustomMimeType::class, $empty);
-		static::assertSame($builtIn->getValue(), $empty->getValue());
-		static::assertSame('', $empty->getExtension());
+		self::assertInstanceOf(CustomMimeType::class, $empty);
+		self::assertSame($builtIn->getValue(), $empty->getValue());
+		self::assertSame('', $empty->getExtension());
 	}
 
 	public function testFromFileInvalidType(): void
@@ -103,6 +103,6 @@ class CustomMimeTypeTest extends TestCase
 	{
 		$mimeType = CustomMimeType::fromFile('test.png');
 
-		static::assertSame(MimeType::ImagePng, $mimeType);
+		self::assertSame(MimeType::ImagePng, $mimeType);
 	}
 }

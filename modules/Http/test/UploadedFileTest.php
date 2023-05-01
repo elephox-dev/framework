@@ -20,7 +20,7 @@ use RuntimeException;
  *
  * @internal
  */
-class UploadedFileTest extends TestCase
+final class UploadedFileTest extends TestCase
 {
 	/**
 	 * @throws RuntimeException
@@ -36,12 +36,12 @@ class UploadedFileTest extends TestCase
 
 		try {
 			$file = new UploadedFile('client name', 'client path', $tmpFile, MimeType::TextPlain, 123, UploadError::Ok);
-			static::assertSame('client name', $file->getClientFilename());
-			static::assertSame('client path', $file->getClientPath());
-			static::assertSame('test', $file->getStream()->getContents());
-			static::assertSame(123, $file->getSize());
-			static::assertSame(MimeType::TextPlain, $file->getClientMimeType());
-			static::assertSame(UploadError::Ok, $file->getUploadError());
+			self::assertSame('client name', $file->getClientFilename());
+			self::assertSame('client path', $file->getClientPath());
+			self::assertSame('test', $file->getStream()->getContents());
+			self::assertSame(123, $file->getSize());
+			self::assertSame(MimeType::TextPlain, $file->getClientMimeType());
+			self::assertSame(UploadError::Ok, $file->getUploadError());
 		} finally {
 			$tmpFile->delete();
 		}

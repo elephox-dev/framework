@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class EagerCachingIteratorTest extends TestCase
+final class EagerCachingIteratorTest extends TestCase
 {
 	public function testGeneratorIsRewindable(): void
 	{
@@ -22,20 +22,20 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertSame(1, $iterator->current());
-		static::assertTrue($iterator->hasNext());
+		self::assertSame(1, $iterator->current());
+		self::assertTrue($iterator->hasNext());
 		$iterator->next();
-		static::assertSame(2, $iterator->current());
-		static::assertTrue($iterator->hasNext());
+		self::assertSame(2, $iterator->current());
+		self::assertTrue($iterator->hasNext());
 		$iterator->next();
-		static::assertSame(3, $iterator->current());
-		static::assertFalse($iterator->hasNext());
+		self::assertSame(3, $iterator->current());
+		self::assertFalse($iterator->hasNext());
 		$iterator->rewind();
-		static::assertSame(1, $iterator->current());
-		static::assertTrue($iterator->hasNext());
+		self::assertSame(1, $iterator->current());
+		self::assertTrue($iterator->hasNext());
 		$iterator->next();
-		static::assertSame(2, $iterator->current());
-		static::assertTrue($iterator->hasNext());
+		self::assertSame(2, $iterator->current());
+		self::assertTrue($iterator->hasNext());
 	}
 
 	public function testArrayAccess(): void
@@ -46,12 +46,12 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertTrue(isset($iterator[0]));
-		static::assertSame(1, $iterator[0]);
-		static::assertTrue(isset($iterator[1]));
-		static::assertSame(2, $iterator[1]);
-		static::assertTrue(isset($iterator[2]));
-		static::assertSame(3, $iterator[2]);
+		self::assertTrue(isset($iterator[0]));
+		self::assertSame(1, $iterator[0]);
+		self::assertTrue(isset($iterator[1]));
+		self::assertSame(2, $iterator[1]);
+		self::assertTrue(isset($iterator[2]));
+		self::assertSame(3, $iterator[2]);
 	}
 
 	public function testCurrentIsEager(): void
@@ -62,7 +62,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertSame(1, $iterator->current());
+		self::assertSame(1, $iterator->current());
 	}
 
 	public function testKeyIsEager(): void
@@ -73,7 +73,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertSame(0, $iterator->key());
+		self::assertSame(0, $iterator->key());
 	}
 
 	public function testNextIsEager(): void
@@ -85,7 +85,7 @@ class EagerCachingIteratorTest extends TestCase
 		})());
 
 		$iterator->next();
-		static::assertSame(2, $iterator->current());
+		self::assertSame(2, $iterator->current());
 	}
 
 	public function testHasNextIsEager(): void
@@ -96,7 +96,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertTrue($iterator->hasNext());
+		self::assertTrue($iterator->hasNext());
 	}
 
 	public function testValidIsEager(): void
@@ -107,7 +107,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertTrue($iterator->valid());
+		self::assertTrue($iterator->valid());
 	}
 
 	public function testOffsetExistsIsEager(): void
@@ -118,7 +118,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertTrue(isset($iterator[0]));
+		self::assertTrue(isset($iterator[0]));
 	}
 
 	public function testOffsetGetIsEager(): void
@@ -129,7 +129,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertSame(1, $iterator[0]);
+		self::assertSame(1, $iterator[0]);
 	}
 
 	public function testCountIsEager(): void
@@ -140,7 +140,7 @@ class EagerCachingIteratorTest extends TestCase
 			yield 3;
 		})());
 
-		static::assertCount(3, $iterator);
+		self::assertCount(3, $iterator);
 	}
 
 	public function testOffsetSetThrows(): void
@@ -180,7 +180,7 @@ class EagerCachingIteratorTest extends TestCase
 		})());
 
 		$iterator->rewind();
-		static::assertSame([1, 2, 3], $iterator->getCacheValues());
+		self::assertSame([1, 2, 3], $iterator->getCacheValues());
 	}
 
 	public function testGetCacheKeys(): void
@@ -192,6 +192,6 @@ class EagerCachingIteratorTest extends TestCase
 		})());
 
 		$iterator->rewind();
-		static::assertSame([0, 1, 2], $iterator->getCacheKeys());
+		self::assertSame([0, 1, 2], $iterator->getCacheKeys());
 	}
 }

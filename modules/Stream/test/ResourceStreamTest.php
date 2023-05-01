@@ -13,7 +13,7 @@ use RuntimeException;
  *
  * @internal
  */
-class ResourceStreamTest extends TestCase
+final class ResourceStreamTest extends TestCase
 {
 	private string $tmpName;
 
@@ -27,10 +27,10 @@ class ResourceStreamTest extends TestCase
 		$fh = fopen($this->tmpName, 'rb');
 		$stream = ResourceStream::wrap($fh);
 
-		static::assertTrue($stream->isReadable());
-		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWritable());
-		static::assertSame(0, $stream->getSize());
+		self::assertTrue($stream->isReadable());
+		self::assertTrue($stream->isSeekable());
+		self::assertFalse($stream->isWritable());
+		self::assertSame(0, $stream->getSize());
 	}
 
 	public function testConstructorNoResource(): void
@@ -45,15 +45,15 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh, writable: true);
 
-		static::assertSame(0, $stream->getSize());
+		self::assertSame(0, $stream->getSize());
 
 		$stream->read(1);
 
-		static::assertSame(0, $stream->getSize());
+		self::assertSame(0, $stream->getSize());
 
 		$stream->write('a');
 
-		static::assertSame(1, $stream->getSize());
+		self::assertSame(1, $stream->getSize());
 	}
 
 	public function testGetInvalidSizeFromFstat(): void
@@ -61,7 +61,7 @@ class ResourceStreamTest extends TestCase
 		$fh = fopen('php://output', 'rb');
 		$stream = ResourceStream::wrap($fh);
 
-		static::assertNull($stream->getSize());
+		self::assertNull($stream->getSize());
 	}
 
 	public function testReadFromInvalidStream(): void
@@ -80,15 +80,15 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh);
 
-		static::assertIsResource($stream->getResource());
+		self::assertIsResource($stream->getResource());
 
 		$stream->close();
 
-		static::assertIsNotResource($stream->getResource());
-		static::assertNull($stream->detach());
+		self::assertIsNotResource($stream->getResource());
+		self::assertNull($stream->detach());
 
 		$stream->close();
-		static::assertNull($stream->detach());
+		self::assertNull($stream->detach());
 	}
 
 	public function testToString(): void
@@ -96,15 +96,15 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh, writable: true);
 
-		static::assertSame('', (string) $stream);
+		self::assertSame('', (string) $stream);
 
 		$stream->write('a');
 
-		static::assertSame('a', (string) $stream);
+		self::assertSame('a', (string) $stream);
 
 		$stream->close();
 
-		static::assertSame('', (string) $stream);
+		self::assertSame('', (string) $stream);
 	}
 
 	public function testClosedGetSizeThrows(): void
@@ -218,8 +218,8 @@ class ResourceStreamTest extends TestCase
 
 		$stream->close();
 
-		static::assertEmpty($stream->getMetadata());
-		static::assertNull($stream->getMetadata('size'));
+		self::assertEmpty($stream->getMetadata());
+		self::assertNull($stream->getMetadata('size'));
 	}
 
 	public function testInvalidLengthReadThrows(): void
@@ -238,11 +238,11 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh, writable: true);
 
-		static::assertSame(0, $stream->tell());
+		self::assertSame(0, $stream->tell());
 
 		$stream->write('a');
 
-		static::assertSame(1, $stream->tell());
+		self::assertSame(1, $stream->tell());
 	}
 
 	public function testEof(): void
@@ -250,14 +250,14 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh, writable: true);
 
-		static::assertEmpty($stream->getContents());
-		static::assertTrue($stream->eof());
+		self::assertEmpty($stream->getContents());
+		self::assertTrue($stream->eof());
 
 		$stream->write('a');
 
-		static::assertTrue($stream->eof());
+		self::assertTrue($stream->eof());
 		$stream->rewind();
-		static::assertFalse($stream->eof());
+		self::assertFalse($stream->eof());
 	}
 
 	public function testSeekThrowsIfNotSeekable(): void
@@ -309,7 +309,7 @@ class ResourceStreamTest extends TestCase
 		$fh = tmpfile();
 		$stream = ResourceStream::wrap($fh, readable: true);
 
-		static::assertSame('', $stream->read(0));
+		self::assertSame('', $stream->read(0));
 	}
 
 	public function testGetMetadata(): void
@@ -318,19 +318,19 @@ class ResourceStreamTest extends TestCase
 		$stream = ResourceStream::wrap($fh, readable: true);
 
 		$data = $stream->getMetadata();
-		static::assertIsArray($data);
-		static::assertArrayHasKey('eof', $data);
-		static::assertArrayHasKey('seekable', $data);
-		static::assertArrayHasKey('mode', $data);
-		static::assertArrayHasKey('uri', $data);
-		static::assertArrayHasKey('timed_out', $data);
-		static::assertArrayHasKey('blocked', $data);
-		static::assertArrayHasKey('wrapper_type', $data);
-		static::assertArrayHasKey('stream_type', $data);
+		self::assertIsArray($data);
+		self::assertArrayHasKey('eof', $data);
+		self::assertArrayHasKey('seekable', $data);
+		self::assertArrayHasKey('mode', $data);
+		self::assertArrayHasKey('uri', $data);
+		self::assertArrayHasKey('timed_out', $data);
+		self::assertArrayHasKey('blocked', $data);
+		self::assertArrayHasKey('wrapper_type', $data);
+		self::assertArrayHasKey('stream_type', $data);
 
-		static::assertTrue($stream->getMetadata('seekable'));
-		static::assertFalse($stream->getMetadata('eof'));
-		static::assertSame('plainfile', $stream->getMetadata('wrapper_type'));
-		static::assertNull($stream->getMetadata('non-existent'));
+		self::assertTrue($stream->getMetadata('seekable'));
+		self::assertFalse($stream->getMetadata('eof'));
+		self::assertSame('plainfile', $stream->getMetadata('wrapper_type'));
+		self::assertNull($stream->getMetadata('non-existent'));
 	}
 }

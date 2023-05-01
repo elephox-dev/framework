@@ -17,15 +17,15 @@ use stdClass;
  *
  * @internal
  */
-class CookieMapTest extends TestCase
+final class CookieMapTest extends TestCase
 {
 	public function testFromGlobals(): void
 	{
 		$map = CookieMap::fromGlobals(['foo' => 'bar', 'baz' => null]);
 
-		static::assertInstanceOf(CookieMap::class, $map);
-		static::assertInstanceOf(CookieContract::class, $map->get('foo'));
-		static::assertSame('bar', $map->get('foo')->getValue());
+		self::assertInstanceOf(CookieMap::class, $map);
+		self::assertInstanceOf(CookieContract::class, $map->get('foo'));
+		self::assertSame('bar', $map->get('foo')->getValue());
 	}
 
 	public function testFromGlobalsNull(): void
@@ -33,8 +33,8 @@ class CookieMapTest extends TestCase
 		$mapNoArg = CookieMap::fromGlobals();
 		$mapEmpty = CookieMap::fromGlobals([]);
 
-		static::assertEmpty($mapNoArg);
-		static::assertEmpty($mapEmpty);
+		self::assertEmpty($mapNoArg);
+		self::assertEmpty($mapEmpty);
 	}
 
 	public function testFromGlobalsInvalidValueType(): void

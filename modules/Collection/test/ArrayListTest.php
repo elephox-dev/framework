@@ -20,52 +20,52 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ArrayListTest extends TestCase
+final class ArrayListTest extends TestCase
 {
 	public function testOffsetExists(): void
 	{
 		$arr = new ArrayList(['test']);
 
-		static::assertTrue($arr->offsetExists(0));
-		static::assertArrayHasKey(0, $arr);
-		static::assertFalse($arr->offsetExists(1));
+		self::assertTrue($arr->offsetExists(0));
+		self::assertArrayHasKey(0, $arr);
+		self::assertFalse($arr->offsetExists(1));
 	}
 
 	public function testCount(): void
 	{
 		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		static::assertCount(3, $arr);
+		self::assertCount(3, $arr);
 	}
 
 	public function testOffsetUnset(): void
 	{
 		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		static::assertCount(3, $arr);
+		self::assertCount(3, $arr);
 
 		$arr->offsetUnset(1);
 
-		static::assertCount(2, $arr);
+		self::assertCount(2, $arr);
 	}
 
 	public function testOffsetSet(): void
 	{
 		$arr = new ArrayList();
 
-		static::assertArrayNotHasKey(0, $arr);
-		static::assertArrayNotHasKey(1, $arr);
-		static::assertArrayNotHasKey(2, $arr);
+		self::assertArrayNotHasKey(0, $arr);
+		self::assertArrayNotHasKey(1, $arr);
+		self::assertArrayNotHasKey(2, $arr);
 
 		$arr->offsetSet(null, 'test');
 		$arr->put(0, 'test2');
 		$arr[null] = 'test3';
 
-		static::assertArrayHasKey(0, $arr);
-		static::assertArrayHasKey(1, $arr);
-		static::assertArrayNotHasKey(2, $arr);
-		static::assertSame('test2', $arr[0]);
-		static::assertSame('test3', $arr[1]);
+		self::assertArrayHasKey(0, $arr);
+		self::assertArrayHasKey(1, $arr);
+		self::assertArrayNotHasKey(2, $arr);
+		self::assertSame('test2', $arr[0]);
+		self::assertSame('test3', $arr[1]);
 	}
 
 	public function testOffsetSetInvalidType(): void
@@ -90,8 +90,8 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList(['test', 'test2', 'test3']);
 
-		static::assertSame('test', $arr->offsetGet(0));
-		static::assertSame('test2', $arr[1]);
+		self::assertSame('test', $arr->offsetGet(0));
+		self::assertSame('test2', $arr[1]);
 
 		$this->expectException(OffsetNotAllowedException::class);
 		$this->expectExceptionMessage("Offset 'not a number' is not allowed.");
@@ -113,27 +113,27 @@ class ArrayListTest extends TestCase
 	{
 		$arr = new ArrayList();
 
-		static::assertCount(0, $arr);
+		self::assertCount(0, $arr);
 
 		$arr->add('test');
 		$arr[] = 'test2';
 
-		static::assertCount(2, $arr);
-		static::assertSame('test', $arr->elementAt(0));
-		static::assertSame('test2', $arr->elementAt(1));
+		self::assertCount(2, $arr);
+		self::assertSame('test', $arr->elementAt(0));
+		self::assertSame('test2', $arr->elementAt(1));
 	}
 
 	public function testAddAll(): void
 	{
 		$arr = new ArrayList();
 
-		static::assertCount(0, $arr);
+		self::assertCount(0, $arr);
 
 		$arr->addAll(['test', 'test2']);
 
-		static::assertCount(2, $arr);
-		static::assertSame('test', $arr->elementAt(0));
-		static::assertSame('test2', $arr->elementAt(1));
+		self::assertCount(2, $arr);
+		self::assertSame('test', $arr->elementAt(0));
+		self::assertSame('test2', $arr->elementAt(1));
 	}
 
 	public function testIsEmpty(): void
@@ -141,23 +141,23 @@ class ArrayListTest extends TestCase
 		$filled = new ArrayList(['653', '123', '154']);
 		$empty = new ArrayList();
 
-		static::assertFalse($filled->isEmpty());
-		static::assertTrue($empty->isEmpty());
+		self::assertFalse($filled->isEmpty());
+		self::assertTrue($empty->isEmpty());
 	}
 
 	public function testToList(): void
 	{
 		$arr = new ArrayList(['123', '456']);
 
-		static::assertSame(['123', '456'], $arr->toList());
+		self::assertSame(['123', '456'], $arr->toList());
 	}
 
 	public function testFromArray(): void
 	{
 		$arr = ArrayList::from(['123', '456']);
 
-		static::assertSame('123', $arr->elementAt(0));
-		static::assertSame('456', $arr->elementAt(1));
+		self::assertSame('123', $arr->elementAt(0));
+		self::assertSame('456', $arr->elementAt(1));
 	}
 
 	public function testFromSelf(): void
@@ -165,22 +165,22 @@ class ArrayListTest extends TestCase
 		$arr = ArrayList::from(['123', '456']);
 		$arr2 = ArrayList::from($arr);
 
-		static::assertSame($arr, $arr2);
+		self::assertSame($arr, $arr2);
 	}
 
 	public function testFromIterator(): void
 	{
 		$arr = ArrayList::from(new ArrayIterator(['123', '456']));
 
-		static::assertSame('123', $arr->elementAt(0));
-		static::assertSame('456', $arr->elementAt(1));
+		self::assertSame('123', $arr->elementAt(0));
+		self::assertSame('456', $arr->elementAt(1));
 	}
 
 	public function testFromValue(): void
 	{
 		$arr = ArrayList::from('123');
 
-		static::assertSame('123', $arr->elementAt(0));
+		self::assertSame('123', $arr->elementAt(0));
 	}
 
 	public function testIterator(): void
@@ -190,8 +190,8 @@ class ArrayListTest extends TestCase
 		]);
 
 		foreach ($map as $key => $value) {
-			static::assertSame('a', $key);
-			static::assertSame('1', $value);
+			self::assertSame('a', $key);
+			self::assertSame('1', $value);
 		}
 	}
 
@@ -199,32 +199,32 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertCount(5, $list);
+		self::assertCount(5, $list);
 
 		$removed = $list->removeAt(2);
 
-		static::assertSame(3, $removed);
-		static::assertSame(4, $list->count());
-		static::assertSame(1, $list->elementAt(0));
-		static::assertSame(2, $list->elementAt(1));
-		static::assertSame(4, $list->elementAt(2));
-		static::assertSame(5, $list->elementAt(3));
+		self::assertSame(3, $removed);
+		self::assertSame(4, $list->count());
+		self::assertSame(1, $list->elementAt(0));
+		self::assertSame(2, $list->elementAt(1));
+		self::assertSame(4, $list->elementAt(2));
+		self::assertSame(5, $list->elementAt(3));
 	}
 
 	public function testRemove(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertCount(5, $list);
+		self::assertCount(5, $list);
 
 		$removed = $list->removeValue(3);
 
-		static::assertTrue($removed);
-		static::assertSame(4, $list->count());
-		static::assertSame(1, $list->elementAt(0));
-		static::assertSame(2, $list->elementAt(1));
-		static::assertSame(4, $list->elementAt(2));
-		static::assertSame(5, $list->elementAt(3));
+		self::assertTrue($removed);
+		self::assertSame(4, $list->count());
+		self::assertSame(1, $list->elementAt(0));
+		self::assertSame(2, $list->elementAt(1));
+		self::assertSame(4, $list->elementAt(2));
+		self::assertSame(5, $list->elementAt(3));
 	}
 
 	public function testOffsetExistThrows(): void
@@ -249,32 +249,32 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertSame(0, $list->indexOf(1));
-		static::assertSame(1, $list->indexOf(2));
-		static::assertSame(2, $list->indexOf(3));
-		static::assertSame(3, $list->indexOf(4));
-		static::assertSame(4, $list->indexOf(5));
-		static::assertSame(-1, $list->indexOf(6));
+		self::assertSame(0, $list->indexOf(1));
+		self::assertSame(1, $list->indexOf(2));
+		self::assertSame(2, $list->indexOf(3));
+		self::assertSame(3, $list->indexOf(4));
+		self::assertSame(4, $list->indexOf(5));
+		self::assertSame(-1, $list->indexOf(6));
 	}
 
 	public function testLastIndexOf(): void
 	{
 		$list = new ArrayList([1, 2, 3, 4, 5]);
 
-		static::assertSame(4, $list->lastIndexOf(5));
-		static::assertSame(3, $list->lastIndexOf(4));
-		static::assertSame(2, $list->lastIndexOf(3));
-		static::assertSame(1, $list->lastIndexOf(2));
-		static::assertSame(0, $list->lastIndexOf(1));
-		static::assertSame(-1, $list->lastIndexOf(0));
-		static::assertSame(-1, $list->lastIndexOf(7));
+		self::assertSame(4, $list->lastIndexOf(5));
+		self::assertSame(3, $list->lastIndexOf(4));
+		self::assertSame(2, $list->lastIndexOf(3));
+		self::assertSame(1, $list->lastIndexOf(2));
+		self::assertSame(0, $list->lastIndexOf(1));
+		self::assertSame(-1, $list->lastIndexOf(0));
+		self::assertSame(-1, $list->lastIndexOf(7));
 	}
 
 	public function testRemoveNotExists(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertFalse($list->removeValue(4));
+		self::assertFalse($list->removeValue(4));
 	}
 
 	public function testRemoveAtOffsetNotExists(): void
@@ -297,19 +297,19 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame(3, $list->pop());
-		static::assertSame(2, $list->pop());
-		static::assertSame(1, $list->pop());
-		static::assertSame(0, $list->count());
+		self::assertSame(3, $list->pop());
+		self::assertSame(2, $list->pop());
+		self::assertSame(1, $list->pop());
+		self::assertSame(0, $list->count());
 	}
 
 	public function testPopWithPredicate(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame(3, $list->pop(static fn ($item) => $item % 2 === 1));
-		static::assertSame(1, $list->pop(static fn ($item) => $item % 2 === 1));
-		static::assertSame(1, $list->count());
+		self::assertSame(3, $list->pop(static fn ($item) => $item % 2 === 1));
+		self::assertSame(1, $list->pop(static fn ($item) => $item % 2 === 1));
+		self::assertSame(1, $list->count());
 	}
 
 	public function testPopThrowsForEmpty(): void
@@ -334,19 +334,19 @@ class ArrayListTest extends TestCase
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame(1, $list->shift());
-		static::assertSame(2, $list->shift());
-		static::assertSame(3, $list->shift());
-		static::assertSame(0, $list->count());
+		self::assertSame(1, $list->shift());
+		self::assertSame(2, $list->shift());
+		self::assertSame(3, $list->shift());
+		self::assertSame(0, $list->count());
 	}
 
 	public function testShiftWithPredicate(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame(1, $list->shift(static fn ($item) => $item % 2 === 1));
-		static::assertSame(3, $list->shift(static fn ($item) => $item % 2 === 1));
-		static::assertSame(1, $list->count());
+		self::assertSame(1, $list->shift(static fn ($item) => $item % 2 === 1));
+		self::assertSame(3, $list->shift(static fn ($item) => $item % 2 === 1));
+		self::assertSame(1, $list->count());
 	}
 
 	public function testShiftThrowsForEmpty(): void
@@ -373,46 +373,46 @@ class ArrayListTest extends TestCase
 
 		$list->unshift(0);
 
-		static::assertSame(0, $list[0]);
-		static::assertSame(1, $list[1]);
+		self::assertSame(0, $list[0]);
+		self::assertSame(1, $list[1]);
 	}
 
 	public function testImplode(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame('1, 2, 3', $list->implode());
+		self::assertSame('1, 2, 3', $list->implode());
 	}
 
 	public function testImplodeWithGlue(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertSame('1-2-3', $list->implode('-'));
+		self::assertSame('1-2-3', $list->implode('-'));
 	}
 
 	public function testContains(): void
 	{
 		$list = new ArrayList([1, 2, 3]);
 
-		static::assertTrue($list->contains(1));
-		static::assertTrue($list->contains(2));
-		static::assertTrue($list->contains(3));
-		static::assertFalse($list->contains(4));
+		self::assertTrue($list->contains(1));
+		self::assertTrue($list->contains(2));
+		self::assertTrue($list->contains(3));
+		self::assertFalse($list->contains(4));
 	}
 
 	public function testContainsKey(): void
 	{
 		$list = new ArrayList(['a' => 1, true => 2, 0 => 3]);
 
-		static::assertTrue($list->containsKey('a'));
-		static::assertTrue($list->containsKey(true));
-		static::assertFalse($list->containsKey(4));
-		static::assertFalse($list->containsKey('b'));
+		self::assertTrue($list->containsKey('a'));
+		self::assertTrue($list->containsKey(true));
+		self::assertFalse($list->containsKey(4));
+		self::assertFalse($list->containsKey('b'));
 
 		// falsy keys
-		static::assertTrue($list->containsKey(0));
-		static::assertTrue($list->containsKey(false));
+		self::assertTrue($list->containsKey(0));
+		self::assertTrue($list->containsKey(false));
 	}
 
 	public function testInsertAt(): void
@@ -423,8 +423,8 @@ class ArrayListTest extends TestCase
 		$list->insertAt(2, '-');
 		$list->insertAt(5, 'd');
 
-		static::assertCount(6, $list);
-		static::assertSame(['z', 'a', '-', 'b', 'c', 'd'], $list->toArray());
+		self::assertCount(6, $list);
+		self::assertSame(['z', 'a', '-', 'b', 'c', 'd'], $list->toArray());
 	}
 
 	public function testSlice(): void
@@ -432,13 +432,13 @@ class ArrayListTest extends TestCase
 		$list = new ArrayList(range(0, 5));
 
 		$start = $list->slice(0, 2);
-		static::assertCount(2, $start);
-		static::assertSame(0, $start[0]);
-		static::assertSame(1, $start[1]);
+		self::assertCount(2, $start);
+		self::assertSame(0, $start[0]);
+		self::assertSame(1, $start[1]);
 
 		$end = $list->slice(4, 2);
-		static::assertCount(2, $end);
-		static::assertSame(4, $end[0]);
-		static::assertSame(5, $end[1]);
+		self::assertCount(2, $end);
+		self::assertSame(4, $end[0]);
+		self::assertSame(5, $end[1]);
 	}
 }

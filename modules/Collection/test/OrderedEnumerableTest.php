@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class OrderedEnumerableTest extends TestCase
+final class OrderedEnumerableTest extends TestCase
 {
 	public function testThenBy(): void
 	{
@@ -44,7 +44,7 @@ class OrderedEnumerableTest extends TestCase
 			->toList()
 		;
 
-		static::assertSame(
+		self::assertSame(
 			[
 				[
 					'age' => 10,
@@ -92,7 +92,7 @@ class OrderedEnumerableTest extends TestCase
 			->toList()
 		;
 
-		static::assertSame(
+		self::assertSame(
 			[
 				[
 					'age' => 30,

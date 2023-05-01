@@ -13,33 +13,33 @@ use RuntimeException;
  *
  * @internal
  */
-class StringStreamTest extends TestCase
+final class StringStreamTest extends TestCase
 {
 	public function testFrom(): void
 	{
 		$stream = StringStream::from('foo');
 
-		static::assertSame('foo', $stream->getContents());
-		static::assertTrue($stream->isReadable());
-		static::assertFalse($stream->isWritable());
-		static::assertTrue($stream->isSeekable());
+		self::assertSame('foo', $stream->getContents());
+		self::assertTrue($stream->isReadable());
+		self::assertFalse($stream->isWritable());
+		self::assertTrue($stream->isSeekable());
 	}
 
 	public function testConstructor(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame('foo', $stream->getContents());
-		static::assertTrue($stream->isReadable());
-		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWritable());
+		self::assertSame('foo', $stream->getContents());
+		self::assertTrue($stream->isReadable());
+		self::assertTrue($stream->isSeekable());
+		self::assertFalse($stream->isWritable());
 	}
 
 	public function testToString(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame('foo', (string) $stream);
+		self::assertSame('foo', (string) $stream);
 	}
 
 	public function testDetach(): void
@@ -68,29 +68,29 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame(3, $stream->getSize());
+		self::assertSame(3, $stream->getSize());
 	}
 
 	public function testTell(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame(0, $stream->tell());
+		self::assertSame(0, $stream->tell());
 
 		$stream->read(1);
 
-		static::assertSame(1, $stream->tell());
+		self::assertSame(1, $stream->tell());
 	}
 
 	public function testEof(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertFalse($stream->eof());
+		self::assertFalse($stream->eof());
 
 		$stream->read(3);
 
-		static::assertTrue($stream->eof());
+		self::assertTrue($stream->eof());
 	}
 
 	public function testSeek(): void
@@ -99,11 +99,11 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1);
 
-		static::assertSame(1, $stream->tell());
+		self::assertSame(1, $stream->tell());
 
 		$stream->seek(0);
 
-		static::assertSame(0, $stream->tell());
+		self::assertSame(0, $stream->tell());
 	}
 
 	public function testSeekCurOffset(): void
@@ -112,11 +112,11 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1);
 
-		static::assertSame(1, $stream->tell());
+		self::assertSame(1, $stream->tell());
 
 		$stream->seek(1, SEEK_CUR);
 
-		static::assertSame(2, $stream->tell());
+		self::assertSame(2, $stream->tell());
 	}
 
 	public function testSeekEndOffset(): void
@@ -125,7 +125,7 @@ class StringStreamTest extends TestCase
 
 		$stream->seek(1, SEEK_END);
 
-		static::assertSame(4, $stream->tell());
+		self::assertSame(4, $stream->tell());
 	}
 
 	public function testSeekNotSeekable(): void
@@ -155,7 +155,7 @@ class StringStreamTest extends TestCase
 
 		$stream->rewind();
 
-		static::assertSame(0, $stream->tell());
+		self::assertSame(0, $stream->tell());
 	}
 
 	public function testWrite(): void
@@ -164,7 +164,7 @@ class StringStreamTest extends TestCase
 
 		$stream->write('bar');
 
-		static::assertSame('foobar', $stream->getContents());
+		self::assertSame('foobar', $stream->getContents());
 	}
 
 	public function testWriteNotWritable(): void
@@ -180,10 +180,10 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame('foo', $stream->read(3));
-		static::assertSame(3, $stream->tell());
-		static::assertSame('', $stream->read(3));
-		static::assertSame(3, $stream->tell());
+		self::assertSame('foo', $stream->read(3));
+		self::assertSame(3, $stream->tell());
+		self::assertSame('', $stream->read(3));
+		self::assertSame(3, $stream->tell());
 	}
 
 	public function testReadNotReadable(): void
@@ -199,63 +199,63 @@ class StringStreamTest extends TestCase
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame('foo', $stream->getContents());
+		self::assertSame('foo', $stream->getContents());
 	}
 
 	public function testGetMetadata(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame([], $stream->getMetadata());
+		self::assertSame([], $stream->getMetadata());
 	}
 
 	public function testReadLine(): void
 	{
 		$stream = new StringStream("foo\r\nbar\r\nbaz");
 
-		static::assertSame('foo', $stream->readLine());
-		static::assertSame('bar', $stream->readLine());
-		static::assertSame('baz', $stream->readLine());
+		self::assertSame('foo', $stream->readLine());
+		self::assertSame('bar', $stream->readLine());
+		self::assertSame('baz', $stream->readLine());
 		$stream->rewind();
-		static::assertSame('foo', $stream->readLine());
+		self::assertSame('foo', $stream->readLine());
 	}
 
 	public function testReadAllLines(): void
 	{
 		$stream = new StringStream("foo\r\nbar\r\nbaz");
 
-		static::assertSame(['foo', 'bar', 'baz'], [...$stream->readAllLines()]);
+		self::assertSame(['foo', 'bar', 'baz'], [...$stream->readAllLines()]);
 	}
 
 	public function testReadBytes(): void
 	{
 		$stream = new StringStream('foo');
 
-		static::assertSame(102, $stream->readByte());
-		static::assertSame(1, $stream->tell());
+		self::assertSame(102, $stream->readByte());
+		self::assertSame(1, $stream->tell());
 
-		static::assertSame([111, 111], [...$stream->readBytes(2)]);
-		static::assertTrue($stream->eof());
+		self::assertSame([111, 111], [...$stream->readBytes(2)]);
+		self::assertTrue($stream->eof());
 	}
 
 	public function testReadChar(): void
 	{
 		$simpleStream = new StringStream('hello');
 
-		static::assertSame('h', $simpleStream->readChar());
-		static::assertSame('e', $simpleStream->readChar());
-		static::assertSame('l', $simpleStream->readChar());
-		static::assertSame('l', $simpleStream->readChar());
-		static::assertSame('o', $simpleStream->readChar());
-		static::assertTrue($simpleStream->eof());
+		self::assertSame('h', $simpleStream->readChar());
+		self::assertSame('e', $simpleStream->readChar());
+		self::assertSame('l', $simpleStream->readChar());
+		self::assertSame('l', $simpleStream->readChar());
+		self::assertSame('o', $simpleStream->readChar());
+		self::assertTrue($simpleStream->eof());
 
 		$multiByteStream = new StringStream('🧔+👩🏿=❤');
-		static::assertSame('🧔', $multiByteStream->readChar());
-		static::assertSame('+', $multiByteStream->readChar());
-		static::assertSame('👩', $multiByteStream->readChar());
-		static::assertSame('🏿', $multiByteStream->readChar());
-		static::assertSame('=', $multiByteStream->readChar());
-		static::assertSame('❤', $multiByteStream->readChar());
-		static::assertTrue($multiByteStream->eof());
+		self::assertSame('🧔', $multiByteStream->readChar());
+		self::assertSame('+', $multiByteStream->readChar());
+		self::assertSame('👩', $multiByteStream->readChar());
+		self::assertSame('🏿', $multiByteStream->readChar());
+		self::assertSame('=', $multiByteStream->readChar());
+		self::assertSame('❤', $multiByteStream->readChar());
+		self::assertTrue($multiByteStream->eof());
 	}
 }

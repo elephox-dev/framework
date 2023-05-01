@@ -16,7 +16,7 @@ use Traversable;
  *
  * @implements Iterator<TKey, TValue>
  */
-class OrderedIterator implements Iterator
+final class OrderedIterator implements Iterator
 {
 	/**
 	 * @var list<array{value: TValue, key: TKey}>

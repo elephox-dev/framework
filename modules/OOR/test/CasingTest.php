@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class CasingTest extends TestCase
+final class CasingTest extends TestCase
 {
 	public function casingDataProvider(): iterable
 	{
@@ -41,15 +41,15 @@ class CasingTest extends TestCase
 	 */
 	public function testCasing(string $input, string $lower, string $upper, string $title, string $camel, string $snake, string $kebab, string $httpHeader, string $cobol, string $pascal): void
 	{
-		static::assertSame($lower, Casing::toLower($input), "Invalid case conversion for: toLower($input)");
-		static::assertSame($upper, Casing::toUpper($input), "Invalid case conversion for: toUpper($input)");
-		static::assertSame($title, Casing::toTitle($input), "Invalid case conversion for: toTitle($input)");
-		static::assertSame($camel, Casing::toCamel($input), "Invalid case conversion for: toCamel($input)");
-		static::assertSame($snake, Casing::toSnake($input), "Invalid case conversion for: toSnake($input)");
-		static::assertSame($kebab, Casing::toKebab($input), "Invalid case conversion for: toKebab($input)");
-		static::assertSame($httpHeader, Casing::toHttpHeader($input), "Invalid case conversion for: toHttpHeader($input)");
-		static::assertSame($cobol, Casing::toCobol($input), "Invalid case conversion for: toCobol($input)");
-		static::assertSame($pascal, Casing::toPascal($input), "Invalid case conversion for: toPascal($input)");
+		self::assertSame($lower, Casing::toLower($input), "Invalid case conversion for: toLower($input)");
+		self::assertSame($upper, Casing::toUpper($input), "Invalid case conversion for: toUpper($input)");
+		self::assertSame($title, Casing::toTitle($input), "Invalid case conversion for: toTitle($input)");
+		self::assertSame($camel, Casing::toCamel($input), "Invalid case conversion for: toCamel($input)");
+		self::assertSame($snake, Casing::toSnake($input), "Invalid case conversion for: toSnake($input)");
+		self::assertSame($kebab, Casing::toKebab($input), "Invalid case conversion for: toKebab($input)");
+		self::assertSame($httpHeader, Casing::toHttpHeader($input), "Invalid case conversion for: toHttpHeader($input)");
+		self::assertSame($cobol, Casing::toCobol($input), "Invalid case conversion for: toCobol($input)");
+		self::assertSame($pascal, Casing::toPascal($input), "Invalid case conversion for: toPascal($input)");
 	}
 
 	public function replaceDelimitersDataProvider(): iterable
@@ -70,9 +70,9 @@ class CasingTest extends TestCase
 	public function testReplaceDelimiters(string $output, string $input, string $replacement, ?string $delimitersPattern): void
 	{
 		if ($delimitersPattern !== null) {
-			static::assertSame($output, Casing::replaceDelimiters($input, $replacement, $delimitersPattern));
+			self::assertSame($output, Casing::replaceDelimiters($input, $replacement, $delimitersPattern));
 		} else {
-			static::assertSame($output, Casing::replaceDelimiters($input, $replacement));
+			self::assertSame($output, Casing::replaceDelimiters($input, $replacement));
 		}
 	}
 }

@@ -13,20 +13,20 @@ use Psr\Clock\ClockInterface;
  *
  * @internal
  */
-class LazyClockTest extends TestCase
+final class LazyClockTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$clock = new LazyClock(static fn () => new DateTimeImmutable());
 
-		static::assertInstanceOf(ClockInterface::class, $clock);
+		self::assertInstanceOf(ClockInterface::class, $clock);
 	}
 
 	public function testNow(): void
 	{
 		$clock = new LazyClock(static fn () => new DateTimeImmutable());
 
-		static::assertInstanceOf(DateTimeInterface::class, $clock->now());
+		self::assertInstanceOf(DateTimeInterface::class, $clock->now());
 	}
 
 	public function testCallback(): void
@@ -35,8 +35,8 @@ class LazyClockTest extends TestCase
 		$a = $clock->now();
 		$b = $clock->now();
 
-		static::assertInstanceOf(DateTimeInterface::class, $a);
-		static::assertInstanceOf(DateTimeInterface::class, $b);
-		static::assertSame($a, $b);
+		self::assertInstanceOf(DateTimeInterface::class, $a);
+		self::assertInstanceOf(DateTimeInterface::class, $b);
+		self::assertSame($a, $b);
 	}
 }

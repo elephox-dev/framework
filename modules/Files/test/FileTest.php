@@ -29,7 +29,7 @@ use RuntimeException;
  *
  * @internal
  */
-class FileTest extends MockeryTestCase
+final class FileTest extends MockeryTestCase
 {
 	/**
 	 * @var resource $fileHandle
@@ -64,25 +64,25 @@ class FileTest extends MockeryTestCase
 	public function testGetExtension(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertSame('txt', $file->extension());
+		self::assertSame('txt', $file->extension());
 	}
 
 	public function testGetNameWithoutExtension(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertSame('test', $file->getNameWithoutExtension());
+		self::assertSame('test', $file->getNameWithoutExtension());
 	}
 
 	public function testToString(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertSame('/tmp/test.txt', (string) $file);
+		self::assertSame('/tmp/test.txt', (string) $file);
 	}
 
 	public function testGetModifiedTime(): void
 	{
 		$file = new File($this->filePath);
-		static::assertSame(filemtime($this->filePath), $file->modifiedAt()->getTimestamp());
+		self::assertSame(filemtime($this->filePath), $file->modifiedAt()->getTimestamp());
 	}
 
 	public function testFileNotFoundModifiedTime(): void
@@ -116,40 +116,40 @@ class FileTest extends MockeryTestCase
 	public function testGetPath(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertSame('/tmp/test.txt', $file->path());
+		self::assertSame('/tmp/test.txt', $file->path());
 	}
 
 	public function testGetMimeType(): void
 	{
 		$file = new File($this->filePath);
-		static::assertNull($file->mimeType());
+		self::assertNull($file->mimeType());
 
 		$fileWithType = new File($this->filePath, MimeType::TextPlain);
-		static::assertSame(MimeType::TextPlain, $fileWithType->mimeType());
+		self::assertSame(MimeType::TextPlain, $fileWithType->mimeType());
 	}
 
 	public function testGetHash(): void
 	{
 		$file = new File($this->filePath);
-		static::assertSame(md5(self::FileContents), $file->getHash());
+		self::assertSame(md5(self::FileContents), $file->getHash());
 	}
 
 	public function testGetSize(): void
 	{
 		$file = new File($this->filePath);
-		static::assertSame(strlen(self::FileContents), $file->size());
+		self::assertSame(strlen(self::FileContents), $file->size());
 	}
 
 	public function testGetParent(): void
 	{
 		$file = new File('/tmp/nested/deep/file/test.txt');
 		$dir = $file->parent();
-		static::assertInstanceOf(Directory::class, $dir);
-		static::assertSame('/tmp/nested/deep/file', $dir->path());
+		self::assertInstanceOf(Directory::class, $dir);
+		self::assertSame('/tmp/nested/deep/file', $dir->path());
 
 		$upperDir = $file->parent(2);
-		static::assertInstanceOf(Directory::class, $upperDir);
-		static::assertSame('/tmp/nested/deep', $upperDir->path());
+		self::assertInstanceOf(Directory::class, $upperDir);
+		self::assertSame('/tmp/nested/deep', $upperDir->path());
 
 		$this->expectException(InvalidParentLevelException::class);
 		$file->parent(0);
@@ -158,23 +158,23 @@ class FileTest extends MockeryTestCase
 	public function testGetName(): void
 	{
 		$file = new File('/tmp/test.txt');
-		static::assertSame('test.txt', $file->name());
+		self::assertSame('test.txt', $file->name());
 	}
 
 	public function testIsExecutable(): void
 	{
 		$file = new File($this->filePath);
-		static::assertFalse($file->isExecutable());
+		self::assertFalse($file->isExecutable());
 	}
 
 	public function testOpenStream(): void
 	{
 		$stream = File::openStream($this->filePath);
 
-		static::assertInstanceOf(ResourceStream::class, $stream);
-		static::assertTrue($stream->isReadable());
-		static::assertTrue($stream->isSeekable());
-		static::assertFalse($stream->isWritable());
+		self::assertInstanceOf(ResourceStream::class, $stream);
+		self::assertTrue($stream->isReadable());
+		self::assertTrue($stream->isSeekable());
+		self::assertFalse($stream->isWritable());
 
 		$stream->close();
 	}
@@ -419,20 +419,20 @@ class FileTest extends MockeryTestCase
 	public function testTouch(): void
 	{
 		$file = File::temp();
-		static::assertFalse($file->exists());
+		self::assertFalse($file->exists());
 
 		$file->touch();
-		static::assertTrue($file->exists());
+		self::assertTrue($file->exists());
 		$file->touch();
-		static::assertTrue($file->exists());
+		self::assertTrue($file->exists());
 
 		$file->delete();
-		static::assertFalse($file->exists());
+		self::assertFalse($file->exists());
 		$file->touch();
-		static::assertTrue($file->exists());
+		self::assertTrue($file->exists());
 
 		$invalidFile = new File('');
-		static::assertFalse($invalidFile->exists());
+		self::assertFalse($invalidFile->exists());
 
 		$this->expectException(FileNotCreatedException::class);
 		$invalidFile->touch();
@@ -441,7 +441,7 @@ class FileTest extends MockeryTestCase
 	public function testExistsIsFalseOnDirectories(): void
 	{
 		$file = new File(sys_get_temp_dir());
-		static::assertFalse($file->exists());
+		self::assertFalse($file->exists());
 	}
 
 	public function testMoveTo(): void
@@ -454,14 +454,14 @@ class FileTest extends MockeryTestCase
 
 		$destinationDirectory->ensureExists();
 
-		static::assertTrue($file->exists());
-		static::assertFalse($destinationFilename->exists());
+		self::assertTrue($file->exists());
+		self::assertFalse($destinationFilename->exists());
 		$file->moveTo($destinationFilename);
-		static::assertFalse($file->exists());
-		static::assertTrue($destinationFilename->exists());
-		static::assertFalse($destinationDirectoryFilename->exists());
+		self::assertFalse($file->exists());
+		self::assertTrue($destinationFilename->exists());
+		self::assertFalse($destinationDirectoryFilename->exists());
 		$destinationFilename->moveTo($destinationDirectory);
-		static::assertTrue($destinationDirectoryFilename->exists());
+		self::assertTrue($destinationDirectoryFilename->exists());
 
 		$nonExistentFile = new File('/i/dont/exist');
 		$this->expectException(FileNotFoundException::class);
@@ -478,14 +478,14 @@ class FileTest extends MockeryTestCase
 
 		$destinationDirectory->ensureExists();
 
-		static::assertTrue($file->exists());
-		static::assertFalse($destinationFilename->exists());
+		self::assertTrue($file->exists());
+		self::assertFalse($destinationFilename->exists());
 		$file->copyTo($destinationFilename);
-		static::assertTrue($file->exists());
-		static::assertTrue($destinationFilename->exists());
-		static::assertFalse($destinationDirectoryFilename->exists());
+		self::assertTrue($file->exists());
+		self::assertTrue($destinationFilename->exists());
+		self::assertFalse($destinationDirectoryFilename->exists());
 		$destinationFilename->copyTo($destinationDirectory);
-		static::assertTrue($destinationDirectoryFilename->exists());
+		self::assertTrue($destinationDirectoryFilename->exists());
 
 		$nonExistentFile = new File('/i/dont/exist');
 		$this->expectException(FileNotFoundException::class);
@@ -496,7 +496,7 @@ class FileTest extends MockeryTestCase
 	{
 		$file = new File('/path/to/non/existent/file');
 
-		static::assertFalse($file->exists());
+		self::assertFalse($file->exists());
 
 		$this->expectException(FileNotFoundException::class);
 		$this->expectExceptionMessage('File at /path/to/non/existent/file not found');
@@ -508,7 +508,7 @@ class FileTest extends MockeryTestCase
 	{
 		$file = new File('/path/to/non/existent/file');
 
-		static::assertFalse($file->exists());
+		self::assertFalse($file->exists());
 
 		$this->expectException(FileNotFoundException::class);
 		$this->expectExceptionMessage('File at /path/to/non/existent/file not found');

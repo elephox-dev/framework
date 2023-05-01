@@ -17,7 +17,7 @@ use Stringable;
  *
  * @internal
  */
-class UrlTest extends TestCase
+final class UrlTest extends TestCase
 {
 	public function dataProvider(): array
 	{
@@ -56,15 +56,15 @@ class UrlTest extends TestCase
 	public function testFromString(string|Stringable $uriString, string $toString, ?string $scheme, ?string $username, ?string $password, ?string $host, ?int $port, string $path, ?string $query, ?string $fragment): void
 	{
 		$uri = Url::fromString($uriString);
-		static::assertSame($scheme, $uri->scheme?->getScheme(), "Unexpected scheme in $uriString.");
-		static::assertSame($username, $uri->username, "Unexpected username in $uriString.");
-		static::assertSame($password, $uri->password, "Unexpected password in $uriString.");
-		static::assertSame($host, $uri->host, "Unexpected host in $uriString.");
-		static::assertSame($port, $uri->port, "Unexpected port in $uriString.");
-		static::assertSame($path, $uri->path, "Unexpected path in $uriString.");
-		static::assertSame($query, (string) $uri->queryMap, "Unexpected query in $uriString.");
-		static::assertSame($fragment, $uri->fragment, "Unexpected fragment in $uriString.");
-		static::assertSame($toString, (string) $uri);
+		self::assertSame($scheme, $uri->scheme?->getScheme(), "Unexpected scheme in $uriString.");
+		self::assertSame($username, $uri->username, "Unexpected username in $uriString.");
+		self::assertSame($password, $uri->password, "Unexpected password in $uriString.");
+		self::assertSame($host, $uri->host, "Unexpected host in $uriString.");
+		self::assertSame($port, $uri->port, "Unexpected port in $uriString.");
+		self::assertSame($path, $uri->path, "Unexpected path in $uriString.");
+		self::assertSame($query, (string) $uri->queryMap, "Unexpected query in $uriString.");
+		self::assertSame($fragment, $uri->fragment, "Unexpected fragment in $uriString.");
+		self::assertSame($toString, (string) $uri);
 
 		if (empty($query)) {
 			$queryMap = null;
@@ -78,22 +78,22 @@ class UrlTest extends TestCase
 		$authority = empty($userInfo) ? $hostAuthorityPart : ($userInfo . '@' . $hostAuthorityPart);
 
 		$array = $uri->toArray();
-		static::assertSame($scheme, $array['scheme']?->getScheme());
-		static::assertSame($username, $array['username']);
-		static::assertSame($password, $array['password']);
-		static::assertSame($host, $array['host']);
-		static::assertSame($port, $array['port']);
-		static::assertSame($authority, $array['authority']);
-		static::assertSame($userInfo, $array['userInfo']);
-		static::assertSame($path, $array['path']);
-		static::assertSame($queryMap, $array['query']?->toArray());
-		static::assertSame($fragment, $array['fragment']);
+		self::assertSame($scheme, $array['scheme']?->getScheme());
+		self::assertSame($username, $array['username']);
+		self::assertSame($password, $array['password']);
+		self::assertSame($host, $array['host']);
+		self::assertSame($port, $array['port']);
+		self::assertSame($authority, $array['authority']);
+		self::assertSame($userInfo, $array['userInfo']);
+		self::assertSame($path, $array['path']);
+		self::assertSame($queryMap, $array['query']?->toArray());
+		self::assertSame($fragment, $array['fragment']);
 	}
 
 	public function testWith(): void
 	{
 		$uri = Url::fromString('/');
-		static::assertSame('/', (string) $uri);
+		self::assertSame('/', (string) $uri);
 
 		$uri = $uri->with()
 			->scheme(UrlScheme::HTTPS)
@@ -101,14 +101,14 @@ class UrlTest extends TestCase
 			->path('/test')
 			->get()
 		;
-		static::assertSame('https://example.com/test', (string) $uri);
+		self::assertSame('https://example.com/test', (string) $uri);
 
 		$uri = $uri->with()
 			->userInfo('user', 'password')
 			->fragment('fragment')
 			->get()
 		;
-		static::assertSame('https://user:password@example.com/test#fragment', (string) $uri);
+		self::assertSame('https://user:password@example.com/test#fragment', (string) $uri);
 
 		$query = new QueryMap();
 		$query['test'] = 'true';
@@ -118,6 +118,6 @@ class UrlTest extends TestCase
 			->port(8080)
 			->get()
 		;
-		static::assertSame('https://user:password@example.com:8080/test?test=true#fragment', (string) $uri);
+		self::assertSame('https://user:password@example.com:8080/test?test=true#fragment', (string) $uri);
 	}
 }

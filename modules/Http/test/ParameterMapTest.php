@@ -24,7 +24,7 @@ use RuntimeException;
  *
  * @internal
  */
-class ParameterMapTest extends TestCase
+final class ParameterMapTest extends TestCase
 {
 	public function testFromGlobals(): void
 	{
@@ -56,22 +56,22 @@ class ParameterMapTest extends TestCase
 
 		$map = ParameterMap::fromGlobals($post, $get, $server, $env);
 
-		static::assertInstanceOf(ParameterMapContract::class, $map);
+		self::assertInstanceOf(ParameterMapContract::class, $map);
 
-		static::assertArrayHasKey('foo', $map);
-		static::assertSame('bar', $map['foo']);
+		self::assertArrayHasKey('foo', $map);
+		self::assertSame('bar', $map['foo']);
 
-		static::assertArrayHasKey('faa', $map);
-		static::assertSame('bor', $map['faa']);
+		self::assertArrayHasKey('faa', $map);
+		self::assertSame('bor', $map['faa']);
 
-		static::assertArrayHasKey('invalid', $map);
-		static::assertSame('invalid', $map['invalid']);
+		self::assertArrayHasKey('invalid', $map);
+		self::assertSame('invalid', $map['invalid']);
 
 		$allGet = $map->allFrom(ParameterSource::Get)->toArray();
-		static::assertSame($get, $allGet);
+		self::assertSame($get, $allGet);
 
 		$ambiguous = $map->all('ambiguous')->toArray(static fn (ParameterSource $source) => $source->name);
-		static::assertSame(
+		self::assertSame(
 			[
 				ParameterSource::Post->name => 'test post',
 				ParameterSource::Get->name => 'test get',
@@ -79,9 +79,9 @@ class ParameterMapTest extends TestCase
 			$ambiguous,
 		);
 
-		static::assertTrue($map->has('biz'));
+		self::assertTrue($map->has('biz'));
 		unset($map['biz']);
-		static::assertFalse($map->has('biz'));
+		self::assertFalse($map->has('biz'));
 	}
 
 	public function testOffsetSetException(): void
@@ -126,9 +126,9 @@ class ParameterMapTest extends TestCase
 	{
 		$map = new ParameterMap();
 
-		static::assertFalse($map->has('foo'));
+		self::assertFalse($map->has('foo'));
 
-		static::assertNull($map->offsetGet('foo'));
+		self::assertNull($map->offsetGet('foo'));
 	}
 
 	public function testAmbiguousKeyException(): void

@@ -12,7 +12,7 @@ use Http\Psr7Test\StreamIntegrationTest;
  *
  * @internal
  */
-class StreamTest extends StreamIntegrationTest
+final class StreamTest extends StreamIntegrationTest
 {
 	public function createStream($data): ResourceStream
 	{

@@ -28,7 +28,7 @@ use JsonException;
  *
  * @internal
  */
-class GeneratesResponsesTest extends TestCase
+final class GeneratesResponsesTest extends TestCase
 {
 	use GeneratesResponses;
 
@@ -38,7 +38,7 @@ class GeneratesResponsesTest extends TestCase
 		$builder->responseCode(ResponseCode::OK);
 
 		$response = $builder->get();
-		static::assertSame(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
+		self::assertSame(AbstractMessageBuilder::DefaultProtocolVersion, $response->getProtocolVersion());
 	}
 
 	/**
@@ -47,15 +47,15 @@ class GeneratesResponsesTest extends TestCase
 	public function testJsonResponse(): void
 	{
 		$response = $this->jsonResponse(['foo' => 'bar'])->get();
-		static::assertSame(MimeType::ApplicationJson, $response->getContentType());
-		static::assertSame('{"foo":"bar"}', $response->getBody()->getContents());
+		self::assertSame(MimeType::ApplicationJson, $response->getContentType());
+		self::assertSame('{"foo":"bar"}', $response->getBody()->getContents());
 	}
 
 	public function testStringResponse(): void
 	{
 		$response = $this->stringResponse('Hello World')->get();
-		static::assertSame(MimeType::TextPlain, $response->getContentType());
-		static::assertSame('Hello World', $response->getBody()->getContents());
+		self::assertSame(MimeType::TextPlain, $response->getContentType());
+		self::assertSame('Hello World', $response->getBody()->getContents());
 	}
 
 	public function testResourceResponse(): void
@@ -64,7 +64,7 @@ class GeneratesResponsesTest extends TestCase
 		fwrite($resource, 'Hello World');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(function_exists('mime_content_type') ? MimeType::TextPlain : MimeType::ApplicationOctetStream, $response->getContentType());
+		self::assertSame(function_exists('mime_content_type') ? MimeType::TextPlain : MimeType::ApplicationOctetStream, $response->getContentType());
 
 		fclose($resource);
 	}
@@ -74,7 +74,7 @@ class GeneratesResponsesTest extends TestCase
 		$resource = fopen(__FILE__, 'rb');
 
 		$response = $this->resourceResponse($resource)->get();
-		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
+		self::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
 
 		fclose($resource);
 	}
@@ -83,14 +83,14 @@ class GeneratesResponsesTest extends TestCase
 	{
 		$response = $this->fileResponse(__FILE__)->get();
 		// TODO: Add test for both cases in which mime_content_type exists and not
-		static::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
-		static::assertStringEqualsFile(__FILE__, $response->getBody()->getContents());
+		self::assertSame(function_exists('mime_content_type') ? MimeType::TextXPhp : MimeType::ApplicationPhp, $response->getContentType());
+		self::assertStringEqualsFile(__FILE__, $response->getBody()->getContents());
 	}
 
 	public function testFileNotFoundResponse(): void
 	{
 		$response = $this->fileResponse('/tmp/file-that-does-not-exist')->get();
 
-		static::assertSame(ResponseCode::NotFound, $response->getResponseCode());
+		self::assertSame(ResponseCode::NotFound, $response->getResponseCode());
 	}
 }

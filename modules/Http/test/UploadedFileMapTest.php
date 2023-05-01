@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class UploadedFileMapTest extends TestCase
+final class UploadedFileMapTest extends TestCase
 {
 	public function testFromGlobals(): void
 	{
@@ -55,11 +55,11 @@ class UploadedFileMapTest extends TestCase
 			],
 		]);
 
-		static::assertInstanceOf(UploadedFileMapContract::class, $map);
-		static::assertCount(3, $map);
-		static::assertInstanceOf(UploadedFile::class, $map->get('test'));
-		static::assertInstanceOf(UploadedFile::class, $map->get('custom-mime'));
-		static::assertInstanceOf(UploadedFile::class, $map->get('unknown-filesize'));
+		self::assertInstanceOf(UploadedFileMapContract::class, $map);
+		self::assertCount(3, $map);
+		self::assertInstanceOf(UploadedFile::class, $map->get('test'));
+		self::assertInstanceOf(UploadedFile::class, $map->get('custom-mime'));
+		self::assertInstanceOf(UploadedFile::class, $map->get('unknown-filesize'));
 
 		unlink($tmp);
 	}

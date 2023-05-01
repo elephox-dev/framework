@@ -22,14 +22,14 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ArrayMapTest extends TestCase
+final class ArrayMapTest extends TestCase
 {
 	public function testFromSelf(): void
 	{
 		$arr = new ArrayMap();
 		$arr2 = ArrayMap::from($arr);
 
-		static::assertSame($arr, $arr2);
+		self::assertSame($arr, $arr2);
 	}
 
 	public function testFromIterator(): void
@@ -37,7 +37,7 @@ class ArrayMapTest extends TestCase
 		$iterator = new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3]);
 		$arr = ArrayMap::from($iterator);
 
-		static::assertSame(['a' => 1, 'b' => 2, 'c' => 3], $arr->toArray());
+		self::assertSame(['a' => 1, 'b' => 2, 'c' => 3], $arr->toArray());
 	}
 
 	public function testFromInvalid(): void
@@ -54,8 +54,8 @@ class ArrayMapTest extends TestCase
 		$map->put('testKey', 'testValue');
 		$map->put('anotherKey', 'anotherValue');
 
-		static::assertSame('testValue', $map->get('testKey'));
-		static::assertSame('anotherValue', $map->get('anotherKey'));
+		self::assertSame('testValue', $map->get('testKey'));
+		self::assertSame('anotherValue', $map->get('anotherKey'));
 	}
 
 	public function testInitialize(): void
@@ -63,8 +63,8 @@ class ArrayMapTest extends TestCase
 		$map = new ArrayMap(['test' => 'val', 123 => '134']);
 		$map2 = ArrayMap::from(['test' => 'val', 123 => '134']);
 
-		static::assertSame('val', $map->get('test'));
-		static::assertSame('134', $map2->get(123));
+		self::assertSame('val', $map->get('test'));
+		self::assertSame('134', $map2->get(123));
 	}
 
 	public function testInvalidKey(): void
@@ -93,8 +93,8 @@ class ArrayMapTest extends TestCase
 			'c' => '3',
 		]);
 
-		static::assertSame(['1', '2', '3'], $map->values()->toList());
-		static::assertSame(['a', 'b', 'c'], $map->keys()->toList());
+		self::assertSame(['1', '2', '3'], $map->values()->toList());
+		self::assertSame(['a', 'b', 'c'], $map->keys()->toList());
 	}
 
 	public function testContains(): void
@@ -105,7 +105,7 @@ class ArrayMapTest extends TestCase
 			'c' => '3',
 		]);
 
-		static::assertTrue($map->contains('1'));
+		self::assertTrue($map->contains('1'));
 	}
 
 	public function testIterator(): void
@@ -115,7 +115,7 @@ class ArrayMapTest extends TestCase
 		]);
 
 		foreach ($map as $value) {
-			static::assertSame('1', $value);
+			self::assertSame('1', $value);
 		}
 	}
 
@@ -129,9 +129,9 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove('a');
 
-		static::assertTrue($removed);
-		static::assertCount(2, $map);
-		static::assertFalse($map->has('a'));
+		self::assertTrue($removed);
+		self::assertCount(2, $map);
+		self::assertFalse($map->has('a'));
 	}
 
 	public function testRemoveNonExistent(): void
@@ -144,8 +144,8 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove('d');
 
-		static::assertFalse($removed);
-		static::assertCount(3, $map);
+		self::assertFalse($removed);
+		self::assertCount(3, $map);
 	}
 
 	public function testRemoveIntKey(): void
@@ -154,9 +154,9 @@ class ArrayMapTest extends TestCase
 
 		$removed = $map->remove(1);
 
-		static::assertTrue($removed);
-		static::assertCount(2, $map);
-		static::assertSame(['a', 'c'], $map->toArray());
+		self::assertTrue($removed);
+		self::assertCount(2, $map);
+		self::assertSame(['a', 'c'], $map->toArray());
 	}
 
 	public function testOffsetExists(): void
@@ -167,11 +167,11 @@ class ArrayMapTest extends TestCase
 			'c' => 3,
 		]);
 
-		static::assertTrue($map->offsetExists('a'));
-		static::assertTrue($map->offsetExists('b'));
-		static::assertTrue($map->offsetExists('c'));
-		static::assertFalse($map->offsetExists('d'));
-		static::assertFalse($map->offsetExists(null));
+		self::assertTrue($map->offsetExists('a'));
+		self::assertTrue($map->offsetExists('b'));
+		self::assertTrue($map->offsetExists('c'));
+		self::assertFalse($map->offsetExists('d'));
+		self::assertFalse($map->offsetExists(null));
 	}
 
 	public function testOffsetSet(): void
@@ -185,10 +185,10 @@ class ArrayMapTest extends TestCase
 		$map->offsetSet('a', 4);
 		$map->offsetSet('d', 5);
 
-		static::assertSame(4, $map->offsetGet('a'));
-		static::assertSame(2, $map->offsetGet('b'));
-		static::assertSame(3, $map->offsetGet('c'));
-		static::assertSame(5, $map->offsetGet('d'));
+		self::assertSame(4, $map->offsetGet('a'));
+		self::assertSame(2, $map->offsetGet('b'));
+		self::assertSame(3, $map->offsetGet('c'));
+		self::assertSame(5, $map->offsetGet('d'));
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot set null offset in ArrayMap');
@@ -206,8 +206,8 @@ class ArrayMapTest extends TestCase
 
 		$map->offsetUnset('a');
 
-		static::assertFalse($map->offsetExists('a'));
-		static::assertTrue($map->offsetExists('b'));
+		self::assertFalse($map->offsetExists('a'));
+		self::assertTrue($map->offsetExists('b'));
 	}
 
 	public function testFirstOrDefault(): void
@@ -219,8 +219,8 @@ class ArrayMapTest extends TestCase
 			'c' => 3,
 		]);
 
-		static::assertNull($emptyMap->firstOrDefault(null));
-		static::assertSame(1, $map->firstOrDefault(null));
-		static::assertSame(2, $map->firstOrDefault(null, static fn (int $v) => $v % 2 === 0));
+		self::assertNull($emptyMap->firstOrDefault(null));
+		self::assertSame(1, $map->firstOrDefault(null));
+		self::assertSame(2, $map->firstOrDefault(null, static fn (int $v) => $v % 2 === 0));
 	}
 }

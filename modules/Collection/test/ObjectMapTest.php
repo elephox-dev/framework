@@ -16,7 +16,7 @@ use stdClass;
  *
  * @internal
  */
-class ObjectMapTest extends TestCase
+final class ObjectMapTest extends TestCase
 {
 	public function testConstructor(): void
 	{
@@ -30,7 +30,7 @@ class ObjectMapTest extends TestCase
 			],
 		);
 
-		static::assertSame(123, $map->get($inst));
+		self::assertSame(123, $map->get($inst));
 	}
 
 	public function testConstructorUnevenArrays(): void
@@ -65,7 +65,7 @@ class ObjectMapTest extends TestCase
 		$inst = new stdClass();
 		$map = new ObjectMap([$inst], [123]);
 
-		static::assertTrue($map->has($inst));
+		self::assertTrue($map->has($inst));
 	}
 
 	public function testIterator(): void
@@ -74,8 +74,8 @@ class ObjectMapTest extends TestCase
 		$map = new ObjectMap([$inst], [123]);
 
 		foreach ($map as $key => $value) {
-			static::assertSame($inst, $key);
-			static::assertSame(123, $value);
+			self::assertSame($inst, $key);
+			self::assertSame(123, $value);
 		}
 	}
 
@@ -86,12 +86,12 @@ class ObjectMapTest extends TestCase
 
 		$added = $map->put($inst, 456);
 
-		static::assertFalse($added);
-		static::assertSame(456, $map->get($inst));
+		self::assertFalse($added);
+		self::assertSame(456, $map->get($inst));
 
 		$anotherAdded = $map->put(new stdClass(), 789);
 
-		static::assertTrue($anotherAdded);
+		self::assertTrue($anotherAdded);
 	}
 
 	public function testRemove(): void
@@ -101,12 +101,12 @@ class ObjectMapTest extends TestCase
 
 		$removed = $map->remove($inst);
 
-		static::assertTrue($removed);
-		static::assertFalse($map->has($inst));
+		self::assertTrue($removed);
+		self::assertFalse($map->has($inst));
 
 		$removedAgain = $map->remove($inst);
 
-		static::assertFalse($removedAgain);
+		self::assertFalse($removedAgain);
 	}
 
 	public function testClear(): void
@@ -114,10 +114,10 @@ class ObjectMapTest extends TestCase
 		$inst = new stdClass();
 		$map = new ObjectMap([$inst], [123]);
 
-		static::assertTrue($map->has($inst));
+		self::assertTrue($map->has($inst));
 
 		$map->clear();
 
-		static::assertFalse($map->has($inst));
+		self::assertFalse($map->has($inst));
 	}
 }

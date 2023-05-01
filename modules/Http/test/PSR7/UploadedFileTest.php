@@ -25,7 +25,7 @@ use Throwable;
  *
  * @internal
  */
-class UploadedFileTest extends UploadedFileIntegrationTest
+final class UploadedFileTest extends UploadedFileIntegrationTest
 {
 	private static function getUploadedFileTestTempDir(): Directory
 	{

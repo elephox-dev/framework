@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class EventBusTest extends TestCase
+final class EventBusTest extends TestCase
 {
 	public function testPubSub(): void
 	{
@@ -39,7 +39,7 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		static::assertTrue($triggered);
+		self::assertTrue($triggered);
 
 		$bus->unsubscribe($subscription);
 
@@ -47,7 +47,7 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		static::assertFalse($triggered);
+		self::assertFalse($triggered);
 	}
 
 	public function testPubSubNamed(): void
@@ -75,13 +75,13 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestNamedEvent('testA', 5));
 
-		static::assertTrue($triggeredA1);
-		static::assertTrue($triggeredA2);
-		static::assertFalse($triggeredB);
+		self::assertTrue($triggeredA1);
+		self::assertTrue($triggeredA2);
+		self::assertFalse($triggeredB);
 
 		$bus->publish(new TestNamedEvent('testB', 6));
 
-		static::assertTrue($triggeredB);
+		self::assertTrue($triggeredB);
 
 		$bus->unsubscribe($subscription->getId());
 		$bus->unsubscribe($subscription->getId());
@@ -91,42 +91,42 @@ class EventBusTest extends TestCase
 	{
 		$testEvent = new TestEvent(5);
 
-		static::assertSame(TestEvent::class, $testEvent->getName());
+		self::assertSame(TestEvent::class, $testEvent->getName());
 	}
 
 	public function testGetSubscribers(): void
 	{
 		$bus = new EventBus();
 
-		static::assertEmpty($bus->getSubscriptions());
+		self::assertEmpty($bus->getSubscriptions());
 
 		$subscription = $bus->subscribe('test', static function (): void {});
 
-		static::assertCount(1, $bus->getSubscriptions());
-		static::assertSame($subscription, $bus->getSubscriptions()->first());
+		self::assertCount(1, $bus->getSubscriptions());
+		self::assertSame($subscription, $bus->getSubscriptions()->first());
 	}
 
 	public function testGetSubscribersByName(): void
 	{
 		$bus = new EventBus();
 
-		static::assertEmpty($bus->getSubscriptions());
-		static::assertEmpty($bus->getSubscriptions('test'));
-		static::assertEmpty($bus->getSubscriptions('test2'));
+		self::assertEmpty($bus->getSubscriptions());
+		self::assertEmpty($bus->getSubscriptions('test'));
+		self::assertEmpty($bus->getSubscriptions('test2'));
 
 		$subscription = $bus->subscribe('test', static function (): void {});
 
-		static::assertCount(1, $bus->getSubscriptions());
-		static::assertCount(1, $bus->getSubscriptions('test'));
-		static::assertEmpty($bus->getSubscriptions('test2'));
-		static::assertSame($subscription, $bus->getSubscriptions('test')->first());
+		self::assertCount(1, $bus->getSubscriptions());
+		self::assertCount(1, $bus->getSubscriptions('test'));
+		self::assertEmpty($bus->getSubscriptions('test2'));
+		self::assertSame($subscription, $bus->getSubscriptions('test')->first());
 
 		$subscription2 = $bus->subscribe('test2', static function (): void {});
 
-		static::assertCount(2, $bus->getSubscriptions());
-		static::assertCount(1, $bus->getSubscriptions('test'));
-		static::assertCount(1, $bus->getSubscriptions('test2'));
-		static::assertSame($subscription2, $bus->getSubscriptions('test2')->first());
+		self::assertCount(2, $bus->getSubscriptions());
+		self::assertCount(1, $bus->getSubscriptions('test'));
+		self::assertCount(1, $bus->getSubscriptions('test2'));
+		self::assertSame($subscription2, $bus->getSubscriptions('test2')->first());
 	}
 
 	public function testStopPropagation(): void
@@ -149,9 +149,9 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		static::assertTrue($triggered[0]);
-		static::assertTrue($triggered[1]);
-		static::assertFalse($triggered[2]);
+		self::assertTrue($triggered[0]);
+		self::assertTrue($triggered[1]);
+		self::assertFalse($triggered[2]);
 	}
 
 	public function testPriority(): void
@@ -174,9 +174,9 @@ class EventBusTest extends TestCase
 
 		$bus->publish(new TestEvent(5));
 
-		static::assertFalse($triggered[0]);
-		static::assertTrue($triggered[1]);
-		static::assertTrue($triggered[2]);
+		self::assertFalse($triggered[0]);
+		self::assertTrue($triggered[1]);
+		self::assertTrue($triggered[2]);
 	}
 }
 

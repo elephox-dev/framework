@@ -12,14 +12,14 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ReverseIteratorTest extends TestCase
+final class ReverseIteratorTest extends TestCase
 {
 	public function testIterator(): void
 	{
 		$arrayIterator = new ArrayIterator([1, 2, 3]);
 		$iterator = new ReverseIterator($arrayIterator, false);
 
-		static::assertSame([3, 2, 1], iterator_to_array($iterator));
-		static::assertCount(3, $iterator);
+		self::assertSame([3, 2, 1], iterator_to_array($iterator));
+		self::assertCount(3, $iterator);
 	}
 }

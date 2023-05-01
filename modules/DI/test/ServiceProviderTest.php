@@ -31,17 +31,17 @@ use Psr\Container\ContainerInterface;
  *
  * @internal
  */
-class ServiceProviderTest extends MockeryTestCase
+final class ServiceProviderTest extends MockeryTestCase
 {
 	public function testSelfRegister(): void
 	{
 		$container = new ServiceProvider([]);
 
-		static::assertTrue($container->has(ContainerInterface::class));
-		static::assertTrue($container->has(Contract\ServiceProvider::class));
-		static::assertTrue($container->has(Contract\RootServiceProvider::class));
-		static::assertTrue($container->has(Contract\Resolver::class));
-		static::assertTrue($container->has(Contract\ServiceScopeFactory::class));
+		self::assertTrue($container->has(ContainerInterface::class));
+		self::assertTrue($container->has(Contract\ServiceProvider::class));
+		self::assertTrue($container->has(Contract\RootServiceProvider::class));
+		self::assertTrue($container->has(Contract\Resolver::class));
+		self::assertTrue($container->has(Contract\ServiceScopeFactory::class));
 	}
 
 	public function testSingletonOnlyCreatesOneInstance(): void
@@ -50,9 +50,9 @@ class ServiceProviderTest extends MockeryTestCase
 		$collection->addSingleton(TestServiceInterface::class, TestServiceClass::class);
 
 		$provider = $collection->buildProvider();
-		static::assertTrue($provider->has(TestServiceInterface::class));
+		self::assertTrue($provider->has(TestServiceInterface::class));
 
 		$instance = $provider->require(TestServiceInterface::class);
-		static::assertSame($instance, $provider->get(TestServiceInterface::class));
+		self::assertSame($instance, $provider->get(TestServiceInterface::class));
 	}
 }

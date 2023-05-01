@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ServiceCollectionTest extends TestCase
+final class ServiceCollectionTest extends TestCase
 {
 	public function testCannotAddSingletonWithoutAWayToInstantiateInterface(): void
 	{
@@ -36,6 +36,6 @@ class ServiceCollectionTest extends TestCase
 		$collection->addSingleton(TestServiceClass::class);
 
 		$provider = $collection->buildProvider();
-		static::assertTrue($provider->has(TestServiceClass::class));
+		self::assertTrue($provider->has(TestServiceClass::class));
 	}
 }

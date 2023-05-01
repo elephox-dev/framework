@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @internal
  */
-class ResponseTest extends ResponseIntegrationTest
+final class ResponseTest extends ResponseIntegrationTest
 {
 	protected $skippedTests = [
 		'testReasonPhrase' => 'non-standard reason phrases are not supported',

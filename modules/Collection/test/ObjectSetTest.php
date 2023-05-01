@@ -17,18 +17,18 @@ use stdClass;
  *
  * @internal
  */
-class ObjectSetTest extends TestCase
+final class ObjectSetTest extends TestCase
 {
 	public function testAdd(): void
 	{
 		$set = new ObjectSet();
 		$obj = new stdClass();
 
-		static::assertTrue($set->add($obj));
-		static::assertCount(1, $set);
+		self::assertTrue($set->add($obj));
+		self::assertCount(1, $set);
 
-		static::assertFalse($set->add($obj));
-		static::assertCount(1, $set);
+		self::assertFalse($set->add($obj));
+		self::assertCount(1, $set);
 	}
 
 	public function testAddAll(): void
@@ -38,11 +38,11 @@ class ObjectSetTest extends TestCase
 		$obj2 = new stdClass();
 		$obj3 = new stdClass();
 
-		static::assertTrue($set->addAll([$obj, $obj2]));
-		static::assertCount(2, $set);
+		self::assertTrue($set->addAll([$obj, $obj2]));
+		self::assertCount(2, $set);
 
-		static::assertFalse($set->addAll([$obj2, $obj3]));
-		static::assertCount(3, $set);
+		self::assertFalse($set->addAll([$obj2, $obj3]));
+		self::assertCount(3, $set);
 	}
 
 	public function testAddInvalid(): void
@@ -61,7 +61,7 @@ class ObjectSetTest extends TestCase
 		$set->add($ref);
 
 		self::assertfalse($set->remove(new stdClass()));
-		static::assertTrue($set->remove($ref));
+		self::assertTrue($set->remove($ref));
 	}
 
 	public function testInvalidRemove(): void
@@ -93,8 +93,8 @@ class ObjectSetTest extends TestCase
 		$set->add($ref3);
 		$set->add($ref4);
 
-		static::assertFalse($set->removeBy(static fn ($x) => false));
-		static::assertTrue($set->removeBy(static fn ($x) => $x->test));
-		static::assertCount(2, $set);
+		self::assertFalse($set->removeBy(static fn ($x) => false));
+		self::assertTrue($set->removeBy(static fn ($x) => $x->test));
+		self::assertCount(2, $set);
 	}
 }

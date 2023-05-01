@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class TransparentGetterSetterTest extends TestCase
+final class TransparentGetterSetterTest extends TestCase
 {
 	public function testGetter(): void
 	{
 		$obj = new ExampleGetterSetterTestClass();
 		$obj->internalValue = 123;
-		static::assertSame(123, $obj->value);
+		self::assertSame(123, $obj->value);
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('None of the tried getter methods exists: getNotExisting, isNotExisting, hasNotExisting');
@@ -30,7 +30,7 @@ class TransparentGetterSetterTest extends TestCase
 	{
 		$obj = new ExampleGetterSetterTestClass();
 		$obj->value = 123;
-		static::assertSame(123, $obj->internalValue);
+		self::assertSame(123, $obj->internalValue);
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('None of the tried setter methods exists: setNotExisting, putNotExisting');
@@ -41,8 +41,8 @@ class TransparentGetterSetterTest extends TestCase
 	{
 		$obj = new ExampleGetterSetterTestClass();
 		$obj->internalValue = 123;
-		static::assertTrue(isset($obj->value));
-		static::assertFalse(isset($obj->notExisting));
+		self::assertTrue(isset($obj->value));
+		self::assertFalse(isset($obj->notExisting));
 	}
 }
 

@@ -25,7 +25,7 @@ use JsonException;
  *
  * @internal
  */
-class JsonConfigurationProviderTest extends TestCase
+final class JsonConfigurationProviderTest extends TestCase
 {
 	private ?File $tmpFile = null;
 
@@ -59,8 +59,8 @@ JSON);
 		$source = new JsonFileConfigurationSource($this->tmpFile);
 		$provider = new JsonConfigurationProvider($source);
 
-		static::assertTrue($provider->tryGet('baz:guz', $value));
-		static::assertSame('qux', $value);
+		self::assertTrue($provider->tryGet('baz:guz', $value));
+		self::assertSame('qux', $value);
 	}
 
 	/**
@@ -70,6 +70,6 @@ JSON);
 	{
 		$source = new JsonFileConfigurationSource(new File(''), true);
 
-		static::assertSame([], $source->getData());
+		self::assertSame([], $source->getData());
 	}
 }

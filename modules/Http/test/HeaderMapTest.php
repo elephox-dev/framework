@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class HeaderMapTest extends TestCase
+final class HeaderMapTest extends TestCase
 {
 	public function testFromGlobals(): void
 	{
@@ -24,15 +24,15 @@ class HeaderMapTest extends TestCase
 			'TEST_HEADER' => 'test',
 		]);
 
-		static::assertTrue($map->has(HeaderName::Accept));
-		static::assertSame(['text/html'], $map->get(HeaderName::Accept));
+		self::assertTrue($map->has(HeaderName::Accept));
+		self::assertSame(['text/html'], $map->get(HeaderName::Accept));
 
-		static::assertTrue($map->has(HeaderName::AcceptLanguage));
-		static::assertSame(['en-US,en;q=0.9'], $map->get(HeaderName::AcceptLanguage));
+		self::assertTrue($map->has(HeaderName::AcceptLanguage));
+		self::assertSame(['en-US,en;q=0.9'], $map->get(HeaderName::AcceptLanguage));
 
-		static::assertFalse($map->has('TEST_HEADER'));
-		static::assertFalse($map->has('TestHeader'));
-		static::assertFalse($map->has('Test-Header'));
-		static::assertFalse($map->has('Header'));
+		self::assertFalse($map->has('TEST_HEADER'));
+		self::assertFalse($map->has('TestHeader'));
+		self::assertFalse($map->has('Test-Header'));
+		self::assertFalse($map->has('Header'));
 	}
 }

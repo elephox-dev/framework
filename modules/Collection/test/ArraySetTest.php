@@ -14,13 +14,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ArraySetTest extends TestCase
+final class ArraySetTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$set = new ArraySet(['a', 'b', 'c']);
 
-		static::assertSame(['a', 'b', 'c'], $set->toArray());
+		self::assertSame(['a', 'b', 'c'], $set->toArray());
 	}
 
 	public function testAdd(): void
@@ -28,10 +28,10 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 		$set->add('d');
 
-		static::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
+		self::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
 
 		$set->add('b');
-		static::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
+		self::assertSame(['a', 'b', 'c', 'd'], $set->toArray());
 	}
 
 	public function testAddAll(): void
@@ -39,10 +39,10 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 		$set->addAll(['d', 'e']);
 
-		static::assertSame(['a', 'b', 'c', 'd', 'e'], $set->toArray());
+		self::assertSame(['a', 'b', 'c', 'd', 'e'], $set->toArray());
 
 		$set->addAll(['b', 'a', 'f']);
-		static::assertSame(['a', 'b', 'c', 'd', 'e', 'f'], $set->toArray());
+		self::assertSame(['a', 'b', 'c', 'd', 'e', 'f'], $set->toArray());
 	}
 
 	public function testRemove(): void
@@ -50,12 +50,12 @@ class ArraySetTest extends TestCase
 		$set = new ArraySet(['a', 'b', 'c']);
 
 		$removed = $set->remove('b');
-		static::assertTrue($removed);
-		static::assertSame(['a', 'c'], $set->toArray());
+		self::assertTrue($removed);
+		self::assertSame(['a', 'c'], $set->toArray());
 
 		$removed2 = $set->remove('b');
-		static::assertFalse($removed2);
-		static::assertSame(['a', 'c'], $set->toArray());
+		self::assertFalse($removed2);
+		self::assertSame(['a', 'c'], $set->toArray());
 	}
 
 	public function testRemoveBy(): void
@@ -64,7 +64,7 @@ class ArraySetTest extends TestCase
 
 		$removed = $set->removeBy(static fn ($item) => $item >= 'b');
 
-		static::assertTrue($removed);
-		static::assertSame(['a'], $set->toArray());
+		self::assertTrue($removed);
+		self::assertSame(['a'], $set->toArray());
 	}
 }

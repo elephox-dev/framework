@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class GlobalEnvironmentTest extends TestCase
+final class GlobalEnvironmentTest extends TestCase
 {
 	public function envDataProvider(): iterable
 	{
@@ -60,20 +60,20 @@ class GlobalEnvironmentTest extends TestCase
 		}
 
 		$env = new GlobalEnvironment();
-		static::assertSame($shouldBeDevelopment, $env->isDevelopment());
+		self::assertSame($shouldBeDevelopment, $env->isDevelopment());
 	}
 
 	public function testGetTemp(): void
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertSame('.' . DIRECTORY_SEPARATOR . 'tmp', $env->root()->relativePathTo($env->temp()));
+		self::assertSame('.' . DIRECTORY_SEPARATOR . 'tmp', $env->root()->relativePathTo($env->temp()));
 	}
 
 	public function testGetConfig(): void
 	{
 		$env = new GlobalEnvironment();
 
-		static::assertSame($env->root()->path(), $env->config()->path());
+		self::assertSame($env->root()->path(), $env->config()->path());
 	}
 }

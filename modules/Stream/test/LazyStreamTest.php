@@ -13,7 +13,7 @@ use Mockery as M;
  *
  * @internal
  */
-class LazyStreamTest extends MockeryTestCase
+final class LazyStreamTest extends MockeryTestCase
 {
 	public function testGetStream(): void
 	{
@@ -39,14 +39,14 @@ class LazyStreamTest extends MockeryTestCase
 
 		$stream = new LazyStream(static fn () => $streamMock);
 
-		static::assertSame($streamMock, $stream->getStream());
-		static::assertTrue($stream->isReadable());
+		self::assertSame($streamMock, $stream->getStream());
+		self::assertTrue($stream->isReadable());
 
 		$stream = new LazyStream(static fn () => $streamMock);
-		static::assertTrue($stream->isWritable());
+		self::assertTrue($stream->isWritable());
 
 		$stream = new LazyStream(static fn () => $streamMock);
-		static::assertTrue($stream->isSeekable());
+		self::assertTrue($stream->isSeekable());
 	}
 
 	public function methodNameProvider(): array
@@ -93,6 +93,6 @@ class LazyStreamTest extends MockeryTestCase
 
 		$actual = $stream->{$method}(...$args);
 
-		static::assertSame($result, $actual);
+		self::assertSame($result, $actual);
 	}
 }

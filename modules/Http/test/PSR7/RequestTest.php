@@ -29,7 +29,7 @@ use Psr\Http\Message\RequestInterface;
  *
  * @internal
  */
-class RequestTest extends RequestIntegrationTest
+final class RequestTest extends RequestIntegrationTest
 {
 	protected $skippedTests = [
 		'testRequestTarget' => 'RequestTarget is not supported',

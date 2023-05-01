@@ -13,57 +13,57 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class OrderedIteratorTest extends TestCase
+final class OrderedIteratorTest extends TestCase
 {
 	public function testIterator(): void
 	{
 		$iterator = new OrderedIterator(new ArrayIterator([4, 2, 1, 5, 2, 3]), static fn ($x) => $x, DefaultEqualityComparer::compare(...));
 
-		static::assertFalse($iterator->valid());
-		static::assertFalse($iterator->current());
-		static::assertNull($iterator->key());
+		self::assertFalse($iterator->valid());
+		self::assertFalse($iterator->current());
+		self::assertNull($iterator->key());
 
 		$iterator->rewind();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(1, $iterator->current());
-		static::assertSame(0, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(1, $iterator->current());
+		self::assertSame(0, $iterator->key());
 
 		$iterator->next();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(2, $iterator->current());
-		static::assertSame(1, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(2, $iterator->current());
+		self::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(2, $iterator->current());
-		static::assertSame(2, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(2, $iterator->current());
+		self::assertSame(2, $iterator->key());
 
 		$iterator->next();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(3, $iterator->current());
-		static::assertSame(3, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(3, $iterator->current());
+		self::assertSame(3, $iterator->key());
 
 		$iterator->next();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(4, $iterator->current());
-		static::assertSame(4, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(4, $iterator->current());
+		self::assertSame(4, $iterator->key());
 
 		$iterator->next();
 
-		static::assertTrue($iterator->valid());
-		static::assertSame(5, $iterator->current());
-		static::assertSame(5, $iterator->key());
+		self::assertTrue($iterator->valid());
+		self::assertSame(5, $iterator->current());
+		self::assertSame(5, $iterator->key());
 
 		$iterator->next();
 
-		static::assertFalse($iterator->valid());
-		static::assertFalse($iterator->current());
-		static::assertNull($iterator->key());
+		self::assertFalse($iterator->valid());
+		self::assertFalse($iterator->current());
+		self::assertNull($iterator->key());
 	}
 
 	public function testIntegerKeyReordering(): void
@@ -71,34 +71,34 @@ class OrderedIteratorTest extends TestCase
 		$iterator = new OrderedIterator(new ArrayIterator(['a' => 5, 1 => 4, 'b' => 2, 'c' => 3, 2 => 1, 3 => 0]), static fn ($x) => $x, DefaultEqualityComparer::compare(...));
 
 		$iterator->rewind();
-		static::assertTrue($iterator->valid());
+		self::assertTrue($iterator->valid());
 
-		static::assertSame(0, $iterator->current());
-		static::assertSame(0, $iterator->key());
-
-		$iterator->next();
-
-		static::assertSame(1, $iterator->current());
-		static::assertSame(1, $iterator->key());
+		self::assertSame(0, $iterator->current());
+		self::assertSame(0, $iterator->key());
 
 		$iterator->next();
 
-		static::assertSame(2, $iterator->current());
-		static::assertSame('b', $iterator->key());
+		self::assertSame(1, $iterator->current());
+		self::assertSame(1, $iterator->key());
 
 		$iterator->next();
 
-		static::assertSame(3, $iterator->current());
-		static::assertSame('c', $iterator->key());
+		self::assertSame(2, $iterator->current());
+		self::assertSame('b', $iterator->key());
 
 		$iterator->next();
 
-		static::assertSame(4, $iterator->current());
-		static::assertSame(4, $iterator->key());
+		self::assertSame(3, $iterator->current());
+		self::assertSame('c', $iterator->key());
 
 		$iterator->next();
 
-		static::assertSame(5, $iterator->current());
-		static::assertSame('a', $iterator->key());
+		self::assertSame(4, $iterator->current());
+		self::assertSame(4, $iterator->key());
+
+		$iterator->next();
+
+		self::assertSame(5, $iterator->current());
+		self::assertSame('a', $iterator->key());
 	}
 }

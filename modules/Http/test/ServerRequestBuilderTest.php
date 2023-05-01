@@ -38,7 +38,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ServerRequestBuilderTest extends TestCase
+final class ServerRequestBuilderTest extends TestCase
 {
 	public function globalsProvider(): iterable
 	{
@@ -67,10 +67,10 @@ class ServerRequestBuilderTest extends TestCase
 	{
 		$request = ServerRequestBuilder::fromGlobals($parameterMap, session: new FakeSessionMap(), protocolVersion: $protocolVersion, requestMethod: $requestMethod);
 
-		static::assertSame($requestUri, $request->getUrl()->path);
-		static::assertSame($bodyStreamLength, $request->getBody()->getSize());
-		static::assertSame($expectedProtocolVersion, $request->getProtocolVersion());
-		static::assertSame($expectedRequestMethod, $request->getRequestMethod());
+		self::assertSame($requestUri, $request->getUrl()->path);
+		self::assertSame($bodyStreamLength, $request->getBody()->getSize());
+		self::assertSame($expectedProtocolVersion, $request->getProtocolVersion());
+		self::assertSame($expectedRequestMethod, $request->getRequestMethod());
 	}
 
 	public function testMissingParameterIsThrown(): void
@@ -87,8 +87,8 @@ class ServerRequestBuilderTest extends TestCase
 		$builder->requestMethod(RequestMethod::GET);
 		$builder->requestUrl(Url::fromString('http://example.com/foo'));
 
-		static::assertSame(RequestMethod::GET, $builder->getRequestMethod());
-		static::assertSame('http://example.com/foo', (string) $builder->getRequestUrl());
+		self::assertSame(RequestMethod::GET, $builder->getRequestMethod());
+		self::assertSame('http://example.com/foo', (string) $builder->getRequestUrl());
 	}
 
 	public function testFromRequest(): void
@@ -105,9 +105,9 @@ class ServerRequestBuilderTest extends TestCase
 
 		$serverRequestBuilder = ServerRequestBuilder::fromRequest($request);
 
-		static::assertSame('2.0', $serverRequestBuilder->getProtocolVersion());
-		static::assertSame(['value', 'another'], $serverRequestBuilder->getHeaderMap()?->get('header'));
-		static::assertSame('html', $serverRequestBuilder->getBody()?->getContents());
-		static::assertSame(RequestMethod::GET, $serverRequestBuilder->getRequestMethod());
+		self::assertSame('2.0', $serverRequestBuilder->getProtocolVersion());
+		self::assertSame(['value', 'another'], $serverRequestBuilder->getHeaderMap()?->get('header'));
+		self::assertSame('html', $serverRequestBuilder->getBody()?->getContents());
+		self::assertSame(RequestMethod::GET, $serverRequestBuilder->getRequestMethod());
 	}
 }

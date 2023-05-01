@@ -13,16 +13,16 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class FluentTransparentPropertiesTest extends TestCase
+final class FluentTransparentPropertiesTest extends TestCase
 {
 	public function testFluentSetter(): void
 	{
 		$obj = new ExampleFluentPropertiesTest();
 
-		static::assertSame(0, $obj->getValue());
+		self::assertSame(0, $obj->getValue());
 		$result = $obj->setValue(42);
-		static::assertSame($obj, $result);
-		static::assertSame(42, $obj->getValue());
+		self::assertSame($obj, $result);
+		self::assertSame(42, $obj->getValue());
 	}
 }
 

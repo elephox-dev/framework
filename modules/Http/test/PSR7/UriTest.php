@@ -17,7 +17,7 @@ use Psr\Http\Message\UriInterface;
  *
  * @internal
  */
-class UriTest extends UriIntegrationTest
+final class UriTest extends UriIntegrationTest
 {
 	protected $skippedTests = [
 		'testWithSchemeInvalidArguments' => 'Type coercion prevents tests from failing',

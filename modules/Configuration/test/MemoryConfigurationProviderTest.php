@@ -23,27 +23,27 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class MemoryConfigurationProviderTest extends TestCase
+final class MemoryConfigurationProviderTest extends TestCase
 {
 	public function testTryGet(): void
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar']));
-		static::assertTrue($provider->tryGet('foo', $val));
-		static::assertSame('bar', $val);
+		self::assertTrue($provider->tryGet('foo', $val));
+		self::assertSame('bar', $val);
 
-		static::assertFalse($provider->tryGet('bar', $val));
-		static::assertFalse($provider->tryGet('', $val));
-		static::assertFalse($provider->tryGet('::', $val));
+		self::assertFalse($provider->tryGet('bar', $val));
+		self::assertFalse($provider->tryGet('', $val));
+		self::assertFalse($provider->tryGet('::', $val));
 	}
 
 	public function testRemove(): void
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar', 'nested' => ['foo' => 'bar']]));
-		static::assertTrue($provider->tryGet('foo', $val));
+		self::assertTrue($provider->tryGet('foo', $val));
 
 		$provider->remove('foo');
 
-		static::assertFalse($provider->tryGet('foo', $val));
+		self::assertFalse($provider->tryGet('foo', $val));
 
 		$provider->remove('nested:test');
 		$provider->remove('');
@@ -65,6 +65,6 @@ EOF;
 	{
 		$provider = new MemoryConfigurationProvider(new MemoryConfigurationSource(['foo' => 'bar', 'nested' => ['foo' => 'bar']]));
 
-		static::assertTrue($provider->getChildKeys('baz')->isEmpty());
+		self::assertTrue($provider->getChildKeys('baz')->isEmpty());
 	}
 }

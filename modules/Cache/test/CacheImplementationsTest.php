@@ -36,7 +36,7 @@ use const APP_ROOT;
  *
  * @internal
  */
-class CacheImplementationsTest extends TestCase
+final class CacheImplementationsTest extends TestCase
 {
 	public function cacheImplementationProvider(): iterable
 	{
@@ -67,10 +67,10 @@ class CacheImplementationsTest extends TestCase
 		$item = $cache->getItem('test');
 		$cache->saveDeferred($item);
 
-		static::assertFalse($cache->hasItem('test'));
-		static::assertTrue($cache->commit());
-		static::assertTrue($cache->hasItem('test'));
-		static::assertTrue($cache->offsetExists('test'));
+		self::assertFalse($cache->hasItem('test'));
+		self::assertTrue($cache->commit());
+		self::assertTrue($cache->hasItem('test'));
+		self::assertTrue($cache->offsetExists('test'));
 
 		$cache->clear();
 	}
@@ -87,9 +87,9 @@ class CacheImplementationsTest extends TestCase
 		$item = $cache->getItem('test');
 		$cache->save($item);
 
-		static::assertTrue($cache->hasItem('test'));
-		static::assertTrue($cache->deleteItem('test'));
-		static::assertFalse($cache->hasItem('test'));
+		self::assertTrue($cache->hasItem('test'));
+		self::assertTrue($cache->deleteItem('test'));
+		self::assertFalse($cache->hasItem('test'));
 
 		$cache->save($item);
 		unset($cache['test']);
@@ -106,13 +106,13 @@ class CacheImplementationsTest extends TestCase
 	{
 		$item = $cache['test'];
 
-		static::assertFalse($cache->hasItem('test'));
-		static::assertTrue($cache->save($item));
-		static::assertTrue($cache->hasItem('test'));
+		self::assertFalse($cache->hasItem('test'));
+		self::assertTrue($cache->save($item));
+		self::assertTrue($cache->hasItem('test'));
 
 		$cache->deleteItem('test');
 		$cache[] = $item;
-		static::assertTrue($cache->hasItem('test'));
+		self::assertTrue($cache->hasItem('test'));
 
 		$cache->clear();
 	}
@@ -133,14 +133,14 @@ class CacheImplementationsTest extends TestCase
 		$item3 = $cache->getItem('test3');
 		$cache->save($item3);
 
-		static::assertTrue($cache->hasItem($item->getKey()));
-		static::assertTrue($cache->hasItem($item2->getKey()));
-		static::assertTrue($cache->hasItem($item3->getKey()));
-		static::assertTrue($cache->deleteItems([$item->getKey(), $item2->getKey()]));
-		static::assertFalse($cache->hasItem($item->getKey()));
-		static::assertFalse($cache->hasItem($item2->getKey()));
-		static::assertTrue($cache->hasItem($item3->getKey()));
-		static::assertFalse($cache->deleteItem($item->getKey()));
+		self::assertTrue($cache->hasItem($item->getKey()));
+		self::assertTrue($cache->hasItem($item2->getKey()));
+		self::assertTrue($cache->hasItem($item3->getKey()));
+		self::assertTrue($cache->deleteItems([$item->getKey(), $item2->getKey()]));
+		self::assertFalse($cache->hasItem($item->getKey()));
+		self::assertFalse($cache->hasItem($item2->getKey()));
+		self::assertTrue($cache->hasItem($item3->getKey()));
+		self::assertFalse($cache->deleteItem($item->getKey()));
 	}
 
 	/**
@@ -152,16 +152,16 @@ class CacheImplementationsTest extends TestCase
 	 */
 	public function testGetItem(Cache $cache): void
 	{
-		static::assertFalse($cache->hasItem('test'));
+		self::assertFalse($cache->hasItem('test'));
 		$item = $cache->getItem('test');
-		static::assertFalse($cache->hasItem('test'));
+		self::assertFalse($cache->hasItem('test'));
 		$item2 = $cache->getItem('test');
-		static::assertFalse($cache->hasItem('test'));
-		static::assertNotSame($item, $item2);
-		static::assertTrue($cache->save($item));
-		static::assertTrue($cache->hasItem('test'));
+		self::assertFalse($cache->hasItem('test'));
+		self::assertNotSame($item, $item2);
+		self::assertTrue($cache->save($item));
+		self::assertTrue($cache->hasItem('test'));
 		$item3 = $cache->getItem('test');
-		static::assertSame($item, $item3);
+		self::assertSame($item, $item3);
 
 		$cache->clear();
 	}
@@ -177,9 +177,9 @@ class CacheImplementationsTest extends TestCase
 	{
 		$item = $cache->getItem('test');
 		$cache->save($item);
-		static::assertTrue($cache->hasItem('test'));
-		static::assertTrue($cache->clear());
-		static::assertFalse($cache->hasItem('test'));
+		self::assertTrue($cache->hasItem('test'));
+		self::assertTrue($cache->clear());
+		self::assertFalse($cache->hasItem('test'));
 	}
 
 	/**
@@ -198,14 +198,14 @@ class CacheImplementationsTest extends TestCase
 		$item3 = $cache->getItem('test3');
 		$cache->save($item3);
 
-		static::assertTrue($cache->hasItem('test'));
-		static::assertTrue($cache->hasItem('test2'));
-		static::assertTrue($cache->hasItem('test3'));
+		self::assertTrue($cache->hasItem('test'));
+		self::assertTrue($cache->hasItem('test2'));
+		self::assertTrue($cache->hasItem('test3'));
 		$items = $cache->getItems(['test', 'test2', 'test3']);
-		static::assertCount(3, $items);
+		self::assertCount(3, $items);
 		foreach ($items as $key => $item) {
-			static::assertInstanceOf(ImmutableCacheItem::class, $item);
-			static::assertSame($item, ['test' => $item, 'test2' => $item2, 'test3' => $item3][$key]);
+			self::assertInstanceOf(ImmutableCacheItem::class, $item);
+			self::assertSame($item, ['test' => $item, 'test2' => $item2, 'test3' => $item3][$key]);
 		}
 	}
 
@@ -217,6 +217,6 @@ class CacheImplementationsTest extends TestCase
 	public function testGetConfiguration(Cache $cache): void
 	{
 		$configuration = $cache->getConfiguration();
-		static::assertInstanceOf(CacheConfiguration::class, $configuration);
+		self::assertInstanceOf(CacheConfiguration::class, $configuration);
 	}
 }

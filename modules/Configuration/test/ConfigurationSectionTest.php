@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ConfigurationSectionTest extends TestCase
+final class ConfigurationSectionTest extends TestCase
 {
 	public function testGetSection(): void
 	{
@@ -38,8 +38,8 @@ class ConfigurationSectionTest extends TestCase
 
 		$config = new ConfigurationSection($root, 'nested');
 		$section = $config->getSection('c');
-		static::assertInstanceOf(ConfigurationSection::class, $section);
-		static::assertSame('bar', $section->getSection('foo')->getValue());
+		self::assertInstanceOf(ConfigurationSection::class, $section);
+		self::assertSame('bar', $section->getSection('foo')->getValue());
 	}
 
 	public function testInvalidOffsetUnset(): void

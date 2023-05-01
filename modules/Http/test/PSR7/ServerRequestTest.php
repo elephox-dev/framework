@@ -44,7 +44,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @internal
  */
-class ServerRequestTest extends ServerRequestIntegrationTest
+final class ServerRequestTest extends ServerRequestIntegrationTest
 {
 	protected $skippedTests = [
 		'testRequestTarget' => 'withRequestTarget is not supported',

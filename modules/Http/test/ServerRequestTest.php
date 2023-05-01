@@ -33,13 +33,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ServerRequestTest extends TestCase
+final class ServerRequestTest extends TestCase
 {
 	public function testGetters(): void
 	{
 		$request = ServerRequest::build()->requestUrl(Url::fromString('https://example.com/foo'))->session(new FakeSessionMap())->get();
 
-		static::assertInstanceOf(ServerRequest::class, $request);
+		self::assertInstanceOf(ServerRequest::class, $request);
 
 		$builder = $request->with();
 		$builder->parameter('foo', 'bar', ParameterSource::Post);
@@ -59,17 +59,17 @@ class ServerRequestTest extends TestCase
 		$files = $newRequest->getUploadedFileMap();
 		$session = $newRequest->getSessionMap();
 
-		static::assertSame($builderCookies, $cookies);
-		static::assertSame($builderParameters, $parameters);
-		static::assertSame($builderUploadedFiles, $files);
-		static::assertSame($builderSession, $session);
+		self::assertSame($builderCookies, $cookies);
+		self::assertSame($builderParameters, $parameters);
+		self::assertSame($builderUploadedFiles, $files);
+		self::assertSame($builderSession, $session);
 
-		static::assertCount(1, $cookies);
-		static::assertCount(1, $files);
+		self::assertCount(1, $cookies);
+		self::assertCount(1, $files);
 
-		static::assertTrue($cookies->has('cookie'));
-		static::assertSame('value', $cookies->get('cookie')->getValue());
-		static::assertSame('bar', $parameters->get('foo'));
-		static::assertSame('value', $session?->get('session'));
+		self::assertTrue($cookies->has('cookie'));
+		self::assertSame('value', $cookies->get('cookie')->getValue());
+		self::assertSame('bar', $parameters->get('foo'));
+		self::assertSame('value', $session?->get('session'));
 	}
 }

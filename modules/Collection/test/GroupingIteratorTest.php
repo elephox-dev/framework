@@ -20,7 +20,7 @@ use RuntimeException;
  *
  * @internal
  */
-class GroupingIteratorTest extends TestCase
+final class GroupingIteratorTest extends TestCase
 {
 	public function testCurrentThrowsIfEmpty(): void
 	{
@@ -38,20 +38,20 @@ class GroupingIteratorTest extends TestCase
 		$groupIterator->rewind();
 
 		$firstKey = $groupIterator->key();
-		static::assertSame(0, $firstKey);
+		self::assertSame(0, $firstKey);
 		$firstGroup = $groupIterator->current();
-		static::assertSame($firstKey, $firstGroup->groupKey());
-		static::assertSame([0 => 0, 2 => 2, 4 => 4], $firstGroup->toArray());
+		self::assertSame($firstKey, $firstGroup->groupKey());
+		self::assertSame([0 => 0, 2 => 2, 4 => 4], $firstGroup->toArray());
 
 		$groupIterator->next();
 		$secondKey = $groupIterator->key();
-		static::assertSame(1, $secondKey);
+		self::assertSame(1, $secondKey);
 		$secondGroup = $groupIterator->current();
-		static::assertSame($secondKey, $secondGroup->groupKey());
-		static::assertSame([1 => 1, 3 => 3, 5 => 5], $secondGroup->toArray());
+		self::assertSame($secondKey, $secondGroup->groupKey());
+		self::assertSame([1 => 1, 3 => 3, 5 => 5], $secondGroup->toArray());
 
 		$groupIterator->next();
-		static::assertFalse($groupIterator->valid());
+		self::assertFalse($groupIterator->valid());
 	}
 
 	public function testNonNumericGroupingKey(): void
@@ -59,12 +59,12 @@ class GroupingIteratorTest extends TestCase
 		$groupIterator = new GroupingIterator(Enumerable::range(0, 5), static fn (int $v): string => (string) ($v % 2));
 
 		$groupIterator->rewind();
-		static::assertSame('0', $groupIterator->current()->groupKey());
+		self::assertSame('0', $groupIterator->current()->groupKey());
 
 		$groupIterator->next();
-		static::assertSame('1', $groupIterator->current()->groupKey());
+		self::assertSame('1', $groupIterator->current()->groupKey());
 
 		$groupIterator->next();
-		static::assertFalse($groupIterator->valid());
+		self::assertFalse($groupIterator->valid());
 	}
 }

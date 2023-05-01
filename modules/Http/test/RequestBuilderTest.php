@@ -29,7 +29,7 @@ use JsonException;
  *
  * @internal
  */
-class RequestBuilderTest extends TestCase
+final class RequestBuilderTest extends TestCase
 {
 	/**
 	 * @throws JsonException
@@ -45,21 +45,21 @@ class RequestBuilderTest extends TestCase
 		$builder->header('X-Bar', 'baz');
 
 		$request = $builder->get();
-		static::assertInstanceOf(RequestContract::class, $request);
-		static::assertSame(RequestMethod::GET, $request->getRequestMethod());
-		static::assertSame('https://example.com/', (string) $request->getUrl());
-		static::assertSame('2.0', $request->getProtocolVersion());
-		static::assertSame('{"foo":"bar"}', $request->getBody()->getContents());
-		static::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		static::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		self::assertInstanceOf(RequestContract::class, $request);
+		self::assertSame(RequestMethod::GET, $request->getRequestMethod());
+		self::assertSame('https://example.com/', (string) $request->getUrl());
+		self::assertSame('2.0', $request->getProtocolVersion());
+		self::assertSame('{"foo":"bar"}', $request->getBody()->getContents());
+		self::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		self::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
 
 		$newRequest = $request->with()->jsonBody(['foo2' => 'bar2'])->get();
-		static::assertSame(RequestMethod::GET, $request->getRequestMethod());
-		static::assertSame('https://example.com/', (string) $request->getUrl());
-		static::assertSame('2.0', $request->getProtocolVersion());
-		static::assertSame('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
-		static::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
-		static::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
+		self::assertSame(RequestMethod::GET, $request->getRequestMethod());
+		self::assertSame('https://example.com/', (string) $request->getUrl());
+		self::assertSame('2.0', $request->getProtocolVersion());
+		self::assertSame('{"foo2":"bar2"}', $newRequest->getBody()->getContents());
+		self::assertSame(['bar'], $request->getHeaderMap()->get('X-Foo'));
+		self::assertSame(['baz'], $request->getHeaderMap()->get('X-Bar'));
 	}
 
 	public function invalidBodyResourceProvider(): iterable

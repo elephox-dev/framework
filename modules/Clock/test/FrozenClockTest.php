@@ -17,13 +17,13 @@ use Psr\Clock\ClockInterface;
  *
  * @internal
  */
-class FrozenClockTest extends TestCase
+final class FrozenClockTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$clock = new FrozenClock(new DateTimeImmutable('now'));
 
-		static::assertInstanceOf(ClockInterface::class, $clock);
+		self::assertInstanceOf(ClockInterface::class, $clock);
 	}
 
 	public function testNow(): void
@@ -31,7 +31,7 @@ class FrozenClockTest extends TestCase
 		$source = new DateTimeImmutable('now');
 		$clock = new FrozenClock($source);
 
-		static::assertSame($source, $clock->now());
+		self::assertSame($source, $clock->now());
 	}
 
 	public function testDiff(): void
@@ -41,10 +41,10 @@ class FrozenClockTest extends TestCase
 		$diff = $source->diff($target);
 		$diffRev = $target->diff($source);
 
-		static::assertEqualsWithDelta(1, $diff->getTotalDays(), 1.0E-15);
-		static::assertFalse($diff->isNegative());
-		static::assertEqualsWithDelta(1, $diffRev->getTotalDays(), 1.0E-15);
-		static::assertTrue($diffRev->isNegative());
+		self::assertEqualsWithDelta(1, $diff->getTotalDays(), 1.0E-15);
+		self::assertFalse($diff->isNegative());
+		self::assertEqualsWithDelta(1, $diffRev->getTotalDays(), 1.0E-15);
+		self::assertTrue($diffRev->isNegative());
 	}
 
 	public function testExtremeDiff(): void
@@ -54,10 +54,10 @@ class FrozenClockTest extends TestCase
 		$diff = $source->diff($target);
 		$diffRev = $target->diff($source);
 
-		static::assertEqualsWithDelta(3652457.4368634, $diff->getTotalDays(), 1.0E-7);
-		static::assertFalse($diff->isNegative());
-		static::assertEqualsWithDelta(3652457.4368634, $diffRev->getTotalDays(), 1.0E-7);
-		static::assertTrue($diffRev->isNegative());
+		self::assertEqualsWithDelta(3652457.4368634, $diff->getTotalDays(), 1.0E-7);
+		self::assertFalse($diff->isNegative());
+		self::assertEqualsWithDelta(3652457.4368634, $diffRev->getTotalDays(), 1.0E-7);
+		self::assertTrue($diffRev->isNegative());
 	}
 
 	public function testEqualsAndCompare(): void
@@ -65,13 +65,13 @@ class FrozenClockTest extends TestCase
 		$a = new FrozenClock(new DateTimeImmutable('now'));
 		$b = new FrozenClock(new DateTimeImmutable('+1 day'));
 
-		static::assertTrue($a->equals($a));
-		static::assertFalse($b->equals($a));
-		static::assertTrue($b->equals($b));
+		self::assertTrue($a->equals($a));
+		self::assertFalse($b->equals($a));
+		self::assertTrue($b->equals($b));
 
-		static::assertSame(0, $a->compare($a));
-		static::assertSame(-1, $a->compare($b));
-		static::assertSame(1, $b->compare($a));
+		self::assertSame(0, $a->compare($a));
+		self::assertSame(-1, $a->compare($b));
+		self::assertSame(1, $b->compare($a));
 	}
 
 	public function testAddAndSub(): void
@@ -79,8 +79,8 @@ class FrozenClockTest extends TestCase
 		$a = new FrozenClock(new DateTimeImmutable('now'));
 		$b = new FrozenClock(new DateTimeImmutable('+1 day'));
 
-		static::assertNotSame($b->now()->format(DateTimeInterface::ATOM), $a->now()->format(DateTimeInterface::ATOM));
-		static::assertSame($b->now()->format(DateTimeInterface::ATOM), $a->add(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
-		static::assertSame($a->now()->format(DateTimeInterface::ATOM), $b->sub(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		self::assertNotSame($b->now()->format(DateTimeInterface::ATOM), $a->now()->format(DateTimeInterface::ATOM));
+		self::assertSame($b->now()->format(DateTimeInterface::ATOM), $a->add(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
+		self::assertSame($a->now()->format(DateTimeInterface::ATOM), $b->sub(new Duration(days: 1))->now()->format(DateTimeInterface::ATOM));
 	}
 }

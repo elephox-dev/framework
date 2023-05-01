@@ -18,7 +18,7 @@ use Elephox\Collection\Iterator\OrderedIterator;
  *
  * @implements GenericOrderedEnumerable<TSource>
  */
-class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumerable
+final class OrderedEnumerable extends KeyedEnumerable implements GenericOrderedEnumerable
 {
 	/**
 	 * @param OrderedIterator<NonNegativeInteger, TSource, TCompareKey> $orderedIterator

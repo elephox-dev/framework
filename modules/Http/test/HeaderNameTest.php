@@ -13,15 +13,15 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class HeaderNameTest extends TestCase
+final class HeaderNameTest extends TestCase
 {
 	public function testCanBeDuplicate(): void
 	{
 		foreach (HeaderName::cases() as $name) {
 			if ($name === HeaderName::SetCookie) {
-				static::assertTrue($name->canBeDuplicate());
+				self::assertTrue($name->canBeDuplicate());
 			} else {
-				static::assertFalse($name->canBeDuplicate());
+				self::assertFalse($name->canBeDuplicate());
 			}
 		}
 	}
@@ -55,9 +55,9 @@ class HeaderNameTest extends TestCase
 				],
 				true,
 			)) {
-				static::assertTrue($name->isOnlyRequest());
+				self::assertTrue($name->isOnlyRequest());
 			} else {
-				static::assertFalse($name->isOnlyRequest());
+				self::assertFalse($name->isOnlyRequest());
 			}
 		}
 	}
@@ -86,9 +86,9 @@ class HeaderNameTest extends TestCase
 				],
 				true,
 			)) {
-				static::assertTrue($name->isOnlyResponse());
+				self::assertTrue($name->isOnlyResponse());
 			} else {
-				static::assertFalse($name->isOnlyResponse());
+				self::assertFalse($name->isOnlyResponse());
 			}
 		}
 	}
@@ -100,13 +100,13 @@ class HeaderNameTest extends TestCase
 			$uppercase = strtoupper($name->value);
 			$randomCase = Casing::random($name->value, (int) ($_ENV['ELEPHOX_TEST_SEED'] ?? time()));
 
-			static::assertSame($name, HeaderName::tryFromIgnoreCase($name->value));
-			static::assertSame($name, HeaderName::tryFromIgnoreCase($lowercase));
-			static::assertSame($name, HeaderName::tryFromIgnoreCase($uppercase));
-			static::assertSame($name, HeaderName::tryFromIgnoreCase($randomCase));
+			self::assertSame($name, HeaderName::tryFromIgnoreCase($name->value));
+			self::assertSame($name, HeaderName::tryFromIgnoreCase($lowercase));
+			self::assertSame($name, HeaderName::tryFromIgnoreCase($uppercase));
+			self::assertSame($name, HeaderName::tryFromIgnoreCase($randomCase));
 		}
 
-		static::assertNull(HeaderName::tryFromIgnoreCase('foo'));
+		self::assertNull(HeaderName::tryFromIgnoreCase('foo'));
 	}
 
 	public function invalidHeaderNameProvider(): iterable

@@ -14,7 +14,7 @@ use stdClass;
  *
  * @internal
  */
-class SplObjectStorageIteratorTest extends TestCase
+final class SplObjectStorageIteratorTest extends TestCase
 {
 	public function testIterator(): void
 	{
@@ -24,11 +24,11 @@ class SplObjectStorageIteratorTest extends TestCase
 
 		$iterator = new SplObjectStorageIterator($storage);
 
-		static::assertInstanceOf(Iterator::class, $iterator);
+		self::assertInstanceOf(Iterator::class, $iterator);
 
 		foreach ($iterator as $obj => $value) {
-			static::assertInstanceOf(stdClass::class, $obj);
-			static::assertIsString($value);
+			self::assertInstanceOf(stdClass::class, $obj);
+			self::assertIsString($value);
 		}
 	}
 }

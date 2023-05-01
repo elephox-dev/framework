@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class UploadErrorTest extends TestCase
+final class UploadErrorTest extends TestCase
 {
 	public function messageProvider(): iterable
 	{
@@ -32,6 +32,6 @@ class UploadErrorTest extends TestCase
 	 */
 	public function testGetMessage(UploadError $error, string $message): void
 	{
-		static::assertSame($message, $error->getMessage());
+		self::assertSame($message, $error->getMessage());
 	}
 }

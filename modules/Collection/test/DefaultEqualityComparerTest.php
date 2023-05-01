@@ -15,7 +15,7 @@ use stdClass;
  *
  * @internal
  */
-class DefaultEqualityComparerTest extends TestCase
+final class DefaultEqualityComparerTest extends TestCase
 {
 	public static function equalsDataProvider(): iterable
 	{
@@ -62,7 +62,7 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testEquals(mixed $a, mixed $b, bool $result): void
 	{
-		static::assertSame($result, DefaultEqualityComparer::equals($a, $b));
+		self::assertSame($result, DefaultEqualityComparer::equals($a, $b));
 	}
 
 	public static function sameDataProvider(): iterable
@@ -95,8 +95,8 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testSame(mixed $a, mixed $b, bool $result): void
 	{
-		static::assertSame($result, DefaultEqualityComparer::same($a, $b));
-		static::assertSame(!$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::same(...))($a, $b));
+		self::assertSame($result, DefaultEqualityComparer::same($a, $b));
+		self::assertSame(!$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::same(...))($a, $b));
 	}
 
 	public static function compareDataProvider(): iterable
@@ -129,8 +129,8 @@ class DefaultEqualityComparerTest extends TestCase
 	 */
 	public function testCompareAndInvert(mixed $a, mixed $b, int $result): void
 	{
-		static::assertSame($result, DefaultEqualityComparer::compare($a, $b));
-		static::assertSame(-$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::compare(...))($a, $b));
+		self::assertSame($result, DefaultEqualityComparer::compare($a, $b));
+		self::assertSame(-$result, DefaultEqualityComparer::invert(DefaultEqualityComparer::compare(...))($a, $b));
 	}
 
 	public static function invalidCompareDataProvider(): iterable

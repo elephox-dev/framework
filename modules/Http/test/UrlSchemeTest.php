@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class UrlSchemeTest extends TestCase
+final class UrlSchemeTest extends TestCase
 {
 	public function defaultPortProvider(): iterable
 	{
@@ -33,14 +33,14 @@ class UrlSchemeTest extends TestCase
 	 */
 	public function testDefaultPorts(UrlScheme $scheme, ?int $port): void
 	{
-		static::assertSame($scheme->getDefaultPort(), $port);
+		self::assertSame($scheme->getDefaultPort(), $port);
 	}
 
 	public function testCustomScheme(): void
 	{
 		$scheme = new CustomUrlScheme('custom', 80);
 
-		static::assertSame('custom', $scheme->getScheme());
-		static::assertSame(80, $scheme->getDefaultPort());
+		self::assertSame('custom', $scheme->getScheme());
+		self::assertSame(80, $scheme->getDefaultPort());
 	}
 }

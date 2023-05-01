@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class TransparentPropertiesTest extends TestCase
+final class TransparentPropertiesTest extends TestCase
 {
 	public function testGetter(): void
 	{
 		$obj = new ExamplePropertiesClass();
 		$obj->setInternalValue(123);
-		static::assertSame(123, $obj->getValue());
+		self::assertSame(123, $obj->getValue());
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('No property for reading could be found using Elephox\Support\ExamplePropertiesClass::getNonExistingProperty. If you intend to set a value, pass at least one argument.');
@@ -30,7 +30,7 @@ class TransparentPropertiesTest extends TestCase
 	{
 		$obj = new ExamplePropertiesClass();
 		$obj->setValue(123);
-		static::assertSame(123, $obj->getInternalValue());
+		self::assertSame(123, $obj->getInternalValue());
 
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Unknown method Elephox\Support\ExamplePropertiesClass::setNonExistingProperty()');
@@ -41,7 +41,7 @@ class TransparentPropertiesTest extends TestCase
 	{
 		$obj = new ExamplePropertiesClass();
 		$obj->setUninitialized('test');
-		static::assertSame('test', $obj->getInternalUninitialized());
+		self::assertSame('test', $obj->getInternalUninitialized());
 	}
 }
 

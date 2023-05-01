@@ -14,7 +14,7 @@ use RuntimeException;
  *
  * @internal
  */
-class AppendStreamTest extends MockeryTestCase
+final class AppendStreamTest extends MockeryTestCase
 {
 	public function testGetContents(): void
 	{
@@ -25,7 +25,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('getContents')->andReturns('bar');
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame('foobar', $appendStream->getContents());
+		self::assertSame('foobar', $appendStream->getContents());
 	}
 
 	public function testToString(): void
@@ -37,7 +37,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('__toString')->andReturns('bar');
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame('foobar', (string) $appendStream);
+		self::assertSame('foobar', (string) $appendStream);
 	}
 
 	public function testDetach(): void
@@ -49,7 +49,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('detach')->andReturns(2);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame(1, $appendStream->detach());
+		self::assertSame(1, $appendStream->detach());
 	}
 
 	public function testClose(): void
@@ -73,7 +73,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('getSize')->andReturns(2);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame(3, $appendStream->getSize());
+		self::assertSame(3, $appendStream->getSize());
 	}
 
 	public function testGetSizeNull(): void
@@ -85,7 +85,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('getSize')->andReturns(2);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertNull($appendStream->getSize());
+		self::assertNull($appendStream->getSize());
 	}
 
 	public function testReadTell(): void
@@ -106,8 +106,8 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('tell')->andReturns(2);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame('abcde', $appendStream->read(5));
-		static::assertSame(5, $appendStream->tell());
+		self::assertSame('abcde', $appendStream->read(5));
+		self::assertSame(5, $appendStream->tell());
 	}
 
 	public function testReadNullSize(): void
@@ -161,7 +161,7 @@ class AppendStreamTest extends MockeryTestCase
 		$streamMock->expects('eof')->andReturns(false);
 
 		$appendStream = new AppendStream($streamMock, M::mock(Stream::class));
-		static::assertFalse($appendStream->eof());
+		self::assertFalse($appendStream->eof());
 	}
 
 	public function testEofAppended(): void
@@ -173,7 +173,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('eof')->andReturns(false);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertFalse($appendStream->eof());
+		self::assertFalse($appendStream->eof());
 	}
 
 	public function testIsSeekableWriteableReadable(): void
@@ -192,9 +192,9 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('isReadable')->andReturns(true);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertTrue($appendStream->isSeekable());
-		static::assertTrue($appendStream->isWritable());
-		static::assertTrue($appendStream->isReadable());
+		self::assertTrue($appendStream->isSeekable());
+		self::assertTrue($appendStream->isWritable());
+		self::assertTrue($appendStream->isReadable());
 	}
 
 	public function testSeek(): void
@@ -289,7 +289,7 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('write')->with('b')->andReturns(1);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame(2, $appendStream->write('ab'));
+		self::assertSame(2, $appendStream->write('ab'));
 	}
 
 	public function testGetMetadata(): void
@@ -301,6 +301,6 @@ class AppendStreamTest extends MockeryTestCase
 		$appendedStreamMock->expects('getMetadata')->andReturns(['foo' => 'bar']);
 
 		$appendStream = new AppendStream($streamMock, $appendedStreamMock);
-		static::assertSame([['foo' => 'bar'], ['foo' => 'bar']], $appendStream->getMetadata());
+		self::assertSame([['foo' => 'bar'], ['foo' => 'bar']], $appendStream->getMetadata());
 	}
 }

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class PathTest extends TestCase
+final class PathTest extends TestCase
 {
 	public function joinDataProvider(): iterable
 	{
@@ -28,7 +28,7 @@ class PathTest extends TestCase
 	public function testJoin(array $parts, string $targetPath): void
 	{
 		$path = Path::join(...$parts);
-		static::assertSame($path, $targetPath);
+		self::assertSame($path, $targetPath);
 	}
 
 	public function rootDataProvider(): iterable
@@ -50,7 +50,7 @@ class PathTest extends TestCase
 	 */
 	public function testIsRoot(string $path, bool $isRoot): void
 	{
-		static::assertSame($isRoot, Path::isRoot($path));
+		self::assertSame($isRoot, Path::isRoot($path));
 	}
 
 	public function rootedDataProvider(): iterable
@@ -74,7 +74,7 @@ class PathTest extends TestCase
 	 */
 	public function testIsRooted(string $path, bool $result): void
 	{
-		static::assertSame($result, Path::isRooted($path), "Path: $path");
+		self::assertSame($result, Path::isRooted($path), "Path: $path");
 	}
 
 	public function relativeToProvider(): iterable
@@ -99,6 +99,6 @@ class PathTest extends TestCase
 	 */
 	public function testRelativeTo(string $pathA, string $pathB, string $result): void
 	{
-		static::assertSame($result, Path::relativeTo($pathA, $pathB));
+		self::assertSame($result, Path::relativeTo($pathA, $pathB));
 	}
 }

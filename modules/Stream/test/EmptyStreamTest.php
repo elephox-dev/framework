@@ -12,20 +12,20 @@ use RuntimeException;
  *
  * @internal
  */
-class EmptyStreamTest extends TestCase
+final class EmptyStreamTest extends TestCase
 {
 	public function testToString(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertSame('', (string) $stream);
+		self::assertSame('', (string) $stream);
 	}
 
 	public function testDetach(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertNull($stream->detach());
+		self::assertNull($stream->detach());
 	}
 
 	public function testClose(): void
@@ -34,35 +34,35 @@ class EmptyStreamTest extends TestCase
 
 		$stream->close();
 
-		static::assertTrue(true);
+		self::assertTrue(true);
 	}
 
 	public function testGetSize(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertSame(0, $stream->getSize());
+		self::assertSame(0, $stream->getSize());
 	}
 
 	public function testTell(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertSame(0, $stream->tell());
+		self::assertSame(0, $stream->tell());
 	}
 
 	public function testEof(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertTrue($stream->eof());
+		self::assertTrue($stream->eof());
 	}
 
 	public function testIsSeekable(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertFalse($stream->isSeekable());
+		self::assertFalse($stream->isSeekable());
 	}
 
 	public function testSeek(): void
@@ -85,7 +85,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		static::assertFalse($stream->isWritable());
+		self::assertFalse($stream->isWritable());
 	}
 
 	public function testWrite(): void
@@ -100,7 +100,7 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		static::assertFalse($stream->isReadable());
+		self::assertFalse($stream->isReadable());
 	}
 
 	public function testRead(): void
@@ -115,26 +115,26 @@ class EmptyStreamTest extends TestCase
 	{
 		$stream = new EmptyStream();
 
-		static::assertSame('', $stream->getContents());
+		self::assertSame('', $stream->getContents());
 	}
 
 	public function testGetMetadata(): void
 	{
 		$stream = new EmptyStream();
 
-		static::assertNull($stream->getMetadata());
+		self::assertNull($stream->getMetadata());
 	}
 
 	public function testReadLine(): void
 	{
 		$stream = new EmptyStream();
-		static::assertSame('', $stream->readLine());
+		self::assertSame('', $stream->readLine());
 	}
 
 	public function testReadAllLines(): void
 	{
 		$stream = new EmptyStream();
-		static::assertSame([], iterator_to_array($stream->readAllLines()));
+		self::assertSame([], iterator_to_array($stream->readAllLines()));
 	}
 
 	public function testReadByte(): void

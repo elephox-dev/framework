@@ -39,7 +39,7 @@ use Traversable;
  *
  * @internal
  */
-class ConfigurationRootTest extends TestCase
+final class ConfigurationRootTest extends TestCase
 {
 	public function testGetChildren(): void
 	{
@@ -47,29 +47,29 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		static::assertSame(['this is', 'nested'], $root->getChildKeys()->toArray());
+		self::assertSame(['this is', 'nested'], $root->getChildKeys()->toArray());
 		$children = $root->getChildren();
 
 		$firstChild = $children->first();
-		static::assertSame('this is', $firstChild->getKey());
+		self::assertSame('this is', $firstChild->getKey());
 
 		$nested = $children->skip(1)->first();
-		static::assertSame('nested', $nested->getKey());
-		static::assertSame(['nested:a', 'nested:c'], $nested->getChildKeys()->toArray());
+		self::assertSame('nested', $nested->getKey());
+		self::assertSame(['nested:a', 'nested:c'], $nested->getChildKeys()->toArray());
 
 		$nestedChildren = $nested->getChildren();
 		$firstNestedChild = $nestedChildren->first();
-		static::assertSame('a', $firstNestedChild->getKey());
-		static::assertSame('nested:a', $firstNestedChild->getPath());
-		static::assertSame('b', $firstNestedChild->getValue());
+		self::assertSame('a', $firstNestedChild->getKey());
+		self::assertSame('nested:a', $firstNestedChild->getPath());
+		self::assertSame('b', $firstNestedChild->getValue());
 
 		$secondNestedChild = $nestedChildren->skip(1)->first();
-		static::assertSame('c', $secondNestedChild->getKey());
-		static::assertSame('nested:c', $secondNestedChild->getPath());
-		static::assertSame(['nested:c:foo'], $secondNestedChild->getChildKeys()->toArray());
+		self::assertSame('c', $secondNestedChild->getKey());
+		self::assertSame('nested:c', $secondNestedChild->getPath());
+		self::assertSame(['nested:c:foo'], $secondNestedChild->getChildKeys()->toArray());
 
-		static::assertSame('bar', $secondNestedChild['foo']);
-		static::assertSame('bar', $root->offsetGet('nested:c:foo'));
+		self::assertSame('bar', $secondNestedChild['foo']);
+		self::assertSame('bar', $root->offsetGet('nested:c:foo'));
 	}
 
 	public function testArrayAccess(): void
@@ -78,24 +78,24 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		static::assertSame('bar', $root['nested:c:foo']);
+		self::assertSame('bar', $root['nested:c:foo']);
 		$root['nested:c:foo'] = 'baz';
-		static::assertSame('baz', $root['nested:c:foo']);
+		self::assertSame('baz', $root['nested:c:foo']);
 
-		static::assertTrue($root->offsetExists('nested:c:foo'));
+		self::assertTrue($root->offsetExists('nested:c:foo'));
 		unset($root['nested:c:foo']);
-		static::assertFalse($root->offsetExists('nested:c:foo'));
-		static::assertNull($root['nested:c:foo']);
+		self::assertFalse($root->offsetExists('nested:c:foo'));
+		self::assertNull($root['nested:c:foo']);
 
 		$section = $root->getSection('nested');
 		$section['c:foo'] = 'baz';
-		static::assertTrue($section->offsetExists('c:foo'));
-		static::assertSame('baz', $section['c:foo']);
+		self::assertTrue($section->offsetExists('c:foo'));
+		self::assertSame('baz', $section['c:foo']);
 		$section['c:foo'] = 'bar';
-		static::assertSame('bar', $section['c:foo']);
+		self::assertSame('bar', $section['c:foo']);
 		unset($section['c:foo']);
-		static::assertFalse($section->offsetExists('c:foo'));
-		static::assertNull($section['c:foo']);
+		self::assertFalse($section->offsetExists('c:foo'));
+		self::assertNull($section['c:foo']);
 	}
 
 	public function testValue(): void
@@ -104,11 +104,11 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		static::assertSame('bar', $root->getSection('nested:c:foo')->getValue());
+		self::assertSame('bar', $root->getSection('nested:c:foo')->getValue());
 		$root->getSection('nested:c:foo')->setValue('baz');
-		static::assertSame('baz', $root->getSection('nested:c:foo')->getValue());
+		self::assertSame('baz', $root->getSection('nested:c:foo')->getValue());
 		$root->getSection('nested:c:foo')->deleteValue();
-		static::assertFalse($root->getSection('nested:c')->hasSection('foo'));
+		self::assertFalse($root->getSection('nested:c')->hasSection('foo'));
 	}
 
 	public function testHasSection(): void
@@ -117,10 +117,10 @@ class ConfigurationRootTest extends TestCase
 		$configBuilder->add(new MemoryConfigurationSource(['this is' => 'a test', 'nested' => ['a' => 'b', 'c' => ['foo' => 'bar']]]));
 		$root = $configBuilder->build();
 
-		static::assertTrue($root->hasSection('nested:c'));
-		static::assertTrue($root->hasSection('nested:c:foo'));
-		static::assertFalse($root->hasSection('nested:c:foo:baz'));
-		static::assertFalse($root->hasSection('nested:d'));
+		self::assertTrue($root->hasSection('nested:c'));
+		self::assertTrue($root->hasSection('nested:c:foo'));
+		self::assertFalse($root->hasSection('nested:c:foo:baz'));
+		self::assertFalse($root->hasSection('nested:d'));
 	}
 
 	public function testInvalidOffsetUnset(): void
@@ -199,38 +199,38 @@ class ConfigurationRootTest extends TestCase
 		$_ENV['TEST_VAR'] = 'secret!';
 		unset($_ENV['NOT_A_VAR']);
 
-		static::assertSame('this is an env value: secret!', $root->getSection('test')->getValue());
-		static::assertSame('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
-		static::assertSame('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
-		static::assertSame(['test' => 'this is a nested env value: secret!', 'not-a-string-and-not-iterable' => 2], $root->getSection('test4')->getValue());
+		self::assertSame('this is an env value: secret!', $root->getSection('test')->getValue());
+		self::assertSame('this env should not be replaced: ${TEST_VAR}', $root->getSection('test2')->getValue());
+		self::assertSame('this env should remain: ${NOT_A_VAR}', $root->getSection('test3')->getValue());
+		self::assertSame(['test' => 'this is a nested env value: secret!', 'not-a-string-and-not-iterable' => 2], $root->getSection('test4')->getValue());
 
 		$_ENV['NOT_A_VAR'] = 'now has a value!';
-		static::assertSame('this env should remain: now has a value!', $root->getSection('test3')->getValue());
+		self::assertSame('this env should remain: now has a value!', $root->getSection('test3')->getValue());
 
 		$_ENV['TEST_VAR'] = 123.2;
-		static::assertSame('this is an env value: 123.2', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: 123.2', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = true;
-		static::assertSame('this is an env value: true', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: true', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = false;
-		static::assertSame('this is an env value: false', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: false', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = null;
-		static::assertSame('this is an env value: null', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: null', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = '${NOT_A_VAR}';
-		static::assertSame('this is an env value: now has a value!', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: now has a value!', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = ['a' => 'b', 'c' => [1, 2, 3], 'nested' => '${NOT_A_VAR}'];
-		static::assertSame('this is an env value: {"a":"b","c":[1,2,3],"nested":"now has a value!"}', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: {"a":"b","c":[1,2,3],"nested":"now has a value!"}', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new stdClass();
-		static::assertSame('this is an env value: stdClass', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: stdClass', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new class {
 		};
-		static::assertSame('this is an env value: class@anonymous', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: class@anonymous', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new class implements Stringable {
 			public function __toString(): string
@@ -238,7 +238,7 @@ class ConfigurationRootTest extends TestCase
 				return 'this is a stringable object';
 			}
 		};
-		static::assertSame('this is an env value: this is a stringable object', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: this is a stringable object', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = new class implements IteratorAggregate {
 			public function getIterator(): Traversable
@@ -249,12 +249,12 @@ class ConfigurationRootTest extends TestCase
 				yield 'iterable';
 			}
 		};
-		static::assertSame('this is an env value: ["this","is","an","iterable"]', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: ["this","is","an","iterable"]', $root->getSection('test')->getValue());
 
 		$_ENV['TEST_VAR'] = fopen('php://memory', 'rb');
-		static::assertSame('this is an env value: resource (stream)', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: resource (stream)', $root->getSection('test')->getValue());
 
 		fclose($_ENV['TEST_VAR']);
-		static::assertSame('this is an env value: resource (closed)', $root->getSection('test')->getValue());
+		self::assertSame('this is an env value: resource (closed)', $root->getSection('test')->getValue());
 	}
 }

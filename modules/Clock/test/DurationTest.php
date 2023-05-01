@@ -13,67 +13,67 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class DurationTest extends TestCase
+final class DurationTest extends TestCase
 {
 	public function testFromValues(): void
 	{
 		$duration = Duration::from(false, 1, 2, 3, 4, 5, 6, 7);
 
-		static::assertFalse($duration->isNegative());
-		static::assertSame(7, $duration->getYears());
-		static::assertSame(6, $duration->getMonths());
-		static::assertSame(5, $duration->getDays());
-		static::assertSame(4, $duration->getHours());
-		static::assertSame(3, $duration->getMinutes());
-		static::assertSame(2, $duration->getSeconds());
-		static::assertSame(1.0, $duration->getMicroseconds());
+		self::assertFalse($duration->isNegative());
+		self::assertSame(7, $duration->getYears());
+		self::assertSame(6, $duration->getMonths());
+		self::assertSame(5, $duration->getDays());
+		self::assertSame(4, $duration->getHours());
+		self::assertSame(3, $duration->getMinutes());
+		self::assertSame(2, $duration->getSeconds());
+		self::assertSame(1.0, $duration->getMicroseconds());
 	}
 
 	public function testFromTotalMicroseconds(): void
 	{
 		$a = Duration::fromTotalMicroseconds(123456789123456.78125);
 
-		static::assertFalse($a->isNegative());
-		static::assertSame(123456.78125, $a->getMicroseconds());
-		static::assertSame(9, $a->getSeconds());
-		static::assertSame(33, $a->getMinutes());
-		static::assertSame(21, $a->getHours());
-		static::assertSame(15, $a->getDays());
-		static::assertSame(3, $a->getMonths());
-		static::assertSame(3, $a->getYears());
+		self::assertFalse($a->isNegative());
+		self::assertSame(123456.78125, $a->getMicroseconds());
+		self::assertSame(9, $a->getSeconds());
+		self::assertSame(33, $a->getMinutes());
+		self::assertSame(21, $a->getHours());
+		self::assertSame(15, $a->getDays());
+		self::assertSame(3, $a->getMonths());
+		self::assertSame(3, $a->getYears());
 
 		$b = Duration::fromTotalMicroseconds(Contract\Duration::MICROSECONDS_PER_SECOND);
 
-		static::assertFalse($b->isNegative());
-		static::assertSame(0.0, $b->getMicroseconds());
-		static::assertSame(1, $b->getSeconds());
-		static::assertSame(0, $b->getMinutes());
-		static::assertSame(0, $b->getHours());
-		static::assertSame(0, $b->getDays());
-		static::assertSame(0, $b->getMonths());
-		static::assertSame(0, $b->getYears());
+		self::assertFalse($b->isNegative());
+		self::assertSame(0.0, $b->getMicroseconds());
+		self::assertSame(1, $b->getSeconds());
+		self::assertSame(0, $b->getMinutes());
+		self::assertSame(0, $b->getHours());
+		self::assertSame(0, $b->getDays());
+		self::assertSame(0, $b->getMonths());
+		self::assertSame(0, $b->getYears());
 
 		$max = Duration::fromTotalMicroseconds(PHP_FLOAT_MAX);
 
-		static::assertFalse($max->isNegative());
-		static::assertSame(858368.0, $max->getMicroseconds());
-		static::assertSame(0, $max->getSeconds());
-		static::assertSame(0, $max->getMinutes());
-		static::assertSame(0, $max->getHours());
-		static::assertSame(0, $max->getDays());
-		static::assertSame(0, $max->getMonths());
-		static::assertSame(0, $max->getYears());
+		self::assertFalse($max->isNegative());
+		self::assertSame(858368.0, $max->getMicroseconds());
+		self::assertSame(0, $max->getSeconds());
+		self::assertSame(0, $max->getMinutes());
+		self::assertSame(0, $max->getHours());
+		self::assertSame(0, $max->getDays());
+		self::assertSame(0, $max->getMonths());
+		self::assertSame(0, $max->getYears());
 
 		$min = Duration::fromTotalMicroseconds(PHP_FLOAT_MIN);
 
-		static::assertFalse($min->isNegative());
-		static::assertSame(PHP_FLOAT_MIN, $min->getMicroseconds());
-		static::assertSame(0, $min->getSeconds());
-		static::assertSame(0, $min->getMinutes());
-		static::assertSame(0, $min->getHours());
-		static::assertSame(0, $min->getDays());
-		static::assertSame(0, $min->getMonths());
-		static::assertSame(0, $min->getYears());
+		self::assertFalse($min->isNegative());
+		self::assertSame(PHP_FLOAT_MIN, $min->getMicroseconds());
+		self::assertSame(0, $min->getSeconds());
+		self::assertSame(0, $min->getMinutes());
+		self::assertSame(0, $min->getHours());
+		self::assertSame(0, $min->getDays());
+		self::assertSame(0, $min->getMonths());
+		self::assertSame(0, $min->getYears());
 	}
 
 	public function totalsDataProvider(): iterable
@@ -101,7 +101,7 @@ class DurationTest extends TestCase
 	 */
 	public function testTotals(Duration $duration, string $unit, float $total): void
 	{
-		static::assertEqualsWithDelta($total, $duration->{'getTotal' . ucfirst($unit)}(), 1.0E-13);
+		self::assertEqualsWithDelta($total, $duration->{'getTotal' . ucfirst($unit)}(), 1.0E-13);
 	}
 
 	public function testAdd(): void
@@ -109,7 +109,7 @@ class DurationTest extends TestCase
 		$duration = Duration::from(microseconds: 1234, seconds: 1);
 		$duration = $duration->add(Duration::from(microseconds: 1000, seconds: 12));
 
-		static::assertSame(Duration::from(microseconds: 2234, seconds: 13)->getTotalMicroseconds(), $duration->getTotalMicroseconds());
+		self::assertSame(Duration::from(microseconds: 2234, seconds: 13)->getTotalMicroseconds(), $duration->getTotalMicroseconds());
 	}
 
 	public function testSubtract(): void
@@ -118,7 +118,7 @@ class DurationTest extends TestCase
 		$b = Duration::from(microseconds: 1123, seconds: 1);
 		$c = $a->subtract($b);
 
-		static::assertSame(123.0, $c->getTotalMicroseconds());
+		self::assertSame(123.0, $c->getTotalMicroseconds());
 	}
 
 	public function testEquals(): void
@@ -126,9 +126,9 @@ class DurationTest extends TestCase
 		$a = Duration::from(microseconds: 1234, seconds: 1);
 		$b = Duration::from(negative: true, microseconds: 1000, seconds: 12);
 
-		static::assertTrue($a->equals($a));
-		static::assertFalse($a->equals($b));
-		static::assertTrue($b->equals($b));
+		self::assertTrue($a->equals($a));
+		self::assertFalse($a->equals($b));
+		self::assertTrue($b->equals($b));
 	}
 
 	public function testCompare(): void
@@ -136,10 +136,10 @@ class DurationTest extends TestCase
 		$a = Duration::from(microseconds: 1234, seconds: 1);
 		$b = Duration::from(negative: true, microseconds: 1000, seconds: 12);
 
-		static::assertSame(0, $a->compare($a));
-		static::assertSame(0, $b->compare($b));
-		static::assertSame(1, $a->compare($b));
-		static::assertSame(-1, $b->compare($a));
+		self::assertSame(0, $a->compare($a));
+		self::assertSame(0, $b->compare($b));
+		self::assertSame(1, $a->compare($b));
+		self::assertSame(-1, $b->compare($a));
 
 		$c = Duration::from(years: 1);
 		$d = Duration::from(months: 1, years: 1);
@@ -149,27 +149,27 @@ class DurationTest extends TestCase
 		$h = Duration::from(seconds: 1, years: 1);
 		$i = Duration::from(microseconds: 1, years: 1);
 
-		static::assertSame(-1, $c->compare($d));
-		static::assertSame(-1, $c->compare($e));
-		static::assertSame(-1, $c->compare($f));
-		static::assertSame(-1, $c->compare($g));
-		static::assertSame(-1, $c->compare($h));
-		static::assertSame(-1, $c->compare($i));
+		self::assertSame(-1, $c->compare($d));
+		self::assertSame(-1, $c->compare($e));
+		self::assertSame(-1, $c->compare($f));
+		self::assertSame(-1, $c->compare($g));
+		self::assertSame(-1, $c->compare($h));
+		self::assertSame(-1, $c->compare($i));
 	}
 
 	public function testToInterval(): void
 	{
 		$a = Duration::from(microseconds: 1234, seconds: 1)->toDateInterval();
 
-		static::assertSame(0, $a->invert);
-		static::assertSame(0.001234, $a->f);
-		static::assertSame(1, $a->s);
+		self::assertSame(0, $a->invert);
+		self::assertSame(0.001234, $a->f);
+		self::assertSame(1, $a->s);
 
 		$b = Duration::from(negative: true, microseconds: 1000, seconds: 12)->toDateInterval();
 
-		static::assertSame(1, $b->invert);
-		static::assertSame(0.001, $b->f);
-		static::assertSame(12, $b->s);
+		self::assertSame(1, $b->invert);
+		self::assertSame(0.001, $b->f);
+		self::assertSame(12, $b->s);
 	}
 
 	public function testNegatives(): void
@@ -185,13 +185,13 @@ class DurationTest extends TestCase
 		$zeroA = Duration::zero();
 		$zeroB = Duration::zero();
 
-		static::assertSame($zeroA, $zeroB);
-		static::assertSame(0.0, $zeroA->getTotalMicroseconds());
-		static::assertFalse($zeroA->isNegative());
+		self::assertSame($zeroA, $zeroB);
+		self::assertSame(0.0, $zeroA->getTotalMicroseconds());
+		self::assertFalse($zeroA->isNegative());
 
 		$modified = $zeroA->add(Duration::from(seconds: 1));
-		static::assertSame(0.0, $zeroA->getTotalMicroseconds());
-		static::assertSame(1.0, $modified->getTotalSeconds());
+		self::assertSame(0.0, $zeroA->getTotalMicroseconds());
+		self::assertSame(1.0, $modified->getTotalSeconds());
 	}
 
 	public function testToFromDateInterval(): void
@@ -199,39 +199,39 @@ class DurationTest extends TestCase
 		$i = new DateInterval('P1DT1S');
 		$a = Duration::fromDateInterval($i);
 
-		static::assertFalse($a->isNegative());
-		static::assertSame(0.0, $a->getMicroseconds());
-		static::assertSame(1, $a->getSeconds());
-		static::assertSame(0, $a->getMinutes());
-		static::assertSame(0, $a->getHours());
-		static::assertSame(1, $a->getDays());
-		static::assertSame(0, $a->getMonths());
-		static::assertSame(0, $a->getYears());
+		self::assertFalse($a->isNegative());
+		self::assertSame(0.0, $a->getMicroseconds());
+		self::assertSame(1, $a->getSeconds());
+		self::assertSame(0, $a->getMinutes());
+		self::assertSame(0, $a->getHours());
+		self::assertSame(1, $a->getDays());
+		self::assertSame(0, $a->getMonths());
+		self::assertSame(0, $a->getYears());
 
 		$b = $a->toDateInterval();
 
-		static::assertSame(0, $b->invert);
-		static::assertSame(0.0, $b->f);
-		static::assertSame(1, $b->s);
-		static::assertSame(0, $b->i);
-		static::assertSame(0, $b->h);
-		static::assertSame(1, $b->d);
-		static::assertSame(0, $b->m);
-		static::assertSame(0, $b->y);
+		self::assertSame(0, $b->invert);
+		self::assertSame(0.0, $b->f);
+		self::assertSame(1, $b->s);
+		self::assertSame(0, $b->i);
+		self::assertSame(0, $b->h);
+		self::assertSame(1, $b->d);
+		self::assertSame(0, $b->m);
+		self::assertSame(0, $b->y);
 	}
 
 	public function testAbs(): void
 	{
 		$d = Duration::from(negative: true, seconds: 30, minutes: 1)->abs();
 
-		static::assertFalse($d->isNegative());
-		static::assertSame(0.0, $d->getMicroseconds());
-		static::assertSame(30, $d->getSeconds());
-		static::assertSame(1, $d->getMinutes());
-		static::assertSame(0, $d->getHours());
-		static::assertSame(0, $d->getDays());
-		static::assertSame(0, $d->getMonths());
-		static::assertSame(0, $d->getYears());
+		self::assertFalse($d->isNegative());
+		self::assertSame(0.0, $d->getMicroseconds());
+		self::assertSame(30, $d->getSeconds());
+		self::assertSame(1, $d->getMinutes());
+		self::assertSame(0, $d->getHours());
+		self::assertSame(0, $d->getDays());
+		self::assertSame(0, $d->getMonths());
+		self::assertSame(0, $d->getYears());
 	}
 
 	public function testToString(): void
@@ -246,10 +246,10 @@ class DurationTest extends TestCase
 			years: 10,
 		);
 
-		static::assertSame('Duration(8.9.10 7:6:5:1.234)', (string) $d1);
+		self::assertSame('Duration(8.9.10 7:6:5:1.234)', (string) $d1);
 
 		$d2 = Duration::from(negative: true, microseconds: 0.001);
 
-		static::assertSame('Duration(neg 0.0.0 0:0:0:0.001)', (string) $d2);
+		self::assertSame('Duration(neg 0.0.0 0:0:0:0.001)', (string) $d2);
 	}
 }

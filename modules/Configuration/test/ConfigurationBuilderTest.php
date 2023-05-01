@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-class ConfigurationBuilderTest extends TestCase
+final class ConfigurationBuilderTest extends TestCase
 {
 	public function testBuild(): void
 	{
@@ -53,18 +53,18 @@ class ConfigurationBuilderTest extends TestCase
 		$builder->add($source2);
 
 		$sources = $builder->getSources();
-		static::assertNotEmpty($sources);
-		static::assertCount(2, $sources);
+		self::assertNotEmpty($sources);
+		self::assertCount(2, $sources);
 
 		$root = $builder->build();
-		static::assertNotEmpty($root);
-		static::assertCount(2, $root->getProviders());
+		self::assertNotEmpty($root);
+		self::assertCount(2, $root->getProviders());
 
 		$provider = $root->getProviders()->first();
-		static::assertInstanceOf(MemoryConfigurationProvider::class, $provider);
+		self::assertInstanceOf(MemoryConfigurationProvider::class, $provider);
 
-		static::assertSame('bar', $root->offsetGet('foo'));
-		static::assertSame('garply', $root->offsetGet('baz:corge:grault'));
-		static::assertNull($root->offsetGet('baz:not:there'));
+		self::assertSame('bar', $root->offsetGet('foo'));
+		self::assertSame('garply', $root->offsetGet('baz:corge:grault'));
+		self::assertNull($root->offsetGet('baz:not:there'));
 	}
 }

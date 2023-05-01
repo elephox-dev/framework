@@ -19,7 +19,7 @@ use stdClass;
  *
  * @internal
  */
-class ServiceDescriptorTest extends TestCase
+final class ServiceDescriptorTest extends TestCase
 {
 	public function testCreateInstance(): void
 	{
@@ -29,7 +29,7 @@ class ServiceDescriptorTest extends TestCase
 		$sp = new ServiceProvider();
 		$instance2 = $sd->createInstance($sp);
 
-		static::assertSame($instance1, $instance2);
+		self::assertSame($instance1, $instance2);
 	}
 
 	public function testEitherFactoryOrInstanceMustBeSet(): void
@@ -126,8 +126,8 @@ class ServiceDescriptorTest extends TestCase
 		$sp = new ServiceProvider();
 		$instance = $sd->createInstance($sp);
 
-		static::assertInstanceOf(TestServiceInterface::class, $instance);
-		static::assertInstanceOf(TestServiceInterface2::class, $instance);
+		self::assertInstanceOf(TestServiceInterface::class, $instance);
+		self::assertInstanceOf(TestServiceInterface2::class, $instance);
 
 		$sd2 = new ServiceDescriptor(
 			TestServiceInterface::class . '&' . TestServiceInterface2::class,

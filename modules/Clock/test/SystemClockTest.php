@@ -14,19 +14,19 @@ use Psr\Clock\ClockInterface;
  *
  * @internal
  */
-class SystemClockTest extends TestCase
+final class SystemClockTest extends TestCase
 {
 	public function testConstructor(): void
 	{
 		$clock = new SystemClock();
 
-		static::assertInstanceOf(ClockInterface::class, $clock);
+		self::assertInstanceOf(ClockInterface::class, $clock);
 	}
 
 	public function testNow(): void
 	{
 		$clock = new SystemClock();
 
-		static::assertInstanceOf(DateTimeInterface::class, $clock->now());
+		self::assertInstanceOf(DateTimeInterface::class, $clock->now());
 	}
 }
