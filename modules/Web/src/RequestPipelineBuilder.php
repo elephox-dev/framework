@@ -75,13 +75,13 @@ class RequestPipelineBuilder
 
 	public function exceptionHandler(WebMiddleware&ExceptionHandler $exceptionHandler): self
 	{
-		try {
-			/** @var int $key */
-			$key = $this->middlewares->firstKey(static fn (string|WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
+		/** @var int|null $key */
+		$key = $this->middlewares->firstKeyOrDefault(null, static fn (string|WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
 
-			$this->middlewares->put($key, $exceptionHandler);
-		} catch (EmptySequenceException) {
+		if ($key === null) {
 			$this->middlewares->insertAt(0, $exceptionHandler);
+		} else {
+			$this->middlewares->put($key, $exceptionHandler);
 		}
 
 		return $this;
