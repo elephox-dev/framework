@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Web\Routing;
 
-use Elephox\Autoloading\Composer\NamespaceLoader;
+use Elephox\Autoloading\Composer\GlobalNamespaceLoader;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Enumerable;
 use Elephox\Web\Routing\Contract\RouteData;
@@ -33,7 +33,7 @@ readonly class NamespaceRouteLoader implements RouteLoader
 	 */
 	public function getClassRouteLoaders(): iterable
 	{
-		foreach (NamespaceLoader::iterateNamespace($this->namespace) as $loader) {
+		foreach (GlobalNamespaceLoader::iterateNamespace($this->namespace) as $loader) {
 			yield new ClassRouteLoader($loader);
 		}
 	}

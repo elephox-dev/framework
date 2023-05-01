@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-use Elephox\Autoloading\Composer\NamespaceLoader;
+use Elephox\Autoloading\Composer\GlobalNamespaceLoader;
 use Elephox\Collection\ArraySet;
 use Elephox\Collection\ObjectSet;
 use Elephox\Console\Command\Contract\CommandHandler;
@@ -37,7 +37,7 @@ readonly class CommandCollection
 	public function addNamespace(string $namespace): static
 	{
 		/** @var class-string $className */
-		foreach (NamespaceLoader::iterateNamespace($namespace) as $className) {
+		foreach (GlobalNamespaceLoader::iterateNamespace($namespace) as $className) {
 			$this->add($className);
 		}
 
