@@ -78,7 +78,7 @@ class RequestPipelineBuilder
 		$key = $this->middlewares->firstKeyOrDefault(null, static fn (string|WebMiddleware $middleware): bool => $middleware instanceof ExceptionHandler);
 
 		if ($key === null) {
-			$this->middlewares->insertAt(0, $exceptionHandler);
+			$this->middlewares->unshift($exceptionHandler);
 		} else {
 			$this->middlewares->put($key, $exceptionHandler);
 		}
