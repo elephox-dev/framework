@@ -189,6 +189,14 @@ interface GenericKeyedEnumerable extends GenericCollection, IteratorAggregate, C
 	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericGroupedKeyedEnumerable;
 
 	/**
+	 * @param string $separator
+	 * @param null|callable(TSource, TIteratorKey): string $toString
+	 *
+	 * @return string
+	 */
+	public function implode(string $separator = ', ', ?callable $toString = null): string;
+
+	/**
 	 * @param GenericKeyedEnumerable<TIteratorKey, TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *

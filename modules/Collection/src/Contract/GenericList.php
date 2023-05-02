@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
-use ArrayAccess;
+use Elephox\Collection\EmptySequenceException;
 
 /**
  * @template T
  *
  * @extends GenericReadonlyList<T>
- * @extends ArrayAccess<int, T>
  */
-interface GenericList extends GenericReadonlyList, ArrayAccess
+interface GenericList extends GenericReadonlyList
 {
 	/**
 	 * @param T $value
@@ -49,4 +48,27 @@ interface GenericList extends GenericReadonlyList, ArrayAccess
 	public function removeAt(int $index): mixed;
 
 	public function clear(): void;
+
+	/**
+	 * @param null|callable(T, int): bool $predicate
+	 *
+	 * @return T
+	 *
+	 * @throws EmptySequenceException
+	 */
+	public function pop(?callable $predicate = null): mixed;
+
+	/**
+	 * @param null|callable(T, int): bool $predicate
+	 *
+	 * @return T
+	 *
+	 * @throws EmptySequenceException
+	 */
+	public function shift(?callable $predicate = null): mixed;
+
+	/**
+	 * @param T $value
+	 */
+	public function unshift(mixed $value): void;
 }

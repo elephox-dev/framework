@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace Elephox\Collection\Contract;
 
+use ArrayAccess;
+
 /**
  * @template T
  *
  * @extends GenericList<T>
+ * @extends ArrayAccess<int, T>
  */
-interface GenericArrayList extends GenericList
+interface GenericArrayList extends GenericList, ArrayAccess
 {
 	/**
 	 * @return T|false

@@ -378,6 +378,18 @@ trait IsEnumerable
 		return new GroupedKeyedEnumerable(new GroupingIterator($this->getIterator(), $keySelector(...), $comparer(...)));
 	}
 
+	public function implode(string $separator = ', ', ?callable $toString = null): string
+	{
+		$toString ??= static fn (mixed $v): string => (string) $v;
+		$strings = [];
+
+		foreach ($this->getIterator() as $value) {
+			$strings[] = $toString($value);
+		}
+
+		return implode($separator, $strings);
+	}
+
 	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer

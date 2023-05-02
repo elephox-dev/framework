@@ -222,11 +222,6 @@ class ArrayList implements GenericArrayList
 		return $lastMatchingIndex;
 	}
 
-	/**
-	 * @param null|callable(T, int): bool $predicate
-	 *
-	 * @return T
-	 */
 	public function pop(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {
@@ -247,11 +242,6 @@ class ArrayList implements GenericArrayList
 		return $this->removeAt($key);
 	}
 
-	/**
-	 * @param null|callable(T, int): bool $predicate
-	 *
-	 * @return T
-	 */
 	public function shift(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {
@@ -277,11 +267,6 @@ class ArrayList implements GenericArrayList
 	public function unshift(mixed $value): void
 	{
 		array_unshift($this->items, $value);
-	}
-
-	public function implode(string $separator = ', '): string
-	{
-		return implode($separator, array_map(static fn (mixed $v) => (string) $v, $this->items));
 	}
 
 	public function contains(mixed $value, ?callable $comparer = null): bool

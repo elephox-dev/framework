@@ -135,6 +135,14 @@ interface GenericEnumerable extends GenericCollection, IteratorAggregate, Counta
 	public function groupBy(callable $keySelector, ?callable $comparer = null): GenericGroupedKeyedEnumerable;
 
 	/**
+	 * @param string $separator
+	 * @param null|callable(TSource): string $toString
+	 *
+	 * @return string
+	 */
+	public function implode(string $separator = ', ', ?callable $toString = null): string;
+
+	/**
 	 * @param GenericEnumerable<TSource> $other
 	 * @param null|callable(TSource, TSource): bool $comparer
 	 *

@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use ArrayAccess;
 use ArrayIterator;
-use Elephox\Collection\Contract\GenericMap;
+use Elephox\Collection\Contract\GenericArrayMap;
 use InvalidArgumentException;
 use Iterator;
 use Traversable;
@@ -14,10 +13,9 @@ use Traversable;
  * @template TKey of array-key
  * @template TValue
  *
- * @implements GenericMap<TKey, TValue>
- * @implements ArrayAccess<TKey, TValue>
+ * @implements GenericArrayMap<TKey, TValue>
  */
-class ArrayMap implements GenericMap, ArrayAccess
+class ArrayMap implements GenericArrayMap
 {
 	// TODO: replace generic enumerable function with array-specific functions where possible
 	/**
