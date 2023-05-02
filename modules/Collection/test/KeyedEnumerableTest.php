@@ -357,18 +357,18 @@ final class KeyedEnumerableTest extends TestCase
 	public function testImplode(): void
 	{
 		self::assertSame(
-			"1, 2, 3, 4, 5",
+			'1, 2, 3, 4, 5',
 			KeyedEnumerable::range(1, 5)->implode(),
 		);
 
 		self::assertSame(
-			"1-2-3-4-5",
+			'1-2-3-4-5',
 			KeyedEnumerable::range(1, 5)->implode('-'),
 		);
 
 		self::assertSame(
-			"0-1-2-3-4",
-			KeyedEnumerable::range(1, 5)->implode('-', fn ($v, $k) => (string) $k),
+			'0-1-2-3-4',
+			KeyedEnumerable::range(1, 5)->implode('-', static fn ($v, $k) => (string) $k),
 		);
 	}
 

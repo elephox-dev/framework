@@ -5,5 +5,4 @@ namespace Elephox\Autoloading\Namespaces\A;
 
 class SomeClass
 {
-
 }

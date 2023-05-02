@@ -11,6 +11,7 @@ use EmptyIterator;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Stringable;
 
 /**
  * @covers \Elephox\Collection\Enumerable
@@ -285,27 +286,27 @@ final class EnumerableTest extends TestCase
 	public function testImplode(): void
 	{
 		self::assertSame(
-			"1, 2, 3, 4, 5",
+			'1, 2, 3, 4, 5',
 			Enumerable::range(1, 5)->implode(),
 		);
 
 		self::assertSame(
-			"1-2-3-4-5",
+			'1-2-3-4-5',
 			Enumerable::range(1, 5)->implode('-'),
 		);
 
 		self::assertSame(
-			"",
+			'',
 			Enumerable::from([])->implode(),
 		);
 
 		self::assertSame(
-			"class1, 1, , , 0, 19321, class2",
+			'class1, 1, , , 0, 19321, class2',
 			Enumerable::from([
-				new class implements \Stringable {
-					function __toString(): string
+				new class implements Stringable {
+					public function __toString(): string
 					{
-						return "class1";
+						return 'class1';
 					}
 				},
 				true,
@@ -313,10 +314,10 @@ final class EnumerableTest extends TestCase
 				null,
 				0,
 				19321,
-				new class implements \Stringable {
-					function __toString(): string
+				new class implements Stringable {
+					public function __toString(): string
 					{
-						return "class2";
+						return 'class2';
 					}
 				},
 			])->implode(),

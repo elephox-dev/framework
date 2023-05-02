@@ -9,6 +9,18 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Elephox\Autoloading\Composer\NamespaceIterator
+ * @covers \Elephox\Collection\ArrayList
+ * @covers \Elephox\Collection\IteratorProvider
+ * @covers \Elephox\Collection\Iterator\EagerCachingIterator
+ * @covers \Elephox\Collection\Iterator\SelectIterator
+ * @covers \Elephox\Files\AbstractFilesystemNode
+ * @covers \Elephox\Files\Directory
+ * @covers \Elephox\Files\File
+ * @covers \Elephox\OOR\Regex
+ * @covers \Elephox\Files\Path
+ *
+ * @uses \Elephox\Collection\IsArrayEnumerable
+ * @uses \Elephox\Collection\IsKeyedEnumerable
  *
  * @internal
  */
@@ -17,8 +29,9 @@ final class NamespaceIteratorTest extends TestCase
 	private function getTestClassLoader(): ClassLoader
 	{
 		$classLoader = new ClassLoader();
-		$classLoader->addPsr4("Elephox\\Autoloading\\Namespaces\\A\\", __DIR__ . "/Namespaces/A");
-		$classLoader->addPsr4("Elephox\\Autoloading\\Namespaces\\D\\", __DIR__ . "/Namespaces/D");
+		$classLoader->addPsr4('Elephox\\Autoloading\\Namespaces\\A\\', __DIR__ . '/Namespaces/A');
+		$classLoader->addPsr4('Elephox\\Autoloading\\Namespaces\\D\\', __DIR__ . '/Namespaces/D');
+
 		return $classLoader;
 	}
 
