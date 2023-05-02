@@ -68,30 +68,22 @@ final class RegexTest extends TestCase
 
 	public function relativeSpecificityDataProvider(): iterable
 	{
-		yield ['/alice@[a-z]+\.[a-z]+/', '/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com', false];
-		yield ['/alice@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com', false];
-		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com', false];
-		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*@.*\..*/', 'alice@foo.com', true];
-		yield ['/^foo$/', '/^.*$/', 'foo', false];
+		yield ['/alice@[a-z]+\.[a-z]+/', '/[a-z]+@[a-z]+\.[a-z]+/', 'alice@foo.com'];
+		yield ['/alice@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com'];
+		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*/', 'alice@foo.com'];
+		yield ['/[a-z]+@[a-z]+\.[a-z]+/', '/.*@.*..*/', 'alice@foo.com'];
+		yield ['/^foo$/', '/^.*$/', 'foo'];
+		yield ['/^.*$/', '/^.+$/', ''];
 	}
 
 	/**
 	 * @dataProvider relativeSpecificityDataProvider
-	 *
-	 * @param string $more
-	 * @param string $less
-	 * @param string $subject
-	 * @param bool $equalAllowed
 	 */
-	public function testRelativeSpecificity(string $more, string $less, string $subject, bool $equalAllowed): void
+	public function testRelativeSpecificity(string $more, string $less, string $subject): void
 	{
 		$shouldBeMore = Regex::specificity($more, $subject);
 		$shouldBeLess = Regex::specificity($less, $subject);
 
-		if ($equalAllowed) {
-			self::assertLessThanOrEqual($shouldBeMore, $shouldBeLess);
-		} else {
-			self::assertLessThan($shouldBeMore, $shouldBeLess);
-		}
+		self::assertLessThan($shouldBeMore, $shouldBeLess);
 	}
 }
