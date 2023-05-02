@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\Web;
 
 use Elephox\Collection\ArrayList;
-use Elephox\Collection\EmptySequenceException;
 use Elephox\DI\Contract\Resolver;
 use Elephox\Support\Contract\ExceptionHandler;
 use Elephox\Web\Contract\PipelineEndpoint;

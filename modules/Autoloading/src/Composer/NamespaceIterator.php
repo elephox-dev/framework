@@ -16,14 +16,15 @@ use RuntimeException;
  */
 final readonly class NamespaceIterator implements Iterator
 {
-	/** @var ArrayList<class-string> */
+	/**
+	 * @var ArrayList<class-string>
+	 */
 	private ArrayList $classes;
 
 	public function __construct(
 		private ClassLoader $classLoader,
 		private string $namespace,
-	)
-	{
+	) {
 		/** @var ArrayList<class-string> */
 		$this->classes = new ArrayList();
 	}
@@ -85,6 +86,7 @@ final readonly class NamespaceIterator implements Iterator
 	 * @param string $rootNs
 	 * @param DirectoryContract $directory
 	 * @param int $depth
+	 *
 	 * @return iterable<int, class-string>
 	 */
 	private function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, int $depth = 0): iterable
