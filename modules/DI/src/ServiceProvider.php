@@ -30,7 +30,7 @@ use ReflectionUnionType;
 readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFactory
 {
 	/**
-	 * @var ArrayMap<string, ServiceDescriptor>
+	 * @var ArrayMap<string, ServiceDescriptor<object, object>>
 	 */
 	protected ArrayMap $descriptors;
 

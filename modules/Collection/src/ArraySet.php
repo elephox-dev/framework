@@ -22,8 +22,9 @@ class ArraySet implements GenericSet
 	 * @use IsEnumerable<T>
 	 */
 	use IsEnumerable;
+
 	/**
-	 * @use IsArrayEnumerable<mixed, T>
+	 * @use IsArrayEnumerable<array-key, T>
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;

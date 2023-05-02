@@ -73,6 +73,10 @@ class ArrayMap implements GenericArrayMap
 		return new ArrayIterator($this->items);
 	}
 
+	/**
+	 * @param TKey $key
+	 * @param TValue $value
+	 */
 	public function put(mixed $key, mixed $value): bool
 	{
 		$validKey = $this->validateKey($key);
@@ -102,11 +106,17 @@ class ArrayMap implements GenericArrayMap
 		return $this->items[$validKey];
 	}
 
+	/**
+	 * @param TKey $key
+	 */
 	public function has(mixed $key): bool
 	{
 		return array_key_exists($key, $this->items);
 	}
 
+	/**
+	 * @param TKey $key
+	 */
 	public function remove(mixed $key): bool
 	{
 		$validKey = $this->validateKey($key);
@@ -170,6 +180,10 @@ class ArrayMap implements GenericArrayMap
 		return $this->arrayContains($value, $comparer);
 	}
 
+	/**
+	 * @param TKey $key
+	 * @param null|callable(TKey, TKey): bool $comparer
+	 */
 	public function containsKey(mixed $key, ?callable $comparer = null): bool
 	{
 		return $this->arrayContainsKey($key, $comparer);

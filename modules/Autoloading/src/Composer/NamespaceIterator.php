@@ -74,6 +74,7 @@ final readonly class NamespaceIterator implements Iterator
 					$namespaceRelativePath = substr($relativePath, 2, -4); // cut off './' and '.php'
 					$namespaceRelativeParts = Regex::split('#[/\\\\]#', $namespaceRelativePath);
 
+					/** @var class-string $className */
 					$className = $nsPrefix . $namespaceRelativeParts->implode('\\');
 					if (!str_starts_with($className, $this->namespace)) {
 						continue;

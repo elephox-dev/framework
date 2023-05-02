@@ -48,6 +48,7 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 
 	public function buildProvider(): RootServiceProvider
 	{
+		/** @psalm-suppress InvalidArgument */
 		return new ServiceProvider($this->descriptors, $this->instances);
 	}
 

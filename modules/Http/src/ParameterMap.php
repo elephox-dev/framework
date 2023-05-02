@@ -86,7 +86,10 @@ class ParameterMap implements Contract\ParameterMap
 		if ($this->parameters->has($source)) {
 			$this->parameters->get($source)->put($key, $value);
 		} else {
-			$this->parameters->put($source, new ArrayMap([$key => $value]));
+			/** @var GenericMap<string|int, mixed> $map */
+			$map = new ArrayMap([$key => $value]);
+
+			$this->parameters->put($source, $map);
 		}
 	}
 

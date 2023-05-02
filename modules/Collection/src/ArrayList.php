@@ -21,6 +21,7 @@ class ArrayList implements GenericArrayList
 	 * @use IsKeyedEnumerable<int, T>
 	 */
 	use IsKeyedEnumerable;
+
 	/**
 	 * @use IsArrayEnumerable<int, T>
 	 */
@@ -222,6 +223,13 @@ class ArrayList implements GenericArrayList
 		return $lastMatchingIndex;
 	}
 
+	/**
+	 * @param null|callable(T, int): bool $predicate
+	 *
+	 * @return T
+	 *
+	 * @throws EmptySequenceException
+	 */
 	public function pop(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {
@@ -242,6 +250,13 @@ class ArrayList implements GenericArrayList
 		return $this->removeAt($key);
 	}
 
+	/**
+	 * @param null|callable(T, int): bool $predicate
+	 *
+	 * @return T
+	 *
+	 * @throws EmptySequenceException
+	 */
 	public function shift(?callable $predicate = null): mixed
 	{
 		if ($this->count() === 0) {

@@ -6,7 +6,7 @@ namespace Elephox\Collection;
 use LogicException;
 
 /**
- * @template TKey
+ * @template TKey of array-key
  * @template TValue
  */
 trait IsArrayEnumerable
@@ -62,26 +62,31 @@ trait IsArrayEnumerable
 
 	public function current(): mixed
 	{
+		/** @var TValue|false */
 		return current($this->items);
 	}
 
 	public function next(): mixed
 	{
+		/** @var TValue|false */
 		return next($this->items);
 	}
 
 	public function prev(): mixed
 	{
+		/** @var TValue|false */
 		return prev($this->items);
 	}
 
 	public function key(): int|string|null
 	{
+		/** @var TKey|null */
 		return key($this->items);
 	}
 
 	public function reset(): mixed
 	{
+		/** @var TValue|false */
 		return reset($this->items);
 	}
 }

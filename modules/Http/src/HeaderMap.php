@@ -48,7 +48,9 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 		$validKey = $this->validateKey($key);
 
 		/** @var null|callable(string, string): bool $comparer */
-		return parent::containsKey($validKey, $comparer ?? self::compareHeaderNames(...));
+		$comparer ??= self::compareHeaderNames(...);
+
+		return parent::containsKey($validKey, $comparer);
 	}
 
 	protected function validateKey(mixed $key): string
