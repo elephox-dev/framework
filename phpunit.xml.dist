@@ -43,7 +43,6 @@
         </include>
         <exclude>
             <file>**/*Exception.php</file>
-            <directory>modules/Autoloading/src/*</directory>
             <directory>modules/Console/src/*</directory>
         </exclude>
     </coverage>
