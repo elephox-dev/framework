@@ -8,8 +8,6 @@ final class GlobalNamespaceLoader
 	/**
 	 * @param string $namespace
 	 *
-	 * @psalm-suppress MixedReturnTypeCoercion
-	 *
 	 * @return iterable<int, class-string>
 	 */
 	public static function iterateNamespace(string $namespace): iterable
