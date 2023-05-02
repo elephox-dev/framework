@@ -33,7 +33,7 @@ class ConsoleApplication
 	public function logger(): LoggerInterface
 	{
 		if ($this->logger === null) {
-			$this->logger = $this->services->require(LoggerInterface::class);
+			$this->logger = $this->services->get(LoggerInterface::class);
 		}
 
 		return $this->logger;
@@ -42,7 +42,7 @@ class ConsoleApplication
 	public function commands(): CommandProvider
 	{
 		if ($this->commands === null) {
-			$this->commands = $this->services->require(CommandProvider::class);
+			$this->commands = $this->services->get(CommandProvider::class);
 		}
 
 		return $this->commands;
@@ -51,7 +51,7 @@ class ConsoleApplication
 	public function exceptionHandler(): ExceptionHandler
 	{
 		if ($this->exceptionHandler === null) {
-			$this->exceptionHandler = $this->services->require(ExceptionHandler::class);
+			$this->exceptionHandler = $this->services->get(ExceptionHandler::class);
 		}
 
 		return $this->exceptionHandler;

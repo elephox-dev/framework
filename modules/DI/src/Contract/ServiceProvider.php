@@ -22,22 +22,13 @@ interface ServiceProvider extends ContainerInterface, Resolver
 	 *
 	 * @param string|class-string<TService> $id
 	 *
-	 * @return TService|null
-	 */
-	public function get(string $id): ?object;
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param string|class-string<TService> $id
-	 *
 	 * @return TService
 	 *
 	 * @throws ServiceNotFoundException if no such service is registered
 	 * @throws ServiceInstantiationException if the service cannot be instantiated
 	 * @throws InvalidArgumentException if the service name is empty
 	 */
-	public function require(string $id): object;
+	public function get(string $id): object;
 
 	public function dispose(): void;
 }

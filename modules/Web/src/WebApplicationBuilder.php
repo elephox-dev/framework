@@ -135,7 +135,7 @@ class WebApplicationBuilder
 
 		if ($provider->has(ExceptionHandler::class)) {
 			set_exception_handler(static function (Throwable $exception) use ($provider): void {
-				$provider->require(ExceptionHandler::class)
+				$provider->get(ExceptionHandler::class)
 					->handleException($exception)
 				;
 			});
@@ -144,7 +144,7 @@ class WebApplicationBuilder
 		if ($provider->has(ErrorHandler::class)) {
 			set_error_handler(
 				static function (int $severity, string $message, string $file, int $line) use ($provider): bool {
-					return $provider->require(ErrorHandler::class)
+					return $provider->get(ErrorHandler::class)
 						->handleError($severity, $message, $file, $line)
 					;
 				},
@@ -176,6 +176,6 @@ class WebApplicationBuilder
 	public function service(string $name): object
 	{
 		/** @var T */
-		return $this->services->require($name);
+		return $this->services->get($name);
 	}
 }

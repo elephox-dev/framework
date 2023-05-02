@@ -49,7 +49,7 @@ readonly class ScopedServiceProvider extends ServiceProvider implements ScopedSe
 
 	public function createScope(): ServiceScope
 	{
-		$factory = $this->root->require(ServiceScopeFactory::class);
+		$factory = $this->root->get(ServiceScopeFactory::class);
 
 		return $factory->createScope();
 	}

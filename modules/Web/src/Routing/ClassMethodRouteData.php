@@ -67,7 +67,7 @@ readonly class ClassMethodRouteData extends AbstractRouteData
 	public function __invoke(ServiceProvider $services, Resolver $resolver, RouteParametersMap $params): ResponseBuilder
 	{
 		if ($services->has($this->className)) {
-			$controller = $services->require($this->className);
+			$controller = $services->get($this->className);
 		} else {
 			$controller = $resolver->instantiate($this->className);
 		}

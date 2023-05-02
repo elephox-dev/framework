@@ -112,12 +112,12 @@ class ConsoleApplicationBuilder
 
 		if ($provider->has(ExceptionHandler::class)) {
 			set_exception_handler(static function (Throwable $exception) use ($provider): void {
-				$provider->require(ExceptionHandler::class)->handleException($exception);
+				$provider->get(ExceptionHandler::class)->handleException($exception);
 			});
 		}
 
 		if ($provider->has(ErrorHandler::class)) {
-			set_error_handler(static fn (int $severity, string $message, string $file, int $line): bool => $provider->require(ErrorHandler::class)->handleError($severity, $message, $file, $line));
+			set_error_handler(static fn (int $severity, string $message, string $file, int $line): bool => $provider->get(ErrorHandler::class)->handleError($severity, $message, $file, $line));
 		}
 
 		return new ConsoleApplication(

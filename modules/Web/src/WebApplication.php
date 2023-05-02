@@ -30,7 +30,7 @@ class WebApplication
 	public function exceptionHandler(): ExceptionHandler
 	{
 		if ($this->exceptionHandler === null) {
-			$this->exceptionHandler = $this->services->require(ExceptionHandler::class);
+			$this->exceptionHandler = $this->services->get(ExceptionHandler::class);
 		}
 
 		return $this->exceptionHandler;
@@ -40,7 +40,7 @@ class WebApplication
 	{
 		/** @var ServerRequestContract $request */
 		$request = $this->services
-			->require(Resolver::class)
+			->get(Resolver::class)
 			->callStaticMethod(ServerRequestBuilder::class, 'fromGlobals')
 		;
 
@@ -50,7 +50,7 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
-		$requestScope = $this->services->require(ServiceScopeFactory::class)->createScope();
+		$requestScope = $this->services->get(ServiceScopeFactory::class)->createScope();
 
 		// TODO: use services from scoped service provider
 		$response = $this->pipeline->process($request)->get();

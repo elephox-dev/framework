@@ -39,8 +39,8 @@ final class ScopedServiceProviderTest extends TestCase
 		$scope = $sp->createScope();
 		$ssp = $scope->services();
 
-		$instance1 = $ssp->require(TestServiceInterface::class);
-		$instance2 = $ssp->require(TestServiceInterface::class);
+		$instance1 = $ssp->get(TestServiceInterface::class);
+		$instance2 = $ssp->get(TestServiceInterface::class);
 
 		self::assertSame($instance1, $instance2);
 	}
@@ -67,8 +67,8 @@ final class ScopedServiceProviderTest extends TestCase
 
 		self::assertNotSame($ssp1, $ssp2);
 
-		$instance1 = $ssp1->require(TestServiceInterface::class);
-		$instance2 = $ssp2->require(TestServiceInterface::class);
+		$instance1 = $ssp1->get(TestServiceInterface::class);
+		$instance2 = $ssp2->get(TestServiceInterface::class);
 
 		self::assertNotSame($instance1, $instance2);
 	}
@@ -105,28 +105,28 @@ final class ScopedServiceProviderTest extends TestCase
 		$nestedScope = $scopedSp->createScope();
 		$nestedScopedSp = $nestedScope->services();
 
-		$singleton1 = $sp->require(TestServiceInterface::class);
-		$singleton2 = $scopedSp->require(TestServiceInterface::class);
-		$singleton3 = $nestedScopedSp->require(TestServiceInterface::class);
+		$singleton1 = $sp->get(TestServiceInterface::class);
+		$singleton2 = $scopedSp->get(TestServiceInterface::class);
+		$singleton3 = $nestedScopedSp->get(TestServiceInterface::class);
 
 		self::assertSame($singleton1, $singleton2);
 		self::assertSame($singleton2, $singleton3);
 
-		$transient1 = $sp->require(TestServiceInterface3::class);
-		$transient2 = $scopedSp->require(TestServiceInterface3::class);
-		$transient3 = $nestedScopedSp->require(TestServiceInterface3::class);
+		$transient1 = $sp->get(TestServiceInterface3::class);
+		$transient2 = $scopedSp->get(TestServiceInterface3::class);
+		$transient3 = $nestedScopedSp->get(TestServiceInterface3::class);
 
 		self::assertNotSame($transient1, $transient2);
 		self::assertNotSame($transient2, $transient3);
 
-		$scoped1 = $scopedSp->require(TestServiceInterface2::class);
-		$scoped2 = $nestedScopedSp->require(TestServiceInterface2::class);
+		$scoped1 = $scopedSp->get(TestServiceInterface2::class);
+		$scoped2 = $nestedScopedSp->get(TestServiceInterface2::class);
 
 		self::assertNotSame($scoped1, $scoped2);
 
 		$this->expectException(ServiceException::class);
 		$this->expectExceptionMessage("Cannot resolve service '" . TestServiceInterface2::class . "' from " . ServiceProvider::class . ', as it requires a scope.');
 
-		$sp->require(TestServiceInterface2::class);
+		$sp->get(TestServiceInterface2::class);
 	}
 }

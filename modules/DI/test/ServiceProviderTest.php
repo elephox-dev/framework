@@ -52,7 +52,7 @@ final class ServiceProviderTest extends MockeryTestCase
 		$provider = $collection->buildProvider();
 		self::assertTrue($provider->has(TestServiceInterface::class));
 
-		$instance = $provider->require(TestServiceInterface::class);
+		$instance = $provider->get(TestServiceInterface::class);
 		self::assertSame($instance, $provider->get(TestServiceInterface::class));
 	}
 }

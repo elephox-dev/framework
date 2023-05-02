@@ -27,7 +27,7 @@ readonly class HelpCommand implements Contract\CommandHandler
 
 	public function handle(CommandInvocation $command): ?int
 	{
-		$commandProvider = $this->services->require(CommandProvider::class);
+		$commandProvider = $this->services->get(CommandProvider::class);
 
 		$requestedCommand = $command->arguments->get('command')->nullableString();
 		if (!is_string($requestedCommand)) {

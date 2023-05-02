@@ -13,7 +13,6 @@ use Elephox\DI\Contract\RootServiceProvider;
 use Elephox\DI\Contract\ServiceScope as ServiceScopeContract;
 use Elephox\DI\Contract\ServiceScopeFactory;
 use Generator;
-use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
@@ -82,27 +81,6 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		return $this->isSelf($id) || $this->descriptors->has($id);
 	}
 
-	/**
-	 * @template TService of object
-	 *
-	 * @param string|class-string<TService> $id
-	 *
-	 * @return TService|null
-	 */
-	public function get(string $id): ?object
-	{
-		try {
-			if ($id === '') {
-				throw new InvalidArgumentException('Service name cannot be empty');
-			}
-
-			/** @var TService */
-			return $this->require($id);
-		} catch (ServiceNotFoundException) {
-			return null;
-		}
-	}
-
 	protected function getDescriptor(string $id): ServiceDescriptor
 	{
 		try {
@@ -119,7 +97,7 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	 *
 	 * @return TService
 	 */
-	public function require(string $id): object
+	public function get(string $id): object
 	{
 		if ($this->isSelf($id)) {
 			/** @var TService */
@@ -348,7 +326,7 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		if ($type === null) {
 			if ($this->has($name)) {
 				/** @var class-string $name */
-				return $this->require($name);
+				return $this->get($name);
 			}
 
 			if ($parameter->isDefaultValueAvailable()) {
@@ -439,7 +417,7 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	{
 		$this->resolverStack->push("$name::$forMethod");
 
-		$service = $this->require($name);
+		$service = $this->get($name);
 
 		$this->resolverStack->pop();
 
