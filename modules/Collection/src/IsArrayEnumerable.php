@@ -75,7 +75,7 @@ trait IsArrayEnumerable
 		return prev($this->items);
 	}
 
-	public function key(): ?int
+	public function key(): int|string|null
 	{
 		return key($this->items);
 	}

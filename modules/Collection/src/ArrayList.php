@@ -310,4 +310,9 @@ class ArrayList implements GenericArrayList
 		/** @var ArrayList<T>&static */
 		return new self(array_slice($this->items, $offset, $length));
 	}
+
+	public function key(): ?int
+	{
+		return key($this->items);
+	}
 }
