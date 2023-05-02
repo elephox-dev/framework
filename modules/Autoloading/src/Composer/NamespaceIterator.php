@@ -5,11 +5,10 @@ namespace Elephox\Autoloading\Composer;
 
 use Composer\Autoload\ClassLoader;
 use Elephox\Collection\ArrayList;
-use Elephox\Files\Contract\Directory as DirectoryContract;
+use Elephox\Files\Contract\File;
 use Elephox\Files\Directory;
 use Elephox\OOR\Regex;
 use Iterator;
-use RuntimeException;
 
 /**
  * @implements Iterator<int, class-string>
@@ -53,17 +52,8 @@ final readonly class NamespaceIterator implements Iterator
 	{
 		$this->classes->clear();
 
-		$parts = Regex::split('/\\\\/', rtrim($this->namespace, '\\') . '\\');
-
 		foreach ($this->classLoader->getPrefixesPsr4() as $nsPrefix => $dirs) {
-			if (!str_starts_with($this->namespace, $nsPrefix) && !str_starts_with($nsPrefix, $this->namespace)) {
-				continue;
-			}
-
-			$root = $parts->shift();
-			while ($root !== rtrim($nsPrefix, '\\')) {
-				$root .= '\\' . $parts->shift();
-			}
+			assert(str_ends_with($nsPrefix, '\\'), 'Namespace prefix must end with "\\": ' . $nsPrefix);
 
 			foreach ($dirs as $dirName) {
 				$directory = new Directory($dirName);
@@ -71,62 +61,33 @@ final readonly class NamespaceIterator implements Iterator
 					continue;
 				}
 
-				$partsUsed = new ArrayList();
+				/** @var File $file */
+				foreach ($directory->recurseFiles() as $file) {
+					if ($file->extension() !== 'php') {
+						continue;
+					}
 
-				$this->classes->addAll($this->iterateClassesRecursive($root, $parts, $partsUsed, $directory));
+					$relativePath = $directory->relativePathTo($file);
 
-				assert($partsUsed->isEmpty());
-			}
-		}
-	}
+					assert(str_starts_with($relativePath, './') && str_ends_with($relativePath, '.php'), 'Relative path must start with "./" and end with ".php": ' . $relativePath);
 
-	/**
-	 * @param ArrayList<string> $nsParts
-	 * @param ArrayList<string> $nsPartsUsed
-	 * @param string $rootNs
-	 * @param DirectoryContract $directory
-	 * @param int $depth
-	 *
-	 * @return iterable<int, class-string>
-	 */
-	private function iterateClassesRecursive(string $rootNs, ArrayList $nsParts, ArrayList $nsPartsUsed, DirectoryContract $directory, int $depth = 0): iterable
-	{
-		if ($depth > 10) {
-			throw new RuntimeException('Recursion limit exceeded. Please choose a more specific namespace.');
-		}
+					$namespaceRelativePath = substr($relativePath, 2, -4); // cut off './' and '.php'
+					$namespaceRelativeParts = Regex::split('#[/\\\\]#', $namespaceRelativePath);
 
-		$lastPart = $nsParts->shift();
-		$nsPartsUsed->add($lastPart);
-		foreach ($directory->directories() as $dir) {
-			if ($dir->name() !== $lastPart) {
-				continue;
-			}
+					$className = $nsPrefix . $namespaceRelativeParts->implode('\\');
+					if (!str_starts_with($className, $this->namespace)) {
+						continue;
+					}
 
-			yield from $this->iterateClassesRecursive($rootNs, $nsParts, $nsPartsUsed, $dir, $depth + 1);
-		}
-
-		if ($lastPart === '') {
-			foreach ($directory->files() as $file) {
-				$filename = $file->name();
-				if (!str_ends_with($filename, '.php')) {
-					continue;
+					if (class_exists($className, false)) {
+						$this->classes->add($className);
+					} else {
+						if ($this->classLoader->loadClass($className) === true) {
+							$this->classes->add($className);
+						}
+					}
 				}
-
-				$className = substr($filename, 0, -4);
-
-				/**
-				 * @var class-string $fqcn
-				 */
-				$fqcn = $rootNs . '\\' . implode('\\', $nsPartsUsed->toList()) . $className;
-
-				if (!class_exists($fqcn, false)) {
-					$this->classLoader->loadClass($fqcn);
-				}
-
-				yield $fqcn;
 			}
 		}
-
-		$nsParts->unshift($nsPartsUsed->pop());
 	}
 }
