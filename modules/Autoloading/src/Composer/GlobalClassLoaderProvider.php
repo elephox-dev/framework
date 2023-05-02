@@ -5,6 +5,7 @@ namespace Elephox\Autoloading\Composer;
 
 use Composer\Autoload\ClassLoader;
 use Elephox\Autoloading\Composer\Contract\ComposerAutoloaderInit;
+use RuntimeException;
 
 final class GlobalClassLoaderProvider
 {
