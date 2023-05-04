@@ -12,57 +12,7 @@ use RuntimeException;
  */
 class CommandInvocationParametersMap extends ArrayMap
 {
-	/**
-	 * @param iterable<int, string> $args
-	 */
-	public static function fromArgs(iterable $args): self
-	{
-		$map = new self();
-
-		$compoundArgumentsKey = null;
-		$compoundArgumentsValue = null;
-		$compoundQuotes = null;
-		$nonNamedIndex = 0;
-
-		foreach ($args as $arg) {
-			if (str_starts_with($arg, '--')) {
-				if (str_contains($arg, '=')) {
-					/** @psalm-suppress PossiblyUndefinedArrayOffset already checked the string contains '=' */
-					[$key, $value] = explode('=', $arg, 2);
-
-					$key = trim($key, '-');
-				} else {
-					$key = trim($arg, '-');
-					$value = true;
-				}
-			} else {
-				$key = $nonNamedIndex;
-				$value = $arg;
-
-				$nonNamedIndex++;
-			}
-
-			if ($compoundArgumentsKey === null && is_string($value) && (str_starts_with($value, '"') || str_starts_with($value, "'"))) {
-				$compoundArgumentsKey = $key;
-				$compoundArgumentsValue = substr($value, 1);
-				$compoundQuotes = $value[0];
-			} elseif (is_string($compoundQuotes) && is_string($value) && is_string($compoundArgumentsValue) && is_string($compoundArgumentsKey) && str_ends_with($value, $compoundQuotes)) {
-				$compoundArgumentsValue .= ' ' . substr($value, 0, -1);
-
-				$map->put($compoundArgumentsKey, $compoundArgumentsValue);
-
-				$compoundArgumentsKey = null;
-				$compoundArgumentsValue = null;
-				$compoundQuotes = null;
-			} elseif (is_string($compoundArgumentsValue)) {
-				$compoundArgumentsValue .= ' ' . $value;
-			} else {
-				$map->put($key, $value);
-			}
-		}
-
-		return $map;
-	}
+	public const INVALID_OPTION_NAME_CHARS = [' ', '=', '"', "'"];
 
 	/**
 	 * @param string $commandLine
@@ -110,7 +60,7 @@ class CommandInvocationParametersMap extends ArrayMap
 					} elseif (is_int($old)) {
 						$value = $old + 1;
 					} else {
-						trigger_error(sprintf("Option '%s' was already defined with value %s. Repeated option reset this to 'true'", $opt, json_encode($old, JSON_THROW_ON_ERROR)), E_USER_WARNING);
+						trigger_error(sprintf('Option "%s" was already defined with value %s. Repeated option reset this to "true"', $opt, json_encode($old, JSON_THROW_ON_ERROR)), E_USER_WARNING);
 
 						$value = true;
 					}
@@ -120,6 +70,22 @@ class CommandInvocationParametersMap extends ArrayMap
 
 				$map->put($opt, $value);
 			}
+		};
+
+		$addOptionToMap = static function (string $name, string $value) use ($map): void {
+			if ($map->has($name)) {
+				$old = $map->get($name);
+				if (is_array($old)) {
+					$old[] = $value;
+					$mapValue = $old;
+				} else {
+					$mapValue = [$old, $value];
+				}
+			} else {
+				$mapValue = $value;
+			}
+
+			$map->put($name, $mapValue);
 		};
 
 		$max = strlen($commandLine);
@@ -172,12 +138,8 @@ class CommandInvocationParametersMap extends ArrayMap
 
 					break;
 				case 'o':
-					if ($char === ' ') {
-						$option = '--';
-						$optionValue = substr($commandLine, $i);
-						$state = 'uv';
-
-						break 2;
+					if (in_array($char, self::INVALID_OPTION_NAME_CHARS, true)) {
+						throw new InvalidCommandLineException("Invalid option name character: '$char'");
 					}
 
 					$option = $char;
@@ -190,22 +152,23 @@ class CommandInvocationParametersMap extends ArrayMap
 						$state = 'ov';
 					} elseif ($char === ' ') {
 						if ($map->has($option)) {
-							trigger_error(sprintf("Option '%s' was already defined with value %s. Repeated option reset this to 'true'", $option, json_encode($map->get($option), JSON_THROW_ON_ERROR)), E_USER_WARNING);
+							trigger_error(sprintf('Option "%s" was already defined with value %s. Repeated option reset this to "true"', $option, json_encode($map->get($option), JSON_THROW_ON_ERROR)), E_USER_WARNING);
 						}
 
 						$map->put($option, true);
 						$state = 'n';
 					} else {
+						if (in_array($char, self::INVALID_OPTION_NAME_CHARS, true)) {
+							throw new InvalidCommandLineException("Invalid option name character: '$char'");
+						}
+
 						$option .= $char;
 					}
 
 					break;
 				case 'ov':
-					if ($char === '"') {
-						$quotation = '"';
-						$state = 'qv';
-					} elseif ($char === "'") {
-						$quotation = "'";
+					if ($char === '"' || $char === "'") {
+						$quotation = $char;
 						$state = 'qv';
 					} else {
 						$optionValue = $char;
@@ -219,16 +182,9 @@ class CommandInvocationParametersMap extends ArrayMap
 					 * @var string $optionValue
 					 */
 					if ($char === ' ') {
-						if ($map->has($option)) {
-							$old = $map->get($option);
+						$addOptionToMap($option, $optionValue);
+						$optionValue = null;
 
-							/** @var list<string> $value */
-							$value = [$old, $optionValue];
-						} else {
-							$value = $optionValue;
-						}
-
-						$map->put($option, $value);
 						$state = 'n';
 					} else {
 						$optionValue .= $char;
@@ -241,16 +197,9 @@ class CommandInvocationParametersMap extends ArrayMap
 					 * @var string $optionValue
 					 */
 					if ($char === $quotation) {
-						if ($map->has($option)) {
-							$old = $map->get($option);
+						$addOptionToMap($option, $optionValue ?? '');
+						$optionValue = null;
 
-							/** @var list<string> $value */
-							$value = [$old, $optionValue];
-						} else {
-							$value = $optionValue;
-						}
-
-						$map->put($option, $value);
 						$state = 'qe';
 					} else {
 						$optionValue .= $char;
@@ -283,13 +232,10 @@ class CommandInvocationParametersMap extends ArrayMap
 					if ($char === ' ') {
 						$state = 'n';
 					} else {
-						throw new IncompleteCommandLineException('Additional characters after quoted argument');
+						throw new InvalidCommandLineException("Additional character after quoted argument: '$char'");
 					}
 
 					break;
-				default:
-					/** @var string $state */
-					throw new RuntimeException("Unknown state: $state");
 			}
 
 			$i++;
@@ -313,6 +259,9 @@ class CommandInvocationParametersMap extends ArrayMap
 				break;
 			case 'on':
 				assert(is_string($option));
+				if ($map->has($option) && !is_bool($map->get($option))) {
+					trigger_error(sprintf('Option "%s" was already defined with value %s. Repeated option reset this to "true"', $option, json_encode($map->get($option), JSON_THROW_ON_ERROR)), E_USER_WARNING);
+				}
 
 				$map->put($option, true);
 
@@ -321,7 +270,7 @@ class CommandInvocationParametersMap extends ArrayMap
 				assert(is_string($option) && $option !== '');
 				assert(is_string($optionValue));
 
-				$map->put($option, $optionValue);
+				$addOptionToMap($option, $optionValue);
 
 				break;
 			case 'ov':

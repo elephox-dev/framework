@@ -32,6 +32,9 @@ final class NamespaceIteratorTest extends TestCase
 		$classLoader->addPsr4('Elephox\\Autoloading\\Namespaces\\A\\', __DIR__ . '/Namespaces/A');
 		$classLoader->addPsr4('Elephox\\Autoloading\\Namespaces\\D\\', __DIR__ . '/Namespaces/D');
 
+		// add missing directory
+		$classLoader->addPsr4('Elephox\\Autoloading\\Namespaces\\E\\', __DIR__ . '/Namespaces/E');
+
 		return $classLoader;
 	}
 

@@ -20,7 +20,9 @@ class ArrayList implements GenericArrayList
 	/**
 	 * @use IsKeyedEnumerable<int, T>
 	 */
-	use IsKeyedEnumerable;
+	use IsKeyedEnumerable {
+		IsKeyedEnumerable::count as genericCount;
+	}
 
 	/**
 	 * @use IsArrayEnumerable<int, T>
@@ -28,6 +30,7 @@ class ArrayList implements GenericArrayList
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
 		IsArrayEnumerable::containsKey as arrayContainsKey;
+		IsArrayEnumerable::count as arrayCount;
 	}
 
 	/**
@@ -314,5 +317,13 @@ class ArrayList implements GenericArrayList
 	public function key(): ?int
 	{
 		return key($this->items);
+	}
+
+	public function count(?callable $predicate = null): int {
+		if ($predicate === null) {
+			return $this->arrayCount();
+		}
+
+		return $this->genericCount($predicate);
 	}
 }

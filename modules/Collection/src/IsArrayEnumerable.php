@@ -89,4 +89,9 @@ trait IsArrayEnumerable
 		/** @var TValue|false */
 		return reset($this->items);
 	}
+
+	public function count(): int
+	{
+		return count($this->items);
+	}
 }

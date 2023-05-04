@@ -21,13 +21,16 @@ class ArraySet implements GenericSet
 	/**
 	 * @use IsEnumerable<T>
 	 */
-	use IsEnumerable;
+	use IsEnumerable {
+		IsEnumerable::count as genericCount;
+	}
 
 	/**
 	 * @use IsArrayEnumerable<array-key, T>
 	 */
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
+		IsArrayEnumerable::count as arrayCount;
 	}
 
 	/**
@@ -139,5 +142,13 @@ class ArraySet implements GenericSet
 	public function contains(mixed $value, ?callable $comparer = null): bool
 	{
 		return $this->arrayContains($value, $comparer ?? $this->comparer);
+	}
+
+	public function count(?callable $predicate = null): int {
+		if ($predicate === null) {
+			return $this->arrayCount();
+		}
+
+		return $this->genericCount($predicate);
 	}
 }

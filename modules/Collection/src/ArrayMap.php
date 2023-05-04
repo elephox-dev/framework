@@ -24,6 +24,7 @@ class ArrayMap implements GenericArrayMap
 	use IsKeyedEnumerable {
 		//		IsKeyedEnumerable::contains as genericContains;
 		IsKeyedEnumerable::firstOrDefault as genericFirstOrDefault;
+		IsKeyedEnumerable::count as genericCount;
 	}
 
 	/**
@@ -32,6 +33,7 @@ class ArrayMap implements GenericArrayMap
 	use IsArrayEnumerable {
 		IsArrayEnumerable::contains as arrayContains;
 		IsArrayEnumerable::containsKey as arrayContainsKey;
+		IsArrayEnumerable::count as arrayCount;
 		//		IsArrayEnumerable::firstOrDefault as arrayFirstOrDefault;
 	}
 
@@ -201,5 +203,13 @@ class ArrayMap implements GenericArrayMap
 	{
 		/** @var TValue|TDefault */
 		return $this->genericFirstOrDefault($defaultValue, $predicate);
+	}
+
+	public function count(?callable $predicate = null): int {
+		if ($predicate === null) {
+			return $this->arrayCount();
+		}
+
+		return $this->genericCount($predicate);
 	}
 }

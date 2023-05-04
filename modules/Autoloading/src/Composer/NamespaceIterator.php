@@ -69,7 +69,7 @@ final readonly class NamespaceIterator implements Iterator
 
 					$relativePath = $directory->relativePathTo($file);
 
-					assert(str_starts_with($relativePath, './') && str_ends_with($relativePath, '.php'), 'Relative path must start with "./" and end with ".php": ' . $relativePath);
+					assert(str_starts_with($relativePath, '.' . DIRECTORY_SEPARATOR) && str_ends_with($relativePath, '.php'), 'Relative path must start with ".' . DIRECTORY_SEPARATOR . '" and end with ".php": ' . $relativePath);
 
 					$namespaceRelativePath = substr($relativePath, 2, -4); // cut off './' and '.php'
 					$namespaceRelativeParts = Regex::split('#[/\\\\]#', $namespaceRelativePath);
@@ -80,12 +80,8 @@ final readonly class NamespaceIterator implements Iterator
 						continue;
 					}
 
-					if (class_exists($className, false)) {
+					if (class_exists($className, false) || ($this->classLoader->loadClass($className) === true && class_exists($className, false))) {
 						$this->classes->add($className);
-					} else {
-						if ($this->classLoader->loadClass($className) === true) {
-							$this->classes->add($className);
-						}
 					}
 				}
 			}
