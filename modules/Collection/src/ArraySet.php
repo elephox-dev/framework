@@ -144,7 +144,8 @@ class ArraySet implements GenericSet
 		return $this->arrayContains($value, $comparer ?? $this->comparer);
 	}
 
-	public function count(?callable $predicate = null): int {
+	public function count(?callable $predicate = null): int
+	{
 		if ($predicate === null) {
 			return $this->arrayCount();
 		}

@@ -17,43 +17,43 @@ final class ArgumentTest extends TestCase
 {
 	public function testFromTemplateThrowsForFailingValidatorBool(): void
 	{
-		$template = new ArgumentTemplate("arg", validator: fn ($v) => false);
+		$template = new ArgumentTemplate('arg', validator: static fn ($v) => false);
 
 		$this->expectException(ArgumentValidationException::class);
 		$this->expectExceptionMessage("Validation failed for argument 'arg'");
 
-		Argument::fromTemplate($template, "val");
+		Argument::fromTemplate($template, 'val');
 	}
 
 	public function testFromTemplateThrowsForFailingValidatorMessage(): void
 	{
-		$template = new ArgumentTemplate("arg", validator: fn ($v) => 'failure message');
+		$template = new ArgumentTemplate('arg', validator: static fn ($v) => 'failure message');
 
 		$this->expectException(ArgumentValidationException::class);
-		$this->expectExceptionMessage("failure message");
+		$this->expectExceptionMessage('failure message');
 
-		Argument::fromTemplate($template, "val");
+		Argument::fromTemplate($template, 'val');
 	}
 
 	public function testGettersAreForwardedToTemplate(): void
 	{
-		$template = new ArgumentTemplate("arg", true, "default", "description", fn ($v) => $v === 'val');
-		$arg = new Argument($template, "val");
+		$template = new ArgumentTemplate('arg', true, 'default', 'description', static fn ($v) => $v === 'val');
+		$arg = new Argument($template, 'val');
 
-		self::assertSame("arg", $arg->name);
+		self::assertSame('arg', $arg->name);
 		self::assertTrue($arg->hasDefault);
-		self::assertSame("default", $arg->default);
-		self::assertSame("description", $arg->description);
+		self::assertSame('default', $arg->default);
+		self::assertSame('description', $arg->description);
 		self::assertNotNull($arg->validator);
 	}
 
 	public function testSetterThrows(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage("Cannot set argument value");
+		$this->expectExceptionMessage('Cannot set argument value');
 
-		$template = new ArgumentTemplate("arg");
-		$arg = new Argument($template, "val");
-		$arg->name = "no";
+		$template = new ArgumentTemplate('arg');
+		$arg = new Argument($template, 'val');
+		$arg->name = 'no';
 	}
 }

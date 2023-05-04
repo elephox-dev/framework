@@ -5,7 +5,6 @@ namespace Elephox\Console\Command;
 
 use Elephox\Collection\ArrayMap;
 use JsonException;
-use RuntimeException;
 
 /**
  * @extends ArrayMap<int|string, list<string>|int|string|bool|null>

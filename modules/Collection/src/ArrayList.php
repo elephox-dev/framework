@@ -319,7 +319,8 @@ class ArrayList implements GenericArrayList
 		return key($this->items);
 	}
 
-	public function count(?callable $predicate = null): int {
+	public function count(?callable $predicate = null): int
+	{
 		if ($predicate === null) {
 			return $this->arrayCount();
 		}

@@ -205,7 +205,8 @@ class ArrayMap implements GenericArrayMap
 		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 
-	public function count(?callable $predicate = null): int {
+	public function count(?callable $predicate = null): int
+	{
 		if ($predicate === null) {
 			return $this->arrayCount();
 		}

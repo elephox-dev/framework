@@ -24,18 +24,22 @@ use PHPUnit\Framework\TestCase;
  *
  * @internal
  */
-final class GlobalNamespaceLoaderTest extends TestCase {
-	public function testIterateNamespace(): void {
-		$generator = GlobalNamespaceLoader::iterateNamespace("Elephox\\Autoloading\\Namespaces\\");
+final class GlobalNamespaceLoaderTest extends TestCase
+{
+	public function testIterateNamespace(): void
+	{
+		$generator = GlobalNamespaceLoader::iterateNamespace('Elephox\\Autoloading\\Namespaces\\');
 
-		self::assertSame([
-			'Elephox\Autoloading\Namespaces\A\B\C\MoreNestedClass',
-			'Elephox\Autoloading\Namespaces\A\B\NestedClass',
-			'Elephox\Autoloading\Namespaces\A\SomeClass',
-			'Elephox\Autoloading\Namespaces\A\SomeOtherClass',
-			'Elephox\Autoloading\Namespaces\D\AnotherDifferentClass',
-			'Elephox\Autoloading\Namespaces\D\SomeDifferentClass',
-		],
-			iterator_to_array($generator));
+		self::assertSame(
+			[
+				'Elephox\Autoloading\Namespaces\A\B\C\MoreNestedClass',
+				'Elephox\Autoloading\Namespaces\A\B\NestedClass',
+				'Elephox\Autoloading\Namespaces\A\SomeClass',
+				'Elephox\Autoloading\Namespaces\A\SomeOtherClass',
+				'Elephox\Autoloading\Namespaces\D\AnotherDifferentClass',
+				'Elephox\Autoloading\Namespaces\D\SomeDifferentClass',
+			],
+			iterator_to_array($generator),
+		);
 	}
 }
