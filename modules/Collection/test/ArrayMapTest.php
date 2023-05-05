@@ -145,7 +145,11 @@ final class ArrayMapTest extends TestCase
 		$removed = $map->remove('d');
 
 		self::assertFalse($removed);
-		self::assertCount(3, $map);
+		self::assertSame([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+		], $map->toArray());
 	}
 
 	public function testRemoveIntKey(): void
@@ -222,5 +226,19 @@ final class ArrayMapTest extends TestCase
 		self::assertNull($emptyMap->firstOrDefault(null));
 		self::assertSame(1, $map->firstOrDefault(null));
 		self::assertSame(2, $map->firstOrDefault(null, static fn (int $v) => $v % 2 === 0));
+	}
+
+	public function testCount(): void
+	{
+		$map = new ArrayMap([
+			'a' => 1,
+			'b' => 2,
+			'c' => 3,
+			'd' => 4,
+		]);
+
+		self::assertCount(4, $map);
+		self::assertSame(4, $map->count());
+		self::assertSame(2, $map->count(static fn (int $v) => $v % 2 === 0));
 	}
 }

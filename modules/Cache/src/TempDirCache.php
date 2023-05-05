@@ -87,7 +87,7 @@ class TempDirCache extends AbstractCache
 			return false;
 		}
 
-		unset($this->floatingItems[$key]);
+		$this->floatingItems->remove($key);
 		$this->persist();
 
 		return true;
@@ -106,7 +106,7 @@ class TempDirCache extends AbstractCache
 
 	public function save(CacheItemInterface $item): bool
 	{
-		$this->floatingItems[$item->getKey()] = $item;
+		$this->floatingItems->put($item->getKey(), $item);
 		$this->persist();
 
 		return true;
@@ -114,7 +114,7 @@ class TempDirCache extends AbstractCache
 
 	public function saveDeferred(CacheItemInterface $item): bool
 	{
-		$this->floatingItems[$item->getKey()] = $item;
+		$this->floatingItems->put($item->getKey(), $item);
 
 		$this->changes++;
 		$this->checkWriteBackThreshold();

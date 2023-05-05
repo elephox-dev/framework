@@ -6,8 +6,8 @@ namespace Elephox\Collection\Contract;
 use ArrayAccess;
 
 /**
- * @template TValue
  * @template TKey of array-key
+ * @template TValue
  *
  * @extends GenericMap<TKey, TValue>
  * @extends ArrayAccess<TKey, TValue>

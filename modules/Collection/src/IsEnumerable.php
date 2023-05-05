@@ -65,11 +65,12 @@ trait IsEnumerable
 
 	/**
 	 * @template TAccumulate
+	 * @template TSeed
 	 *
-	 * @param callable(TAccumulate|null, TSource): TAccumulate $accumulator
-	 * @param TAccumulate|null $seed
+	 * @param callable(TAccumulate|TSeed, TSource): TAccumulate $accumulator
+	 * @param TSeed $seed
 	 *
-	 * @return TAccumulate
+	 * @return (TSeed is null ? TAccumulate|null : TAccumulate)
 	 */
 	public function aggregate(callable $accumulator, mixed $seed = null): mixed
 	{

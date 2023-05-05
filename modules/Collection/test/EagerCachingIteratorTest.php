@@ -194,4 +194,18 @@ final class EagerCachingIteratorTest extends TestCase
 		$iterator->rewind();
 		self::assertSame([0, 1, 2], $iterator->getCacheKeys());
 	}
+
+	public function testSeekIsEager(): void
+	{
+		$iterator = new EagerCachingIterator((static function () {
+			yield 1;
+			yield 2;
+			yield 3;
+		})());
+
+		$iterator->seek(1);
+
+		self::assertSame(1, $iterator->key());
+		self::assertSame(2, $iterator->current());
+	}
 }

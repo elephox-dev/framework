@@ -42,9 +42,9 @@ abstract class AbstractCache implements Cache
 	/**
 	 * @param iterable $keys
 	 *
-	 * @return iterable<string, CacheItemInterface>
+	 * @return KeyedEnumerable<string, CacheItemInterface>
 	 */
-	public function getItems(iterable $keys = []): iterable
+	public function getItems(iterable $keys = []): KeyedEnumerable
 	{
 		/** @var KeyedEnumerable<string, CacheItemInterface> */
 		return new KeyedEnumerable(function () use ($keys) {

@@ -67,4 +67,23 @@ final class ArraySetTest extends TestCase
 		self::assertTrue($removed);
 		self::assertSame(['a'], $set->toArray());
 	}
+
+	public function testRemoveAll(): void
+	{
+		$set = new ArraySet(['a', 'b', 'c']);
+
+		$removed = $set->removeAll();
+
+		self::assertTrue($removed);
+		self::assertSame([], $set->toArray());
+	}
+
+	public function testCount(): void
+	{
+		$set = new ArraySet(['a', 'b', 'c']);
+
+		self::assertCount(3, $set);
+		self::assertSame(3, $set->count());
+		self::assertSame(1, $set->count(fn ($v) => $v === 'b'));
+	}
 }
