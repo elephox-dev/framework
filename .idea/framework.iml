@@ -33,6 +33,8 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/Web/test" isTestSource="true" packagePrefix="Elephox\Web\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Clock/src" isTestSource="false" packagePrefix="Elephox\Clock\" />
       <sourceFolder url="file://$MODULE_DIR$/modules/Clock/test" isTestSource="true" packagePrefix="Elephox\Clock\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/DB/src" isTestSource="false" packagePrefix="Elephox\DB\" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/DB/test" isTestSource="true" packagePrefix="Elephox\DB\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ricardoboss/php-console-logger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
