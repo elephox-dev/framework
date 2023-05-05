@@ -13,7 +13,7 @@ use LogicException;
  * @property string $name
  * @property null|string $short
  * @property bool $hasValue
- * @property null|list<string>|string|int|float|bool $default
+ * @property null|list<string|int|float|bool|null>|string|int|float|bool $default
  * @property null|string $description
  * @property null|Closure $validator
  */
@@ -21,7 +21,7 @@ class Option
 {
 	/**
 	 * @param OptionTemplate $template
-	 * @param list<string>|string|int|float|bool|null $value
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $value
 	 *
 	 * @return self
 	 */
@@ -45,7 +45,7 @@ class Option
 
 	/**
 	 * @param OptionTemplate $template
-	 * @param list<string>|string|int|float|bool|null $value
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $value
 	 */
 	public function __construct(
 		public readonly OptionTemplate $template,

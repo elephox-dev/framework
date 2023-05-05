@@ -5,6 +5,7 @@ namespace Elephox\Collection\Iterator;
 
 use Closure;
 use Iterator;
+use OuterIterator;
 
 /**
  * @template TKey
@@ -12,8 +13,9 @@ use Iterator;
  * @template TResult
  *
  * @implements Iterator<TKey, TResult>
+ * @implements OuterIterator<TKey, TValue>
  */
-readonly class SelectIterator implements Iterator
+readonly class SelectIterator implements Iterator, OuterIterator
 {
 	/**
 	 * @param Iterator<TKey, TValue> $iterator

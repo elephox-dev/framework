@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\OrderedEnumerable
  * @covers \Elephox\Collection\IteratorProvider
  *
- * @uses   \Elephox\Collection\IsEnumerable
- * @uses   \Elephox\Events\ClassNameAsEventName
+ * @uses \Elephox\Collection\IsEnumerable
+ * @uses \Elephox\Events\ClassNameAsEventName
  *
  * @internal
  */

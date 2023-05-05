@@ -60,30 +60,45 @@ trait IsArrayEnumerable
 		return false;
 	}
 
+	/**
+	 * @return TValue|false
+	 */
 	public function current(): mixed
 	{
 		/** @var TValue|false */
 		return current($this->items);
 	}
 
+	/**
+	 * @return TValue|false
+	 */
 	public function next(): mixed
 	{
 		/** @var TValue|false */
 		return next($this->items);
 	}
 
+	/**
+	 * @return TValue|false
+	 */
 	public function prev(): mixed
 	{
 		/** @var TValue|false */
 		return prev($this->items);
 	}
 
+	/**
+	 * @return TKey|null
+	 */
 	public function key(): int|string|null
 	{
 		/** @var TKey|null */
 		return key($this->items);
 	}
 
+	/**
+	 * @return TValue|false
+	 */
 	public function reset(): mixed
 	{
 		/** @var TValue|false */

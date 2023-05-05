@@ -29,8 +29,8 @@ interface GenericList extends GenericReadonlyList
 	public function removeValue(mixed $value, ?callable $comparer = null): bool;
 
 	/**
-	 * @param T $value
 	 * @param int $index
+	 * @param T $value
 	 */
 	public function put(int $index, mixed $value): bool;
 
@@ -41,9 +41,9 @@ interface GenericList extends GenericReadonlyList
 	public function insertAt(int $index, mixed $value): void;
 
 	/**
-	 * @return T
-	 *
 	 * @param int $index
+	 *
+	 * @return T
 	 */
 	public function removeAt(int $index): mixed;
 

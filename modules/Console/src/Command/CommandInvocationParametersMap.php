@@ -7,7 +7,7 @@ use Elephox\Collection\ArrayMap;
 use JsonException;
 
 /**
- * @extends ArrayMap<int|string, list<string>|int|string|bool|null>
+ * @extends ArrayMap<int|string, list<int|float|string|bool|null>|int|float|string|bool|null>
  */
 class CommandInvocationParametersMap extends ArrayMap
 {
@@ -71,9 +71,10 @@ class CommandInvocationParametersMap extends ArrayMap
 			}
 		};
 
-		$addOptionToMap = static function (string $name, string $value) use ($map): void {
+		$addOptionToMap = static function (string $name, array|int|string|bool|null $value) use ($map): void {
 			if ($map->has($name)) {
 				$old = $map->get($name);
+
 				if (is_array($old)) {
 					$old[] = $value;
 					$mapValue = $old;
@@ -84,6 +85,7 @@ class CommandInvocationParametersMap extends ArrayMap
 				$mapValue = $value;
 			}
 
+			/** @var list<string|int|float|bool|null>|int|string|bool|null $mapValue */
 			$map->put($name, $mapValue);
 		};
 
@@ -157,6 +159,7 @@ class CommandInvocationParametersMap extends ArrayMap
 						$map->put($option, true);
 						$state = 'n';
 					} else {
+						/** @psalm-suppress ParadoxicalCondition */
 						if (in_array($char, self::INVALID_OPTION_NAME_CHARS, true)) {
 							throw new InvalidCommandLineException("Invalid option name character: '$char'");
 						}
@@ -178,14 +181,14 @@ class CommandInvocationParametersMap extends ArrayMap
 				case 'uv':
 					/**
 					 * @var non-empty-string $option
-					 * @var string $optionValue
 					 */
 					if ($char === ' ') {
-						$addOptionToMap($option, $optionValue);
+						$addOptionToMap($option, $optionValue ?? '');
 						$optionValue = null;
 
 						$state = 'n';
 					} else {
+						$optionValue ??= '';
 						$optionValue .= $char;
 					}
 
@@ -193,7 +196,6 @@ class CommandInvocationParametersMap extends ArrayMap
 				case 'qv':
 					/**
 					 * @var non-empty-string $option
-					 * @var string $optionValue
 					 */
 					if ($char === $quotation) {
 						$addOptionToMap($option, $optionValue ?? '');
@@ -201,6 +203,7 @@ class CommandInvocationParametersMap extends ArrayMap
 
 						$state = 'qe';
 					} else {
+						$optionValue ??= '';
 						$optionValue .= $char;
 					}
 

@@ -34,6 +34,21 @@ use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 use Stringable;
 use Traversable;
+use const JSON_FORCE_OBJECT;
+use const JSON_HEX_AMP;
+use const JSON_HEX_APOS;
+use const JSON_HEX_QUOT;
+use const JSON_HEX_TAG;
+use const JSON_INVALID_UTF8_IGNORE;
+use const JSON_INVALID_UTF8_SUBSTITUTE;
+use const JSON_NUMERIC_CHECK;
+use const JSON_PARTIAL_OUTPUT_ON_ERROR;
+use const JSON_PRESERVE_ZERO_FRACTION;
+use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_LINE_TERMINATORS;
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
 
 /**
  * @psalm-type NonNegativeInteger = int<0,max>
@@ -53,8 +68,8 @@ trait IsKeyedEnumerable
 	/**
 	 * @template TAccumulate
 	 *
-	 * @param callable(TAccumulate, TSource, TIteratorKey): TAccumulate $accumulator
-	 * @param TAccumulate $seed
+	 * @param callable(TAccumulate|null, TSource, TIteratorKey): TAccumulate $accumulator
+	 * @param TAccumulate|null $seed
 	 *
 	 * @return TAccumulate
 	 */

@@ -34,20 +34,20 @@ use RecursiveIteratorIterator;
 use Traversable;
 
 use const JSON_FORCE_OBJECT;
-use const JSON_HEX_QUOT;
-use const JSON_HEX_TAG;
 use const JSON_HEX_AMP;
 use const JSON_HEX_APOS;
+use const JSON_HEX_QUOT;
+use const JSON_HEX_TAG;
 use const JSON_INVALID_UTF8_IGNORE;
 use const JSON_INVALID_UTF8_SUBSTITUTE;
 use const JSON_NUMERIC_CHECK;
 use const JSON_PARTIAL_OUTPUT_ON_ERROR;
 use const JSON_PRESERVE_ZERO_FRACTION;
 use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_LINE_TERMINATORS;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
-use const JSON_THROW_ON_ERROR;
 
 /**
  * @psalm-type NonNegativeInteger = int<0,max>
@@ -1028,14 +1028,14 @@ trait IsEnumerable
 	{
 		$comparer ??= DefaultEqualityComparer::same(...);
 
-		$otherIterator = $other->getIterator();
-		if (!($otherIterator instanceof Iterator)) {
-			$otherIterator = new IteratorIterator($otherIterator);
-		}
-
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
+		}
+
+		$otherIterator = $other->getIterator();
+		if (!($otherIterator instanceof Iterator)) {
+			$otherIterator = new IteratorIterator($otherIterator);
 		}
 
 		$append = new AppendIterator();
@@ -1119,14 +1119,14 @@ trait IsEnumerable
 	{
 		$resultSelector ??= static fn (mixed $a, mixed $b): array => [$a, $b];
 
-		$otherIterator = $other->getIterator();
-		if (!($otherIterator instanceof Iterator)) {
-			$otherIterator = new IteratorIterator($otherIterator);
-		}
-
 		$iterator = $this->getIterator();
 		if (!($iterator instanceof Iterator)) {
 			$iterator = new IteratorIterator($iterator);
+		}
+
+		$otherIterator = $other->getIterator();
+		if (!($otherIterator instanceof Iterator)) {
+			$otherIterator = new IteratorIterator($otherIterator);
 		}
 
 		$mit = new ParallelIterator(ParallelIterator::MIT_KEYS_NUMERIC | ParallelIterator::MIT_NEED_ALL);

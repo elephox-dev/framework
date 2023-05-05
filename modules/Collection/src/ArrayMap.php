@@ -205,6 +205,11 @@ class ArrayMap implements GenericArrayMap
 		return $this->genericFirstOrDefault($defaultValue, $predicate);
 	}
 
+	/**
+	 * @param null|callable(TValue, TKey, Iterator<TKey, TValue>): bool $predicate
+	 *
+	 * @return int<0, max>
+	 */
 	public function count(?callable $predicate = null): int
 	{
 		if ($predicate === null) {

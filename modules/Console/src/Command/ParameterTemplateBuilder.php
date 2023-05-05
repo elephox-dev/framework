@@ -9,9 +9,9 @@ abstract class ParameterTemplateBuilder
 {
 	/**
 	 * @param string|null $name
-	 * @param list<string>|string|int|float|bool|null $default
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
+	 * @param null|Closure(list<string|int|float|bool|null>|string|int|float|bool|null): (bool|string) $validator
 	 */
 	public function __construct(
 		private ?string $name,
@@ -34,7 +34,7 @@ abstract class ParameterTemplateBuilder
 	}
 
 	/**
-	 * @param list<string>|string|int|float|bool|null $default
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $default
 	 *
 	 * @return static
 	 */
@@ -46,7 +46,7 @@ abstract class ParameterTemplateBuilder
 	}
 
 	/**
-	 * @return list<string>|string|int|float|bool|null
+	 * @return list<string|int|float|bool|null>|string|int|float|bool|null
 	 */
 	public function getDefault(): null|array|string|int|float|bool
 	{
@@ -66,7 +66,7 @@ abstract class ParameterTemplateBuilder
 	}
 
 	/**
-	 * @param callable(list<string>|string|int|float|bool|null): (bool|string) $validator
+	 * @param callable(list<string|int|float|bool|null>|string|int|float|bool|null): (bool|string) $validator
 	 *
 	 * @return static
 	 */
@@ -78,7 +78,7 @@ abstract class ParameterTemplateBuilder
 	}
 
 	/**
-	 * @return null|Closure(list<string>|string|int|float|bool|null): (string|bool) $validator
+	 * @return null|Closure(list<string|int|float|bool|null>|string|int|float|bool|null): (string|bool) $validator
 	 */
 	public function getValidator(): ?Closure
 	{

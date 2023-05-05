@@ -49,9 +49,9 @@ class CommandTemplateBuilder
 	/**
 	 * @param string $name
 	 * @param bool $hasDefault
-	 * @param list<string>|string|int|float|bool|null $default
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|callable(list<string>|string|int|float|bool|null): (string|bool) $validator
+	 * @param null|callable(list<string|int|float|bool|null>|string|int|float|bool|null): (string|bool) $validator
 	 *
 	 * @return ArgumentTemplateBuilder
 	 */
@@ -78,10 +78,10 @@ class CommandTemplateBuilder
 	/**
 	 * @param string $name
 	 * @param string|null $short
-	 * @param list<string>|string|int|float|bool|null $default
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $default
 	 * @param bool $repeated
 	 * @param string|null $description
-	 * @param null|callable(list<string>|string|int|float|bool|null): (string|bool) $validator
+	 * @param null|callable(list<string|int|float|bool|null>|string|int|float|bool|null): (string|bool) $validator
 	 *
 	 * @return OptionTemplateBuilder
 	 */

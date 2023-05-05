@@ -12,9 +12,9 @@ class OptionTemplate extends ParameterTemplate
 	 * @param string|null $short
 	 * @param bool $hasValue
 	 * @param bool $repeated
-	 * @param list<string>|string|int|float|bool|null $default
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $default
 	 * @param string|null $description
-	 * @param null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
+	 * @param null|Closure(list<string|int|float|bool|null>|string|int|float|bool|null): (bool|string) $validator
 	 */
 	public function __construct(
 		string $name,

@@ -21,6 +21,7 @@
         <ignoreFiles>
             <file name="modules/Collection/src/IsKeyedEnumerable.php"/>
             <file name="modules/Collection/src/IsEnumerable.php"/>
+            <file name="modules/Collection/src/IsArrayEnumerable.php"/>
         </ignoreFiles>
     </projectFiles>
     <stubs>

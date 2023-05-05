@@ -50,9 +50,9 @@ class ArraySet implements GenericSet
 	}
 
 	/**
-	 * @return Traversable<array-key, T>
+	 * @return ArrayIterator<array-key, T>
 	 */
-	public function getIterator(): Traversable
+	public function getIterator(): ArrayIterator
 	{
 		return new ArrayIterator($this->items);
 	}
@@ -82,9 +82,7 @@ class ArraySet implements GenericSet
 	public function remove(mixed $value): bool
 	{
 		$iterator = $this->getIterator();
-		if (!($iterator instanceof Iterator)) {
-			$iterator = new IteratorIterator($iterator);
-		}
+
 		/** @var Iterator $iterator */
 		$iterator->rewind();
 		while ($iterator->valid()) {
@@ -107,9 +105,7 @@ class ArraySet implements GenericSet
 	public function removeBy(callable $predicate): bool
 	{
 		$iterator = $this->getIterator();
-		if (!($iterator instanceof Iterator)) {
-			$iterator = new IteratorIterator($iterator);
-		}
+
 		/** @var Iterator $iterator */
 		$iterator->rewind();
 		$anyRemoved = false;

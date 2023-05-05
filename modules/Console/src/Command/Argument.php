@@ -7,16 +7,16 @@ use LogicException;
 
 /**
  * @property bool $hasDefault
- * @property null|list<string>|string|int|float|bool $default
+ * @property null|list<string|int|float|bool|null>|string|int|float|bool $default
  * @property null|string $description
  * @property string $name
- * @property null|Closure(list<string>|string|int|float|bool|null): (bool|string) $validator
+ * @property null|Closure(list<string|int|float|bool|null>|string|int|float|bool|null): (bool|string) $validator
  */
 class Argument
 {
 	/**
 	 * @param ArgumentTemplate $template
-	 * @param list<string>|string|int|float|bool|null $value
+	 * @param list<string|int|float|bool|null>|string|int|float|bool|null $value
 	 *
 	 * @return self
 	 */
