@@ -84,6 +84,6 @@ final class ArraySetTest extends TestCase
 
 		self::assertCount(3, $set);
 		self::assertSame(3, $set->count());
-		self::assertSame(1, $set->count(fn ($v) => $v === 'b'));
+		self::assertSame(1, $set->count(static fn ($v) => $v === 'b'));
 	}
 }

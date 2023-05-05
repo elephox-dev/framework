@@ -17,8 +17,8 @@ final class SelectIteratorTest extends TestCase
 	public function testGetInnerIterator(): void
 	{
 		$it = new ArrayIterator([]);
-		$select = new SelectIterator($it, fn ($v) => $v);
+		$select = new SelectIterator($it, static fn ($v) => $v);
 
-		$this->assertSame($it, $select->getInnerIterator());
+		self::assertSame($it, $select->getInnerIterator());
 	}
 }

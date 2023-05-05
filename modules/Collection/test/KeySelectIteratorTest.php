@@ -17,8 +17,8 @@ final class KeySelectIteratorTest extends TestCase
 	public function testGetInnerIterator(): void
 	{
 		$it = new ArrayIterator([]);
-		$keySelect = new KeySelectIterator($it, fn ($v) => $v);
+		$keySelect = new KeySelectIterator($it, static fn ($v) => $v);
 
-		$this->assertSame($it, $keySelect->getInnerIterator());
+		self::assertSame($it, $keySelect->getInnerIterator());
 	}
 }

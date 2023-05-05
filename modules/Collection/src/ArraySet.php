@@ -7,8 +7,6 @@ use ArrayIterator;
 use Closure;
 use Elephox\Collection\Contract\GenericSet;
 use Iterator;
-use IteratorIterator;
-use Traversable;
 
 /**
  * @template T

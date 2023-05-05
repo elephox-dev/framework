@@ -25,8 +25,8 @@ final class UniqueByIteratorTest extends TestCase
 	public function testGetInnerIterator(): void
 	{
 		$it = new ArrayIterator([]);
-		$select = new UniqueByIterator($it, fn ($v) => $v, DefaultEqualityComparer::same(...));
+		$select = new UniqueByIterator($it, static fn ($v) => $v, DefaultEqualityComparer::same(...));
 
-		$this->assertSame($it, $select->getInnerIterator());
+		self::assertSame($it, $select->getInnerIterator());
 	}
 }

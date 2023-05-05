@@ -19,6 +19,6 @@ final class FlipIteratorTest extends TestCase
 		$it = new ArrayIterator([]);
 		$flip = new FlipIterator($it);
 
-		$this->assertSame($it, $flip->getInnerIterator());
+		self::assertSame($it, $flip->getInnerIterator());
 	}
 }

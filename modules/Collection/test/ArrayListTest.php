@@ -36,7 +36,7 @@ final class ArrayListTest extends TestCase
 		$arr = new ArrayList(['test', 'test2', 'test3']);
 
 		self::assertCount(3, $arr);
-		self::assertSame(2, $arr->count(fn ($v) => strlen($v) === 5));
+		self::assertSame(2, $arr->count(static fn ($v) => strlen($v) === 5));
 	}
 
 	public function testOffsetUnset(): void
