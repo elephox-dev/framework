@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\DB\Adapters;
+namespace Elephox\DB\Abstraction;
 
-use Elephox\DB\Adapters\Contract\AdapterConfiguration;
-use Elephox\DB\Adapters\Contract\DatabaseAdapter;
-use Elephox\DB\Adapters\Contract\DatabaseConnection;
+use Elephox\DB\Abstraction\Contract\AdapterConfiguration;
+use Elephox\DB\Abstraction\Contract\DatabaseAdapter;
+use Elephox\DB\Abstraction\Contract\DatabaseConnection;
 
 /**
  * @template TConfig of AdapterConfiguration

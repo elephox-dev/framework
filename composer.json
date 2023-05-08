@@ -74,7 +74,8 @@
     },
     "suggest": {
         "ext-fileinfo": "To get the mime type of a file",
-        "ext-mysqli": "To use the mysqli database adapter"
+        "ext-mysqli": "To use the mysqli database adapter",
+        "ext-sqlite3": "To use the sqlite database adapter"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

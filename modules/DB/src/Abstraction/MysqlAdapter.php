@@ -1,14 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\DB\Adapters;
+namespace Elephox\DB\Abstraction;
 
-use Elephox\DB\Adapters\Contract\DatabaseConnection;
-use RuntimeException;
-
-if (!extension_loaded('mysqli')) {
-	throw new RuntimeException('mysqli extension not loaded');
-}
+use Elephox\DB\Abstraction\Contract\DatabaseConnection;
 
 /**
  * @extends AbstractAdapter<MysqlAdapterConfiguration, MysqlConnection>
@@ -18,11 +13,6 @@ class MysqlAdapter extends AbstractAdapter
 	public function __construct(MysqlAdapterConfiguration $configuration)
 	{
 		parent::__construct($configuration);
-	}
-
-	public function getConfiguration(): MysqlAdapterConfiguration
-	{
-		return $this->configuration;
 	}
 
 	public function connect(): MysqlConnection

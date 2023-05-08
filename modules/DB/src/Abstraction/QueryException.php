@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\DB\Adapters;
-
-use Elephox\DB\DatabaseException;
+namespace Elephox\DB\Abstraction;
 
 class QueryException extends DatabaseException
 {

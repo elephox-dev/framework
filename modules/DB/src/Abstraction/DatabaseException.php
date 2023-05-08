@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Elephox\DB;
+namespace Elephox\DB\Abstraction;
 
 use RuntimeException;
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
+use CachingIterator;
 use Closure;
 use Elephox\Collection\Iterator\EagerCachingIterator;
 use Generator;

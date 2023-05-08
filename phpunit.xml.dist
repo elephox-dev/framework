@@ -34,6 +34,13 @@
             <directory>modules/*/test</directory>
             <exclude>modules/Files/test</exclude>
         </testsuite>
+        <testsuite name="without-database">
+            <directory>modules/*/test</directory>
+            <exclude>modules/DB/test</exclude>
+        </testsuite>
+        <testsuite name="only-database">
+            <directory>modules/DB/test</directory>
+        </testsuite>
     </testsuites>
 
     <coverage cacheDirectory="tmp/coverage/cache"
