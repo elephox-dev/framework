@@ -13,8 +13,7 @@ readonly class MysqlAdapterConfiguration implements AdapterConfiguration
 		public ?string $database = null,
 		public ?string $user = null,
 		public ?string $password = null,
-		public ?string $socket = null
-	)
-	{
+		public ?string $socket = null,
+	) {
 	}
 }

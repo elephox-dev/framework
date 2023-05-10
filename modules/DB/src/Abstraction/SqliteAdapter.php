@@ -11,18 +11,21 @@ use SQLite3;
  */
 class SqliteAdapter extends AbstractAdapter
 {
-	public function __construct(SqliteAdapterConfiguration $configuration) {
+	public function __construct(SqliteAdapterConfiguration $configuration)
+	{
 		parent::__construct($configuration);
 	}
 
-	public function connect(): DatabaseConnection {
+	public function connect(): DatabaseConnection
+	{
 		$sqlite = new SQLite3($this->getConfiguration()->path);
 		$sqlite->enableExceptions(true);
 
 		return new SqliteConnection($sqlite);
 	}
 
-	public function disconnect(DatabaseConnection $connection): void {
+	public function disconnect(DatabaseConnection $connection): void
+	{
 		// TODO: Implement disconnect() method.
 	}
 }

@@ -24,17 +24,18 @@ use SQLite3;
  */
 final class SqliteAdapterTest extends TestCase
 {
-	private static string $path = __DIR__ . "/../data/test.sqlitedb";
+	private static string $path = __DIR__ . '/../data/test.sqlitedb';
 
-	public static function setUpBeforeClass(): void {
+	public static function setUpBeforeClass(): void
+	{
 		parent::setUpBeforeClass();
 
 		if (!extension_loaded('sqlite3')) {
-			self::markTestSkipped("sqlite3 not installed");
+			self::markTestSkipped('sqlite3 not installed');
 		}
 
 		$db = new SQLite3(self::$path);
-		$db->exec("CREATE TABLE IF NOT EXISTS users (name TEXT, password TEXT)");
+		$db->exec('CREATE TABLE IF NOT EXISTS users (name TEXT, password TEXT)');
 	}
 
 	private function getConnection(): SqliteConnection
@@ -43,6 +44,7 @@ final class SqliteAdapterTest extends TestCase
 		$adapter = new SqliteAdapter($config);
 		$connection = $adapter->connect();
 		self::assertInstanceOf(SqliteConnection::class, $connection);
+
 		return $connection;
 	}
 
@@ -58,9 +60,9 @@ final class SqliteAdapterTest extends TestCase
 		$connection = $this->getConnection();
 
 		$this->expectException(QueryException::class);
-		$this->expectExceptionMessage("Failed to execute query: near \"Invalid\": syntax error");
+		$this->expectExceptionMessage('Failed to execute query: near "Invalid": syntax error');
 
-		$result = $connection->query("Invalid");
+		$result = $connection->query('Invalid');
 		$result->toArray();
 	}
 }

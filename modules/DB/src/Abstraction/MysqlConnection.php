@@ -7,38 +7,22 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Enumerable;
 use Elephox\DB\Abstraction\Contract\DatabaseConnection;
+use Elephox\DB\Abstraction\Contract\QueryAdapter;
+use Elephox\DB\Querying\Contract\ExecutableQuery;
+use Elephox\DB\Querying\Contract\ResultSetQuery;
 use JetBrains\PhpStorm\Language;
 use mysqli;
+use mysqli_result;
 
-readonly class MysqlConnection implements DatabaseConnection
+final readonly class MysqlConnection implements DatabaseConnection
 {
 	public function __construct(
 		public mysqli $mysqli,
-	)
-	{
+	) {
 	}
 
-	public function query(#[Language("SQL")] string $query): GenericEnumerable
+	public function getAdapter(): QueryAdapter
 	{
-		$result = $this->mysqli->query($query);
-		if ($result === false) {
-			throw new QueryException("Failed to execute query: " . $this->mysqli->error, $this->mysqli->errno);
-		}
-
-		return new Enumerable($result->getIterator());
-	}
-
-	public function execute(#[Language("SQL")] string $query, ?array $params = null): int|string
-	{
-		$result = $this->mysqli->execute_query($query, $params);
-		if ($result === false) {
-			throw new QueryException("Failed to execute query: " . $this->mysqli->error, $this->mysqli->errno);
-		}
-
-		return $result->num_rows;
-	}
-
-	public function getTables(): ArrayList {
-		return $this->query("SHOW TABLES")->toArrayList();
+		return new MysqlQueryAdapter($this->mysqli);
 	}
 }

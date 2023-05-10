@@ -21,7 +21,7 @@ class MysqlAdapter extends AbstractAdapter
 
 		$mysqli = mysqli_connect($config->host, $config->user, $config->password, $config->database, $config->port, $config->socket);
 		if ($mysqli === false) {
-			throw new ConnectException("Failed to establish MySQL connection: " . mysqli_connect_error(), mysqli_connect_errno());
+			throw new ConnectException('Failed to establish MySQL connection: ' . mysqli_connect_error(), mysqli_connect_errno());
 		}
 
 		return new MysqlConnection($mysqli);

@@ -9,5 +9,6 @@ readonly class SqliteAdapterConfiguration implements AdapterConfiguration
 {
 	public function __construct(
 		public ?string $path = null,
-	) {}
+	) {
+	}
 }

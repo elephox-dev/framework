@@ -1,20 +1,15 @@
 ```mermaid
-flowchart
+flowchart LR
     subgraph Querying
-    Table <--> BuiltQuery
-    QueryBuilder <--> BuiltQuery
+        QueryBuilder <--> BuiltQuery
     end
-    
-        subgraph DBAL
+
+        subgraph Abstraction
             DatabaseAdapter <--> MysqlAdapter
             DatabaseAdapter <--> SqliteAdapter
             DatabaseAdapter <--> PostgresqlAdapter
-            
-            subgraph Doctrine
-                DoctrineAdapter
-            end
         end
-    
+
         subgraph Mapping
             EntityMapper
         end
@@ -29,10 +24,51 @@ flowchart
             CacheProvider <--> RedisProvider
             CacheProvider <--> InMemoryProvider
         end
-    
+
         BuiltQuery <-.-> CacheProvider
-        Table <--> DatabaseAdapter
-        DoctrineAdapter <--> Table
+        BuiltQuery <--> DatabaseAdapter
         EntityMapper <--> Entities
         EntityMapper <--> QueryBuilder
+```
+
+Query definition in EBNF:
+
+```
+query       = identifer , param + ;
+param       = identifer | query | expression ;
+expression  = value operator value ;
+operator    = identifer | symbol ;
+value       = identifer | expression ;
+identifer   = letter , ( letter | digit | "." ) + ;
+```
+
+QueryBuilder flow:
+
+```mermaid
+flowchart
+    subgraph Querying
+        builder(QueryBuilder)
+        query(Query)
+        bound(BoundQuery)
+        parameters(QueryParameters)
+
+        subgraph QueryResult
+            direction TB
+
+            resultSet(GenericEnumerable)
+            affectedRows(affected rows)
+        end
+    end
+
+    subgraph Abstraction
+        adapter(QueryAdapter)
+        connection(DatabaseConnection)
+    end
+
+    builder --creates--> query
+    query --creates--> bound
+    connection --provides---> adapter
+    parameters --fills--> bound
+    bound --uses--> adapter
+    adapter --yields--> QueryResult
 ```

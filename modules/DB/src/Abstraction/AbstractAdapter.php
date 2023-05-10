@@ -17,8 +17,7 @@ abstract class AbstractAdapter implements DatabaseAdapter
 {
 	public function __construct(
 		protected readonly AdapterConfiguration $configuration,
-	)
-	{
+	) {
 	}
 
 	/**

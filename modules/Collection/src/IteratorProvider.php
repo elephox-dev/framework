@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\Collection;
 
-use CachingIterator;
 use Closure;
 use Elephox\Collection\Iterator\EagerCachingIterator;
 use Generator;
@@ -40,6 +39,9 @@ class IteratorProvider implements IteratorAggregate
 			$this->iteratorGenerator = null;
 		} elseif ($iterator instanceof Iterator) {
 			$this->iterator = $iterator;
+			$this->iteratorGenerator = null;
+		} elseif ($iterator instanceof IteratorAggregate) {
+			$this->iterator = $iterator->getIterator();
 			$this->iteratorGenerator = null;
 		} else {
 			/** @var Closure(): Traversable<TIteratorKey, TSource> $iterator */

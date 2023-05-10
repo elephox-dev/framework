@@ -7,6 +7,7 @@ use ArrayIterator;
 use Elephox\Collection\Contract\GenericArrayList;
 use InvalidArgumentException;
 use Iterator;
+use IteratorAggregate;
 use Traversable;
 
 /**
@@ -46,20 +47,20 @@ class ArrayList implements GenericArrayList
 			return $value;
 		}
 
-		if (is_array($value)) {
-			if (!array_is_list($value)) {
-				throw new InvalidArgumentException('ArrayList::from() expects a list of values');
-			}
-
-			return new self($value);
+		if ($value instanceof IteratorAggregate) {
+			$value = $value->getIterator();
 		}
 
 		if ($value instanceof Iterator) {
-			return new self(array_values(iterator_to_array($value)));
+			$value = iterator_to_array($value);
 		}
 
-		/** @var list<UValue> $value */
-		$value = [$value];
+		if (!is_array($value)) {
+			/** @var list<UValue> $value */
+			$value = [$value];
+		} else if (!array_is_list($value)) {
+			$value = array_values($value);
+		}
 
 		return new self($value);
 	}
