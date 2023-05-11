@@ -8,7 +8,6 @@ use Elephox\DB\Querying\Contract\BoundQuery;
 use Elephox\DB\Querying\Contract\ExecutableQuery;
 use Elephox\DB\Querying\Contract\QueryDefinition;
 use Elephox\DB\Querying\Contract\QueryExpression;
-use Elephox\DB\Querying\Contract\QueryParameter;
 use Elephox\DB\Querying\Contract\QueryResult;
 use Elephox\DB\Querying\Contract\QueryValue;
 use InvalidArgumentException;
@@ -23,7 +22,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 			'float' => 'd',
 			'bool' => 'b',
 			'string' => 's',
-			default => throw new InvalidArgumentException("No corresponding type found for " . get_debug_type($value)),
+			default => throw new InvalidArgumentException('No corresponding type found for ' . get_debug_type($value)),
 		};
 	}
 
@@ -36,58 +35,58 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 	{
 		$sourceQuery = $query->getQuery();
 
-		$sql = "";
+		$sql = '';
 		$parameters = [];
-		$parameterTypes = "";
+		$parameterTypes = '';
 
 		$buildExpression = static function (QueryExpression $e, callable $def, callable $exp) use (&$sql, &$parameters, &$parameterTypes): void {
-			$sql .= "(";
+			$sql .= '(';
 			$left = $e->getLeft();
 			if ($left instanceof QueryValue) {
-				$sql .= "?";
+				$sql .= '?';
 				$value = $left->getValue();
 				$parameters[] = $value;
 				$parameterTypes .= self::getBindParameterType($value);
-			} else if ($left instanceof QueryExpression) {
+			} elseif ($left instanceof QueryExpression) {
 				$exp($left, $def, $exp);
 			} else {
-				throw new InvalidArgumentException("left must be QueryValue or QueryExpression, got " . get_debug_type($left));
+				throw new InvalidArgumentException('left must be QueryValue or QueryExpression, got ' . get_debug_type($left));
 			}
 
 			$right = $e->getRight();
 			if ($right instanceof QueryValue) {
-				$sql .= "?";
+				$sql .= '?';
 				$value = $right->getValue();
 				$parameters[] = $value;
 				$parameterTypes .= self::getBindParameterType($value);
-			} else if ($right instanceof QueryExpression) {
+			} elseif ($right instanceof QueryExpression) {
 				$exp($right, $def, $exp);
 			} else {
-				throw new InvalidArgumentException("right must be QueryValue or QueryExpression, got " . get_debug_type($right));
+				throw new InvalidArgumentException('right must be QueryValue or QueryExpression, got ' . get_debug_type($right));
 			}
 
-			$sql .= ")";
+			$sql .= ')';
 		};
 
 		$buildDefinition = static function (QueryDefinition $d, callable $def, callable $exp) use (&$sql, &$parameters, &$parameterTypes): void {
-			$sql .= $d->getVerb() . " ";
+			$sql .= $d->getVerb() . ' ';
 
 			foreach ($d->getParams() as $param) {
 				if ($param instanceof QueryDefinition) {
 					$def($param, $def, $exp);
-				} else if ($param instanceof QueryValue) {
-					$sql .= "?";
+				} elseif ($param instanceof QueryValue) {
+					$sql .= '?';
 					$value = $param->getValue();
 					$parameters[] = $value;
 					$parameterTypes .= self::getBindParameterType($value);
-				} else if (is_string($param)) {
-					$sql .= "?";
+				} elseif (is_string($param)) {
+					$sql .= '?';
 					$parameters[] = $param;
-					$parameterTypes .= "s";
-				} else if ($param instanceof QueryExpression) {
+					$parameterTypes .= 's';
+				} elseif ($param instanceof QueryExpression) {
 					$exp($param, $def, $exp);
 				} else {
-					throw new InvalidArgumentException("param must be QueryDefinition, QueryValue, QueryExpression or string, got " . get_debug_type($param));
+					throw new InvalidArgumentException('param must be QueryDefinition, QueryValue, QueryExpression or string, got ' . get_debug_type($param));
 				}
 			}
 		};
@@ -99,7 +98,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 
 		$success = $stmt->execute($parameters);
 		if ($success === false) {
-			throw new QueryException("Query failed: " . $this->mysqli->error, $this->mysqli->errno);
+			throw new QueryException('Query failed: ' . $this->mysqli->error, $this->mysqli->errno);
 		}
 
 		if ($sourceQuery instanceof ExecutableQuery) {
@@ -108,7 +107,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 
 		$result = $stmt->get_result();
 		if ($result === false) {
-			throw new QueryException("Query failed: " . $this->mysqli->error, $this->mysqli->errno);
+			throw new QueryException('Query failed: ' . $this->mysqli->error, $this->mysqli->errno);
 		}
 
 		return new MysqlResultSetQueryResult($result);

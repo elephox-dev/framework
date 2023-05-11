@@ -75,12 +75,12 @@ final class MysqlAdapterTest extends TestCase
 		$adapter = $connection->getAdapter();
 
 		$result = (new QueryStarter())
-			->select("*")
-			->from("users")
-			->where("name")
-			->equals("username")
+			->select('*')
+			->from('users')
+			->where('name')
+			->equals('username')
 			->build()
-			->bind(QueryParameters::from(["username" => "rboss"]))
+			->bind(QueryParameters::from(['username' => 'rboss']))
 			->run($adapter)
 		;
 

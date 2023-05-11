@@ -14,7 +14,8 @@ final readonly class Query implements Contract\Query
 	) {
 	}
 
-	public function getDefinition(): QueryDefinitionContract {
+	public function getDefinition(): QueryDefinitionContract
+	{
 		return $this->definition;
 	}
 

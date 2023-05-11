@@ -17,7 +17,8 @@ final readonly class TableReferenceQueryValue implements QueryValue
 		return $this->table;
 	}
 
-	public function __toString(): string {
+	public function __toString(): string
+	{
 		return $this->getValue();
 	}
 }

@@ -5,7 +5,8 @@ namespace Elephox\DB\Querying;
 
 readonly class QueryStarter implements Contract\QueryStarter
 {
-	public function select(iterable|string $columns): Contract\SelectQueryBuilder {
+	public function select(iterable|string $columns): Contract\SelectQueryBuilder
+	{
 		if (is_string($columns)) {
 			$columns = [$columns];
 		} else {
@@ -15,7 +16,8 @@ readonly class QueryStarter implements Contract\QueryStarter
 		return new SelectQueryBuilder($columns);
 	}
 
-	public function insert(string $into): Contract\InsertQueryBuilder {
+	public function insert(string $into): Contract\InsertQueryBuilder
+	{
 		// TODO: Implement insert() method.
 	}
 }
