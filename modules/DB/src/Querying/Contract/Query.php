@@ -7,5 +7,7 @@ use Stringable;
 
 interface Query extends Stringable
 {
+	public function getDefinition(): QueryDefinition;
+
 	public function bind(QueryParameters $parameters): BoundQuery;
 }

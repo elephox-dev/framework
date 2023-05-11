@@ -5,13 +5,17 @@ namespace Elephox\DB\Querying;
 
 readonly class QueryStarter implements Contract\QueryStarter
 {
-	protected function __construct(
-		private Contract\QueryDefinition $rootDefinition,
-	) {
+	public function select(iterable|string $columns): Contract\SelectQueryBuilder {
+		if (is_string($columns)) {
+			$columns = [$columns];
+		} else {
+			$columns = iterator_to_array($columns);
+		}
+
+		return new SelectQueryBuilder($columns);
 	}
 
-	public function build(): Contract\Query
-	{
-		return new Query($this->rootDefinition);
+	public function insert(string $into): Contract\InsertQueryBuilder {
+		// TODO: Implement insert() method.
 	}
 }

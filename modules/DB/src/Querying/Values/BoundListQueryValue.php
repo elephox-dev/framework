@@ -25,8 +25,7 @@ final readonly class BoundListQueryValue implements QueryValueContract
 		};
 	}
 
-	public function __toString()
-	{
+	public function __toString(): string {
 		return '?';
 	}
 }

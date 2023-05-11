@@ -16,8 +16,7 @@ final readonly class AnyColumnQueryValue implements QueryValue
 		return '*';
 	}
 
-	public function __toString()
-	{
+	public function __toString(): string {
 		return $this->getValue();
 	}
 }

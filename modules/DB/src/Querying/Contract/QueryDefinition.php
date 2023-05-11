@@ -13,7 +13,7 @@ interface QueryDefinition extends Stringable
 	public function getVerb(): string;
 
 	/**
-	 * @return non-empty-list<string|QueryDefinition|QueryExpression>
+	 * @return non-empty-list<string|QueryValue|QueryDefinition|QueryExpression>
 	 */
 	public function getParams(): array;
 }

@@ -6,8 +6,11 @@ namespace Elephox\DB\Abstraction;
 use Elephox\DB\Abstraction\Contract\QueryAdapter;
 use Elephox\DB\Querying\Contract\BoundQuery;
 use Elephox\DB\Querying\Contract\ExecutableQuery;
+use Elephox\DB\Querying\Contract\QueryDefinition;
+use Elephox\DB\Querying\Contract\QueryExpression;
 use Elephox\DB\Querying\Contract\QueryParameter;
 use Elephox\DB\Querying\Contract\QueryResult;
+use Elephox\DB\Querying\Contract\QueryValue;
 use InvalidArgumentException;
 use mysqli;
 
@@ -33,19 +36,65 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 	{
 		$sourceQuery = $query->getQuery();
 
-		$sql = (string)$sourceQuery;
-		$stmt = $this->mysqli->prepare($sql);
+		$sql = "";
 		$parameters = [];
 		$parameterTypes = "";
 
-		/**
-		 * @var QueryParameter $param
-		 */
-		foreach ($query->getParameters() as $name => $param) {
-			$parameters[] = $param->getValue();
-			$parameterTypes .= self::getBindParameterType($param->getValue());
-		}
+		$buildExpression = static function (QueryExpression $e, callable $def, callable $exp) use (&$sql, &$parameters, &$parameterTypes): void {
+			$sql .= "(";
+			$left = $e->getLeft();
+			if ($left instanceof QueryValue) {
+				$sql .= "?";
+				$value = $left->getValue();
+				$parameters[] = $value;
+				$parameterTypes .= self::getBindParameterType($value);
+			} else if ($left instanceof QueryExpression) {
+				$exp($left, $def, $exp);
+			} else {
+				throw new InvalidArgumentException("left must be QueryValue or QueryExpression, got " . get_debug_type($left));
+			}
 
+			$right = $e->getRight();
+			if ($right instanceof QueryValue) {
+				$sql .= "?";
+				$value = $right->getValue();
+				$parameters[] = $value;
+				$parameterTypes .= self::getBindParameterType($value);
+			} else if ($right instanceof QueryExpression) {
+				$exp($right, $def, $exp);
+			} else {
+				throw new InvalidArgumentException("right must be QueryValue or QueryExpression, got " . get_debug_type($right));
+			}
+
+			$sql .= ")";
+		};
+
+		$buildDefinition = static function (QueryDefinition $d, callable $def, callable $exp) use (&$sql, &$parameters, &$parameterTypes): void {
+			$sql .= $d->getVerb() . " ";
+
+			foreach ($d->getParams() as $param) {
+				if ($param instanceof QueryDefinition) {
+					$def($param, $def, $exp);
+				} else if ($param instanceof QueryValue) {
+					$sql .= "?";
+					$value = $param->getValue();
+					$parameters[] = $value;
+					$parameterTypes .= self::getBindParameterType($value);
+				} else if (is_string($param)) {
+					$sql .= "?";
+					$parameters[] = $param;
+					$parameterTypes .= "s";
+				} else if ($param instanceof QueryExpression) {
+					$exp($param, $def, $exp);
+				} else {
+					throw new InvalidArgumentException("param must be QueryDefinition, QueryValue, QueryExpression or string, got " . get_debug_type($param));
+				}
+			}
+		};
+
+		$buildDefinition($sourceQuery->getDefinition(), $buildDefinition, $buildExpression);
+
+		$stmt = $this->mysqli->prepare($sql);
 		$stmt->bind_param($parameterTypes, ...$parameters);
 
 		$success = $stmt->execute($parameters);

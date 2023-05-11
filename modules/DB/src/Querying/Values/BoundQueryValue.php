@@ -19,8 +19,7 @@ final readonly class BoundQueryValue implements Contract\QueryValue
 		return $this->callback;
 	}
 
-	public function __toString()
-	{
+	public function __toString(): string {
 		return '?';
 	}
 }

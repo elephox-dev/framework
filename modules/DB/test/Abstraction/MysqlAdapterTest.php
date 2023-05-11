@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Elephox\DB\Abstraction;
 
+use Elephox\DB\Querying\Contract\ResultSetQueryResult;
+use Elephox\DB\Querying\QueryParameters;
+use Elephox\DB\Querying\QueryStarter;
 use mysqli;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -66,10 +69,22 @@ final class MysqlAdapterTest extends TestCase
 		return $connection;
 	}
 
-	public function testSimpleQuery(): void
+	public function testQueryBuilder(): void
 	{
 		$connection = $this->getConnection();
-		$tables = $connection->getTables();
-		self::assertNotEmpty($tables);
+		$adapter = $connection->getAdapter();
+
+		$result = (new QueryStarter())
+			->select("*")
+			->from("users")
+			->where("name")
+			->equals("username")
+			->build()
+			->bind(QueryParameters::from(["username" => "rboss"]))
+			->run($adapter)
+		;
+
+		self::assertInstanceOf(ResultSetQueryResult::class, $result);
+		self::assertNotEmpty($result->getResults());
 	}
 }

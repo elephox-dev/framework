@@ -29,8 +29,7 @@ final readonly class ListQueryValue implements QueryValueContract
 		return $this->values;
 	}
 
-	public function __toString()
-	{
+	public function __toString(): string {
 		return '(' . implode(', ', $this->getValue()) . ')';
 	}
 }

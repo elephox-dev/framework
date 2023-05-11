@@ -14,6 +14,10 @@ final readonly class Query implements Contract\Query
 	) {
 	}
 
+	public function getDefinition(): QueryDefinitionContract {
+		return $this->definition;
+	}
+
 	public function bind(QueryParameters $parameters): BoundQueryContract
 	{
 		return new BoundQuery($this, $parameters);
