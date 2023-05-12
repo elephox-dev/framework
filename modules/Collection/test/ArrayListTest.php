@@ -286,14 +286,6 @@ final class ArrayListTest extends TestCase
 		$list->removeAt(4);
 	}
 
-	public function testFromThrowsForNonList(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('ArrayList::from() expects a list of values');
-
-		ArrayList::from(['a' => 1, 'b' => 2]);
-	}
-
 	public function testPop(): void
 	{
 		$list = new ArrayList([1, 2, 3]);

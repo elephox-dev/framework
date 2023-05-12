@@ -10,13 +10,12 @@ final readonly class BoundQueryValue implements Contract\QueryValue
 {
 	public function __construct(
 		public string $name,
-		private Closure $callback,
 	) {
 	}
 
-	public function getValue(): Closure
+	public function getValue(): string
 	{
-		return $this->callback;
+		return $this->name;
 	}
 
 	public function __toString(): string

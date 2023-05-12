@@ -33,8 +33,6 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 
 	public function run(BoundQuery $query): QueryResult
 	{
-		$sourceQuery = $query->getQuery();
-
 		$sql = '';
 		$parameters = [];
 		$parameterTypes = '';
@@ -91,6 +89,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 			}
 		};
 
+		$sourceQuery = $query->getQuery();
 		$buildDefinition($sourceQuery->getDefinition(), $buildDefinition, $buildExpression);
 
 		$stmt = $this->mysqli->prepare($sql);

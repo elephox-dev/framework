@@ -11,4 +11,5 @@ interface ExpressionBuilder
 	public function lessThan(string $paramName): SelectQueryBuilder;
 	public function like(string $paramName): SelectQueryBuilder;
 	public function in(string $paramName): SelectQueryBuilder;
+	public function build(): QueryExpression;
 }

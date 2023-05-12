@@ -7,6 +7,7 @@ use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Enumerable;
 use Elephox\DB\Abstraction\Contract\DatabaseConnection;
+use Elephox\DB\Abstraction\Contract\QueryAdapter;
 use Elephox\DB\Querying\Contract\QueryDefinition;
 use Elephox\DB\Querying\Contract\QueryParameters;
 use SQLite3;
@@ -62,19 +63,8 @@ readonly class SqliteConnection implements DatabaseConnection
 		return new QueryException('Failed to execute query: ' . $this->sqlite->lastErrorMsg(), $this->sqlite->lastErrorCode(), $previous);
 	}
 
-	public function getTables(): ArrayList
+	public function getAdapter(): QueryAdapter
 	{
-		return $this
-			->query("SELECT name FROM sqlite_schema WHERE type ='table'")
-			->toArrayList()
-		;
-	}
-
-	public function getColumns(string $tableName): ArrayList
-	{
-		return $this
-			->query("PRAGMA table_info($tableName)")
-			->toArrayList()
-		;
+		// TODO: Implement getAdapter() method.
 	}
 }

@@ -45,7 +45,8 @@ final class MysqlAdapterTest extends TestCase
 			$db->execute_query('CREATE TABLE IF NOT EXISTS users (name TEXT, password TEXT)');
 			$db->close();
 		} catch (Throwable $t) {
-			self::markTestSkipped("mysqli not available ({$t->getMessage()})");
+			$tClass = $t::class;
+			self::markTestSkipped("mysqli not available ($tClass: {$t->getMessage()})");
 		}
 	}
 

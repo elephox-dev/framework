@@ -10,19 +10,12 @@ final readonly class BoundListQueryValue implements QueryValueContract
 {
 	public function __construct(
 		public string $name,
-		private Closure $callback,
 	) {
 	}
 
-	public function getValue(): Closure
+	public function getValue(): string
 	{
-		return function (): array {
-			$result = ($this->callback)();
-
-			assert(is_array($result), 'Callback must return an array');
-
-			return $result;
-		};
+		return $this->name;
 	}
 
 	public function __toString(): string

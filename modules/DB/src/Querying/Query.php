@@ -7,7 +7,7 @@ use Elephox\DB\Querying\Contract\BoundQuery as BoundQueryContract;
 use Elephox\DB\Querying\Contract\QueryDefinition as QueryDefinitionContract;
 use Elephox\DB\Querying\Contract\QueryParameters;
 
-final readonly class Query implements Contract\Query
+readonly class Query implements Contract\Query
 {
 	public function __construct(
 		private QueryDefinitionContract $definition,

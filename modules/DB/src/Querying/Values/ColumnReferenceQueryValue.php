@@ -8,8 +8,8 @@ use Elephox\DB\Querying\Contract\QueryValue;
 final readonly class ColumnReferenceQueryValue implements QueryValue
 {
 	public function __construct(
-		public string $table,
 		public string $column,
+		public ?string $table = null,
 	) {
 	}
 
@@ -20,6 +20,11 @@ final readonly class ColumnReferenceQueryValue implements QueryValue
 
 	public function __toString(): string
 	{
-		return implode('.', $this->getValue());
+		$value = $this->getValue();
+		if ($value[0] === null) {
+			return $value[1];
+		}
+
+		return implode('.', $value);
 	}
 }
