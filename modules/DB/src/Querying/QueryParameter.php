@@ -5,7 +5,6 @@ namespace Elephox\DB\Querying;
 
 final readonly class QueryParameter implements Contract\QueryParameter
 {
-
 	/**
 	 * @param string $name
 	 * @param mixed $value

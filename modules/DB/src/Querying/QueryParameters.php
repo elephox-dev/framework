@@ -18,9 +18,9 @@ final class QueryParameters implements Contract\QueryParameters
 	{
 		if ($parameters instanceof Iterator) {
 			$arr = iterator_to_array($parameters);
-		} else if ($parameters instanceof IteratorAggregate) {
+		} elseif ($parameters instanceof IteratorAggregate) {
 			$arr = iterator_to_array($parameters->getIterator());
-		} else if (is_array($parameters)) {
+		} elseif (is_array($parameters)) {
 			if (array_is_list($parameters)) {
 				$arr = $parameters;
 			} else {
@@ -32,7 +32,7 @@ final class QueryParameters implements Contract\QueryParameters
 				}
 			}
 		} else {
-			throw new InvalidArgumentException("Invalid parameters type: " . get_debug_type($parameters));
+			throw new InvalidArgumentException('Invalid parameters type: ' . get_debug_type($parameters));
 		}
 
 		return new self($arr);
@@ -50,20 +50,20 @@ final class QueryParameters implements Contract\QueryParameters
 
 		foreach ($parameters as $parameter) {
 			if (!$parameter instanceof QueryParameterContract) {
-				throw new InvalidArgumentException("Invalid parameter type: " . get_debug_type($parameter));
+				throw new InvalidArgumentException('Invalid parameter type: ' . get_debug_type($parameter));
 			}
 
 			$this->add($parameter);
 		}
 	}
 
-	public function add(QueryParameterContract ...$parameters): QueryParameters
+	public function add(QueryParameterContract ...$parameters): self
 	{
 		foreach ($parameters as $parameter) {
 			$name = $parameter->getName();
 
 			if ($this->has($name)) {
-				throw new InvalidArgumentException("Parameter already exists: " . $name);
+				throw new InvalidArgumentException('Parameter already exists: ' . $name);
 			}
 
 			$this->parameters[$name] = $parameter;
@@ -72,7 +72,7 @@ final class QueryParameters implements Contract\QueryParameters
 		return $this;
 	}
 
-	public function put(string $name, mixed $value): QueryParameters
+	public function put(string $name, mixed $value): self
 	{
 		$parameter = new QueryParameter($name, $value);
 
@@ -94,7 +94,7 @@ final class QueryParameters implements Contract\QueryParameters
 	public function get(string $name): QueryParameterContract
 	{
 		if (!$this->has($name)) {
-			throw new InvalidArgumentException("Parameter not found: " . $name);
+			throw new InvalidArgumentException('Parameter not found: ' . $name);
 		}
 
 		return $this->parameters[$name];

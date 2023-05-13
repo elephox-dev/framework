@@ -5,7 +5,6 @@ namespace Elephox\Collection;
 
 use ArrayIterator;
 use Elephox\Collection\Contract\GenericArrayList;
-use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use Traversable;
@@ -58,7 +57,7 @@ class ArrayList implements GenericArrayList
 		if (!is_array($value)) {
 			/** @var list<UValue> $value */
 			$value = [$value];
-		} else if (!array_is_list($value)) {
+		} elseif (!array_is_list($value)) {
 			$value = array_values($value);
 		}
 

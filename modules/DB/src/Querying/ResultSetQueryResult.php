@@ -5,5 +5,4 @@ namespace Elephox\DB\Querying;
 
 class ResultSetQueryResult extends AbstractQueryResult
 {
-
 }
