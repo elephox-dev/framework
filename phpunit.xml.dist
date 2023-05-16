@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
          bootstrap="bootstrap.php"
          cacheResultFile="tmp/tests/cache"
          executionOrder="random"
@@ -14,7 +14,6 @@
          failOnWarning="true"
          verbose="true">
     <php>
-        <ini name="assertion.exception" value="1" />
         <const name="REQUEST_FACTORY" value="Nyholm\Psr7\Factory\Psr17Factory"/>
         <const name="RESPONSE_FACTORY" value="Nyholm\Psr7\Factory\Psr17Factory"/>
         <const name="SERVER_REQUEST_FACTORY" value="Nyholm\Psr7\Factory\Psr17Factory"/>
