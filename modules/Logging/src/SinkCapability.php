@@ -7,4 +7,5 @@ enum SinkCapability
 {
 	case AnsiFormatting;
 	case ElephoxFormatting;
+	case MessageTemplates;
 }
