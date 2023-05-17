@@ -43,6 +43,7 @@ final class MysqlAdapterTest extends TestCase
 			$db = new mysqli();
 			$db->connect(self::$host, self::$user, self::$password, self::$database, self::$port);
 			$db->execute_query('CREATE TABLE IF NOT EXISTS users (name TEXT, password TEXT)');
+			$db->execute_query('INSERT INTO users (name, password) VALUES (?, ?)', ['username', 'password']);
 			$db->close();
 		} catch (Throwable $t) {
 			$tClass = $t::class;

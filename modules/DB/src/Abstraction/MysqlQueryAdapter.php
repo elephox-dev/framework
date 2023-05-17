@@ -10,6 +10,9 @@ use Elephox\DB\Querying\Contract\QueryDefinition;
 use Elephox\DB\Querying\Contract\QueryExpression;
 use Elephox\DB\Querying\Contract\QueryResult;
 use Elephox\DB\Querying\Contract\QueryValue;
+use Elephox\DB\Querying\Values\AnyColumnQueryValue;
+use Elephox\DB\Querying\Values\ColumnReferenceQueryValue;
+use Elephox\DB\Querying\Values\TableReferenceQueryValue;
 use InvalidArgumentException;
 use mysqli;
 
@@ -73,12 +76,21 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 				if ($param instanceof QueryDefinition) {
 					$def($param, $def, $exp);
 				} elseif ($param instanceof QueryValue) {
-					$sql .= '?';
-					$value = $param->getValue();
-					$parameters[] = $value;
-					$parameterTypes .= self::getBindParameterType($value);
+					if ($param instanceof AnyColumnQueryValue) {
+						$sql .= '* ';
+					} elseif ($param instanceof TableReferenceQueryValue) {
+						$sql .= $param->getValue() . ' ';
+					} elseif ($param instanceof ColumnReferenceQueryValue) {
+						$sql .= implode('.', $param->getValue()) . ' ';
+					} else {
+						throw new InvalidArgumentException("Unimplemented QueryValue type: " . get_debug_type($param));
+						// $sql .= '? ';
+						// $value = $param->getValue();
+						// $parameters[] = $value;
+						// $parameterTypes .= self::getBindParameterType($value);
+					}
 				} elseif (is_string($param)) {
-					$sql .= '?';
+					$sql .= '? ';
 					$parameters[] = $param;
 					$parameterTypes .= 's';
 				} elseif ($param instanceof QueryExpression) {
@@ -93,7 +105,10 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 		$buildDefinition($sourceQuery->getDefinition(), $buildDefinition, $buildExpression);
 
 		$stmt = $this->mysqli->prepare($sql);
-		$stmt->bind_param($parameterTypes, ...$parameters);
+
+		if ($parameterTypes !== "") {
+			$stmt->bind_param($parameterTypes, ...$parameters);
+		}
 
 		$success = $stmt->execute($parameters);
 		if ($success === false) {

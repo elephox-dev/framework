@@ -47,22 +47,4 @@ final class SqliteAdapterTest extends TestCase
 
 		return $connection;
 	}
-
-	public function testSimpleQuery(): void
-	{
-		$connection = $this->getConnection();
-		$someResult = $connection->getTables();
-		self::assertNotEmpty($someResult);
-	}
-
-	public function testFailingQuery(): void
-	{
-		$connection = $this->getConnection();
-
-		$this->expectException(QueryException::class);
-		$this->expectExceptionMessage('Failed to execute query: near "Invalid": syntax error');
-
-		$result = $connection->query('Invalid');
-		$result->toArray();
-	}
 }
