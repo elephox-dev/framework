@@ -17,7 +17,8 @@ readonly class RouteTemplateVariable
 	public function getTypePattern(): string
 	{
 		return match ($this->type) {
-			'int' => '\d+',
+			'int' => '-?\d+',
+			'alpha' => '\w+',
 			'*' => '.*',
 			default => '[^}/]+',
 		};
