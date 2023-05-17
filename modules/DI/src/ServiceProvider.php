@@ -8,6 +8,7 @@ use BadMethodCallException;
 use Closure;
 use Elephox\Collection\ArrayMap;
 use Elephox\Collection\Contract\GenericEnumerable;
+use Elephox\Collection\Enumerable;
 use Elephox\Collection\OffsetNotFoundException;
 use Elephox\DI\Contract\RootServiceProvider;
 use Elephox\DI\Contract\ServiceScope as ServiceScopeContract;
@@ -337,30 +338,27 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		}
 
 		if ($type instanceof ReflectionUnionType) {
-			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): GenericEnumerable {
-				return collect(...$refType->getTypes())
-					->select(static function (mixed $t) use ($self): array {
+			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): Enumerable {
+				return new Enumerable(function () use ($refType, $self) {
+					foreach ($refType->getTypes() as $t) {
 						assert($t instanceof ReflectionType, '$t must be an instance of ReflectionType');
 
 						/** @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self */
 						if ($t instanceof ReflectionUnionType) {
-							return $self($t, $self)->toList();
+							yield $self($t, $self)->toList();
+						} else if ($t instanceof ReflectionIntersectionType) {
+							yield [$self($t, $self)->toList()];
+						} else if ($t instanceof ReflectionNamedType) {
+							yield [$t->getName()];
+						} else {
+							throw new ReflectionException('Unsupported ReflectionType: ' . get_debug_type($t));
 						}
-
-						if ($t instanceof ReflectionIntersectionType) {
-							return [$self($t, $self)->toList()];
-						}
-
-						if ($t instanceof ReflectionNamedType) {
-							return [$t->getName()];
-						}
-
-						throw new ReflectionException('Unsupported ReflectionType: ' . get_debug_type($t));
-					});
+					}
+				});
 			};
 
 			/** @psalm-suppress DocblockTypeContradiction */
-			$allowedTypes = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t): string|array => is_array($t) ? collect(...$t)->flatten()->toList() : $t);
+			$allowedTypes = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t): string|array => is_array($t) ? (count($t) === 1 ? $t[0] : collect(...$t)->flatten()->toList()) : $t);
 		} else {
 			/** @var ReflectionNamedType $type */
 			$allowedTypes = [$type->getName()];
@@ -379,6 +377,10 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 			if (is_array($typeName)) {
 				/** @var class-string $combinedTypeName */
 				$combinedTypeName = implode('&', $typeName);
+
+				if (!$this->has($combinedTypeName)) {
+					continue;
+				}
 
 				return $this->resolveService($combinedTypeName, $parameter->getDeclaringFunction()->getName());
 			}
