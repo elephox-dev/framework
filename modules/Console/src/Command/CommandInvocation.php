@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace Elephox\Console\Command;
 
-/**
- * @property string $name
- * @property string $invokedBinary
- * @property string $commandLine
- */
-class CommandInvocation
+readonly class CommandInvocation
 {
 	public function __construct(
-		public readonly RawCommandInvocation $raw,
-		public readonly ArgumentList $arguments,
-		public readonly OptionList $options,
+		public RawCommandInvocation $raw,
+		public ArgumentList $arguments,
+		public OptionList $options,
 	) {
 	}
 }
