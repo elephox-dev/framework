@@ -271,12 +271,24 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		}
 	}
 
+	/**
+	 * @template TResult
+	 *
+	 * @param ReflectionFunction|Closure|Closure(mixed): TResult $callback
+	 * @param argument-list $overrideArguments
+	 * @param null|Closure(ReflectionParameter $param, int $index): (null|TResult) $onUnresolved
+	 *
+	 * @return TResult
+	 *
+	 * @throws BadFunctionCallException
+	 */
 	public function call(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
 	{
 		/** @noinspection PhpUnhandledExceptionInspection $callback is never a string */
 		$reflectionFunction = $callback instanceof ReflectionFunction ? $callback : new ReflectionFunction($callback);
 		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
 
+		/** @var TResult */
 		return $reflectionFunction->invokeArgs([...$arguments]);
 	}
 
@@ -339,11 +351,15 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 
 		if ($type instanceof ReflectionUnionType) {
 			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): Enumerable {
+				/** @var Enumerable<string|list<string>> */
 				return new Enumerable(static function () use ($refType, $self) {
+					/**
+					 * @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self
+					 * @var ReflectionType $t
+					 */
 					foreach ($refType->getTypes() as $t) {
 						assert($t instanceof ReflectionType, '$t must be an instance of ReflectionType');
 
-						/** @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self */
 						if ($t instanceof ReflectionUnionType) {
 							yield $self($t, $self)->toList();
 						} elseif ($t instanceof ReflectionIntersectionType) {
@@ -357,8 +373,17 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 				});
 			};
 
-			/** @psalm-suppress DocblockTypeContradiction */
-			$allowedTypes = $extractTypeNames($type, $extractTypeNames)->select(static fn (string|array $t): string|array => is_array($t) ? (count($t) === 1 ? $t[0] : collect(...$t)->flatten()->toList()) : $t);
+			$allowedTypes = $extractTypeNames($type, $extractTypeNames)->select(static function (string|array $t): string|array {
+				if (!is_array($t)) {
+					return $t;
+				}
+
+				if (count($t) === 1) {
+					return $t[0];
+				}
+
+				return collect(...$t)->flatten()->toList();
+			});
 		} else {
 			/** @var ReflectionNamedType $type */
 			$allowedTypes = [$type->getName()];

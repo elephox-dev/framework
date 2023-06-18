@@ -63,6 +63,12 @@ trait HasArrayData
 	public function set(string|Stringable $key, array|string|float|bool|int|null $value): void
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
+
+		/**
+		 * @psalm-suppress UnsupportedPropertyReferenceUsage
+		 *
+		 * @var array<string, mixed> $data
+		 */
 		$data = &$this->data;
 		while (!$keys->isEmpty()) {
 			/** @var string $keyPart */
@@ -105,6 +111,12 @@ trait HasArrayData
 	public function remove(string|Stringable $key): void
 	{
 		$keys = ConfigurationPath::getSectionKeys($key);
+
+		/**
+		 * @psalm-suppress UnsupportedPropertyReferenceUsage
+		 *
+		 * @var array<string, mixed> $data
+		 */
 		$data = &$this->data;
 		while (!$keys->isEmpty()) {
 			/** @var string $keyPart */

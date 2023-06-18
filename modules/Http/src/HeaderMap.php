@@ -72,7 +72,7 @@ class HeaderMap extends ArrayMap implements Contract\HeaderMap
 
 		foreach ($this->items as $k => $v) {
 			if (self::compareHeaderNames($k, $validKey)) {
-				return $v;
+				return is_array($v) ? $v : [$v];
 			}
 		}
 

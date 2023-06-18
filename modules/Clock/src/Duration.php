@@ -152,7 +152,6 @@ class Duration extends AbstractDuration
 
 		/**
 		 * @psalm-suppress ImpurePropertyAssignment
-		 * @psalm-suppress InaccessibleProperty
 		 */
 		$d->invert = $this->negative ? 1 : 0;
 
