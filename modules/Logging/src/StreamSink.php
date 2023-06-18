@@ -28,7 +28,7 @@ readonly class StreamSink implements Sink
 		$this->errorStream = $errorStream ?? $stream;
 	}
 
-	public function write(LogLevelContract $level, string $message, array $context): void
+	public function write(LogLevelContract $level, string $message, ?array $context): void
 	{
 		if ($level->getLevel() >= LogLevel::WARNING->getLevel()) {
 			$this->errorStream->write($message . $this->eol);

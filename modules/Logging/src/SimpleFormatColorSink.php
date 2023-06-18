@@ -88,7 +88,7 @@ class SimpleFormatColorSink implements Sink, SinkProxy
 		}
 	}
 
-	public function write(LogLevel $level, string $message, array $context): void
+	public function write(LogLevel $level, string $message, ?array $context): void
 	{
 		$message = $this->replaceSingleCodes(self::FOREGROUND_MAP['default'], self::FOREGROUND_MAP, $message, $this->foregroundOpener, $this->foregroundCloser);
 		$message = $this->replaceSingleCodes(self::BACKGROUND_MAP['defaultBack'], self::BACKGROUND_MAP, $message, $this->backgroundOpener, $this->backgroundCloser);

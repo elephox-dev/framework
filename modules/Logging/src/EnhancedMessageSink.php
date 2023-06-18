@@ -18,7 +18,7 @@ readonly class EnhancedMessageSink implements Sink, SinkProxy
 		$this->useFormatting = $this->getInnerSink()->hasCapability(SinkCapability::ElephoxFormatting);
 	}
 
-	public function write(LogLevelContract $level, string $message, array $context): void
+	public function write(LogLevelContract $level, string $message, ?array $context): void
 	{
 		$message = $this->enhanceMessage($level, $message);
 

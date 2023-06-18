@@ -9,5 +9,5 @@ interface Sink
 {
 	public function hasCapability(SinkCapability $capability): bool;
 
-	public function write(LogLevel $level, string $message, array $context): void;
+	public function write(LogLevel $level, string $message, ?array $context): void;
 }
