@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\DB\Querying\Values;
 
-use Closure;
 use Elephox\DB\Querying\Contract\QueryValue as QueryValueContract;
 
 final readonly class BoundListQueryValue implements QueryValueContract

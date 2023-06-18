@@ -34,10 +34,10 @@ final readonly class SelectQueryBuilder implements Contract\SelectQueryBuilder
 			throw new InvalidArgumentException('from must be set');
 		}
 
-		if (count($this->columns) === 1 && $this->columns[0] === "*") {
+		if (count($this->columns) === 1 && $this->columns[0] === '*') {
 			$columns = [new AnyColumnQueryValue()];
 		} else {
-			$columns = collect($this->columns)->select(fn(string $col) => new ColumnReferenceQueryValue($col, $this->from));
+			$columns = collect($this->columns)->select(fn (string $col) => new ColumnReferenceQueryValue($col, $this->from));
 		}
 
 		$froms = [
@@ -53,9 +53,9 @@ final readonly class SelectQueryBuilder implements Contract\SelectQueryBuilder
 			$wheres[] = $this->where->build();
 		}
 
-		return new ResultSetQuery(new QueryDefinition("SELECT", [
+		return new ResultSetQuery(new QueryDefinition('SELECT', [
 			...$columns,
-			new QueryDefinition("FROM", $froms),
+			new QueryDefinition('FROM', $froms),
 			...$wheres,
 		]));
 	}

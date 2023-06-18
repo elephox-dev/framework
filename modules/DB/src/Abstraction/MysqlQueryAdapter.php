@@ -83,7 +83,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 					} elseif ($param instanceof ColumnReferenceQueryValue) {
 						$sql .= implode('.', $param->getValue()) . ' ';
 					} else {
-						throw new InvalidArgumentException("Unimplemented QueryValue type: " . get_debug_type($param));
+						throw new InvalidArgumentException('Unimplemented QueryValue type: ' . get_debug_type($param));
 						// $sql .= '? ';
 						// $value = $param->getValue();
 						// $parameters[] = $value;
@@ -106,7 +106,7 @@ final readonly class MysqlQueryAdapter implements QueryAdapter
 
 		$stmt = $this->mysqli->prepare($sql);
 
-		if ($parameterTypes !== "") {
+		if ($parameterTypes !== '') {
 			$stmt->bind_param($parameterTypes, ...$parameters);
 		}
 

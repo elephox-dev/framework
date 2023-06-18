@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Elephox\DB\Abstraction;
 
-use Elephox\Collection\ArrayList;
 use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\Collection\Enumerable;
 use Elephox\DB\Abstraction\Contract\DatabaseConnection;

@@ -27,7 +27,7 @@ final class ExpressionBuilder implements Contract\ExpressionBuilder
 
 	public function equals(string $paramName): SelectQueryBuilder
 	{
-		$this->operator = "=";
+		$this->operator = '=';
 		$this->value = new BoundQueryValue($paramName);
 
 		return $this->builder;
@@ -35,7 +35,7 @@ final class ExpressionBuilder implements Contract\ExpressionBuilder
 
 	public function greaterThan(string $paramName): SelectQueryBuilder
 	{
-		$this->operator = ">";
+		$this->operator = '>';
 		$this->value = new BoundQueryValue($paramName);
 
 		return $this->builder;
@@ -43,7 +43,7 @@ final class ExpressionBuilder implements Contract\ExpressionBuilder
 
 	public function lessThan(string $paramName): SelectQueryBuilder
 	{
-		$this->operator = "<";
+		$this->operator = '<';
 		$this->value = new BoundQueryValue($paramName);
 
 		return $this->builder;
@@ -51,7 +51,7 @@ final class ExpressionBuilder implements Contract\ExpressionBuilder
 
 	public function like(string $paramName): SelectQueryBuilder
 	{
-		$this->operator = "LIKE";
+		$this->operator = 'LIKE';
 		$this->value = new BoundQueryValue($paramName);
 
 		return $this->builder;
@@ -59,7 +59,7 @@ final class ExpressionBuilder implements Contract\ExpressionBuilder
 
 	public function in(string $paramName): SelectQueryBuilder
 	{
-		$this->operator = "IN";
+		$this->operator = 'IN';
 		$this->value = new BoundListQueryValue($paramName);
 
 		return $this->builder;
