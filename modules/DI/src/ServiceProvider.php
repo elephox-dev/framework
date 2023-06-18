@@ -339,16 +339,16 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 
 		if ($type instanceof ReflectionUnionType) {
 			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): Enumerable {
-				return new Enumerable(function () use ($refType, $self) {
+				return new Enumerable(static function () use ($refType, $self) {
 					foreach ($refType->getTypes() as $t) {
 						assert($t instanceof ReflectionType, '$t must be an instance of ReflectionType');
 
 						/** @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self */
 						if ($t instanceof ReflectionUnionType) {
 							yield $self($t, $self)->toList();
-						} else if ($t instanceof ReflectionIntersectionType) {
+						} elseif ($t instanceof ReflectionIntersectionType) {
 							yield [$self($t, $self)->toList()];
-						} else if ($t instanceof ReflectionNamedType) {
+						} elseif ($t instanceof ReflectionNamedType) {
 							yield [$t->getName()];
 						} else {
 							throw new ReflectionException('Unsupported ReflectionType: ' . get_debug_type($t));

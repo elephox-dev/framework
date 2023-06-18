@@ -15,7 +15,7 @@ class ConfigurationManager implements Contract\ConfigurationManager
 {
 	use BuildsConfigurationRoot;
 	use ConfiguresConfigurationProviders {
-		offsetGet as protected innerOffsetGet;
+		ConfiguresConfigurationProviders::offsetGet as protected innerOffsetGet;
 	}
 	use SubstitutesEnvironmentVariables;
 
