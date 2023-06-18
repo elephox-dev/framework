@@ -43,7 +43,7 @@ final class RouteTemplateTest extends TestCase
 		yield ['/abc/', '/abc', '#^/abc$#i'];
 		yield ['/abc/{user}', '/abc/{user}', '#^/abc/(?<user>[^}/]+)$#i'];
 		yield ['/a{user}b/', '/a{user}b', '#^/a(?<user>[^}/]+)b$#i'];
-		yield ['/abc/{version:int}', '/abc/{version:int}', '#^/abc/(?<version>\d+)$#i'];
+		yield ['/abc/{version:int}', '/abc/{version:int}', '#^/abc/(?<version>-?\d+)$#i'];
 		yield ['/abc/{path:*}', '/abc/{path:*}', '#^/abc/(?<path>.*)$#i'];
 		yield ['{path:*}', '/{path:*}', '#^/(?<path>.*)$#i'];
 		yield ['/[controller]/poke', '/[controller]/poke', '#^/myController/poke$#i'];
