@@ -4,31 +4,17 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use BadFunctionCallException;
-use BadMethodCallException;
-use Closure;
 use Elephox\Collection\ArrayMap;
-use Elephox\Collection\Contract\GenericEnumerable;
-use Elephox\Collection\Enumerable;
 use Elephox\Collection\OffsetNotFoundException;
-use Elephox\DI\Contract\RootServiceProvider;
+use Elephox\DI\Contract\Disposable;
+use Elephox\DI\Contract\Resolver;
+use Elephox\DI\Contract\ServiceProvider as ServiceProviderContract;
 use Elephox\DI\Contract\ServiceScope as ServiceScopeContract;
-use Elephox\DI\Contract\ServiceScopeFactory;
-use Generator;
-use LogicException;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionFunction;
-use ReflectionFunctionAbstract;
-use ReflectionIntersectionType;
-use ReflectionNamedType;
-use ReflectionParameter;
-use ReflectionType;
-use ReflectionUnionType;
 
 /**
  * @psalm-type argument-list = array<non-empty-string, mixed>
  */
-readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFactory
+readonly class ServiceProvider implements ServiceProviderContract, Disposable
 {
 	/**
 	 * @var ArrayMap<string, ServiceDescriptor<object, object>>
@@ -40,13 +26,13 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	protected ArrayMap $instances;
 
 	private array $selfIds;
-	private ResolverStack $resolverStack;
+
+	private Resolver $resolver;
 
 	/**
 	 * @param iterable<ServiceDescriptor> $descriptors
-	 * @param iterable<class-string, object> $instances
 	 */
-	public function __construct(iterable $descriptors = [], iterable $instances = [])
+	public function __construct(iterable $descriptors = [], ?Resolver $resolver = null, private ?ServiceProviderContract $root = null)
 	{
 		$this->descriptors = new ArrayMap();
 		$this->instances = new ArrayMap();
@@ -54,10 +40,6 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		/** @var ServiceDescriptor $description */
 		foreach ($descriptors as $descriptor) {
 			$this->descriptors->put($descriptor->serviceType, $descriptor);
-		}
-
-		foreach ($instances as $className => $instance) {
-			$this->instances->put($className, $instance);
 		}
 
 		$interfaces = class_implements($this);
@@ -69,7 +51,9 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 			...$interfaces,
 		];
 
-		$this->resolverStack = new ResolverStack();
+		$this->resolver = $resolver ?? new DynamicResolver($this);
+		$this->instances->put(Resolver::class, $this->resolver);
+		$this->descriptors->put(Resolver::class, new ServiceDescriptor(Resolver::class, $this->resolver::class, ServiceLifetime::Singleton, null, $this->resolver));
 	}
 
 	protected function isSelf(string $id): bool
@@ -79,7 +63,7 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 
 	public function has(string $id): bool
 	{
-		return $this->isSelf($id) || $this->descriptors->has($id);
+		return $this->isSelf($id) || $this->descriptors->has($id) || ($this->root !== null && $this->root->has($id));
 	}
 
 	protected function getDescriptor(string $id): ServiceDescriptor
@@ -87,6 +71,10 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 		try {
 			return $this->descriptors->get($id);
 		} catch (OffsetNotFoundException $e) {
+			if ($this->root !== null) {
+				return $this->root->getDescriptor($id);
+			}
+
 			throw new ServiceNotFoundException($id, previous: $e);
 		}
 	}
@@ -105,6 +93,10 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 			return $this;
 		}
 
+		if ($id === Resolver::class) {
+			return $this->resolver;
+		}
+
 		$descriptor = $this->getDescriptor($id);
 
 		/** @var TService */
@@ -112,7 +104,6 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 			ServiceLifetime::Transient => $this->requireTransient($descriptor),
 			ServiceLifetime::Singleton => $this->requireSingleton($descriptor),
 			ServiceLifetime::Scoped => $this->requireScoped($descriptor),
-			default => throw new LogicException("Invalid descriptor lifetime: {$descriptor->lifetime->name}"),
 		};
 	}
 
@@ -134,11 +125,15 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	{
 		assert($descriptor->lifetime === ServiceLifetime::Scoped, sprintf('Expected %s lifetime, got: %s', ServiceLifetime::Scoped->name, $descriptor->lifetime->name));
 
-		throw new ServiceException(sprintf(
-			"Cannot resolve service '%s' from %s, as it requires a scope.",
-			$descriptor->serviceType,
-			get_debug_type($this),
-		));
+		if ($this->root === null) {
+			throw new ServiceException(sprintf(
+				"Cannot resolve service '%s' from %s, as it requires a scope.",
+				$descriptor->serviceType,
+				get_debug_type($this),
+			));
+		}
+
+		return $this->getOrCreateInstance($descriptor);
 	}
 
 	protected function getOrCreateInstance(ServiceDescriptor $descriptor): object
@@ -157,7 +152,7 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 	protected function createInstance(ServiceDescriptor $descriptor): object
 	{
 		try {
-			return $descriptor->createInstance($this);
+			return $descriptor->createInstance($this->resolver);
 		} catch (BadFunctionCallException $e) {
 			throw new ServiceInstantiationException($descriptor->serviceType, previous: $e);
 		}
@@ -165,9 +160,9 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 
 	public function createScope(): ServiceScopeContract
 	{
-		$scopedProvider = new ScopedServiceProvider(
-			$this,
+		$scopedProvider = new self(
 			$this->descriptors->where(static fn (ServiceDescriptor $d) => $d->lifetime === ServiceLifetime::Scoped),
+			root: $this,
 		);
 
 		return new ServiceScope($scopedProvider);
@@ -175,279 +170,12 @@ readonly class ServiceProvider implements RootServiceProvider, ServiceScopeFacto
 
 	public function dispose(): void
 	{
+		foreach ($this->instances as $instance) {
+			if ($instance instanceof Disposable && !$instance instanceof self) {
+				$instance->dispose();
+			}
+		}
+
 		$this->instances->clear();
-	}
-
-	public function instantiate(string $className, array $overrideArguments = [], ?Closure $onUnresolved = null): object
-	{
-		if (!class_exists($className)) {
-			assert(is_string($className), sprintf('Expected string, got: %s', get_debug_type($className)));
-
-			throw new ClassNotFoundException($className);
-		}
-
-		$reflectionClass = new ReflectionClass($className);
-		$constructor = $reflectionClass->getConstructor();
-
-		try {
-			if ($constructor === null) {
-				return $reflectionClass->newInstance();
-			}
-
-			$serviceName = $constructor->getDeclaringClass()->getName();
-
-			$this->resolverStack->push("$serviceName::__construct");
-
-			$arguments = $this->resolveArguments($constructor, $overrideArguments, $onUnresolved);
-			$instance = $reflectionClass->newInstanceArgs([...$arguments]);
-
-			$this->resolverStack->pop();
-
-			return $instance;
-		} catch (ReflectionException $e) {
-			throw new BadMethodCallException("Failed to instantiate class '$className'", previous: $e);
-		}
-	}
-
-	/**
-	 * @param class-string $className
-	 * @param non-empty-string $method
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
-	 *
-	 * @return mixed
-	 *
-	 * @throws BadMethodCallException
-	 */
-	public function callMethod(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
-	{
-		$instance = $this->instantiate($className);
-
-		return $this->callMethodOn($instance, $method, $overrideArguments, $onUnresolved);
-	}
-
-	/**
-	 * @param non-empty-string $method
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
-	 *
-	 * @throws BadMethodCallException
-	 */
-	public function callMethodOn(object $instance, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
-	{
-		try {
-			$reflectionClass = new ReflectionClass($instance);
-			$reflectionMethod = $reflectionClass->getMethod($method);
-			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
-
-			return $reflectionMethod->invokeArgs($instance, [...$arguments]);
-		} catch (ReflectionException $e) {
-			throw new BadMethodCallException(sprintf(
-				"Failed to call method '%s' on class '%s'",
-				$method,
-				$instance::class,
-			), previous: $e);
-		}
-	}
-
-	/**
-	 * @param class-string $className
-	 * @param non-empty-string $method
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): mixed $onUnresolved
-	 *
-	 * @throws BadMethodCallException
-	 */
-	public function callStaticMethod(string $className, string $method, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
-	{
-		try {
-			$reflectionClass = new ReflectionClass($className);
-			$reflectionMethod = $reflectionClass->getMethod($method);
-			$arguments = $this->resolveArguments($reflectionMethod, $overrideArguments, $onUnresolved);
-
-			return $reflectionMethod->invokeArgs(null, [...$arguments]);
-		} catch (ReflectionException $e) {
-			throw new BadMethodCallException("Failed to call method '$method' on class '$className'", previous: $e);
-		}
-	}
-
-	/**
-	 * @template TResult
-	 *
-	 * @param ReflectionFunction|Closure|Closure(mixed): TResult $callback
-	 * @param argument-list $overrideArguments
-	 * @param null|Closure(ReflectionParameter $param, int $index): (null|TResult) $onUnresolved
-	 *
-	 * @return TResult
-	 *
-	 * @throws BadFunctionCallException
-	 */
-	public function call(Closure|ReflectionFunction $callback, array $overrideArguments = [], ?Closure $onUnresolved = null): mixed
-	{
-		/** @noinspection PhpUnhandledExceptionInspection $callback is never a string */
-		$reflectionFunction = $callback instanceof ReflectionFunction ? $callback : new ReflectionFunction($callback);
-		$arguments = $this->resolveArguments($reflectionFunction, $overrideArguments, $onUnresolved);
-
-		/** @var TResult */
-		return $reflectionFunction->invokeArgs([...$arguments]);
-	}
-
-	public function resolveArguments(ReflectionFunctionAbstract $function, array $overrideArguments = [], ?Closure $onUnresolved = null): Generator
-	{
-		if ($overrideArguments !== [] && array_is_list($overrideArguments)) {
-			yield from $overrideArguments;
-
-			return;
-		}
-
-		$argumentCount = 0;
-		$parameters = $function->getParameters();
-
-		foreach ($parameters as $parameter) {
-			if ($parameter->isVariadic()) {
-				yield from $overrideArguments;
-
-				break;
-			}
-
-			$name = $parameter->getName();
-			if (array_key_exists($name, $overrideArguments)) {
-				yield $overrideArguments[$name];
-
-				unset($overrideArguments[$name]);
-			} else {
-				try {
-					yield $this->resolveArgument($parameter);
-				} catch (UnresolvedParameterException $e) {
-					if ($onUnresolved === null) {
-						throw $e;
-					}
-
-					yield $onUnresolved($parameter, $argumentCount);
-				}
-			}
-
-			$argumentCount++;
-		}
-	}
-
-	private function resolveArgument(ReflectionParameter $parameter): mixed
-	{
-		$name = $parameter->getName();
-		$type = $parameter->getType();
-
-		if ($type === null) {
-			if ($this->has($name)) {
-				/** @var class-string $name */
-				return $this->get($name);
-			}
-
-			if ($parameter->isDefaultValueAvailable()) {
-				return $parameter->getDefaultValue();
-			}
-
-			throw new MissingTypeHintException($parameter);
-		}
-
-		if ($type instanceof ReflectionUnionType) {
-			$extractTypeNames = static function (ReflectionUnionType|ReflectionIntersectionType $refType, callable $self): Enumerable {
-				/** @var Enumerable<string|list<string>> */
-				return new Enumerable(static function () use ($refType, $self) {
-					/**
-					 * @var Closure(ReflectionUnionType|ReflectionIntersectionType, Closure): GenericEnumerable<class-string> $self
-					 * @var ReflectionType $t
-					 */
-					foreach ($refType->getTypes() as $t) {
-						assert($t instanceof ReflectionType, '$t must be an instance of ReflectionType');
-
-						if ($t instanceof ReflectionUnionType) {
-							yield $self($t, $self)->toList();
-						} elseif ($t instanceof ReflectionIntersectionType) {
-							yield [$self($t, $self)->toList()];
-						} elseif ($t instanceof ReflectionNamedType) {
-							yield [$t->getName()];
-						} else {
-							throw new ReflectionException('Unsupported ReflectionType: ' . get_debug_type($t));
-						}
-					}
-				});
-			};
-
-			$allowedTypes = $extractTypeNames($type, $extractTypeNames)->select(static function (string|array $t): string|array {
-				if (!is_array($t)) {
-					return $t;
-				}
-
-				if (count($t) === 1) {
-					return $t[0];
-				}
-
-				return collect(...$t)->flatten()->toList();
-			});
-		} else {
-			/** @var ReflectionNamedType $type */
-			$allowedTypes = [$type->getName()];
-		}
-
-		/** @var list<class-string|list<class-string>> $allowedTypes */
-		foreach ($allowedTypes as $typeName) {
-			if (is_string($typeName)) {
-				if (!$this->has($typeName)) {
-					continue;
-				}
-
-				return $this->resolveService($typeName, $parameter->getDeclaringFunction()->getName());
-			}
-
-			if (is_array($typeName)) {
-				/** @var class-string $combinedTypeName */
-				$combinedTypeName = implode('&', $typeName);
-
-				if (!$this->has($combinedTypeName)) {
-					continue;
-				}
-
-				return $this->resolveService($combinedTypeName, $parameter->getDeclaringFunction()->getName());
-			}
-		}
-
-		if ($parameter->isDefaultValueAvailable()) {
-			return $parameter->getDefaultValue();
-		}
-
-		if ($parameter->allowsNull()) {
-			return null;
-		}
-
-		throw new UnresolvedParameterException(
-			$parameter->getDeclaringClass()?->getShortName() ??
-			$parameter->getDeclaringFunction()->getClosureScopeClass()?->getShortName() ??
-			'<unknown class>',
-			$parameter->getDeclaringFunction()->getShortName(),
-			(string) $type,
-			$parameter->name,
-			$parameter->getDeclaringFunction()->getFileName(),
-			$parameter->getDeclaringFunction()->getStartLine(),
-			$parameter->getDeclaringFunction()->getEndLine(),
-		);
-	}
-
-	/**
-	 * @template TService of object
-	 *
-	 * @param class-string<TService> $name
-	 * @param string $forMethod
-	 *
-	 * @return TService
-	 */
-	private function resolveService(string $name, string $forMethod): object
-	{
-		$this->resolverStack->push("$name::$forMethod");
-
-		$service = $this->get($name);
-
-		$this->resolverStack->pop();
-
-		return $service;
 	}
 }

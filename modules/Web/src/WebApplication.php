@@ -6,7 +6,6 @@ namespace Elephox\Web;
 use Elephox\Configuration\Contract\Configuration;
 use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceProvider;
-use Elephox\DI\Contract\ServiceScopeFactory;
 use Elephox\Http\Contract\Request as RequestContract;
 use Elephox\Http\Contract\Response as ResponseContract;
 use Elephox\Http\Contract\ServerRequest as ServerRequestContract;
@@ -50,7 +49,7 @@ class WebApplication
 
 	public function handle(RequestContract $request): ResponseContract
 	{
-		$requestScope = $this->services->get(ServiceScopeFactory::class)->createScope();
+		$requestScope = $this->services->createScope();
 
 		// TODO: use services from scoped service provider
 		$response = $this->pipeline->process($request)->get();

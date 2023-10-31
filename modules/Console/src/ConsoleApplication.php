@@ -12,7 +12,7 @@ use Elephox\Console\Command\NoCommandInCommandLineException;
 use Elephox\Console\Command\RawCommandInvocation;
 use Elephox\Console\Command\RequiredArgumentMissingException;
 use Elephox\Console\Contract\ConsoleEnvironment;
-use Elephox\DI\Contract\RootServiceProvider;
+use Elephox\DI\Contract\ServiceProvider;
 use Elephox\Support\Contract\ExceptionHandler;
 use JsonException;
 use Psr\Log\LoggerInterface;
@@ -24,7 +24,7 @@ class ConsoleApplication
 	protected ?ExceptionHandler $exceptionHandler = null;
 
 	public function __construct(
-		public readonly RootServiceProvider $services,
+		public readonly ServiceProvider $services,
 		public readonly Configuration $configuration,
 		public readonly ConsoleEnvironment $environment,
 	) {

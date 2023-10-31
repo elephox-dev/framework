@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \Elephox\Collection\Iterator\SplObjectStorageIterator
  * @covers \Elephox\DI\ServiceDescriptor
  * @covers \Elephox\DI\ServiceProvider
+ * @covers \Elephox\DI\DynamicResolver
  *
  * @internal
  */

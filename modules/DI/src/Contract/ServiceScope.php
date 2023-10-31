@@ -7,5 +7,5 @@ interface ServiceScope
 {
 	public function endScope(): void;
 
-	public function services(): ScopedServiceProvider;
+	public function services(): ServiceProvider;
 }

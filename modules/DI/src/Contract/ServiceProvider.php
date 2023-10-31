@@ -8,7 +8,7 @@ use Elephox\DI\ServiceNotFoundException;
 use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 
-interface ServiceProvider extends ContainerInterface, Resolver
+interface ServiceProvider extends ContainerInterface
 {
 	/**
 	 * @param string $id
@@ -30,5 +30,5 @@ interface ServiceProvider extends ContainerInterface, Resolver
 	 */
 	public function get(string $id): object;
 
-	public function dispose(): void;
+	public function createScope(): ServiceScope;
 }

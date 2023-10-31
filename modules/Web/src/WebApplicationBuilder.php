@@ -9,6 +9,7 @@ use Elephox\Configuration\Contract\ConfigurationBuilder as ConfigurationBuilderC
 use Elephox\Configuration\Contract\ConfigurationManager as ConfigurationManagerContract;
 use Elephox\Configuration\Contract\Environment;
 use Elephox\Configuration\LoadsDefaultConfiguration;
+use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use Elephox\DI\ServiceCollection;
 use Elephox\Support\Contract\ErrorHandler;
@@ -55,6 +56,8 @@ class WebApplicationBuilder
 		);
 	}
 
+	private ?RouterBuilderContract $routerBuilder;
+
 	public function __construct(
 		public readonly ConfigurationManagerContract $configuration,
 		public readonly WebEnvironment $environment,
@@ -90,7 +93,11 @@ class WebApplicationBuilder
 
 	public function getRouter(): RouterBuilderContract
 	{
-		return $this->service(RouterBuilderContract::class);
+		if ($this->routerBuilder === null) {
+			$this->addRouting();
+		}
+
+		return $this->routerBuilder;
 	}
 
 	protected function loadConfiguration(): void
@@ -129,8 +136,8 @@ class WebApplicationBuilder
 		$this->services->addSingleton(Configuration::class, instance: $configuration);
 
 		$provider = $this->services->buildProvider();
-
-		$builtPipeline = $this->pipeline->build($provider);
+		$resolver = $provider->get(Resolver::class);
+		$builtPipeline = $this->pipeline->build($resolver);
 		$this->services->addSingleton(RequestPipeline::class, instance: $builtPipeline);
 
 		if ($provider->has(ExceptionHandler::class)) {
@@ -161,21 +168,14 @@ class WebApplicationBuilder
 
 	public function addRouting(): void
 	{
-		$this->services->addSingleton(RouterBuilderContract::class, RouterBuilder::class);
-		$this->services->addSingleton(Router::class, factory: static fn (RouterBuilderContract $routerBuilder): Router => $routerBuilder->build());
-		$this->pipeline->endpoint(RouterEndpoint::class);
-	}
+		$this->services->tryAddSingleton(RouterBuilderContract::class, RouterBuilder::class);
+		$this->services->tryAddSingleton(Router::class, factory: static fn (RouterBuilderContract $routerBuilder): Router => $routerBuilder->build());
 
-	/**
-	 * @template T of object
-	 *
-	 * @param class-string<T>|string $name
-	 *
-	 * @return T
-	 */
-	public function service(string $name): object
-	{
-		/** @var T */
-		return $this->services->get($name);
+		// use a temporary provider to get a router builder instance
+		$provider = $this->services->buildProvider();
+
+		$this->routerBuilder = $provider->get(RouterBuilderContract::class);
+
+		$this->pipeline->endpoint(RouterEndpoint::class);
 	}
 }

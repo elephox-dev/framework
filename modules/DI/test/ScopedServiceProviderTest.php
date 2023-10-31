@@ -129,4 +129,29 @@ final class ScopedServiceProviderTest extends TestCase
 
 		$sp->get(TestServiceInterface2::class);
 	}
+
+	public function testScopedServiceProviderCleansUpInstancesOnEnd(): void {
+		$sp = new ServiceProvider([
+			new ServiceDescriptor(
+				TestServiceInterface::class,
+				TestServiceClass::class,
+				ServiceLifetime::Scoped,
+				static fn () => new TestServiceClass(),
+				null,
+			),
+		]);
+		$scope = $sp->createScope();
+		$ssp = $scope->services();
+
+		$instance1 = $ssp->get(TestServiceInterface::class);
+		$instance2 = $ssp->get(TestServiceInterface::class);
+
+		self::assertSame($instance1, $instance2);
+
+		$scope->endScope();
+
+		$instance3 = $ssp->get(TestServiceInterface::class);
+
+		self::assertNotSame($instance1, $instance3);
+	}
 }

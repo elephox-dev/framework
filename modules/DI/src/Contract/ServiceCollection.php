@@ -4,11 +4,15 @@ declare(strict_types=1);
 namespace Elephox\DI\Contract;
 
 use Closure;
+use Elephox\Collection\Contract\GenericEnumerable;
 use Elephox\DI\InvalidServiceDescriptorException;
 use Elephox\DI\ServiceDescriptor;
 use InvalidArgumentException;
 
-interface ServiceCollection extends ServiceProvider
+/**
+ * @extends GenericEnumerable<ServiceDescriptor>
+ */
+interface ServiceCollection extends GenericEnumerable
 {
 	public function add(ServiceDescriptor $descriptor): self;
 
@@ -25,7 +29,7 @@ interface ServiceCollection extends ServiceProvider
 
 	public function removeAll(): self;
 
-	public function buildProvider(): RootServiceProvider;
+	public function buildProvider(): ServiceProvider;
 
 	/**
 	 * @template TService of object

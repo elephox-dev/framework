@@ -53,37 +53,37 @@ Replace the value of the `style` parameter for different styles (`flat`, `flat-s
 
 ### ✅ To Do
 
-- [ ] [modules/Collection/src/ArrayList.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayList.php)
+- [ ] [modules/Collection/src/ArrayList.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/ArrayList.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/ArrayMap.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArrayMap.php)
+- [ ] [modules/Collection/src/ArrayMap.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/ArrayMap.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/ArraySet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ArraySet.php)
+- [ ] [modules/Collection/src/ArraySet.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/ArraySet.php)
   - [ ] replace generic enumerable function with array-specific functions where possible
-- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsKeyedEnumerable.php)
+- [ ] [modules/Collection/src/IsKeyedEnumerable.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/IsKeyedEnumerable.php)
   - [ ] rewrite more functions to use iterators
-- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/Iterator/OrderedIterator.php)
+- [ ] [modules/Collection/src/Iterator/OrderedIterator.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/Iterator/OrderedIterator.php)
   - [ ] cache keys so they won't have to be re-calculated
-- [ ] [modules/Collection/src/ObjectSet.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/ObjectSet.php)
+- [ ] [modules/Collection/src/ObjectSet.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/ObjectSet.php)
   - [ ] use this style of assertion error messages for all assertions
-- [ ] [modules/DI/src/ServiceDescriptor.php](https://github.com/elephox-dev/framework/tree/develop/modules/DI/src/ServiceDescriptor.php)
+- [ ] [modules/DI/src/ServiceDescriptor.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/DI/src/ServiceDescriptor.php)
   - [ ] Update TImplementation to extend TService once vimeo/psalm#7795 is resolved.
-- [ ] [modules/Files/test/DirectoryTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Files/test/DirectoryTest.php)
+- [ ] [modules/Files/test/DirectoryTest.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Files/test/DirectoryTest.php)
   - [ ] add test for symlink
-- [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Http/test/GeneratesResponsesTest.php)
+- [ ] [modules/Http/test/GeneratesResponsesTest.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Http/test/GeneratesResponsesTest.php)
   - [ ] Add test for both cases in which mime_content_type exists and not
-- [ ] [modules/Logging/test/SimpleFormatColorSinkTest.php](https://github.com/elephox-dev/framework/tree/develop/modules/Logging/test/SimpleFormatColorSinkTest.php)
+- [ ] [modules/Logging/test/SimpleFormatColorSinkTest.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Logging/test/SimpleFormatColorSinkTest.php)
   - [ ] write tests for background and options
-- [ ] [modules/Web/src/WebApplication.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/WebApplication.php)
+- [ ] [modules/Web/src/WebApplication.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Web/src/WebApplication.php)
   - [ ] use services from scoped service provider
 
 ### ⚠️ Fixes
 
-- [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/develop/modules/Collection/src/IsEnumerable.php)
+- [ ] [modules/Collection/src/IsEnumerable.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Collection/src/IsEnumerable.php)
   - [ ] de-duplicate code from IsEnumerable and IsKeyedEnumerable where possible (move iterator creation to trait and return self with created iterator)
 
 ### 🤔 Maybe
 
-- [ ] [modules/Web/src/Middleware/DefaultNotFoundHandler.php](https://github.com/elephox-dev/framework/tree/develop/modules/Web/src/Middleware/DefaultNotFoundHandler.php)
+- [ ] [modules/Web/src/Middleware/DefaultNotFoundHandler.php](https://github.com/elephox-dev/framework/tree/features/better-scopes/modules/Web/src/Middleware/DefaultNotFoundHandler.php)
   - [ ] use a standardized schema for errors in json
 
 

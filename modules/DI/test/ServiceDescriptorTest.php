@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
+use Elephox\DI\Contract\Resolver;
 use Elephox\DI\Data\TestServiceClass;
 use Elephox\DI\Data\TestServiceClass2;
 use Elephox\DI\Data\TestServiceInterface;
@@ -16,6 +17,7 @@ use stdClass;
  * @covers \Elephox\DI\ServiceLifetime
  * @covers \Elephox\Collection\ArrayMap
  * @covers \Elephox\DI\ServiceProvider
+ * @covers \Elephox\DI\DynamicResolver
  *
  * @internal
  */
@@ -27,7 +29,8 @@ final class ServiceDescriptorTest extends TestCase
 		$sd = new ServiceDescriptor(TestServiceInterface::class, TestServiceClass::class, ServiceLifetime::Singleton, null, $instance1);
 
 		$sp = new ServiceProvider();
-		$instance2 = $sd->createInstance($sp);
+		$res = $sp->get(Resolver::class);
+		$instance2 = $sd->createInstance($res);
 
 		self::assertSame($instance1, $instance2);
 	}
@@ -88,7 +91,8 @@ final class ServiceDescriptorTest extends TestCase
 		);
 
 		$sp = new ServiceProvider();
-		$sd->createInstance($sp);
+		$res = $sp->get(Resolver::class);
+		$sd->createInstance($res);
 	}
 
 	public function testInstanceMustBeOfServiceType(): void
@@ -105,7 +109,8 @@ final class ServiceDescriptorTest extends TestCase
 		);
 
 		$sp = new ServiceProvider();
-		$sd->createInstance($sp);
+		$res = $sp->get(Resolver::class);
+		$sd->createInstance($res);
 	}
 
 	/**
@@ -124,7 +129,8 @@ final class ServiceDescriptorTest extends TestCase
 		);
 
 		$sp = new ServiceProvider();
-		$instance = $sd->createInstance($sp);
+		$res = $sp->get(Resolver::class);
+		$instance = $sd->createInstance($res);
 
 		self::assertInstanceOf(TestServiceInterface::class, $instance);
 		self::assertInstanceOf(TestServiceInterface2::class, $instance);
@@ -140,6 +146,7 @@ final class ServiceDescriptorTest extends TestCase
 		$this->expectException(InvalidServiceDescriptorException::class);
 		$this->expectExceptionMessage('Instance must be an intersection of all service types (' . TestServiceInterface::class . '&' . TestServiceInterface2::class . '), but the type ' . TestServiceClass::class . ' is missing the ' . TestServiceInterface2::class . ' type.');
 
-		$sd2->createInstance($sp);
+		$res = $sp->get(Resolver::class);
+		$sd2->createInstance($res);
 	}
 }

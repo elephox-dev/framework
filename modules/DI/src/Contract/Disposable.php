@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Elephox\DI\Contract;
 
-interface ScopedServiceProvider extends RootServiceProvider
+interface Disposable
 {
+	public function dispose(): void;
 }

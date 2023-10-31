@@ -4,28 +4,49 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use Closure;
+use Elephox\Collection\IsEnumerable;
+use Elephox\Collection\ObjectSet;
 use Elephox\DI\Contract\Resolver;
-use Elephox\DI\Contract\RootServiceProvider;
 use Elephox\DI\Contract\ServiceCollection as ServiceCollectionContract;
 use InvalidArgumentException;
+use Traversable;
 
-readonly class ServiceCollection extends ServiceProvider implements ServiceCollectionContract
+readonly class ServiceCollection implements ServiceCollectionContract
 {
+	use IsEnumerable;
+
+	private ObjectSet $descriptors;
+
 	public function __construct()
 	{
-		parent::__construct();
+		$this->descriptors = new ObjectSet();
+	}
+
+	public function getIterator(): Traversable
+	{
+		return $this->descriptors->getIterator();
 	}
 
 	public function add(ServiceDescriptor $descriptor): self
 	{
-		$this->descriptors->put($descriptor->serviceType, $descriptor);
+		$this->descriptors->add($descriptor);
 
 		return $this;
 	}
 
+	private function has(ServiceDescriptor $descriptor): bool
+	{
+		return $this->hasService($descriptor->serviceType);
+	}
+
+	private function hasService(string $service): bool
+	{
+		return $this->descriptors->any(static fn ($d) => $d->serviceType === $service);
+	}
+
 	public function tryAdd(ServiceDescriptor $descriptor): self
 	{
-		if ($this->descriptors->containsKey($descriptor->serviceType)) {
+		if ($this->has($descriptor)) {
 			return $this;
 		}
 
@@ -41,14 +62,14 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 
 	public function removeAll(): self
 	{
-		$this->descriptors->clear();
+		$this->descriptors->removeAll();
 
 		return $this;
 	}
 
-	public function buildProvider(): RootServiceProvider
+	public function buildProvider(): ServiceProvider
 	{
-		return new ServiceProvider($this->descriptors, $this->instances);
+		return new ServiceProvider($this->descriptors);
 	}
 
 	/**
@@ -122,7 +143,7 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 
 	public function tryAddSingleton(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
 	{
-		if ($this->has($service)) {
+		if ($this->hasService($service)) {
 			return $this;
 		}
 
@@ -131,7 +152,7 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 
 	public function tryAddTransient(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
 	{
-		if ($this->has($service)) {
+		if ($this->hasService($service)) {
 			return $this;
 		}
 
@@ -140,7 +161,7 @@ readonly class ServiceCollection extends ServiceProvider implements ServiceColle
 
 	public function tryAddScoped(string $service, ?string $concrete = null, ?Closure $factory = null, ?object $instance = null): ServiceCollectionContract
 	{
-		if ($this->has($service)) {
+		if ($this->hasService($service)) {
 			return $this;
 		}
 

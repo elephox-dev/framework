@@ -3,30 +3,23 @@ declare(strict_types=1);
 
 namespace Elephox\DI;
 
-use Elephox\DI\Contract\ScopedServiceProvider;
+use Elephox\DI\Contract\ServiceProvider;
 use LogicException;
 
 class ServiceScope implements Contract\ServiceScope
 {
-	private bool $closed = false;
-
 	public function __construct(
-		private readonly ScopedServiceProvider $serviceProvider,
+		private readonly ServiceProvider $serviceProvider,
 	) {
 	}
 
 	public function endScope(): void
 	{
-		$this->closed = true;
 		$this->serviceProvider->dispose();
 	}
 
-	public function services(): ScopedServiceProvider
+	public function services(): ServiceProvider
 	{
-		if ($this->closed) {
-			throw new LogicException('ServiceScope is already closed');
-		}
-
 		return $this->serviceProvider;
 	}
 }

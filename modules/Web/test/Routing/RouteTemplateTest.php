@@ -50,6 +50,8 @@ final class RouteTemplateTest extends TestCase
 		yield ['[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i'];
 		yield ['/[controller]/[action]', '/[controller]/[action]', '#^/myController/myAction$#i'];
 		yield ['/[controller]/{slug}/draft/title', '/[controller]/{slug}/draft/title', '#^/myController/(?<slug>[^}/]+)/draft/title$#i'];
+		yield ['/[controller]/{id:int}', '/[controller]/{id:int}', '#^/myController/(?<id>-?\d+)$#i'];
+		yield ['/[controller]/{name:alpha}', '/[controller]/{name:alpha}', '#^/myController/(?<name>\w+)$#i'];
 	}
 
 	/**
