@@ -18,7 +18,7 @@ enum HeaderName: string
 	/* Caching */
 	case Age = 'Age';
 	case CacheControl = 'Cache-Control';
-	case ClearSizeData = 'Clear-Site-Data';
+	case ClearSiteData = 'Clear-Site-Data';
 	case Expires = 'Expires';
 	case Pragma = 'Pragma';
 	case Warning = 'Warning';
