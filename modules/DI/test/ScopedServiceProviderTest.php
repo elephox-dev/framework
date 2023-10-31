@@ -130,7 +130,8 @@ final class ScopedServiceProviderTest extends TestCase
 		$sp->get(TestServiceInterface2::class);
 	}
 
-	public function testScopedServiceProviderCleansUpInstancesOnEnd(): void {
+	public function testScopedServiceProviderCleansUpInstancesOnEnd(): void
+	{
 		$sp = new ServiceProvider([
 			new ServiceDescriptor(
 				TestServiceInterface::class,

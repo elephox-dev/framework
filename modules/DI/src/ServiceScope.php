@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use Elephox\DI\Contract\ServiceProvider;
-use LogicException;
 
 class ServiceScope implements Contract\ServiceScope
 {

@@ -69,15 +69,15 @@ final class ServiceProviderTest extends MockeryTestCase
 		$provider->get(TestDisposableInterface::class);
 
 		$provider->dispose();
-		self::assertEquals(1, TestDisposableClass::$disposeCount);
+		self::assertSame(1, TestDisposableClass::$disposeCount);
 
 		// calling again has no effect since the instance should have been removed from the provider
 		$provider->dispose();
-		self::assertEquals(1, TestDisposableClass::$disposeCount);
+		self::assertSame(1, TestDisposableClass::$disposeCount);
 
 		// creating a new instance should dispose it again
 		$provider->get(TestDisposableInterface::class);
 		$provider->dispose();
-		self::assertEquals(2, TestDisposableClass::$disposeCount);
+		self::assertSame(2, TestDisposableClass::$disposeCount);
 	}
 }
