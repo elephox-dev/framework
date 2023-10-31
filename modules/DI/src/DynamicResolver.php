@@ -251,7 +251,7 @@ readonly class DynamicResolver implements Resolver
 					continue;
 				}
 
-				return $this->resolveService($typeName, $parameter->getDeclaringFunction()->getName());
+				return $this->resolveService($typeName, $parameter);
 			}
 
 			if (is_array($typeName)) {
@@ -262,7 +262,7 @@ readonly class DynamicResolver implements Resolver
 					continue;
 				}
 
-				return $this->resolveService($combinedTypeName, $parameter->getDeclaringFunction()->getName());
+				return $this->resolveService($combinedTypeName, $parameter);
 			}
 		}
 
@@ -291,13 +291,13 @@ readonly class DynamicResolver implements Resolver
 	 * @template TService of object
 	 *
 	 * @param class-string<TService> $name
-	 * @param string $forMethod
+	 * @param ReflectionParameter $parameter
 	 *
 	 * @return TService
 	 */
-	private function resolveService(string $name, string $forMethod): object
+	private function resolveService(string $name, ReflectionParameter $parameter): object
 	{
-		$this->resolverStack->push("$name::$forMethod");
+		$this->resolverStack->push("$name::$parameter");
 
 		$service = $this->serviceProvider->get($name);
 

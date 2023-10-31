@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Elephox\DI;
 
 use Elephox\DI\Data\TestServiceClass;
+use Elephox\DI\Data\TestServiceClassWithConstructor;
+use Elephox\DI\Data\TestServiceClassWithConstructor2;
 use Elephox\DI\Data\TestServiceInterface;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -38,5 +40,18 @@ final class ServiceCollectionTest extends TestCase
 
 		$provider = $collection->buildProvider();
 		self::assertTrue($provider->has(TestServiceClass::class));
+	}
+
+	public function testChainedConstructorCall(): void
+	{
+		$collection = new ServiceCollection();
+		$collection->addSingleton(TestServiceInterface::class, TestServiceClass::class);
+		$collection->addSingleton(TestServiceClassWithConstructor::class);
+		$collection->addSingleton(TestServiceClassWithConstructor2::class);
+
+		$provider = $collection->buildProvider();
+		$service = $provider->get(TestServiceClassWithConstructor2::class);
+
+		self::assertInstanceOf(TestServiceClassWithConstructor2::class, $service);
 	}
 }
