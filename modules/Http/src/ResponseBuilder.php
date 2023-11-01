@@ -146,13 +146,19 @@ class ResponseBuilder extends AbstractMessageBuilder implements Contract\Respons
 		return $this->textBody($content, $mimeType);
 	}
 
-	public function fileBody(string|FileContract $path, ?MimeTypeInterface $mimeType = MimeType::ApplicationOctetStream): static
+	public function fileBody(string|FileContract $path, ?MimeTypeInterface $mimeType = null): static
 	{
 		$this->body(File::openStream($path));
 
-		if ($mimeType) {
-			$this->contentType($mimeType);
+		if ($mimeType === null) {
+			if ($path instanceof FileContract) {
+				$mimeType = $path->mimeType();
+			} else {
+				$mimeType = MimeType::ApplicationOctetStream;
+			}
 		}
+
+		$this->contentType($mimeType);
 
 		return $this;
 	}
