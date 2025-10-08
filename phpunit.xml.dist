@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="bootstrap.php"
          cacheResultFile="tmp/tests/cache"
          executionOrder="random"
-         forceCoversAnnotation="true"
+         requireCoverageMetadata="true"
          defaultTestSuite="full"
-         beStrictAboutCoversAnnotation="true"
+         beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         convertDeprecationsToExceptions="true"
+         failOnDeprecation="true"
          failOnRisky="true"
-         failOnWarning="true"
-         verbose="true">
+         failOnWarning="true">
     <php>
         <const name="REQUEST_FACTORY" value="Nyholm\Psr7\Factory\Psr17Factory"/>
         <const name="RESPONSE_FACTORY" value="Nyholm\Psr7\Factory\Psr17Factory"/>
@@ -35,13 +33,5 @@
         </testsuite>
     </testsuites>
 
-    <coverage cacheDirectory="tmp/coverage/cache"
-              processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">modules/*/src</directory>
-        </include>
-        <exclude>
-            <file>**/*Exception.php</file>
-        </exclude>
-    </coverage>
+    <coverage cacheDirectory="tmp/coverage/cache" />
 </phpunit>
